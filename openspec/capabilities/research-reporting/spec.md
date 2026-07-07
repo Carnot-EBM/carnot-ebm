@@ -97,6 +97,85 @@ modify `research-roadmap.yaml`.
 |---|---|---|
 | REQ-REPORT-5335 | Implemented (`python/carnot/experiment_5335_archive_486_activate_487.py`, `results/experiment_5335_archive_486_activate_487.json`) | Implemented (`tests/python/test_experiment_5335_archive_486_activate_487.py`) |
 
+### REQ-REPORT-5336: V487 Execution-Time SOTA Source Delta Refresh
+
+The Exp 5336 workflow SHALL perform an execution-time 2025-2026 source-delta
+check after the `.487` planner refresh in `research-references.md`. It SHALL
+check arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub,
+Extropic writing, Logical Intelligence public pages, and local duplicate
+history for source deltas that affect EBMs for reasoning, neural constraint
+satisfaction, Ising/annealing, hallucination detection, KAN verification,
+energy-guided decoding, hardware sampling, or continual constraint learning.
+It SHALL write `results/experiment_5336_sota_source_delta_v487.json` and SHALL
+declare `inference_substrate="literature_ingestion_network_sources"`.
+
+The workflow SHALL append to `research-references.md` only when a finding is
+both absent from the V487 planner refresh and actionable for Carnot-local work.
+When it appends, it SHALL add a clearly delimited `V487 Execution Refresh`
+section with source URLs, Carnot-local actionability, plan impact, and retired
+scope status. When no new actionable finding exists, it SHALL emit an honest
+no-op artifact and SHALL NOT churn `research-references.md`.
+
+The workflow SHALL NOT reopen retired Phase D external generated-text/logprob
+scoring, broad GRPO/fine-tuning reruns, TSU/Kona execution claims, CPU-only
+GGUF offload reruns, or ARC level solves. It SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md` for this conductor-scoped source refresh.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `sources_checked`, and `references_section_marker`. It
+SHALL include bare fields `new_actionable_findings_count`,
+`references_modified`, `retired_scope_reopened`, `methodology_duration_s`, and
+`executable_plan_change_required`. It SHOULD also include actionability rows,
+search-window metadata, checked-source details, rejected-candidate notes, tests
+run, and field principles so downstream reconciliation can audit the refresh
+without relying on prose.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5336 execution-time source delta artifact."
+- `milestone`: principle "Binds this receipt to V487 so source deltas cannot be misapplied to another milestone."
+- `status`: principle "Machine-readable terminal state for downstream reconciliation."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ so nuance cannot be misclassified."
+- `inference_substrate`: principle "literature_ingestion_network_sources because Exp5336 reads network literature/source metadata and makes no model, solver, or hardware outcome claim."
+- `sources_checked`: principle "Records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result."
+- `references_section_marker`: principle "Idempotent marker prevents duplicate research-references.md appends."
+- `actionable_findings`: principle "Source URLs plus Carnot-local hooks make each appended reference auditable instead of bibliography churn."
+
+#### SCENARIO-REPORT-5336-APPEND-DELTAS: New Network Findings Append A V487 Refresh
+
+**Given** the V487 planner refresh is present in `research-references.md`
+**And** the source check finds one or more genuinely new Carnot-actionable
+findings
+**When** the Exp 5336 workflow runs
+**Then** it writes the JSON artifact, appends one clearly delimited V487
+execution-refresh section, records every required source family checked,
+sets `references_modified=true`, sets
+`new_actionable_findings_count` to the number of appended rows, keeps
+`retired_scope_reopened=false`, keeps
+`executable_plan_change_required=false`, and does not modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+#### SCENARIO-REPORT-5336-NOOP: No New Findings Leave References Unchanged
+
+**Given** the V487 planner refresh is present in `research-references.md`
+**And** the source check finds no genuinely new Carnot-actionable finding
+outside retired scopes
+**When** the Exp 5336 workflow runs
+**Then** it writes a terminal no-op JSON artifact, records every required
+source family checked, sets `references_modified=false`, sets
+`new_actionable_findings_count=0`, sets
+`references_section_marker=null`, keeps `retired_scope_reopened=false`, and
+does not edit `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5336)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5336 | Planned (`python/carnot/experiment_5336_sota_source_delta_v487.py`, `results/experiment_5336_sota_source_delta_v487.json`) | Planned (`tests/python/test_experiment_5336_sota_source_delta_v487.py`) |
+
 ### REQ-REPORT-5109: Archive .468, Record Exp5108 KAN Wall, And Activate .469 Frame
 
 The Exp 5109 workflow SHALL aggregate milestone `2026.07.468` from

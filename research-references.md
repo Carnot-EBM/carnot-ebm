@@ -27685,3 +27685,19 @@ zero-score structured rewrite smoke.
   GateMate needs a physical/JTAG change, and no board speedup claim is supported.
 
 <!-- V487-PLANNER-REFRESH-2026-07-07-END -->
+
+
+### V487 Execution Refresh - 2026-07-07
+
+Execution-time sweep after the `.487` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, Logical Intelligence public pages, and local duplicate history. The findings below were absent from the V487 planner block and nearby reference history.
+
+### New actionable deltas
+- **Learning Hierarchical Procedural Memory for LLM Agents through Bayesian Selection and Contrastive Refinement** (https://arxiv.org/abs/2512.18950; code/reference https://github.com/S-Forouzandeh/MACLA-LLM-Agents-AAMAS-2026-Conference): MACLA keeps the LLM frozen and moves adaptation into external hierarchical procedural memory with Bayesian reliability posteriors, expected-utility selection, contrastive success/failure refinement, and meta-procedure composition. Actionability: For Exp5340/Exp5342, add a procedural-memory lane beside MemRL utility values: track procedure preconditions, Beta posterior counts, information gain, success/failure contrast pairs, capacity saturation, and no model weight mutation.
+- **Hard-Constrained Graph Generation with Discrete-Projection Diffusion** (https://openreview.net/forum?id=cbtykHVWX9; code/reference https://github.com/zhangxuesong2000/Neuro-Symbolic-Projected-Sampling-for-Graphs): The NSPSG repository exposes a discrete graph-generation path that uses SMT projection, plus a neural projection/corrector option, to keep samples inside arithmetic, structural, and combined hard constraints. Actionability: For Exp5343/Exp5346, treat SMT projection as the authority when converting candidate structures into constraint cuts. Log projection rate, solver fallback, neural-corrector agreement, and post-projection validity before claiming any learned sampler benefit.
+
+### Execution impact
+- **Plan impact:** No executable `.487` task edit is required. The deltas sharpen procedural-memory utility telemetry for Exp5340/Exp5342 and solver-authoritative projection telemetry for Exp5343/Exp5346.
+- **Retired scope:** No retired scope was reopened. External generated-text scoring, broad GRPO/fine-tuning reruns, TSU/Kona execution claims, CPU-only GGUF offload reruns, and ARC level solves remain closed.
+- **Secondary-source status:** Semantic Scholar was rate-limited during execution and no citation-trend claim is made. Extropic and Logical Intelligence did not add a separate execution-changing source.
+
+<!-- V487-EXECUTION-REFRESH-2026-07-07-END -->
