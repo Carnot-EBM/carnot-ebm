@@ -28696,6 +28696,107 @@ hardware-speedup claim.
 |---|---|---|
 | REQ-VERIFY-5371 | Planned (`python/carnot/experiment_5371_pbit_boundary_exchange_schedule_v489.py`, `results/experiment_5371_pbit_boundary_exchange_schedule_v489.json`) | Planned (`tests/python/test_experiment_5371_pbit_boundary_exchange_schedule_v489.py`) |
 
+### REQ-VERIFY-5372: Token/Internal-Feature Precondition Gate V489
+
+The repository SHALL provide Exp 5372 at
+`python/carnot/experiment_5372_token_feature_precondition_gate_v489.py` and
+write `results/experiment_5372_token_feature_precondition_gate_v489.json`
+without invoking a costly live SOTA job, reopening retired external text
+scorer scope, claiming a new token/internal-energy signal, or modifying
+`scripts/research_conductor.py`. Exp 5372 SHALL read the flagged Exp 5353
+token-probability feature artifact, the flagged Exp 5354 arithmetic carry
+token-energy artifact, the `.488` capstone flag summary when present, and
+`research-references.md` context for latent/logit/attention thermodynamic
+claims. It SHALL distinguish feature availability from signal validity.
+
+The gate SHALL extract exact missing and tautological fields from the source
+artifacts. For Exp 5353 this includes latent feature absences such as logits,
+hidden states, and attention, the fact that top-level missing features may be
+empty while nested `feature_audit.missing_feature_names` is not empty, and any
+duration/methodology tautology flags. For Exp 5354 this includes missing
+perturbed target token rows, nonpositive weakest correct-vs-perturbed margins,
+incomplete feature rows, and duration/methodology tautology flags. The gate
+SHALL treat adversarially flagged artifacts as evidence about available
+surfaces, not as clean evidence for a live internal-energy signal.
+
+The runtime feature audit SHALL use existing receipts unless those receipts are
+insufficient. It SHALL explicitly decide availability for per-token logprob
+rows, logits, hidden states, attention tensors, token timing, and
+prompt/completion token split. If only generated text, top-logprob rows,
+aggregate timing, or prompt/completion token counts are available, then
+`future_signal_allowed` SHALL be false for internal-energy, thermodynamic
+signature, FLaG-style, hidden-state, attention, and broad hallucination claims.
+
+The minimum preconditions for any future live token/internal-energy signal
+claim SHALL include `methodology_min_duration_s >= 60`, independently measured
+duration and methodology timing, current local runtime provenance, real
+internal feature tensors or full logit distributions matching the proposed
+claim, prompt/completion separation, token timing where token-local claims are
+made, non-tautological positive controls, non-tautological negative controls,
+zero unsafe false accepts, and closed retired external-scorer scope. The carry
+token-energy lane SHALL be recommended for retirement until new backend
+features expose logits, hidden states, or attention and the carry controls are
+feature-complete with positive margins.
+
+The artifact SHALL include top-level fields `status`,
+`token_feature_gate_ready`, `tokenprob_rows_available`, `logits_available`,
+`hidden_states_available`, `attention_available`,
+`completion_split_available`, `methodology_min_duration_s`,
+`future_signal_allowed`, `carry_token_energy_continue`,
+`retire_recommendation`, `forbidden_claims`, `unsafe_false_accepts`,
+`tests_run`, and `honest_verdict`. `status` SHALL be `complete` only if the
+precondition gate is written from actual artifact/runtime evidence.
+`token_feature_gate_ready` SHALL be true only if feature availability and no-go
+decisions are explicit. `future_signal_allowed` SHALL be false if the available
+evidence is text-only, top-logprob-only, tautological, adversarially flagged,
+or otherwise lacks the internal surfaces needed by the proposed claim.
+
+Required field principles:
+
+- `status`: principle "complete only if the precondition gate is written from actual artifact/runtime evidence."
+- `token_feature_gate_ready`: principle "true only if feature availability and no-go decisions are explicit."
+- `tokenprob_rows_available`: principle "whether reliable per-token logprob rows are available."
+- `logits_available`: principle "whether logits are available from the current local runtime path."
+- `hidden_states_available`: principle "whether hidden states are available from the current local runtime path."
+- `attention_available`: principle "whether attention tensors are available from the current local runtime path."
+- `completion_split_available`: principle "whether prompt/completion token separation is available."
+- `methodology_min_duration_s`: principle "minimum duration required for any future live signal claim."
+- `future_signal_allowed`: principle "boolean; false if only tautological/text-only evidence exists."
+- `carry_token_energy_continue`: principle "boolean continuation recommendation for the arithmetic carry lane."
+- `retire_recommendation`: principle "boolean indicating whether the lane should be retired until new backend features exist."
+- `forbidden_claims`: principle "list of claims not supported by the available features."
+- `unsafe_false_accepts`: principle "count of invalid energy claims accepted by this gate; should be zero."
+- `tests_run`: principle "list of commands run or no-code-change explanation."
+- `honest_verdict`: principle "one-line continuation or retirement recommendation."
+
+### SCENARIO-VERIFY-5372: Logprob-Only Evidence Retires Carry Energy Claims
+
+Given Exp 5353 is readable and shows per-token/top-logprob rows but no logits,
+hidden states, or attention, and Exp 5354 is readable but blocked or flagged
+because carry rows are incomplete or margins are nonpositive, when Exp 5372
+runs, then it writes the required artifact from existing receipts, records
+`tokenprob_rows_available=true`, records `logits_available=false`,
+`hidden_states_available=false`, `attention_available=false`, records whether
+prompt/completion split is available, records `methodology_min_duration_s=60`,
+sets `future_signal_allowed=false`, sets
+`carry_token_energy_continue=false`, sets `retire_recommendation=true`,
+lists forbidden internal-energy and thermodynamic-signal claims, and records
+`unsafe_false_accepts=0`.
+
+If the source artifacts are missing, the gate cannot identify feature
+availability, forbidden claims are empty while no internal surfaces are
+available, an invalid energy claim is accepted, tests are not recorded, or the
+runner recommends continuation of the carry lane without logits, hidden states,
+attention, complete controls, and positive margins, then the same runner writes
+a terminal blocked artifact or fails validation with
+`token_feature_gate_ready=false` and no new energy-signal claim.
+
+## Implementation Status (REQ-VERIFY-5372)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5372 | Planned (`python/carnot/experiment_5372_token_feature_precondition_gate_v489.py`, `results/experiment_5372_token_feature_precondition_gate_v489.json`) | Planned (`tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py`) |
+
 ### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
 
 The repository SHALL provide Exp 5345 at
