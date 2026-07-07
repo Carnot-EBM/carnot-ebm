@@ -1,0 +1,858 @@
+milestone: "2026.07.490"
+milestone_title: "Clean Structured SOTA Receipts, Audited Self-Learning, and Geometry-Guided Live Verification"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp5376-v490-transition-and-archive
+    milestone: "2026.07.490"
+    title: "Archive .489 outcomes and stage .490 execution context"
+    priority: critical
+    track: ops
+    deliverable: "results/experiment_5376_transition_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 20
+    prior_failures:
+      - experiment_id: exp5363-v489-transition-and-archive
+        verdict: "complete: .489 transition recorded .488 gates and roadmap expectations"
+        addressed_by: "This transition starts from the completed .489 capstone and opens the .490 ledger; it is not a rerun of the .489 transition."
+        retire_if_same_verdict: true
+      - experiment_id: exp5375-v489-capstone
+        verdict: "complete: .489 closed with grammar preflight ready but structured/constraint gates blocked, self-learning and solver guidance ready, p-bit CPU-only, token future signal disallowed, ARC no-bank, hardware_speedup_claim=false; missing_expected=2"
+        addressed_by: "This task converts the completed .489 capstone into .490 starting gates and explicitly carries forward the blocked lanes."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.07.489 has completed. You are preparing the first execution artifact for milestone 2026.07.490 without changing the active roadmap or conductor. The .489 capstone is results/experiment_5375_capstone_v489.json.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5375_capstone_v489.json
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/conductor-log.md
+
+      TASK:
+      Create the transition artifact for .490. Capture the completed .489 truth table, the .490 task range, and the gate expectations downstream tasks must honor.
+
+      CONCRETE STEPS:
+      1. Confirm research-roadmap.yaml and scripts/research_conductor.py were not modified by this task.
+      2. Read the .489 capstone and extract the main gate fields: grammar_budget_protocol_ready, structured_protocol_clean, constraint_tax_panel_ready, budget_curated_memory_ready, continuous_self_learning_budget_scaleup_ready, overwrite_solver_guidance_ready, boundary_exchange_schedule_ready, future_token_signal_allowed, arc_new_level_banked, and hardware_speedup_claim.
+      3. Record the .489 special cautions: Exp5366 failed only on methodology_duration_s<60, Exp5367 was gate-blocked, Exp5368 was adversarially flagged TAUTOLOGY in the conductor log, Exp5373 banked no ARC level, and Exp5374 made no speedup claim.
+      4. Read the .490 roadmap doc and staged YAML to record task count, phase names, and ordered task ids.
+      5. Write {project_root}/results/experiment_5376_transition_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: honest terminal state, usually complete unless required inputs are missing.
+      - milestone: principle: must equal 2026.07.490.
+      - prior_milestone: principle: must equal 2026.07.489.
+      - prior_capstone_path: principle: path to the .489 capstone used as source of truth.
+      - prior_gate_summary: principle: object containing the .489 gate fields listed above.
+      - prior_blockers: principle: object summarizing structured, constraint-tax, memory-tautology, ARC, token-feature, and hardware blockers.
+      - roadmap_next_present: principle: boolean proving research-roadmap-next.yaml exists at execution time.
+      - roadmap_doc_present: principle: boolean proving openspec/change-proposals/research-roadmap-vNEXT.md exists.
+      - planned_task_count: principle: number of .490 tasks in the staged roadmap.
+      - planned_task_ids: principle: ordered list of .490 task ids.
+      - downstream_gate_expectations: principle: object listing structured, self-learning, solver, ARC, token, and hardware expectations for .490.
+      - active_roadmap_modified: principle: must be false.
+      - conductor_modified: principle: must be false.
+      - honest_verdict: principle: one-line summary that distinguishes clean transition from missing-input block.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5377-v490-sota-source-delta
+    milestone: "2026.07.490"
+    title: "Execution-time SOTA source delta for .490"
+    priority: high
+    track: literature
+    deliverable: "results/experiment_5377_sota_source_delta_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    estimated_wall_time_min: 30
+    prior_failures:
+      - experiment_id: exp5364-v489-sota-source-delta
+        verdict: "complete: V489 execution refresh added llguidance and LongMemEval-V2 hooks"
+        addressed_by: "This is the next-milestone execution-time delta check after the V490 planner refresh, not a duplicate .489 source update."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The planner already appended the V490 Planner Refresh to research-references.md. This task performs the execution-time delta check immediately before downstream experiments, looking only for sources that were missed or newly surfaced after planning.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/research-references.md
+      - {project_root}/research-program.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5375_capstone_v489.json
+
+      TASK:
+      Search current sources for a narrow execution-time SOTA delta relevant to .490. Add only actionable, non-duplicate findings to research-references.md, then write the artifact.
+
+      CONCRETE STEPS:
+      1. Search arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub, Extropic writing, and Logical Intelligence for sources not already covered in the V490 Planner Refresh.
+      2. Focus on live local SOTA structured receipts, constraint-tax verification, continuous self-learning memory governance, overwrite-capable solver guidance, p-bit boundary exchange, ARC live-path geometric salience, backend feature exposure, and hash-chained hardware receipts.
+      3. Do not promote external generated-text scorers, CPU-only GGUF offload headline reruns, TSU/Kona execution claims, KV260 host block-device evidence, or offline ARC solve paths.
+      4. If there is an actionable delta, append a short dated V490 Execution Refresh block to research-references.md with URLs and Carnot hooks.
+      5. Write {project_root}/results/experiment_5377_sota_source_delta_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete or honest_null depending on whether a new actionable delta exists.
+      - search_date: principle: must equal {date}.
+      - sources_checked: principle: list of source families searched.
+      - new_actionable_findings_count: principle: integer count of non-duplicate actionable findings.
+      - findings: principle: list with title, url, source_type, and carnot_hook for each promoted finding.
+      - duplicates_suppressed: principle: list of relevant sources already covered by the planner refresh.
+      - retired_scope_reopened: principle: must be false.
+      - research_references_updated: principle: true only if a new block was appended.
+      - honest_verdict: principle: one-line summary of the delta check.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5378-v490-structured-methodology-duration-receipt
+    milestone: "2026.07.490"
+    title: "Repair live structured SOTA methodology-duration receipt"
+    priority: critical
+    track: structured-sota
+    deliverable: "results/experiment_5378_structured_methodology_duration_receipt_v490.json"
+    requires_gpu: true
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 75
+    prior_failures:
+      - experiment_id: exp5366-v489-live-grammar-budgeted-sota-protocol
+        verdict: "blocked_structured_protocol_clean_false: parse/schema/semantic/final JSON rates clean, unsafe_false_accepts=0, but methodology_duration_s=19.445366 below required 60"
+        addressed_by: "This task targets the actual failed clean-gate field by producing a >=60s live receipt before any downstream constraint-tax rerun."
+        retire_if_same_verdict: true
+      - experiment_id: exp5284-sota-offload-cpu-only-path
+        verdict: "retired_cpu_only_offload_path"
+        addressed_by: "This task requires a non-retired GPU/offload receipt or writes an honest blocked artifact; CPU-only GGUF can only be smoke-test evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5366 showed that the grammar-budgeted local SOTA protocol can produce clean parse/schema/semantic/final-JSON rates, but the structured_protocol_clean gate remained false because methodology_duration_s was only 19.445366. This task must repair the receipt itself, not broaden the benchmark.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json
+      - {project_root}/results/experiment_5365_grammar_budget_protocol_preflight_v489.json
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Produce a clean methodology-duration and runtime receipt for the live structured SOTA protocol using mandated local GGUF models. Fail closed if the local runtime cannot provide headline-eligible GPU/offload evidence.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify CUDA/GPU visibility and GGUF runtime availability. If only a CPU-only path is available for headline SOTA, write a blocked artifact and stop.
+      1. Reuse the Exp5365 grammar budget and Exp5366 structured protocol fixtures without changing the acceptance thresholds.
+      2. MODEL_SPECS for headline-eligible local runs must include:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      3. Use llama.cpp/GGUF-compatible loading only. Do not use AutoTokenizer or AutoModel directly on a -GGUF repository.
+      4. Run at least one mandated SOTA model long enough that methodology_duration_s is >=60, or write an honest blocked artifact explaining the missing precondition.
+      5. Preserve the structured acceptance fields from Exp5366: parse_success_rate, schema_success_rate, final_json_extraction_rate, semantic_success_rate, unsafe_false_accepts, truncation failures, and completion slack.
+      6. Write {project_root}/results/experiment_5378_structured_methodology_duration_receipt_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete only if live local SOTA inference ran; blocked if runtime preconditions fail.
+      - live_sota_receipt_ready: principle: true only if a mandated SOTA GGUF produced non-retired live evidence with methodology_duration_s>=60.
+      - grammar_budget_protocol_ready: principle: copied or recomputed from the .489 preflight.
+      - MODEL_SPECS: principle: list containing all mandated local GGUF model specs considered for headline results.
+      - selected_model_spec: principle: exact model spec used for headline measurements.
+      - inference_substrate: principle: concrete runtime path, GPU/offload status, and GGUF loader family.
+      - gpu_or_offload_receipt: principle: machine-readable evidence that this was not the retired CPU-only headline path.
+      - no_autotokenizer_used: principle: must be true for GGUF repositories.
+      - prompt_count: principle: number of live prompts evaluated.
+      - parse_success_rate: principle: fraction of responses with parseable JSON.
+      - schema_success_rate: principle: fraction of responses satisfying the schema.
+      - final_json_extraction_rate: principle: fraction with unambiguous final JSON extraction.
+      - semantic_success_rate: principle: fraction satisfying task semantics after schema validity.
+      - truncation_failure_rate: principle: fraction classified as token-budget truncation failures.
+      - completion_slack_min_tokens: principle: minimum JSON completion slack observed.
+      - unsafe_false_accepts: principle: count of invalid/unsafe outputs accepted as valid.
+      - methodology_duration_s: principle: live measurement duration excluding planning prose; must be >=60 for ready.
+      - active_roadmap_modified: principle: must be false.
+      - conductor_modified: principle: must be false.
+      - honest_verdict: principle: one-line ready/block verdict.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5379-v490-live-structured-clean-gate-rerun
+    milestone: "2026.07.490"
+    title: "Gated live structured SOTA clean-gate rerun"
+    priority: critical
+    track: structured-sota
+    deliverable: "results/experiment_5379_live_structured_clean_gate_rerun_v490.json"
+    requires_gpu: true
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 80
+    gated_on:
+      - upstream: exp5378-v490-structured-methodology-duration-receipt
+        artifact_field: live_sota_receipt_ready
+        op: "=="
+        value: true
+      - upstream: exp5378-v490-structured-methodology-duration-receipt
+        artifact_field: methodology_duration_s
+        op: ">="
+        value: 60.0
+    prior_failures:
+      - experiment_id: exp5366-v489-live-grammar-budgeted-sota-protocol
+        verdict: "blocked_structured_protocol_clean_false: methodology_duration_s below 60 despite clean structured rates"
+        addressed_by: "This rerun is conductor-gated on Exp5378 live_sota_receipt_ready=true and methodology_duration_s>=60 before dispatch."
+        retire_if_same_verdict: true
+      - experiment_id: exp5351-v488-trigger-constrain-structured-protocol
+        verdict: "blocked_structured_protocol_clean_false"
+        addressed_by: "The current attempt keeps grammar budgeting and adds the repaired methodology-duration receipt before evaluating clean-gate status."
+        retire_if_same_verdict: true
+      - experiment_id: exp5284-sota-offload-cpu-only-path
+        verdict: "retired_cpu_only_offload_path"
+        addressed_by: "This task must use a GPU/offload receipt for headline local SOTA or block honestly."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This task must run only if Exp5378 reports live_sota_receipt_ready=true and methodology_duration_s>=60. It converts the repaired receipt into the canonical structured_protocol_clean gate for downstream constraint-tax work.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/results/experiment_5378_structured_methodology_duration_receipt_v490.json
+      - {project_root}/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json
+      - {project_root}/results/experiment_5365_grammar_budget_protocol_preflight_v489.json
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Rerun the live structured SOTA clean gate with the repaired methodology-duration receipt. The output should be the single upstream truth source for the .490 constraint-tax panel.
+
+      CONCRETE STEPS:
+      1. Verify the Exp5378 gate fields before doing any live inference.
+      2. MODEL_SPECS for headline-eligible local runs must include:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      3. Use llama.cpp/GGUF-compatible loading only. Do not use AutoTokenizer or AutoModel directly on a -GGUF repository.
+      4. Run the structured fixtures with at least one mandated SOTA GGUF and record parse, schema, semantic, final JSON, truncation, and unsafe-false-accept metrics.
+      5. Set structured_protocol_clean=true only if parse_success_rate>=0.95, schema_success_rate>=0.90, final_json_extraction_rate>=0.95, unsafe_false_accepts=0, and methodology_duration_s>=60.
+      6. Write {project_root}/results/experiment_5379_live_structured_clean_gate_rerun_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete only if live local SOTA inference ran under the gated preconditions.
+      - upstream_receipt_ready: principle: copied from Exp5378 live_sota_receipt_ready.
+      - structured_protocol_clean: principle: boolean downstream gate, true only under the thresholds listed in the concrete steps.
+      - MODEL_SPECS: principle: list containing all mandated local GGUF model specs considered for headline results.
+      - selected_model_spec: principle: exact model spec used for headline measurements.
+      - inference_substrate: principle: concrete runtime path, GPU/offload status, and GGUF loader family.
+      - gpu_or_offload_receipt: principle: machine-readable evidence that this was not the retired CPU-only headline path.
+      - no_autotokenizer_used: principle: must be true for GGUF repositories.
+      - prompt_count: principle: number of live prompts evaluated.
+      - parse_success_rate: principle: fraction of responses with parseable JSON.
+      - schema_success_rate: principle: fraction of responses satisfying the schema.
+      - final_json_extraction_rate: principle: fraction with unambiguous final JSON extraction.
+      - semantic_success_rate: principle: fraction satisfying task semantics after schema validity.
+      - wrong_valid_count: principle: count of schema-valid outputs that were semantically wrong.
+      - truncation_failure_rate: principle: fraction classified as token-budget truncation failures.
+      - unsafe_false_accepts: principle: count of invalid/unsafe outputs accepted as valid.
+      - methodology_duration_s: principle: live measurement duration excluding planning prose.
+      - honest_verdict: principle: one-line clean/block verdict.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5380-v490-constraint-tax-tool-action-panel-v3
+    milestone: "2026.07.490"
+    title: "Gated constraint-tax tool/action panel after clean structured protocol"
+    priority: high
+    track: structured-sota
+    deliverable: "results/experiment_5380_constraint_tax_tool_action_panel_v3_v490.json"
+    requires_gpu: true
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 80
+    gated_on:
+      - upstream: exp5379-v490-live-structured-clean-gate-rerun
+        artifact_field: structured_protocol_clean
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5367-v489-constraint-tax-tool-action-panel-v2
+        verdict: "blocked_gate: upstream structured_protocol_clean=false"
+        addressed_by: "This panel is structurally gated on Exp5379 structured_protocol_clean=true and will be skipped before dispatch otherwise."
+        retire_if_same_verdict: true
+      - experiment_id: exp5352-v488-gated-constraint-tax-tool-action-panel
+        verdict: "blocked_gate: upstream structured_protocol_clean=false"
+        addressed_by: "The retry only runs after the repaired live clean structured protocol and includes deterministic initial/final state evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This task must run only if Exp5379 reports structured_protocol_clean=true. The previous two constraint-tax panels were correctly blocked by upstream structured-protocol failures.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/results/experiment_5379_live_structured_clean_gate_rerun_v490.json
+      - {project_root}/results/experiment_5367_v489_constraint_tax_tool_action_panel_v2.json
+      - {project_root}/results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json
+      - {project_root}/research-references.md
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Run the constraint-tax tool/action reachability panel with deterministic state evidence after a clean local SOTA structured protocol. Measure the cost and benefit of constraints rather than only JSON syntax.
+
+      CONCRETE STEPS:
+      1. Verify Exp5379 structured_protocol_clean=true before running.
+      2. MODEL_SPECS for any live LLM panel run must include:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      3. Use llama.cpp/GGUF-compatible loading only. Do not use AutoTokenizer or AutoModel directly on a -GGUF repository.
+      4. Run paired unconstrained-vs-constrained fixtures that log initial state, final state, tool-call trace, verifier predicate, and response-text fallback separately.
+      5. Report schema validity, semantic correctness, wrong-valid outputs, tool/action reachability, latency/token overhead, and unsafe false accepts.
+      6. Write {project_root}/results/experiment_5380_constraint_tax_tool_action_panel_v3_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete only if the upstream clean structured gate is true and the panel ran.
+      - upstream_structured_protocol_clean: principle: copied from Exp5379.
+      - constraint_tax_panel_ready: principle: true only if deterministic state/tool-call evidence exists and unsafe_false_accepts=0.
+      - MODEL_SPECS: principle: list containing all mandated local GGUF model specs considered for live LLM panel results.
+      - selected_model_spec: principle: exact model spec used if live LLM calls ran.
+      - inference_substrate: principle: concrete runtime path or explicit no-live-LLM explanation.
+      - fixture_count: principle: number of paired fixtures.
+      - constrained_schema_validity_rate: principle: schema-valid fraction under constraints.
+      - unconstrained_schema_validity_rate: principle: schema-valid fraction without constraints.
+      - constrained_semantic_success_rate: principle: semantic success fraction under constraints.
+      - unconstrained_semantic_success_rate: principle: semantic success fraction without constraints.
+      - wrong_valid_count: principle: schema-valid but semantically wrong outputs.
+      - deterministic_state_evidence_count: principle: fixtures with initial state, final state, and verifier predicate evidence.
+      - tool_action_reachability_rate: principle: fraction of required tool/action sequences reached.
+      - latency_or_token_overhead: principle: measured constraint overhead.
+      - unsafe_false_accepts: principle: count of invalid/unsafe outputs accepted as valid.
+      - honest_verdict: principle: one-line result or block reason.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5381-v490-budget-memory-tautology-corrigendum
+    milestone: "2026.07.490"
+    title: "Budget-curated memory tautology corrigendum"
+    priority: critical
+    track: self-learning
+    deliverable: "results/experiment_5381_budget_memory_tautology_corrigendum_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    estimated_wall_time_min: 35
+    prior_failures:
+      - experiment_id: exp5368-v489-budget-curated-memory-governance
+        verdict: "FLAGGED: adversarial_verify CRITICAL TAUTOLOGY despite capstone budget_curated_memory_ready=true"
+        addressed_by: "This task recomputes every readiness field from row-level evidence and adds negative controls before allowing downstream self-learning scale-up."
+        retire_if_same_verdict: true
+      - experiment_id: exp5342-v487-memory-cadence-policy
+        verdict: "FLAGGED: adversarial_verify CRITICAL TAUTOLOGY"
+        addressed_by: "This corrigendum requires anti-tautology controls, row-level provenance, and recomputation rather than copying an aggregate ready flag."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The .489 capstone reported budget_curated_memory_ready=true, but the conductor log marked Exp5368 with an adversarial TAUTOLOGY flag. Downstream self-learning should not depend on that artifact until a clean corrigendum recomputes the fields from row-level evidence.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5368_budget_curated_memory_governance_v489.json
+      - {project_root}/results/experiment_5375_capstone_v489.json
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Produce a non-tautological budget-curated memory corrigendum. The artifact must show that memory KEEP/SHARE/TRUST decisions and readiness flags are derived from rows, not from restating desired conclusions.
+
+      CONCRETE STEPS:
+      1. Inspect the Exp5368 artifact and conductor log for the exact TAUTOLOGY reason.
+      2. Build or reuse row-level memory evidence covering value, byte/latency/energy proxy cost, provenance, trust label, stale/poison controls, and rollback behavior.
+      3. Add negative controls where a stale or poisoned memory should be rejected and a high-cost low-value memory should be dropped.
+      4. Recompute aggregate fields from the rows and fail closed if the rows do not support the claim.
+      5. Write {project_root}/results/experiment_5381_budget_memory_tautology_corrigendum_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete only if row-level evidence and controls were evaluated.
+      - budget_memory_corrigendum_clean: principle: true only if readiness is recomputed from rows and anti-tautology controls pass.
+      - source_artifact: principle: path to the Exp5368 artifact reviewed.
+      - row_count: principle: number of memory decision rows evaluated.
+      - recomputed_fields_from_rows: principle: list of aggregate fields derived mechanically from rows.
+      - anti_tautology_controls: principle: object describing controls and pass/fail status.
+      - negative_controls_count: principle: number of stale/poison/high-cost controls.
+      - negative_controls_passed: principle: count of negative controls rejected correctly.
+      - keep_share_trust_policy_ready: principle: true only if decisions are supported by row evidence.
+      - no_weight_mutation: principle: must be true.
+      - rollback_supported: principle: true only if rollback behavior is evidenced.
+      - unsafe_false_accepts: principle: count of bad memory decisions accepted as good.
+      - tests_run: principle: list of commands run or explicit no-code-change explanation.
+      - honest_verdict: principle: one-line clean/block verdict.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5382-v490-real-workflow-continuous-self-learning
+    milestone: "2026.07.490"
+    title: "Gated real-workflow continuous self-learning scale-up"
+    priority: critical
+    track: self-learning
+    deliverable: "results/experiment_5382_real_workflow_continuous_self_learning_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 55
+    gated_on:
+      - upstream: exp5381-v490-budget-memory-tautology-corrigendum
+        artifact_field: budget_memory_corrigendum_clean
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5369-v489-continuous-self-learning-budget-scaleup
+        verdict: "complete: 12 traces, 36 events, context_efficiency_delta=0.196429, verifier_cost_delta=0.583333, quality_delta=0.0, no weight mutation"
+        addressed_by: "This task scales only after the Exp5368 corrigendum is clean and moves from synthetic budget checks to a real multi-session workflow."
+        retire_if_same_verdict: true
+      - experiment_id: exp5368-v489-budget-curated-memory-governance
+        verdict: "FLAGGED: adversarial_verify CRITICAL TAUTOLOGY"
+        addressed_by: "The conductor gate requires Exp5381 budget_memory_corrigendum_clean=true before this self-learning task can run."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Carnot's research program requires at least one continuous self-learning experiment per milestone. This task must run only if Exp5381 reports budget_memory_corrigendum_clean=true.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/_bmad/prd.md
+      - {project_root}/results/experiment_5381_budget_memory_tautology_corrigendum_v490.json
+      - {project_root}/results/experiment_5369_continuous_self_learning_budget_scaleup_v489.json
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Run a real-workflow continuous self-learning scale-up that uses corrected budget-curated memory governance. The learner may update memory, retrieval, or constraint-selection policy, but it must not mutate model weights.
+
+      CONCRETE STEPS:
+      1. Verify Exp5381 budget_memory_corrigendum_clean=true before running.
+      2. Select a multi-session workflow with repeated constraint, tool-use, or verification decisions and enough trace diversity to measure memory value.
+      3. Run baseline vs self-learning variants with identical tasks and deterministic evaluators.
+      4. Enforce no-weight-mutation, rollback, stale-memory rejection, poisoned-memory rejection, and budget limits.
+      5. Measure context efficiency, verifier cost, quality, unsafe false accepts, and memory churn.
+      6. Write {project_root}/results/experiment_5382_real_workflow_continuous_self_learning_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete only if the gated real-workflow experiment ran.
+      - continuous_self_learning_target: principle: must be true.
+      - continuous_self_learning_real_workflow_ready: principle: true only if the real-workflow result has clean evidence and no unsafe false accepts.
+      - upstream_budget_memory_corrigendum_clean: principle: copied from Exp5381.
+      - workflow_name: principle: name of the real multi-session workflow.
+      - session_count: principle: number of sessions.
+      - trace_count: principle: number of traces.
+      - checked_event_count: principle: number of events evaluated by deterministic checks.
+      - context_efficiency_delta: principle: self-learning minus baseline context efficiency.
+      - verifier_cost_delta: principle: baseline minus self-learning verifier cost, positive means improvement.
+      - quality_delta: principle: self-learning minus baseline task quality.
+      - stale_memory_deflection_rate: principle: fraction of stale-memory probes rejected.
+      - poison_memory_deflection_rate: principle: fraction of poisoned-memory probes rejected.
+      - rollback_success_rate: principle: fraction of failed updates rolled back correctly.
+      - no_weight_mutation: principle: must be true.
+      - unsafe_false_accepts: principle: count of bad learned decisions accepted as good.
+      - honest_verdict: principle: one-line result or block reason.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5383-v490-overwrite-guidance-scale-validity
+    milestone: "2026.07.490"
+    title: "Overwrite-capable solver guidance scale and validity matrix"
+    priority: high
+    track: solver-energy
+    deliverable: "results/experiment_5383_overwrite_guidance_scale_validity_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 55
+    prior_failures:
+      - experiment_id: exp5370-v489-overwrite-capable-solver-guidance
+        verdict: "complete: overwrite_rate=0.5909, forced_hint_harm_rate=0.6667, post_projection_validity_rate=0.8571, fallback_completeness_rate=1.0, unsafe_false_accepts=0"
+        addressed_by: "This task scales the clean solver-authoritative branch and specifically explains invalid post-projection cases instead of claiming only aggregate success."
+        retire_if_same_verdict: true
+      - experiment_id: exp5358-v488-solver-projection-cut-bridge
+        verdict: "complete: solver_projection_ready=true with fallback completeness"
+        addressed_by: "The .490 task extends projection/cuts into overwrite-aware validity diagnostics while keeping the solver authoritative."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5370 showed overwrite-capable solver guidance is useful when the symbolic solver remains authoritative, but post_projection_validity_rate was 0.8571. This task should explain and reduce invalid projection cases without forcing neural hints.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_5370_overwrite_capable_solver_guidance_v489.json
+      - {project_root}/results/experiment_5358_solver_projection_cut_bridge_v488.json
+      - {project_root}/research-references.md
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Scale the overwrite-capable solver-guidance matrix and produce a validity/root-cause report. Neural or heuristic hints are advice only; the symbolic solver must be able to overwrite them and preserve fallback completeness.
+
+      CONCRETE STEPS:
+      1. Reuse the existing solver-projection and overwrite-guidance fixtures where possible.
+      2. Add or select a larger fixture set with benign hints, harmful hints, incomplete hints, and contradictory hints.
+      3. Compare forced-hint, overwrite-capable, and no-hint baselines.
+      4. Record overwrite rate, conflict delta, convergence delta, post-projection validity, fallback completeness, harmful hint classes, and unsafe false accepts.
+      5. Write {project_root}/results/experiment_5383_overwrite_guidance_scale_validity_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete only if the matrix ran or honest_blocked if prerequisites are missing.
+      - overwrite_guidance_scale_ready: principle: true only if overwrite guidance preserves fallback completeness and unsafe_false_accepts=0.
+      - solver_authoritative: principle: must be true.
+      - fixture_count: principle: number of fixtures.
+      - forced_hint_harm_rate: principle: harm rate when hints cannot be overwritten.
+      - overwrite_rate: principle: fraction of bad or incomplete hints overwritten by the solver.
+      - post_projection_validity_rate: principle: fraction of projected outputs valid after solver authority.
+      - invalid_projection_root_causes: principle: categorized root causes for invalid projections.
+      - fallback_completeness_rate: principle: fraction of cases solved or safely completed by fallback.
+      - conflict_delta_vs_no_hint: principle: conflict count difference vs no-hint baseline.
+      - convergence_delta_vs_no_hint: principle: convergence step difference vs no-hint baseline.
+      - unsafe_false_accepts: principle: count of invalid solver outputs accepted as valid.
+      - honest_verdict: principle: one-line result or block reason.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5384-v490-pbit-boundary-overwrite-joint-diagnostic
+    milestone: "2026.07.490"
+    title: "CPU-only p-bit boundary exchange plus overwrite guidance diagnostic"
+    priority: high
+    track: solver-energy
+    deliverable: "results/experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 55
+    prior_failures:
+      - experiment_id: exp5371-v489-pbit-boundary-exchange-schedule
+        verdict: "complete: boundary exchange schedule ready, CPU-only diagnostic, eta_threshold_estimate=1.0, conflict_delta_vs_monolithic=20, convergence_delta_vs_monolithic=10"
+        addressed_by: "This task keeps the diagnostic CPU-only and joins it with solver-overwrite fixtures to explain when boundary exchange helps or harms."
+        retire_if_same_verdict: true
+      - experiment_id: exp5359-v488-pbit-schedule-diagnostic
+        verdict: "complete: pbit_schedule_signal_ready=true but no hardware speedup"
+        addressed_by: "The .490 task extends schedule diagnostics while preserving simulation_only=true and hardware_speedup_claim=false."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The p-bit lane is useful as an energy/sampling diagnostic but remains CPU simulation-only. Exp5371 showed a boundary-exchange schedule and nontrivial conflict/convergence deltas. This task connects that diagnostic to overwrite-capable solver guidance.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_5371_pbit_boundary_exchange_schedule_v489.json
+      - {project_root}/results/experiment_5383_overwrite_guidance_scale_validity_v490.json
+      - {project_root}/results/experiment_5359_pbit_schedule_diagnostic_v488.json
+      - {project_root}/research-references.md
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Run a CPU-only joint diagnostic that tests whether p-bit boundary exchange can improve or explain overwrite-guidance behavior on shared fixtures. Do not claim hardware speedup.
+
+      CONCRETE STEPS:
+      1. Reuse p-bit schedule and solver-overwrite fixtures where possible.
+      2. Compare monolithic, boundary-exchange, and overwrite-guided variants over eta or communication-to-update ratios.
+      3. Record conflicts, convergence steps, validity, fallback completeness, and false accepts.
+      4. Mark simulation_only=true and hardware_speedup_claim=false regardless of CPU improvements.
+      5. Write {project_root}/results/experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete only if the CPU diagnostic ran or honest_blocked if prerequisites are missing.
+      - pbit_boundary_overwrite_ready: principle: true only if results are interpretable and unsafe_false_accepts=0.
+      - simulation_only: principle: must be true.
+      - hardware_speedup_claim: principle: must be false.
+      - fixture_count: principle: number of shared fixtures.
+      - eta_values: principle: list of boundary-exchange ratios tested.
+      - eta_threshold_estimate: principle: estimated threshold where boundary exchange approaches monolithic behavior.
+      - solver_overwrite_enabled: principle: whether overwrite guidance was enabled in the joint condition.
+      - conflict_delta_vs_monolithic: principle: conflict count difference vs monolithic p-bit run.
+      - convergence_delta_vs_monolithic: principle: convergence step difference vs monolithic p-bit run.
+      - post_projection_validity_rate: principle: fraction valid after solver projection.
+      - fallback_completeness_rate: principle: fraction safely completed by fallback.
+      - unsafe_false_accepts: principle: count of invalid outputs accepted as valid.
+      - honest_verdict: principle: one-line result or block reason.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5385-v490-arc-geometric-salience-live-path
+    milestone: "2026.07.490"
+    title: "ARC live-agent geometric salience +1 solve attempt"
+    priority: high
+    track: arc
+    deliverable: "results/experiment_5385_arc_geometric_salience_live_path_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 60
+    prior_failures:
+      - experiment_id: exp5373-v489-arc-salience-re86-levelup
+        verdict: "honest_null: re86 L3 not banked; no-bank residual salience/status-bar errors recorded"
+        addressed_by: "This attempt changes technique from re86-specific salience tweaks to live-agent geometric/hyperbolic salience ranking over the agent's own observations."
+        retire_if_same_verdict: true
+      - experiment_id: exp5360-v488-arc-perception-salience-levelup
+        verdict: "honest_null: no new ARC level banked"
+        addressed_by: "The .490 task must perform registry precheck and improve live routing rather than duplicate a solved level or use offline ground truth."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The .489 ARC task did not bank re86 L3. GeoWorld motivates geometry-aware salience and planning, but Carnot's ARC deliverable is still live agent self-discovery from its own attempts and runtime observations.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5373_arc_salience_re86_levelup_v489.json
+      - {project_root}/results/experiment_5360_arc_perception_salience_levelup_attempt_v488.json
+      - {project_root}/research-references.md
+      - {project_root}/arc/
+      - {project_root}/python/carnot/
+      - {project_root}/tests/python/
+
+      TASK:
+      Attempt to bank a +1 reproducible level by adding or evaluating geometric salience routing over the live agent's own observations. Do not use offline BFS, per-game adapters, or outer-loop reverse engineering.
+
+      CONCRETE STEPS:
+      1. Registry-precheck ops/arc_solve_registry.yaml. If the target level is already reproducible, do not duplicate it; select an unsolved live-path improvement target or write an honest duplicate-blocked artifact.
+      2. Prefer re86 L3 only if the registry still shows re86 reproduced levels below 3 and the live mechanism can reach the target path.
+      3. Implement or configure a small geometric/hyperbolic/geodesic salience ranking over agent-observed frames, transitions, status changes, or interaction traces.
+      4. Run the live agent using its own attempts and runtime observation stream. Do not inspect game source for a solution and do not run an offline ground-truth BFS.
+      5. Acceptance gate: for any credited solve, solve_provenance must be live_agent_self_discovery, offline_reproduced=true must mean replay/reproduction of the live-agent-discovered solve rather than offline BFS, and reproduced_levels>=1 for first-contact or +1 deeper than target_level_before for an already-started game.
+      6. Record whether a new level was banked; if not, record the live failure mode and next reachable blocker.
+      7. Write {project_root}/results/experiment_5385_arc_geometric_salience_live_path_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete, honest_null, or duplicate_blocked with evidence.
+      - solve_provenance: principle: must equal live_agent_self_discovery for any credited solve.
+      - registry_precheck_done: principle: must be true.
+      - target_game: principle: selected game id.
+      - target_level_before: principle: reproduced level count before this task.
+      - attempted_level: principle: target level attempted.
+      - geometric_salience_live_reachable: principle: true only if the live agent can use the salience signal without outer-loop help.
+      - hyperbolic_or_geodesic_ranking_enabled: principle: whether the GeoWorld-inspired ranking was active.
+      - live_attempt_count: principle: number of live attempts.
+      - offline_reproduced: principle: true only if a live-agent-discovered solve was replayed/reproduced for banking; must not mean offline BFS or outer-loop reverse engineering.
+      - no_outer_loop_re: principle: must be true.
+      - no_per_game_adapter: principle: must be true.
+      - no_duplicate_solve: principle: must be true for credited deliverables.
+      - reproduced_levels: principle: level count after this task; for a credited first-contact solve this must satisfy reproduced_levels>=1, and for a deeper solve it must be at least target_level_before+1.
+      - new_level_banked: principle: true only if the live agent self-discovered a new reproducible level.
+      - failure_mode: principle: if no bank, concrete live-path blocker.
+      - honest_verdict: principle: one-line ARC outcome.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5386-v490-hardware-hashchain-receipts
+    milestone: "2026.07.490"
+    title: "Hash-chained hardware workload receipts for active boards"
+    priority: high
+    track: hardware
+    deliverable: "results/experiment_5386_hardware_hashchain_receipts_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 60
+    prior_failures:
+      - experiment_id: exp5374-v489-hardware-continuity
+        verdict: "complete: KV260 unreachable by SSH, PolarFire reachable with workload receipt, GateMate blocked physical/JTAG, repeatability_evidence_present=false, hardware_speedup_claim=false"
+        addressed_by: "This task changes the deliverable from continuity-only status to QCIVET-style hash-chained receipts while still making no speedup claim."
+        retire_if_same_verdict: true
+      - experiment_id: exp5361-v488-hardware-continuity-workload
+        verdict: "complete: hardware_speedup_claim=false with partial board continuity"
+        addressed_by: "The .490 task adds authenticated command/input/output hashes and explicitly avoids KV260 host block-device evidence."
+        retire_if_same_verdict: true
+      - experiment_id: kv260-host-sd-card-precondition
+        verdict: "retired: host /dev/mmcblk* checks do not prove KV260 readiness"
+        addressed_by: "This task uses SSH reachability and board-local workload receipts only; host block devices are forbidden evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Hardware work remains continuity and receipt discipline, not speedup. QCIVET motivates contract checks and hash-chained audit traces. The attached-board obligations are KV260, PolarFire, and GateMate when available.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/results/experiment_5374_hardware_continuity_v489.json
+      - {project_root}/results/experiment_5361_hardware_continuity_workload_v488.json
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/scripts/
+      - {project_root}/tests/python/
+
+      TASK:
+      Produce hash-chained workload receipts for the active hardware boards where safely reachable. Do not claim speedup, do not use host block-device KV260 evidence, and do not perform destructive flashing.
+
+      CONCRETE STEPS:
+      1. For KV260, use only a safe SSH reachability check such as ssh -o ConnectTimeout=5 -o BatchMode=yes kria true and board-local receipt evidence if reachable.
+      2. For PolarFire, reuse the reachable workload path if available and add command/input/output hashes.
+      3. For GateMate, record DirtyJTAG/toolchain/physical status and only run safe detection or workload steps if the physical path is present.
+      4. Create a hash chain over commands, inputs, outputs, timestamps, board identity, and exit statuses for each safe board action.
+      5. Set hardware_speedup_claim=false unless repeatable board timing evidence exists; the expected .490 outcome is receipt discipline, not speedup.
+      6. Write {project_root}/results/experiment_5386_hardware_hashchain_receipts_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete with per-board statuses or honest_blocked if no safe board interaction is possible.
+      - hardware_hash_chained_receipt_ready: principle: true only if at least one safe board workload has a valid hash chain and blocked boards are honestly represented.
+      - hardware_speedup_claim: principle: must be false unless repeatable board timing evidence exists; expected value is false.
+      - boards_checked: principle: list including KV260, PolarFire, and GateMate.
+      - kv260_status: principle: SSH reachability and workload status; no host block-device evidence.
+      - polar_fire_status: principle: reachability and workload status.
+      - gatemate_status: principle: physical/JTAG/toolchain status.
+      - workload_hash_chain: principle: ordered list of command/input/output hash records.
+      - commands_run: principle: safe commands executed.
+      - no_host_mmcblk_kv260_evidence: principle: must be true.
+      - no_destructive_flash: principle: must be true.
+      - repeatability_evidence_present: principle: whether repeated board timing evidence exists.
+      - receipt_contract_version: principle: identifier for the hash-chain receipt schema.
+      - honest_verdict: principle: one-line hardware outcome.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5387-v490-token-feature-backend-reopen-gate
+    milestone: "2026.07.490"
+    title: "Backend feature gate for token/internal energy reopening"
+    priority: medium
+    track: internal-energy
+    deliverable: "results/experiment_5387_token_feature_backend_reopen_gate_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    estimated_wall_time_min: 30
+    prior_failures:
+      - experiment_id: exp5372-v489-token-internal-feature-precondition-gate
+        verdict: "complete: logits/hidden/attention unavailable, future_signal_allowed=false; retire token energy until backend features"
+        addressed_by: "This task is a reopen gate only; it cannot claim a token/internal energy signal unless backend feature receipts now exist."
+        retire_if_same_verdict: true
+      - experiment_id: exp5353-v488-tokenprob-feature-audit-corrigendum
+        verdict: "FLAGGED: adversarial TAUTOLOGY/DURATION concerns in token-probability feature rows"
+        addressed_by: "This task checks backend feature availability and forbidden claims rather than reusing incomplete token rows as evidence."
+        retire_if_same_verdict: true
+      - experiment_id: exp5354-v488-arithmetic-carry-token-energy
+        verdict: "blocked/no_signal: no carry-token energy margin and methodology flagged"
+        addressed_by: "The .490 gate forbids arithmetic or token-energy signal claims until logits, hidden states, or attention are available with clean provenance."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5372 closed token/internal-feature energy until a backend exposes logits, hidden states, or attention with clean provenance. This task is a gate check, not a signal experiment.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_5372_token_internal_feature_precondition_gate_v489.json
+      - {project_root}/results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json
+      - {project_root}/results/experiment_5354_arithmetic_carry_token_energy_v488.json
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/
+
+      TASK:
+      Determine whether token/internal-feature energy work can reopen. If the backend still lacks logits, hidden states, attention, intermediate-depth exits, or clean row provenance, keep future_signal_allowed=false.
+
+      CONCRETE STEPS:
+      1. Inspect current local inference helpers and receipts for exposed logits, hidden states, attention, or intermediate-depth exits.
+      2. Do not run a new signal benchmark unless feature availability is already proven by backend receipts.
+      3. Record which claims remain forbidden: text-only energy, incomplete token rows, arithmetic carry signal, external generated-text scoring, and DEX-style depth claims without depth exits.
+      4. If a feature is newly available, describe the minimum next experiment; do not claim signal quality in this artifact.
+      5. Write {project_root}/results/experiment_5387_token_feature_backend_reopen_gate_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete gate check or honest_blocked if required files are missing.
+      - backend_reopen_allowed: principle: true only if a backend exposes clean feature receipts.
+      - future_signal_allowed: principle: true only if logits, hidden states, attention, or depth exits are available with provenance.
+      - logits_available: principle: backend availability boolean with evidence path.
+      - hidden_states_available: principle: backend availability boolean with evidence path.
+      - attention_available: principle: backend availability boolean with evidence path.
+      - intermediate_depth_exits_available: principle: backend availability boolean with evidence path.
+      - clean_feature_row_provenance: principle: true only if rows can be traced to live runtime outputs.
+      - forbidden_claims: principle: list of claims that remain disallowed.
+      - no_live_signal_claim: principle: must be true.
+      - retired_scope_reopened: principle: must be false unless a clean backend feature receipt exists.
+      - honest_verdict: principle: one-line gate result.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5388-v490-capstone
+    milestone: "2026.07.490"
+    title: "Milestone .490 capstone and next-action synthesis"
+    priority: critical
+    track: synthesis
+    deliverable: "results/experiment_5388_capstone_v490.json"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp5375-v489-capstone
+        verdict: "complete: .489 closed with grammar preflight ready but structured/constraint gates blocked, self-learning and solver guidance ready, p-bit CPU-only, token future signal disallowed, ARC no-bank, hardware_speedup_claim=false; missing_expected=2"
+        addressed_by: "This capstone aggregates .490 artifacts and must explicitly report whether the structured receipt, memory corrigendum, ARC, token, and hardware blockers changed."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the capstone for milestone 2026.07.490. It must aggregate the .490 artifacts honestly, including skipped gated tasks, blocked hardware, and any no-signal results.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/results/experiment_5376_transition_v490.json
+      - {project_root}/results/experiment_5377_sota_source_delta_v490.json
+      - {project_root}/results/experiment_5378_structured_methodology_duration_receipt_v490.json
+      - {project_root}/results/experiment_5379_live_structured_clean_gate_rerun_v490.json
+      - {project_root}/results/experiment_5380_constraint_tax_tool_action_panel_v3_v490.json
+      - {project_root}/results/experiment_5381_budget_memory_tautology_corrigendum_v490.json
+      - {project_root}/results/experiment_5382_real_workflow_continuous_self_learning_v490.json
+      - {project_root}/results/experiment_5383_overwrite_guidance_scale_validity_v490.json
+      - {project_root}/results/experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.json
+      - {project_root}/results/experiment_5385_arc_geometric_salience_live_path_v490.json
+      - {project_root}/results/experiment_5386_hardware_hashchain_receipts_v490.json
+      - {project_root}/results/experiment_5387_token_feature_backend_reopen_gate_v490.json
+
+      TASK:
+      Write the .490 capstone artifact. Summarize what was proved, what was blocked, what should retire, and what the next milestone should do.
+
+      CONCRETE STEPS:
+      1. Load all expected .490 artifacts that exist and record missing artifacts separately.
+      2. Preserve gate semantics: a conductor-skipped task because its upstream gate failed is a correct blocked result, not a missing experiment.
+      3. Summarize structured SOTA, constraint tax, self-learning, solver/p-bit guidance, ARC, hardware, and token/backend gates.
+      4. Verify the continuous self-learning milestone requirement was satisfied only if Exp5382 ran and reported continuous_self_learning_real_workflow_ready=true, or clearly explain the upstream gate block.
+      5. Update ops/status.md, ops/changelog.md, and _bmad/traceability.md only if local project procedure requires it for completed milestones; do not edit research-roadmap.yaml or scripts/research_conductor.py.
+      6. Write {project_root}/results/experiment_5388_capstone_v490.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - status: principle: complete if aggregation ran; honest_partial if critical artifacts are missing.
+      - milestone: principle: must equal 2026.07.490.
+      - expected_artifacts: principle: ordered list of expected .490 artifact paths.
+      - artifacts_found: principle: ordered list of found artifact paths.
+      - artifacts_missing: principle: ordered list of missing artifact paths.
+      - skipped_by_gate: principle: object mapping gated task ids to upstream gate conditions when skipped.
+      - structured_methodology_receipt_ready: principle: copied or derived from Exp5378.
+      - structured_protocol_clean: principle: copied or derived from Exp5379.
+      - constraint_tax_panel_ready: principle: copied or derived from Exp5380.
+      - budget_memory_corrigendum_clean: principle: copied or derived from Exp5381.
+      - continuous_self_learning_real_workflow_ready: principle: copied or derived from Exp5382.
+      - continuous_self_learning_requirement_satisfied: principle: true only if the milestone's self-learning requirement has live evidence.
+      - overwrite_guidance_scale_ready: principle: copied or derived from Exp5383.
+      - pbit_boundary_overwrite_ready: principle: copied or derived from Exp5384.
+      - arc_new_level_banked: principle: copied or derived from Exp5385.
+      - hardware_hash_chained_receipt_ready: principle: copied or derived from Exp5386.
+      - hardware_speedup_claim: principle: must be false unless Exp5386 has repeatable board timing evidence.
+      - future_token_signal_allowed: principle: copied or derived from Exp5387.
+      - retired_or_blocked_lanes: principle: list of lanes that remain closed or should retire.
+      - next_milestone_recommendations: principle: concrete recommendations for .491.
+      - active_roadmap_modified: principle: must be false.
+      - conductor_modified: principle: must be false.
+      - honest_verdict: principle: one-line capstone truth summary.
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

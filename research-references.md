@@ -27846,3 +27846,63 @@ Execution-time sweep after the `.489` planner refresh checked arXiv, OpenReview,
 - **Watch-only context:** EDV/PREPING memory papers, SE-RRM/ARC solver repositories, Extropic writing, and Logical Intelligence public pages were checked but not promoted because they either broaden the bounded .489 tasks or lack reproducible local execution evidence.
 
 <!-- V489-EXECUTION-REFRESH-2026-07-07-END -->
+
+
+### V490 Planner Refresh - 2026-07-07
+
+Planner sweep for milestone `.490` checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar,
+GitHub, Extropic writing, Logical Intelligence public pages, and local duplicate history after the
+`.489` capstone closed. The items below were not already covered by the V489 planner/execution
+blocks and add Carnot-local hooks for the next roadmap.
+
+### New actionable findings
+- **Depth Exploration for LLM Decoding / DEX** (https://arxiv.org/abs/2606.29223): explores
+  multiple intermediate-depth candidate continuations but validates committed tokens against a
+  final-depth reference, preserving standard autoregressive equivalence while reducing token cost.
+  Carnot hook: use as a precondition/watch lane for future local GGUF runtimes that expose
+  intermediate-layer/depth exits. For `.490`, do not claim DEX speedup unless the runtime exposes
+  depth-wise exits and a final-depth validation receipt.
+- **GeoWorld: Geometric World Models** (https://arxiv.org/abs/2602.23058): combines an
+  energy-based predictive world model, Hyperbolic JEPA representations, and geometric RL for
+  multi-step visual planning. Carnot hook: convert the failed re86 L3 salience attempt into a
+  live-agent geometric salience diagnostic over the agent's own observed frames/transitions, without
+  per-game adapters, offline BFS, or outer-loop reverse engineering.
+- **QCIVET: Quantum-Classical Pipeline Integrity Framework with Contract-Based Subtype Verification
+  and Hash-Chained Audit Traces** (https://arxiv.org/abs/2605.13109): proposes contract checks,
+  observable-deviation tests, and hash-chained audit trails for hybrid pipelines. Carnot hook:
+  apply the same evidence pattern to KV260/PolarFire/GateMate workload receipts so future hardware
+  speedup claims can cite authenticated commands, inputs, outputs, and board-state hashes.
+
+### Secondary-source status
+- **Semantic Scholar:** direct citation lookups for EBT `2507.02092` and ARM-EBM `2512.15605`
+  were rate-limited during the `.490` planner pass, so no fresh citation-count or influence-trend
+  claim is made.
+- **OpenReview:** recent constrained-guidance entries, including DANCE-ST, were checked. DANCE-ST
+  is useful watch-only support for constraint-guidance language but was desk-rejected and is not a
+  core experiment basis.
+- **HuggingFace Papers and GitHub:** mirrors and repositories around constrained decoding,
+  verification, and memory were checked. No new reproducible engine displaced the already-filed
+  `llguidance`, CFGzip, TruncProof, G-RRM, or LongMemEval-V2 hooks.
+- **Extropic:** current TSU/X0/XTR writing remains architecture context only. Carnot still has no
+  executable TSU path.
+- **Logical Intelligence:** Kona/Aleph public pages continue to emphasize verifier/prover authority
+  under LLM interfaces. They remain non-reproducible public claims, not comparison baselines.
+
+### Planning impact
+- `.490` should repair the `.489` structured SOTA lane by addressing the actual clean-gate failure:
+  Exp5366 had parse/schema/semantic/final-JSON success but only `methodology_duration_s=19.445366`,
+  below the required 60-second receipt.
+- `.490` should retry the constraint-tax panel only after the structured protocol has a clean live
+  local GGUF receipt.
+- `.490` should treat Exp5368's budget-curated memory result as tainted until a non-tautological
+  corrigendum recomputes fields from row-level evidence, then scale continuous self-learning on a
+  real multi-session workflow.
+- `.490` should move ARC from a re86-specific salience tweak toward live-agent geometric salience
+  routing inspired by GeoWorld, while preserving the ARC live-path provenance rules.
+- `.490` should add QCIVET-style hash-chained hardware receipts for KV260, PolarFire, and GateMate,
+  still with `hardware_speedup_claim=false` unless board timing and repeatability evidence exist.
+- `.490` should keep token/internal-feature energy closed unless a backend exposes logits, hidden
+  states, or attention with clean provenance; text-only or incomplete rows must not become a signal
+  claim.
+
+<!-- V490-PLANNER-REFRESH-2026-07-07-END -->

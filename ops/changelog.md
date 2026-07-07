@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-07-07 (Milestone 2026.07.490 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V490 planner refresh to `research-references.md`, incorporating recent
+  DEX multi-depth decoding, GeoWorld geometric world-model planning, and QCIVET hash-chained
+  audit-trace findings.
+- The `.490` plan contains 13 conductor tasks across transition/source refresh, structured
+  methodology-duration repair, gated structured clean rerun, gated constraint-tax retry,
+  memory-tautology corrigendum, real-workflow continuous self-learning, overwrite/p-bit
+  diagnostics, one ARC live-path +1 solve slot, hash-chained hardware receipts, backend
+  token-feature gating, and capstone synthesis.
+- Validation passed for roadmap schema parsing, gate audit, ARC level-up guarantee lint, and
+  exclusion-manifest lint. Repo-wide spec coverage remains blocked by the pre-existing
+  traceability backlog (`1262 test(s) missing spec traceability`).
+
 ## 2026-07-07 (Milestone 2026.07.489 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
