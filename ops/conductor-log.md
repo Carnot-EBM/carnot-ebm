@@ -10493,3 +10493,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 19:14 UTC | p-bit boundary-exchange schedule diagnostic | OK | 87 passed, 1 warning in 9.40s |
 | 2026-07-07 19:29 UTC | Token/internal-feature continuation precondition g | OK | 86 passed, 1 warning in 11.10s |
 | 2026-07-07 19:54 UTC | ARC live-path salience repair and re86 +1 deeper l | OK | 111 passed, 1 warning in 16.93s |
+| 2026-07-07 20:08 UTC | Hardware continuity receipts for KV260, PolarFire, | OK | 91 passed, 1 warning in 11.68s |
