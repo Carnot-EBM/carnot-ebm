@@ -1,0 +1,416 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Confirms mandated local SOTA GGUF models are included for any LLM call.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "attention_available": false,
+  "duration_s": 18.988115,
+  "experiment": 5353,
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": "experiment_5353_tokenprob_feature_audit_corrigendum_v488"
+  },
+  "external_text_scorer_reopened": false,
+  "feature_audit": {
+    "attention_available": false,
+    "completion_probability_count": 2,
+    "hidden_states_available": false,
+    "logits_available": false,
+    "missing_feature_names": [
+      "logits",
+      "attention",
+      "hidden_states"
+    ],
+    "per_token_logprob_available": true,
+    "prompt_completion_token_split_available": true,
+    "token_probability_api_available": true,
+    "token_timing_available": true,
+    "top_logprob_row_count": 10,
+    "topk_alternatives_available": true
+  },
+  "feature_audit_duration_s": 0.95139,
+  "field_principles": {
+    "MODEL_SPECS": "Confirms mandated local SOTA GGUF models are included for any LLM call.",
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "Terminal prefix `complete:` or `blocked_` prevents ambiguous feature availability.",
+    "inference_substrate": "Expected value must truthfully reflect live_llm_inference or feature_audit_only.",
+    "milestone": "Prevents `.487` flagged internal-energy evidence from being reused.",
+    "preconditions_checked": "Records model/backend/GPU checks before feature probing.",
+    "selected_model_spec": "Identifies which mandated model was probed.",
+    "status": "Lets downstream gates skip if feature rows are absent.",
+    "tests_run": "Lists local checks for schema and receipt validation."
+  },
+  "hidden_states_available": false,
+  "honest_verdict": {
+    "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous feature availability.",
+    "value": "complete: tokenprob_feature_rows_ready"
+  },
+  "inference_substrate": {
+    "principle": "Expected value must truthfully reflect live_llm_inference or feature_audit_only.",
+    "value": "live_llm_inference"
+  },
+  "logits_available": false,
+  "methodology_duration_s": 18.988115,
+  "milestone": {
+    "principle": "Prevents `.487` flagged internal-energy evidence from being reused.",
+    "value": "2026.07.488"
+  },
+  "missing_feature_names": [],
+  "no_quality_claim": true,
+  "per_token_logprob_available": true,
+  "preconditions_checked": {
+    "principle": "Records model/backend/GPU checks before feature probing.",
+    "value": {
+      "blocked_preconditions": [],
+      "exp5331_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_harness_v486.json",
+      "exp5331_receipt_schema_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_schema_v486.json",
+      "exp5331_tiny_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "exp5337_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json",
+      "external_text_scorer_reopened": false,
+      "free_vram_mb": 48240,
+      "gpu_visible": true,
+      "live_probe_attempted": true,
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.032873,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+      },
+      "retired_scope_check": {
+        "external_text_scorer_reopened": false,
+        "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+        "phase_d_external_text_scorer_retired_marker_present": true,
+        "retired_scope_reopened": false
+      },
+      "selected_backend_kind": "llama-server",
+      "selected_backend_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "selected_model_file_present": true,
+      "selected_model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "selected_runtime_backend_kind": "llama-cli",
+      "token_probability_api_available": true
+    }
+  },
+  "prompt_completion_token_split_available": true,
+  "prompt_count": 3,
+  "random_seed": 5353,
+  "raw_probe_summary": {
+    "backend_kind": "llama-server",
+    "endpoint": "/completion",
+    "prompt_receipt_count": 3,
+    "quality_interpretation": null,
+    "status": "completed"
+  },
+  "reproducibility_checksum": "0b32d0fcda1154ae",
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5353.tokenprob_feature_audit_corrigendum.v488",
+  "selected_model_spec": {
+    "principle": "Identifies which mandated model was probed.",
+    "value": {
+      "autotokenizer_used": false,
+      "file_receipts": {
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata": {
+        "magic": "GGUF",
+        "metadata_kv_count": 57,
+        "tensor_count": 833,
+        "version": 3
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense",
+      "status": "local_gguf_resolved"
+    }
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5353",
+    "SCENARIO-VERIFY-5353"
+  ],
+  "status": {
+    "principle": "Lets downstream gates skip if feature rows are absent.",
+    "value": "complete"
+  },
+  "tests_run": {
+    "principle": "Lists local checks for schema and receipt validation.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5353_tokenprob_feature_audit_corrigendum_v488.py -q -o addopts=\"\"",
+        "outcome": "initial run failed only because results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json was not generated yet; rerun pending"
+      }
+    ]
+  },
+  "token_timing_available": true,
+  "tokenprob_feature_row_count": 3,
+  "tokenprob_feature_rows": [
+    {
+      "completion_tokens_predicted": 1,
+      "feature_source": "backend_completion_probabilities",
+      "logprob": -1.464441538,
+      "prompt_checksum": "873a10371c67fd82",
+      "prompt_id": "receipt_alpha",
+      "prompt_tokens_evaluated": 12,
+      "quality_interpretation": null,
+      "token_checksum": "02bd175f32972037",
+      "token_id": 3723,
+      "token_index": 0,
+      "token_timing_ms": 0.001,
+      "top_alternative_count": 8,
+      "top_alternatives": [
+        {
+          "logprob": -1.464441538,
+          "rank": 0,
+          "token_checksum": "02bd175f32972037",
+          "token_id": 3723
+        },
+        {
+          "logprob": -1.995062113,
+          "rank": 1,
+          "token_checksum": "01ba4719c80b6fe9",
+          "token_id": 107
+        },
+        {
+          "logprob": -2.322349787,
+          "rank": 2,
+          "token_checksum": "75a11da44c802486",
+          "token_id": 108
+        },
+        {
+          "logprob": -2.893075228,
+          "rank": 3,
+          "token_checksum": "36a9e7f1c95b82ff",
+          "token_id": 236743
+        },
+        {
+          "logprob": -2.996120691,
+          "rank": 4,
+          "token_checksum": "c35b21d6ca39aa7c",
+          "token_id": 10888
+        },
+        {
+          "logprob": -3.386529207,
+          "rank": 5,
+          "token_checksum": "043a718774c572bd",
+          "token_id": 236751
+        },
+        {
+          "logprob": -4.060296535,
+          "rank": 6,
+          "token_checksum": "15f450a59134f37a",
+          "token_id": 20404
+        },
+        {
+          "logprob": -4.129627705,
+          "rank": 7,
+          "token_checksum": "f8146b6cb4961f87",
+          "token_id": 4034
+        }
+      ]
+    },
+    {
+      "completion_tokens_predicted": 1,
+      "feature_source": "backend_completion_probabilities",
+      "logprob": -0.33805126,
+      "prompt_checksum": "dd9eaead525e7bdd",
+      "prompt_id": "receipt_blue",
+      "prompt_tokens_evaluated": 12,
+      "quality_interpretation": null,
+      "token_checksum": "e3b0c44298fc1c14",
+      "token_id": 106,
+      "token_index": 0,
+      "token_timing_ms": 0.001,
+      "top_alternative_count": 8,
+      "top_alternatives": [
+        {
+          "logprob": -0.33805126,
+          "rank": 0,
+          "token_checksum": "e3b0c44298fc1c14",
+          "token_id": 106
+        },
+        {
+          "logprob": -2.269096851,
+          "rank": 1,
+          "token_checksum": "f0f4c2f03dd6a53f",
+          "token_id": 101
+        },
+        {
+          "logprob": -2.413294315,
+          "rank": 2,
+          "token_checksum": "01ba4719c80b6fe9",
+          "token_id": 107
+        },
+        {
+          "logprob": -3.802315235,
+          "rank": 3,
+          "token_checksum": "7784a7ce29b770bd",
+          "token_id": 211
+        },
+        {
+          "logprob": -4.199551105,
+          "rank": 4,
+          "token_checksum": "16477688c0e00699",
+          "token_id": 9503
+        },
+        {
+          "logprob": -4.821250439,
+          "rank": 5,
+          "token_checksum": "75a11da44c802486",
+          "token_id": 108
+        },
+        {
+          "logprob": -5.025799274,
+          "rank": 6,
+          "token_checksum": "e12eeace32b3193e",
+          "token_id": 3730
+        },
+        {
+          "logprob": -5.285862446,
+          "rank": 7,
+          "token_checksum": "956bb5e268800ed4",
+          "token_id": 9657
+        }
+      ]
+    },
+    {
+      "completion_tokens_predicted": 1,
+      "feature_source": "backend_completion_probabilities",
+      "logprob": -0.242516801,
+      "prompt_checksum": "186491a9a4923134",
+      "prompt_id": "receipt_17",
+      "prompt_tokens_evaluated": 14,
+      "quality_interpretation": null,
+      "token_checksum": "ef2d127de37b942b",
+      "token_id": 236810,
+      "token_index": 0,
+      "token_timing_ms": 0.001,
+      "top_alternative_count": 8,
+      "top_alternatives": [
+        {
+          "logprob": -0.242516801,
+          "rank": 0,
+          "token_checksum": "ef2d127de37b942b",
+          "token_id": 236810
+        },
+        {
+          "logprob": -2.299046755,
+          "rank": 1,
+          "token_checksum": "6b86b273ff34fce1",
+          "token_id": 236770
+        },
+        {
+          "logprob": -3.648347139,
+          "rank": 2,
+          "token_checksum": "5feceb66ffc86f38",
+          "token_id": 236771
+        },
+        {
+          "logprob": -4.093648434,
+          "rank": 3,
+          "token_checksum": "7db295ed84aca160",
+          "token_id": 1852
+        },
+        {
+          "logprob": -4.242658138,
+          "rank": 4,
+          "token_checksum": "7902699be42c8a8e",
+          "token_id": 236832
+        },
+        {
+          "logprob": -4.615111828,
+          "rank": 5,
+          "token_checksum": "2c624232cdd22177",
+          "token_id": 236828
+        },
+        {
+          "logprob": -4.710361004,
+          "rank": 6,
+          "token_checksum": "f0f4c2f03dd6a53f",
+          "token_id": 101
+        },
+        {
+          "logprob": -4.792691708,
+          "rank": 7,
+          "token_checksum": "043a718774c572bd",
+          "token_id": 236751
+        }
+      ]
+    }
+  ],
+  "tokenprob_feature_rows_ready": true,
+  "topk_alternatives_available": true
+}

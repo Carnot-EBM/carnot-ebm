@@ -28302,3 +28302,88 @@ reranker, or text judge.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5345 | Planned (`python/carnot/experiment_5345_tokenprob_energy_corrigendum_v487.py`, `results/experiment_5345_tokenprob_energy_corrigendum_v487.json`) | Planned (`tests/python/test_experiment_5345_tokenprob_energy_corrigendum_v487.py`) |
+
+### REQ-VERIFY-5353: Token-Probability Feature Audit Corrigendum V488
+
+The repository SHALL provide Exp 5353 at
+`python/carnot/experiment_5353_tokenprob_feature_audit_corrigendum_v488.py`
+and write
+`results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL perform a
+methodology-clean token-probability feature audit, not an external generated-text
+scorer, not a generated-text quality judge, not a reranker, and not a
+hallucination detector. It SHALL use only backend-exposed internal signal
+surfaces and SHALL keep Phase D external generated-text/logprob scorer scope
+retired.
+
+Step 0 SHALL record GPU visibility, the selected backend, the selected local
+model path, token-probability API availability, and the retired-scope check
+before any feature-row decision. The mandated `MODEL_SPECS` SHALL include
+exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If any live LLM call occurs, the runner SHALL
+use at least one mandated local SOTA GGUF model and SHALL NOT use
+`AutoTokenizer.from_pretrained` or any transformers tokenizer on a GGUF
+repository.
+
+The audit SHALL explicitly record whether the selected backend exposes
+per-token logprob rows, top-k token alternatives, raw logits, attention,
+hidden states, token timing, and prompt/completion token split. If per-token
+logprob rows are unavailable, the artifact SHALL write a terminal
+`blocked_tokenprob_features_unavailable` verdict with
+`tokenprob_feature_rows_ready=false` and SHALL name the missing backend features.
+If per-token logprob rows are available, the runner SHALL emit a tiny clean
+receipt over three to five deterministic prompts, record separate
+`methodology_duration_s` and `feature_audit_duration_s` values, and SHALL NOT
+duplicate those values to satisfy duration fields.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, and `tests_run`, plus bare
+boolean `per_token_logprob_available`, bare boolean
+`topk_alternatives_available`, bare boolean `logits_available`, bare boolean
+`attention_available`, bare boolean `hidden_states_available`, bare integer
+`tokenprob_feature_row_count`, bare list `missing_feature_names`, bare numeric
+`methodology_duration_s`, bare numeric `feature_audit_duration_s`, bare boolean
+`external_text_scorer_reopened=false`, bare boolean `no_quality_claim=true`,
+and bare boolean `tokenprob_feature_rows_ready`. `inference_substrate.value`
+SHALL truthfully be either `live_llm_inference` or `feature_audit_only`.
+`honest_verdict.value` SHALL start with `complete:` when real per-token rows are
+present and the audit is clean, or `blocked_` when backend feature rows,
+methodology, tests, or scope checks are insufficient.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Prevents `.487` flagged internal-energy evidence from being reused."
+- `status`: principle "Lets downstream gates skip if feature rows are absent."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous feature availability."
+- `inference_substrate`: principle "Expected value must truthfully reflect live_llm_inference or feature_audit_only."
+- `MODEL_SPECS`: principle "Confirms mandated local SOTA GGUF models are included for any LLM call."
+- `preconditions_checked`: principle "Records model/backend/GPU checks before feature probing."
+- `selected_model_spec`: principle "Identifies which mandated model was probed."
+- `tests_run`: principle "Lists local checks for schema and receipt validation."
+
+### SCENARIO-VERIFY-5353: Audit Backend Token-Probability Features Or Block Precisely
+
+Given the selected local GGUF backend and prior internal-signal receipts are
+available, when Exp 5353 runs, then it records Step 0 preconditions, audits
+per-token logprob rows, top-k alternatives, raw logits, attention, hidden
+states, token timing, and prompt/completion split, writes the required artifact,
+keeps `external_text_scorer_reopened=false`, keeps `no_quality_claim=true`, and
+sets `tokenprob_feature_rows_ready=true` only when real per-token rows exist,
+timing/methodology fields are independently measured, tests are recorded, and
+no retired external scorer scope is reopened.
+
+If the backend exposes only generated text, aggregate timing, raw output, or
+any surface short of per-token logprob rows, then the same runner writes
+`honest_verdict.value=blocked_tokenprob_features_unavailable`, sets
+`tokenprob_feature_rows_ready=false`, names the missing feature fields, and
+does not substitute an external text scorer, learned reward model, quality
+claim, AutoTokenizer path, or `.487` flagged internal-energy claim.
+
+## Implementation Status (REQ-VERIFY-5353)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5353 | Planned (`python/carnot/experiment_5353_tokenprob_feature_audit_corrigendum_v488.py`, `results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json`) | Planned (`tests/python/test_experiment_5353_tokenprob_feature_audit_corrigendum_v488.py`) |
