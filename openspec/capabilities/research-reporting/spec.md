@@ -15,6 +15,88 @@ performance.
 
 ## Requirements
 
+### REQ-REPORT-5335: Archive .486 And Record .487 Activation Preconditions
+
+The Exp 5335 workflow SHALL read `results/experiment_5334_capstone_v486.json`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap-next.yaml` when present, `research-roadmap.yaml`, and
+`scripts/research_conductor.py`. It SHALL write
+`results/experiment_5335_archive_486_activate_487.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL summarize only what the `.486` capstone artifact actually
+proves: stable local runtime without a quality claim, bounded local-SOTA quality
+measurement without a headline claim, clean deterministic rewrite/SMT/context
+self-learning gates, internal-signal receipts that remain open but flagged,
+bounded KAN localization without a broad certificate claim, and hardware
+reachability with no speedup claim. It SHALL NOT strengthen blocked, flagged,
+bounded, missing, no-speedup, or no-headline-quality evidence into stronger
+readiness claims.
+
+The workflow SHALL confirm
+`openspec/change-proposals/research-roadmap-vNEXT.md` exists and names milestone
+`2026.07.487`. It SHALL also confirm `research-roadmap-next.yaml` exists and
+names milestone `2026.07.487`. If the next-roadmap file is absent or names a
+different milestone, the workflow SHALL write a terminal `blocked_<reason>`
+artifact that records `roadmap_next_present=false` or the observed mismatch and
+SHALL NOT repair the condition by editing `research-roadmap.yaml`.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `archived_milestone`, `activated_milestone`,
+`v486_capstone_verdict`, `cited_upstream_artifacts`, and
+`preconditions_checked`. It SHALL include bare booleans
+`roadmap_next_present`, `milestone_doc_present`, `active_roadmap_modified`, and
+`conductor_modified`, with the latter two set to false for this workflow. It
+SHOULD also include a capstone truth summary, failed preconditions, source
+context, deterministic checksum, and spec refs so downstream reconciliation can
+audit the transition without relying on prose.
+
+Required field principles:
+
+- `experiment_id`: principle "Identifies Exp5335 as the .486-to-.487 transition receipt rather than a roadmap activator or new research result."
+- `milestone`: principle "Binds this receipt to target milestone 2026.07.487 so downstream gates cannot confuse transition scope with the archived .486 capstone."
+- `status`: principle "Machine-readable terminal state derived from explicit transition preconditions."
+- `honest_verdict`: principle "Must start with complete: or blocked_ and preserve missing roadmap-next, flagged, bounded, and no-claim evidence without laundering it."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts because Exp5335 reads local artifacts and roadmap metadata without model, solver, or hardware execution."
+- `archived_milestone`: principle "Records the completed milestone whose capstone truth is being carried forward."
+- `activated_milestone`: principle "Records the next milestone that pre-staged roadmap files must name before activation is ready."
+- `v486_capstone_verdict`: principle "Carries forward the capstone's own terminal verdict without converting it into broader quality, hardware, or certificate claims."
+- `cited_upstream_artifacts`: principle "Lists every upstream artifact or roadmap file used so the transition claim is traceable to local evidence."
+- `preconditions_checked`: principle "Records each capstone, roadmap-next, milestone-doc, active-roadmap, and conductor no-edit check that determines completion or blockage."
+
+#### SCENARIO-REPORT-5335: Present .487 Roadmap-Next Records Complete Transition Preconditions
+
+**Given** the `.486` capstone artifact is readable and terminal
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
+`2026.07.487`
+**And** `research-roadmap-next.yaml` exists and names `2026.07.487`
+**When** the Exp 5335 workflow runs
+**Then** it writes the transition artifact, declares
+`aggregation_from_upstream_artifacts`, summarizes only `.486` capstone truth,
+sets `roadmap_next_present=true`, sets `milestone_doc_present=true`, keeps
+`active_roadmap_modified=false`, keeps `conductor_modified=false`, and does not
+edit `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-5335-BLOCKED-NEXT-ROADMAP: Missing Or Mismatched Next Queue Fails Closed
+
+**Given** the `.486` capstone artifact and `.487` milestone document are
+readable
+**And** `research-roadmap-next.yaml` is missing or does not name milestone
+`2026.07.487`
+**When** the Exp 5335 workflow runs
+**Then** it writes a terminal blocked artifact, records the missing or
+mismatched next-roadmap precondition, keeps
+`active_roadmap_modified=false`, keeps `conductor_modified=false`, and does not
+modify `research-roadmap.yaml`.
+
+## Implementation Status (REQ-REPORT-5335)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5335 | Implemented (`python/carnot/experiment_5335_archive_486_activate_487.py`, `results/experiment_5335_archive_486_activate_487.json`) | Implemented (`tests/python/test_experiment_5335_archive_486_activate_487.py`) |
+
 ### REQ-REPORT-5109: Archive .468, Record Exp5108 KAN Wall, And Activate .469 Frame
 
 The Exp 5109 workflow SHALL aggregate milestone `2026.07.468` from
