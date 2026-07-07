@@ -1,0 +1,207 @@
+{
+  "active_roadmap_modified": false,
+  "cited_upstream_artifacts": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CLAUDE.md",
+      "sha256": "sha256:3f0b49b310cd2e507887754c891ab2ae9758b3ee7e6fd0b79b9928a85f5d9ca2"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:dba87e984022e58711554adb1d57a37ea2c6a2da4d34936ea48327fa2bea103a"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:f8118309bacec16ea4f25e51ffe408139d867268a9816f2e6a3c30555cf37143"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:4ee0489382ef54683c7cb8c0085bacfcffeed44163f4ae28fd0d6cbd1e5b9d7c"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:271736be9a311e1f3947dd1906eed22629474d9a1b2e3c2436923c6275b50f99"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "results/experiment_5362_capstone_v488.json",
+      "sha256": "sha256:8b740b734280f32db604dbd6bf6198c101402e1aa32a207f6741d5c6e06376b6"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "scripts/research_conductor.py",
+      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+    }
+  ],
+  "conductor_modified": false,
+  "downstream_gate_expectations": {
+    "ARC": {
+      "expectation": "Run the live-path salience repair and re86 +1 attempt without claiming offline ground-truth BFS, hand-built adapters, or a banked level unless the live agent actually earns it.",
+      "inherits_prior_gate": "arc_new_level_banked=false"
+    },
+    "hardware": {
+      "expectation": "Collect continuity receipts only unless authenticated board timing, baseline timing, workload hash, and repeatability evidence support a speedup claim.",
+      "inherits_prior_gate": "hardware_speedup_claim=false",
+      "speedup_claim_allowed": false
+    },
+    "self_learning": {
+      "expectation": "Extend clean dependency and drift work into budget-curated memory with value-minus-harm per byte, rollback recovery, stale/poison deflection, and no model-weight mutation.",
+      "inherits_prior_gates": [
+        "dependency_provenance_ready=true",
+        "memory_tool_drift_ready=true",
+        "self_learning_scaleup_ready=true"
+      ]
+    },
+    "solver": {
+      "expectation": "Treat neural guidance as overwriteable hints under solver authority; preserve fallback completeness and add p-bit boundary-exchange timing.",
+      "inherits_prior_gates": [
+        "solver_projection_ready=true",
+        "pbit_schedule_signal_ready=true"
+      ]
+    },
+    "structured": {
+      "clean_gate": "parse_success_rate>=0.95, schema_success_rate>=0.90, final_json_extraction_rate>=0.95, unsafe_false_accepts=0, methodology_duration_s>=60",
+      "expectation": "Run a deterministic grammar-budget and completion-slack preflight before any live GGUF structured-output rerun; keep constraint-tax work gated.",
+      "inherits_prior_gate": "structured_protocol_clean=false"
+    },
+    "token": {
+      "expectation": "Use a token/internal-feature precondition gate; do not promote text-only completion artifacts into internal-energy or hallucination claims.",
+      "inherits_prior_gates": [
+        "tokenprob_feature_rows_ready=true",
+        "carry_token_energy_signal_ready=false"
+      ]
+    }
+  },
+  "duration_s": 0.051739,
+  "experiment": "experiment_5363_transition_v489",
+  "experiment_id": "exp5363-v489-transition-and-archive",
+  "failed_preconditions": [],
+  "field_principles": {
+    "active_roadmap_modified": "Bare boolean must remain false because this task is record-only.",
+    "conductor_modified": "Bare boolean must remain false by operator instruction.",
+    "downstream_gate_expectations": "Summarizes the structured, self-learning, solver, token, ARC, and hardware expectations downstream tasks must honor.",
+    "honest_verdict": "One-line terminal summary distinguishes clean transition context from missing-input blockage.",
+    "milestone": "Must equal 2026.07.489 so this transition cannot be confused with the archived .488 capstone.",
+    "planned_task_count": "Counts the .489 tasks in the roadmap source used for execution.",
+    "planned_task_ids": "Ordered task ids preserve the conductor execution range for downstream gates.",
+    "prior_capstone_path": "Names the exact .488 capstone used as the source of truth.",
+    "prior_gate_summary": "Carries only the requested .488 gate booleans so downstream tasks inherit the actual truth table.",
+    "prior_milestone": "Must equal 2026.07.488 because all carried gates come from the completed prior milestone.",
+    "roadmap_doc_present": "Bare boolean proves the vNEXT roadmap document was available for phase and expectation extraction.",
+    "roadmap_next_present": "Bare boolean records whether the literal pre-staged next-roadmap file existed at execution time.",
+    "status": "Honest terminal state derived from source availability and protected-file checks."
+  },
+  "honest_verdict": "complete: .488 gates archived and .489 task range recorded from research-roadmap.yaml; roadmap_next_present=false; no active roadmap or conductor edit.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.489",
+  "planned_phase_names": [
+    "Phase 0 - Transition and Fresh Source Delta",
+    "Phase 1 - Grammar-Budgeted Structured SOTA",
+    "Phase 2 - Budget-Curated Continuous Self-Learning",
+    "Phase 3 - Solver Guidance, Internal-Feature Preconditions, ARC, and Hardware",
+    "Phase 4 - Capstone"
+  ],
+  "planned_task_count": 13,
+  "planned_task_ids": [
+    "exp5363-v489-transition-and-archive",
+    "exp5364-v489-sota-source-delta",
+    "exp5365-v489-grammar-budget-protocol-preflight",
+    "exp5366-v489-live-grammar-budgeted-sota-protocol",
+    "exp5367-v489-constraint-tax-tool-action-panel-v2",
+    "exp5368-v489-budget-curated-memory-governance",
+    "exp5369-v489-budgeted-continuous-self-learning-scaleup",
+    "exp5370-v489-overwrite-solver-guidance-matrix",
+    "exp5371-v489-pbit-boundary-exchange-schedule",
+    "exp5372-v489-token-feature-precondition-gate",
+    "exp5373-v489-arc-salience-re86-levelup",
+    "exp5374-v489-hardware-continuity-receipts",
+    "exp5375-v489-capstone"
+  ],
+  "planned_task_source": "research-roadmap.yaml",
+  "preconditions_checked": {
+    "active_roadmap_loadable": true,
+    "active_roadmap_milestone": "2026.07.489",
+    "active_roadmap_modified": false,
+    "active_roadmap_present": true,
+    "capstone_loadable": true,
+    "capstone_present": true,
+    "checked_paths": [
+      "CODEX.md",
+      "CLAUDE.md",
+      "research-roadmap.yaml",
+      "research-roadmap-next.yaml",
+      "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "ops/status.md",
+      "ops/conductor-log.md",
+      "results/experiment_5362_capstone_v488.json",
+      "scripts/research_conductor.py"
+    ],
+    "conductor_modified": false,
+    "phase_names": [
+      "Phase 0 - Transition and Fresh Source Delta",
+      "Phase 1 - Grammar-Budgeted Structured SOTA",
+      "Phase 2 - Budget-Curated Continuous Self-Learning",
+      "Phase 3 - Solver Guidance, Internal-Feature Preconditions, ARC, and Hardware",
+      "Phase 4 - Capstone"
+    ],
+    "roadmap_doc_names_milestone": true,
+    "roadmap_doc_present": true,
+    "roadmap_next_loadable": false,
+    "roadmap_next_milestone": null,
+    "roadmap_next_names_milestone": false,
+    "roadmap_next_present": false,
+    "task_range": "Exp 5363-5375"
+  },
+  "prior_capstone_path": "results/experiment_5362_capstone_v488.json",
+  "prior_gate_summary": {
+    "arc_new_level_banked": false,
+    "carry_token_energy_signal_ready": false,
+    "constraint_tax_panel_ready": false,
+    "dependency_provenance_ready": true,
+    "hardware_speedup_claim": false,
+    "memory_tool_drift_ready": true,
+    "pbit_schedule_signal_ready": true,
+    "self_learning_scaleup_ready": true,
+    "solver_projection_ready": true,
+    "structured_protocol_clean": false,
+    "tokenprob_feature_rows_ready": true
+  },
+  "prior_milestone": "2026.07.488",
+  "random_seed": 5363,
+  "reproducibility_checksum": "sha256:327a4b8c760d437df8b6a63354c032f9508d32d65b59f4937821ca37602b794b",
+  "result_path": "results/experiment_5363_transition_v489.json",
+  "roadmap_doc_present": true,
+  "roadmap_doc_task_range": "Exp 5363-5375",
+  "roadmap_next_present": false,
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5363_transition_v489.v1",
+  "spec_refs": [
+    "REQ-REPORT-5363",
+    "SCENARIO-REPORT-5363",
+    "SCENARIO-REPORT-5363-BLOCKED-INPUT"
+  ],
+  "status": "complete"
+}

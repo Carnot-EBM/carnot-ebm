@@ -183,6 +183,93 @@ keeps `conductor_modified=false`, and does not modify `research-roadmap.yaml`.
 |---|---|---|
 | REQ-REPORT-5349 | Implemented (`python/carnot/experiment_5349_archive_487_activate_488.py`, `results/experiment_5349_archive_487_activate_488.json`) | Implemented (`tests/python/test_experiment_5349_archive_487_activate_488.py`) |
 
+### REQ-REPORT-5363: Archive .488 Truth And Record .489 Transition Context
+
+The Exp 5363 workflow SHALL read `results/experiment_5362_capstone_v488.json`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/status.md`,
+`ops/conductor-log.md`, and `scripts/research_conductor.py`. It SHALL write
+`results/experiment_5363_transition_v489.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL copy the `.488` capstone gate truth exactly for these fields:
+`structured_protocol_clean`, `constraint_tax_panel_ready`,
+`tokenprob_feature_rows_ready`, `carry_token_energy_signal_ready`,
+`dependency_provenance_ready`, `memory_tool_drift_ready`,
+`self_learning_scaleup_ready`, `solver_projection_ready`,
+`pbit_schedule_signal_ready`, `arc_new_level_banked`, and
+`hardware_speedup_claim`. It SHALL NOT strengthen blocked, flagged,
+no-speedup, or no-new-ARC-level evidence into readiness claims.
+
+The workflow SHALL confirm the `.489` roadmap document is present, the active
+roadmap names milestone `2026.07.489`, and the ordered `.489` task ids and
+phase names are recorded. If the literal `research-roadmap-next.yaml` file has
+already been consumed by conductor activation, the workflow SHALL still record
+`roadmap_next_present=false` and may complete by deriving the task list from
+the active `.489` roadmap. If the active roadmap is absent, names another
+milestone, the capstone is unreadable, the milestone document is missing, or a
+protected file is modified, the workflow SHALL emit a terminal `blocked_`
+artifact instead of fabricating the transition context.
+
+The artifact SHALL include principle-covered fields `status`, `milestone`,
+`prior_milestone`, `prior_capstone_path`, `prior_gate_summary`,
+`roadmap_next_present`, `roadmap_doc_present`, `planned_task_count`,
+`planned_task_ids`, `downstream_gate_expectations`,
+`active_roadmap_modified`, `conductor_modified`, and `honest_verdict`. It
+SHOULD also include `field_principles`, `planned_phase_names`,
+`roadmap_doc_task_range`, `planned_task_source`, `preconditions_checked`,
+`cited_upstream_artifacts`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, and `spec_refs` so downstream reconciliation can
+audit the transition without rerunning prior experiments.
+
+Required field principles:
+
+- `status`: principle "Honest terminal state derived from source availability and protected-file checks."
+- `milestone`: principle "Must equal 2026.07.489 so this transition cannot be confused with the archived .488 capstone."
+- `prior_milestone`: principle "Must equal 2026.07.488 because all carried gates come from the completed prior milestone."
+- `prior_capstone_path`: principle "Names the exact .488 capstone used as the source of truth."
+- `prior_gate_summary`: principle "Carries only the requested .488 gate booleans so downstream tasks inherit the actual truth table."
+- `roadmap_next_present`: principle "Bare boolean records whether the literal pre-staged next-roadmap file existed at execution time."
+- `roadmap_doc_present`: principle "Bare boolean proves the vNEXT roadmap document was available for phase and expectation extraction."
+- `planned_task_count`: principle "Counts the .489 tasks in the roadmap source used for execution."
+- `planned_task_ids`: principle "Ordered task ids preserve the conductor execution range for downstream gates."
+- `downstream_gate_expectations`: principle "Summarizes the structured, self-learning, solver, token, ARC, and hardware expectations downstream tasks must honor."
+- `active_roadmap_modified`: principle "Bare boolean must remain false because this task is record-only."
+- `conductor_modified`: principle "Bare boolean must remain false by operator instruction."
+- `honest_verdict`: principle "One-line terminal summary distinguishes clean transition context from missing-input blockage."
+
+#### SCENARIO-REPORT-5363: Already Active .489 Roadmap Records Clean Transition Context
+
+**Given** the `.488` capstone artifact is readable and terminal
+**And** `research-roadmap.yaml` names milestone `2026.07.489`
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
+`2026.07.489`
+**And** `research-roadmap-next.yaml` may be absent because activation consumed it
+**When** the Exp 5363 workflow runs
+**Then** it writes the transition artifact, copies the requested `.488` gate
+summary, records `roadmap_next_present=false` when the literal file is absent,
+records the ordered 13 task ids and phase names from the `.489` roadmap
+context, keeps `active_roadmap_modified=false`, keeps
+`conductor_modified=false`, and does not edit `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-5363-BLOCKED-INPUT: Missing Required Source Fails Closed
+
+**Given** the `.488` capstone, `.489` roadmap document, or active `.489`
+roadmap source is missing or mismatched
+**When** the Exp 5363 workflow runs
+**Then** it still writes a terminal blocked artifact with the required fields,
+records the failed precondition, keeps `active_roadmap_modified=false`, keeps
+`conductor_modified=false`, and does not repair the condition by editing the
+active roadmap or conductor.
+
+## Implementation Status (REQ-REPORT-5363)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5363 | Planned (`python/carnot/experiment_5363_transition_v489.py`, `results/experiment_5363_transition_v489.json`) | Planned (`tests/python/test_experiment_5363_transition_v489.py`) |
+
 ### REQ-REPORT-5336: V487 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5336 workflow SHALL perform an execution-time 2025-2026 source-delta
