@@ -1,0 +1,1814 @@
+{
+  "blocked_instance_class_count": 4,
+  "blocked_instance_classes": [
+    "qstr:misleading_hints",
+    "qstr:stale_hints",
+    "sat_cdcl:misleading_hints",
+    "sat_cdcl:stale_hints"
+  ],
+  "conflict_delta_vs_no_hint": 4,
+  "domain_summaries": {
+    "qstr": {
+      "fallback_runs": 22,
+      "false_accepts": 0,
+      "hint_runs": 55,
+      "overwritten_runs": 22
+    },
+    "sat_cdcl": {
+      "fallback_runs": 2,
+      "false_accepts": 0,
+      "hint_runs": 5,
+      "overwritten_runs": 2
+    }
+  },
+  "experiment": 5344,
+  "experiment_id": {
+    "principle": "Traceability for the Exp5344 deterministic solver-guidance overwrite telemetry diagnostic.",
+    "value": "experiment_5344_solver_guidance_overwrite_telemetry_v487"
+  },
+  "fallback_completeness_rate": 1.0,
+  "fallback_rate": 0.4,
+  "field_principles": {
+    "experiment_id": "Traceability for the Exp5344 deterministic solver-guidance overwrite telemetry diagnostic.",
+    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether solver-guidance telemetry preserved authoritative fallback safety.",
+    "inference_substrate": "Declares deterministic_solver_guidance_telemetry so the artifact is read as exact QSTR and CDCL guidance telemetry, not live model quality.",
+    "milestone": "Milestone accountability for the V487 solver-guidance overwrite telemetry gate.",
+    "status": "Machine-readable terminal state for downstream solver-guidance telemetry consumers.",
+    "tests_run": "Commands run to validate solver-guidance telemetry, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+  },
+  "hint_class_count": 5,
+  "hint_overwrite_rate": 0.5,
+  "hint_validity_rate": 0.6,
+  "honest_verdict": {
+    "principle": "Terminal verdict must start with complete: or blocked_ and state whether solver-guidance telemetry preserved authoritative fallback safety.",
+    "value": "complete: solver-guidance telemetry preserved authoritative fallback safety while recording stale and misleading hint overwrites"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic_solver_guidance_telemetry so the artifact is read as exact QSTR and CDCL guidance telemetry, not live model quality.",
+    "value": "deterministic_solver_guidance_telemetry"
+  },
+  "milestone": {
+    "principle": "Milestone accountability for the V487 solver-guidance overwrite telemetry gate.",
+    "value": "2026.07.487"
+  },
+  "misleading_hint_false_accepts": 0,
+  "misleading_hint_harm": {
+    "conflicts_added": 1,
+    "search_steps_added": 7
+  },
+  "per_hint_results": [
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "before"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "before"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:before",
+      "instance_id": "t-before",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "before"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "before",
+          "after"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:before",
+      "instance_id": "t-before",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "before"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:before",
+      "instance_id": "t-before",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "before"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:before",
+      "instance_id": "t-before",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "before"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:before",
+      "instance_id": "t-before",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlaps"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "overlaps"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:overlaps",
+      "instance_id": "t-overlaps",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlaps"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "overlaps",
+          "after"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:overlaps",
+      "instance_id": "t-overlaps",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlaps"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:overlaps",
+      "instance_id": "t-overlaps",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlaps"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:overlaps",
+      "instance_id": "t-overlaps",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlaps"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:overlaps",
+      "instance_id": "t-overlaps",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "during"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "during"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:during",
+      "instance_id": "t-during",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "during"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "during",
+          "after"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:during",
+      "instance_id": "t-during",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "during"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:during",
+      "instance_id": "t-during",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "during"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:during",
+      "instance_id": "t-during",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "during"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:during",
+      "instance_id": "t-during",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "meets"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:meets",
+      "instance_id": "t-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "meets",
+          "after"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:meets",
+      "instance_id": "t-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:meets",
+      "instance_id": "t-meets",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:meets",
+      "instance_id": "t-meets",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:meets",
+      "instance_id": "t-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "meets"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "t-contradiction-before-vs-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "meets",
+          "after"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "t-contradiction-before-vs-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "t-contradiction-before-vs-meets",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "before"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "t-contradiction-before-vs-meets",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "t-contradiction-before-vs-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "meets"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:ambiguous",
+      "instance_id": "t-ambiguous-before-or-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "meets",
+          "after"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:ambiguous",
+      "instance_id": "t-ambiguous-before-or-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:ambiguous",
+      "instance_id": "t-ambiguous-before-or-meets",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "after"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:ambiguous",
+      "instance_id": "t-ambiguous-before-or-meets",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "meets"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:ambiguous",
+      "instance_id": "t-ambiguous-before-or-meets",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "disconnected"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:disconnected",
+      "instance_id": "s-disconnected",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "disconnected",
+          "east_of"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:disconnected",
+      "instance_id": "s-disconnected",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "east_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:disconnected",
+      "instance_id": "s-disconnected",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "east_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:disconnected",
+      "instance_id": "s-disconnected",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:disconnected",
+      "instance_id": "s-disconnected",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlap"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "overlap"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:overlap",
+      "instance_id": "s-overlap",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlap"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "overlap",
+          "west_of"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:overlap",
+      "instance_id": "s-overlap",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlap"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "west_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:overlap",
+      "instance_id": "s-overlap",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlap"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "west_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:overlap",
+      "instance_id": "s-overlap",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "overlap"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:overlap",
+      "instance_id": "s-overlap",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "contains"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "contains"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:containment",
+      "instance_id": "s-containment",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "contains"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "contains",
+          "west_of"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:containment",
+      "instance_id": "s-containment",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "contains"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "west_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:containment",
+      "instance_id": "s-containment",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "contains"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "west_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:containment",
+      "instance_id": "s-containment",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "contains"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:containment",
+      "instance_id": "s-containment",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "east_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "east_of"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:cardinal_direction",
+      "instance_id": "s-east-of",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "east_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "east_of",
+          "west_of"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:cardinal_direction",
+      "instance_id": "s-east-of",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "east_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "west_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:cardinal_direction",
+      "instance_id": "s-east-of",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "east_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "west_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:cardinal_direction",
+      "instance_id": "s-east-of",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "satisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "east_of"
+      ],
+      "final_status": "satisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:cardinal_direction",
+      "instance_id": "s-east-of",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "relations": [
+          "disconnected"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "s-contradiction-contains-vs-disconnected",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "relations": [
+          "disconnected",
+          "east_of"
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "s-contradiction-contains-vs-disconnected",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "relations": [
+          "east_of"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "s-contradiction-contains-vs-disconnected",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "relations": [
+          "contains"
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "s-contradiction-contains-vs-disconnected",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 2,
+      "solved": true
+    },
+    {
+      "baseline_status": "unsatisfiable",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 0,
+      "domain": "qstr",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        "disconnected",
+        "west_of"
+      ],
+      "final_status": "unsatisfiable",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "relations": []
+      },
+      "hint_valid": true,
+      "instance_class": "qstr:contradiction",
+      "instance_id": "s-contradiction-contains-vs-disconnected",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 1,
+      "solved": true
+    },
+    {
+      "baseline_status": "sat",
+      "conflict_delta_vs_no_hint": 3,
+      "conflicts": 0,
+      "domain": "sat_cdcl",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        -1,
+        -2,
+        3,
+        -4,
+        -5,
+        -6,
+        -7,
+        8
+      ],
+      "final_status": "sat",
+      "hint_class": "perfect_hints",
+      "hint_payload": {
+        "assumptions": [
+          3,
+          8
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "aligned_factor_sat",
+      "instance_id": "exp5292_aligned_factor_sat",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 30,
+      "search_steps": 11,
+      "solved": true
+    },
+    {
+      "baseline_status": "sat",
+      "conflict_delta_vs_no_hint": 3,
+      "conflicts": 0,
+      "domain": "sat_cdcl",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        -1,
+        -2,
+        3,
+        -4,
+        -5,
+        -6,
+        -7,
+        8
+      ],
+      "final_status": "sat",
+      "hint_class": "partial_hints",
+      "hint_payload": {
+        "assumptions": [
+          3
+        ]
+      },
+      "hint_valid": true,
+      "instance_class": "aligned_factor_sat",
+      "instance_id": "exp5292_aligned_factor_sat",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 30,
+      "search_steps": 11,
+      "solved": true
+    },
+    {
+      "baseline_status": "sat",
+      "conflict_delta_vs_no_hint": -1,
+      "conflicts": 4,
+      "domain": "sat_cdcl",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        -1,
+        -2,
+        3,
+        -4,
+        -5,
+        -6,
+        -7,
+        8
+      ],
+      "final_status": "sat",
+      "hint_class": "stale_hints",
+      "hint_payload": {
+        "assumptions": [
+          2,
+          8
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "aligned_factor_sat",
+      "instance_id": "exp5292_aligned_factor_sat",
+      "overwrite_count": 1,
+      "search_delta_vs_no_hint": -7,
+      "search_steps": 48,
+      "solved": true
+    },
+    {
+      "baseline_status": "sat",
+      "conflict_delta_vs_no_hint": -1,
+      "conflicts": 4,
+      "domain": "sat_cdcl",
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        -1,
+        -2,
+        3,
+        -4,
+        -5,
+        -6,
+        -7,
+        8
+      ],
+      "final_status": "sat",
+      "hint_class": "misleading_hints",
+      "hint_payload": {
+        "assumptions": [
+          4,
+          7
+        ]
+      },
+      "hint_valid": false,
+      "instance_class": "aligned_factor_sat",
+      "instance_id": "exp5292_aligned_factor_sat",
+      "overwrite_count": 2,
+      "search_delta_vs_no_hint": -7,
+      "search_steps": 48,
+      "solved": true
+    },
+    {
+      "baseline_status": "sat",
+      "conflict_delta_vs_no_hint": 0,
+      "conflicts": 3,
+      "domain": "sat_cdcl",
+      "fallback_preserved_baseline": true,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_matches_baseline": true,
+      "final_model_valid": true,
+      "final_solution": [
+        -1,
+        -2,
+        3,
+        -4,
+        -5,
+        -6,
+        -7,
+        8
+      ],
+      "final_status": "sat",
+      "hint_class": "no_hints",
+      "hint_payload": {
+        "assumptions": []
+      },
+      "hint_valid": true,
+      "instance_class": "aligned_factor_sat",
+      "instance_id": "exp5292_aligned_factor_sat",
+      "overwrite_count": 0,
+      "search_delta_vs_no_hint": 0,
+      "search_steps": 41,
+      "solved": true
+    }
+  ],
+  "readiness_blockers": [],
+  "reproducibility_checksum": "45dd78a0b6b66a6e82bb898544871d77ffd3c1173dcb572b5a692d6e51fa6b24",
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5344.solver_guidance_overwrite_telemetry.v487",
+  "search_delta_vs_no_hint": 46,
+  "solved_rate": 1.0,
+  "solver_authoritative": true,
+  "solver_guidance_telemetry_ready": true,
+  "source_fixtures": {
+    "qstr_ready": true,
+    "sat_cdcl_available": true,
+    "source_artifacts": [
+      "results/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.json",
+      "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json"
+    ]
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5344",
+    "SCENARIO-VERIFY-5344"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for downstream solver-guidance telemetry consumers.",
+    "value": "solver_guidance_telemetry_ready"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate solver-guidance telemetry, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks.",
+    "value": [
+      {
+        "command": "bootstrap artifact generation before final verification",
+        "outcome": "pending"
+      }
+    ]
+  }
+}

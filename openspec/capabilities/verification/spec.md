@@ -28041,3 +28041,82 @@ no SOTA model-quality claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5343 | Planned (`python/carnot/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py`, `results/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.json`) | Planned (`tests/python/test_experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py`) |
+
+### REQ-VERIFY-5344: Solver-Guidance Overwrite Telemetry V487
+
+The repository SHALL provide Exp 5344 at
+`python/carnot/experiment_5344_solver_guidance_overwrite_telemetry_v487.py`
+and write
+`results/experiment_5344_solver_guidance_overwrite_telemetry_v487.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, or retired text-verifier path, and without
+modifying `scripts/research_conductor.py`. Exp 5344 SHALL load the checked-in
+Exp 5343 QSTR fixture artifact and one existing bounded SAT/CDCL fixture when
+available, then run a deterministic solver-guidance diagnostic where all hints
+are advisory and the typed QSTR checker or CDCL solver remains authoritative
+for final labels.
+
+The diagnostic SHALL define exactly five deterministic hint classes:
+perfect hints, partial hints, stale hints, misleading hints, and no hints. For each
+loaded fixture domain it SHALL compare no-hint authoritative solving with
+hinted solving, record whether each hint is valid against the final
+authoritative solution, allow stale or misleading hints to be overwritten, and
+route invalid hinted attempts to the authoritative fallback rather than
+accepting the hint result. The SAT/CDCL portion SHALL record conflicts and
+search-step deltas against the no-hint run. The QSTR portion SHALL record
+relation-label validity and false-accept protection against typed interval and
+rectangle facts.
+
+The runner SHALL report hint validity, overwrite behavior, fallback
+completeness, solved rate, fallback rate, conflict/search deltas, misleading
+hint harm, and blocked instance classes. `solver_guidance_telemetry_ready`
+SHALL be true only when fallback completeness is preserved, final hinted labels
+match no-hint authoritative labels, SAT models remain solver-valid,
+misleading-hint false accepts are zero, and tests are recorded. Misleading or
+stale hints MAY increase conflicts before fallback, but that harm SHALL be
+reported and SHALL NOT change the final accepted label.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, and `tests_run`, plus bare
+boolean `solver_authoritative`, bare integer `hint_class_count`, bare numeric
+`hint_validity_rate`, bare numeric `hint_overwrite_rate`, bare numeric
+`fallback_completeness_rate`, bare numeric `conflict_delta_vs_no_hint`, bare
+integer `misleading_hint_false_accepts`, bare integer
+`blocked_instance_class_count`, and bare boolean
+`solver_guidance_telemetry_ready`. `honest_verdict.value` SHALL start with
+`complete:` or `blocked_`. `inference_substrate.value` SHALL be
+`deterministic_solver_guidance_telemetry`. `solver_authoritative` SHALL be true
+because exact QSTR facts and the CDCL solver, not hints, decide final labels.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5344 deterministic solver-guidance overwrite telemetry diagnostic."
+- `milestone`: principle "Milestone accountability for the V487 solver-guidance overwrite telemetry gate."
+- `status`: principle "Machine-readable terminal state for downstream solver-guidance telemetry consumers."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether solver-guidance telemetry preserved authoritative fallback safety."
+- `inference_substrate`: principle "Declares deterministic_solver_guidance_telemetry so the artifact is read as exact QSTR and CDCL guidance telemetry, not live model quality."
+- `tests_run`: principle "Commands run to validate solver-guidance telemetry, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+
+### SCENARIO-VERIFY-5344: Bad Hints Are Overwritten Without False Accepts
+
+Given the checked-in Exp 5343 QSTR fixture and an available bounded SAT/CDCL
+fixture, when Exp 5344 runs the five hint classes, then perfect and partial
+hints may reduce SAT search, stale and misleading hints are detected as invalid
+for the current authoritative solution, invalid hints are overwritten or routed
+to solver-only fallback, fallback rows preserve the no-hint label and model
+validity, `misleading_hint_false_accepts=0`, and
+`solver_guidance_telemetry_ready=true`.
+
+If the QSTR fixture is missing, no SAT/CDCL fixture is available, any hinted
+final label differs from the no-hint authoritative label, a SAT model fails
+CDCL validation, fallback completeness drops below 1.0, a misleading hint
+causes a false accept, required hint classes are missing, or tests are not
+recorded, then the same runner writes a terminal `blocked_` artifact with
+`solver_guidance_telemetry_ready=false`, exact blocker metrics, and no model or
+hardware guidance claim.
+
+## Implementation Status (REQ-VERIFY-5344)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5344 | Planned (`python/carnot/experiment_5344_solver_guidance_overwrite_telemetry_v487.py`, `results/experiment_5344_solver_guidance_overwrite_telemetry_v487.json`) | Planned (`tests/python/test_experiment_5344_solver_guidance_overwrite_telemetry_v487.py`) |
