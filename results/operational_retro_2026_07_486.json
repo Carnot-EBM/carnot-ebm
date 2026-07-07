@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.486",
+  "generated_at": "2026-07-07T03:20:14Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 487.3,
+  "experiments_completed": 28,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 5323: Native GGUF backend and flag bisect for mandated SOT",
+      "duration_minutes": 93.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5326: Gated SOTA paraphrase and rewrite smoke after runtim",
+      "duration_minutes": 93.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5324: Gated runtime receipt stabilization after Exp 5323 b",
+      "duration_minutes": 92.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5331: Gated local internal-signal and energy receipt harne",
+      "duration_minutes": 24.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5322: V486 SOTA source delta refresh",
+      "duration_minutes": 14.7,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.07.486 completed 28 experiments over 487.3 minutes, with 3 compute-bound tasks. The top-five timing list is dominated by synthesis-only runs; the only compute-bound run in that list is Exp 5322 at 14.7 minutes, and the locked compute-bound GPU-idle flag is false.",
+  "bottlenecks_identified": [
+    "Synthesis-only work dominates the visible slow path: Exp 5323 took 93.9 minutes, Exp 5326 took 93.4 minutes, Exp 5324 took 92.6 minutes, and Exp 5331 took 24.1 minutes.",
+    "Compute-bound timing visibility is limited: of 3 compute-bound tasks, only Exp 5322 appears in the top-five list, as V486 SOTA source delta refresh at 14.7 minutes; the supplied timing block does not provide IDs or durations for the other 2 compute-bound tasks.",
+    "No GPU-idle bottleneck is supported for compute-bound work because gpu_idle_on_compute_bound_tasks is false.",
+    "No supplied timing or GPU block identifies a 2+ parallel-model task that failed to engage DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Add per-phase timing buckets to synthesis-only conductor artifacts so long backend-bisect, runtime-receipt, smoke, and harness tasks expose setup, execution, validation, and commit time separately.",
+    "Record compute-bound GPU utilization receipts at task start, during execution, and task end so future retros do not have to reason from a terminal GPU snapshot.",
+    "Emit model_count, parallel_model_count, and dual_gpu_runner_eligible fields for compute-bound tasks so DualGPURunner misses are machine-checkable.",
+    "Keep doomed-rerun block artifacts in a saved-time ledger separate from slowest-experiment ranking."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument synthesis-only tasks with per-phase timing and a long-run heartbeat.",
+    "Add compute-bound GPU-utilization receipts plus runner-eligibility fields to every GGUF/CUDA/requires_gpu artifact.",
+    "Split or checkpoint multi-stage synthesis-only backend and receipt tasks so a long validation pass does not obscure where wall time accumulated."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective should not convert an idle terminal GPU snapshot into a bottleneck when the locked compute-bound GPU-idle field is false. The main operational gap is observability: the supplied bounded data names only the top-five slowest rows, so the other 2 compute-bound tasks and any 2+ model runner eligibility remain unauditable."
+}

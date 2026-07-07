@@ -5781,3 +5781,9 @@ The critical path for milestone .250:
 - theme: compute-bound timeout accounting separated from synthesis-only throughput and GPU-runner claims
 - key result: the locked artifact records 28 experiments in 266.2 minutes with 4 compute-bound tasks; the visible compute-bound slow path took 60.2 minutes, no GPU-idle bottleneck is recorded, and no supplied block identifies a 2+ parallel-model DualGPURunner miss
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.486
+- exp_range: exp5322-exp5331 (visible TIMING DATA IDs only; full 28-experiment ID range not supplied)
+- theme: synthesis-only wall-time dominated operational retrospective with compute-bound GPU-idle gated off
+- key result: 28 experiments completed in 487.3 minutes with 3 compute-bound tasks; the top-five slowest rows were 4 synthesis-only runs and 1 compute-bound run, and no compute-bound GPU-idle or 2+ parallel-model DualGPURunner miss is supported by the supplied blocks
+- acceptance: 4/4 operational questions answered
