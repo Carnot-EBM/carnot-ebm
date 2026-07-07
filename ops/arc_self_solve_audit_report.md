@@ -16,13 +16,30 @@ OK: all solver-like ARC modules are reachable from the live agent path (48 modul
 
 ## Hostile LLM review
 
-TL;DR: **Do not count this as a live self-discovery advance. Verdict: `OUTER_LOOP_RE`, with a secondary duplicate warning.**
+TL;DR: **No recent ARC solve artifacts to credit.** Reachability is clean, but there is **zero evidence of new live self-discovery capability** in the last 7 days.
 
-Artifact: `results/arc_loop_solve_ls20.json`
+**Per-Artifact Review**
 
-- **Verdict:** `OUTER_LOOP_RE`
-- **Evidence:** Artifact declares `solve_provenance="development_proxy"` and `mode="standing_arc_loop_offline_no_quota"`, with no `honest_verdict` and no declared live attempt trace. The OpenSpec entry for Exp4630 explicitly describes this as an “offline dev twin” using `arc_loop_solve + a hand GameAdapter`, “not live-agent self-discovery on a hidden game.” Registry already records `ls20` reproduced to level 2 using this same artifact, so any fresh claim is also non-novel.
-- **Recommended action:** Do not credit it toward ARC-AGI-3 live capability. Keep it as dev/registry evidence only, or quarantine it from “self-discovery” counts. Require future artifacts to include live attempt history, runtime hypotheses, observations used, no source/adapter leakage, and explicit `solve_provenance=live_agent_self_discovery`.
+None.
 
-**Pattern Watch:** This is provenance laundering risk: a reachable entrypoint plus an offline reproduced artifact is being made to look like agent progress. Reachability is necessary, not sufficient. `development_proxy`, hand adapters, registry win-condition notes, and offline reproduction gates are outer-loop scaffolding unless the artifact proves the live agent discovered the solve from its own attempts.
+`RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
+
+No artifact can be classified as `SELF_DISCOVERY_ADVANCE`, `OUTER_LOOP_RE`, `OFF_PATH`, `DUPLICATE`, or `UNCLEAR` because there are no claimed solves.
+
+**Evidence**
+
+- Live entrypoints checked:
+  - `scripts/arc_loop_solve.py`
+  - `python/carnot/agentic/arc_competition_agent.py`
+- Reachability pre-pass passed:
+  - `OK: all solver-like ARC modules are reachable from the live agent path`
+- But reachability only proves modules are callable from the live path. It does **not** prove any hidden game was solved by the live agent from its own attempts/runtime reverse-engineering.
+
+**Recommended Action**
+
+Do not record any new capability advance. Require the next claimed solve artifact to include clear live-run provenance: entrypoint used, attempt trace, observations gathered by the agent, inferred model/actions, and successful solve produced without source reading, offline BFS, or hand-built per-game adapters.
+
+**Pattern Watch**
+
+Current risk is **false credit from infrastructure health**: “reachable from live path” is useful hygiene, but it is not evidence of autonomous discovery. Keep rejecting any future artifact that shows a solve result without proving the live agent reached it through its own runtime attempts.
 
