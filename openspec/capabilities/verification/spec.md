@@ -25882,6 +25882,94 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5331: Stable Local Internal Energy Receipt Harness V486
+
+The repository SHALL provide Exp 5331 at
+`python/carnot/experiment_5331_internal_energy_receipt_harness_v486.py` and
+write `results/experiment_5331_internal_energy_receipt_harness_v486.json`
+without modifying `scripts/research_conductor.py`. Exp 5331 SHALL determine
+whether the stable local GGUF runtime selected by Exp 5324 can emit internal
+receipts suitable for future frequency-aware attention, Semantic Energy, or
+Spilled Energy diagnostics. It SHALL NOT evaluate hallucination quality, SHALL
+NOT train a scorer, SHALL NOT compare self-consistency, and SHALL NOT reopen
+retired external generated-text scorer work.
+
+Step 0 SHALL confirm the Exp 5324 stable backend and selected model, current GPU
+visibility, selected model cache/file availability, and backend flags/API
+options for logits, token probabilities, token timing, raw output, attention,
+and hidden-state proxy data. If Exp 5324 is absent or unstable, the selected
+model is no longer cached, the GPU is not visible, or the backend metadata probe
+cannot run, the runner SHALL write a terminal `blocked_` artifact instead of
+fabricating an internal receipt. The mandated `MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+When preconditions pass, the runner SHALL probe only bounded prompts and native
+llama.cpp backend metadata endpoints/options. A completion endpoint probe MAY
+request token probability metadata, but the response text SHALL be used only for
+checksum/raw-output receipt evidence and SHALL NOT be interpreted as correctness
+or hallucination quality. The runner SHALL record availability for logits,
+per-token probabilities, attention, hidden-state proxies, token timing, and raw
+output receipts. `internal_signal_receipt_ready` SHALL be true only when a
+reproducible non-text-score internal receipt exists, such as token logprobs/top
+logprobs, logits, attention data, or hidden-state/embedding proxy data from the
+local runtime. Aggregate throughput and raw generated text alone SHALL NOT open
+the internal receipt gate.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, `receipt_schema_path`, and
+`tests_run`, plus bare `logits_available`, `token_probability_available`,
+`attention_available`, `hidden_state_proxy_available`,
+`external_text_scorer_reopened=false`, `internal_signal_receipt_ready`, and
+`no_quality_claim=true`. `inference_substrate.value` SHALL be
+`local_sota_internal_signal_receipt`. `honest_verdict.value` SHALL start with
+`complete:` when a local non-text-score internal receipt is saved, or
+`blocked_` when the stable runtime exposes only text, aggregate timing, or no
+usable internal metadata.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5331 stable local internal-energy receipt harness."
+- `milestone`: principle "Milestone accountability for the V486 internal receipt decision."
+- `status`: principle "Machine-readable terminal state for downstream internal-energy gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether a reproducible local non-text-score internal receipt exists."
+- `inference_substrate`: principle "Declares local_sota_internal_signal_receipt so the artifact is read as a stable local GGUF internal-receipt gate, not a generated-text quality scorer."
+- `MODEL_SPECS`: principle "Records the three mandated GGUF model IDs so the receipt harness cannot silently substitute a legacy, tiny, API, or non-GGUF model."
+- `preconditions_checked`: principle "Records Exp5324 stability, selected backend/model binding, GPU visibility, model cache status, and backend metadata/API option checks before any internal receipt claim."
+- `selected_model_spec`: principle "Binds any internal receipt to the stable mandated model selected by Exp5324."
+- `receipt_schema_path`: principle "Points to the tiny internal-receipt schema description, or to a blocked-schema description naming the missing backend feature precisely."
+- `tests_run`: principle "Commands run to validate the Exp5331 module, artifact schema, new-code coverage, and required repository test status."
+
+### SCENARIO-VERIFY-5331: Native Runtime Emits Or Blocks Internal Signal Receipts
+
+Given Exp 5324 reports a stable selected local SOTA GGUF backend and the current
+host still exposes the selected model file plus a GPU, when Exp 5331 probes
+native llama.cpp backend metadata and a bounded completion endpoint, then it
+records backend options, raw output checksums, token timing status, and any
+available non-text internal metadata, writes the result artifact, writes the
+receipt schema description, keeps `external_text_scorer_reopened=false` and
+`no_quality_claim=true`, and sets `internal_signal_receipt_ready=true` only if
+the saved tiny receipt contains reproducible local token probabilities, logits,
+attention, or hidden-state proxy data.
+
+If Exp 5324 is unstable or missing, the selected model cache is absent, GPU
+visibility is absent, backend options show no internal metadata surface, the
+bounded endpoint returns raw text/aggregate timing only, or the metadata probe
+fails, then the same runner writes a terminal `blocked_` artifact, records the
+precise missing backend feature under `preconditions_checked.value`, sets all
+unavailable internal-signal booleans false, keeps
+`external_text_scorer_reopened=false` and `no_quality_claim=true`, and does not
+invoke any external scorer, LLM judge, self-consistency comparison, or trained
+quality model.
+
+## Implementation Status (REQ-VERIFY-5331)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5331 | Implemented (`python/carnot/experiment_5331_internal_energy_receipt_harness_v486.py`, `results/experiment_5331_internal_energy_receipt_harness_v486.json`) | Implemented (`tests/python/test_experiment_5331_internal_energy_receipt_harness_v486.py`) |
+
 ### REQ-VERIFY-5326: Gated Local SOTA Paraphrase And Rewrite Smoke V486
 
 The repository SHALL provide Exp 5326 at
