@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (47 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (48 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
 
 ## Hostile LLM review
 
-TL;DR: `results/arc_loop_solve_ls20.json` is **UNCLEAR**, leaning **not acceptable as a live self-discovery advance** until provenance is tightened.
+TL;DR: **Do not count this as a live self-discovery advance. Verdict: `OUTER_LOOP_RE`, with a secondary duplicate warning.**
 
 Artifact: `results/arc_loop_solve_ls20.json`
 
-- **Verdict:** `UNCLEAR`
-- **Evidence:** It is on a reachable live path via `scripts/arc_loop_solve.py`, so this is not `OFF_PATH`. But the declared provenance is `development_proxy`, `honest_verdict` is empty, and mode is `standing_arc_loop_offline_no_quota`. Nothing here clearly proves the live agent discovered the level 2 solve from its own attempts and runtime reverse-engineering. No outer-loop inputs are declared, but absence of declaration is not positive evidence.
-- **Recommended action:** Do not count this as a new live capability yet. Require the artifact to record live attempt traces, observations used, runtime hypotheses/actions, and an explicit `SELF_DISCOVERY_ADVANCE` provenance verdict. If `development_proxy` involved a human-built model, source inspection, offline ground-truth search, or per-game adapter logic, reclassify as `OUTER_LOOP_RE`.
+- **Verdict:** `OUTER_LOOP_RE`
+- **Evidence:** Artifact declares `solve_provenance="development_proxy"` and `mode="standing_arc_loop_offline_no_quota"`, with no `honest_verdict` and no declared live attempt trace. The OpenSpec entry for Exp4630 explicitly describes this as an “offline dev twin” using `arc_loop_solve + a hand GameAdapter`, “not live-agent self-discovery on a hidden game.” Registry already records `ls20` reproduced to level 2 using this same artifact, so any fresh claim is also non-novel.
+- **Recommended action:** Do not credit it toward ARC-AGI-3 live capability. Keep it as dev/registry evidence only, or quarantine it from “self-discovery” counts. Require future artifacts to include live attempt history, runtime hypotheses, observations used, no source/adapter leakage, and explicit `solve_provenance=live_agent_self_discovery`.
 
-**Pattern Watch:** The drift risk is provenance laundering: reachable entrypoint plus “offline/no quota” artifact is being treated like a solve without showing the agent’s own discovery chain. Reachability is necessary, not sufficient. Count only artifacts that expose the live agent’s attempt-to-solve path, not development proxy outputs.
+**Pattern Watch:** This is provenance laundering risk: a reachable entrypoint plus an offline reproduced artifact is being made to look like agent progress. Reachability is necessary, not sufficient. `development_proxy`, hand adapters, registry win-condition notes, and offline reproduction gates are outer-loop scaffolding unless the artifact proves the live agent discovered the solve from its own attempts.
 

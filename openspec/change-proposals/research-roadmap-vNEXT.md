@@ -1,10 +1,10 @@
-# Research Roadmap vNEXT - Milestone 2026.07.488
+# Research Roadmap vNEXT - Milestone 2026.07.489
 
-**Milestone title:** Constraint-Tax Structured SOTA, Dependency-Safe Self-Learning, and Solver-Projected Energy Certificates
+**Milestone title:** Grammar-Budgeted SOTA, Budget-Curated Self-Learning, and Overwrite-Capable Solver Guidance
 
 **Planner date:** 2026-07-07
-**Previous milestone:** 2026.07.487
-**Task range:** Exp 5349-5362
+**Previous milestone:** 2026.07.488
+**Task range:** Exp 5363-5375
 **Pre-staged roadmap:** `research-roadmap-next.yaml`
 
 ## Inputs Read
@@ -28,192 +28,237 @@ Additional guardrails checked before writing the roadmap:
 - `CLAUDE.md`
 - `CODEX.md`
 - `ops/exclusion_manifest.yaml`
-- `ops/known-issues.md`
+- `ops/arc_solve_registry.yaml`
 - `scripts/roadmap_schema.py`
-- `scripts/exclusion_manifest_lint.py`
 - `scripts/audit_roadmap_gates.py`
 - `scripts/arc_levelup_guarantee_lint.py`
-- `results/experiment_5348_capstone_v487.json`
+- `scripts/exclusion_manifest_lint.py`
+- `results/experiment_5351_trigger_constrain_structured_protocol_v488.json`
+- `results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json`
+- `results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json`
+- `results/experiment_5354_arithmetic_carry_token_energy_v488.json`
+- `results/experiment_5355_dependency_provenance_self_learning_v488.json`
+- `results/experiment_5356_memory_tool_drift_harness_v488.json`
+- `results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json`
+- `results/experiment_5358_solver_projection_cut_bridge_v488.json`
+- `results/experiment_5359_pbit_schedule_diagnostic_v488.json`
+- `results/experiment_5360_arc_perception_salience_levelup_attempt_v488.json`
+- `results/experiment_5361_hardware_continuity_workload_v488.json`
+- `results/experiment_5362_capstone_v488.json`
 
 ## Literature Refresh Incorporated
 
-The planner performed a 2025-2026 source refresh and appended the actionable findings to `research-references.md` under `### V488 Planner Refresh - 2026-07-07` before designing experiments.
+The planner performed a 2025-2026 source refresh and appended the actionable findings to `research-references.md` under `### V489 Planner Refresh - 2026-07-07` before designing experiments.
 
 Promoted sources and planning consequences:
 
-- **Thinking Before Constraining** (`arXiv:2601.07525`): repair structured local SOTA output with a trigger-token/free-reasoning-then-constrain protocol, not a one-pass JSON-only prompt.
-- **The Constraint Tax** (`arXiv:2605.26128`) and **Tool Calling Suppression** (`arXiv:2606.25605`): separate syntactic validity, semantic correctness, wrong-valid-output rate, and tool/action reachability; do not collapse all failures into parse rate.
-- **Memory-Induced Tool-Drift** (`arXiv:2605.24941`): add a self-learning lane that measures whether remembered context biases future verifier/tool/action selection.
-- **ContextWeaver** (`arXiv:2604.23069`): repair the `.487` self-learning TAUTOLOGY by tracking dependency-edge provenance and execution feedback, not duplicate aggregate deltas.
-- **NSGGM** (`arXiv:2602.16954`) and OpenReview hard-constrained graph generation with discrete-projection diffusion (`cbtykHVWX9`): test solver-authoritative projection/cuts with fallback completeness.
-- **The Shape of Addition** (`arXiv:2606.03645`): watch residual/token features for arithmetic carry slippage only if the local backend exposes real token-probability rows.
-- **p-bit schedule papers** (`arXiv:2601.15561`, `arXiv:2604.01564`, `arXiv:2604.17109`): run CPU schedule diagnostics before any hardware speedup claim.
+- **G-RRM** (`arXiv:2607.02491`): neural full-solution proposals help when the solver can overwrite bad hints. `.489` adds an overwrite-capable solver-guidance matrix rather than a forced-hint speedup claim.
+- **Budget-Curated Memory** (`arXiv:2606.25115`): self-learning should score memory by value-minus-harm per byte under RAM/energy/uplink budgets. `.489` extends the clean `.488` dependency/drift artifacts into budgeted continuous self-learning.
+- **ALMA** (`arXiv:2602.07755`): memory-design search is useful context but remains too open-ended for Carnot without deterministic safety gates. `.489` keeps memory governance bounded and verifier-scored.
+- **CFGzip** (`arXiv:2605.29986`) and **TruncProof** (`arXiv:2605.13076`): structured local SOTA should compile grammar/token reachability and completion slack before live generation. `.489` gates the live protocol on this preflight.
+- **FLaG** (`arXiv:2606.00301`) and **Thermodynamic Signatures of Reasoning** (`arXiv:2606.19404`): hidden-state/attention families are promising, but `.489` treats token/internal energy as a precondition/corrigendum lane unless the runtime exposes the needed tensors.
+- **Programmable Probabilistic Computer with 1,000,000 p-bits** (`arXiv:2606.25313`): boundary exchange and communication-to-p-bit timing ratio are the next p-bit diagnostic, still CPU simulation-only.
 
 Secondary-source status:
 
-- Semantic Scholar API returned HTTP 429 for citation lookups on EBT `2507.02092` and ARM-EBM `2512.15605`; no citation delta is claimed.
-- Extropic writing remains useful as TSU/probabilistic-hardware context only; there is no local TSU hardware path.
-- Logical Intelligence/Kona public material is architecture context only; no reproducible local Kona baseline is claimed.
-- GitHub/HuggingFace/OpenReview yielded watch items, but none supersedes local deterministic fixtures or the mandated GGUF runtime.
+- Semantic Scholar rate-limited EBT `2507.02092`; ARM-EBM `2512.15605` had eight citations and two influential citations. Citation-trail ideas are watch items, not a reopened external text-scorer lane.
+- OpenReview, HuggingFace Papers, and GitHub yielded implementation references for constrained decoding and solver guidance, but none replaces local GGUF, deterministic solvers, or live ARC requirements.
+- Extropic TSU/XTR writing remains hardware architecture context only; no Carnot-accessible TSU execution path exists.
+- Logical Intelligence Kona/Aleph pages support the architecture bias toward verifier/prover authority; no reproducible Kona baseline is claimed.
 
-## What 2026.07.487 Proved
+## What 2026.07.488 Proved
 
-The `.487` capstone reports:
+The `.488` capstone reported a mixed but useful milestone:
 
-- `runtime_clean=true`: at least one mandated local SOTA GGUF runtime path is now usable.
-- `structured_output_protocol_ready=false`: the structured protocol was flagged for duration/methodology and is not decision-grade.
-- `bounded_sota_quality_usable=false`: the quality panel stayed blocked by the structured protocol.
-- `utility_memory_ready=true` and `bounded_compressor_ready=true`: deterministic self-learning components are useful.
-- `self_learning_scaleup_ready=false`: the scale-up artifact was quarantined for TAUTOLOGY, so no scaled self-learning claim stands.
-- `qstr_fixture_ready=true`, `solver_guidance_ready=true`, and `kan_constraint_bridge_ready=true`: deterministic solver/KAN bridge components are ready for a projection/cuts follow-up.
-- `internal_energy_corrigendum_clean=false`: token-probability energy remains blocked/flagged and must not be promoted.
-- `hardware_speedup_claim=false`: hardware remains continuity-only; PolarFire produced a workload receipt without a speedup, KV260 was unreachable, and GateMate setup did not change.
+- `structured_protocol_clean=false`: live local SOTA JSON generation still failed schema cleanliness despite real GGUF execution. Exp5351 reached parse success on some prompts but only `schema_success_rate=0.25`.
+- `constraint_tax_panel_ready=false`: the downstream panel was correctly gate-blocked because the structured protocol did not satisfy the clean gate.
+- `tokenprob_feature_rows_ready=true` but token/internal-energy work remained adversarially flagged. Exp5353 had usable logprob row shape, while Exp5354 found no carry-token energy margin and was flagged for tautology/methodology.
+- `dependency_provenance_ready=true`, `memory_tool_drift_ready=true`, and `self_learning_scaleup_ready=true`: the dependency/drift self-learning lane is now clean, with no weight mutation, rollback recovery, and measurable context/verifier savings.
+- `solver_projection_ready=true`: the solver-authoritative projection/cuts bridge is clean and ready for overwrite-aware guidance.
+- `pbit_schedule_signal_ready=true`: CPU p-bit schedule diagnostics produced useful class-level harm/signal data, but no hardware speedup.
+- `arc_new_level_banked=false`: the required live ARC slot ran honestly but did not bank re86 L3; the salience/status-bar error classes are now concrete.
+- `hardware_speedup_claim=false`: PolarFire produced a workload receipt, KV260 remained unreachable by SSH, GateMate remained physically/JTAG blocked, and no board speedup was claimed.
 
 ## Three Biggest Gaps
 
-1. **Local SOTA generation is runtime-clean but not protocol-clean.** The PRD needs verifiable reasoning outputs from local open models. `.487` proved runtime viability, but structured output, semantic correctness under constraints, and action/tool reachability are still not separated cleanly.
+1. **Local SOTA is real but not yet structurally reliable.** The PRD requires verifiable reasoning outputs from local open models. `.488` proved live inference can run but not that JSON/schema/tool-action outputs are clean enough for downstream scoring.
 
-2. **Continuous self-learning has safe parts but no clean scaled loop.** The PRD's FR-11 vision requires durable self-learning under rollback and verifier control. `.487` utility/compressor pieces were ready, but the scale-up duplicated metrics and failed adversarial scrutiny.
+2. **Continuous self-learning is clean but not budget-governed.** FR-11 needs a durable self-learning loop that can retain useful constraints while rejecting stale, poisoned, or over-expensive memory. `.488` cleaned dependency/drift mechanics; `.489` must add memory budget, provenance, and trust decisions.
 
-3. **Energy/certificate substrates are not yet solver-authoritative end-to-end.** QSTR, solver telemetry, and KAN localization are promising, but token-probability energy is blocked and hardware has no speedup. The next step is solver projection/cuts and p-bit schedule diagnostics, not headline hardware or external text-scoring claims.
+3. **Energy guidance is promising but must stay solver-authoritative.** Solver projection and p-bit diagnostics are ready, but token/internal energy is not. `.489` should use overwrite-capable symbolic solvers and boundary-exchange diagnostics while treating neural signals as hints and preserving fallback completeness.
 
 ## Target Architecture
 
 ```text
-                 +-------------------------------+
-                 |  Mandatory Local SOTA GGUFs   |
-                 |  Qwen3.6-35B-A3B / Gemma 31B  |
-                 |  Gemma 26B-A4B                |
-                 +---------------+---------------+
-                                 |
-                         trigger-then-constrain
-                                 |
-                 +---------------v---------------+
-                 | Structured Protocol + Tax      |
-                 | parse / semantic / wrong-valid |
-                 | tool-action reachability       |
-                 +---------------+---------------+
-                                 |
-              +------------------+------------------+
-              |                                     |
- +------------v------------+           +------------v------------+
- | Dependency Self-Learning |           | Token/Internal Signals  |
- | utility memory           |           | receipt-clean only      |
- | bounded compressor       |           | no external scorer      |
- | memory-tool drift        |           +------------+------------+
- +------------+------------+                        |
-              |                                     |
-              +------------------+------------------+
-                                 |
-                 +---------------v---------------+
-                 | Solver-Authoritative Energy    |
-                 | QSTR + projection + cuts        |
-                 | KAN counterexamples             |
-                 | p-bit schedule diagnostics      |
-                 +---------------+---------------+
-                                 |
-                 +---------------v---------------+
-                 | Certificates, Hardware Context  |
-                 | ARC live-path slot, board       |
-                 | receipts, no speedup claim      |
-                 +-------------------------------+
+                 +---------------------------------------+
+                 | Mandatory Local SOTA GGUF Substrate   |
+                 | Qwen3.6-35B-A3B / Gemma 31B /         |
+                 | Gemma 26B-A4B via llama.cpp/GGUF      |
+                 +-------------------+-------------------+
+                                     |
+                         grammar budget + JSON slack
+                                     |
+                 +-------------------v-------------------+
+                 | Structured Protocol Repair             |
+                 | schema reachability / token budget     |
+                 | parse, schema, semantic, wrong-valid   |
+                 | tool-action reachability               |
+                 +-------------------+-------------------+
+                                     |
+              +----------------------+----------------------+
+              |                                             |
+ +------------v-------------+                 +-------------v------------+
+ | Budget-Curated Memory    |                 | Internal Feature Ledger  |
+ | dependency provenance     |                 | logprob/logit/hidden/    |
+ | KEEP/SHARE/TRUST          |                 | attention availability   |
+ | rollback + no mutation    |                 | no text-only energy      |
+ +------------+-------------+                 +-------------+------------+
+              |                                             |
+              +----------------------+----------------------+
+                                     |
+                 +-------------------v-------------------+
+                 | Solver-Authoritative Energy Guidance   |
+                 | overwrite-capable hints / projection   |
+                 | cuts / p-bit boundary timing           |
+                 +-------------------+-------------------+
+                                     |
+                 +-------------------v-------------------+
+                 | Live Verification Surface              |
+                 | ARC self-discovery slot / board        |
+                 | receipts / capstone gates              |
+                 +---------------------------------------+
 ```
 
 ## Phase Plan
 
-### Phase 0 - Transition and Source Control
+### Phase 0 - Transition and Fresh Source Delta
 
-- **Exp 5349:** Archive `.487`, activate `.488`, and record the capstone truth without modifying the active roadmap or conductor.
-- **Exp 5350:** Execution-time SOTA/source delta check. Append only genuinely new actionable findings.
+**Exp5363-Exp5364**
 
-### Phase 1 - Structured Local SOTA Under Constraint Tax
+Archive the completed `.488` state into the `.489` execution context, then perform an execution-time source delta check so the conductor can catch anything discovered after the planner sweep.
 
-- **Exp 5351:** Repair structured output with trigger-then-constrain and a duration/methodology-clean local GGUF receipt.
-- **Exp 5352:** If Exp 5351 passes, run a bounded constraint-tax panel that separates schema validity, semantic correctness, wrong-valid outputs, and tool/action reachability.
-- **Exp 5353:** Clean the token-probability/internal-energy receipt without reopening the retired external text-scorer scope.
-- **Exp 5354:** If Exp 5353 exposes real rows, test a tiny arithmetic carry/token-energy diagnostic.
+Deliverables:
 
-### Phase 2 - Dependency-Safe Continuous Self-Learning
+- `results/experiment_5363_transition_v489.json`
+- `results/experiment_5364_sota_source_delta_v489.json`
 
-- **Exp 5355:** Build dependency-edge provenance and execution feedback for context self-learning, repairing the `.487` TAUTOLOGY.
-- **Exp 5356:** Add memory-induced tool/action drift detection.
-- **Exp 5357:** If both fixtures pass, run the gated self-learning scale-up with separate metrics and rollback.
+### Phase 1 - Grammar-Budgeted Structured SOTA
 
-### Phase 3 - Solver Projection, Schedules, ARC Floor, and Hardware
+**Exp5365-Exp5367**
 
-- **Exp 5358:** Add solver-authoritative projection/cuts and fallback completeness metrics.
-- **Exp 5359:** Run CPU p-bit schedule diagnostics for partial deactivation, inertia, and cost landscapes.
-- **Exp 5360:** Reserve the mandatory ARC-AGI-3 live-path slot: perception grounding plus classical color-blob salience, with a first-contact level-up attempt and registry discipline.
-- **Exp 5361:** Run hardware continuity: KV260 SSH-only precondition, PolarFire workload receipt if reachable, GateMate unchanged blocker, no speedup claim.
+Repair the failed structured local SOTA lane in two steps: first build a deterministic grammar/token-budget preflight from CFGzip/TruncProof ideas, then run a live mandated-GGUF protocol only if the preflight is ready. The constraint-tax panel remains gated on `structured_protocol_clean=true`.
+
+Deliverables:
+
+- `results/experiment_5365_grammar_budget_protocol_preflight_v489.json`
+- `results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json`
+- `results/experiment_5367_constraint_tax_tool_action_panel_v2_v489.json`
+
+### Phase 2 - Budget-Curated Continuous Self-Learning
+
+**Exp5368-Exp5369**
+
+Extend the clean `.488` dependency-provenance and memory-drift work into budgeted self-learning: memory must prove value-minus-harm per byte, no weight mutation, rollback recovery, stale/poison deflection, and quality retention under larger traces.
+
+Deliverables:
+
+- `results/experiment_5368_budget_curated_memory_governance_v489.json`
+- `results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json`
+
+### Phase 3 - Solver Guidance, Internal-Feature Preconditions, ARC, and Hardware
+
+**Exp5370-Exp5374**
+
+Convert the clean solver projection and p-bit schedule results into the next bounded tests: overwrite-capable solver guidance, boundary-exchange p-bit timing, and a token/internal-feature continuation gate that prevents text-only energy overclaims. The milestone also includes the required ARC live-path level-up slot and hardware continuity receipt.
+
+Deliverables:
+
+- `results/experiment_5370_overwrite_solver_guidance_matrix_v489.json`
+- `results/experiment_5371_pbit_boundary_exchange_schedule_v489.json`
+- `results/experiment_5372_token_feature_precondition_gate_v489.json`
+- `results/experiment_5373_arc_salience_re86_levelup_v489.json`
+- `results/experiment_5374_hardware_continuity_receipts_v489.json`
 
 ### Phase 4 - Capstone
 
-- **Exp 5362:** Synthesize the milestone, update ops docs if required, and select the next decisive gate.
+**Exp5375**
+
+Synthesize the phase results into milestone gates and next-step decisions.
+
+Deliverable:
+
+- `results/experiment_5375_capstone_v489.json`
 
 ## Dependency Graph
 
 ```text
-exp5349 --> exp5362
-exp5350 --> exp5362
+Exp5363 transition
+  |
+  +--> Exp5364 source delta
+  |
+  +--> Exp5365 grammar-budget preflight
+          |
+          +-- gated_on grammar_budget_protocol_ready == true
+              Exp5366 live grammar-budgeted SOTA protocol
+                  |
+                  +-- gated_on structured_protocol_clean == true
+                      Exp5367 constraint-tax tool/action panel v2
 
-exp5351 --> exp5352 --> exp5362
-exp5353 --> exp5354 --> exp5362
+Exp5368 budget-curated memory governance
+  |
+  +-- gated_on budget_curated_memory_ready == true
+      Exp5369 budgeted continuous self-learning scale-up
 
-exp5355 --> exp5357 --> exp5362
-exp5356 --> exp5357 --> exp5362
+Exp5358/Exp5359 prior clean artifacts
+  |
+  +--> Exp5370 overwrite-capable solver guidance
+  +--> Exp5371 p-bit boundary-exchange schedule
 
-exp5358 --> exp5362
-exp5359 --> exp5362
-exp5360 --> exp5362
-exp5361 --> exp5362
+Exp5353/Exp5354 flagged artifacts
+  |
+  +--> Exp5372 token/internal-feature precondition gate
+
+Exp5360 ARC honest-null artifact
+  |
+  +--> Exp5373 live ARC salience repair and re86 +1 attempt
+
+Exp5361 hardware receipt
+  |
+  +--> Exp5374 hardware continuity receipts
+
+Exp5363-Exp5374
+  |
+  +--> Exp5375 capstone
 ```
-
-Structured gates in `research-roadmap-next.yaml`:
-
-- Exp 5352 runs only if `exp5351.structured_protocol_clean == true`.
-- Exp 5354 runs only if `exp5353.tokenprob_feature_rows_ready == true`.
-- Exp 5357 runs only if `exp5355.dependency_provenance_ready == true` and `exp5356.memory_tool_drift_ready == true`.
 
 ## Model and Inference Requirements
 
-Every task that needs an LLM must define `MODEL_SPECS` containing the mandated local SOTA GGUF models:
+Any task that calls an LLM must declare and use the mandated local GGUF SOTA model specs:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-The legacy small models may appear only as CPU smoke tests, never as headline-result models. Tasks must not use HuggingFace `AutoTokenizer` on GGUF repositories; they must use llama.cpp/cached GGUF paths as established by `scripts/experiment_template.py`.
+The legacy small models may be used only as CPU smoke tests and cannot supply headline results. GGUF repositories must run through llama.cpp-compatible GGUF loading paths; AutoTokenizer/AutoModel loading against a `-GGUF` repository is forbidden. Each live LLM artifact must record `MODEL_SPECS`, selected model, inference substrate, GPU/offload receipt, parser/schema metrics, unsafe false accepts, and no-autotokenizer evidence.
 
 ## Hardware Requirements
 
-| Substrate | Required in .488 | Claim boundary |
-|---|---:|---|
-| Dual RTX 3090 CUDA | Required for local GGUF structured-output/token-prob tasks | Runtime/protocol receipts only unless quality gates pass |
-| KV260 | SSH reachability check only: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` | No host `/dev/mmcblk*` evidence; no speedup claim |
-| PolarFire | Board-local hash-verified workload only if reachable | Workload receipt only; no speedup claim |
-| GateMate | Only record changed setup or unchanged blocker | No repeated unchanged detect loop |
-| Extropic TSU / Kona | Public context only | No local execution or speedup claim |
+- **Dual RTX 3090 CUDA:** required for live SOTA protocol tasks unless the task writes an honest blocked artifact. CPU-only SOTA headline reruns are retired and must not be revived.
+- **KV260:** check only by SSH, for example `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Do not inspect host `/dev/mmcblk*` devices as board evidence.
+- **PolarFire:** if reachable, run the established workload receipt path and record output hashes/timing as receipts only.
+- **GateMate:** perform current detect/toolchain checks only if the board/JTAG path is available; do not rerun unchanged blocked loops.
+- **Extropic TSU / Kona:** architecture references only. No execution, speedup, or baseline claim is allowed.
 
 ## No-Go Rules
 
 - Do not modify `research-roadmap.yaml`.
 - Do not modify `scripts/research_conductor.py`.
 - Do not push.
-- Do not reopen the retired Phase D external generated-text/logprob scorer scope.
-- Do not claim SOTA quality from parse-only protocol work.
-- Do not claim token-probability or internal-energy discrimination unless real backend features are present and the receipt is methodology-clean.
-- Do not claim hardware acceleration without authenticated local hardware workload and a valid comparison.
-- Do not solve ARC with outer-loop reverse engineering, per-game adapters, or offline ground-truth BFS. The `.488` ARC task must be live-path reachable and must declare `solve_provenance`.
+- Do not reopen retired external text-scorer, CPU-only GGUF offload, or ARC candidate-exploration-signal scopes.
+- Do not claim ARC solves from offline ground-truth BFS, hand-built per-game adapters, or outer-loop reverse engineering. The credited ARC path is live-agent self-discovery.
+- Do not claim hardware speedup without authenticated board timing, baseline timing, workload hash, and repeatability evidence.
+- Do not promote token/internal-energy signals from text-only completions or incomplete logprob rows.
 
 ## Expected End State
 
-By the end of `.488`, Carnot should know whether:
-
-- trigger-then-constrain makes local SOTA structured outputs clean enough for constrained verification;
-- constraint-tax metrics expose a real gap between valid-looking and semantically correct outputs;
-- token-probability energy has sufficient local backend features to continue;
-- continuous self-learning can scale with dependency provenance and memory-tool drift controls without TAUTOLOGY;
-- solver projection/cuts produce safer certificates than neural hints alone;
-- p-bit schedule variants merit hardware work;
-- the ARC live path gains or honestly fails a perception/salience level-up attempt; and
-- hardware remains continuity-only or has new authenticated board receipts.
+At the end of `.489`, Carnot should know whether the structured local SOTA lane can be repaired by grammar-budget preflight and completion slack, whether continuous self-learning remains clean under budget-curated memory governance, whether solver hints help only under overwrite-capable symbolic authority, and whether ARC/hardware continuity progressed without overclaiming. A clean milestone would unlock a later quality panel and broader solver-guided verification experiments; a blocked milestone should retire or narrow the failed lanes with explicit preconditions.

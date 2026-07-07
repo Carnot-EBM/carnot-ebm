@@ -27799,3 +27799,33 @@ Execution-time sweep after the `.488` planner refresh checked arXiv, OpenReview,
 - **Secondary-source status:** Semantic Scholar was rate-limited and no citation-trend claim is made. LLM-as-a-Verifier was not promoted because its public path depends on external logprob/scoring-token extraction.
 
 <!-- V488-EXECUTION-REFRESH-2026-07-07-END -->
+
+
+### V489 Planner Refresh - 2026-07-07
+
+Planner sweep for milestone `.489` checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub, Extropic writing, and Logical Intelligence public pages after `.488` completed. The items below are actionable for the next roadmap or explicit watch/no-go context.
+
+### New actionable findings
+- **G-RRM: Guiding Symbolic Solvers with Recurrent Reasoning Models** (https://arxiv.org/abs/2607.02491; code https://github.com/ml-jku/SE-RRM): neural full-solution proposals help most when the symbolic solver can overwrite bad hints; reported Sudoku backtracking and Glucose speedups do not transfer to solvers that always honor hints. Carnot hook: extend the clean Exp5358 solver-projection bridge with an overwrite-capable guidance matrix that logs overwrite rate, conflict delta, fallback completeness, post-projection validity, and harmful hint classes.
+- **Forget to Improve: On-Device LLM-Agent Continual Learning via Budget-Curated Memory** (https://arxiv.org/abs/2606.25115): on-device agents score memory by net value per byte under RAM, energy, and uplink budgets, with KEEP/SHARE/TRUST decisions that reduce stale/poisoned memory harm. Carnot hook: follow the clean `.488` dependency/drift self-learning artifacts with budget-curated memory governance, provenance/trust labels, no-weight-mutation enforcement, and attack/stale controls.
+- **Learning to Continually Learn via Meta-learning Agentic Memory Designs / ALMA** (https://arxiv.org/abs/2602.07755): a meta-agent searches memory schemas, retrieval, and update mechanisms. Carnot hook: use this as a bounded design-space enumeration reference only; Carnot should not run open-ended code-writing memory search until deterministic policy scoring and rollback guards are in place.
+- **Accelerating Constrained Decoding with Token Space Compression / CFGzip** (https://arxiv.org/abs/2605.29986): offline grammar/token-space compression reduces CFG constrained-decoding overhead. Carnot hook: repair the `.488` SOTA structured protocol by compiling schema grammar/token reachability and budget fixtures before live GGUF calls.
+- **TruncProof: A Guardrail for LLM-based JSON Generation under Token-Length Constraints** (https://arxiv.org/abs/2605.13076; code https://github.com/Yosshi999/TruncProof): LL(1)-style JSON completion slack detects when strict token budgets cannot finish valid JSON. Carnot hook: add completion-slack and truncation-vs-schema failure fields to the structured-output protocol before another live SOTA quality panel.
+- **FLaG: Fine-Grained Latent Grouping for Hallucination Detection** (https://arxiv.org/abs/2606.00301): frozen-model hallucination detection improves by grouping heterogeneous latent evidence families instead of collapsing to a single score. Carnot hook: future hidden-state/logit verifiers should aggregate feature families separately; text-only GGUF logprob rows are insufficient for latent-grouping claims.
+- **Thermodynamic Signatures of Reasoning: Free-Energy and Spectral-Form-Factor Diagnostics for Hallucination Detection in LLMs** (https://arxiv.org/abs/2606.19404): attention-Laplacian thermodynamic descriptors are proposed for hallucination detection. Carnot hook: watch item only unless the local runtime exposes attention or equivalent internal tensors; do not claim thermodynamic signatures from final text or incomplete token-probability rows.
+- **Programmable Probabilistic Computer with 1,000,000 p-bits** (https://arxiv.org/abs/2606.25313): networked FPGAs exchange boundary bits, and the communication-to-p-bit clock ratio controls when distributed operation approximates a monolithic p-bit machine. Carnot hook: extend Exp5359 from single-node CPU p-bit scheduling to a boundary-exchange timing-ratio simulation; still no local hardware speedup claim.
+
+### Secondary-source status
+- **Semantic Scholar:** direct API access to EBT `2507.02092` was rate-limited; ARM-EBM `2512.15605` returned eight citations and two influential citations on 2026-07-07. The citation trail includes distributional EBMs, ontology-constrained neural reasoning, graph energy matching, false-first-step detection, and energy-based Gibbs alignment. Carnot hook: use these as watch items for latent-loop/constraint-verifier design; do not reopen the retired external text-scorer lane.
+- **OpenReview/HuggingFace/GitHub:** OpenReview constrained-generation entries, HuggingFace paper mirrors, `Saibo-creator/Awesome-LLM-Constrained-Decoding`, `eth-sri/constrained-diffusion`, and `ml-jku/SE-RRM` are useful implementation references for grammar and solver-guidance experiments. None replaces local GGUF, deterministic solver, or live ARC requirements.
+- **Extropic:** current writing continues to describe TSU/XTR probabilistic computing architecture, but there is still no Carnot-accessible TSU hardware path. Treat as hardware architecture context only.
+- **Logical Intelligence:** recent public Kona/Aleph pages emphasize formal verification and an EBM-like reasoning layer beneath LLM interfaces. Carnot hook: prefer deterministic verifier/prover authority and certificate artifacts; no reproducible Kona baseline or speedup claim is available.
+
+### Planning impact
+- `.489` should repair the structured SOTA protocol with grammar-budget preflight, completion slack, schema reachability, and live local GGUF evidence before attempting the constraint-tax panel.
+- `.489` should extend continuous self-learning with budget-curated memory governance and a larger dependency/drift scale-up, preserving no-weight-mutation and rollback discipline.
+- `.489` should convert solver and p-bit results into overwrite-capable guidance and boundary-exchange diagnostics, keeping the symbolic solver authoritative.
+- `.489` should treat token/internal-energy work as a precondition and corrigendum lane unless the backend exposes logits, hidden states, or attention with clean artifact provenance.
+- `.489` should include the required ARC live-path level-up slot and hardware continuity receipt, but no duplicate ARC solve, host block-device KV260 evidence, TSU/Kona claim, or hardware speedup claim.
+
+<!-- V489-PLANNER-REFRESH-2026-07-07-END -->

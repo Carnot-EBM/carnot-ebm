@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-07-07 (Milestone 2026.07.489 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V489 planner refresh to `research-references.md`, incorporating recent
+  grammar-budgeted constrained decoding, JSON truncation guard, budget-curated memory,
+  overwrite-capable solver guidance, latent-feature hallucination detection, and p-bit
+  boundary-exchange findings.
+- The `.489` plan contains 13 conductor tasks across transition/source refresh,
+  structured SOTA repair, budgeted continuous self-learning, solver and p-bit diagnostics,
+  token/internal-feature gating, one ARC live-path level-up slot, hardware continuity, and
+  capstone synthesis.
+- Validation passed for roadmap schema parsing, gate audit, ARC level-up guarantee lint,
+  and exclusion-manifest lint. Repo-wide spec coverage remains blocked by the pre-existing
+  traceability backlog.
+
 ## 2026-07-07 (Milestone 2026.07.488 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
