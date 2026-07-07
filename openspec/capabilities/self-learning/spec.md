@@ -18775,3 +18775,126 @@ is shared
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5368 | Implemented (`python/carnot/experiment_5368_budget_curated_memory_governance_v489.py`, `results/experiment_5368_budget_curated_memory_governance_v489.json`) | Implemented (`tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py`) |
+
+---
+
+## REQ-LEARN-5369: Budgeted Continuous Self-Learning Scale-Up v489
+
+Experiment 5369 SHALL run the milestone's explicit continuous self-learning
+scale-up slot only when Exp5368 reports `budget_curated_memory_ready=true`.
+The experiment SHALL combine dependency provenance, memory drift detection,
+rollback, and budget-curated curation in one deterministic replay without
+loading a live model, invoking an API judge, fine-tuning an adapter, or
+mutating foundation weights.
+
+The deterministic replay SHALL build or run at least 12 multi-session traces
+and at least 30 checked events unless the checked-in fixture source is smaller
+and cannot be expanded. If a smaller fixture is the maximum available, the
+artifact SHALL state that limitation honestly. The policy comparison SHALL
+include the combined budget-curated memory loop, an always-full-context baseline, and a no-memory baseline where the deterministic trace rows support that comparison.
+
+The result artifact SHALL be
+`results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json`
+and SHALL include principle-wrapped `experiment_id`, principle-wrapped
+`milestone`, principle-wrapped `status` whose value is `complete` only if the
+gated scale-up runs, principle-wrapped `honest_verdict` whose value starts with
+`complete:` or `blocked_`, principle-wrapped `inference_substrate` with
+`value=deterministic_budgeted_continuous_self_learning_scaleup`, bare boolean
+`budget_curated_memory_ready` copied from Exp5368, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`continuous_self_learning_budget_scaleup_ready`, bare integer
+`multi_session_trace_count`, bare integer `checked_event_count`, bare numeric
+`context_efficiency_delta`, bare numeric `verifier_cost_delta`, bare numeric
+`quality_delta_vs_always_full`, bare numeric `dependency_attribution_rate`,
+bare numeric `drift_detection_rate`, bare numeric `rollback_recovery_rate`,
+bare numeric `stale_memory_deflection_rate`, bare numeric
+`poison_memory_deflection_rate`, bare integer `retained_bytes_delta`, bare
+integer `unsafe_false_accepts`, bare boolean `no_weight_mutation`, and
+principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Stable id ties the artifact to this roadmap task.
+- `milestone`: Keeps the scale-up tied to the `.489` budget-curated memory
+  milestone.
+- `status`: Complete only if the gated scale-up runs.
+- `honest_verdict`: One-line ready or blocked verdict with a terminal prefix.
+- `inference_substrate`: Expected value is
+  deterministic_budgeted_continuous_self_learning_scaleup.
+- `budget_curated_memory_ready`: Copied from the Exp5368 gate source.
+- `continuous_self_learning_target`: Bare boolean must be true to mark this as
+  the required milestone self-learning slot.
+- `continuous_self_learning_budget_scaleup_ready`: Bare boolean true only when
+  dependency, drift, rollback, budget, and quality metrics are all present.
+- `multi_session_trace_count`: Number of traces evaluated.
+- `checked_event_count`: Number of events checked by verifier or fixture.
+- `context_efficiency_delta`: Context reduction versus always-full baseline.
+- `verifier_cost_delta`: Verifier-cost reduction versus always-full or
+  always-verify baseline.
+- `quality_delta_vs_always_full`: Task-quality delta versus always-full
+  baseline.
+- `dependency_attribution_rate`: Fraction of selected memories with traceable
+  dependency edges.
+- `drift_detection_rate`: Fraction of induced drift cases detected.
+- `rollback_recovery_rate`: Fraction of bad-memory cases recovered after
+  rollback.
+- `stale_memory_deflection_rate`: Fraction of stale memories rejected or
+  quarantined.
+- `poison_memory_deflection_rate`: Fraction of poisoned memories rejected or
+  quarantined.
+- `retained_bytes_delta`: Bytes saved versus uncurated memory.
+- `unsafe_false_accepts`: Count of harmful, stale, or poisoned memories
+  accepted as useful.
+- `no_weight_mutation`: Must be true.
+- `tests_run`: Lists deterministic replay, coverage, and pytest commands.
+
+### REQ-LEARN-5369 Sub-requirements
+
+- REQ-LEARN-5369-1: The source gate SHALL load Exp5368 and copy
+  `budget_curated_memory_ready` into the artifact. A false gate SHALL block the
+  scale-up.
+- REQ-LEARN-5369-2: The replay SHALL evaluate at least 12 multi-session traces
+  and at least 30 checked events when the fixture can be expanded
+  deterministically.
+- REQ-LEARN-5369-3: The combined loop SHALL apply dependency provenance,
+  memory drift detection, rollback recovery, and budget-curated memory
+  decisions to the same event panel.
+- REQ-LEARN-5369-4: The policy comparison SHALL include always-full-context
+  and no-memory baselines where fixture rows allow those baselines to be
+  scored.
+- REQ-LEARN-5369-5: `continuous_self_learning_budget_scaleup_ready` SHALL be
+  true only when the Exp5368 gate passes, trace and checked-event counts meet
+  the scale target, dependency, drift, rollback, budget, and quality metrics
+  are present, quality is preserved versus always-full, context and verifier
+  cost are reduced, unsafe false accepts are zero, tests are recorded, and no
+  model weights mutate.
+
+### SCENARIO-LEARN-5369-GATE: Exp5368 Opens the Scale-Up
+
+**Given** Exp5368 reports `budget_curated_memory_ready=true`
+**When** Exp5369 checks its source gate
+**Then** the scale-up runs
+**And** the artifact copies `budget_curated_memory_ready=true`.
+
+### SCENARIO-LEARN-5369-SCALE: Budgeted Replay Meets the Larger Fixture Size
+
+**Given** expandable deterministic trace rows
+**When** Exp5369 builds the budgeted replay panel
+**Then** at least 12 multi-session traces are evaluated
+**And** at least 30 events are checked by the deterministic verifier or
+fixture.
+
+### SCENARIO-LEARN-5369-SAFETY-COST: Quality Is Preserved While Cost Falls
+
+**Given** the same event IDs for combined, always-full, and no-memory baselines
+**When** Exp5369 compares policy outcomes
+**Then** the combined loop preserves always-full quality
+**And** context efficiency and verifier cost improve
+**And** stale or poisoned memory is rejected or quarantined with zero unsafe
+false accepts.
+
+## Implementation Status (Exp 5369)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5369 | Implemented (`python/carnot/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.py`, `results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json`) | Implemented (`tests/python/test_experiment_5369_budgeted_continuous_self_learning_scaleup_v489.py`) |
