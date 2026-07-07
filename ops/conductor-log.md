@@ -10432,3 +10432,4 @@ web search: Semantic Schola |
 | 2026-07-06 22:59 UTC | Exp 5324: Gated runtime receipt stabilization afte | OK | cache hit: 96 passed, 1 warning in 13.78s |
 | 2026-07-06 23:17 UTC | Exp 5325: Deterministic Theoria-style rewrite-stat | OK | 88 passed, 1 warning in 10.92s |
 | 2026-07-07 00:41 UTC | Exp 5326: Gated SOTA paraphrase and rewrite smoke  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ompt_id": "rew |
+| 2026-07-07 00:53 UTC | Exp 5326: Gated SOTA paraphrase and rewrite smoke  | OK | cache hit: 87 passed, 1 warning in 13.11s |
