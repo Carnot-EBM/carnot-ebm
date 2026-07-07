@@ -1217,3 +1217,76 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5320 | Planned (`python/carnot/experiment_5320_capstone_v485.py`, `results/experiment_5320_capstone_v485.json`) | Planned (`tests/python/test_experiment_5320_capstone_v485.py`) |
+
+- REQ-CAPSTONE-5334: The `.486` milestone-close capstone aggregator
+  `exp5334-capstone-v486` in `python/carnot/experiment_5334_capstone_v486.py`
+  SHALL write `results/experiment_5334_capstone_v486.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every expected
+  `.486` upstream artifact from Exp5321 through Exp5333, record missing,
+  blocked, adversarially flagged, and conductor-gate outcomes explicitly, build
+  a gate table for runtime, SOTA quality, rewrite-state verification, SMT
+  corrigendum, context lifecycle, certificate-gated self-learning,
+  internal-signal receipts, KAN localization, and hardware, and synthesize the
+  milestone without promoting blocked transition work, bounded quality smoke,
+  flagged internal-signal diagnostics, bounded KAN localization, or
+  reachability-only hardware into quality, speedup, or certificate claims.
+- SCENARIO-CAPSTONE-5334: The artifact
+  `results/experiment_5334_capstone_v486.json` must emit top-level
+  principle-annotated fields `experiment_id`, `milestone`, `status`,
+  `honest_verdict`, `inference_substrate`, `artifacts_read`,
+  `missing_or_blocked_artifacts`, `gate_table`,
+  `next_milestone_recommendation`, and `tests_run`. The artifact must also emit
+  bare booleans
+  `runtime_stable`, `sota_quality_measured`, `rewrite_state_ready`,
+  `smt_corrigendum_clean`, `context_lifecycle_ready`,
+  `certificate_self_learning_ready`, `internal_signal_path_open`,
+  `kan_localization_ready`, `hardware_speedup_claim=false`,
+  `active_roadmap_modified=false`, and `conductor_modified=false`. The default
+  `.486` aggregation must summarize Exp5324 as stable native GGUF runtime with
+  `quality_claim_permitted=false`, Exp5326 as bounded fixture-scored SOTA smoke
+  with `headline_quality_claim=false`, Exp5325 as rewrite-state fixture ready,
+  Exp5327 as clean deterministic SMT corrigendum evidence only, Exp5328 through
+  Exp5330 as deterministic self-learning/context positives with no weight
+  mutation, Exp5331 as an opened token-probability internal-signal path that is
+  still adversarially flagged and not a quality claim, Exp5332 as bounded KAN
+  counterexample localization with no broad certificate claim, and Exp5333 as
+  reachability-only hardware with no authenticated workload and no speedup
+  claim. The terminal `honest_verdict.value` must start with `complete:` or
+  `blocked_` and state the true `.486` closure without laundering blocked,
+  flagged, missing, bounded, reachability-only, or no-headline-quality evidence.
+- SCENARIO-CAPSTONE-5334-BLOCKED-MISSING-INPUT: If any expected Exp5321 through
+  Exp5333 artifact is absent or unreadable, the workflow must still write
+  `results/experiment_5334_capstone_v486.json` with `honest_verdict.value`
+  starting with `blocked_missing_required`, record the missing or malformed
+  artifact in `missing_or_blocked_artifacts.value`, keep
+  `hardware_speedup_claim=false`, keep `active_roadmap_modified=false`, and keep
+  `conductor_modified=false`.
+- SCENARIO-CAPSTONE-5334-FIELD-PRINCIPLES: The required field principles are:
+  `experiment_id` = "identifies Exp5334 as the `.486` capstone artifact so
+  downstream reconciliation cannot confuse it with an upstream runtime,
+  self-learning, KAN, or hardware task.", `milestone` = "binds the aggregation
+  to 2026.07.486 and the close-state read of Exp5321 through Exp5333.",
+  `status` = "complete only when every expected artifact is readable; otherwise
+  blocked_missing_required.", `honest_verdict` = "terminal prefix; starts with
+  complete: or blocked_ and summarizes the milestone without laundering blocked,
+  flagged, bounded, missing, no-speedup, or no-headline-quality evidence.",
+  `inference_substrate` = "artifact_synthesis_and_gate_reconciliation because
+  the capstone reads local artifacts and conductor notes without running model,
+  solver, or hardware workloads.", `artifacts_read` = "every readable upstream
+  artifact with path, experiment identity, status, verdict, sha256, and
+  conductor outcome when available.", `missing_or_blocked_artifacts` = "missing,
+  malformed, blocked, flagged, and conductor-gate outcomes that must remain
+  first-class and cannot be rounded up.", `gate_table` = "one reconciled row per
+  requested gate with source artifacts, boolean outcome, claim boundary, and
+  blocker or caveat text.", `next_milestone_recommendation` = "short next branch
+  recommendation grounded only in the reconciled gates.", and `tests_run` =
+  "validation commands and outcomes used to check the capstone
+  module, artifact, coverage, and required repository test status."
+
+## Implementation Status (REQ-CAPSTONE-5334)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5334 | Planned (`python/carnot/experiment_5334_capstone_v486.py`, `results/experiment_5334_capstone_v486.json`) | Planned (`tests/python/test_experiment_5334_capstone_v486.py`) |
