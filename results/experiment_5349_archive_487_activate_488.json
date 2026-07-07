@@ -1,0 +1,292 @@
+{
+  "activated_milestone": {
+    "principle": "Records the destination milestone being staged.",
+    "value": "2026.07.488"
+  },
+  "active_roadmap_modified": false,
+  "archived_milestone": {
+    "principle": "Records the source milestone being closed.",
+    "value": "2026.07.487"
+  },
+  "cited_upstream_artifacts": {
+    "principle": "Makes the transition auditable without re-running experiments.",
+    "value": [
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "CLAUDE.md",
+        "sha256": "sha256:3f0b49b310cd2e507887754c891ab2ae9758b3ee7e6fd0b79b9928a85f5d9ca2"
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "research-roadmap.yaml",
+        "sha256": "sha256:91858643ccf6fd081d5ec09cb03f107b9c06baf904acb9180605830d00eed38d"
+      },
+      {
+        "exists": false,
+        "read_only": true,
+        "relative_path": "research-roadmap-next.yaml",
+        "sha256": null
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "sha256": "sha256:e8109ae5b6d64228a8ab2bdd5926c6002f30c4930cbc95b725962cb2fb061361"
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "ops/status.md",
+        "sha256": "sha256:81f707f8903dd5915abd5e965df9ee384452091a1ba224727e8de77dfebdf9cb"
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "ops/changelog.md",
+        "sha256": "sha256:f414a1ad2d6fe3eff3bc15295d60f1e43e785fc714050f8ab378080f3e7dd05c"
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "ops/conductor-log.md",
+        "sha256": "sha256:b69b2cf02602c66b4870942f3d7cc6ebc54ea03e144359770fffe8bb9a73cc87"
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "results/experiment_5348_capstone_v487.json",
+        "sha256": "sha256:7cc90d8dbf57bd4d65f2cb0e3744e9df3c6aeed104cfd49794f1b1bf016cfb5b"
+      },
+      {
+        "exists": true,
+        "read_only": true,
+        "relative_path": "scripts/research_conductor.py",
+        "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+      }
+    ]
+  },
+  "conductor_modified": false,
+  "duration_s": 0.041397,
+  "experiment": "experiment_5349_archive_487_activate_488",
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": "exp5349-archive-487-activate-488"
+  },
+  "failed_preconditions": [
+    "roadmap_next_missing"
+  ],
+  "field_principles": {
+    "activated_milestone": "Records the destination milestone being staged.",
+    "active_roadmap_modified": "Bare boolean must remain false because activation is conductor-owned.",
+    "archived_milestone": "Records the source milestone being closed.",
+    "cited_upstream_artifacts": "Makes the transition auditable without re-running experiments.",
+    "conductor_modified": "Bare boolean must remain false by operator instruction.",
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "Terminal prefix `complete:` or `blocked_` prevents ambiguous reconciliation.",
+    "inference_substrate": "This is aggregation from upstream artifacts, not fresh inference.",
+    "milestone": "Prevents cross-milestone evidence laundering.",
+    "milestone_doc_present": "Bare boolean guard against roadmap/doc drift.",
+    "preconditions_checked": "Records which files/resources existed before writing the artifact.",
+    "roadmap_next_present": "Bare boolean guard against activation without a pre-staged roadmap.",
+    "status": "Lets the conductor distinguish completed, blocked, and partial work.",
+    "v487_capstone_verdict": "Carries forward the actual capstone truth."
+  },
+  "honest_verdict": {
+    "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous reconciliation.",
+    "value": "blocked_archive_487_activate_488: transition preconditions failed; roadmap_next_present=false; no active roadmap overwrite or conductor edit was performed by this task."
+  },
+  "inference_substrate": {
+    "principle": "This is aggregation from upstream artifacts, not fresh inference.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone": {
+    "principle": "Prevents cross-milestone evidence laundering.",
+    "value": "2026.07.488"
+  },
+  "milestone_doc_present": true,
+  "preconditions_checked": {
+    "principle": "Records which files/resources existed before writing the artifact.",
+    "value": {
+      "active_roadmap_milestone": "2026.07.488",
+      "active_roadmap_modified": false,
+      "active_roadmap_present": true,
+      "capstone_loadable": true,
+      "capstone_present": true,
+      "checked_paths": [
+        "results/experiment_5348_capstone_v487.json",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "scripts/research_conductor.py"
+      ],
+      "conductor_modified": false,
+      "milestone_doc_names_activated_milestone": true,
+      "milestone_doc_present": true,
+      "no_active_roadmap_overwrite_performed": true,
+      "no_conductor_edit_performed": true,
+      "ops_reconciliation_delegated": true,
+      "roadmap_next_milestone": null,
+      "roadmap_next_names_activated_milestone": false,
+      "roadmap_next_present": false
+    }
+  },
+  "random_seed": 5349,
+  "reproducibility_checksum": "sha256:573ac6c2dafeb97bf1d7a45e6c7798febaf4a77b9d407ce4bfaf223f851a73f2",
+  "result_path": "results/experiment_5349_archive_487_activate_488.json",
+  "roadmap_next_present": false,
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5349_archive_487_activate_488.v1",
+  "spec_refs": [
+    "REQ-REPORT-5349",
+    "SCENARIO-REPORT-5349",
+    "SCENARIO-REPORT-5349-BLOCKED-NEXT-ROADMAP"
+  ],
+  "status": {
+    "principle": "Lets the conductor distinguish completed, blocked, and partial work.",
+    "value": "blocked"
+  },
+  "v487_capstone_proves": {
+    "principle": "Summarizes only fields present in the .487 capstone so this transition cannot turn flagged, bounded, no-speedup, no-quality, or blocked evidence into a stronger claim.",
+    "value": {
+      "bounded_compressor_ready": true,
+      "bounded_sota_quality_usable": false,
+      "capstone_active_roadmap_modified": false,
+      "capstone_conductor_modified": false,
+      "capstone_honest_verdict": "complete: .487 synthesized with runtime_clean=True, structured_output_protocol_ready=False, bounded_sota_quality_usable=False, utility_memory_ready=True, bounded_compressor_ready=True, self_learning_scaleup_ready=False, qstr_solver_kan_clean=True, internal_energy_corrigendum_clean=False, hardware_speedup_claim=false",
+      "capstone_inference_substrate": "aggregation_from_upstream_artifacts",
+      "capstone_milestone": "2026.07.487",
+      "capstone_status": "complete",
+      "do_not_claim": [
+        "headline_sota_quality",
+        "structured_protocol_clean_success",
+        "self_learning_scaleup_clean",
+        "internal_energy_clean",
+        "broad_kan_certificate",
+        "hardware_speedup"
+      ],
+      "gate_claim_boundaries": [
+        {
+          "claim_boundary": "runtime receipt only; no SOTA quality claim",
+          "classification": "clean_runtime_no_quality_claim",
+          "gate": "runtime",
+          "ready": true,
+          "source_artifacts": [
+            "results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "parse-only protocol candidate; no quality claim",
+          "classification": "flagged_parse_only_protocol_candidate",
+          "gate": "structured_output_protocol",
+          "ready": false,
+          "source_artifacts": [
+            "results/experiment_5338_structured_output_protocol_calibration_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "bounded fixture panel only; no headline SOTA quality claim",
+          "classification": "blocked_quality_panel_not_usable",
+          "gate": "sota_bounded_quality",
+          "ready": false,
+          "source_artifacts": [
+            "results/experiment_5339_gated_sota_claim_rewrite_panel_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "deterministic utility learning over context operations; no weight mutation",
+          "classification": "clean_utility_memory_fixture",
+          "gate": "utility_memory",
+          "ready": true,
+          "source_artifacts": [
+            "results/experiment_5340_utility_weighted_context_memory_v487.json",
+            "results/experiment_5340_utility_weighted_context_memory_q_values_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "bounded deterministic compressor and drift monitor only",
+          "classification": "clean_bounded_compressor_fixture",
+          "gate": "bounded_compressor",
+          "ready": true,
+          "source_artifacts": [
+            "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "multi-session context-policy scale-up only when not flagged",
+          "classification": "flagged_scaleup_not_claimable",
+          "gate": "self_learning_scaleup",
+          "ready": false,
+          "source_artifacts": [
+            "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "deterministic temporal/spatial fixture; solver remains authoritative",
+          "classification": "clean_deterministic_qstr_fixture",
+          "gate": "qstr_fixture",
+          "ready": true,
+          "source_artifacts": [
+            "results/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "solver-authoritative overwrite telemetry; not LLM correctness",
+          "classification": "clean_solver_guidance_telemetry",
+          "gate": "solver_guidance",
+          "ready": true,
+          "source_artifacts": [
+            "results/experiment_5344_solver_guidance_overwrite_telemetry_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "internal token-probability diagnostic only; no text-scorer reopening",
+          "classification": "blocked_and_flagged_energy_corrigendum",
+          "gate": "token_probability_energy",
+          "ready": false,
+          "source_artifacts": [
+            "results/experiment_5345_tokenprob_energy_corrigendum_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "bounded explicit cuts only; no broad KAN certificate claim",
+          "classification": "bounded_constraint_bridge_clean",
+          "gate": "kan_constraint_bridge",
+          "ready": true,
+          "source_artifacts": [
+            "results/experiment_5346_kan_ising_counterexample_constraint_bridge_v487.json"
+          ]
+        },
+        {
+          "claim_boundary": "hardware continuity and board-local smoke only; no speedup claim",
+          "classification": "continuity_workload_receipt_no_speedup",
+          "gate": "hardware",
+          "ready": true,
+          "source_artifacts": [
+            "results/experiment_5347_hardware_continuity_workload_receipts_v487.json"
+          ]
+        }
+      ],
+      "hardware_speedup_claim": false,
+      "internal_energy_corrigendum_clean": false,
+      "kan_constraint_bridge_ready": true,
+      "qstr_fixture_ready": true,
+      "runtime_clean": true,
+      "self_learning_scaleup_ready": false,
+      "solver_guidance_ready": true,
+      "structured_output_protocol_ready": false,
+      "utility_memory_ready": true
+    }
+  },
+  "v487_capstone_verdict": {
+    "principle": "Carries forward the actual capstone truth.",
+    "value": "complete: .487 synthesized with runtime_clean=True, structured_output_protocol_ready=False, bounded_sota_quality_usable=False, utility_memory_ready=True, bounded_compressor_ready=True, self_learning_scaleup_ready=False, qstr_solver_kan_clean=True, internal_energy_corrigendum_clean=False, hardware_speedup_claim=false"
+  }
+}
