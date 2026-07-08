@@ -18898,3 +18898,100 @@ false accepts.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5369 | Implemented (`python/carnot/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.py`, `results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json`) | Implemented (`tests/python/test_experiment_5369_budgeted_continuous_self_learning_scaleup_v489.py`) |
+
+---
+
+## REQ-LEARN-5381: Budget Memory Tautology Corrigendum v490
+
+Experiment 5381 SHALL produce a clean corrigendum for the Exp5368
+budget-curated memory artifact before downstream continuous self-learning
+depends on that gate. The corrigendum SHALL inspect
+`results/experiment_5368_budget_curated_memory_governance_v489.json` and
+`ops/conductor-log.md`, record the exact TAUTOLOGY reason, and recompute memory
+KEEP, SHARE, TRUST, readiness, rollback, and false-accept fields from
+row-level evidence instead of copying or restating the Exp5368 conclusion.
+
+Each evaluated row SHALL carry value evidence, byte cost, latency proxy cost,
+energy proxy cost, provenance, trust label, stale and poison control inputs, and
+rollback evidence. The row panel SHALL include negative controls for stale
+memory, poisoned memory, and high-cost low-value memory. A negative control
+passes only when the stale or poisoned memory is rejected or quarantined and the
+high-cost low-value memory is dropped. The corrigendum SHALL fail closed when
+any required row evidence is missing, when a negative control is accepted as
+good memory, when rollback evidence is absent, or when aggregate fields are not
+mechanically recomputed from rows.
+
+The result artifact SHALL be
+`results/experiment_5381_budget_memory_tautology_corrigendum_v490.json` and
+SHALL include `status`, `budget_memory_corrigendum_clean`, `source_artifact`,
+`row_count`, `recomputed_fields_from_rows`, `anti_tautology_controls`,
+`negative_controls_count`, `negative_controls_passed`,
+`keep_share_trust_policy_ready`, `no_weight_mutation`, `rollback_supported`,
+`unsafe_false_accepts`, `tests_run`, and `honest_verdict`. The artifact SHALL
+also include field principles documenting those required fields.
+
+The required field principles SHALL be:
+
+- `status`: Complete only if row-level evidence and controls were evaluated.
+- `budget_memory_corrigendum_clean`: True only if readiness is recomputed from
+  rows and anti-tautology controls pass.
+- `source_artifact`: Path to the Exp5368 artifact reviewed.
+- `row_count`: Number of memory decision rows evaluated.
+- `recomputed_fields_from_rows`: List of aggregate fields derived mechanically
+  from rows.
+- `anti_tautology_controls`: Object describing controls and pass/fail status.
+- `negative_controls_count`: Number of stale, poison, and high-cost controls.
+- `negative_controls_passed`: Count of negative controls rejected correctly.
+- `keep_share_trust_policy_ready`: True only if decisions are supported by row
+  evidence.
+- `no_weight_mutation`: Must be true.
+- `rollback_supported`: True only if rollback behavior is evidenced.
+- `unsafe_false_accepts`: Count of bad memory decisions accepted as good.
+- `tests_run`: List of commands run or explicit no-code-change explanation.
+- `honest_verdict`: One-line clean or blocked verdict.
+
+### REQ-LEARN-5381 Sub-requirements
+
+- REQ-LEARN-5381-1: The corrigendum SHALL preserve the exact Exp5368
+  adversarial TAUTOLOGY reason in a reviewed-source finding.
+- REQ-LEARN-5381-2: The corrigendum SHALL build row-level evidence with value,
+  byte cost, latency proxy cost, energy proxy cost, provenance, trust label,
+  stale control, poison control, and rollback fields for every memory decision.
+- REQ-LEARN-5381-3: The corrigendum SHALL recompute aggregate readiness fields
+  from row evidence and SHALL list those fields in
+  `recomputed_fields_from_rows`.
+- REQ-LEARN-5381-4: Stale, poisoned, and high-cost low-value negative controls
+  SHALL be rejected correctly before `budget_memory_corrigendum_clean` can be
+  true.
+- REQ-LEARN-5381-5: The clean gate SHALL require zero unsafe false accepts,
+  supported rollback behavior, no model weight mutation, recorded tests, and
+  passing anti-tautology controls.
+
+### SCENARIO-LEARN-5381-ROW-EVIDENCE: Aggregates Derive From Rows
+
+**Given** the Exp5368 memory decision rows
+**When** Exp5381 converts them into evidence rows and recomputes aggregate
+fields
+**Then** `row_count` equals the evaluated evidence-row count
+**And** `keep_share_trust_policy_ready`, `rollback_supported`, and
+`unsafe_false_accepts` are derived from row predicates.
+
+### SCENARIO-LEARN-5381-NEGATIVE-CONTROLS: Bad Memory Is Rejected
+
+**Given** stale, poisoned, and high-cost low-value control rows
+**When** the corrigendum evaluates anti-tautology controls
+**Then** all three controls are counted
+**And** all three are rejected correctly before the clean gate can pass.
+
+### SCENARIO-LEARN-5381-FAIL-CLOSED: Unsupported Rows Block Readiness
+
+**Given** rows that omit cost evidence or accept poisoned memory as trusted
+**When** the corrigendum recomputes readiness
+**Then** `budget_memory_corrigendum_clean=false`
+**And** `honest_verdict` starts with `blocked_`.
+
+## Implementation Status (Exp 5381)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5381 | Implemented (`python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py`, `results/experiment_5381_budget_memory_tautology_corrigendum_v490.json`) | Implemented (`tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py`) |

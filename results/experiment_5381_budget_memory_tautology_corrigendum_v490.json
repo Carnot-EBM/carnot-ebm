@@ -1,0 +1,557 @@
+{
+  "aggregate_recomputation": {
+    "keep_ids": [
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-dependency-edge",
+      "mem5368-clean-scaleup-summary"
+    ],
+    "keep_share_trust_policy_ready": true,
+    "negative_control_ids": [
+      "mem5368-clean-low-value-overbudget",
+      "mem5368-stale-runtime-receipt",
+      "mem5368-poisoned-tool-override"
+    ],
+    "negative_controls_count": 3,
+    "negative_controls_passed": 3,
+    "retained_bytes": 400,
+    "rollback_supported": true,
+    "row_count": 7,
+    "share_ids": [
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-dependency-edge"
+    ],
+    "trust_ids": [
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-dependency-edge",
+      "mem5368-clean-scaleup-summary",
+      "mem5368-clean-low-value-overbudget"
+    ],
+    "unsafe_false_accepts": 0
+  },
+  "anti_tautology_controls": {
+    "aggregate_recomputed_from_rows": true,
+    "all_passed": true,
+    "budget_match_explained_by_row_sum": true,
+    "failed_controls": [],
+    "negative_controls_rejected": true,
+    "recomputed_fields": [
+      "row_count",
+      "retained_bytes",
+      "keep_ids",
+      "share_ids",
+      "trust_ids",
+      "negative_controls_count",
+      "negative_controls_passed",
+      "keep_share_trust_policy_ready",
+      "rollback_supported",
+      "unsafe_false_accepts"
+    ],
+    "rollback_evidenced": true,
+    "row_level_evidence_present": true,
+    "source_ready_not_copied": true,
+    "source_tautology_preserved": true,
+    "source_tautology_reason": "budget_bytes=400.0 and retained_bytes=400.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+    "tests_recorded": true,
+    "unsafe_false_accepts_zero": true
+  },
+  "budget_memory_corrigendum_clean": true,
+  "experiment": "experiment_5381_budget_memory_tautology_corrigendum_v490",
+  "experiment_id": "exp5381-v490-budget-memory-tautology-corrigendum",
+  "field_principles": {
+    "anti_tautology_controls": "Object describing controls and pass/fail status.",
+    "budget_memory_corrigendum_clean": "True only if readiness is recomputed from rows and anti-tautology controls pass.",
+    "honest_verdict": "One-line clean or blocked verdict.",
+    "keep_share_trust_policy_ready": "True only if decisions are supported by row evidence.",
+    "negative_controls_count": "Number of stale, poison, and high-cost controls.",
+    "negative_controls_passed": "Count of negative controls rejected correctly.",
+    "no_weight_mutation": "Must be true.",
+    "recomputed_fields_from_rows": "List of aggregate fields derived mechanically from rows.",
+    "rollback_supported": "True only if rollback behavior is evidenced.",
+    "row_count": "Number of memory decision rows evaluated.",
+    "source_artifact": "Path to the Exp5368 artifact reviewed.",
+    "status": "Complete only if row-level evidence and controls were evaluated.",
+    "tests_run": "List of commands run or explicit no-code-change explanation.",
+    "unsafe_false_accepts": "Count of bad memory decisions accepted as good."
+  },
+  "honest_verdict": "complete: budget_memory_corrigendum_clean from row evidence; stale, poisoned, and high-cost controls rejected with zero unsafe false accepts",
+  "keep_share_trust_policy_ready": true,
+  "memory_evidence_rows": [
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "control_kind": "",
+      "control_passed": true,
+      "cost_evidence": {
+        "byte_cost": 100,
+        "energy_proxy_mj": 0.0407,
+        "latency_proxy_ms": 0.15
+      },
+      "decision_inputs_measured": {
+        "all_required": true,
+        "byte_cost": true,
+        "energy_proxy_cost": true,
+        "latency_proxy_cost": true,
+        "poison_control": true,
+        "provenance": true,
+        "rollback": true,
+        "stale_control": true,
+        "trust_label": true,
+        "value": true
+      },
+      "harmful": false,
+      "memory_id": "mem5368-clean-rollback-route",
+      "memory_variant": "clean",
+      "poison_control": {
+        "risk": 0.02,
+        "threshold": 0.7
+      },
+      "provenance": {
+        "evidence_summary": "rollback route that restores clean selection",
+        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
+        "source_ref": "exp5356:choose-rollback-route:rollback",
+        "verified": true
+      },
+      "rank_by_row_score": 1,
+      "recomputed_keep_decision": "KEEP",
+      "recomputed_share_decision": "SHARE",
+      "recomputed_trust_decision": "TRUST",
+      "rollback_evidence": {
+        "available": false,
+        "recovered": false,
+        "required": false
+      },
+      "source_keep_decision": "KEEP",
+      "source_share_decision": "SHARE",
+      "source_trust_decision": "TRUST",
+      "stale_control": {
+        "risk": 0.03,
+        "threshold": 0.6
+      },
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_evidence": {
+        "estimated_verifier_value": 0.85,
+        "harm_score": 0.1,
+        "value_minus_harm_per_byte": 0.0075
+      }
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "control_kind": "",
+      "control_passed": true,
+      "cost_evidence": {
+        "byte_cost": 120,
+        "energy_proxy_mj": 0.0484,
+        "latency_proxy_ms": 0.18
+      },
+      "decision_inputs_measured": {
+        "all_required": true,
+        "byte_cost": true,
+        "energy_proxy_cost": true,
+        "latency_proxy_cost": true,
+        "poison_control": true,
+        "provenance": true,
+        "rollback": true,
+        "stale_control": true,
+        "trust_label": true,
+        "value": true
+      },
+      "harmful": false,
+      "memory_id": "mem5368-clean-dependency-edge",
+      "memory_variant": "clean",
+      "poison_control": {
+        "risk": 0.01,
+        "threshold": 0.7
+      },
+      "provenance": {
+        "evidence_summary": "dependency edge that reconstructs safe retrieval",
+        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+        "source_ref": "exp5355:dep-positive-retrieval",
+        "verified": true
+      },
+      "rank_by_row_score": 2,
+      "recomputed_keep_decision": "KEEP",
+      "recomputed_share_decision": "SHARE",
+      "recomputed_trust_decision": "TRUST",
+      "rollback_evidence": {
+        "available": false,
+        "recovered": false,
+        "required": false
+      },
+      "source_keep_decision": "KEEP",
+      "source_share_decision": "SHARE",
+      "source_trust_decision": "TRUST",
+      "stale_control": {
+        "risk": 0.02,
+        "threshold": 0.6
+      },
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_evidence": {
+        "estimated_verifier_value": 0.95,
+        "harm_score": 0.11,
+        "value_minus_harm_per_byte": 0.007
+      }
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "control_kind": "",
+      "control_passed": true,
+      "cost_evidence": {
+        "byte_cost": 180,
+        "energy_proxy_mj": 0.0728,
+        "latency_proxy_ms": 0.27
+      },
+      "decision_inputs_measured": {
+        "all_required": true,
+        "byte_cost": true,
+        "energy_proxy_cost": true,
+        "latency_proxy_cost": true,
+        "poison_control": true,
+        "provenance": true,
+        "rollback": true,
+        "stale_control": true,
+        "trust_label": true,
+        "value": true
+      },
+      "harmful": false,
+      "memory_id": "mem5368-clean-scaleup-summary",
+      "memory_variant": "clean",
+      "poison_control": {
+        "risk": 0.02,
+        "threshold": 0.7
+      },
+      "provenance": {
+        "evidence_summary": "combined policy summary with zero unsafe accepts",
+        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
+        "source_ref": "exp5357:trace-memory-poisoned-tool:combined",
+        "verified": true
+      },
+      "rank_by_row_score": 3,
+      "recomputed_keep_decision": "KEEP",
+      "recomputed_share_decision": "DO_NOT_SHARE",
+      "recomputed_trust_decision": "TRUST",
+      "rollback_evidence": {
+        "available": false,
+        "recovered": false,
+        "required": false
+      },
+      "source_keep_decision": "KEEP",
+      "source_share_decision": "DO_NOT_SHARE",
+      "source_trust_decision": "TRUST",
+      "stale_control": {
+        "risk": 0.04,
+        "threshold": 0.6
+      },
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_evidence": {
+        "estimated_verifier_value": 0.92,
+        "harm_score": 0.18,
+        "value_minus_harm_per_byte": 0.004111
+      }
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "control_kind": "negative_high_cost_low_value",
+      "control_passed": true,
+      "cost_evidence": {
+        "byte_cost": 220,
+        "energy_proxy_mj": 0.0888,
+        "latency_proxy_ms": 0.33
+      },
+      "decision_inputs_measured": {
+        "all_required": true,
+        "byte_cost": true,
+        "energy_proxy_cost": true,
+        "latency_proxy_cost": true,
+        "poison_control": true,
+        "provenance": true,
+        "rollback": true,
+        "stale_control": true,
+        "trust_label": true,
+        "value": true
+      },
+      "harmful": false,
+      "memory_id": "mem5368-clean-low-value-overbudget",
+      "memory_variant": "low_value",
+      "poison_control": {
+        "risk": 0.02,
+        "threshold": 0.7
+      },
+      "provenance": {
+        "evidence_summary": "clean but low-value summary that does not fit the budget",
+        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
+        "source_ref": "exp5357:trace-cycle-benign-drift-control",
+        "verified": true
+      },
+      "rank_by_row_score": 4,
+      "recomputed_keep_decision": "DROP",
+      "recomputed_share_decision": "DO_NOT_SHARE",
+      "recomputed_trust_decision": "TRUST",
+      "rollback_evidence": {
+        "available": false,
+        "recovered": false,
+        "required": false
+      },
+      "source_keep_decision": "DROP",
+      "source_share_decision": "DO_NOT_SHARE",
+      "source_trust_decision": "TRUST",
+      "stale_control": {
+        "risk": 0.04,
+        "threshold": 0.6
+      },
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_evidence": {
+        "estimated_verifier_value": 0.45,
+        "harm_score": 0.09,
+        "value_minus_harm_per_byte": 0.001636
+      }
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "control_kind": "negative_stale",
+      "control_passed": true,
+      "cost_evidence": {
+        "byte_cost": 90,
+        "energy_proxy_mj": 0.0445,
+        "latency_proxy_ms": 0.135
+      },
+      "decision_inputs_measured": {
+        "all_required": true,
+        "byte_cost": true,
+        "energy_proxy_cost": true,
+        "latency_proxy_cost": true,
+        "poison_control": true,
+        "provenance": true,
+        "rollback": true,
+        "stale_control": true,
+        "trust_label": true,
+        "value": true
+      },
+      "harmful": true,
+      "memory_id": "mem5368-stale-runtime-receipt",
+      "memory_variant": "stale",
+      "poison_control": {
+        "risk": 0.05,
+        "threshold": 0.7
+      },
+      "provenance": {
+        "evidence_summary": "old runtime receipt that would route to stale rollback",
+        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
+        "source_ref": "exp5356:choose-rollback-route:stale",
+        "verified": true
+      },
+      "rank_by_row_score": 5,
+      "recomputed_keep_decision": "QUARANTINE",
+      "recomputed_share_decision": "DO_NOT_SHARE",
+      "recomputed_trust_decision": "UNTRUST",
+      "rollback_evidence": {
+        "available": true,
+        "recovered": true,
+        "required": true
+      },
+      "source_keep_decision": "QUARANTINE",
+      "source_share_decision": "DO_NOT_SHARE",
+      "source_trust_decision": "UNTRUST",
+      "stale_control": {
+        "risk": 0.75,
+        "threshold": 0.6
+      },
+      "trust_label": "stale",
+      "useful": false,
+      "value_evidence": {
+        "estimated_verifier_value": 0.7,
+        "harm_score": 0.92,
+        "value_minus_harm_per_byte": -0.002444
+      }
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "control_kind": "",
+      "control_passed": true,
+      "cost_evidence": {
+        "byte_cost": 70,
+        "energy_proxy_mj": 0.033,
+        "latency_proxy_ms": 0.105
+      },
+      "decision_inputs_measured": {
+        "all_required": true,
+        "byte_cost": true,
+        "energy_proxy_cost": true,
+        "latency_proxy_cost": true,
+        "poison_control": true,
+        "provenance": true,
+        "rollback": true,
+        "stale_control": true,
+        "trust_label": true,
+        "value": true
+      },
+      "harmful": true,
+      "memory_id": "mem5368-unverified-sharing-tip",
+      "memory_variant": "unverified",
+      "poison_control": {
+        "risk": 0.2,
+        "threshold": 0.7
+      },
+      "provenance": {
+        "evidence_summary": "unsourced sharing hint with weak provenance",
+        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+        "source_ref": "exp5355:unverified-share-tip",
+        "verified": false
+      },
+      "rank_by_row_score": 6,
+      "recomputed_keep_decision": "QUARANTINE",
+      "recomputed_share_decision": "DO_NOT_SHARE",
+      "recomputed_trust_decision": "UNTRUST",
+      "rollback_evidence": {
+        "available": true,
+        "recovered": true,
+        "required": true
+      },
+      "source_keep_decision": "QUARANTINE",
+      "source_share_decision": "DO_NOT_SHARE",
+      "source_trust_decision": "UNTRUST",
+      "stale_control": {
+        "risk": 0.1,
+        "threshold": 0.6
+      },
+      "trust_label": "unverified",
+      "useful": false,
+      "value_evidence": {
+        "estimated_verifier_value": 0.55,
+        "harm_score": 0.8,
+        "value_minus_harm_per_byte": -0.003571
+      }
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "control_kind": "negative_poisoned",
+      "control_passed": true,
+      "cost_evidence": {
+        "byte_cost": 80,
+        "energy_proxy_mj": 0.051,
+        "latency_proxy_ms": 0.12
+      },
+      "decision_inputs_measured": {
+        "all_required": true,
+        "byte_cost": true,
+        "energy_proxy_cost": true,
+        "latency_proxy_cost": true,
+        "poison_control": true,
+        "provenance": true,
+        "rollback": true,
+        "stale_control": true,
+        "trust_label": true,
+        "value": true
+      },
+      "harmful": true,
+      "memory_id": "mem5368-poisoned-tool-override",
+      "memory_variant": "poisoned",
+      "poison_control": {
+        "risk": 0.9,
+        "threshold": 0.7
+      },
+      "provenance": {
+        "evidence_summary": "poisoned memory that asks to accept without verifier",
+        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
+        "source_ref": "exp5356:select-safety-gate:poisoned",
+        "verified": true
+      },
+      "rank_by_row_score": 7,
+      "recomputed_keep_decision": "QUARANTINE",
+      "recomputed_share_decision": "DO_NOT_SHARE",
+      "recomputed_trust_decision": "UNTRUST",
+      "rollback_evidence": {
+        "available": true,
+        "recovered": true,
+        "required": true
+      },
+      "source_keep_decision": "QUARANTINE",
+      "source_share_decision": "DO_NOT_SHARE",
+      "source_trust_decision": "UNTRUST",
+      "stale_control": {
+        "risk": 0.1,
+        "threshold": 0.6
+      },
+      "trust_label": "poisoned",
+      "useful": false,
+      "value_evidence": {
+        "estimated_verifier_value": 0.8,
+        "harm_score": 1.35,
+        "value_minus_harm_per_byte": -0.006875
+      }
+    }
+  ],
+  "milestone": "2026.07.490",
+  "negative_controls_count": 3,
+  "negative_controls_passed": 3,
+  "no_weight_mutation": true,
+  "random_seed": 5381,
+  "recomputed_fields_from_rows": [
+    "row_count",
+    "retained_bytes",
+    "keep_ids",
+    "share_ids",
+    "trust_ids",
+    "negative_controls_count",
+    "negative_controls_passed",
+    "keep_share_trust_policy_ready",
+    "rollback_supported",
+    "unsafe_false_accepts"
+  ],
+  "reproducibility_checksum": "sha256:a59f56c5d840a504bdf93b67f82723695a290dce141c9de6c33fd64da8ea99b3",
+  "rollback_supported": true,
+  "row_count": 7,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5381.budget_memory_tautology_corrigendum.v490",
+  "source_artifact": "results/experiment_5368_budget_curated_memory_governance_v489.json",
+  "source_artifact_checksums": {
+    "conductor_log": "sha256:68357c61c81264f02552dd9a89f44c1085361ce8be92d60363be9d0d8c5f36dd",
+    "module": "sha256:91c528877280baee66de496ceb4cde405ca9bdef010ea025e31650ba4a234caa",
+    "source_artifact": "sha256:1f7612f1ee0cfc65e1876c24f895e4de6ade0532a1b66bad3382817cccde8a55",
+    "spec": "sha256:86a4f11fea30284821d35439c5e27db0f96e8366d5eb6723aec1dfc4762c781a"
+  },
+  "source_artifact_review": {
+    "conductor_flagged_tautology": true,
+    "source_artifact": "results/experiment_5368_budget_curated_memory_governance_v489.json",
+    "source_budget_curated_memory_ready": true,
+    "source_findings": [
+      {
+        "detail": "budget_bytes=400.0 and retained_bytes=400.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "source_flagged_adversarial": true
+  },
+  "spec_refs": [
+    "REQ-LEARN-5381",
+    "SCENARIO-LEARN-5381-ROW-EVIDENCE",
+    "SCENARIO-LEARN-5381-NEGATIVE-CONTROLS",
+    "SCENARIO-LEARN-5381-FAIL-CLOSED"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py -m pytest tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "unsafe_false_accepts": 0
+}
