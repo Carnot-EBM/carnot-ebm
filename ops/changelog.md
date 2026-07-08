@@ -1,5 +1,26 @@
 # Carnot — Changelog
 
+## 2026-07-08 (Milestone 2026.07.495 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V495 planner refresh to `research-references.md`, incorporating
+  verifier-guided decoding, p-bit/CDCL assumption guidance, Potts sparsity,
+  governed agent memory, execution provenance, MemFail, experience compression,
+  and deterministic AST/KB witness findings.
+- The `.495` plan contains 13 conductor tasks across transition/source refresh,
+  verifier-potential fixtures, gated local SOTA GGUF decoding, AST/KB witness
+  constraints, governed continuous self-learning, memory-failure stress,
+  active-constraint/p-bit sparsity bridges, hardware timing receipts, one ARC
+  live-path level-up slot, bounded KAN certificates, PRD gap synthesis, and the
+  capstone.
+- Validation passed for YAML parsing, prompt-shape audit, prior-failure
+  validation, gate audit, ARC level-up guarantee lint, exclusion-manifest lint,
+  touched-file diff check, and protected-file diff check. Repo-wide spec
+  coverage remains blocked by the pre-existing traceability backlog (`1262
+  test(s) missing spec traceability`).
+
 ## 2026-07-08 (Milestone 2026.07.494 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`

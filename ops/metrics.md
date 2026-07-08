@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-07-08 Milestone 2026.07.495 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-07-08T20:51:26Z | 2026-07-08T21:06:59Z | Planned milestone 2026.07.495 after reading required project context, `.494` completion evidence, exclusion manifest, ARC registry, hardware notes, prior roadmap docs, current references, and recent 2025-2026 sources. Added V495 planner refresh to `research-references.md`; rewrote `openspec/change-proposals/research-roadmap-vNEXT.md`; created `research-roadmap-next.yaml` with 13 tasks exp5441-exp5453 covering verifier-potential generation, governed online CSL memory, p-bit solver assumptions, hardware receipts, ARC live-path level-up, KAN certificates, and synthesis. Validation: YAML parse OK; prompt checks OK; prior-failure validator OK; gate audit OK; ARC guarantee OK; exclusion-manifest lint OK; touched-file diff check OK; protected-file diff clean; spec coverage still fails on known 1262-test traceability backlog. | ~190k |
+
+---
+
 ## Session: 2026-06-07 Milestone 2026.06.361 Operational Retrospective
 
 ### Turn Log

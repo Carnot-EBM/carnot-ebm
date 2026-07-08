@@ -28320,3 +28320,131 @@ Execution-time sweep after the `.494` planner refresh checked arXiv, OpenReview,
 - **Watch-only/excluded:** Extropic TSU/XTR-0 writing, Logical Intelligence Aleph/Kona pages, OpenReview EBT/NRGPT/action-head surfaces, and VLM hidden-state hallucination methods were checked but not promoted as executable `.494` dependencies.
 
 <!-- V494-EXECUTION-REFRESH-20260708-END -->
+
+
+<!-- V495-PLANNER-REFRESH-2026-07-08-START -->
+### V495 Planner Refresh - 2026-07-08
+
+Planner sweep for milestone `2026.07.495` checked arXiv primary sources,
+OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT `2507.02092`
+and ARM-EBM `2512.15605`, GitHub repositories, Extropic writing, Logical
+Intelligence public posts, V489-V494 duplicate history, and the exclusion
+manifest. The entries below either add a new executable hook or sharpen a
+guardrail for the next roadmap.
+
+### New actionable findings
+- **Score x Decoder: A Unified View of Unsupervised Inference-Time Scaling for
+  Hallucination Mitigation** (https://arxiv.org/abs/2606.00739): compares
+  base-model scores with MCMC, consensus reweighting, and SMC guidance, and
+  explicitly separates "reweighting a vote" from guiding a sampler. Carnot
+  hook: run prefix/particle decoding only when the score is an exact local
+  verifier potential with reward-budget accounting; do not reopen external
+  generated-text/logprob scorer lanes.
+- **Stratified Scaling Search for Test-Time in Diffusion Language Models**
+  (https://arxiv.org/abs/2604.06260): uses lightweight reference-free
+  verifier scores during iterative denoising and notes that self-verifying
+  structured tasks such as Sudoku can be scored from constraints alone. Carnot
+  hook: adapt the principle to autoregressive local GGUF decoding as a
+  bounded verifier-potential pilot, with exact solvers retaining final
+  authority.
+- **Verifier-Guided Code Translation via Meta-Step Decoding**
+  (https://arxiv.org/abs/2605.17626): interleaves generation with verifier
+  calls at structural boundaries and uses rollback to prevent early prefix
+  errors from contaminating later context. Carnot hook: test structural
+  prefix checkpoints and rollback on bounded structured-output/code fixtures
+  instead of final-only verify-then-repair.
+- **Probabilistic-bit Guided CDCL for SAT Solving using Ising Consensus
+  Assumptions** (https://arxiv.org/abs/2605.04033): p-bit samples provide
+  temporary high-agreement assumptions, while CDCL checks every result and can
+  fall back unrestricted. Carnot hook: use p-bit/Ising hints only as LNS/CDCL
+  assumptions and report solver-work deltas; correctness remains with the
+  exact solver.
+- **Restoring Sparsity in Potts Machines via Mean-Field Constraints**
+  (https://arxiv.org/abs/2602.04200): constraint-induced dense couplings are a
+  primary scaling obstacle for probabilistic hardware; p-dits and mean-field
+  constraints restore sparsity for selected constrained problems. Carnot hook:
+  add a density/restored-sparsity ledger before any hardware timing experiment
+  and avoid claiming speedup without matched board-local timings.
+- **Programmable Probabilistic Computer with 1,000,000 p-bits**
+  (https://arxiv.org/abs/2606.25313): networked FPGAs create a very large
+  p-bit machine by exchanging boundary states, raising partition-frequency and
+  locality questions. Carnot hook: use as hardware architecture context only;
+  local PolarFire/KV260 work should measure hash-matched tiny workloads and
+  boundary/update receipts, not extrapolate to million-p-bit claims.
+- **Governing Evolving Memory in LLM Agents: Risks, Mechanisms, and the SSGM
+  Framework** (https://arxiv.org/abs/2603.11768): dynamic memory requires
+  consistency verification, temporal decay, access control, and drift
+  prevention before consolidation. Carnot hook: promote workflow memories only
+  through a System-2-style verification gate with rollback, raw trace
+  retention, and provenance links.
+- **From Agent Traces to Trust: Evidence Tracing and Execution Provenance in
+  LLM Agents** (https://arxiv.org/abs/2606.04990): argues that final-answer
+  accuracy hides which evidence, tools, memory entries, and actions supported
+  an output. Carnot hook: every CSL memory and verifier-guided decoding row
+  should include evidence-support and execution-dependency relations.
+- **Escaping the Self-Confirmation Trap: Execute-Distill-Verify**
+  (https://arxiv.org/abs/2606.24428): emphasizes that useful self-evolution
+  depends on constructing reliable reusable experience before memory
+  insertion, not simply storing more history. Carnot hook: add a distill-then-
+  verify memory-promotion stage and reject experience that cannot replay.
+- **MemFail: Stress-Testing Failure Modes of LLM Memory Systems**
+  (https://arxiv.org/abs/2605.26667): isolates summarization, storage, and
+  retrieval failure modes instead of treating memory as a black box. Carnot
+  hook: stress continuous self-learning with trap memories, stale summaries,
+  and retrieval collisions while preserving rollback and no weight mutation.
+- **Experience Compression Spectrum: Unifying Memory, Skills, and Rules in LLM
+  Agents** (https://arxiv.org/abs/2604.15877): frames raw traces, episodic
+  memory, procedural skills, and declarative rules as compression levels with
+  missing adaptive cross-level selection. Carnot hook: evaluate verified CSL
+  across trace/case/skill/rule promotion levels and require cross-level
+  consistency checks.
+- **Detecting and Correcting Hallucinations in LLM-Generated Code via
+  Deterministic AST Analysis** (https://arxiv.org/abs/2601.19106): reports a
+  static AST plus dynamic-KB path for detecting and repairing knowledge-
+  conflicting code hallucinations. Carnot hook: add deterministic AST/KB
+  witness fields for structured code or API-call claims before any LLM
+  correction is credited.
+
+### Secondary-source status
+- **OpenReview:** searches surfaced CRANE, verifier-guided sampling with
+  imperfect process verifiers, tractable continuation distributions, certified
+  correctness for neural constraint solvers, KAN variants, and neural-flow
+  samplers. Browser challenges blocked full-page fetches, but the visible
+  metadata reinforces two design rules: use verifiers during generation when
+  they are exact enough, and keep exact solvers/certificates as authority when
+  neural heuristics propose candidates.
+- **HuggingFace Papers:** EBT `2507.02092` remains the main EBM verifier-
+  optimization watch item, with community metadata pointing to unsupervised
+  energy minimization and self-verification. No HuggingFace page supersedes
+  local GGUF runtime requirements or deterministic verifier authority.
+- **Semantic Scholar:** arXiv citation widgets for EBT `2507.02092` and
+  ARM-EBM `2512.15605` still route to Semantic Scholar, but public search did
+  not reveal a stronger citation-derived Carnot task than the source-paper
+  hooks already tracked.
+- **GitHub:** `eth-sri/type-constrained-code-generation`,
+  constrained-decoding lists, `quantinfo/Simple-sparse-Ising-machine`, KAN
+  lists, and p-bit/Ising repositories remain implementation watch references.
+  They do not replace Carnot's local exact solvers, ARC provenance gates, or
+  hardware receipt requirements.
+- **Extropic and Logical Intelligence:** X0/XTR-0/TSU posts and Aleph/Kona
+  public posts reinforce the EBM-for-verification direction. They remain
+  architecture context only because Carnot has no authenticated local TSU,
+  Kona, or Aleph execution path.
+
+### V495 Planning impact
+- Add a verifier-potential guided generation phase: start with deterministic
+  potential fixtures, then run a small local SOTA GGUF pilot only if prefix
+  reward accounting and exact final checks are clean.
+- Make continuous self-learning a multi-session governed-memory experiment:
+  raw traces, case memory, skill memory, and rules must carry provenance,
+  replay, rollback, temporal decay, and negative-transfer stress receipts.
+- Extend active-constraint/p-bit work with restored-sparsity and solver-
+  authority ledgers before collecting hardware timing variance receipts.
+- Keep ARC in the live-path standing floor, but use the open perception/
+  salience lane from `ops/known-issues.md` rather than another retired
+  exploration-signal or duplicate deepest-target rerun.
+- Keep token/internal feature and external text-scorer lanes closed unless a
+  task obtains authenticated backend receipts; no V495 experiment should claim
+  hidden-state, logprob, Kona, Aleph, or TSU execution without local evidence.
+
+<!-- V495-PLANNER-REFRESH-2026-07-08-END -->
