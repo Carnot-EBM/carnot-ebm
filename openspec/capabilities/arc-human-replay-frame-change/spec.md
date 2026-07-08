@@ -1034,6 +1034,52 @@ Required field principles:
 - `no_duplicate_solve`: principle "must be true."
 - `honest_verdict`: principle "one-line banked/no-bank verdict."
 
+### REQ-ARC-FCP-5385: Geometric Salience Live-Path Level-Up Attempt
+
+Experiment 5385 SHALL write
+`results/experiment_5385_arc_geometric_salience_live_path_v490.json` after a
+registry-prechecked ARC live-path attempt. The workflow SHALL prefer `re86` L3
+when the registry still records fewer than three reproduced `re86` levels; if
+that depth is already reproducible, it SHALL choose a non-duplicate live-path
+target or emit a duplicate-blocked artifact. The salience mechanism SHALL be a
+live-reachable geometric, hyperbolic, or geodesic ranking signal over the
+agent-observed frame and its own observed transition stream, and SHALL NOT use
+offline ground-truth BFS, public-game source inspection, per-game adapters, or
+outer-loop reverse engineering for a credited solve.
+
+The result artifact SHALL include `status`, `solve_provenance`,
+`registry_precheck_done`, `target_game`, `target_level_before`,
+`attempted_level`, `geometric_salience_live_reachable`,
+`hyperbolic_or_geodesic_ranking_enabled`, `live_attempt_count`,
+`offline_reproduced`, `no_outer_loop_re`, `no_per_game_adapter`,
+`no_duplicate_solve`, `reproduced_levels`, `new_level_banked`,
+`failure_mode`, and `honest_verdict`. A credited level-up SHALL require
+`solve_provenance=live_agent_self_discovery`, `offline_reproduced=true` from
+replaying a live-agent-discovered solution, `no_outer_loop_re=true`,
+`no_per_game_adapter=true`, `no_duplicate_solve=true`, and
+`reproduced_levels >= target_level_before + 1`; otherwise the artifact SHALL
+report an honest null or duplicate block with the live-path blocker.
+
+Required field principles:
+
+- `status`: principle "complete, honest_null, or duplicate_blocked with evidence."
+- `solve_provenance`: principle "must equal live_agent_self_discovery for any credited solve."
+- `registry_precheck_done`: principle "must be true."
+- `target_game`: principle "selected game id."
+- `target_level_before`: principle "reproduced level count before this task."
+- `attempted_level`: principle "target level attempted."
+- `geometric_salience_live_reachable`: principle "true only if the live agent can use the salience signal without outer-loop help."
+- `hyperbolic_or_geodesic_ranking_enabled`: principle "whether the GeoWorld-inspired ranking was active."
+- `live_attempt_count`: principle "number of live attempts."
+- `offline_reproduced`: principle "true only if a live-agent-discovered solve was replayed/reproduced for banking; must not mean offline BFS or outer-loop reverse engineering."
+- `no_outer_loop_re`: principle "must be true."
+- `no_per_game_adapter`: principle "must be true."
+- `no_duplicate_solve`: principle "must be true for credited deliverables."
+- `reproduced_levels`: principle "level count after this task; for a credited first-contact solve this must satisfy reproduced_levels>=1, and for a deeper solve it must be at least target_level_before+1."
+- `new_level_banked`: principle "true only if the live agent self-discovered a new reproducible level."
+- `failure_mode`: principle "if no bank, concrete live-path blocker."
+- `honest_verdict`: principle "one-line ARC outcome."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1393,3 +1439,24 @@ Then it selects the next unbanked target level rather than duplicating an
 already reproduced L1/L2 solve, runs the perception audit, and writes an
 artifact whose credited progress fields only pass when offline reproduction
 banks at least one new live-path level.
+
+### SCENARIO-ARC-FCP-5385: Geometric Salience Stays On The Live Path
+
+Given a rendered ARC frame with two same-tier button-like blobs and a later
+agent-observed transition changing cells near only one of those blobs
+When the geometric salience prior ranks live `rich_action_candidates`
+Then the geodesic transition anchor moves the nearer blob ahead of the equal
+base-salience distractor and the prior reports hyperbolic/geodesic ranking as
+enabled.
+
+Given the submitted `StepwiseExplorer` has an action prior that can observe
+transitions
+When the live policy ingests its own before/action/after observation
+Then the action prior receives that observation through the same live path that
+feeds the frame-change scorer.
+
+Given `ops/arc_solve_registry.yaml` records `re86` below L3
+When Experiment 5385 performs its registry precheck
+Then it selects `re86` L3, marks duplicate credit disallowed, and only sets
+`new_level_banked=true` if the live-agent-discovered action labels reproduce
+beyond the prior level.
