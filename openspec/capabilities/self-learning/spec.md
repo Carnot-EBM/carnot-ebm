@@ -18995,3 +18995,104 @@ fields
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5381 | Implemented (`python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py`, `results/experiment_5381_budget_memory_tautology_corrigendum_v490.json`) | Implemented (`tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py`) |
+
+---
+
+## REQ-LEARN-5382: Corrected Budget Memory Real-Workflow Continuous Self-Learning v490
+
+Experiment 5382 SHALL run a real-workflow continuous self-learning scale-up
+only when Exp5381 reports `budget_memory_corrigendum_clean=true`. The
+experiment SHALL use the corrected Exp5381 row-derived memory governance as the
+source of budget, trust, stale-memory, poisoned-memory, rollback, and
+no-weight-mutation evidence. A false Exp5381 gate SHALL block the run before any
+workflow result is marked complete.
+
+The workflow SHALL be a multi-session replay with repeated retrieval,
+constraint-selection, verifier tool-use, rollback, and memory-update decisions.
+The same workflow event IDs SHALL be evaluated under both a baseline variant and
+a self-learning variant. The artifact SHALL compare the baseline variant and a self-learning variant directly. The baseline SHALL not receive corrected
+budget-curated memory updates. The self-learning variant MAY update retrieval memory or
+constraint-selection policy, but SHALL NOT load, fine-tune, write, or mutate model weights. Deterministic evaluators SHALL measure context efficiency,
+verifier cost, task quality, unsafe false accepts, stale-memory deflection,
+poisoned-memory deflection, rollback success, and memory churn.
+
+The result artifact SHALL be
+`results/experiment_5382_real_workflow_continuous_self_learning_v490.json` and
+SHALL include `status`, `continuous_self_learning_target`,
+`continuous_self_learning_real_workflow_ready`,
+`upstream_budget_memory_corrigendum_clean`, `workflow_name`, `session_count`,
+`trace_count`, `checked_event_count`, `context_efficiency_delta`,
+`verifier_cost_delta`, `quality_delta`, `stale_memory_deflection_rate`,
+`poison_memory_deflection_rate`, `rollback_success_rate`,
+`no_weight_mutation`, `unsafe_false_accepts`, and `honest_verdict`. The
+artifact SHALL also include field principles documenting those required fields.
+
+The required field principles SHALL be:
+
+- `status`: Complete only if the gated real-workflow experiment ran.
+- `continuous_self_learning_target`: Must be true.
+- `continuous_self_learning_real_workflow_ready`: True only if the real-workflow result has clean evidence and no unsafe false accepts.
+- `upstream_budget_memory_corrigendum_clean`: Copied from Exp5381.
+- `workflow_name`: Name of the real multi-session workflow.
+- `session_count`: Number of sessions.
+- `trace_count`: Number of traces.
+- `checked_event_count`: Number of events evaluated by deterministic checks.
+- `context_efficiency_delta`: Self-learning minus baseline context efficiency.
+- `verifier_cost_delta`: Baseline minus self-learning verifier cost, positive means improvement.
+- `quality_delta`: Self-learning minus baseline task quality.
+- `stale_memory_deflection_rate`: Fraction of stale-memory probes rejected.
+- `poison_memory_deflection_rate`: Fraction of poisoned-memory probes rejected.
+- `rollback_success_rate`: Fraction of failed updates rolled back correctly.
+- `no_weight_mutation`: Must be true.
+- `unsafe_false_accepts`: Count of bad learned decisions accepted as good.
+- `honest_verdict`: One-line result or block reason.
+
+### REQ-LEARN-5382 Sub-requirements
+
+- REQ-LEARN-5382-1: The source gate SHALL load Exp5381 and copy
+  `budget_memory_corrigendum_clean` into
+  `upstream_budget_memory_corrigendum_clean`; a false gate SHALL block the
+  real-workflow run.
+- REQ-LEARN-5382-2: The selected workflow SHALL contain multiple sessions and
+  traces with repeated retrieval, verifier tool-use, rollback, and
+  constraint-selection decisions.
+- REQ-LEARN-5382-3: Baseline and self-learning variants SHALL evaluate the same
+  ordered event IDs with deterministic checks.
+- REQ-LEARN-5382-4: The self-learning variant SHALL apply corrected
+  budget-curated memory governance and SHALL reject stale and poisoned memory
+  probes, enforce the byte budget, and roll back failed updates.
+- REQ-LEARN-5382-5: `continuous_self_learning_real_workflow_ready` SHALL be true
+  only when the Exp5381 gate passes, event IDs match between variants, context
+  efficiency improves, verifier cost falls, quality is preserved, stale and
+  poisoned memory are deflected, rollback succeeds, unsafe false accepts are
+  zero, tests are recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5382-GATE: Exp5381 Opens the Real Workflow
+
+**Given** Exp5381 reports `budget_memory_corrigendum_clean=true`
+**When** Exp5382 checks its source gate
+**Then** the real-workflow run is allowed
+**And** the artifact copies
+`upstream_budget_memory_corrigendum_clean=true`.
+
+### SCENARIO-LEARN-5382-IDENTICAL-TASKS: Variants Share Event IDs
+
+**Given** the selected multi-session workflow
+**When** baseline and self-learning variants are evaluated
+**Then** both variants evaluate the same ordered event IDs
+**And** deterministic checks count every workflow event.
+
+### SCENARIO-LEARN-5382-SAFETY: Corrected Memory Governance Deflects Bad Updates
+
+**Given** stale, poisoned, and rollback-required workflow events
+**When** the self-learning variant applies Exp5381 corrected memory governance
+**Then** stale and poisoned probes are rejected
+**And** rollback-required updates recover
+**And** unsafe false accepts remain zero
+**And** no model weights mutate.
+
+## Implementation Status (Exp 5382)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5382 | Planned (`python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py`, `results/experiment_5382_real_workflow_continuous_self_learning_v490.json`) | Planned (`tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py`) |

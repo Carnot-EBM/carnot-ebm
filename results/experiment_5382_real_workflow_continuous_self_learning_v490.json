@@ -1,0 +1,933 @@
+{
+  "checked_event_count": 36,
+  "context_efficiency_delta": 0.238235,
+  "continuous_self_learning_real_workflow_ready": true,
+  "continuous_self_learning_target": true,
+  "corrected_memory_policy": {
+    "budget_limit_bytes": 400,
+    "budget_limit_respected": true,
+    "evidence_row_count": 7,
+    "kept_memory_ids": [
+      "mem5368-clean-dependency-edge",
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-scaleup-summary"
+    ],
+    "rejected_or_quarantined_memory_ids": [
+      "mem5368-clean-low-value-overbudget",
+      "mem5368-poisoned-tool-override",
+      "mem5368-stale-runtime-receipt",
+      "mem5368-unverified-sharing-tip"
+    ],
+    "retained_bytes": 400,
+    "trusted_memory_ids": [
+      "mem5368-clean-dependency-edge",
+      "mem5368-clean-low-value-overbudget",
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-scaleup-summary"
+    ]
+  },
+  "event_decisions": [
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t01-e1-retrieve",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-01",
+      "supporting_context": [
+        "mem5368-clean-dependency-edge"
+      ],
+      "trace_id": "trace-5369-01-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t01-e2-commit",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-01",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-01-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t01-e3-summarize",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-01",
+      "supporting_context": [
+        "mem5368-clean-scaleup-summary"
+      ],
+      "trace_id": "trace-5369-01-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "rollback",
+      "event_id": "t02-e1-retrieve",
+      "learned_decision": "rollback",
+      "learned_update_applied": false,
+      "memory_variant": "stale",
+      "rollback_recovered": true,
+      "rollback_required": true,
+      "session_id": "session-5369-02",
+      "supporting_context": [
+        "mem5368-stale-runtime-receipt"
+      ],
+      "trace_id": "trace-5369-02-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t02-e2-restore",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-02",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-02-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t02-e3-verify",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-02",
+      "supporting_context": [
+        "mem5368-clean-scaleup-summary"
+      ],
+      "trace_id": "trace-5369-02-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "rollback",
+      "event_id": "t03-e1-tool_select",
+      "learned_decision": "rollback",
+      "learned_update_applied": false,
+      "memory_variant": "poisoned",
+      "rollback_recovered": true,
+      "rollback_required": true,
+      "session_id": "session-5369-03",
+      "supporting_context": [
+        "mem5368-poisoned-tool-override"
+      ],
+      "trace_id": "trace-5369-03-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t03-e2-restore",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-03",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-03-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t03-e3-commit",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-03",
+      "supporting_context": [
+        "mem5368-clean-dependency-edge"
+      ],
+      "trace_id": "trace-5369-03-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "reject",
+      "event_id": "t04-e1-revise",
+      "learned_decision": "reject",
+      "learned_update_applied": false,
+      "memory_variant": "unverified",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-04",
+      "supporting_context": [
+        "mem5368-unverified-sharing-tip"
+      ],
+      "trace_id": "trace-5369-04-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "reject",
+      "event_id": "t04-e2-fold",
+      "learned_decision": "reject",
+      "learned_update_applied": false,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-04",
+      "supporting_context": [
+        "exp5355:dep-cyclic-dependency"
+      ],
+      "trace_id": "trace-5369-04-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t04-e3-revise",
+      "learned_decision": "accept_ephemeral",
+      "learned_update_applied": false,
+      "memory_variant": "biased",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-04",
+      "supporting_context": [
+        "operator:benign-style-note"
+      ],
+      "trace_id": "trace-5369-04-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t05-e1-retrieve",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-05",
+      "supporting_context": [
+        "mem5368-clean-dependency-edge"
+      ],
+      "trace_id": "trace-5369-05-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t05-e2-commit",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-05",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-05-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t05-e3-summarize",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-05",
+      "supporting_context": [
+        "mem5368-clean-scaleup-summary"
+      ],
+      "trace_id": "trace-5369-05-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "rollback",
+      "event_id": "t06-e1-retrieve",
+      "learned_decision": "rollback",
+      "learned_update_applied": false,
+      "memory_variant": "stale",
+      "rollback_recovered": true,
+      "rollback_required": true,
+      "session_id": "session-5369-06",
+      "supporting_context": [
+        "mem5368-stale-runtime-receipt"
+      ],
+      "trace_id": "trace-5369-06-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t06-e2-restore",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-06",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-06-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t06-e3-verify",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-06",
+      "supporting_context": [
+        "mem5368-clean-scaleup-summary"
+      ],
+      "trace_id": "trace-5369-06-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "rollback",
+      "event_id": "t07-e1-tool_select",
+      "learned_decision": "rollback",
+      "learned_update_applied": false,
+      "memory_variant": "poisoned",
+      "rollback_recovered": true,
+      "rollback_required": true,
+      "session_id": "session-5369-07",
+      "supporting_context": [
+        "mem5368-poisoned-tool-override"
+      ],
+      "trace_id": "trace-5369-07-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t07-e2-restore",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-07",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-07-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t07-e3-commit",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-07",
+      "supporting_context": [
+        "mem5368-clean-dependency-edge"
+      ],
+      "trace_id": "trace-5369-07-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "reject",
+      "event_id": "t08-e1-revise",
+      "learned_decision": "reject",
+      "learned_update_applied": false,
+      "memory_variant": "unverified",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-08",
+      "supporting_context": [
+        "mem5368-unverified-sharing-tip"
+      ],
+      "trace_id": "trace-5369-08-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "reject",
+      "event_id": "t08-e2-fold",
+      "learned_decision": "reject",
+      "learned_update_applied": false,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-08",
+      "supporting_context": [
+        "exp5355:dep-cyclic-dependency"
+      ],
+      "trace_id": "trace-5369-08-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t08-e3-revise",
+      "learned_decision": "accept_ephemeral",
+      "learned_update_applied": false,
+      "memory_variant": "biased",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-08",
+      "supporting_context": [
+        "operator:benign-style-note"
+      ],
+      "trace_id": "trace-5369-08-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t09-e1-retrieve",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-09",
+      "supporting_context": [
+        "mem5368-clean-dependency-edge"
+      ],
+      "trace_id": "trace-5369-09-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t09-e2-commit",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-09",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-09-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t09-e3-summarize",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-09",
+      "supporting_context": [
+        "mem5368-clean-scaleup-summary"
+      ],
+      "trace_id": "trace-5369-09-clean",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "rollback",
+      "event_id": "t10-e1-retrieve",
+      "learned_decision": "rollback",
+      "learned_update_applied": false,
+      "memory_variant": "stale",
+      "rollback_recovered": true,
+      "rollback_required": true,
+      "session_id": "session-5369-10",
+      "supporting_context": [
+        "mem5368-stale-runtime-receipt"
+      ],
+      "trace_id": "trace-5369-10-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t10-e2-restore",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-10",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-10-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t10-e3-verify",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-10",
+      "supporting_context": [
+        "mem5368-clean-scaleup-summary"
+      ],
+      "trace_id": "trace-5369-10-stale",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "rollback",
+      "event_id": "t11-e1-tool_select",
+      "learned_decision": "rollback",
+      "learned_update_applied": false,
+      "memory_variant": "poisoned",
+      "rollback_recovered": true,
+      "rollback_required": true,
+      "session_id": "session-5369-11",
+      "supporting_context": [
+        "mem5368-poisoned-tool-override"
+      ],
+      "trace_id": "trace-5369-11-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t11-e2-restore",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-11",
+      "supporting_context": [
+        "mem5368-clean-rollback-route"
+      ],
+      "trace_id": "trace-5369-11-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t11-e3-commit",
+      "learned_decision": "learn_policy_update",
+      "learned_update_applied": true,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-11",
+      "supporting_context": [
+        "mem5368-clean-dependency-edge"
+      ],
+      "trace_id": "trace-5369-11-poison",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "reject",
+      "event_id": "t12-e1-revise",
+      "learned_decision": "reject",
+      "learned_update_applied": false,
+      "memory_variant": "unverified",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-12",
+      "supporting_context": [
+        "mem5368-unverified-sharing-tip"
+      ],
+      "trace_id": "trace-5369-12-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": false,
+      "bad_memory": true,
+      "certificate_decision": "reject",
+      "event_id": "t12-e2-fold",
+      "learned_decision": "reject",
+      "learned_update_applied": false,
+      "memory_variant": "clean",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-12",
+      "supporting_context": [
+        "exp5355:dep-cyclic-dependency"
+      ],
+      "trace_id": "trace-5369-12-dependency",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_as_good": true,
+      "bad_memory": false,
+      "certificate_decision": "accept",
+      "event_id": "t12-e3-revise",
+      "learned_decision": "accept_ephemeral",
+      "learned_update_applied": false,
+      "memory_variant": "biased",
+      "rollback_recovered": false,
+      "rollback_required": false,
+      "session_id": "session-5369-12",
+      "supporting_context": [
+        "operator:benign-style-note"
+      ],
+      "trace_id": "trace-5369-12-dependency",
+      "unsafe_false_accept": false
+    }
+  ],
+  "experiment": "experiment_5382_real_workflow_continuous_self_learning_v490",
+  "experiment_id": "exp5382-v490-real-workflow-continuous-self-learning",
+  "field_principles": {
+    "checked_event_count": "Number of events evaluated by deterministic checks.",
+    "context_efficiency_delta": "Self-learning minus baseline context efficiency.",
+    "continuous_self_learning_real_workflow_ready": "True only if the real-workflow result has clean evidence and no unsafe false accepts.",
+    "continuous_self_learning_target": "Must be true.",
+    "honest_verdict": "One-line result or block reason.",
+    "no_weight_mutation": "Must be true.",
+    "poison_memory_deflection_rate": "Fraction of poisoned-memory probes rejected.",
+    "quality_delta": "Self-learning minus baseline task quality.",
+    "rollback_success_rate": "Fraction of failed updates rolled back correctly.",
+    "session_count": "Number of sessions.",
+    "stale_memory_deflection_rate": "Fraction of stale-memory probes rejected.",
+    "status": "Complete only if the gated real-workflow experiment ran.",
+    "trace_count": "Number of traces.",
+    "unsafe_false_accepts": "Count of bad learned decisions accepted as good.",
+    "upstream_budget_memory_corrigendum_clean": "Copied from Exp5381.",
+    "verifier_cost_delta": "Baseline minus self-learning verifier cost, positive means improvement.",
+    "workflow_name": "Name of the real multi-session workflow."
+  },
+  "honest_verdict": "complete: real workflow ran after Exp5381 clean gate; baseline and self-learning variants shared 36 deterministic event checks, context efficiency improved, verifier cost fell, quality was preserved, stale and poisoned memory were deflected, rollback succeeded, and no model weights mutated",
+  "methodology_note": "Baseline and self-learning variants evaluate the same Exp5369 multi-session workflow event IDs. The self-learning variant uses Exp5381 row-derived corrected budget memory to update controller retrieval and verifier-selection state only; no model weights are loaded or mutated.",
+  "milestone": "2026.07.490",
+  "no_weight_mutation": true,
+  "poison_memory_deflection_rate": 1.0,
+  "quality_delta": 0.0,
+  "random_seed": 5382,
+  "readiness_checks": {
+    "all_passed": true,
+    "budget_limit_respected": true,
+    "checked_event_count_ready": true,
+    "context_efficiency_improved": true,
+    "failed_gates": [],
+    "no_weight_mutation": true,
+    "poison_memory_deflected": true,
+    "quality_preserved": true,
+    "rollback_succeeded": true,
+    "same_event_ids": true,
+    "session_count_ready": true,
+    "stale_memory_deflected": true,
+    "tests_recorded": true,
+    "trace_count_ready": true,
+    "unsafe_false_accepts_zero": true,
+    "upstream_gate_passed": true,
+    "verifier_cost_reduced": true
+  },
+  "reproducibility_checksum": "sha256:5da15fa7cdb8ef7ce6a54e080e2ee0d0360b5f588ca5c5eac2ecceffc1be2e67",
+  "rollback_success_rate": 1.0,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5382.real_workflow_continuous_self_learning.v490",
+  "session_count": 12,
+  "source_artifact_checksums": {
+    "exp5369": "sha256:b5457868997e47ec00a28d0a5a243e9b78001bbd97804be0b512681732de2e9c",
+    "exp5369_module": "sha256:a4c4a4b02c476f985ee084ef6b50a5c47dc032bfbfb3cd87c582d71eb64bc3a2",
+    "exp5381": "sha256:69647663614b4c03628127e3b3762c42b126a23ab21212c8fa6e2b44f38a3d23",
+    "exp5381_module": "sha256:91c528877280baee66de496ceb4cde405ca9bdef010ea025e31650ba4a234caa",
+    "module": "sha256:360eeb0b9ccd7f41eaf31f2afa4d8db8abe5a61d10d4d047c4c015c070d27d82",
+    "spec": "sha256:e9d9d395e5416c8e80fe9ba787390bcf1e9f5d1a8328a6a17f712dce72e197e4"
+  },
+  "source_artifacts": [
+    "results/experiment_5381_budget_memory_tautology_corrigendum_v490.json",
+    "results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5382",
+    "SCENARIO-LEARN-5382-GATE",
+    "SCENARIO-LEARN-5382-IDENTICAL-TASKS",
+    "SCENARIO-LEARN-5382-SAFETY"
+  ],
+  "stale_memory_deflection_rate": 1.0,
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py -m pytest tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "trace_count": 12,
+  "unsafe_false_accepts": 0,
+  "upstream_budget_memory_corrigendum_clean": true,
+  "upstream_gate": {
+    "all_passed": true,
+    "budget_memory_corrigendum_clean": true,
+    "failed_gates": [],
+    "source_artifact": "results/experiment_5381_budget_memory_tautology_corrigendum_v490.json",
+    "source_honest_verdict": "complete: budget_memory_corrigendum_clean from row evidence; stale, poisoned, and high-cost controls rejected with zero unsafe false accepts",
+    "source_no_weight_mutation": true,
+    "source_policy_ready": true,
+    "source_rollback_supported": true,
+    "source_status": "complete",
+    "source_status_complete": true,
+    "source_unsafe_false_accepts_zero": true
+  },
+  "verifier_cost_delta": 21.0,
+  "weight_mutation_receipt": {
+    "allowed_update_targets": [
+      "retrieval_policy_memory",
+      "constraint_selection_cache",
+      "rollback_decision_log"
+    ],
+    "forbidden_updates": {
+      "fine_tune_model_weights": false,
+      "foundation_weight_write": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true
+  },
+  "workflow_evidence": {
+    "baseline_variant": {
+      "context_efficiency": 0.661765,
+      "event_ids": [
+        "t01-e1-retrieve",
+        "t01-e2-commit",
+        "t01-e3-summarize",
+        "t02-e1-retrieve",
+        "t02-e2-restore",
+        "t02-e3-verify",
+        "t03-e1-tool_select",
+        "t03-e2-restore",
+        "t03-e3-commit",
+        "t04-e1-revise",
+        "t04-e2-fold",
+        "t04-e3-revise",
+        "t05-e1-retrieve",
+        "t05-e2-commit",
+        "t05-e3-summarize",
+        "t06-e1-retrieve",
+        "t06-e2-restore",
+        "t06-e3-verify",
+        "t07-e1-tool_select",
+        "t07-e2-restore",
+        "t07-e3-commit",
+        "t08-e1-revise",
+        "t08-e2-fold",
+        "t08-e3-revise",
+        "t09-e1-retrieve",
+        "t09-e2-commit",
+        "t09-e3-summarize",
+        "t10-e1-retrieve",
+        "t10-e2-restore",
+        "t10-e3-verify",
+        "t11-e1-tool_select",
+        "t11-e2-restore",
+        "t11-e3-commit",
+        "t12-e1-revise",
+        "t12-e2-fold",
+        "t12-e3-revise"
+      ],
+      "model_weights_mutated": false,
+      "quality": 1.0,
+      "unsafe_false_accepts": 0,
+      "variant_name": "baseline_always_full_context",
+      "verifier_cost": 36.0
+    },
+    "memory_churn": {
+      "churn_rate": 0.571429,
+      "memory_evidence_row_count": 7,
+      "rejected_or_quarantined_memory_count": 4,
+      "retained_memory_count": 3
+    },
+    "safety_controls": {
+      "budget_limit_bytes": 400,
+      "budget_limit_respected": true,
+      "checked_event_count": 36,
+      "poison_memory_deflection_rate": 1.0,
+      "poison_probe_count": 3,
+      "retained_bytes": 400,
+      "rollback_required_count": 6,
+      "rollback_success_rate": 1.0,
+      "stale_memory_deflection_rate": 1.0,
+      "stale_probe_count": 3,
+      "unsafe_false_accepts": 0
+    },
+    "same_event_ids": true,
+    "self_learning_variant": {
+      "context_efficiency": 0.9,
+      "event_ids": [
+        "t01-e1-retrieve",
+        "t01-e2-commit",
+        "t01-e3-summarize",
+        "t02-e1-retrieve",
+        "t02-e2-restore",
+        "t02-e3-verify",
+        "t03-e1-tool_select",
+        "t03-e2-restore",
+        "t03-e3-commit",
+        "t04-e1-revise",
+        "t04-e2-fold",
+        "t04-e3-revise",
+        "t05-e1-retrieve",
+        "t05-e2-commit",
+        "t05-e3-summarize",
+        "t06-e1-retrieve",
+        "t06-e2-restore",
+        "t06-e3-verify",
+        "t07-e1-tool_select",
+        "t07-e2-restore",
+        "t07-e3-commit",
+        "t08-e1-revise",
+        "t08-e2-fold",
+        "t08-e3-revise",
+        "t09-e1-retrieve",
+        "t09-e2-commit",
+        "t09-e3-summarize",
+        "t10-e1-retrieve",
+        "t10-e2-restore",
+        "t10-e3-verify",
+        "t11-e1-tool_select",
+        "t11-e2-restore",
+        "t11-e3-commit",
+        "t12-e1-revise",
+        "t12-e2-fold",
+        "t12-e3-revise"
+      ],
+      "learned_decision_count": 21,
+      "model_weights_mutated": false,
+      "quality": 1.0,
+      "unsafe_false_accepts": 0,
+      "variant_name": "self_learning_corrected_budget_memory",
+      "verifier_cost": 15.0
+    },
+    "source_replay_metrics": {
+      "exp5369_checked_event_count": 36,
+      "exp5369_context_efficiency_delta": 0.196429,
+      "exp5369_verifier_cost_delta_rate": 0.583333
+    },
+    "workflow": {
+      "checked_event_count": 36,
+      "decision_type_counts": {
+        "constraint_selection": 36,
+        "retrieval": 36,
+        "rollback": 6,
+        "verifier_tool_use": 36
+      },
+      "event_ids": [
+        "t01-e1-retrieve",
+        "t01-e2-commit",
+        "t01-e3-summarize",
+        "t02-e1-retrieve",
+        "t02-e2-restore",
+        "t02-e3-verify",
+        "t03-e1-tool_select",
+        "t03-e2-restore",
+        "t03-e3-commit",
+        "t04-e1-revise",
+        "t04-e2-fold",
+        "t04-e3-revise",
+        "t05-e1-retrieve",
+        "t05-e2-commit",
+        "t05-e3-summarize",
+        "t06-e1-retrieve",
+        "t06-e2-restore",
+        "t06-e3-verify",
+        "t07-e1-tool_select",
+        "t07-e2-restore",
+        "t07-e3-commit",
+        "t08-e1-revise",
+        "t08-e2-fold",
+        "t08-e3-revise",
+        "t09-e1-retrieve",
+        "t09-e2-commit",
+        "t09-e3-summarize",
+        "t10-e1-retrieve",
+        "t10-e2-restore",
+        "t10-e3-verify",
+        "t11-e1-tool_select",
+        "t11-e2-restore",
+        "t11-e3-commit",
+        "t12-e1-revise",
+        "t12-e2-fold",
+        "t12-e3-revise"
+      ],
+      "session_count": 12,
+      "trace_count": 12,
+      "workflow_name": "budgeted_dependency_drift_verifier_tool_workflow"
+    }
+  },
+  "workflow_name": "budgeted_dependency_drift_verifier_tool_workflow"
+}
