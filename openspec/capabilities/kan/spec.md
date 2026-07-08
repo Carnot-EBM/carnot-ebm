@@ -1358,6 +1358,88 @@ provable, `false_property_rejection_rate=1.0`,
 `kan_measurement_access_certificate_ready=true` only for the bounded
 measurement-access fixture.
 
+## REQ-KAN-5438: V494 Ontology And Workflow-Memory Measurement-Access Certificate
+
+The KAN verification tier SHALL add an Exp 5438 CPU-only deterministic
+certificate experiment that extends the Exp 5425 bounded measurement-access
+certificate family to ontology, triple, and workflow-memory claims after
+Exp5432 reports `ontology_constraint_memory_ready=true`. The experiment MUST
+read or replay the Exp5432 finite ontology workflow rows and MUST distinguish
+properties supported by measured rows, properties contradicted by measured
+rows, and unsupported properties whose required evidence is missing. It MUST
+NOT modify `scripts/research_conductor.py`.
+
+The false-property controls MUST include invalid triples, unsupported graph updates,
+stale relation updates, infeasible retrieval traps, missing
+kernel/planner evidence, and unsupported board, token, and internal-state
+claims. Unsupported graph, kernel, board, token, and internal-state claims MUST
+be classified as missing-evidence unsupported when the Exp5432 rows do not
+contain the required receipt. The true-property controls MUST preserve valid
+triple updates, valid workflow retrieval order, deterministic solver
+authority, and accepted tool-evidence-backed memory writes under the same
+bounded certificate. Every certificate or counterexample record MUST carry
+row-level provenance and stable checksums. The experiment MUST state directly
+that it is a bounded ontology/workflow-memory measurement-access certificate
+only and MUST NOT claim broad KAN verification, trained-network soundness,
+hardware execution, hardware speedup, token-level access, or hidden/internal
+state access.
+
+The deliverable MUST be written to
+`results/experiment_5438_kan_ontology_measurement_certificate_v494.json` with
+the required top-level fields `certificate_count`, `property_family`,
+`ontology_property_count`, `workflow_memory_property_count`,
+`measurement_access_controls`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `row_checksums`,
+`missing_evidence_detected`, `broad_kan_verification_claim`,
+`kan_ontology_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `certificate_count` MUST be an integer count of bounded
+certificate controls. `property_family` MUST name a bounded claim scope.
+`ontology_property_count` MUST count ontology/triple controls.
+`workflow_memory_property_count` MUST count workflow-memory controls.
+`measurement_access_controls` MUST classify each checked property as supported,
+observable-false, or missing-evidence unsupported. `row_checksums` MUST contain
+stable row-level provenance checksums. `missing_evidence_detected` MUST be true
+when any false property requires evidence unavailable to the bounded fixture.
+`broad_kan_verification_claim` MUST be false. `inference_substrate` MUST equal
+`deterministic_certificate_experiment`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_ontology_certificate_ready` MUST be true only
+when Exp5432 readiness is true, false properties are rejected, true properties
+are preserved, missing-evidence controls are detected, row checksums are
+present, and claim limits are explicit.
+
+Required field principles:
+- `certificate_count`: coverage.
+- `property_family`: bounded claim scope.
+- `ontology_property_count`: graph-memory coverage.
+- `workflow_memory_property_count`: CSL coverage.
+- `measurement_access_controls`: observable-vs-missing evidence.
+- `false_property_rejection_rate`: counterexample strength.
+- `true_property_preservation_rate`: no over-rejection.
+- `row_checksums`: provenance.
+- `missing_evidence_detected`: measurement-access boundary.
+- `broad_kan_verification_claim`: bounded claim.
+- `kan_ontology_certificate_ready`: capstone evidence.
+- `inference_substrate`: no hidden live model inference.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5438: Ontology Measurement-Access Gaps Do Not Become KAN Claims
+
+Given the completed Exp5432 ontology-backed constraint-memory fixture with
+valid triples, invalid triples, unsupported graph writes, stale relation
+updates, and infeasible retrieval rows,
+When Exp5438 evaluates bounded ontology/triple and workflow-memory
+measurement-access controls,
+Then measured invalid triples and retrieval traps produce row-backed
+counterexamples, unsupported graph/kernel/board/token/internal claims are
+classified as missing-evidence unsupported, valid triple updates and valid
+workflow retrieval controls stay provable, `false_property_rejection_rate=1.0`,
+`true_property_preservation_rate=1.0`,
+`missing_evidence_detected=true`,
+`broad_kan_verification_claim=false`,
+`inference_substrate=deterministic_certificate_experiment`, and
+`kan_ontology_certificate_ready=true` only for the bounded
+ontology/workflow-memory fixture.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
