@@ -3278,11 +3278,23 @@ submission deadline (or an explicit operator retirement), MUST:
    relax those disciplines, it guarantees them a slot every milestone instead of only when a milestone
    happens to already be ARC-headline.
 
-**Mechanical enforcement.** `scripts/arc_levelup_guarantee_lint.py [roadmap.yaml] [--min N]` already counts
-level-up attempts and exits non-zero below the floor; run it on every emitted roadmap through November 2026,
-not only on ARC-headline milestones as the original guarantee scoped it. The activation guard SHOULD extend
-to also fail a roadmap with zero ARC-tagged (`track: arc` or equivalent) tasks, mirroring the Hardware-Task
-Continuity Discipline's per-board mandatory-slot check.
+**Mechanical enforcement — WIRED 2026-07-08.** `scripts/arc_levelup_guarantee_lint.py [roadmap.yaml]
+[--min N]` counts level-up attempts and exits non-zero below the floor. Milestone .487 shipped with zero
+ARC tasks on a planner crash-and-retry with no mechanical backstop; per operator directive ("wire the
+mechanical enforcement too, since it already failed once") this lint is now called directly from
+`scripts/research_conductor.py:_activate_next_roadmap()` (the live function — note the file has a dead,
+shadowed duplicate definition of this function name earlier in the file; the live one is the second
+definition), immediately after the exclusion-manifest Layer-2 pre-emit check and before the roadmap is
+copied into `research-roadmap.yaml`. On 0 level-up attempts it hard-refuses activation via the same
+`log_step(..., "BLOCK", ...)` path exclusion-manifest uses, leaving `research-roadmap-next.yaml` in place
+for operator inspection or re-plan — it does NOT auto-replan. The check is date-gated
+(`datetime.now(UTC) < datetime(2026, 11, 1, tzinfo=UTC)`) so it self-disables at the November 2026
+retirement condition without needing a follow-up edit. Verified 2026-07-08: passes against the live
+milestone .492 roadmap (1 level-up attempt), correctly fails (exit 1) against a synthetic copy of that same
+roadmap with the ARC task stripped out (the .487 scenario), and the import/call pattern was exercised
+standalone to confirm it matches what `_activate_next_roadmap()` actually executes. Because the conductor
+runs as a single long-lived `--loop` process (not re-exec'd per iteration), this code change takes effect
+on the process's next natural restart, not instantly.
 
 **Retirement.** This floor retires on the November 2026 submission deadline, or when the operator explicitly
 lifts it — whichever comes first, the same two-condition pattern as the retired sprint forcing function
