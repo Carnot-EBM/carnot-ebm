@@ -20154,3 +20154,132 @@ fine-tuned, or mutated.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5446 | Planned (`python/carnot/experiment_5446_governed_memory_csl_online_v495.py`, `results/experiment_5446_governed_memory_csl_online_v495.json`) | Planned (`tests/python/test_experiment_5446_governed_memory_csl_online_v495.py`) |
+
+---
+
+## REQ-LEARN-5447: Gated CSL Memory Failure Stress v495
+
+Experiment 5447 SHALL run only when
+`results/experiment_5446_governed_memory_csl_online_v495.json` reports
+`governed_csl_loop_ready=true`. The experiment SHALL load the exact upstream
+governance policy provenance from Exp5446, including its
+`reproducibility_checksum`, temporal decay policy, source file checksums, and
+the ordered governance gates: evidence support, execution dependency, replay
+success, temporal decay, access control, rollback pointer, and no-weight
+mutation proof.
+
+The stress fixture SHALL include adversarial memory cases for summarization
+loss, storage collision, retrieval collision, stale rule reuse, poisoned
+sidecar, over-generalized skill, and distribution shift. Every rejected or
+failed memory SHALL be attributed to exactly one memory operation from this
+closed set: summarization, storage, retrieval, replay, decay, access-control,
+or verifier gate. Rejected memories SHALL remain in the audit log but SHALL
+have zero routing influence. Rollback after a bad-memory insertion SHALL
+restore the prior active sidecar and SHALL prove the rejected memory cannot
+influence later routing.
+The phrase summarization loss, storage collision, retrieval collision, stale rule reuse
+is intentionally recorded contiguously for test traceability.
+
+The evaluation SHALL compare governed memory against always-full-context,
+no-memory, and ungated-memory controls over the same failure cases. It SHALL
+report stale-memory, poisoned-memory, retrieval-collision, and negative-transfer
+deflection rates, rollback recovery rate, quality delta against
+always-full-context, unsafe false accepts, and no-weight-mutation evidence. The
+artifact SHALL declare
+`inference_substrate="deterministic_memory_stress_no_weight_update"` and SHALL
+not load, write, fine-tune, or mutate model or adapter weights.
+
+The result artifact SHALL be
+`results/experiment_5447_gated_csl_memory_failure_stress_v495.json` and SHALL
+include `gated_upstream_ready`, `memory_failure_case_count`,
+`failure_operation_counts`, `stale_memory_deflection_rate`,
+`poisoned_memory_deflection_rate`, `retrieval_collision_deflection_rate`,
+`negative_transfer_deflection_rate`, `rollback_recovery_rate`,
+`quality_delta_vs_always_full`, `unsafe_false_accepts`, `no_weight_mutation`,
+`csl_memory_stress_ready`, `inference_substrate`, and `honest_verdict`. The
+artifact SHALL also include field principles documenting those required fields.
+
+The required field principles SHALL be:
+
+- `gated_upstream_ready`: Structured gate provenance.
+- `memory_failure_case_count`: Stress coverage.
+- `failure_operation_counts`: MemFail-style attribution.
+- `stale_memory_deflection_rate`: Temporal safety.
+- `poisoned_memory_deflection_rate`: Safety.
+- `retrieval_collision_deflection_rate`: Retrieval robustness.
+- `negative_transfer_deflection_rate`: Transfer boundary.
+- `rollback_recovery_rate`: Reversibility.
+- `quality_delta_vs_always_full`: No hidden forgetting.
+- `unsafe_false_accepts`: Safety boundary.
+- `no_weight_mutation`: No hidden fine-tuning.
+- `csl_memory_stress_ready`: Capstone evidence.
+- `inference_substrate`: Explicit learning substrate.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5447 Sub-requirements
+
+- REQ-LEARN-5447-1: The precondition check SHALL block readiness unless
+  Exp5446 reports `governed_csl_loop_ready=true` and SHALL record its exact
+  governance policy checksum provenance in the 5447 artifact.
+- REQ-LEARN-5447-2: The fixture SHALL include at least seven memory failure
+  cases covering summarization loss, storage collision, retrieval collision,
+  stale rule reuse, poisoned sidecar, over-generalized skill, and distribution
+  shift.
+- REQ-LEARN-5447-3: Each failure case SHALL carry exactly one primary
+  `failure_operation` from summarization, storage, retrieval, replay, decay,
+  access-control, or verifier gate, and `failure_operation_counts` SHALL match
+  those case rows exactly.
+- REQ-LEARN-5447-4: The governed, always-full-context, no-memory, and
+  ungated-memory controls SHALL be evaluated over identical failure case IDs.
+- REQ-LEARN-5447-5: Stale, poisoned, retrieval-collision, and
+  negative-transfer cases SHALL be deflected by governed memory and SHALL not
+  create unsafe false accepts.
+- REQ-LEARN-5447-6: Rollback SHALL remove an injected bad memory from the
+  active sidecar, restore the prior sidecar exactly, and prove later routing
+  does not cite rejected or rolled-back memory IDs.
+- REQ-LEARN-5447-7: `csl_memory_stress_ready` SHALL be true only when all
+  required artifact fields are present with principles, all operation counts
+  match the fixture, deflection rates and rollback recovery are complete,
+  quality against always-full-context is non-negative, unsafe false accepts are
+  zero, tests are recorded, inference substrate is
+  `deterministic_memory_stress_no_weight_update`, and no model or adapter
+  weights mutate.
+
+### SCENARIO-LEARN-5447-ATTRIBUTION: Failures Are Attributed By Memory Operation
+
+**Given** adversarial memory cases covering summarization loss, storage
+collision, retrieval collision, stale rule reuse, poisoned sidecar,
+over-generalized skill, and distribution shift
+**When** governed memory evaluates the cases
+**Then** each rejection or failure records one primary failure operation
+**And** the aggregate operation counts equal the case-level attribution.
+
+### SCENARIO-LEARN-5447-CONTROLS: Governed Memory Beats Ungated Memory
+
+**Given** the same failure case IDs are evaluated by always-full-context,
+no-memory, ungated-memory, and governed-memory controls
+**When** control metrics are aggregated
+**Then** governed memory preserves quality against always-full-context
+**And** produces zero unsafe false accepts while ungated memory accepts unsafe
+cases.
+
+### SCENARIO-LEARN-5447-ROLLBACK: Rejected Memories Cannot Influence Later Routing
+
+**Given** a poisoned or colliding memory is inserted into an active sidecar
+**When** rollback runs
+**Then** the prior sidecar is restored exactly
+**And** later routing cites no rejected or rolled-back memory IDs.
+
+### SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION: Stress Learning Is Sidecar-Only
+
+**Given** memory failure stress evaluates replay, decay, access-control, and
+verifier gates
+**When** the experiment completes
+**Then** the artifact reports no model or adapter weights loaded, written,
+fine-tuned, or mutated.
+
+## Implementation Status (Exp 5447)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5447 | Planned (`python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py`, `results/experiment_5447_gated_csl_memory_failure_stress_v495.json`) | Planned (`tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py`) |
