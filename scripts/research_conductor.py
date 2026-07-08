@@ -3134,7 +3134,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     skeleton: dict = {
         "schema": "carnot.operational_retro.v64",
         "milestone": current,
-        "generated_at": _dt_now.now(_tz_now.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": _dt_now.now(_tz_now.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "retro_type": "operational_full",
         "total_wall_time_minutes": round(pre_total_min, 1),
         "experiments_completed": len(experiment_times),
@@ -3798,6 +3798,46 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                 "proceeding without Layer 2 pre-emit check",
                 _e,
             )
+
+        # ARC-AGI-3 standing-floor pre-emit lint (2026-07-08 operator directive:
+        # "wire the mechanical enforcement too, since it already failed once").
+        # CLAUDE.md "ARC-AGI-3 November-Submission Standing Floor" mandates >=1
+        # ARC-AGI-3 task every milestone through the November 2026 deadline;
+        # milestone .487 silently dropped to zero after a planner crash-and-retry
+        # with no mechanical backstop (caught manually, not by any guard). Reuses
+        # `scripts/arc_levelup_guarantee_lint.py` (built 2026-06-19 for the ARC
+        # sprint, documented as "pending wiring" ever since) rather than
+        # duplicating its level-up-attempt detection logic. Date-gated so this
+        # does not become a permanent forced floor past the deadline.
+        if datetime.now(UTC) < datetime(2026, 11, 1, tzinfo=UTC):
+            try:
+                sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+                from arc_levelup_guarantee_lint import (  # type: ignore[import-not-found]
+                    lint_roadmap as _arc_floor_lint,
+                )
+
+                if _arc_floor_lint(NEXT_ROADMAP_FILE, 1) != 0:
+                    logger.error(
+                        "ARC-AGI-3 standing-floor linter: 0 level-up attempts — "
+                        "REFUSING to activate milestone %s",
+                        next_milestone,
+                    )
+                    log_step(
+                        f"Activation REFUSED: milestone {next_milestone}",
+                        "BLOCK",
+                        "arc-levelup-guarantee: 0 level-up attempts (< 1 required); "
+                        "CLAUDE.md 'ARC-AGI-3 November-Submission Standing Floor' "
+                        "requires >=1 ARC-AGI-3 task every milestone through Nov "
+                        "2026. NEXT_ROADMAP_FILE left in place for operator "
+                        "inspection or re-plan.",
+                    )
+                    return False
+            except Exception as _e:
+                logger.warning(
+                    "ARC-AGI-3 standing-floor linter unavailable (%s) — "
+                    "proceeding without this pre-emit check",
+                    _e,
+                )
 
         shutil.copy2(NEXT_ROADMAP_FILE, ROADMAP_FILE)
         NEXT_ROADMAP_FILE.unlink()
