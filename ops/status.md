@@ -1,6 +1,33 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-08 (Milestone 2026.07.492 Operational Retro Complete)
+**Last Updated:** 2026-07-08 (Milestone 2026.07.494 Planning Staged)
+
+## Session 2026-07-08 - Milestone 2026.07.494 Planning Staged
+
+Planned the next research milestone after `.493` completed. The staged `.494`
+roadmap focuses first on repairing the Exp5417/Exp5418 structured-verification
+tautology/checksum flags, then only scaling structured local SOTA evidence
+behind a clean corrigendum gate. It also adds ontology/soft-logic
+constraint-memory fixtures, active-constraint diversity, p-bit/PolarFire timing
+variance receipts without speedup claims, verified workflow-memory CSL and
+transfer stress, one live ARC reinduction level-up slot, bounded KAN
+ontology-measurement certificates, and capstone synthesis.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`.
+
+Validation for this planning task: roadmap schema parsing,
+`scripts/validate_prior_failures.py`, `scripts/audit_roadmap_gates.py`,
+`scripts/arc_levelup_guarantee_lint.py --min 1`, and
+`scripts/exclusion_manifest_lint.py` passed for `research-roadmap-next.yaml`.
+Touched-file `git diff --check` passed for the roadmap and reference/status
+files. Protected-file diff confirmed `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified. Repo-wide
+`scripts/check_spec_coverage.py` still fails on the pre-existing traceability
+backlog (`1262 test(s) missing spec traceability`). No implementation code,
+active roadmap, conductor, model-training run, or hardware workload was
+changed.
 
 ## Session 2026-07-08 - Milestone 2026.07.492 Operational Retro
 
