@@ -27877,6 +27877,80 @@ keeps `no_quality_claim=true`, and does not modify
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
 
+### REQ-VERIFY-5378: Structured Methodology-Duration Receipt V490
+
+The repository SHALL provide Exp 5378 at
+`python/carnot/experiment_5378_structured_methodology_duration_receipt_v490.py`
+and write
+`results/experiment_5378_structured_methodology_duration_receipt_v490.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL reuse the
+Exp 5365 grammar-budget preflight and the Exp 5366 live structured protocol
+fixtures without changing the Exp 5366 acceptance thresholds. It SHALL repair
+the methodology-duration/runtime receipt for the existing structured local SOTA
+protocol rather than broadening the benchmark corpus or acceptance gate.
+
+Before headline inference, the workflow SHALL verify CUDA/GPU visibility,
+llama.cpp/GGUF-compatible runtime availability, locally resolved GGUF model
+paths, and machine-readable GPU/offload evidence. If only the retired CPU-only
+llama.cpp path is available, or if CUDA/GPU visibility, the GGUF runtime, or
+all mandated GGUF files are unavailable, Exp 5378 SHALL write a terminal
+blocked artifact and SHALL NOT invoke live prompt generation. The workflow SHALL
+use llama.cpp/GGUF-compatible loading only and SHALL NOT use
+`AutoTokenizer.from_pretrained`, `AutoModel`, or direct transformers loading on
+any `-GGUF` repository.
+
+The headline-eligible `MODEL_SPECS` SHALL contain all mandated local GGUF model
+ids considered for the run:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. `selected_model_spec` SHALL be the exact
+mandated GGUF model used for headline measurements. Exp 5378 SHALL run or wrap
+at least one mandated local SOTA GGUF structured-protocol invocation long enough
+that the top-level `methodology_duration_s` is at least 60 seconds before
+declaring `live_sota_receipt_ready=true`. Runtime/load/protocol measurement
+time counts toward `methodology_duration_s`; planning prose does not.
+
+The artifact SHALL include bare top-level `status`, `live_sota_receipt_ready`,
+`grammar_budget_protocol_ready`, `MODEL_SPECS`, `selected_model_spec`,
+`inference_substrate`, `gpu_or_offload_receipt`, `no_autotokenizer_used`,
+`prompt_count`, `parse_success_rate`, `schema_success_rate`,
+`final_json_extraction_rate`, `semantic_success_rate`,
+`truncation_failure_rate`, `completion_slack_min_tokens`,
+`unsafe_false_accepts`, `methodology_duration_s`, `active_roadmap_modified`,
+`conductor_modified`, and `honest_verdict`, plus field provenance explaining
+each required field's principle. `live_sota_receipt_ready` SHALL be true only
+when a mandated SOTA GGUF produced non-retired live local evidence with
+`methodology_duration_s>=60`. `status` SHALL be `complete` only if live local
+SOTA inference actually ran; otherwise it SHALL be `blocked`.
+
+### SCENARIO-VERIFY-5378: Methodology Receipt Runs Or Blocks Before CPU-Only SOTA
+
+Given Exp 5365 reports `grammar_budget_protocol_ready=true`, Exp 5366 exposes
+the structured protocol fixtures and acceptance thresholds, and a mandated
+local GGUF model has a concrete `.gguf` path plus non-retired GPU/offload
+evidence, when Exp 5378 runs, then it records all mandated `MODEL_SPECS`,
+selects the exact mandated model used for headline measurements, uses only the
+llama.cpp/GGUF loader family, records `no_autotokenizer_used=true`, preserves
+Exp 5366 parse/schema/final-JSON/semantic/truncation/slack/unsafe-false-accept
+fields, measures methodology duration including live runtime/load/protocol
+work, writes the required `.490` result artifact, and sets
+`live_sota_receipt_ready=true` only if `methodology_duration_s>=60`.
+
+If Exp 5365 is not ready, CUDA/GPU visibility is absent, llama.cpp/GGUF support
+is unavailable, every mandated local GGUF is missing, or the runtime cannot
+provide non-retired GPU/offload evidence, then Exp 5378 writes the same result
+path with `status=blocked`, `live_sota_receipt_ready=false`,
+`selected_model_spec=null`, a machine-readable blocker in
+`gpu_or_offload_receipt`, `honest_verdict` starting with `blocked_`,
+`active_roadmap_modified=false`, `conductor_modified=false`, and no headline
+model prompt execution.
+
+## Implementation Status (REQ-VERIFY-5378)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5378 | Planned (`python/carnot/experiment_5378_structured_methodology_duration_receipt_v490.py`, `results/experiment_5378_structured_methodology_duration_receipt_v490.json`) | Planned (`tests/python/test_experiment_5378_structured_methodology_duration_receipt_v490.py`) |
+
 ### REQ-VERIFY-5366: Live Grammar-Budgeted SOTA Structured Protocol V489
 
 The repository SHALL provide Exp 5366 at
