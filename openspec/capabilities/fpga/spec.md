@@ -16491,6 +16491,116 @@ validated same-workload repeats, `hardware_speedup_claim=false`,
 
 ---
 
+### REQ-HW-5420
+
+**Title:** p-bit/QUBO hardware-transfer preflight MUST preserve exact enumeration and refuse unsupported speedup claims
+
+**Description:**
+Experiment 5420 MUST produce
+`results/experiment_5420_pbit_hardware_transfer_preflight_v493.json` as a
+hardware-transfer preflight for one validated Exp 5407/Exp 5419 p-bit/QUBO
+workload. The preflight SHALL determine whether the workload is ready for later
+Exp5424 hardware timing. It SHALL NOT claim hardware acceleration.
+
+Step 0 SHALL fail fast by checking that
+`results/experiment_5419_active_constraint_lns_scale_v493.json` reports
+`active_constraint_lns_scale_ready=true`. The selected workload SHALL come from
+the Exp 5407 exact-enumerated QUBO artifact
+`results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json` or an
+Exp 5419 deterministic-solver fixture, and the artifact SHALL record the
+selected workload hash before any board timing comparison. The CPU receipt
+SHALL repeat the exact-enumeration workload, record the seed, exact result,
+repeat count, and per-repeat timing, and verify that the replayed result
+matches the upstream exact result.
+
+Hardware checks SHALL be limited to paths documented in
+`research-hardware-wishlist.md`: PolarFire over authenticated SSH, KV260 over SSH-only reachability,
+and GateMate non-destructive DirtyJTAG diagnostics. KV260
+MUST NOT use host block-device, SD-card, `/dev/mmcblk*`, or `/dev/disk` probes.
+If PolarFire is reachable, the preflight SHALL run the same workload hash and
+repeat count on the board and record board-local timing receipts. If PolarFire
+is unreachable, the artifact SHALL record a blocked hardware precondition
+instead of fabricating board timing.
+
+`hardware_speedup_claim` MUST be false in every valid Exp 5420 artifact. Even
+when CPU and board receipts are comparable, repeated, and hash-matched, the
+artifact SHALL classify only `pbit_transfer_preflight_ready` for Exp5424 timing,
+not a broad hardware result or speedup.
+
+The artifact SHALL include top-level fields `preconditions_checked`,
+`gated_upstream_ready`, `workload_hash`, `cpu_repeat_count`,
+`board_repeat_count`, `exact_enumeration_match`, `same_workload_hash_match`,
+`polarfire_reachable`, `kv260_ssh_checked`, `gatemate_diagnostic_checked`,
+`timing_receipts`, `hardware_speedup_claim`,
+`pbit_transfer_preflight_ready`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`hardware_preflight_with_cpu_reference`. `honest_verdict` SHALL start with
+`complete:` when hash-matched CPU and board receipts make the workload ready for
+Exp5424 timing, or `blocked:` when a required gate or hardware precondition is
+missing.
+
+Required field principles:
+
+- `preconditions_checked`: principle "hardware task must fail fast"
+- `gated_upstream_ready`: principle "structured gate provenance"
+- `workload_hash`: principle "same-workload comparison"
+- `cpu_repeat_count`: principle "timing reliability"
+- `board_repeat_count`: principle "board reliability"
+- `exact_enumeration_match`: principle "validity preservation"
+- `same_workload_hash_match`: principle "no apples-to-oranges timing"
+- `polarfire_reachable`: principle "hardware availability"
+- `kv260_ssh_checked`: principle "SSH-only discipline"
+- `gatemate_diagnostic_checked`: principle "physical/JTAG honesty"
+- `timing_receipts`: principle "reproducible evidence"
+- `hardware_speedup_claim`: principle "no unsupported speedup"
+- `pbit_transfer_preflight_ready`: principle "downstream evidence"
+- `inference_substrate`: principle "explicit substrate"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5420_pbit_hardware_transfer_preflight_v493 --date 20260708`
+  writes `results/experiment_5420_pbit_hardware_transfer_preflight_v493.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5420` and
+  `SCENARIO-HW-5420`, `random_seed=5420`, `milestone="2026.07.493"`, and a
+  stable `reproducibility_checksum`.
+- The CPU receipt repeats the same exact-enumerated workload at least three
+  times, records the selected workload hash and seed, and sets
+  `exact_enumeration_match=true` only when the replayed exact result matches the
+  upstream Exp 5407 exact result.
+- `same_workload_hash_match=true` only when CPU and board receipts are repeated,
+  comparable, and share the same workload hash. Otherwise the artifact blocks
+  downstream timing readiness.
+- `hardware_speedup_claim=false` in every valid artifact, including artifacts
+  with comparable CPU and board receipts.
+- KV260 command receipts use only the SSH reachability precondition and contain
+  no host block-device or SD-card markers. GateMate command receipts are
+  non-destructive diagnostics only.
+
+**Implementation status:** Planned (Exp 5420)
+
+---
+
+### SCENARIO-HW-5420
+
+**Scenario:** Exp 5420 writes a p-bit/QUBO hardware-transfer preflight without acceleration claims.
+
+**Given:** Exp 5419 reports `active_constraint_lns_scale_ready=true` and Exp
+5407 contains an exact-enumerated p-bit/QUBO workload,
+**When:** Experiment 5420 selects that workload, records a repeated CPU exact
+reference receipt, checks KV260 only through SSH, checks GateMate only through
+non-destructive DirtyJTAG diagnostics, and runs the same workload hash on
+PolarFire only if authenticated SSH is reachable,
+**Then:** It writes
+`results/experiment_5420_pbit_hardware_transfer_preflight_v493.json` with the
+required fields, exact-enumeration preservation, same-workload hash matching,
+CPU and board repeat counts, timing receipts, no unsupported speedup claim,
+`inference_substrate="hardware_preflight_with_cpu_reference"`, and an
+`honest_verdict` beginning with `complete:` or `blocked:`.
+
+**Implementation status:** Planned (Exp 5420)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
