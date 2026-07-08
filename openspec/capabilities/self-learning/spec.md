@@ -19892,3 +19892,139 @@ mutated.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5435 | Implemented (`python/carnot/experiment_5435_verified_workflow_memory_csl_v494.py`, `results/experiment_5435_verified_workflow_memory_csl_v494.json`) | Implemented (`tests/python/test_experiment_5435_verified_workflow_memory_csl_v494.py`) |
+
+---
+
+## REQ-LEARN-5436: CSL Memory Transfer Stress v494
+
+Experiment 5436 SHALL stress Exp5435 verified workflow memory under
+distribution shift. It SHALL first require
+`verified_workflow_memory_ready=true` from
+`results/experiment_5435_verified_workflow_memory_csl_v494.json`; when that
+gate is absent or false, no transferred case memory or skill memory may
+influence routing. The transfer fixture SHALL reuse Exp5435 case and skill
+memories across in-domain, near-domain, out-of-domain, stale, and adversarial
+workflow rows. Rows SHALL include matched transfer, shifted transfer,
+unsupported transfer, stale transfer, ambiguous transfer, and adversarial
+transfer controls.
+
+Transferred memories SHALL NOT influence routing until deterministic ontology
+and kernel checks pass. The controller SHALL also require evidence support,
+freshness, non-adversarial provenance, bounded reliance drift, non-negative
+guarded quality delta, and resource accounting before promotion. Ambiguous or
+unsupported transfers SHALL abstain or route to verification rather than
+silently applying transferred memory. Negative-transfer candidates SHALL be
+quarantined or deflected before they can alter routing, and the audit SHALL
+record the ungated quality harm that would have occurred without the gate.
+Unsupported or ambiguous transfers SHALL abstain or route to verification.
+
+The transfer stress audit SHALL measure in-domain quality/resource deltas,
+out-of-domain quality/resource deltas, reliance drift, verifier-routing
+changes, promoted transfer counts, quarantined transfer counts, negative
+transfer deflections, rollback after a deliberately bad promotion, and the
+model-weight boundary. The inference substrate SHALL be
+`deterministic_self_learning_controller`, because the experiment is a
+deterministic controller replay over Exp5435 sidecar memories and transfer
+fixtures rather than hidden live model inference.
+
+The result artifact SHALL be
+`results/experiment_5436_csl_memory_transfer_stress_v494.json` and SHALL
+include `transfer_fixture_count`, `in_domain_quality_delta`,
+`out_of_domain_quality_delta`, `resource_delta`,
+`negative_transfer_deflection_rate`, `reliance_drift_metric`,
+`promoted_transfer_count`, `quarantined_transfer_count`, `rollback_verified`,
+`no_weight_mutation`, `csl_transfer_stress_ready`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL also include field principles documenting
+those required fields.
+
+The required field principles SHALL be:
+
+- `transfer_fixture_count`: Scale.
+- `in_domain_quality_delta`: Useful transfer.
+- `out_of_domain_quality_delta`: Generalization boundary.
+- `resource_delta`: Resource accounting.
+- `negative_transfer_deflection_rate`: Unsafe transfer guard.
+- `reliance_drift_metric`: Hidden-forgetting guard.
+- `promoted_transfer_count`: Accepted memory influence.
+- `quarantined_transfer_count`: Rejected memory safety.
+- `rollback_verified`: Recovery.
+- `no_weight_mutation`: FR-11 boundary.
+- `csl_transfer_stress_ready`: Capstone evidence.
+- `inference_substrate`: No hidden live model inference.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5436 Sub-requirements
+
+- REQ-LEARN-5436-1: The audit SHALL read Exp5435 and SHALL set
+  `source_readiness.exp5435_verified_workflow_memory_ready` true only when
+  Exp5435 reports `verified_workflow_memory_ready=true`.
+- REQ-LEARN-5436-2: The transfer fixture SHALL include in-domain,
+  near-domain, out-of-domain, stale, ambiguous, and adversarial rows that reuse
+  Exp5435 case and skill memories.
+- REQ-LEARN-5436-3: Promotion SHALL require source readiness, ontology checks,
+  kernel checks, evidence support, freshness, non-adversarial provenance,
+  bounded reliance drift, non-negative guarded quality delta, and resource
+  accounting. Any failed ontology or kernel gate SHALL prevent routing
+  influence.
+- REQ-LEARN-5436-4: Unsupported or ambiguous transfers SHALL abstain or route
+  to verification, and stale or adversarial negative-transfer candidates SHALL
+  be quarantined with zero routing influence.
+- REQ-LEARN-5436-5: Reliance drift SHALL be reported for every transfer row;
+  high-drift rows may make `reliance_drift_metric` high only when they are
+  deflected from promotion.
+- REQ-LEARN-5436-6: Rollback SHALL remove a deliberately injected bad transfer
+  from active routing and restore the prior promoted transfer sidecar exactly.
+- REQ-LEARN-5436-7: `csl_transfer_stress_ready` SHALL be true only when Exp5435
+  readiness is true, fixture families are covered, ontology/kernel gates
+  precede routing influence, negative transfer is fully deflected, promoted
+  rows improve or preserve guarded quality, rejected rows cannot route,
+  rollback succeeds, tests are recorded, inference substrate is
+  `deterministic_self_learning_controller`, and no model or adapter weights
+  mutate.
+
+### SCENARIO-LEARN-5436-GATE: Ontology And Kernel Gates Precede Routing
+
+**Given** transferred case and skill memories from Exp5435
+**When** the stress audit evaluates matched, shifted, unsupported, stale, and
+adversarial fixtures
+**Then** routing influence is assigned only to rows whose source readiness,
+ontology, kernel, evidence, freshness, provenance, reliance, quality, and
+resource gates pass.
+
+### SCENARIO-LEARN-5436-NEGATIVE-TRANSFER: Unsafe Transfer Is Deflected
+
+**Given** out-of-domain, stale, and adversarial rows with negative ungated
+quality deltas
+**When** the transfer controller scores them
+**Then** every negative-transfer candidate is quarantined, abstained, or routed
+to verification
+**And** its routing influence remains zero.
+
+### SCENARIO-LEARN-5436-DRIFT: Reliance Drift Is Measured And Bounded
+
+**Given** promoted and deflected transfer rows
+**When** reliance drift is computed
+**Then** promoted rows remain under the reliance-drift threshold
+**And** high-drift rows are visible in `reliance_drift_metric` only as
+deflected rows.
+
+### SCENARIO-LEARN-5436-ROLLBACK: Bad Transfer Promotion Is Reversible
+
+**Given** a bad transferred memory is deliberately injected into active routing
+**When** rollback runs
+**Then** the bad transfer is removed
+**And** the prior promoted transfer sidecar is restored exactly while the audit
+record remains retained.
+
+### SCENARIO-LEARN-5436-NO-WEIGHT-MUTATION: Transfer Uses Sidecars Only
+
+**Given** promoted transfer rows influence deterministic routing
+**When** the stress audit completes
+**Then** the artifact reports no model or adapter weights loaded, written, or
+mutated.
+
+## Implementation Status (Exp 5436)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5436 | Implemented (`python/carnot/experiment_5436_csl_memory_transfer_stress_v494.py`, `results/experiment_5436_csl_memory_transfer_stress_v494.json`) | Implemented (`tests/python/test_experiment_5436_csl_memory_transfer_stress_v494.py`) |
