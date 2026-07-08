@@ -10515,3 +10515,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 03:37 UTC | Milestone 2026.07.491 activated | OK | 13 tasks queued |
 | 2026-07-08 03:49 UTC | Archive .490 outcomes and stage .491 execution con | OK | 87 passed, 1 warning in 8.27s |
 | 2026-07-08 04:05 UTC | Execution-time SOTA source delta for .491 | OK | 116 passed, 1 warning in 8.37s |
+| 2026-07-08 04:20 UTC | Scale the local SOTA constraint-tax panel with det | OK | 107 passed, 1 warning in 8.69s |
