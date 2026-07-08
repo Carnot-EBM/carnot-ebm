@@ -16601,6 +16601,119 @@ CPU and board repeat counts, timing receipts, no unsupported speedup claim,
 
 ---
 
+### REQ-HW-5424
+
+**Title:** comparable CPU and board timing receipts MUST match workload and result hashes while refusing speedup claims
+
+**Description:**
+Experiment 5424 MUST produce
+`results/experiment_5424_hardware_comparable_timing_receipts_v493.json` as a
+capstone timing-evidence receipt for at least one deterministic same-workload
+solver or p-bit diagnostic selected from Exp 5411 or Exp 5420. The experiment
+SHALL create comparable CPU and board timing evidence when authenticated board
+access is available, but it SHALL NOT turn timing comparability into a hardware
+speedup claim.
+
+The selected workload SHALL have deterministic validity, a stable
+`workload_hash`, a recorded seed, and a deterministic `result_hash`. The CPU
+receipt SHALL repeat the same workload at least three times and record the
+repeat count, environment metadata, seed, workload hash, result hash, and timing
+distribution. If PolarFire is reachable over authenticated SSH, the board
+receipt SHALL run the same workload hash with the same repeat count and record
+its result hash and timing distribution. If PolarFire is unreachable, the
+artifact SHALL emit a blocked hardware precondition with the exact command
+attempted and SHALL NOT fabricate board timing.
+
+KV260 checks, if attempted, MUST use only
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true` reachability and MUST NOT
+use host SD-card, `/dev/mmcblk*`, `/dev/disk`, or block-device probes. GateMate
+checks MUST remain non-destructive DirtyJTAG diagnostics only; they do not
+upgrade into workload timing unless physical/JTAG evidence returns in the same
+receipt.
+
+The artifact SHALL compare CPU and board timing only when both
+`same_workload_hash_match=true` and `same_result_hash_match=true`. Timing
+comparability SHALL be recorded separately from speedup. `hardware_speedup_claim`
+MUST be false in every valid Exp 5424 artifact, including artifacts with
+matching CPU and board receipts.
+
+The artifact SHALL include top-level fields `preconditions_checked`,
+`workload_hash`, `cpu_repeat_count`, `board_repeat_count`, `cpu_result_hash`,
+`board_result_hash`, `same_workload_hash_match`, `same_result_hash_match`,
+`polarfire_reachable`, `kv260_ssh_checked`, `gatemate_diagnostic_checked`,
+`timing_receipts`, `measurement_access_complete`,
+`comparable_timing_receipts_ready`, `hardware_speedup_claim`,
+`inference_substrate`, and `honest_verdict`. `inference_substrate` SHALL equal
+`hardware_timing_with_cpu_reference`. `honest_verdict` SHALL start with
+`complete:` only when repeated CPU and board receipts are hash-matched and
+result-matched, or `blocked:` when a hardware precondition or comparability gate
+is missing.
+
+Required field principles:
+
+- `preconditions_checked`: principle "hardware task must fail fast"
+- `workload_hash`: principle "same-workload comparison"
+- `cpu_repeat_count`: principle "CPU timing reliability"
+- `board_repeat_count`: principle "board timing reliability"
+- `cpu_result_hash`: principle "correctness comparison"
+- `board_result_hash`: principle "correctness comparison"
+- `same_workload_hash_match`: principle "no apples-to-oranges timing"
+- `same_result_hash_match`: principle "no invalid speedup"
+- `polarfire_reachable`: principle "board availability"
+- `kv260_ssh_checked`: principle "SSH-only discipline"
+- `gatemate_diagnostic_checked`: principle "physical/JTAG honesty"
+- `timing_receipts`: principle "reproducible evidence"
+- `measurement_access_complete`: principle "physical evidence boundary"
+- `comparable_timing_receipts_ready`: principle "capstone evidence"
+- `hardware_speedup_claim`: principle "no unsupported speedup"
+- `inference_substrate`: principle "explicit substrate"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5424_hardware_comparable_timing_receipts_v493 --date 20260708`
+  writes `results/experiment_5424_hardware_comparable_timing_receipts_v493.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5424` and
+  `SCENARIO-HW-5424`, `random_seed=5424`, `milestone="2026.07.493"`, and a
+  stable `reproducibility_checksum`.
+- The CPU receipt repeats the selected deterministic workload at least three
+  times and records the seed, workload hash, result hash, environment metadata,
+  and timing distribution.
+- The board receipt repeats the same workload hash at least three times only
+  when PolarFire is reachable. If PolarFire is unreachable, the artifact records
+  the exact blocked command attempted and leaves board timing incomplete.
+- `comparable_timing_receipts_ready=true` only when CPU and board repeat counts
+  meet the threshold and both workload hashes and result hashes match.
+- `hardware_speedup_claim=false` in every valid artifact. Timing comparability
+  and speedup are represented as separate fields.
+- KV260 command receipts use only SSH reachability and contain no host
+  block-device or SD-card markers. GateMate command receipts are non-destructive
+  diagnostics only.
+
+**Implementation status:** Planned (Exp 5424)
+
+---
+
+### SCENARIO-HW-5424
+
+**Scenario:** Exp 5424 writes comparable timing receipts without a hardware speedup claim.
+
+**Given:** Exp 5420 selected a deterministic exact-enumerated p-bit/QUBO
+workload with a stable workload hash and result hash,
+**When:** Experiment 5424 repeats that workload on CPU, checks KV260 through
+SSH-only reachability, checks GateMate through non-destructive diagnostics, and
+runs the same workload hash on PolarFire only when authenticated SSH is
+reachable,
+**Then:** It writes
+`results/experiment_5424_hardware_comparable_timing_receipts_v493.json` with
+matching workload/result hash gates, CPU and board repeat counts, timing
+distributions, measurement-access metadata, `hardware_speedup_claim=false`,
+`inference_substrate="hardware_timing_with_cpu_reference"`, and an
+`honest_verdict` beginning with `complete:` or `blocked:`.
+
+**Implementation status:** Planned (Exp 5424)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
