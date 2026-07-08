@@ -1,0 +1,390 @@
+{
+  "accuracy_after_rate": 1.0,
+  "accuracy_before_rate": 1.0,
+  "episode_count": 5,
+  "evidence_reliance_csl_ready": true,
+  "experiment": "experiment_5421_evidence_reliance_csl_v493",
+  "experiment_id": "exp5421-v493-evidence-reliance-csl",
+  "field_principles": {
+    "episode_count": "Scale and coverage.",
+    "evidence_reliance_csl_ready": "Downstream gate.",
+    "hidden_forgetting_detected": "Explicit drift classification.",
+    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "No hidden live model inference.",
+    "no_weight_mutation": "FR-11 boundary.",
+    "quality_preserved": "No learning regression.",
+    "raw_episodes_retained": "Auditability.",
+    "reliance_drift_metric": "Hidden-forgetting signal.",
+    "resource_delta": "Resource-aware learning.",
+    "rollback_verified": "Safety recovery.",
+    "stale_poison_deflection_rate": "Unsafe memory guard.",
+    "verifier_cost_delta": "Verifier economy."
+  },
+  "hidden_forgetting_detected": true,
+  "hidden_forgetting_threshold": 0.45,
+  "honest_verdict": "complete: evidence-reliance CSL detected hidden forgetting under stable accuracy, retained raw episodes, deflected unsafe reliance, verified rollback, and did not mutate weights",
+  "inference_substrate": "deterministic_self_learning_controller",
+  "methodology_note": "Exp5421 replays Exp5408/Exp5409 controller evidence and injects diagnostic stale, poisoned, underspecified, and distribution-shift episodes. The metric watches evidence reliance rather than answer accuracy alone; no live model inference or weight mutation occurs.",
+  "milestone": "2026.07.493",
+  "no_weight_mutation": true,
+  "paired_episodes": [
+    {
+      "active_learned_memory_routing_after": true,
+      "always_verify_resource_cost": 220,
+      "always_verify_verifier_calls": 3,
+      "answer_correct_after": true,
+      "answer_correct_before": true,
+      "constraint_evidence_after": "explicit_constraint_receipt",
+      "constraint_evidence_before": "explicit_constraint_receipt",
+      "controller_action_after": "route_with_memory_and_verifier",
+      "episode_family": "clean",
+      "evidence_reliance_drift": 0.3175,
+      "evidence_reliance_label_after": "memory_assisted_verified",
+      "evidence_reliance_label_before": "verifier_anchored",
+      "grounding_source_after": "accepted_memory_with_verifier_spotcheck",
+      "grounding_source_before": "raw_episode_and_deterministic_verifier",
+      "influence_shares_after": {
+        "constraint_evidence": 5,
+        "deterministic_verifier": 60,
+        "learned_memory": 25,
+        "raw_episode": 10
+      },
+      "influence_shares_before": {
+        "constraint_evidence": 10,
+        "deterministic_verifier": 70,
+        "learned_memory": 10,
+        "raw_episode": 10
+      },
+      "pair_id": "pair5421-clean-supported-memory",
+      "promoted_after_learning": true,
+      "raw_episode_ids": [
+        "raw5396-clean-dependency-edge"
+      ],
+      "raw_episode_receipts": [
+        {
+          "control_kind": "benign_useful",
+          "raw_episode_id": "raw5396-clean-dependency-edge",
+          "raw_payload_checksum": "sha256:827c7da4fb4fc1df6256dd1d880be20464a15a25c4d1c752c3ec8849547ee567",
+          "source_event_id": "t01-e1-retrieve"
+        }
+      ],
+      "raw_episode_retained": true,
+      "resource_cost_after": 120,
+      "resource_cost_before": 170,
+      "routing_decision_after": "memory_assisted_verified",
+      "routing_decision_before": "deterministic_verified",
+      "source_fragment_id": "frag5409-clean-scaleup-summary",
+      "surface_answer_after": "route rich verifier only when dependency provenance is missing",
+      "surface_answer_before": "route rich verifier only when dependency provenance is missing",
+      "surface_success_stable": true,
+      "verifier_calls_after": 2,
+      "verifier_calls_before": 3,
+      "verifier_dependency_after": "deterministic_verifier_supporting",
+      "verifier_dependency_before": "deterministic_verifier_primary"
+    },
+    {
+      "active_learned_memory_routing_after": false,
+      "always_verify_resource_cost": 230,
+      "always_verify_verifier_calls": 3,
+      "answer_correct_after": true,
+      "answer_correct_before": true,
+      "constraint_evidence_after": "expired_constraint_receipt",
+      "constraint_evidence_before": "fresh_constraint_receipt",
+      "controller_action_after": "route_to_deterministic_verifier",
+      "episode_family": "stale",
+      "evidence_reliance_drift": 0.7375,
+      "evidence_reliance_label_after": "stale_memory_uncertain",
+      "evidence_reliance_label_before": "fresh_verifier_grounded",
+      "grounding_source_after": "stale_memory_receipt",
+      "grounding_source_before": "fresh_runtime_receipt",
+      "influence_shares_after": {
+        "constraint_evidence": 10,
+        "deterministic_verifier": 15,
+        "learned_memory": 70,
+        "raw_episode": 5
+      },
+      "influence_shares_before": {
+        "constraint_evidence": 10,
+        "deterministic_verifier": 75,
+        "learned_memory": 5,
+        "raw_episode": 10
+      },
+      "pair_id": "pair5421-stale-runtime-reliance",
+      "promoted_after_learning": false,
+      "raw_episode_ids": [
+        "raw5396-stale-runtime-receipt"
+      ],
+      "raw_episode_receipts": [
+        {
+          "control_kind": "stale_memory",
+          "raw_episode_id": "raw5396-stale-runtime-receipt",
+          "raw_payload_checksum": "sha256:3a4e9f1ec04d0e32082db8e848d808f1921cbeb12bb39a62d85cf945a1a06f8a",
+          "source_event_id": "t02-e1-retrieve"
+        }
+      ],
+      "raw_episode_retained": true,
+      "resource_cost_after": 150,
+      "resource_cost_before": 180,
+      "routing_decision_after": "route_to_deterministic_verifier",
+      "routing_decision_before": "deterministic_verified",
+      "source_fragment_id": "frag5409-stale-runtime-receipt",
+      "surface_answer_after": "use current runtime receipt for verifier tier selection",
+      "surface_answer_before": "use current runtime receipt for verifier tier selection",
+      "surface_success_stable": true,
+      "verifier_calls_after": 2,
+      "verifier_calls_before": 3,
+      "verifier_dependency_after": "verifier_required_due_staleness",
+      "verifier_dependency_before": "deterministic_verifier_primary"
+    },
+    {
+      "active_learned_memory_routing_after": false,
+      "always_verify_resource_cost": 230,
+      "always_verify_verifier_calls": 3,
+      "answer_correct_after": true,
+      "answer_correct_before": true,
+      "constraint_evidence_after": "missing_independent_constraint",
+      "constraint_evidence_before": "forgery_constraint_failed",
+      "controller_action_after": "abstain",
+      "episode_family": "poisoned",
+      "evidence_reliance_drift": 0.8075,
+      "evidence_reliance_label_after": "poisoned_memory_uncertain",
+      "evidence_reliance_label_before": "poison_deflected_by_verifier",
+      "grounding_source_after": "forged_memory_claim",
+      "grounding_source_before": "raw_episode_forgery_check",
+      "influence_shares_after": {
+        "constraint_evidence": 5,
+        "deterministic_verifier": 10,
+        "learned_memory": 80,
+        "raw_episode": 5
+      },
+      "influence_shares_before": {
+        "constraint_evidence": 5,
+        "deterministic_verifier": 80,
+        "learned_memory": 5,
+        "raw_episode": 10
+      },
+      "pair_id": "pair5421-poisoned-forged-reliance",
+      "promoted_after_learning": false,
+      "raw_episode_ids": [
+        "raw5396-forged-reasoning-history"
+      ],
+      "raw_episode_receipts": [
+        {
+          "control_kind": "forged_reasoning_history",
+          "raw_episode_id": "raw5396-forged-reasoning-history",
+          "raw_payload_checksum": "sha256:389ddc70ced1858462a1c54745a6f6e5baebf87f72af255386a19c842b2bc578",
+          "source_event_id": "t04-e1-revise"
+        }
+      ],
+      "raw_episode_retained": true,
+      "resource_cost_after": 80,
+      "resource_cost_before": 170,
+      "routing_decision_after": "abstain",
+      "routing_decision_before": "deterministic_verified",
+      "source_fragment_id": "frag5409-high-cost-low-value",
+      "surface_answer_after": "reject forged reasoning as a routing prior",
+      "surface_answer_before": "reject forged reasoning as a routing prior",
+      "surface_success_stable": true,
+      "verifier_calls_after": 0,
+      "verifier_calls_before": 3,
+      "verifier_dependency_after": "deterministic_verifier_blocked_by_poison",
+      "verifier_dependency_before": "deterministic_verifier_primary"
+    },
+    {
+      "active_learned_memory_routing_after": false,
+      "always_verify_resource_cost": 220,
+      "always_verify_verifier_calls": 3,
+      "answer_correct_after": true,
+      "answer_correct_before": true,
+      "constraint_evidence_after": "boundary_constraint_missing",
+      "constraint_evidence_before": "boundary_constraint_present",
+      "controller_action_after": "retain_non_promoted_evidence",
+      "episode_family": "underspecified",
+      "evidence_reliance_drift": 0.615,
+      "evidence_reliance_label_after": "underspecified_uncertain",
+      "evidence_reliance_label_before": "constraint_complete",
+      "grounding_source_after": "underspecified_memory_summary",
+      "grounding_source_before": "complete_constraint_evidence",
+      "influence_shares_after": {
+        "constraint_evidence": 10,
+        "deterministic_verifier": 25,
+        "learned_memory": 55,
+        "raw_episode": 10
+      },
+      "influence_shares_before": {
+        "constraint_evidence": 10,
+        "deterministic_verifier": 70,
+        "learned_memory": 10,
+        "raw_episode": 10
+      },
+      "pair_id": "pair5421-underspecified-boundary",
+      "promoted_after_learning": false,
+      "raw_episode_ids": [
+        "raw5421-underspecified-constraint-gap"
+      ],
+      "raw_episode_receipts": [
+        {
+          "control_kind": "underspecified",
+          "raw_episode_id": "raw5421-underspecified-constraint-gap",
+          "raw_payload_checksum": "sha256:412dd494f5aea7cc98b6c23b678948dc67787ca295f432790c9e8dd574586f86",
+          "source_event_id": "exp5421-underspecified-constraint-gap"
+        }
+      ],
+      "raw_episode_retained": true,
+      "resource_cost_after": 110,
+      "resource_cost_before": 160,
+      "routing_decision_after": "retain_non_promoted_evidence",
+      "routing_decision_before": "deterministic_verified",
+      "source_fragment_id": "frag5421-underspecified-constraint-gap",
+      "surface_answer_after": "boundary case needs explicit verifier evidence",
+      "surface_answer_before": "boundary case needs explicit verifier evidence",
+      "surface_success_stable": true,
+      "verifier_calls_after": 1,
+      "verifier_calls_before": 3,
+      "verifier_dependency_after": "verification_needed_for_missing_boundary",
+      "verifier_dependency_before": "deterministic_verifier_primary"
+    },
+    {
+      "active_learned_memory_routing_after": false,
+      "always_verify_resource_cost": 235,
+      "always_verify_verifier_calls": 3,
+      "answer_correct_after": true,
+      "answer_correct_before": true,
+      "constraint_evidence_after": "cross_domain_constraint_gap",
+      "constraint_evidence_before": "in_domain_constraint_receipt",
+      "controller_action_after": "route_to_deterministic_verifier",
+      "episode_family": "distribution_shift",
+      "evidence_reliance_drift": 0.685,
+      "evidence_reliance_label_after": "distribution_shift_uncertain",
+      "evidence_reliance_label_before": "in_domain_verifier_grounded",
+      "grounding_source_after": "out_of_domain_memory_prior",
+      "grounding_source_before": "in_domain_verifier_trace",
+      "influence_shares_after": {
+        "constraint_evidence": 10,
+        "deterministic_verifier": 20,
+        "learned_memory": 60,
+        "raw_episode": 10
+      },
+      "influence_shares_before": {
+        "constraint_evidence": 10,
+        "deterministic_verifier": 75,
+        "learned_memory": 5,
+        "raw_episode": 10
+      },
+      "pair_id": "pair5421-distribution-shift",
+      "promoted_after_learning": false,
+      "raw_episode_ids": [
+        "raw5421-distribution-shift-routing-shift"
+      ],
+      "raw_episode_receipts": [
+        {
+          "control_kind": "distribution_shift",
+          "raw_episode_id": "raw5421-distribution-shift-routing-shift",
+          "raw_payload_checksum": "sha256:cf854fa99b755f9202f10f18669c3245c33dc2c607aa74733ec397eff1a8aad5",
+          "source_event_id": "exp5421-distribution-shift-routing-shift"
+        }
+      ],
+      "raw_episode_retained": true,
+      "resource_cost_after": 145,
+      "resource_cost_before": 175,
+      "routing_decision_after": "route_to_deterministic_verifier",
+      "routing_decision_before": "deterministic_verified",
+      "source_fragment_id": "frag5421-distribution-shift-routing",
+      "surface_answer_after": "do not transfer arithmetic routing prior to code repair without verification",
+      "surface_answer_before": "do not transfer arithmetic routing prior to code repair without verification",
+      "surface_success_stable": true,
+      "verifier_calls_after": 2,
+      "verifier_calls_before": 3,
+      "verifier_dependency_after": "verifier_required_for_domain_shift",
+      "verifier_dependency_before": "deterministic_verifier_primary"
+    }
+  ],
+  "quality_preserved": true,
+  "random_seed": 5421,
+  "raw_episode_count": 9,
+  "raw_episodes_retained": true,
+  "readiness_checks": {
+    "all_passed": true,
+    "drift_threshold_crossed": true,
+    "episodes_present": true,
+    "failed_checks": [],
+    "hidden_forgetting_detected": true,
+    "inference_substrate_deterministic": true,
+    "no_weight_mutation": true,
+    "quality_preserved": true,
+    "raw_episodes_retained": true,
+    "required_families_covered": true,
+    "resource_delta_numeric": true,
+    "rollback_verified": true,
+    "source_exp5408_ready": true,
+    "source_exp5409_ready": true,
+    "stale_poison_deflected": true,
+    "tests_recorded": true,
+    "uncertain_reliance_deflected": true,
+    "verifier_cost_delta_numeric": true
+  },
+  "reliance_drift_metric": 0.8075,
+  "reproducibility_checksum": "sha256:675092b9e04b354589531c2c0438055c3f222100bfe2e487ca8abcd1d6c1ab27",
+  "resource_delta": 530.0,
+  "rollback_audit": {
+    "bad_fragment_id": "frag5421-poisoned-reliance-drift",
+    "injected_into_active_routing": true,
+    "prior_routing_restored": true,
+    "retained_audit_record_after_rollback": true,
+    "rollback_removed_from_active_routing": true,
+    "rollback_success": true
+  },
+  "rollback_verified": true,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5421.evidence_reliance_csl.v493",
+  "source_artifact_checksums": {
+    "exp5408": "sha256:387d76b9f34d110b40929b0d8146f576821b50ebf980947d01db4e99b1cc26e0",
+    "exp5408_module": "sha256:6a8dd28e6315a4861ae97c634dfb43701443c216839446afd330f3e1670cad24",
+    "exp5409": "sha256:55d67196eeea0655c425c3e74ba7f188fa643c0e204766d21d6f121b972fc61b",
+    "exp5409_module": "sha256:980e7bdb28ef76ab781e053943683bd14d6dbaf3f1b2768c9fe7c57fc7876627",
+    "module": "sha256:a140c63a9419f05b8444a764b2679df0f19379f525dfaaf56180141554755f8f",
+    "spec": "sha256:1752a89592f32819ab8f9aaafeb1e31f4ded4739029883c4568a7bf953a0b17c"
+  },
+  "source_artifacts": [
+    "results/experiment_5408_resource_accounted_csl_controller_v492.json",
+    "results/experiment_5409_uncertainty_gated_promotion_v492.json"
+  ],
+  "source_readiness": {
+    "exp5408_resource_accounted_csl_ready": true,
+    "exp5409_uncertainty_gated_promotion_ready": true
+  },
+  "spec_refs": [
+    "REQ-LEARN-5421",
+    "SCENARIO-LEARN-5421-DRIFT",
+    "SCENARIO-LEARN-5421-RAW-RETENTION",
+    "SCENARIO-LEARN-5421-SAFETY",
+    "SCENARIO-LEARN-5421-ROLLBACK"
+  ],
+  "stale_poison_deflection_rate": 1.0,
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5421_evidence_reliance_csl_v493.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5421_evidence_reliance_csl_v493.py -m pytest tests/python/test_experiment_5421_evidence_reliance_csl_v493.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "uncertain_reliance_deflection_rate": 1.0,
+  "verifier_cost_delta": 8.0,
+  "weight_mutation_receipt": {
+    "adapter_weights_loaded": false,
+    "adapter_weights_written": false,
+    "learned_state_scope": "controller_evidence_reliance_sidecar_only",
+    "model_weights_loaded": false,
+    "model_weights_written": false,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true
+  }
+}
