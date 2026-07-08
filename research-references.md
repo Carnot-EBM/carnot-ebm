@@ -28448,3 +28448,21 @@ guardrail for the next roadmap.
   hidden-state, logprob, Kona, Aleph, or TSU execution without local evidence.
 
 <!-- V495-PLANNER-REFRESH-2026-07-08-END -->
+
+
+### V495 Execution Refresh - 20260708
+
+Execution-time sweep after the `.495` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V489/V490/V491/V492/V493/V494/V495 duplicate history, and the exclusion manifest. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **Dockerless: Environment-Free Program Verifier for Coding Agents** (https://arxiv.org/abs/2606.28436): For Exp5445 code/API witness constraints, add an environment-free repo-evidence triage arm that gathers call-graph, import, reference, and surrounding-code evidence before execution. Keep deterministic tests, runtime checks, AST/KB witnesses, or exact solvers as final authority, and do not credit the paper's SFT/RL post-training claims.
+- **P-dit Probabilistic Ising Machine for Solving the Quadratic Assignment Problem** (https://arxiv.org/abs/2605.24408): For Exp5448 p-bit/Potts work, add a CPU-only assignment-style multi-state fixture with p-dit variable counts, assignment-cost energy tables, exact QAP baseline checks, workload hashes, and solver-authority outcomes. Do not claim large-QAP performance, GPU parallelism, or hardware speedup without matched local receipts.
+- **From Errors to Proofs: Minimal-Core-Guided Repair for Neuro-Symbolic Constraint Solving** (https://openreview.net/forum?id=ySI9HwU9K7): For Exp5443 and Exp5445 formalization repair, replace generic solver-error prompting with minimal unsatisfiable core feedback. Record core constraint IDs, omitted-constraint hypotheses, repaired formalizations, and exact recheck results so solver feedback stays deterministic and auditable.
+
+### Execution impact
+- **Plan impact:** No active `.495` roadmap edit is required. The deltas sharpen Exp5443/Exp5445 formalization and code-witness receipts, and Exp5448 p-bit/Potts assignment controls, without expanding scope.
+- **Duplicates suppressed:** V495 planner sources, DTV, p-bit guided CDCL, Potts mean-field, million-p-bit hardware, SSGM, evidence tracing, Execute-Distill-Verify, MemFail, Experience Compression Spectrum, deterministic AST correction, EBT, ARM-EBM, ConstraintLLM, NSVIF, Automating Formal Verification, and prior p-dit/Potts accounting were already covered and are not re-added.
+- **Retired scope:** No retired scope was reopened. Dockerless SFT/RL post-training, broad GRPO/fine-tuning or LoRA reruns, external generated-text/logprob scorers, token/internal feature claims without backend receipts, non-local TSU/Kona/Aleph execution claims, duplicate ARC lanes, and hardware speedup claims without matched board timing remain closed.
+- **Watch-only/excluded:** Extropic TSU/XTR-0/THRML writing, Logical Intelligence Aleph/Kona pages, OpenReview EBT/neural-CSP surfaces, Dockerless post-training, SynthFix fine-tuning, and Semantic Scholar citation-route material were checked but not promoted as executable `.495` dependencies.
+
+<!-- V495-EXECUTION-REFRESH-20260708-END -->

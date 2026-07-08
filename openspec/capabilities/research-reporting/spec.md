@@ -38065,3 +38065,90 @@ does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5441 | Planned (`python/carnot/experiment_5441_transition_v495.py`, `results/experiment_5441_transition_v495.json`) | Planned (`tests/python/test_experiment_5441_transition_v495.py`) |
+
+### REQ-REPORT-5442: V495 Execution-Time Source Delta Refresh
+
+The Exp5442 workflow SHALL search arXiv and secondary sources for 2025-2026
+work relevant to Carnot after the `V495 Planner Refresh - 2026-07-08` marker
+in `research-references.md`. It SHALL check arXiv for Energy-Based Models for
+verification/reasoning, neural constraint satisfaction, Ising applications in
+ML, hallucination mitigation, Kolmogorov-Arnold Networks, energy-guided
+decoding, hardware-accelerated sampling, and continual/online learning for
+constraint systems. It SHALL also check OpenReview, Extropic writing,
+Semantic Scholar routes for EBT `2507.02092` and ARM-EBM `2512.15605`,
+HuggingFace Papers, GitHub, Logical Intelligence public pages, local
+V489/V490/V491/V492/V493/V494/V495 duplicate history, and
+`ops/exclusion_manifest.yaml`.
+
+The workflow SHALL append a short `### V495 Execution Refresh - 20260708`
+block to `research-references.md` only when genuinely new, non-duplicate, and
+Carnot-actionable deltas exist. If the V495 planner marker is absent, it SHALL
+write a blocked artifact and SHALL NOT append references. If no new actionable
+delta exists, it SHALL write a complete no-op artifact and SHALL NOT append
+references. Duplicate, watch-only, or retired-scope items SHALL be recorded in
+the JSON receipt rather than re-added as reference churn.
+
+The workflow SHALL write
+`results/experiment_5442_source_delta_v495.json`, SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT push, SHALL NOT modify
+`ops/changelog.md`, SHALL NOT modify `ops/status.md`, and SHALL NOT modify
+`_bmad/traceability.md`.
+
+The artifact SHALL include the required fields `sources_checked`,
+`new_references_added`, `duplicates_suppressed`, `retired_scopes_reopened`,
+`research_references_updated`, `prior_refresh_marker_found`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include
+`experiment_id`, `task_id`, `milestone`, `status`, `search_date`,
+`searched_source_details`, `watch_only_or_excluded`, `spec_refs`,
+`field_principles`, `methodology_duration_s`, `tests_run`,
+`research_conductor_modified`, `ops_docs_modified`, `traceability_modified`,
+and `roadmap_files_modified` so the source-delta receipt is reproducible
+without rerunning network search.
+
+Required field principles:
+
+- `sources_checked`: principle "reproducible literature sweep"
+- `new_references_added`: principle "current-knowledge delta"
+- `duplicates_suppressed`: principle "no reference churn"
+- `retired_scopes_reopened`: principle "exclusion-manifest compliance"
+- `research_references_updated`: principle "doc alignment"
+- `prior_refresh_marker_found`: principle "dedupe against planner work"
+- `inference_substrate`: principle "source aggregation only"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+#### SCENARIO-REPORT-5442-APPEND-DELTAS: New Findings Append A V495 Refresh
+
+**Given** `research-references.md` contains the V495 planner marker
+**And** one or more searched sources are absent from the V489-V495 duplicate
+history and add bounded Carnot-local hooks
+**When** the Exp5442 workflow runs
+**Then** it appends exactly one `V495 Execution Refresh - 20260708` block,
+writes the source-delta JSON, records the required source families, lists the
+new references, records duplicate suppression and watch-only/excluded
+classifications, keeps `retired_scopes_reopened=false`, and starts
+`honest_verdict` with `complete:`.
+
+#### SCENARIO-REPORT-5442-NO-NEW-DELTA: No New Findings Leave References Unchanged
+
+**Given** `research-references.md` contains the V495 planner marker
+**And** every searched candidate is duplicate, watch-only, or excluded by the
+exclusion manifest
+**When** the Exp5442 workflow runs
+**Then** it writes a complete no-op artifact, sets
+`research_references_updated=false`, leaves `new_references_added=[]`, records
+the duplicate and watch-only decisions, and does not append a references block.
+
+#### SCENARIO-REPORT-5442-BLOCKED-MISSING-PLANNER: Missing Planner Marker Fails Closed
+
+**Given** `research-references.md` lacks `V495 Planner Refresh - 2026-07-08`
+**When** the Exp5442 workflow runs
+**Then** it writes a terminal blocked artifact, sets
+`prior_refresh_marker_found=false`, sets `research_references_updated=false`,
+keeps `new_references_added=[]`, and does not append a references block.
+
+## Implementation Status (REQ-REPORT-5442)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5442 | Planned (`python/carnot/experiment_5442_source_delta_v495.py`, `results/experiment_5442_source_delta_v495.json`) | Planned (`tests/python/test_experiment_5442_source_delta_v495.py`) |
