@@ -10508,3 +10508,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 01:27 UTC | Overwrite-capable solver guidance scale and validi | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-08 01:40 UTC | CPU-only p-bit boundary exchange plus overwrite gu | OK | 88 passed, 1 warning in 10.59s |
 | 2026-07-08 01:55 UTC | ARC live-agent geometric salience +1 solve attempt | OK | 109 passed, 1 warning in 9.59s |
+| 2026-07-08 02:11 UTC | Hash-chained hardware workload receipts for active | OK | 91 passed, 1 warning in 11.17s |
