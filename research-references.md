@@ -28220,3 +28220,85 @@ Execution-time sweep after the `.493` planner refresh checked arXiv, OpenReview,
 - **Watch-only/excluded:** NatATL strategy synthesis, Extropic THRML/TSU repos, Logical Intelligence Aleph/Kona pages, and OpenReview EBT/NRGPT surfaces were checked but not promoted as executable `.493` dependencies.
 
 <!-- V493-EXECUTION-REFRESH-20260708-END -->
+
+
+<!-- V494-PLANNER-REFRESH-2026-07-08-START -->
+### V494 Planner Refresh - 2026-07-08
+
+Planner sweep after the 2026.07.493 capstone checked arXiv primary
+sources, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT
+`2507.02092` and ARM-EBM `2512.15605`, GitHub repositories, Extropic
+writing, Logical Intelligence public posts, V489-V493 duplicate history, and
+the exclusion manifest. The entries below were absent from nearby blocks or
+materially sharpen the next roadmap.
+
+### New actionable findings
+- **A-MEM: Agentic Memory for LLM Agents** (https://arxiv.org/abs/2502.12110):
+  builds a dynamically linked, Zettelkasten-style memory graph whose entries
+  carry structured attributes and evolve as new memories arrive. Carnot hook:
+  keep the graph idea but replace open-ended agent edits with deterministic
+  verify-before-store gates, provenance links, rollback pointers, and
+  reliance-drift checks before any memory influences routing.
+- **Memory-Augmented Reinforcement Learning Agent for CAD Generation**
+  (https://arxiv.org/abs/2605.19748): wraps a geometric kernel in a structured
+  toolchain, separates case and skill memory, and verifies generated CAD steps
+  against geometry constraints to avoid semantically similar but infeasible
+  retrievals. Carnot hook: build a small verified-workflow memory fixture with
+  kernel-like constraints and multi-dimensional verification; do not run RL or
+  claim CAD generality.
+- **Automatic Ontology Construction Using LLMs as an External Layer of Memory,
+  Verification, and Planning for Hybrid Intelligent Systems**
+  (https://arxiv.org/abs/2604.20795): proposes RDF/OWL graph memory,
+  SHACL/OWL validation, and generation-verification-correction over planning
+  tasks. Carnot hook: add an ontology-backed constraint-memory fixture where
+  triples, relation updates, and tool outputs are accepted only when a local
+  SHACL-style verifier and deterministic planner agree.
+- **Symbolic-Neural Soft-Logic Reasoning**
+  (https://arxiv.org/abs/2605.25618): relaxes brittle symbolic chains into
+  soft-logic reasoning while preserving verifiability. Carnot hook: use
+  soft-logic residuals as advisory conflict scores for structured verification
+  and active constraints, with exact finite-domain solvers as final authority.
+- **Logical Intelligence Aleph formal-verification posts**
+  (https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation
+  and https://logicalintelligence.com/blog/aleph-leading-benchmarks): reinforce
+  the candidate-generator plus deterministic-checker architecture. Carnot hook:
+  treat Lean/proof-style results as architecture context only; no local Aleph or
+  Kona baseline is available.
+
+### Secondary-source status
+- **OpenReview:** searches again surfaced Spilled Energy, EBT, neural-CSP
+  correctness positions, constrained diffusers, and EBM sampling work. Spilled
+  Energy is already retired/noisy in Carnot history and EBT/ARM-EBM are already
+  covered, so no external generated-text or token-internal lane is reopened.
+- **HuggingFace Papers:** constrained-decoding, verification, KITAB, and
+  speculative-verification pages reinforced the split between syntax validity
+  and semantic/tool-state validity. They did not add a stronger local baseline
+  than the arXiv deltas above.
+- **Semantic Scholar:** public search routes for EBT `2507.02092` and ARM-EBM
+  `2512.15605` still resolved mainly to the source papers and mirrors; no new
+  citation-derived experiment is promoted.
+- **GitHub:** `AgenticMemory`, `agiresearch/A-mem`, constrained-decoding lists,
+  ARC-AGI-3 exploration repos, `find-qubo`, and KAN/Ising lists remain watch
+  references. None replace Carnot's deterministic solver, ARC provenance, or
+  GGUF runtime requirements.
+- **Extropic:** X0/XTR-0 and TSU writing still describe probabilistic EBM
+  sampling hardware but expose no authenticated local TSU execution path.
+  Hardware experiments must stay on existing PolarFire/KV260/GateMate receipts.
+
+### V494 Planning impact
+- Repair the `.493` structured-verification tautology flags before scaling any
+  structured GGUF result; row-level provenance must make abstention, semantic
+  error, and action-unreachability independent derived metrics.
+- Expand CSL around verified workflow memory: graph/skill memories may grow,
+  but only with raw episode retention, ontology/kernel verification, rollback,
+  no weight mutation, and evidence-reliance stability.
+- Convert ontology and soft-logic sources into bounded deterministic fixtures,
+  not broad claims about LLM memory, KAN soundness, or learned logical truth.
+- Advance p-bit/active-constraint hardware only through hash-matched CPU and
+  PolarFire timing variance receipts; keep hardware speedup unclaimed unless
+  repeated board-local timings justify it.
+- Keep ARC as a live-path level-up attempt, but rotate away from repeated
+  no-bank `re86`/`lf52` mechanisms and require reproduction-gated
+  `offline_reproduced=true` before changing the registry count.
+
+<!-- V494-PLANNER-REFRESH-2026-07-08-END -->

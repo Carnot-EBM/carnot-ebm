@@ -1,10 +1,10 @@
-# Research Roadmap vNEXT - Milestone 2026.07.493
+# Research Roadmap vNEXT - Milestone 2026.07.494
 
-**Milestone title:** Risk-Calibrated Structured Verification, Evidence-Stable Self-Learning, ARC Level-Up, and Hardware Timing Receipts
+**Milestone title:** Structured Corrigenda, Verified Workflow Memory, ARC Live Reinduction, and Hardware Timing Boundaries
 
 **Planner date:** 2026-07-08
-**Previous milestone:** 2026.07.492
-**Task range:** Exp 5415-5427
+**Previous milestone:** 2026.07.493
+**Task range:** Exp 5428-5440
 **Pre-staged roadmap:** `research-roadmap-next.yaml`
 
 ## Inputs Read
@@ -29,124 +29,105 @@ Additional guardrails checked before writing the roadmap:
 - `CODEX.md`
 - `ops/exclusion_manifest.yaml`
 - `ops/arc_solve_registry.yaml`
-- `ops/known-issues.md`
 - `scripts/experiment_template.py`
 - `scripts/roadmap_schema.py`
 - `scripts/audit_roadmap_gates.py`
 - `scripts/arc_levelup_guarantee_lint.py`
 - `scripts/exclusion_manifest_lint.py`
-- `.492` result artifacts under `results/`
+- `.493` artifacts under `results/`
 
 ## Literature Refresh Incorporated
 
 The planner performed a 2025-2026 refresh across arXiv, OpenReview,
-Extropic writing, Semantic Scholar citation routes, HuggingFace Papers,
-GitHub, and Logical Intelligence public pages before designing experiments.
-Actionable findings were appended to `research-references.md` under
-`### V493 Planner Refresh - 2026-07-08`.
+Extropic writing, Semantic Scholar citation routes for EBT `2507.02092` and
+ARM-EBM `2512.15605`, HuggingFace Papers, GitHub, and Logical Intelligence
+public pages before designing experiments. Actionable findings were appended
+to `research-references.md` under `### V494 Planner Refresh - 2026-07-08`.
 
 Promoted sources and planning consequences:
 
-- **Constrained Flow Matching via Lagrangian Dual Flows** (`arXiv:2607.04513`):
-  motivates dual-residual and nonlinear-constraint diagnostics for active
-  constraints and p-bit transfer, while keeping Carnot's deterministic solver
-  as final authority.
-- **Neuro-Symbolic Safety Guidance for VLA Models via Constrained Flow
-  Matching** (`arXiv:2607.01378`): motivates predictive prefix/tool-action
-  safety checks before final-state verification, without treating learned
-  guidance as an oracle.
-- **Uncertainty-Aware Abstention in LLMs with Provable Alignment Guarantees**
-  (`arXiv:2607.04430`): motivates confidence-interval abstention and accepted
-  risk accounting for structured local SOTA panels and learned-memory
-  promotion.
-- **Weave of Formal Thought** (`arXiv:2606.25987`): motivates prefix-valid
-  grammar/structure constraints and latent-symbol traces, but only as a
-  verifier-facing diagnostic because Carnot does not yet have authenticated
-  logits/hidden-state receipts.
-- **Empirical Study for Structured Output Control in LLMs for Software
-  Engineering** (`arXiv:2606.09395`): warns that schema/syntax validity is not
-  enough. `.493` therefore measures semantic, policy, reachability, and
-  abstention errors separately.
-- **Measurement-Access Risk Frontiers for Autonomous Scientific Control**
-  (`arXiv:2607.05696`): motivates hardware timing receipts and measurement
-  access checks. Missing board records cannot be repaired by compute alone.
-- **Hidden Forgetting in Continual Multimodal Learning** (`arXiv:2607.02020`):
-  motivates evidence-reliance drift tests for continuous self-learning, not
-  just task-score retention.
-- **Beyond the Leaderboard: A Taxonomy of Failure Modes in LLM Tool-Use,
-  Planning, and Reasoning** (`arXiv:2607.05775`): motivates the `.493`
-  PRD-gap/failure table taxonomy.
+- **A-MEM: Agentic Memory for LLM Agents** (`arXiv:2502.12110`): motivates
+  memory graphs with structured attributes and links, but `.494` keeps memory
+  updates deterministic, provenance-backed, rollbackable, and no-weight.
+- **Memory-Augmented Reinforcement Learning Agent for CAD Generation**
+  (`arXiv:2605.19748`): motivates verified workflow memory over a
+  kernel/toolchain fixture with case and skill memory. `.494` uses this as a
+  deterministic CSL fixture, not as a CAD or RL claim.
+- **Automatic Ontology Construction Using LLMs as an External Layer of Memory,
+  Verification, and Planning** (`arXiv:2604.20795`): motivates an
+  ontology-backed constraint-memory fixture with SHACL-style validation and
+  deterministic planner authority.
+- **Symbolic-Neural Soft-Logic Reasoning** (`arXiv:2605.25618`): motivates
+  advisory soft-logic residuals while exact finite-domain solvers remain final
+  authority.
+- **Logical Intelligence Aleph formal-verification posts**: reinforce the
+  candidate-generator plus deterministic-checker architecture. Carnot has no
+  local Aleph/Kona baseline, so these remain architecture context only.
 
 Secondary-source status:
 
-- OpenReview and HuggingFace Papers reinforced constrained decoding,
-  interactive verification, and verifier-first evaluation; no secondary source
-  added a stronger local baseline than the arXiv items above.
-- Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
-  `2512.15605` were checked; the API route was rate-limited during planning,
-  so no new citation-derived experiment is promoted.
-- GitHub search surfaced useful watchlist repos for constrained decoding and
-  ARC exploration, but no repo was adopted as a milestone dependency.
-- Extropic TSU/XTR and Logical Intelligence Kona/Aleph remain architecture
-  context only. Carnot has no executable local TSU, Kona, or Aleph baseline for
-  `.493`.
+- OpenReview again surfaced Spilled Energy, EBT, neural-CSP correctness, and
+  constrained-diffusion work. These are duplicate, retired/noisy, or already
+  covered; no generated-text or token-internal lane is reopened.
+- HuggingFace Papers reinforced constrained-decoding and verification themes,
+  but did not add a stronger local baseline than the arXiv deltas.
+- Semantic Scholar public routes for EBT and ARM-EBM resolved mainly to source
+  papers and mirrors; no citation-derived experiment is promoted.
+- GitHub repositories such as `AgenticMemory`, `agiresearch/A-mem`, KAN lists,
+  constrained-decoding lists, and ARC exploration repos remain watch
+  references. None replace Carnot's deterministic solver or ARC provenance
+  rules.
+- Extropic X0/XTR-0 and TSU writing remains hardware-watch context only; no
+  authenticated local TSU execution path exists.
 
-## What 2026.07.492 Proved
+## What 2026.07.493 Proved
 
-The `.492` result artifacts show several lanes are now usable, while live
-evidence remains the limiting factor:
+The `.493` capstone is the planning source of truth:
 
-- **Formal corrigendum cleaned the prior tautology failure.** Exp5404 produced
-  `formal_encoding_corrigendum_clean=true` with row-level checksums,
-  deterministic policy authority, local SOTA GGUF inference, and GPU/offload
-  receipts.
-- **Structured safety/action verification is headline-ready at bounded scale.**
-  Exp5405 produced `structured_safety_action_panel_ready=true` with the
-  mandated SOTA GGUF model specs and deterministic schema, semantic, policy,
-  and reachability authority.
-- **Active-constraint guidance now has a safe solver-authority interface.**
-  Exp5406 showed a small but real solver-work reduction under deterministic
-  overwrite authority.
-- **P-bit/QUBO stress remains CPU-only but valid.** Exp5407 showed p-bit
-  diagnostics can match exact enumeration and stress active-constraint hints,
-  but no hardware speedup or hardware transfer claim is available.
-- **Continuous self-learning has resource and uncertainty controls.** Exp5408
-  and Exp5409 produced resource-accounted routing, raw episode retention,
-  rollback, no model-weight mutation, and uncertainty-gated promotion.
-- **ARC still did not bank a new level.** Exp5410 was an honest no-bank on
-  `re86` L3 through live-agent self-discovery. It avoided offline BFS and
-  per-game adapters, but did not increase reproducible levels.
-- **Hardware repeatability improved but speedup evidence is absent.** Exp5411
-  restored repeated same-workload PolarFire receipts and kept KV260/GateMate
-  limitations explicit. It made no speedup claim.
-- **KAN certificates remain bounded but useful.** Exp5412 emitted a clean
-  active-constraint certificate family with false-property rejection and
-  true-property preservation.
-- **Evidence table and capstone are explicit about closed, partial, and blocked
-  lanes.** Exp5413/Exp5414 classify formal/structured, resource-CSL, and
-  uncertainty-gated promotion as headline-ready; active-constraint, p-bit, KAN,
-  ARC, hardware, and token/internal evidence remain bounded or blocked.
+- **Continuous self-learning is headline-ready at controller level.**
+  Exp5421 detected hidden forgetting under stable accuracy while preserving
+  raw episodes, rollback, and no weight mutation. Exp5422 promoted only
+  threshold-passing fragments and kept rejected/abstained fragments inactive.
+- **Structured verification still has a corrigendum gap.** Exp5417 and Exp5418
+  had valid local SOTA GGUF/offload receipts and useful row artifacts, but both
+  were blocked from headline use by adversarial tautology flags: Exp5417
+  collapsed abstention and semantic-error metrics, and Exp5418 collapsed
+  final-only action-unreachability and its delta. Reproducibility checksum
+  gaps were also reported.
+- **Active-constraint guidance is bounded and useful.** Exp5419 scaled LNS
+  hints to five fixtures, reduced solver work by 234, and preserved solver
+  authority.
+- **P-bit and hardware lanes have receipt discipline but no acceleration
+  claim.** Exp5420 and Exp5424 produced hash-matched CPU/PolarFire preflight
+  and timing receipts. The board was slower in the observed receipts, and
+  `hardware_speedup_claim=false` remained correct.
+- **KAN certificates remain bounded.** Exp5425 cleanly rejected observable
+  false active-constraint claims and unsupported board/token/internal claims,
+  while preserving true measured properties. It did not make a broad KAN
+  verification claim.
+- **ARC did not bank a new level.** Exp5423 was an honest null on `lf52` L3:
+  46 attempts, 22 frontier expansions, 45 landmarks, no offline BFS, no
+  per-game adapter, registry total unchanged at 69.
+- **Token/internal feature lanes remain closed.** No artifact supplied
+  authenticated logits, hidden states, attention, token-logprob, or
+  intermediate-exit receipts.
 
 ## Three Biggest Gaps
 
-1. **Structured verification is not yet risk-calibrated.** `.492` proved clean
-   row-level structured verification, but PRD FR-12 needs decisions that know
-   when to abstain. `.493` adds confidence-interval accepted-risk accounting,
-   prefix/tool-action safety, and semantic-error separation so schema success
-   is not mistaken for verified reasoning.
+1. **Structured verifier evidence is not adversarial-clean.** The PRD requires
+   verifiable reasoning, not plausible aggregate metrics. `.494` first repairs
+   row-level provenance, metric independence, and checksums before any scale-up.
 
-2. **Continuous self-learning is not yet evidence-stable.** `.492` learned
-   resource-aware routing and uncertainty gates without weight mutation, but
-   FR-11 needs durable learning that does not silently shift evidence
-   reliance. `.493` adds hidden-forgetting/evidence-reliance drift probes and
-   promotion gates that must preserve grounding, rollback, and raw episodes.
+2. **CSL has safe promotion but not verified workflow memory.** `.493` proved
+   no-weight controller learning and reliance drift checks. The PRD vision
+   needs durable, reusable learning units with explicit kernel/ontology
+   verification, retrieval-trap deflection, and transfer stress.
 
-3. **Live evidence still lags the PRD vision.** ARC has repeated no-bank
-   attempts, hardware lacks comparable CPU-vs-board timing receipts, and
-   token/internal feature lanes remain closed. `.493` targets a different ARC
-   live-path mechanism, authenticated hardware timing, and bounded certificate
-   expansion without claiming unsupported hardware speedup or hidden-state
-   access.
+3. **Live evidence still lacks north-star movement.** ARC has repeated
+   no-bank attempts, hardware has no speedup claim, and token/internal lanes
+   are closed. `.494` keeps one concrete live ARC level-up attempt, upgrades
+   hardware timing to variance/receipt boundaries, and avoids unsupported
+   internal-signal claims.
 
 ## Target Architecture
 
@@ -154,162 +135,142 @@ evidence remains the limiting factor:
                          +--------------------------------------+
                          | Local SOTA GGUF inference substrate  |
                          | Qwen3.6-35B-A3B, Gemma-4-31B-it,     |
-                         | Gemma-4-26B-A4B-it via GGUF runtime  |
+                         | Gemma-4-26B-A4B-it via llama.cpp     |
                          +-------------------+------------------+
                                              |
-                             structured candidates + risk receipts
+                      structured candidates + row-level provenance
                                              |
-        +------------------------------------v-----------------------------------+
-        | Risk-calibrated structured verifier layer                              |
-        | schema, semantic, policy, reachability, prefix safety, abstention      |
-        | deterministic verifier is final authority                              |
-        +---------------+------------------------------+-------------------------+
-                        |                              |
-        active constraints + dual residuals            | resource and uncertainty gates
-                        |                              |
-        +---------------v--------------+   +-----------v------------------------+
-        | Solver and p-bit diagnostics |   | Evidence-stable CSL controller     |
-        | solver accepts/rejects/       |   | raw episodes, influence shares,    |
-        | overwrites hints; CPU first   |   | reliance drift, rollback           |
-        +---------------+--------------+   +-----------+------------------------+
-                        |                              |
-                        +--------------+---------------+
-                                       |
-        +------------------------------v----------------------------------------+
-        | Live evidence surfaces                                                 |
-        | ARC self-discovery, board timing receipts, KAN measurement-access      |
-        | certificates; token/internal lanes stay closed                         |
+        +------------------------------------v----------------------------------+
+        | Structured corrigendum and replication layer                          |
+        | independent metrics, checksums, risk calibration, prefix/action safety |
+        | deterministic verifiers are final authority                           |
+        +-------------------+--------------------------+------------------------+
+                            |                          |
+           ontology/soft-logic constraint memory       | active constraints
+                            |                          |
+        +-------------------v----------------+   +-----v------------------------+
+        | Verified workflow CSL controller   |   | Solver, p-bit, hardware      |
+        | raw episodes, case/skill memory,   |   | LNS hints, exact solvers,    |
+        | SHACL/kernel gates, rollback       |   | CPU/PolarFire timing receipts |
+        +-------------------+----------------+   +-----+------------------------+
+                            |                          |
+                            +------------+-------------+
+                                         |
+        +--------------------------------v--------------------------------------+
+        | Live evidence and bounded certificates                                |
+        | ARC self-discovery level-up attempt, KAN measurement-access certs,     |
+        | PRD gap table; token/internal lanes stay closed without receipts       |
         +-----------------------------------------------------------------------+
 ```
 
 ## Phase Plan
 
-### Phase 0 - Transition, Source Delta, and Risk-Calibrated Verification
+### Phase 0 - Transition, Source Delta, and Structured Corrigenda
 
-- **Exp5415:** archive `.492`, stage `.493`, and record the exact closed,
-  partial, and blocked lanes from `.492` artifacts.
-- **Exp5416:** run an execution-time source delta so the roadmap can absorb
-  any source changes after this planner refresh without reopening retired
-  scopes.
-- **Exp5417:** scale the clean `.492` structured safety/action panel into a
-  risk-calibrated local SOTA panel with confidence intervals, accepted-risk
-  accounting, and abstention.
-- **Exp5418:** if Exp5417 is ready, add predictive prefix/tool-action safety
-  checks inspired by constrained flow matching and neuro-symbolic safety
-  guidance.
+- **Exp5428:** archive `.493` terminal evidence and stage `.494` task range.
+- **Exp5429:** run execution-time source delta against the V494 planner
+  refresh and append only non-duplicate actionable references.
+- **Exp5430:** repair Exp5417/Exp5418 structured tautology and checksum
+  gaps with row-level provenance and mandatory local SOTA GGUF receipts.
+- **Exp5431:** if Exp5430 is clean, replicate structured constraint-taxonomy
+  results at bounded scale with independent semantic, abstention, risk, and
+  action-reachability metrics.
 
-### Phase 1 - Active-Constraint Scale and P-Bit Transfer Preconditions
+### Phase 1 - Constraint Memory, Active Constraints, and Hardware Boundaries
 
-- **Exp5419:** scale active-constraint guidance to larger solver panels with
-  LNS-style subproblem hints and dual-residual diagnostics under solver
+- **Exp5432:** convert ontology and soft-logic literature into a deterministic
+  constraint-memory fixture with SHACL-style validation and exact solver
   authority.
-- **Exp5420:** if Exp5419 is clean, run a p-bit hardware-transfer preflight
-  that preserves exact-enumeration validity and refuses speedup claims without
-  comparable board timing receipts.
+- **Exp5433:** scale active-constraint LNS with subproblem diversity,
+  conflict-front hints, and solver accept/reject/overwrite accounting.
+- **Exp5434:** if Exp5433 is ready, collect CPU/PolarFire p-bit timing
+  variance receipts with matched hashes and no speedup claim.
 
-### Phase 2 - Evidence-Stable Continuous Self-Learning
+### Phase 2 - Verified Workflow Continuous Self-Learning
 
-- **Exp5421:** implement the required continuous self-learning experiment for
-  `.493`: evidence-reliance drift and hidden-forgetting diagnostics under the
-  existing no-weight-mutation controller.
-- **Exp5422:** if Exp5421 is ready, expand uncertainty-gated promotion so
-  learned fragments must preserve risk, grounding, resource, rollback, and
-  evidence-reliance thresholds before influencing routing.
+- **Exp5435:** required CSL experiment: build verified workflow memory with
+  case/skill memory, ontology/kernel validation, retrieval-trap deflection,
+  raw episodes, rollback, and no weight mutation.
+- **Exp5436:** if Exp5435 is ready, stress CSL transfer under distribution
+  shifts and negative-transfer controls.
 
-### Phase 3 - Live Evidence, Certificates, and Synthesis
+### Phase 3 - ARC, Certificates, and Synthesis
 
-- **Exp5423:** attempt an ARC live-path level-up with a different mechanism
-  from repeated `re86` salience attempts: CoEx-style frontier persistence,
-  hierarchical landmarks, measurement-access receipts, and live-agent
-  self-discovery only.
-- **Exp5424:** collect comparable same-workload CPU and PolarFire timing
-  receipts, use KV260 SSH-only diagnostics, and keep GateMate diagnostic-only
-  unless physical/JTAG evidence returns.
-- **Exp5425:** expand the bounded KAN certificate family around measurement
-  access and active-constraint false-property controls.
-- **Exp5426:** aggregate `.493` evidence against PRD gaps using the tool-use,
-  planning, and reasoning failure taxonomy.
-- **Exp5427:** emit the `.493` capstone truth table and recommendations for
-  the next milestone.
+- **Exp5437:** run one concrete ARC live-path level-up attempt via
+  registry-checked reinduction/runtime self-discovery. Count only
+  reproduction-gated `offline_reproduced=true` and `reproduced_levels>=1`.
+- **Exp5438:** if Exp5432 is ready, extend bounded KAN measurement-access
+  certificates to ontology and workflow-memory claims.
+- **Exp5439:** aggregate `.494` evidence into a PRD gap and failure-taxonomy
+  table.
+- **Exp5440:** emit the `.494` capstone truth table and recommendations.
 
 ## Dependency Graph
 
 ```text
-exp5415 transition
-  -> exp5416 source delta
-  -> exp5417 risk-calibrated SOTA structured panel
-      -> exp5418 predictive prefix/action safety
+exp5428 transition
+  -> exp5429 source delta
+  -> exp5430 structured tautology corrigendum
+      -> exp5431 structured taxonomy replication
 
-Exp5406/Exp5407 prior solver evidence
-  -> exp5419 active-constraint LNS scale
-      -> exp5420 p-bit hardware-transfer preflight
+V494 literature + Exp5421/Exp5422 CSL evidence
+  -> exp5432 ontology/soft-logic constraint memory
+      -> exp5438 KAN ontology measurement certificate
 
-Exp5408/Exp5409 prior CSL evidence
-  -> exp5421 evidence-reliance CSL
-      -> exp5422 gated CSL promotion scale
+Exp5419 active-constraint evidence
+  -> exp5433 active-constraint diversity LNS
+      -> exp5434 p-bit PolarFire timing variance
 
-Exp5410 no-bank ARC attempt + arc_solve_registry
-  -> exp5423 live ARC CoEx/landmark level-up attempt
+Exp5421/Exp5422 CSL evidence + Exp5432 constraint memory
+  -> exp5435 verified workflow memory CSL
+      -> exp5436 CSL transfer stress
 
-Exp5411 hardware repeatability
-  -> exp5424 comparable timing receipts
+Exp5423 honest ARC null + arc_solve_registry
+  -> exp5437 live ARC reinduction level-up attempt
 
-Exp5412 KAN active-constraint certificate
-  -> exp5425 measurement-access KAN certificate
-
-exp5417, exp5418, exp5419, exp5420, exp5421, exp5422, exp5423, exp5424, exp5425
-  -> exp5426 PRD gap/failure table
-  -> exp5427 capstone
+exp5430, exp5431, exp5432, exp5433, exp5434, exp5435, exp5436, exp5437, exp5438
+  -> exp5439 PRD gap table
+      -> exp5440 capstone
 ```
 
 ## Hardware Requirements
 
-- **Local SOTA GGUF inference:** Exp5417 and Exp5418 require authenticated
-  local GGUF runtime evidence for at least one mandated SOTA model in headline
-  rows and must include all three model specs in artifacts:
-  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
-  `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models are smoke-test only.
-- **CUDA/offload:** Any SOTA GGUF headline row must record runtime, command,
-  model path, offload settings, memory/offload evidence, duration, and failure
-  fallback. CPU-only smoke rows cannot support headline model claims.
-- **ARC:** Exp5423 must use live-agent self-discovery from runtime attempts and
-  runtime reverse engineering. It must not use offline BFS, source inspection,
-  or per-game adapters as the credited solve path.
-- **PolarFire:** Exp5420 and Exp5424 may use the currently reachable PolarFire
-  path. Exp5424 must compare the same workload against CPU with hashes, repeat
-  counts, and timing receipts before any speedup-adjacent interpretation.
-- **KV260:** KV260 checks are SSH-only using `ssh -o ConnectTimeout=5 -o
-  BatchMode=yes kria true`. Do not use host SD-card or block-device probes.
-- **GateMate:** GateMate remains diagnostic-only unless the physical/JTAG path
-  is restored during the experiment. No task may assume it is available.
-- **Extropic TSU, Kona, Aleph:** watch-only architecture references for
-  `.493`; no local executable baseline exists.
+| Experiment | Compute | Hardware notes | Claim boundary |
+|-----------|---------|----------------|----------------|
+| 5428, 5429, 5432, 5433, 5435, 5436, 5438-5440 | CPU | Repository artifacts and deterministic fixtures | No live model or hardware speedup claim |
+| 5430, 5431 | Dual RTX 3090 preferred | Must use CUDA-enabled `llama-cpp-python`/GGUF runtime; MODEL_SPECS include all mandated SOTA GGUFs | Block if offload/runtime receipts are absent |
+| 5434 | CPU plus PolarFire if reachable | Same workload hash, result hash, repeat counts, timing distribution; KV260 SSH-only if checked; GateMate diagnostic-only unless physical/JTAG evidence returns | `hardware_speedup_claim=false` unless matched repeated board timing justifies a future claim |
+| 5437 | CPU ARC offline/live runtime | Registry precheck, live-agent self-discovery only, no offline source/BFS/per-game adapter credited path | Registry count changes only after reproduction-gated new level |
 
-## No-Go Boundaries
+## Risk Controls
 
-- Do not reopen the retired external generated-text scorer, token-internal,
-  LoRA/uPRM/EBRM, or hidden-feature lanes without a new authenticated backend
-  artifact.
-- Do not claim hardware speedup from CPU-only p-bit, unmatched board receipts,
-  or one-off timings.
-- Do not re-solve already-banked ARC levels as headline evidence. The ARC task
-  must target a new reproducible level and report `solve_provenance:
-  live_agent_self_discovery`.
-- Do not modify `research-roadmap.yaml` or `scripts/research_conductor.py`
-  during planning.
-- Do not treat schema validity as semantic correctness. `.493` must separate
-  syntax/schema, semantic, policy, reachability, uncertainty, and abstention
-  outcomes.
+- **Structured flags:** Exp5431 is gated on Exp5430
+  `structured_corrigendum_clean=true`. The roadmap must not scale blocked
+  `.493` structured evidence if the same tautology verdict recurs.
+- **GGUF runtime:** Any LLM task must include the three mandated local SOTA GGUF
+  model specs and fail fast if CUDA/offload receipts are missing.
+- **CSL safety:** Verified workflow memory cannot mutate model weights, and
+  promoted memory must retain raw episodes, rollback pointers, reliance
+  metrics, and verifier provenance.
+- **Hardware honesty:** PolarFire timing can report slower board execution.
+  That is still useful evidence. The milestone does not need, and must not
+  fabricate, a speedup claim.
+- **ARC discipline:** The live agent's own runtime attempts and runtime reverse
+  engineering are the credited path. Offline BFS, hidden source reading, and
+  per-game adapters are not headline solves.
+- **Token/internal closure:** Token, hidden-state, attention, logprob, and
+  intermediate-exit lanes remain closed unless a future backend artifact
+  authenticates those receipts.
 
-## Expected Evidence at Milestone End
+## Expected Outcomes
 
-The milestone should end with one of two honest outcomes:
-
-- **Headline-positive path:** risk-calibrated structured verification remains
-  clean, prefix/action safety improves over final-only checks, evidence-stable
-  CSL preserves grounding while reducing waste, ARC banks at least one new live
-  level, and hardware emits comparable timing receipts without overstated
-  speedup.
-- **Bounded/null path:** any blocked GPU, ARC, or hardware lane emits a
-  precondition-checked artifact with no headline claim; the capstone records
-  exactly which PRD gaps remain and why.
+- A clean go/no-go decision on whether `.493` structured local SOTA evidence
+  can be rehabilitated.
+- A bounded ontology/soft-logic constraint-memory fixture that supports CSL
+  workflow memory without trusting open-ended memory evolution.
+- Stronger active-constraint and p-bit timing receipts with no unsupported
+  acceleration claims.
+- One live ARC level-up attempt that either banks a reproduction-gated new
+  level or emits an honest null with reusable frontier evidence.
+- A capstone that clearly separates headline-ready, bounded, honest-null, and
+  blocked lanes for the next planner.

@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-07-08 (Milestone 2026.07.494 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V494 planner refresh to `research-references.md`, incorporating
+  A-MEM, verified CAD-style workflow memory, ontology/SHACL-style memory
+  validation, and symbolic-neural soft-logic residual findings.
+- The `.494` plan contains 13 conductor tasks across transition/source refresh,
+  structured tautology corrigendum, gated structured taxonomy replication,
+  ontology constraint memory, active-constraint diversity, p-bit/PolarFire timing
+  variance, verified workflow-memory CSL, CSL transfer stress, one ARC live-path
+  level-up slot, KAN ontology measurement certificates, and capstone synthesis.
+- Validation passed for roadmap schema parsing, prior-failure validation, gate
+  audit, ARC level-up guarantee lint, exclusion-manifest lint, prompt-shape audit,
+  touched-file diff check, and protected-file diff check. Repo-wide spec coverage
+  remains blocked by the pre-existing traceability backlog (`1262 test(s) missing
+  spec traceability`).
+
 ## 2026-07-07 (Milestone 2026.07.490 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
