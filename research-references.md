@@ -27998,3 +27998,22 @@ ARC graph-exploration/color-blob salience repo, are used as planning inputs but 
   `hardware_speedup_claim=false` unless repeatable board timing is actually captured.
 
 <!-- V491-PLANNER-REFRESH-2026-07-08-END -->
+
+
+### V491 Execution Refresh - 2026-07-08
+
+Execution-time sweep after the `.491` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM routes, GitHub, Extropic writing, Logical Intelligence public pages, and local V489/V490/V491 duplicate history. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **AgentLTL: A Trace-Verification Framework for Procedural Compliance** (https://arxiv.org/abs/2607.02599): For Exp5391 and Exp5392, compile tool/action and formal-encoding fixtures into trace rules that produce a deterministic, judge-free compliance score. Use prefix checks to block unsafe tool calls before execution, then record completed-trace compliance separately from final-answer correctness.
+- **OEP: Poisoning Self-Evolving LLM Agents via Locally Correct Experiences** (https://arxiv.org/abs/2605.18930): For Exp5396, add memory controls where an episode is locally correct but non-transferable and paired with severe hypothetical consequences. The guard must reject over-generalized reflection rules from row-level evidence while retaining the raw episode and rollback pointer for audit.
+- **CoACT: Action-Preserving Observation Compression for Coding Agents** (https://arxiv.org/abs/2607.02911): For Exp5395 and Exp5396, treat next-action preservation as the local test for compacting observations or memories: a compressed trace can reduce context only when it induces the same next verifier/tool route as the raw observation under deterministic controls.
+- **Succinct QUBO formulations for permutation problems by sorting networks** (https://arxiv.org/abs/2603.07579): For Exp5394, if overwrite or p-bit action-sequence ablations require order or permutation constraints, add a tiny sorting-network QUBO baseline with exact enumeration and solver fallback. This is a CPU/simulator encoding diagnostic, not hardware speedup evidence.
+
+### Execution impact
+- **Plan impact:** No active `.491` roadmap edit is required. The deltas sharpen Exp5391/Exp5392 trace constraints, Exp5395/Exp5396 memory and routing guards, and Exp5394 p-bit/QUBO ablations by adding concrete local receipt fields.
+- **Duplicates suppressed:** Sortify, Energy-Aware Routing, mathematical encoding safety, Agentic Model Checking, VAGEN, MPPI/Ising, KANDy, DEX, GeoWorld, QCIVET, llguidance, CFGzip, TruncProof, G-RRM, LongMemEval-V2, FARMA/SENTINEL, self-verifying measurement records, and vLLM hidden-state extraction were already covered by V489/V490/V491 history and are not re-added.
+- **Retired scope:** No retired scope was reopened. Non-local TSU/Kona/Aleph claims, external generated-text scorers, token/internal-feature claims without backend evidence, CPU-only SOTA headline reruns, duplicate ARC solve paths, and hardware speedup claims without repeatable board timing remain closed.
+- **Watch-only context:** RefChecker, VeriChat, OpenSIR, QAOA hardware-noise diagnostics, Extropic writing, and Logical Intelligence public pages were checked but not promoted because they are ops-only, non-local, training-scope, or hardware-claim context rather than immediate `.491` execution deltas.
+
+<!-- V491-EXECUTION-REFRESH-2026-07-08-END -->
