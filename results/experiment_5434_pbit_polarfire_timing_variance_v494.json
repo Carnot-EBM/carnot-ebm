@@ -1,0 +1,864 @@
+{
+  "blocked_hardware_precondition": null,
+  "board_repeat_count": 10,
+  "board_result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+  "board_timing_variance": 1.45851e-07,
+  "claim_refusal": "No hardware speedup is claimed; slower board timing is a valid outcome and this artifact only records matched variance receipts.",
+  "command_receipts": [
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "command_sha256": "dfcb05ec95a68b9ca25ea5227c0ff787385cda524db9d23617679e6cf2f2d0f4",
+      "duration_s": 5.003885,
+      "exit_code": 124,
+      "kind": "kv260_ssh_only_reachability",
+      "outcome": "blocked",
+      "stderr_excerpt": "timeout",
+      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "command_sha256": "b9e814f65c86bee7dd7fe7a7d7944e2e76fdcd1330e6f7f0cb813bcf9cd690aa",
+      "duration_s": 0.88346,
+      "exit_code": 0,
+      "kind": "polarfire_ssh_reachability",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.354797,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_1",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "d754e5f4314c53cdda5cb1c9ffb508e73d81e9dee95a5d107e642b7849657448",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.372829,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_2",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "73c464751f4475afc9411ebed04af4715fbb9247cbe9d3590171aa0284f2c63e",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.380742,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_3",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "76f3bc14eb495ead24fb12939de88c04d11d495e53057d834a8591a686317d05",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.395378,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_4",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "a81ad1e4f7e21bdeeb8771250ca3970e0bea941faacc0a818b9a924b1c7205d8",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.381937,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_5",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "361709dfe73702c1dc56707c67d589b033cfb1395fc75fbf1b4385fd2762fffc",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.356281,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_6",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "6cfbe4facc0c12c6500d63c10fdd754a6c61ba470caa65ba0bfeaf8eb3a16f4a",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.416368,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_7",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "a89e7b79bb633ca676e26de11c1bbf24bcb68984e949016cd1777f0a8dfa948c",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.377806,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_8",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "7e8cd8f37dabd868ed951bb552b6293738efaf11fe200c2f9d29c34cb9eba6ba",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.394208,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_9",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "831d593dad018290011b51b6dd7afee4570cc267b08d8b18f38cd9027acea16b",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"choose_a\", \"choose_b\", \"check_ab\", \"choose_c\", \"check_bc\", \"publish\"], \"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"precedence\": [[\"choose_a\", \"check_ab\"], [\"choose_b\", \"check_ab\"], [\"check_ab\", \"choose_c\"], [\"choose_c\", \"check_bc\"], [\"choose_b\", \"check_bc\"], [\"check_bc\", \"publish\"]], \"seed\": 5434, \"workload_hash\": \"8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'active_constraint_ids'\"'\"':workload['\"'\"'active_constraint_ids'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "5b6400b692e95d990e52cdc34e57a1563d8e81bed26cbccf7d6902f51135f511",
+      "duration_s": 1.389541,
+      "exit_code": 0,
+      "kind": "polarfire_active_constraint_timing_repeat_10",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"active_constraint_ids\": [\"choose_a->check_ab\", \"choose_b->check_ab\", \"check_ab->choose_c\", \"choose_c->check_bc\", \"choose_b->check_bc\", \"check_bc->publish\"], \"board_local\": true, \"exact_best_sequence\": [\"choose_a\", \"choose_b\", \"check_ab\", ",
+      "stdout_sha256": "40537d48bf67782923efc51ee17771ac3270e61f26bc52e17825c414c2dcbce3",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "command_sha256": "67601b438fbb88a70c1b25f3a913790ab47e5e19b36bc9c3b9f32a8a52363cd4",
+      "duration_s": 0.058103,
+      "exit_code": 0,
+      "kind": "gatemate_non_destructive_dirtyjtag_detect",
+      "outcome": "blocked",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "stdout_sha256": "e96e9c9bdc5e9e0dc606129428b9716fe745efc6402f52cc56db17f800d12437",
+      "timeout_s": 30.0
+    }
+  ],
+  "commit": "7a1159a0e",
+  "cpu_repeat_count": 10,
+  "cpu_result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+  "cpu_timing_variance": 3.75e-09,
+  "duration_s": 19.789023,
+  "experiment": 5434,
+  "experiment_id": "exp5434-pbit-polarfire-timing-variance-v494",
+  "field_principles": {
+    "board_repeat_count": "board reliability",
+    "board_result_hash": "correctness comparison",
+    "board_timing_variance": "timing distribution",
+    "cpu_repeat_count": "timing reliability",
+    "cpu_result_hash": "correctness comparison",
+    "cpu_timing_variance": "timing distribution",
+    "gated_upstream_ready": "structured gate provenance",
+    "gatemate_diagnostic_checked": "physical/JTAG honesty",
+    "hardware_speedup_claim": "no unsupported speedup",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "explicit substrate",
+    "kv260_ssh_checked": "SSH-only discipline",
+    "measurement_access_complete": "physical evidence boundary",
+    "polarfire_reachable": "board availability",
+    "preconditions_checked": "hardware task must fail fast",
+    "same_result_hash_match": "no invalid timing comparison",
+    "same_workload_hash_match": "no apples-to-oranges timing",
+    "timing_variance_receipts_ready": "capstone evidence",
+    "workload_hash": "same-workload comparison"
+  },
+  "gated_upstream_ready": true,
+  "gatemate_diagnostic_checked": true,
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: gated CPU and PolarFire timing variance receipts are hash-matched; hardware_speedup_claim=false",
+  "inference_substrate": "hardware_timing_with_cpu_reference",
+  "kv260_ssh_checked": true,
+  "measurement_access": {
+    "blocked_hardware_precondition": null,
+    "board_timing_complete": true,
+    "comparison_allowed": true,
+    "cpu_timing_complete": true,
+    "missing_physical_records_recoverable_after_fact": false
+  },
+  "measurement_access_complete": true,
+  "milestone": "2026.07.494",
+  "polarfire_reachable": true,
+  "preconditions_checked": true,
+  "random_seed": 5434,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "22b29ef76625ab7d1dc7a43ab26d829edd393a7e2d2c4f7be27bc162ec086ca4",
+  "run_date": "20260708",
+  "same_result_hash_match": true,
+  "same_workload_hash_match": true,
+  "schema": "carnot.experiment_5434.pbit_polarfire_timing_variance.v494",
+  "selected_workload": {
+    "actions": [
+      "choose_a",
+      "choose_b",
+      "check_ab",
+      "choose_c",
+      "check_bc",
+      "publish"
+    ],
+    "active_constraint_ids": [
+      "choose_a->check_ab",
+      "choose_b->check_ab",
+      "check_ab->choose_c",
+      "choose_c->check_bc",
+      "choose_b->check_bc",
+      "check_bc->publish"
+    ],
+    "active_tail": [
+      "choose_a",
+      "check_ab",
+      "choose_b",
+      "choose_c"
+    ],
+    "conflict_front": [
+      "check_ab",
+      "choose_c",
+      "check_bc",
+      "publish"
+    ],
+    "exact_result": {
+      "enumerated_permutation_count": 720,
+      "exact_best_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "exact_min_energy": 0,
+      "exact_valid_permutation_count": 2
+    },
+    "exact_solver_validity": true,
+    "fixture_id": "diverse_bipartite_coloring",
+    "frozen_variables": [
+      "check_bc",
+      "publish"
+    ],
+    "lns_subproblem": [
+      "choose_a",
+      "check_ab",
+      "choose_b",
+      "choose_c"
+    ],
+    "pbit_encoding": {
+      "energy_model": "precedence_penalty_qubo",
+      "spin_count": 6,
+      "violation_penalty": 10
+    },
+    "precedence": [
+      [
+        "choose_a",
+        "check_ab"
+      ],
+      [
+        "choose_b",
+        "check_ab"
+      ],
+      [
+        "check_ab",
+        "choose_c"
+      ],
+      [
+        "choose_c",
+        "check_bc"
+      ],
+      [
+        "choose_b",
+        "check_bc"
+      ],
+      [
+        "check_bc",
+        "publish"
+      ]
+    ],
+    "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+    "seed": 5434,
+    "source_artifact": "results/experiment_5433_active_constraint_diversity_lns_v494.json",
+    "source_diversity_descriptor_checksum": "823475ad0de31b29a2cc1ec552b2c1bf35500dcc53822128b920893adf510831",
+    "source_experiment_id": "exp5433-active-constraint-diversity-lns-v494",
+    "source_row_hint_mode": "lns_guided_hint",
+    "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+  },
+  "spec_refs": [
+    "REQ-HW-5434",
+    "SCENARIO-HW-5434"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5434_pbit_polarfire_timing_variance_v494.py -q --no-cov",
+      "outcome": "passed: 6 passed in 3.76s"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5434_pbit_polarfire_timing_variance_v494.py -m pytest tests/python/test_experiment_5434_pbit_polarfire_timing_variance_v494.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5434_pbit_polarfire_timing_variance_v494.py --fail-under=100",
+      "outcome": "passed: 6 passed; new module 100% coverage"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed/interrupted: pre-existing suite showed unrelated failures plus Z3/JAX native worker crashes before 21% completion"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed: pre-existing 1262 tests missing spec traceability"
+    }
+  ],
+  "timing_comparison": {
+    "board_cpu_ratio": 40.440916623,
+    "board_timing_distribution": {
+      "count": 10,
+      "max_s": 0.062569428,
+      "mean_s": 0.062065524,
+      "median_s": 0.062036924,
+      "min_s": 0.061436419,
+      "p95_s": 0.062569428,
+      "variance_s2": 1.45851e-07
+    },
+    "comparison_boundary": "The ratio is a matched timing fact only; it is not a hardware speedup claim.",
+    "comparison_performed": true,
+    "cpu_timing_distribution": {
+      "count": 10,
+      "max_s": 0.001630692,
+      "mean_s": 0.001534721,
+      "median_s": 0.001535432,
+      "min_s": 0.001442438,
+      "p95_s": 0.001630692,
+      "variance_s2": 3.75e-09
+    },
+    "hardware_speedup_claim": false,
+    "same_result_hash_match": true,
+    "same_workload_hash_match": true
+  },
+  "timing_receipts": [
+    {
+      "environment": {
+        "machine": "x86_64",
+        "platform": "Linux-7.0.11-1-cachyos-x86_64-with-glibc2.43",
+        "processor": "",
+        "python_version": "3.12.13"
+      },
+      "kind": "cpu_timing",
+      "repeat_count": 10,
+      "repeat_timings_s": [
+        0.001442438,
+        0.001468707,
+        0.001469478,
+        0.001497802,
+        0.001519693,
+        0.001551172,
+        0.001574967,
+        0.001587901,
+        0.001604362,
+        0.001630692
+      ],
+      "repeats": [
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 1,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001442438,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 2,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001468707,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 3,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001469478,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 4,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001497802,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 5,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001519693,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 6,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001551172,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 7,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001574967,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 8,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001587901,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 9,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001604362,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "exact_solver_validity": true,
+          "repeat_index": 10,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "result_matches_selected": true,
+          "seed": 5434,
+          "wall_time_s": 0.001630692,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        }
+      ],
+      "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+      "seed": 5434,
+      "substrate": "cpu_exact_active_constraint_enumeration",
+      "timing_distribution": {
+        "count": 10,
+        "max_s": 0.001630692,
+        "mean_s": 0.001534721,
+        "median_s": 0.001535432,
+        "min_s": 0.001442438,
+        "p95_s": 0.001630692,
+        "variance_s2": 3.75e-09
+      },
+      "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+    },
+    {
+      "attempts": [
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.062531427,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 1,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.062531427,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.062146424,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 2,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.062146424,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.062569428,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 3,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.062569428,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.062222425,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 4,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.062222425,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.061749422,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 5,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.061749422,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.062562428,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 6,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.062562428,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.061927423,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 7,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.061927423,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.061436419,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 8,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.061436419,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.061725422,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 9,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.061725422,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        },
+        {
+          "parse_error": null,
+          "receipt": {
+            "active_constraint_ids": [
+              "choose_a->check_ab",
+              "choose_b->check_ab",
+              "check_ab->choose_c",
+              "choose_c->check_bc",
+              "choose_b->check_bc",
+              "check_bc->publish"
+            ],
+            "board_local": true,
+            "exact_best_sequence": [
+              "choose_a",
+              "choose_b",
+              "check_ab",
+              "choose_c",
+              "check_bc",
+              "publish"
+            ],
+            "exact_min_energy": 0,
+            "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+            "seed": 5434,
+            "wall_time_s": 0.061784422,
+            "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+          },
+          "repeat_index": 10,
+          "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+          "valid": true,
+          "wall_time_s": 0.061784422,
+          "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+        }
+      ],
+      "invalid_repeat_count": 0,
+      "kind": "polarfire_board_timing",
+      "reachable": true,
+      "repeat_count": 10,
+      "repeat_target": 10,
+      "repeat_timings_s": [
+        0.062531427,
+        0.062146424,
+        0.062569428,
+        0.062222425,
+        0.061749422,
+        0.062562428,
+        0.061927423,
+        0.061436419,
+        0.061725422,
+        0.061784422
+      ],
+      "result_hash": "843d9ee2499e4018911a99ca4ae92ac97ac3f598fdf23f47e0ed0172bc0a2087",
+      "seed": 5434,
+      "substrate": "polarfire_board_local_python",
+      "timing_distribution": {
+        "count": 10,
+        "max_s": 0.062569428,
+        "mean_s": 0.062065524,
+        "median_s": 0.062036924,
+        "min_s": 0.061436419,
+        "p95_s": 0.062569428,
+        "variance_s2": 1.45851e-07
+      },
+      "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+    }
+  ],
+  "timing_variance_receipts_ready": true,
+  "upstream_gate": {
+    "artifact_path": "results/experiment_5433_active_constraint_diversity_lns_v494.json",
+    "gate_field": "active_constraint_diversity_ready",
+    "gate_value": true,
+    "readiness_blockers": [],
+    "source_experiment_id": "exp5433-active-constraint-diversity-lns-v494",
+    "source_status": "complete"
+  },
+  "workload_hash": "8cf3ff341f19d487ba89ca5c28190362bc4fe4d31085be0bf068c676f54a8ddc"
+}
