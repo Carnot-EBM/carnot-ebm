@@ -27924,3 +27924,77 @@ Execution-time sweep after the `.490` planner refresh checked arXiv, OpenReview,
 - **Watch-only context:** VMG/Long-Term Memory Security, MemGuard, origin-bound memory authority, llama.cpp hidden-state discussions, Extropic writing, and Logical Intelligence pages were checked but not promoted because they were duplicate, higher-level, non-local, or lacked reproducible execution evidence for `.490`.
 
 <!-- V490-EXECUTION-REFRESH-2026-07-07-END -->
+
+
+### V491 Planner Refresh - 2026-07-08
+
+Planner sweep for milestone `.491` checked arXiv, OpenReview, HuggingFace Papers, Semantic
+Scholar citation routes, GitHub, Extropic writing, Logical Intelligence public pages, and local
+duplicate history after the `.490` conductor log showed all tasks complete except the flagged
+Exp5383 solver-guidance artifact. Items already covered in V490 blocks, including KANDy and the
+ARC graph-exploration/color-blob salience repo, are used as planning inputs but not duplicated.
+
+### New actionable findings
+- **Let the Agent Steer: Closed-Loop Ranking Optimization via Influence Exchange / Sortify**
+  (https://arxiv.org/abs/2603.27765): frames continuous optimization as decomposable influence
+  allocation with a belief channel, preference/constraint channel, persistent memory DB, and an
+  Influence Share metric whose factor contributions sum to 100%. Carnot hook: extend the clean
+  Exp5382 continuous self-learning workflow from fixed KEEP/SHARE/TRUST governance into a
+  budgeted verifier router that records influence shares, offline-online correction, rollback,
+  verifier-cost deltas, and no-weight-mutation evidence.
+- **Energy-Aware Routing to Large Reasoning Models** (https://arxiv.org/abs/2601.00823): argues
+  that routing among reasoning models should account for variance and stochastic energy demand,
+  not only mean cost. Carnot hook: treat local SOTA GGUF calls, deterministic verifiers, and cheap
+  preflights as a routed resource pool; report quality-preserving verifier-cost reductions rather
+  than claiming model-energy savings from text-only traces.
+- **Exposing LLM Safety Gaps Through Mathematical Encoding** (https://arxiv.org/abs/2605.03441):
+  shows harmful requests can bypass surface safety filters when reformulated as coherent set-theory,
+  formal-logic, or quantum-mechanics problems. Carnot hook: add a formal-encoding constraint fixture
+  that asks local SOTA models for structured safety/intent classification and gives final authority
+  to deterministic semantic and policy checks, not an external text scorer.
+- **Agentic Model Checking** (https://arxiv.org/abs/2605.21434): couples LLM agents with bounded
+  model checking under an "agents propose, solvers verify" division of labor, including restricted
+  DSL specs, compositional checking, and counterexample validation. Carnot hook: harden structured
+  verifier artifacts so LLMs may infer/check candidate specs while deterministic solvers discharge
+  soundness-relevant claims and counterexamples.
+- **Agentic Reward Modeling / VAGEN** (https://arxiv.org/abs/2602.00575): replaces passive
+  LLM-as-judge evaluation with tool-using interactive verification that probes environments for
+  evidence of task completion. Carnot hook: for ARC and tool/action tasks, prefer verifier actions
+  that gather latent state evidence before judgment; this supports live-path ARC self-discovery and
+  deterministic tool-state receipts.
+- **Ising Machines for Model Predictive Path Integral-Based Optimal Control**
+  (https://arxiv.org/abs/2512.15533): maps MPPI control to a QUBO/Ising energy landscape for
+  Gibbs-style trajectory exploration. Carnot hook: p-bit work should move beyond scalar
+  schedule diagnostics toward action-sequence boundary exchange and overwrite/fallback ablations,
+  still simulation-only unless repeatable board timing appears.
+
+### Secondary-source status
+- **OpenReview:** the MPPI/Ising entry surfaced via OpenReview but has an arXiv mirror, so the arXiv
+  page is the citable source. Other OpenReview continual-memory and KAN entries are watch-only until
+  a direct PDF or local implementation path is needed.
+- **Semantic Scholar:** EBT `2507.02092` and ARM-EBM `2512.15605` citation trails did not yield a
+  fresh, verifiable local-baseline change during this sweep, so no citation-count claim is made.
+- **HuggingFace Papers:** KITAB, VAGEN mirrors, and dynamic verification entries reinforce the need
+  for constraint-specific fixtures and interactive verification. KITAB itself is older and is useful
+  only as benchmark context, not a new 2025-2026 experiment basis.
+- **GitHub:** `dolphin-in-a-coma/arc-agi-3-just-explore` remains the concrete ARC salience reference
+  for connected-component/color-blob prioritization. `IBM/p-kit` and OpenJij remain implementation
+  references for p-bit/Ising diagnostics, not hardware speedup evidence.
+- **Extropic and Logical Intelligence:** current pages continue to support the architecture thesis
+  that verifier/prover layers sit beneath LLM interfaces, but Carnot still has no executable TSU,
+  Kona, or Aleph baseline. Treat them as non-local architecture context only.
+
+### Planning impact
+- `.491` should scale the clean `.490` structured protocol into larger constraint-tax and
+  formal-encoding fixtures using the mandated local SOTA GGUF models.
+- `.491` must repair Exp5383's adversarial TAUTOLOGY flag before any solver-guidance result becomes
+  headline evidence; downstream p-bit/overwrite ablations should be gated on that corrigendum.
+- `.491` should turn the positive Exp5382 self-learning result into a routed, influence-accounted
+  continuous self-learning controller with poisoning/stale-memory controls and rollback.
+- `.491` should implement ARC connected-component/color-blob salience in the live agent path, after
+  a registry precheck, and should avoid duplicate solves, offline BFS, per-game adapters, and
+  outer-loop reverse engineering.
+- `.491` should keep hardware as hash-linked repeatability and safe board-state evidence only:
+  `hardware_speedup_claim=false` unless repeatable board timing is actually captured.
+
+<!-- V491-PLANNER-REFRESH-2026-07-08-END -->
