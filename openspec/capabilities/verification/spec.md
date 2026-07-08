@@ -27971,6 +27971,100 @@ claim CPU-only legacy model evidence.
 |---|---|---|
 | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
 
+### REQ-VERIFY-5407: Gated p-bit/QUBO Active-Constraint Stress Diagnostic V492
+
+The repository SHALL provide Exp 5407 at
+`python/carnot/experiment_5407_pbit_qubo_active_constraint_stress_v492.py`
+and write
+`results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, board timing path, or modifying
+`scripts/research_conductor.py`. Exp 5407 SHALL run p-bit/QUBO stress rows only
+after
+`results/experiment_5406_active_constraint_warmstart_guidance_v492.json`
+reports `active_constraint_warmstart_ready=true`; if the gate is missing,
+unreadable, or false, Exp 5407 SHALL write the same result path with
+`gated_on_active_constraint_ready=false`, `pbit_qubo_stress_ready=false`, and
+an `honest_verdict` starting with `blocked:`.
+
+Exp 5407 SHALL build tiny action-order fixtures whose permutation constraints
+are represented by a sorting-network permutation baseline and a
+QUBO-style precedence energy. The QUBO baseline SHALL be bounded enough for exact
+enumeration of all permutations, and every solver/hint claim SHALL be checked
+against either exact enumeration or the deterministic solver fallback. The
+diagnostic SHALL compare exactly four modes: `deterministic_solver`,
+`pbit_boundary_hint`, `active_constraint_hint`, and `adversarial_hint`.
+`deterministic_solver` SHALL establish the solver-only baseline;
+`pbit_boundary_hint` SHALL score deterministic CPU p-bit candidate samples;
+`active_constraint_hint` SHALL use active-constraint/conflict-front hints from
+the Exp 5406 lane; and `adversarial_hint` SHALL propose contradictory ordering
+advice that must be rejected before final acceptance.
+
+For every row, Exp 5407 SHALL record the fixture id, mode, final validity,
+solver authority, fallback use, solver conflicts, solver iterations, exact
+enumeration agreement, candidate sample count, accepted sample count,
+acceptance rate, and unsafe false-accept status. Wrong or adversarial hints
+SHALL NOT bypass the solver's deterministic validity check. p-bit candidates
+MAY reduce conflict/iteration counts only when the deterministic solver accepts
+or repairs them; otherwise the row SHALL fall back to the solver-only result.
+
+The artifact SHALL include top-level fields
+`gated_on_active_constraint_ready`, `fixture_count`, `qubo_baseline_count`,
+`exact_enumeration_agreement_rate`, `pbit_acceptance_rate`,
+`solver_conflict_delta`, `fallback_rate`, `unsafe_false_accept_rate`,
+`hardware_speedup_claim`, `pbit_qubo_stress_ready`, `inference_substrate`, and
+`honest_verdict`, with field principles explaining each required field.
+`inference_substrate` SHALL equal
+`verifier_ensemble_against_cached_candidates`. `hardware_speedup_claim` SHALL
+be false. `honest_verdict` SHALL start with `complete:` or `blocked:`.
+`pbit_qubo_stress_ready` SHALL be true only if the active-constraint gate is
+true, every fixture has an exact-enumerated sorting-network QUBO baseline, all
+four modes are measured, exact-enumeration agreement is complete, aggregate
+solver conflicts improve under accepted guidance, fallback remains available,
+and unsafe false accepts are zero.
+
+Required field principles:
+
+- `gated_on_active_constraint_ready`: principle "precondition."
+- `fixture_count`: principle "coverage."
+- `qubo_baseline_count`: principle "sorting-network stress coverage."
+- `exact_enumeration_agreement_rate`: principle "bounded correctness."
+- `pbit_acceptance_rate`: principle "sampler behavior."
+- `solver_conflict_delta`: principle "efficiency evidence."
+- `fallback_rate`: principle "operational safety."
+- `unsafe_false_accept_rate`: principle "solver authority."
+- `hardware_speedup_claim`: principle "no unsupported hardware claim."
+- `pbit_qubo_stress_ready`: principle "downstream evidence."
+- `inference_substrate`: principle "deterministic validation."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:."
+
+### SCENARIO-VERIFY-5407: p-bit/QUBO Stress Rows Stay Solver-Authoritative
+
+Given Exp 5406 reports `active_constraint_warmstart_ready=true`, when Exp 5407
+builds tiny action-order fixtures and their sorting-network QUBO baselines,
+then every baseline enumerates all small-instance permutations exactly, records
+the exact best energy, records whether deterministic fallback agrees with the
+exact optimum, and compares `deterministic_solver`, `pbit_boundary_hint`,
+`active_constraint_hint`, and `adversarial_hint` modes under solver authority.
+The result SHALL record validity, fallback use, conflict and iteration deltas,
+p-bit sample counts, p-bit acceptance rates, exact-enumeration agreement,
+`hardware_speedup_claim=false`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+If Exp 5406 is missing, unreadable, or not ready, if any fixture lacks exact
+enumeration, if a p-bit or adversarial hint is accepted without deterministic
+validation, if any final row is invalid, if exact-enumeration agreement is
+incomplete, if aggregate guidance does not reduce solver conflicts, if the run
+claims hardware speedup, or if unsafe false accepts are nonzero, then Exp 5407
+SHALL write a blocked artifact with precise blocker details,
+`pbit_qubo_stress_ready=false`, and no hardware speedup claim.
+
+## Implementation Status (REQ-VERIFY-5407)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5407 | Planned (`python/carnot/experiment_5407_pbit_qubo_active_constraint_stress_v492.py`, `results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json`) | Planned (`tests/python/test_experiment_5407_pbit_qubo_active_constraint_stress_v492.py`) |
+
 ### REQ-VERIFY-5406: Active-Constraint Warm-Start Guidance Diagnostic V492
 
 The repository SHALL provide Exp 5406 at

@@ -1,0 +1,1405 @@
+{
+  "claim_limits": [
+    "CPU-only simulator diagnostic",
+    "sorting-network QUBO baselines are exact-enumerated tiny instances",
+    "p-bit samples are deterministic cached candidates, not hardware samples",
+    "active-constraint hints are advisory and solver-checked",
+    "no LLM, generated text judge, board timing, or hardware speedup claim"
+  ],
+  "compared_modes": [
+    "deterministic_solver",
+    "pbit_boundary_hint",
+    "active_constraint_hint",
+    "adversarial_hint"
+  ],
+  "duration_s": 1.12,
+  "exact_enumeration_agreement_rate": 1.0,
+  "experiment": 5407,
+  "experiment_id": "exp5407-pbit-qubo-active-constraint-stress-v492",
+  "fallback_rate": 0.25,
+  "field_principles": {
+    "exact_enumeration_agreement_rate": "bounded correctness.",
+    "fallback_rate": "operational safety.",
+    "fixture_count": "coverage.",
+    "gated_on_active_constraint_ready": "precondition.",
+    "hardware_speedup_claim": "no unsupported hardware claim.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "deterministic validation.",
+    "pbit_acceptance_rate": "sampler behavior.",
+    "pbit_qubo_stress_ready": "downstream evidence.",
+    "qubo_baseline_count": "sorting-network stress coverage.",
+    "solver_conflict_delta": "efficiency evidence.",
+    "unsafe_false_accept_rate": "solver authority."
+  },
+  "fixture_count": 4,
+  "gate_source": {
+    "artifact_path": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+    "gate_field": "active_constraint_warmstart_ready",
+    "gate_value": true,
+    "source_status": "complete"
+  },
+  "gated_on_active_constraint_ready": true,
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: CPU-only p-bit/QUBO stress kept solver authority, accepted 0.500 of p-bit samples, matched exact enumeration, and made no hardware speedup claim",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "methodology_note": "exact_enumeration_agreement_rate is 1.0 because every tiny fixture enumerates all permutations; this is bounded correctness, not a distributional hardware claim.",
+  "milestone": "2026.07.492",
+  "mode_summaries": {
+    "active_constraint_hint": {
+      "accepted_sample_count": 0,
+      "fallback_count": 0,
+      "row_count": 4,
+      "sample_count": 0,
+      "solver_conflicts": 0,
+      "solver_iterations": 18,
+      "validity_rate": 1.0
+    },
+    "adversarial_hint": {
+      "accepted_sample_count": 0,
+      "fallback_count": 4,
+      "row_count": 4,
+      "sample_count": 0,
+      "solver_conflicts": 21,
+      "solver_iterations": 39,
+      "validity_rate": 1.0
+    },
+    "deterministic_solver": {
+      "accepted_sample_count": 0,
+      "fallback_count": 0,
+      "row_count": 4,
+      "sample_count": 0,
+      "solver_conflicts": 21,
+      "solver_iterations": 39,
+      "validity_rate": 1.0
+    },
+    "pbit_boundary_hint": {
+      "accepted_sample_count": 12,
+      "fallback_count": 0,
+      "row_count": 4,
+      "sample_count": 24,
+      "solver_conflicts": 0,
+      "solver_iterations": 18,
+      "validity_rate": 1.0
+    }
+  },
+  "pbit_acceptance_rate": 0.5,
+  "pbit_qubo_stress_ready": true,
+  "pbit_sample_count": 24,
+  "qubo_baseline_count": 4,
+  "qubo_baselines": [
+    {
+      "deterministic_agrees_with_exact": true,
+      "deterministic_fallback_energy": 0,
+      "deterministic_fallback_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "enumerated_permutation_count": 24,
+      "exact_best_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "exact_enumerated": true,
+      "exact_min_energy": 0,
+      "exact_valid_permutation_count": 1,
+      "fixture_id": "stress_synthetic_linear_review",
+      "qubo_precedence_term_count": 30,
+      "qubo_variable_count": 16,
+      "sorting_network_comparator_count": 6,
+      "sorting_network_comparators": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "sorting_network_output": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "source_fixture_id": "synthetic_linear_review"
+    },
+    {
+      "deterministic_agrees_with_exact": true,
+      "deterministic_fallback_energy": 0,
+      "deterministic_fallback_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "enumerated_permutation_count": 120,
+      "exact_best_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "exact_enumerated": true,
+      "exact_min_energy": 0,
+      "exact_valid_permutation_count": 8,
+      "fixture_id": "stress_synthetic_join_pack",
+      "qubo_precedence_term_count": 60,
+      "qubo_variable_count": 25,
+      "sorting_network_comparator_count": 10,
+      "sorting_network_comparators": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "sorting_network_output": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "source_fixture_id": "synthetic_join_pack"
+    },
+    {
+      "deterministic_agrees_with_exact": true,
+      "deterministic_fallback_energy": 0,
+      "deterministic_fallback_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "enumerated_permutation_count": 24,
+      "exact_best_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "exact_enumerated": true,
+      "exact_min_energy": 0,
+      "exact_valid_permutation_count": 1,
+      "fixture_id": "stress_carry_forward_act_unlock_deliver",
+      "qubo_precedence_term_count": 30,
+      "qubo_variable_count": 16,
+      "sorting_network_comparator_count": 6,
+      "sorting_network_comparators": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "sorting_network_output": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "source_fixture_id": "carry_forward_act_unlock_deliver"
+    },
+    {
+      "deterministic_agrees_with_exact": true,
+      "deterministic_fallback_energy": 0,
+      "deterministic_fallback_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "enumerated_permutation_count": 120,
+      "exact_best_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "exact_enumerated": true,
+      "exact_min_energy": 0,
+      "exact_valid_permutation_count": 3,
+      "fixture_id": "stress_carry_forward_act_build_deploy",
+      "qubo_precedence_term_count": 60,
+      "qubo_variable_count": 25,
+      "sorting_network_comparator_count": 10,
+      "sorting_network_comparators": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "sorting_network_output": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "source_fixture_id": "carry_forward_act_build_deploy"
+    }
+  ],
+  "random_seed": 5407,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "8a6d090ca45f3d8d4584b12fe22d1262b5cf71193e85667a870f7437e91c93fe",
+  "row_records": [
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_linear_review",
+      "hardware_speedup_claim": false,
+      "hint_decision": "ignored",
+      "iteration_delta": 0,
+      "mode": "deterministic_solver",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "synthetic_linear_review",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.5,
+      "accepted_sample_count": 3,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 6,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_linear_review",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 6,
+      "mode": "pbit_boundary_hint",
+      "rejected_sample_count": 3,
+      "sample_count": 6,
+      "sample_records": [
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 0,
+          "sequence": [
+            "outline",
+            "draft",
+            "review",
+            "submit"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 1,
+          "sequence": [
+            "outline",
+            "draft",
+            "review",
+            "submit"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 2,
+          "sequence": [
+            "outline",
+            "draft",
+            "review",
+            "submit"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 10,
+          "sample_index": 3,
+          "sequence": [
+            "draft",
+            "outline",
+            "review",
+            "submit"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 30,
+          "sample_index": 4,
+          "sequence": [
+            "submit",
+            "review",
+            "draft",
+            "outline"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 10,
+          "sample_index": 5,
+          "sequence": [
+            "draft",
+            "outline",
+            "review",
+            "submit"
+          ],
+          "valid": false
+        }
+      ],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_fixture_id": "synthetic_linear_review",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 6,
+      "conflict_front_hint": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_linear_review",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 6,
+      "mode": "active_constraint_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_fixture_id": "synthetic_linear_review",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": true,
+      "final_energy": 0,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_linear_review",
+      "hardware_speedup_claim": false,
+      "hint_decision": "overwritten",
+      "iteration_delta": 0,
+      "mode": "adversarial_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "synthetic_linear_review",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_join_pack",
+      "hardware_speedup_claim": false,
+      "hint_decision": "ignored",
+      "iteration_delta": 0,
+      "mode": "deterministic_solver",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 3,
+      "solver_iterations": 8,
+      "source_fixture_id": "synthetic_join_pack",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.5,
+      "accepted_sample_count": 3,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_delta": 3,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_join_pack",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 3,
+      "mode": "pbit_boundary_hint",
+      "rejected_sample_count": 3,
+      "sample_count": 6,
+      "sample_records": [
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 0,
+          "sequence": [
+            "label",
+            "verify",
+            "pick",
+            "pack",
+            "ship"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 1,
+          "sequence": [
+            "label",
+            "verify",
+            "pick",
+            "pack",
+            "ship"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 2,
+          "sequence": [
+            "label",
+            "verify",
+            "pick",
+            "pack",
+            "ship"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 20,
+          "sample_index": 3,
+          "sequence": [
+            "pack",
+            "pick",
+            "label",
+            "verify",
+            "ship"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 40,
+          "sample_index": 4,
+          "sequence": [
+            "ship",
+            "pack",
+            "pick",
+            "verify",
+            "label"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 20,
+          "sample_index": 5,
+          "sequence": [
+            "pack",
+            "label",
+            "verify",
+            "pick",
+            "ship"
+          ],
+          "valid": false
+        }
+      ],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 5,
+      "source_fixture_id": "synthetic_join_pack",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_delta": 3,
+      "conflict_front_hint": [
+        "pack",
+        "ship"
+      ],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_join_pack",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 3,
+      "mode": "active_constraint_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 5,
+      "source_fixture_id": "synthetic_join_pack",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "final_energy": 0,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_synthetic_join_pack",
+      "hardware_speedup_claim": false,
+      "hint_decision": "overwritten",
+      "iteration_delta": 0,
+      "mode": "adversarial_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 3,
+      "solver_iterations": 8,
+      "source_fixture_id": "synthetic_join_pack",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint_decision": "ignored",
+      "iteration_delta": 0,
+      "mode": "deterministic_solver",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "carry_forward_act_unlock_deliver",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.5,
+      "accepted_sample_count": 3,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 6,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 6,
+      "mode": "pbit_boundary_hint",
+      "rejected_sample_count": 3,
+      "sample_count": 6,
+      "sample_records": [
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 0,
+          "sequence": [
+            "pickup_key",
+            "unlock_door",
+            "enter_room",
+            "deliver_package"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 1,
+          "sequence": [
+            "pickup_key",
+            "unlock_door",
+            "enter_room",
+            "deliver_package"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 2,
+          "sequence": [
+            "pickup_key",
+            "unlock_door",
+            "enter_room",
+            "deliver_package"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 10,
+          "sample_index": 3,
+          "sequence": [
+            "unlock_door",
+            "pickup_key",
+            "enter_room",
+            "deliver_package"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 30,
+          "sample_index": 4,
+          "sequence": [
+            "deliver_package",
+            "enter_room",
+            "unlock_door",
+            "pickup_key"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 10,
+          "sample_index": 5,
+          "sequence": [
+            "unlock_door",
+            "pickup_key",
+            "enter_room",
+            "deliver_package"
+          ],
+          "valid": false
+        }
+      ],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_fixture_id": "carry_forward_act_unlock_deliver",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 6,
+      "conflict_front_hint": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 6,
+      "mode": "active_constraint_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_fixture_id": "carry_forward_act_unlock_deliver",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": true,
+      "final_energy": 0,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint_decision": "overwritten",
+      "iteration_delta": 0,
+      "mode": "adversarial_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "carry_forward_act_unlock_deliver",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint_decision": "ignored",
+      "iteration_delta": 0,
+      "mode": "deterministic_solver",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 11,
+      "source_fixture_id": "carry_forward_act_build_deploy",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.5,
+      "accepted_sample_count": 3,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_delta": 6,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 6,
+      "mode": "pbit_boundary_hint",
+      "rejected_sample_count": 3,
+      "sample_count": 6,
+      "sample_records": [
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 0,
+          "sequence": [
+            "backup_config",
+            "build_artifact",
+            "run_tests",
+            "deploy",
+            "monitor"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 1,
+          "sequence": [
+            "backup_config",
+            "build_artifact",
+            "run_tests",
+            "deploy",
+            "monitor"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": true,
+          "energy": 0,
+          "sample_index": 2,
+          "sequence": [
+            "backup_config",
+            "build_artifact",
+            "run_tests",
+            "deploy",
+            "monitor"
+          ],
+          "valid": true
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 10,
+          "sample_index": 3,
+          "sequence": [
+            "run_tests",
+            "build_artifact",
+            "backup_config",
+            "deploy",
+            "monitor"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 40,
+          "sample_index": 4,
+          "sequence": [
+            "monitor",
+            "deploy",
+            "run_tests",
+            "build_artifact",
+            "backup_config"
+          ],
+          "valid": false
+        },
+        {
+          "accepted_by_solver": false,
+          "energy": 10,
+          "sample_index": 5,
+          "sequence": [
+            "run_tests",
+            "backup_config",
+            "build_artifact",
+            "deploy",
+            "monitor"
+          ],
+          "valid": false
+        }
+      ],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 5,
+      "source_fixture_id": "carry_forward_act_build_deploy",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_delta": 6,
+      "conflict_front_hint": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": false,
+      "final_energy": 0,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint_decision": "accepted",
+      "iteration_delta": 6,
+      "mode": "active_constraint_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 5,
+      "source_fixture_id": "carry_forward_act_build_deploy",
+      "unsafe_false_accept": false
+    },
+    {
+      "acceptance_rate": 0.0,
+      "accepted_sample_count": 0,
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_delta": 0,
+      "conflict_front_hint": [],
+      "exact_enumeration_agrees": true,
+      "exact_min_energy": 0,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": true,
+      "final_energy": 0,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "stress_carry_forward_act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint_decision": "overwritten",
+      "iteration_delta": 0,
+      "mode": "adversarial_hint",
+      "rejected_sample_count": 0,
+      "sample_count": 0,
+      "sample_records": [],
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 11,
+      "source_fixture_id": "carry_forward_act_build_deploy",
+      "unsafe_false_accept": false
+    }
+  ],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5407.pbit_qubo_active_constraint_stress.v492",
+  "simulation_only": true,
+  "solver_conflict_delta": 21,
+  "solver_iteration_delta": 21,
+  "spec_refs": [
+    "REQ-VERIFY-5407",
+    "SCENARIO-VERIFY-5407"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5407_pbit_qubo_active_constraint_stress_v492.py -q --no-cov",
+      "outcome": "passed"
+    }
+  ],
+  "unsafe_false_accept_rate": 0.0,
+  "validity_rate": 1.0
+}
