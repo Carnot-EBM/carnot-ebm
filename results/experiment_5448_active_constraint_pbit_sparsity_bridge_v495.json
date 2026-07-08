@@ -1,0 +1,844 @@
+{
+  "assumption_source_counts": {
+    "active_constraint": 4,
+    "pbit_consensus": 4
+  },
+  "assumption_sources": [
+    "active_constraint",
+    "pbit_consensus"
+  ],
+  "claim_limits": [
+    "deterministic CPU-local solver fixture",
+    "active constraints and p-bit consensus samples are advisory assumptions",
+    "exact unrestricted solving rejects or overwrites unsafe assumptions",
+    "density restoration is accounting only, not a hardware timing result",
+    "no LLM, generated text judge, hardware sampler, or hardware speedup claim"
+  ],
+  "constraint_family_counts": {
+    "csp": 1,
+    "lns": 1,
+    "sat": 2
+  },
+  "density_before_after": {
+    "by_fixture": {
+      "csp_active_join_order": {
+        "after": 0.4,
+        "after_edges": 4,
+        "before": 1.0,
+        "before_edges": 10,
+        "constraint_family": "csp",
+        "density_note": "Exp5407 QUBO-style ordering terms are restored to direct precedence edges.",
+        "possible_edges": 10
+      },
+      "lns_valid_but_suboptimal": {
+        "after": 0.5,
+        "after_edges": 3,
+        "before": 1.0,
+        "before_edges": 6,
+        "constraint_family": "lns",
+        "density_note": "The LNS projection keeps the V494 family provenance but restores sparse direct constraints.",
+        "possible_edges": 6
+      },
+      "sat_consensus_accept": {
+        "after": 0.5,
+        "after_edges": 3,
+        "before": 1.0,
+        "before_edges": 6,
+        "constraint_family": "sat",
+        "density_note": "SAT clauses lifted to a pairwise QUBO-style clique before restoration.",
+        "possible_edges": 6
+      },
+      "sat_false_basin_rescue": {
+        "after": 0.666667,
+        "after_edges": 2,
+        "before": 1.0,
+        "before_edges": 3,
+        "constraint_family": "sat",
+        "density_note": "Wrong consensus fixes a unit-clause variable and must be rescued.",
+        "possible_edges": 3
+      }
+    },
+    "mean_after": 0.516667,
+    "mean_before": 1.0,
+    "mean_restored_sparsity_delta": 0.483333
+  },
+  "experiment": 5448,
+  "experiment_id": "exp5448-active-constraint-pbit-sparsity-bridge-v495",
+  "fallback_completeness_rate": 1.0,
+  "field_principles": {
+    "assumption_source_counts": "active vs p-bit provenance",
+    "constraint_family_counts": "diversity",
+    "density_before_after": "restored-sparsity accounting",
+    "fallback_completeness_rate": "correctness rescue",
+    "fixture_count": "bounded coverage",
+    "hardware_speedup_claim": "no unsupported hardware claim",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "no hidden hardware inference",
+    "overwritten_assumption_count": "solver authority",
+    "pbit_assumption_bridge_ready": "downstream hardware gate",
+    "rejected_assumption_count": "advisory boundary",
+    "solver_authoritative": "exact solver final authority",
+    "solver_work_delta": "utility measurement",
+    "unsafe_false_accepts": "correctness boundary"
+  },
+  "fixture_count": 4,
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completeness was 1.0, density was restored, and no hardware speedup was claimed",
+  "inference_substrate": "deterministic_solver_pbit_assumption_fixture",
+  "milestone": "2026.07.495",
+  "mode_summaries": {
+    "active_constraint": {
+      "accepted_count": 4,
+      "fallback_count": 0,
+      "overwritten_count": 0,
+      "rejected_count": 0,
+      "row_count": 4,
+      "solver_work_delta": 999,
+      "unsafe_false_accepts": 0
+    },
+    "pbit_consensus": {
+      "accepted_count": 2,
+      "fallback_count": 2,
+      "overwritten_count": 1,
+      "rejected_count": 1,
+      "row_count": 4,
+      "solver_work_delta": 874,
+      "unsafe_false_accepts": 0
+    }
+  },
+  "overwritten_assumption_count": 3,
+  "pbit_assumption_bridge_ready": true,
+  "random_seed": 5448,
+  "readiness_blockers": [],
+  "rejected_assumption_count": 3,
+  "reproducibility_checksum": "8eaa904c1dadeab071262375aca9146d4feb1c24aaa795d744ae02ccad8bd6e8",
+  "row_count": 8,
+  "row_records": [
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 4,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 36,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 48,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "x1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 20,
+        "iterations": 16,
+        "objective_value": 0,
+        "propagations": 68,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 104,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "baseline_solver_work": 104,
+      "baseline_status": "sat",
+      "conflicts": 4,
+      "constraint_family": "sat",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_consensus_accept",
+      "guided_solver_work": 48,
+      "hardware_speedup_claim": false,
+      "iterations": 8,
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_consensus_sample_count": 0,
+      "propagations": 36,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:consensus_accept",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 56
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 0,
+        "propagations": 20,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 21,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "assumption_source": "pbit_consensus",
+      "assumptions": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "baseline_metrics": {
+        "conflicts": 20,
+        "iterations": 16,
+        "objective_value": 0,
+        "propagations": 68,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 104,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "baseline_solver_work": 104,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "sat",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_consensus_accept",
+      "guided_solver_work": 21,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_consensus_sample_count": 4,
+      "propagations": 20,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:consensus_accept",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 83
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 1,
+        "iterations": 4,
+        "objective_value": 0,
+        "propagations": 15,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 20,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        false
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "x1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 8,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 27,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 43,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        false
+      ],
+      "baseline_solver_work": 43,
+      "baseline_status": "sat",
+      "conflicts": 1,
+      "constraint_family": "sat",
+      "density_after": 0.666667,
+      "density_after_edges": 2,
+      "density_before": 1.0,
+      "density_before_edges": 3,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_false_basin_rescue",
+      "guided_solver_work": 20,
+      "hardware_speedup_claim": false,
+      "iterations": 4,
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_consensus_sample_count": 0,
+      "propagations": 15,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:false_basin_rescue",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 23
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "unsat",
+      "assumption_decision": "rejected",
+      "assumption_metrics": {
+        "conflicts": 2,
+        "iterations": 1,
+        "objective_value": null,
+        "propagations": 12,
+        "solution": null,
+        "solver_work": 15,
+        "status": "unsat"
+      },
+      "assumption_solution": null,
+      "assumption_source": "pbit_consensus",
+      "assumptions": [
+        "!x1",
+        "x2",
+        "!x3"
+      ],
+      "baseline_metrics": {
+        "conflicts": 8,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 27,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 43,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        false
+      ],
+      "baseline_solver_work": 43,
+      "baseline_status": "sat",
+      "conflicts": 2,
+      "constraint_family": "sat",
+      "density_after": 0.666667,
+      "density_after_edges": 2,
+      "density_before": 1.0,
+      "density_before_edges": 3,
+      "fallback_metrics": {
+        "conflicts": 8,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 27,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 43,
+        "status": "sat"
+      },
+      "fallback_used": true,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_false_basin_rescue",
+      "guided_solver_work": 58,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_consensus_sample_count": 4,
+      "propagations": 12,
+      "rejected_assumptions": 3,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:false_basin_rescue",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": -15
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 6,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 32,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 44,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "label@0",
+        "verify@1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 240,
+        "iterations": 120,
+        "objective_value": 0,
+        "propagations": 484,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 844,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "baseline_solver_work": 844,
+      "baseline_status": "sat",
+      "conflicts": 6,
+      "constraint_family": "csp",
+      "density_after": 0.4,
+      "density_after_edges": 4,
+      "density_before": 1.0,
+      "density_before_edges": 10,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "csp_active_join_order",
+      "guided_solver_work": 44,
+      "hardware_speedup_claim": false,
+      "iterations": 6,
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_consensus_sample_count": 0,
+      "propagations": 32,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "stress_synthetic_join_pack",
+      "source_module": "experiment_5407_pbit_qubo_active_constraint_stress_v492",
+      "unsafe_false_accept": false,
+      "work_delta": 800
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 0,
+        "propagations": 24,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 25,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "assumption_source": "pbit_consensus",
+      "assumptions": [
+        "label@0",
+        "verify@1",
+        "pick@2",
+        "pack@3",
+        "ship@4"
+      ],
+      "baseline_metrics": {
+        "conflicts": 240,
+        "iterations": 120,
+        "objective_value": 0,
+        "propagations": 484,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 844,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "baseline_solver_work": 844,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "csp",
+      "density_after": 0.4,
+      "density_after_edges": 4,
+      "density_before": 1.0,
+      "density_before_edges": 10,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "csp_active_join_order",
+      "guided_solver_work": 25,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_consensus_sample_count": 4,
+      "propagations": 24,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "stress_synthetic_join_pack",
+      "source_module": "experiment_5407_pbit_qubo_active_constraint_stress_v492",
+      "unsafe_false_accept": false,
+      "work_delta": 819
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 1,
+        "iterations": 2,
+        "objective_value": 0,
+        "propagations": 12,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 15,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "invoice@0",
+        "verify@1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 36,
+        "iterations": 24,
+        "objective_value": 0,
+        "propagations": 75,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 135,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "baseline_solver_work": 135,
+      "baseline_status": "sat",
+      "conflicts": 1,
+      "constraint_family": "lns",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "lns_valid_but_suboptimal",
+      "guided_solver_work": 15,
+      "hardware_speedup_claim": false,
+      "iterations": 2,
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_consensus_sample_count": 0,
+      "propagations": 12,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "diverse_fork_join_fulfillment",
+      "source_module": "experiment_5433_active_constraint_diversity_lns_v494",
+      "unsafe_false_accept": false,
+      "work_delta": 120
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "overwritten",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 3,
+        "propagations": 12,
+        "solution": [
+          "verify",
+          "invoice",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 13,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "verify",
+        "invoice",
+        "receive",
+        "ship"
+      ],
+      "assumption_source": "pbit_consensus",
+      "assumptions": [
+        "verify@0",
+        "receive@2",
+        "ship@3"
+      ],
+      "baseline_metrics": {
+        "conflicts": 36,
+        "iterations": 24,
+        "objective_value": 0,
+        "propagations": 75,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 135,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "baseline_solver_work": 135,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "lns",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": {
+        "conflicts": 36,
+        "iterations": 24,
+        "objective_value": 0,
+        "propagations": 75,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 135,
+        "status": "sat"
+      },
+      "fallback_used": true,
+      "final_matches_exact": true,
+      "final_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "lns_valid_but_suboptimal",
+      "guided_solver_work": 148,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "objective_preserved": true,
+      "overwritten_assumptions": 3,
+      "pbit_consensus_sample_count": 4,
+      "propagations": 12,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "diverse_fork_join_fulfillment",
+      "source_module": "experiment_5433_active_constraint_diversity_lns_v494",
+      "unsafe_false_accept": false,
+      "work_delta": -13
+    }
+  ],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5448.active_constraint_pbit_sparsity_bridge.v495",
+  "solver_authoritative": true,
+  "solver_work_delta": 1873,
+  "source_artifacts": [
+    "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json",
+    "results/experiment_5433_active_constraint_diversity_lns_v494.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5448",
+    "SCENARIO-VERIFY-5448"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py -m pytest tests/python/test_experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": "ops/e2e-test-plan.md review: Exp5448 is a deterministic solver fixture; no live Ising training, PyO3 round-trip, KV260, or CSL e2e path applies",
+      "outcome": "not_applicable"
+    }
+  ],
+  "unsafe_false_accepts": 0
+}

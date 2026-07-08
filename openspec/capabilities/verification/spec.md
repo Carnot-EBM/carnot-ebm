@@ -27971,6 +27971,98 @@ claim CPU-only legacy model evidence.
 |---|---|---|
 | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
 
+### REQ-VERIFY-5448: Active-Constraint p-bit Sparsity Bridge V495
+
+The repository SHALL provide Exp 5448 at
+`python/carnot/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py`
+and write
+`results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json`
+without invoking a live LLM, generated text judge, hardware sampler, board
+timing path, hardware speedup claim, or modifying
+`scripts/research_conductor.py`. The diagnostic SHALL reuse the existing
+active-constraint/LNS and p-bit/QUBO fixture helpers where available, and SHALL
+stay CPU-local and deterministic.
+
+The runner SHALL build bounded SAT, CSP, and LNS fixtures with known exact
+outcomes and varying constraint-induced density. Active-constraint hints and
+p-bit-like consensus samples SHALL propose only temporary assumptions. The
+exact solver SHALL attempt bounded solves under those assumptions, then reject or overwrite
+unsafe, contradictory, stale, or suboptimal assumptions and rescue
+with an unrestricted exact solve before reporting any final SAT/UNSAT label,
+assignment, sequence, feasibility predicate, objective predicate, or validity
+predicate.
+
+For every fixture/source row, Exp 5448 SHALL record conflicts,
+propagations or iterations, rejected assumptions, overwritten assumptions,
+fallback use, density before restoration, density after restoration, solution
+validity, baseline solver work, guided solver work, and whether any unsafe
+false accept occurred. Assumption-guided UNSAT under non-empty assumptions
+SHALL NOT be promoted to original-fixture UNSAT without the unrestricted exact
+solver rescue. A p-bit sample MAY reduce work only as advisory guidance; it
+SHALL NOT certify correctness or imply hardware acceleration.
+
+The artifact SHALL include top-level fields `fixture_count`,
+`constraint_family_counts`, `assumption_source_counts`,
+`density_before_after`, `solver_authoritative`,
+`fallback_completeness_rate`, `rejected_assumption_count`,
+`overwritten_assumption_count`, `solver_work_delta`, `unsafe_false_accepts`,
+`pbit_assumption_bridge_ready`, `hardware_speedup_claim`,
+`inference_substrate`, and `honest_verdict`, with field principles explaining
+each required field. `solver_authoritative` SHALL be true,
+`hardware_speedup_claim` SHALL be false, `inference_substrate` SHALL equal
+`deterministic_solver_pbit_assumption_fixture`, and `honest_verdict` SHALL
+start with `complete:` or `blocked:`. `pbit_assumption_bridge_ready` SHALL be
+true only when all SAT/CSP/LNS rows preserve exact solver authority, fallback
+completeness is 1.0, unsafe false accepts are zero, both active-constraint and
+p-bit provenance are present, density restoration is measured for every
+fixture, and the artifact contains no hardware speedup claim.
+
+Required field principles:
+
+- `fixture_count`: principle "bounded coverage"
+- `constraint_family_counts`: principle "diversity"
+- `assumption_source_counts`: principle "active vs p-bit provenance"
+- `density_before_after`: principle "restored-sparsity accounting"
+- `solver_authoritative`: principle "exact solver final authority"
+- `fallback_completeness_rate`: principle "correctness rescue"
+- `rejected_assumption_count`: principle "advisory boundary"
+- `overwritten_assumption_count`: principle "solver authority"
+- `solver_work_delta`: principle "utility measurement"
+- `unsafe_false_accepts`: principle "correctness boundary"
+- `pbit_assumption_bridge_ready`: principle "downstream hardware gate"
+- `hardware_speedup_claim`: principle "no unsupported hardware claim"
+- `inference_substrate`: principle "no hidden hardware inference"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+### SCENARIO-VERIFY-5448: Advisory Assumptions Cannot Override Exact Solvers
+
+Given bounded SAT, CSP, and LNS fixtures with known exact outcomes and
+deterministic active-constraint and p-bit-like consensus assumptions, when Exp
+5448 evaluates active-constraint and p-bit assumption rows, then every row
+records assumption provenance, density before/after restoration, exact solver
+attempt telemetry, fallback or overwrite decisions, final solver-authoritative
+label or solution, and validity. Correct assumptions MAY reduce solver work
+after the exact solver validates them. Wrong p-bit assumptions SHALL be
+rejected and rescued by unrestricted solving. Satisfiable but suboptimal
+assumptions SHALL be overwritten by the unrestricted exact optimum.
+
+If a wrong assumption creates a false SAT or false UNSAT claim, if fallback
+does not recover the unrestricted exact outcome, if overwritten assumptions
+change final validity or objective preservation, if density before/after
+restoration is missing for any fixture, if either active-constraint or p-bit
+provenance is absent, if `hardware_speedup_claim` is true, or if
+`inference_substrate` differs from
+`deterministic_solver_pbit_assumption_fixture`, then Exp 5448 SHALL write
+`results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json`
+with `pbit_assumption_bridge_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5448)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5448 | Planned (`python/carnot/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py`, `results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json`) | Planned (`tests/python/test_experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py`) |
+
 ### REQ-VERIFY-5433: Active-Constraint Diversity LNS Diagnostic V494
 
 The repository SHALL provide Exp 5433 at
