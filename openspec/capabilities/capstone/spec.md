@@ -1590,3 +1590,87 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5388 | Planned (`python/carnot/experiment_5388_capstone_v490.py`, `results/experiment_5388_capstone_v490.json`) | Planned (`tests/python/test_experiment_5388_capstone_v490.py`) |
+
+- REQ-CAPSTONE-5401: The `.491` milestone-close capstone aggregator
+  `exp5401-v491-capstone` in
+  `python/carnot/experiment_5401_capstone_v491.py` SHALL write
+  `results/experiment_5401_capstone_v491.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every available
+  `.491` upstream result artifact from Exp5389 through Exp5400, including the
+  Exp5398 graph sidecar when present, and it SHALL read the conductor log for
+  task flags. It SHALL synthesize a truth table for structured constraint-tax
+  scale-up, formal-encoding safety fixture, overwrite-guidance corrigendum,
+  p-bit ablation, continuous self-learning router, raw-episode memory guard, ARC
+  level-up, hardware repeatability, KAN dynamic certificate, and PRD evidence
+  table without promoting adversarially flagged, missing-input, failed-gate,
+  honest-null, CPU-only, bounded, or no-bank outcomes into stronger claims.
+  Exp5392 SHALL be marked blocked for headline-clean formal-encoding safety
+  while its adversarial TAUTOLOGY flag remains present. Exp5397 SHALL remain an honest no-bank ARC result. Exp5398 SHALL preserve
+  `hardware_speedup_claim=false` unless repeated board-local timing speedup is
+  actually present. Future token/internal-feature signal SHALL remain false
+  unless a new backend feature artifact exists.
+- SCENARIO-CAPSTONE-5401: The artifact
+  `results/experiment_5401_capstone_v491.json` must emit top-level fields
+  `status`, `milestone`, `artifact_count_expected`, `artifact_count_found`,
+  `missing_artifacts`, `flagged_artifacts`, `structured_scaleup_ready`,
+  `formal_encoding_fixture_ready`, `overwrite_guidance_corrigendum_clean`,
+  `pbit_boundary_ablation_ready`, `continuous_self_learning_router_ready`,
+  `raw_episode_guard_ready`, `arc_new_level_banked`,
+  `hardware_repeatability_ready`, `hardware_speedup_claim`,
+  `dynamic_counterexample_certificate_ready`, `future_token_signal_allowed`,
+  `retired_or_blocked_lanes`, `next_recommendations`,
+  `active_roadmap_modified`, `conductor_modified`, and `honest_verdict`. The
+  default `.491` aggregation must report Exp5391 as bounded deterministic
+  structured-scale evidence ready, Exp5392 as present but blocked for clean
+  safety claims due to the conductor/adversarial TAUTOLOGY flag, Exp5393 as a
+  clean row-level overwrite-guidance corrigendum, Exp5394 as bounded CPU-only
+  p-bit ablation ready with no hardware speedup claim, Exp5395 and Exp5396 as
+  controller-level FR-11 evidence ready with no model-weight mutation, Exp5397
+  as honest-null/no-bank ARC evidence, Exp5398 as graph/receipt evidence with no
+  repeated board-local timing and no speedup claim, Exp5399 as a bounded dynamic
+  certificate ready with no broad KAN verification claim, and Exp5400 as a
+  PRD evidence table whose closed rows coexist with blocked ARC, token, and
+  hardware lanes.
+- SCENARIO-CAPSTONE-5401-MISSING-OR-FLAGGED-INPUT: If any expected upstream
+  Exp5389 through Exp5400 artifact is absent or unreadable, the workflow must
+  still write `results/experiment_5401_capstone_v491.json` with
+  `status=honest_partial`, list the absent path in `missing_artifacts`, reduce
+  `artifact_count_found`, and set affected readiness fields false rather than
+  inferring success. If an upstream artifact is present but carries
+  `flagged_adversarial=true`, a conductor `FLAGGED` row, a failed gate, or an
+  honest-null/no-bank outcome, the workflow must include that artifact in
+  `flagged_artifacts` or `retired_or_blocked_lanes` and keep headline readiness
+  false for that lane.
+- SCENARIO-CAPSTONE-5401-FIELD-PRINCIPLES: The required field principles are:
+  `status` = "complete if capstone emitted from actual artifacts; honest_partial
+  if expected upstream artifacts are missing or unreadable.",
+  `milestone` = "must equal 2026.07.491.",
+  `artifact_count_expected` = "number of .491 tasks expected.",
+  `artifact_count_found` = "number of .491 task artifacts found or emitted.",
+  `missing_artifacts` = "list of missing or unreadable expected upstream
+  artifacts.", `flagged_artifacts` = "list of artifacts flagged by conductor or
+  adversarial checks.", `structured_scaleup_ready` = "derived from Exp5391.",
+  `formal_encoding_fixture_ready` = "derived from Exp5392 but false while the
+  artifact is flagged.", `overwrite_guidance_corrigendum_clean` = "derived from
+  Exp5393.", `pbit_boundary_ablation_ready` = "derived from Exp5394.",
+  `continuous_self_learning_router_ready` = "derived from Exp5395.",
+  `raw_episode_guard_ready` = "derived from Exp5396.",
+  `arc_new_level_banked` = "derived from Exp5397.",
+  `hardware_repeatability_ready` = "derived from Exp5398 repeatability evidence.",
+  `hardware_speedup_claim` = "must remain false unless Exp5398 proves repeated
+  board-local timing speedup.", `dynamic_counterexample_certificate_ready` =
+  "derived from Exp5399.", `future_token_signal_allowed` = "must remain false
+  unless a new backend feature artifact exists.", `retired_or_blocked_lanes` =
+  "list of lanes that remain closed or blocked.", `next_recommendations` =
+  "concrete recommendations for the next roadmap.", `active_roadmap_modified` =
+  "must be false.", `conductor_modified` = "must be false.", and
+  `honest_verdict` = "one-line summary starting with complete: that
+  distinguishes real evidence from blocked lanes."
+
+## Implementation Status (REQ-CAPSTONE-5401)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5401 | Planned (`python/carnot/experiment_5401_capstone_v491.py`, `results/experiment_5401_capstone_v491.json`) | Planned (`tests/python/test_experiment_5401_capstone_v491.py`) |

@@ -1,0 +1,512 @@
+{
+  "active_roadmap_modified": false,
+  "arc_new_level_banked": false,
+  "artifact_count_expected": 13,
+  "artifact_count_found": 13,
+  "artifact_read_errors": [],
+  "conductor_flags": [
+    {
+      "log_excerpt": "| 2026-07-08 04:40 UTC | Formal-encoding safety and intent constraint fixtu | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY \u2014 result quarantined, not a clean success |",
+      "path": "results/experiment_5392_formal_encoding_safety_fixture_v491.json",
+      "status": "FLAGGED",
+      "task_id": "exp5392-v491-formal-encoding-safety-fixture"
+    }
+  ],
+  "conductor_modified": false,
+  "continuous_self_learning_router_ready": true,
+  "dynamic_counterexample_certificate_ready": true,
+  "experiment": "experiment_5401_capstone_v491",
+  "experiment_id": "exp5401-v491-capstone",
+  "field_principles": {
+    "active_roadmap_modified": "must be false.",
+    "arc_new_level_banked": "derived from Exp5397.",
+    "artifact_count_expected": "number of .491 tasks expected.",
+    "artifact_count_found": "number of .491 task artifacts found or emitted.",
+    "conductor_modified": "must be false.",
+    "continuous_self_learning_router_ready": "derived from Exp5395.",
+    "dynamic_counterexample_certificate_ready": "derived from Exp5399.",
+    "flagged_artifacts": "list of artifacts flagged by conductor or adversarial checks.",
+    "formal_encoding_fixture_ready": "derived from Exp5392 but false while the artifact is flagged.",
+    "future_token_signal_allowed": "must remain false unless a new backend feature artifact exists.",
+    "hardware_repeatability_ready": "derived from Exp5398 repeatability evidence.",
+    "hardware_speedup_claim": "must remain false unless Exp5398 proves repeated board-local timing speedup.",
+    "honest_verdict": "one-line summary starting with complete: that distinguishes real evidence from blocked lanes.",
+    "milestone": "must equal 2026.07.491.",
+    "missing_artifacts": "list of missing or unreadable expected upstream artifacts.",
+    "next_recommendations": "concrete recommendations for the next roadmap.",
+    "overwrite_guidance_corrigendum_clean": "derived from Exp5393.",
+    "pbit_boundary_ablation_ready": "derived from Exp5394.",
+    "raw_episode_guard_ready": "derived from Exp5396.",
+    "retired_or_blocked_lanes": "list of lanes that remain closed or blocked.",
+    "status": "complete if capstone emitted from actual artifacts; honest_partial if expected upstream artifacts are missing or unreadable.",
+    "structured_scaleup_ready": "derived from Exp5391."
+  },
+  "flagged_artifacts": [
+    {
+      "headline_eligible": false,
+      "path": "results/experiment_5392_formal_encoding_safety_fixture_v491.json",
+      "reasons": [
+        "artifact flagged_adversarial=true",
+        "conductor log status FLAGGED",
+        "critical TAUTOLOGY corrigendum pending"
+      ],
+      "task_id": "exp5392-v491-formal-encoding-safety-fixture"
+    }
+  ],
+  "formal_encoding_fixture_ready": false,
+  "future_token_signal_allowed": false,
+  "hardware_repeatability_ready": false,
+  "hardware_speedup_claim": false,
+  "headline_ready_lanes": [
+    "structured_constraint_tax_scaleup",
+    "overwrite_guidance_corrigendum",
+    "pbit_boundary_ablation",
+    "continuous_self_learning_router",
+    "raw_episode_memory_guard",
+    "kan_dynamic_certificate"
+  ],
+  "honest_verdict": "complete: .491 capstone emitted from actual artifacts; headline-ready bounded lanes are structured scale-up, overwrite corrigendum, p-bit CPU ablation, CSL router, memory guard, and KAN certificate; Exp5392 flagged, Exp5397 no-bank, token/internal lane closed, hardware repeatability absent, and no hardware speedup.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.491",
+  "missing_artifacts": [],
+  "next_recommendations": [
+    {
+      "recommendation": "Rerun the fixture with distinct checksum-backed safety metrics and a clean adversarial check before any formal-encoding headline.",
+      "target": "formal_encoding_safety"
+    },
+    {
+      "recommendation": "Scale Exp5391's deterministic final-state and tool/action fixtures while keeping deterministic verifier final authority.",
+      "target": "structured_constraint_tax"
+    },
+    {
+      "recommendation": "Move the p-bit boundary workload onto reachable hardware only after repeatable same-workload board timing is available.",
+      "target": "pbit_hardware_transfer"
+    },
+    {
+      "recommendation": "Use Exp5395 and Exp5396 as the FR-11 controller baseline; keep raw episode provenance and no model-weight mutation as gates.",
+      "target": "continuous_self_learning"
+    },
+    {
+      "recommendation": "Keep blob salience but spend the next milestone on trajectory generation/enumeration that can bank a reproduction-gated new level.",
+      "target": "arc_level_up"
+    },
+    {
+      "recommendation": "Restore KV260 or PolarFire reachability and rerun the identical workload until repeated timing and stable output hashes exist.",
+      "target": "hardware_repeatability"
+    },
+    {
+      "recommendation": "Keep the lane closed until a backend artifact exposes logits, hidden states, attention, or intermediate exits.",
+      "target": "token_internal_features"
+    },
+    {
+      "recommendation": "Extend the bounded dynamic certificate to the next false-property family without claiming broad KAN soundness.",
+      "target": "kan_certificate"
+    }
+  ],
+  "overwrite_guidance_corrigendum_clean": true,
+  "pbit_boundary_ablation_ready": true,
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:00383b59dde68fef42e8abfec5265c5d27ae18c8fcdd66718cd9f9ff2f716337"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+    }
+  ],
+  "random_seed": 5401,
+  "raw_episode_guard_ready": true,
+  "reproducibility_checksum": "sha256:776236b253454b90df682936efbf77eee2caa7fd042e7aafdc71895a100f8d43",
+  "result_path": "results/experiment_5401_capstone_v491.json",
+  "retired_or_blocked_lanes": [
+    {
+      "lane": "formal_encoding_safety_fixture",
+      "next_gate": "rerun distinct checksum-backed safety metrics",
+      "source_artifact": "results/experiment_5392_formal_encoding_safety_fixture_v491.json",
+      "state": "blocked_flagged_adversarial"
+    },
+    {
+      "lane": "pbit_hardware_transfer",
+      "next_gate": "repeat same workload on reachable board before acceleration claim",
+      "source_artifact": "results/experiment_5394_gated_overwrite_pbit_ablation_v491.json",
+      "state": "blocked_cpu_only"
+    },
+    {
+      "lane": "arc_level_up",
+      "next_gate": "trajectory generation that banks a reproduction-gated new level",
+      "source_artifact": "results/experiment_5397_arc_blob_salience_live_path_v491.json",
+      "state": "honest_null_no_bank"
+    },
+    {
+      "lane": "hardware_repeatability",
+      "next_gate": "restore KV260 or PolarFire reachability and repeat timing",
+      "source_artifact": "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json",
+      "state": "blocked_no_board_local_repeats"
+    },
+    {
+      "lane": "hardware_speedup_claim",
+      "next_gate": "same-workload board timing speedup with stable output hashes",
+      "source_artifact": "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json",
+      "state": "blocked_no_repeatable_timing_speedup"
+    },
+    {
+      "lane": "future_token_internal_signal",
+      "next_gate": "backend artifact with logits, hidden states, attention, or intermediate exits",
+      "source_artifact": "results/experiment_5389_transition_v491.json",
+      "state": "retired_until_backend_feature_artifact"
+    },
+    {
+      "lane": "broad_kan_verification",
+      "next_gate": "new bounded certificate family before widening the claim",
+      "source_artifact": "results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json",
+      "state": "blocked_bounded_certificate_only"
+    },
+    {
+      "lane": "full_prd_realization",
+      "next_gate": "close ARC, token/backend, and hardware repeatability blockers",
+      "source_artifact": "results/experiment_5400_evidence_table_prd_gap_analysis_v491.json",
+      "state": "partial_closed_rows_with_open_arc_token_hardware"
+    }
+  ],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5401.capstone_v491.v1",
+  "sidecar_artifacts": [
+    {
+      "path": "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json",
+      "sha256": "sha256:7506af8732bebe2623e533ee87080ae85c8eff36adc9e9ca03b72600eb27cf7d"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: .490 truth table archived and .491 task range recorded from research-roadmap.yaml; roadmap_next_present=false; solver flagged, ARC no-bank, token closed, hardware no-speedup; no active roadmap or conductor edit.",
+      "path": "results/experiment_5389_transition_v491.json",
+      "sha256": "sha256:2f029ff430702a52d28036ec0b9bfd0a652f8c04a4f2565a381c052a510a1702",
+      "status": "complete",
+      "task_id": "exp5389-v491-transition-and-archive"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: 4 new actionable V491 execution-time source deltas appended; retired scopes remained closed.",
+      "path": "results/experiment_5390_sota_source_delta_v491.json",
+      "sha256": "sha256:8e1550cc2db1281827411c40ea40026bf21a9dbab64e3e2f1184b0aad536252f",
+      "status": "complete",
+      "task_id": "exp5390-v491-sota-source-delta"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: constrained deterministic fixture validity improved over unconstrained with zero constrained unsafe false accepts.",
+      "path": "results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json",
+      "sha256": "sha256:370941f9c71492d5cb2234b1862bb006c57221da408259f41935d462b195403c",
+      "status": "complete",
+      "task_id": "exp5391-v491-constraint-tax-scaleup-fixtures"
+    },
+    {
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: formal-encoding safety fixture ran with deterministic non-leaky checks.",
+      "path": "results/experiment_5392_formal_encoding_safety_fixture_v491.json",
+      "sha256": "sha256:2221e08f2596722cbf32ac3f2e5fdd32dbc1cabe1bed763d94357420fc2a3198",
+      "status": "complete",
+      "task_id": "exp5392-v491-formal-encoding-safety-fixture"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: row-level overwrite-guidance corrigendum recomputed readiness from solver evidence with clean adversarial checks",
+      "path": "results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json",
+      "sha256": "sha256:5ba1e6f38fd66748c0efb62b5cbdfc36e77da015511db0ad5ad4613f417dfb31",
+      "status": "complete",
+      "task_id": "exp5393-v491-overwrite-guidance-tautology-corrigendum"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: CPU-only p-bit boundary hints improved aggregate solver conflict delta -10 while solver-authoritative overwrite/fallback preserved validity",
+      "path": "results/experiment_5394_gated_overwrite_pbit_ablation_v491.json",
+      "sha256": "sha256:28753e047d58c2ed4646e2586b43277877adcaaddf4fc46bcef652cabde1a949",
+      "status": "complete",
+      "task_id": "exp5394-v491-gated-overwrite-pbit-ablation"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: influence-share router preserved quality while reducing verifier cost versus baseline with valid 100% share ledgers, stale and poison deflection, rollback, and no weight mutation",
+      "path": "results/experiment_5395_influence_share_verifier_budget_router_v491.json",
+      "sha256": "sha256:4fd249154db75cffc4680d08efac1cf97502760252757ac82169c36c178a6fec",
+      "status": "complete",
+      "task_id": "exp5395-v491-influence-share-verifier-budget-router"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: raw episodes retained, consolidated memories gated from row evidence, forged and stale controls deflected, benign memories preserved, rejected memories excluded from verifier routing, and no weights mutated",
+      "path": "results/experiment_5396_memory_guard_raw_episode_retention_v491.json",
+      "sha256": "sha256:b5102fc833d7f93587ca9d893bd86c8d90d298353c797856bf31bff5cd4463c9",
+      "status": "complete",
+      "task_id": "exp5396-v491-memory-guard-raw-episode-retention"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "honest_null: re86 L3 bounded_budget_no_levelup",
+      "path": "results/experiment_5397_arc_blob_salience_live_path_v491.json",
+      "sha256": "sha256:29df40ea7c40534c539becfd96141f1f90b35d25087daf1af511822d4f8ad9e0",
+      "status": "honest_null",
+      "task_id": "exp5397-v491-arc-blob-salience-live-path"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: kv260=unreachable polar_fire_repeat_count=0 gatemate_workload_path_available=false repeatability_evidence_present=false hardware_speedup_claim=false",
+      "path": "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json",
+      "sha256": "sha256:fc79593c53972ff15b28d0c3a3b3cb93f0f2d95783ba6cb694319b0c2ab4390e",
+      "status": "complete",
+      "task_id": "exp5398-v491-hardware-evidence-graph-repeatability"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: bounded Exp5395 verifier-routing dynamics rejected held-out false properties with localized certificate cells while preserving true properties and making no broad KAN verification claim",
+      "path": "results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json",
+      "sha256": "sha256:0d25575b62615f1dc32e235c48c9a8998680d163cbc690ce10ef9fa8f266a914",
+      "status": "complete",
+      "task_id": "exp5399-v491-kan-dynamic-counterexample-certificate"
+    },
+    {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: PRD evidence table emitted with 5 closed, 4 partial, 2 blocked, and 0 missing-input rows",
+      "path": "results/experiment_5400_evidence_table_prd_gap_analysis_v491.json",
+      "sha256": "sha256:609ee72922eecd973c0d9c29dcbb6b265ea7807f8d6468cd7e87c3ca019c83a9",
+      "status": "complete",
+      "task_id": "exp5400-v491-evidence-table-and-prd-gap-analysis"
+    }
+  ],
+  "source_context_read": [
+    {
+      "kind": "file",
+      "path": "CLAUDE.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "research-program.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "_bmad/prd.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "_bmad/architecture.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "research-roadmap.yaml",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "research-roadmap-next.yaml",
+      "present": false
+    },
+    {
+      "kind": "file",
+      "path": "ops/conductor-log.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "ops/status.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "ops/changelog.md",
+      "present": true
+    },
+    {
+      "kind": "directory",
+      "path": "results",
+      "present": true
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5401",
+    "SCENARIO-CAPSTONE-5401",
+    "SCENARIO-CAPSTONE-5401-MISSING-OR-FLAGGED-INPUT",
+    "SCENARIO-CAPSTONE-5401-FIELD-PRINCIPLES"
+  ],
+  "status": "complete",
+  "structured_scaleup_ready": true,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5401_capstone_v491.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5401_capstone_v491.py -m pytest tests/python/test_experiment_5401_capstone_v491.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5401_capstone_v491.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "truth_table": [
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded_deterministic_fixture_panel",
+      "classification": "headline_ready",
+      "evidence": {
+        "constrained_semantic_validity_rate": 1.0,
+        "fixture_count": 24,
+        "unsafe_false_accept_count": 0,
+        "wrong_valid_reduction": 20
+      },
+      "headline_ready": true,
+      "lane": "structured_constraint_tax_scaleup",
+      "source_artifact": "results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json"
+    },
+    {
+      "blocked_reason": "flagged_adversarial_tautology",
+      "claim_boundary": "safe_fixture_not_clean_headline_while_flagged",
+      "classification": "blocked",
+      "evidence": {
+        "corrigendum_pending_count": 2,
+        "flagged_adversarial": true,
+        "forbidden_detail_leak_count": 0,
+        "upstream_ready": true
+      },
+      "headline_ready": false,
+      "lane": "formal_encoding_safety_fixture",
+      "source_artifact": "results/experiment_5392_formal_encoding_safety_fixture_v491.json"
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "row_level_solver_authority_only",
+      "classification": "headline_ready",
+      "evidence": {
+        "row_count": 98,
+        "row_level_evidence_clean": true,
+        "tautology_checks_passed": true,
+        "unsafe_false_accept_count": 0
+      },
+      "headline_ready": true,
+      "lane": "overwrite_guidance_corrigendum",
+      "source_artifact": "results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json"
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "cpu_only_no_hardware_speedup",
+      "classification": "bounded_ready",
+      "evidence": {
+        "fixture_count": 4,
+        "hardware_speedup_claim": false,
+        "simulation_only": true,
+        "unsafe_false_accepts": 0
+      },
+      "headline_ready": true,
+      "lane": "pbit_boundary_ablation",
+      "source_artifact": "results/experiment_5394_gated_overwrite_pbit_ablation_v491.json"
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "controller_routing_no_weight_mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "no_weight_mutation": true,
+        "quality_delta_vs_baseline": 0.0,
+        "routed_decision_count": 36,
+        "trace_count": 12,
+        "verifier_cost_delta_vs_baseline": 22.2
+      },
+      "headline_ready": true,
+      "lane": "continuous_self_learning_router",
+      "source_artifact": "results/experiment_5395_influence_share_verifier_budget_router_v491.json"
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "raw_episode_retention_no_rationale_authority",
+      "classification": "headline_ready",
+      "evidence": {
+        "accepted_memory_count": 3,
+        "forged_reasoning_deflection_rate": 1.0,
+        "no_weight_mutation": true,
+        "raw_episode_count": 7,
+        "rejected_memory_count": 4
+      },
+      "headline_ready": true,
+      "lane": "raw_episode_memory_guard",
+      "source_artifact": "results/experiment_5396_memory_guard_raw_episode_retention_v491.json"
+    },
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live_path_reached_no_new_banked_level",
+      "classification": "honest_null",
+      "evidence": {
+        "failure_mode": "bounded_budget_no_levelup",
+        "new_level_banked": false,
+        "offline_bfs_used": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "headline_ready": false,
+      "lane": "arc_level_up",
+      "source_artifact": "results/experiment_5397_arc_blob_salience_live_path_v491.json"
+    },
+    {
+      "blocked_reason": "no_repeated_board_local_timing",
+      "claim_boundary": "hash_graph_receipt_no_board_local_repeatability",
+      "classification": "blocked",
+      "evidence": {
+        "destructive_action_taken": false,
+        "hardware_speedup_claim": false,
+        "offline_verifier_passed": true,
+        "polar_fire_repeat_count": 0,
+        "repeatability_evidence_present": false
+      },
+      "headline_ready": false,
+      "lane": "hardware_repeatability",
+      "source_artifact": [
+        "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json",
+        "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded_certificate_no_broad_kan_verification",
+      "classification": "headline_ready",
+      "evidence": {
+        "broad_kan_verification_claim": false,
+        "counterexample_region_count": 4,
+        "false_property_rejection_rate": 1.0,
+        "sample_count": 36,
+        "true_property_preservation_rate": 1.0
+      },
+      "headline_ready": true,
+      "lane": "kan_dynamic_certificate",
+      "source_artifact": "results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json"
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "evidence_table_complete_but_prd_alignment_partial",
+      "classification": "partial",
+      "evidence": {
+        "blocked_gap_count": 2,
+        "closed_gap_count": 3,
+        "disallowed_claim_count": 8,
+        "honest_verdict": "complete: PRD evidence table emitted with 5 closed, 4 partial, 2 blocked, and 0 missing-input rows",
+        "partial_gap_count": 4
+      },
+      "headline_ready": false,
+      "lane": "prd_evidence_table",
+      "source_artifact": "results/experiment_5400_evidence_table_prd_gap_analysis_v491.json"
+    }
+  ]
+}
