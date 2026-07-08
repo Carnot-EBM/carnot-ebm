@@ -1,0 +1,895 @@
+{
+  "deterministic_solver_authority": true,
+  "evaluated_rows": [
+    {
+      "decision_reasons": [
+        "solver:passed"
+      ],
+      "deterministic_decision": "accepted",
+      "expected_truth": "valid",
+      "final_decision": "accepted",
+      "fixture_family": "valid_update",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:replace_filter",
+          "usesPart",
+          "part:filter-f9"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:valid:part",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for valid_update",
+        "recommended_exact_verification": false,
+        "shacl_residual": 0.0,
+        "solver_residual": 0.0,
+        "total": 0.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "accepted",
+        "passed": true,
+        "reasons": [
+          "solver:passed"
+        ]
+      },
+      "tool_output_evidence": [
+        "toolout:inventory-f9"
+      ]
+    },
+    {
+      "decision_reasons": [
+        "solver:passed"
+      ],
+      "deterministic_decision": "accepted",
+      "expected_truth": "valid",
+      "final_decision": "accepted",
+      "fixture_family": "valid_update",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:drain",
+          "hasStatus",
+          "status:drained"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:valid:drained",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for valid_update",
+        "recommended_exact_verification": false,
+        "shacl_residual": 0.0,
+        "solver_residual": 0.0,
+        "total": 0.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "accepted",
+        "passed": true,
+        "reasons": [
+          "solver:passed"
+        ]
+      },
+      "tool_output_evidence": [
+        "toolout:valve-closed"
+      ]
+    },
+    {
+      "decision_reasons": [
+        "solver:passed"
+      ],
+      "deterministic_decision": "accepted",
+      "expected_truth": "valid",
+      "final_decision": "accepted",
+      "fixture_family": "valid_update",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:refill",
+          "hasStatus",
+          "status:refilled"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:valid:refilled",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for valid_update",
+        "recommended_exact_verification": false,
+        "shacl_residual": 0.0,
+        "solver_residual": 0.0,
+        "total": 0.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "accepted",
+        "passed": true,
+        "reasons": [
+          "solver:passed"
+        ]
+      },
+      "tool_output_evidence": [
+        "toolout:pressure-pass"
+      ]
+    },
+    {
+      "decision_reasons": [
+        "shacl:invalid"
+      ],
+      "deterministic_decision": "rejected",
+      "expected_truth": "false",
+      "final_decision": "rejected",
+      "fixture_family": "false_triple_update",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:replace_filter",
+          "usesPart",
+          "tech:anika"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:false:range",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [
+          "range:usesPart:tech:anika"
+        ],
+        "passed": false,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for false_triple_update",
+        "recommended_exact_verification": true,
+        "shacl_residual": 1.0,
+        "solver_residual": 1.0,
+        "total": 2.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "rejected",
+        "passed": false,
+        "reasons": [
+          "shacl:invalid"
+        ]
+      },
+      "tool_output_evidence": [
+        "toolout:inventory-f9"
+      ]
+    },
+    {
+      "decision_reasons": [
+        "shacl:invalid"
+      ],
+      "deterministic_decision": "rejected",
+      "expected_truth": "false",
+      "final_decision": "rejected",
+      "fixture_family": "false_triple_update",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "asset:pump-a",
+          "nextStep",
+          "step:refill"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:false:domain",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [
+          "domain:asset:pump-a:nextStep"
+        ],
+        "passed": false,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for false_triple_update",
+        "recommended_exact_verification": true,
+        "shacl_residual": 1.0,
+        "solver_residual": 1.0,
+        "total": 2.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "rejected",
+        "passed": false,
+        "reasons": [
+          "shacl:invalid"
+        ]
+      },
+      "tool_output_evidence": []
+    },
+    {
+      "decision_reasons": [
+        "solver:pressure_pass_evidence_missing"
+      ],
+      "deterministic_decision": "rejected",
+      "expected_truth": "false",
+      "final_decision": "rejected",
+      "fixture_family": "false_triple_update",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:release",
+          "hasStatus",
+          "status:released"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:false:evidence",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for false_triple_update",
+        "recommended_exact_verification": true,
+        "shacl_residual": 0.0,
+        "solver_residual": 1.0,
+        "total": 1.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "rejected",
+        "passed": false,
+        "reasons": [
+          "solver:pressure_pass_evidence_missing"
+        ]
+      },
+      "tool_output_evidence": [
+        "toolout:pressure-fail"
+      ]
+    },
+    {
+      "decision_reasons": [
+        "solver:stale_relation"
+      ],
+      "deterministic_decision": "rejected",
+      "expected_truth": "false",
+      "final_decision": "rejected",
+      "fixture_family": "stale_relation_update",
+      "observed_at": "2026-07-07T10:00:00Z",
+      "proposed_triples": [
+        [
+          "step:pressure_test",
+          "hasStatus",
+          "status:pressure_failed"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:stale:pressure",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for stale_relation_update",
+        "recommended_exact_verification": true,
+        "shacl_residual": 0.0,
+        "solver_residual": 1.0,
+        "total": 1.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "rejected",
+        "passed": false,
+        "reasons": [
+          "solver:stale_relation"
+        ]
+      },
+      "tool_output_evidence": [
+        "toolout:pressure-fail"
+      ]
+    },
+    {
+      "decision_reasons": [
+        "unsupported:shacl"
+      ],
+      "deterministic_decision": "abstained",
+      "expected_truth": "unsupported",
+      "final_decision": "abstained",
+      "fixture_family": "unsupported_memory_write",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:drain",
+          "optimizesVibes",
+          "zone:lab-a"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:unsupported:predicate",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [
+          "unsupported_predicate:optimizesVibes"
+        ],
+        "passed": false,
+        "unsupported": true
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for unsupported_memory_write",
+        "recommended_exact_verification": true,
+        "shacl_residual": 1.0,
+        "solver_residual": 1.0,
+        "total": 2.5,
+        "unsupported_residual": 0.5
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "abstained",
+        "passed": false,
+        "reasons": [
+          "unsupported:shacl"
+        ]
+      },
+      "tool_output_evidence": []
+    },
+    {
+      "decision_reasons": [
+        "unsupported:shacl"
+      ],
+      "deterministic_decision": "abstained",
+      "expected_truth": "unsupported",
+      "final_decision": "abstained",
+      "fixture_family": "unsupported_memory_write",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:refill",
+          "requiresToolOutput",
+          "toolout:unseen-humidity"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:unsupported:entity",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [
+          "unknown_entity:step:refill->toolout:unseen-humidity"
+        ],
+        "passed": false,
+        "unsupported": true
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for unsupported_memory_write",
+        "recommended_exact_verification": true,
+        "shacl_residual": 1.0,
+        "solver_residual": 1.0,
+        "total": 2.5,
+        "unsupported_residual": 0.5
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "abstained",
+        "passed": false,
+        "reasons": [
+          "unsupported:shacl"
+        ]
+      },
+      "tool_output_evidence": []
+    },
+    {
+      "decision_reasons": [
+        "solver:part_evidence_missing",
+        "unsupported:missing_evidence"
+      ],
+      "deterministic_decision": "abstained",
+      "expected_truth": "unsupported",
+      "final_decision": "abstained",
+      "fixture_family": "unsupported_memory_write",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [
+        [
+          "step:release",
+          "usesPart",
+          "part:seal-s2"
+        ]
+      ],
+      "retrieved_plan": [],
+      "row_id": "row:unsupported:evidence",
+      "row_type": "triple_update",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for unsupported_memory_write",
+        "recommended_exact_verification": true,
+        "shacl_residual": 0.0,
+        "solver_residual": 2.0,
+        "total": 2.5,
+        "unsupported_residual": 0.5
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "abstained",
+        "passed": false,
+        "reasons": [
+          "solver:part_evidence_missing",
+          "unsupported:missing_evidence"
+        ]
+      },
+      "tool_output_evidence": []
+    },
+    {
+      "decision_reasons": [
+        "solver:precedence:step:drain->step:replace_filter"
+      ],
+      "deterministic_decision": "rejected",
+      "expected_truth": "false",
+      "final_decision": "rejected",
+      "fixture_family": "infeasible_retrieval",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [],
+      "retrieved_plan": [
+        "step:inspect",
+        "step:replace_filter",
+        "step:drain",
+        "step:refill",
+        "step:pressure_test",
+        "step:release"
+      ],
+      "row_id": "row:retrieval:infeasible",
+      "row_type": "retrieval",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for infeasible_retrieval",
+        "recommended_exact_verification": true,
+        "shacl_residual": 0.0,
+        "solver_residual": 1.0,
+        "total": 1.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "rejected",
+        "passed": false,
+        "reasons": [
+          "solver:precedence:step:drain->step:replace_filter"
+        ]
+      },
+      "tool_output_evidence": []
+    },
+    {
+      "decision_reasons": [
+        "solver:passed"
+      ],
+      "deterministic_decision": "accepted",
+      "expected_truth": "valid",
+      "final_decision": "accepted",
+      "fixture_family": "valid_update",
+      "observed_at": "2026-07-08T11:00:00Z",
+      "proposed_triples": [],
+      "retrieved_plan": [
+        "step:inspect",
+        "step:drain",
+        "step:replace_filter",
+        "step:refill",
+        "step:pressure_test",
+        "step:release"
+      ],
+      "row_id": "row:retrieval:valid",
+      "row_type": "retrieval",
+      "shacl": {
+        "issues": [],
+        "passed": true,
+        "unsupported": false
+      },
+      "soft_logic": {
+        "advisory_only": true,
+        "exact_verification_routed": true,
+        "note": "advisory conflict score for valid_update",
+        "recommended_exact_verification": false,
+        "shacl_residual": 0.0,
+        "solver_residual": 0.0,
+        "total": 0.0,
+        "unsupported_residual": 0.0
+      },
+      "soft_logic_overrode_solver": false,
+      "solver": {
+        "decision": "accepted",
+        "passed": true,
+        "reasons": [
+          "solver:passed"
+        ]
+      },
+      "tool_output_evidence": []
+    }
+  ],
+  "experiment_id": "experiment_5432_ontology_softlogic_constraint_memory_v494",
+  "false_triple_rejection_rate": 1.0,
+  "field_principles": {
+    "deterministic_solver_authority": "no learned oracle.",
+    "false_triple_rejection_rate": "safety guard.",
+    "honest_verdict": "terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "no hidden live model inference.",
+    "ontology_constraint_memory_ready": "downstream gate.",
+    "ontology_fixture_count": "coverage.",
+    "shacl_validation_pass_rate": "structural validity.",
+    "soft_logic_overrode_solver": "final authority boundary.",
+    "soft_logic_residuals_recorded": "advisory conflict signal.",
+    "triple_count": "graph scale.",
+    "unsupported_update_abstention_rate": "missing-evidence guard.",
+    "valid_update_preservation_rate": "no over-rejection."
+  },
+  "final_triples": [
+    [
+      "asset:pump-a",
+      "locatedIn",
+      "zone:lab-a"
+    ],
+    [
+      "asset:pump-a",
+      "rdf:type",
+      "Asset"
+    ],
+    [
+      "part:filter-f9",
+      "rdf:type",
+      "Part"
+    ],
+    [
+      "part:seal-s2",
+      "rdf:type",
+      "Part"
+    ],
+    [
+      "status:drained",
+      "rdf:type",
+      "Status"
+    ],
+    [
+      "status:open",
+      "rdf:type",
+      "Status"
+    ],
+    [
+      "status:pressure_failed",
+      "rdf:type",
+      "Status"
+    ],
+    [
+      "status:pressure_passed",
+      "rdf:type",
+      "Status"
+    ],
+    [
+      "status:refilled",
+      "rdf:type",
+      "Status"
+    ],
+    [
+      "status:released",
+      "rdf:type",
+      "Status"
+    ],
+    [
+      "step:drain",
+      "hasStatus",
+      "status:drained"
+    ],
+    [
+      "step:drain",
+      "nextStep",
+      "step:replace_filter"
+    ],
+    [
+      "step:drain",
+      "rdf:type",
+      "Step"
+    ],
+    [
+      "step:drain",
+      "requiresToolOutput",
+      "toolout:valve-closed"
+    ],
+    [
+      "step:inspect",
+      "nextStep",
+      "step:drain"
+    ],
+    [
+      "step:inspect",
+      "rdf:type",
+      "Step"
+    ],
+    [
+      "step:pressure_test",
+      "hasStatus",
+      "status:pressure_passed"
+    ],
+    [
+      "step:pressure_test",
+      "nextStep",
+      "step:release"
+    ],
+    [
+      "step:pressure_test",
+      "rdf:type",
+      "Step"
+    ],
+    [
+      "step:pressure_test",
+      "requiresToolOutput",
+      "toolout:pressure-pass"
+    ],
+    [
+      "step:refill",
+      "hasStatus",
+      "status:refilled"
+    ],
+    [
+      "step:refill",
+      "nextStep",
+      "step:pressure_test"
+    ],
+    [
+      "step:refill",
+      "rdf:type",
+      "Step"
+    ],
+    [
+      "step:release",
+      "rdf:type",
+      "Step"
+    ],
+    [
+      "step:release",
+      "requiresToolOutput",
+      "toolout:pressure-pass"
+    ],
+    [
+      "step:replace_filter",
+      "nextStep",
+      "step:refill"
+    ],
+    [
+      "step:replace_filter",
+      "rdf:type",
+      "Step"
+    ],
+    [
+      "step:replace_filter",
+      "requiresToolOutput",
+      "toolout:inventory-f9"
+    ],
+    [
+      "step:replace_filter",
+      "usesPart",
+      "part:filter-f9"
+    ],
+    [
+      "tech:anika",
+      "rdf:type",
+      "Technician"
+    ],
+    [
+      "toolout:inventory-f9",
+      "rdf:type",
+      "ToolOutput"
+    ],
+    [
+      "toolout:inventory-f9",
+      "reportsAvailability",
+      "part:filter-f9"
+    ],
+    [
+      "toolout:pressure-fail",
+      "rdf:type",
+      "ToolOutput"
+    ],
+    [
+      "toolout:pressure-fail",
+      "reportsPressureStatus",
+      "status:pressure_failed"
+    ],
+    [
+      "toolout:pressure-pass",
+      "rdf:type",
+      "ToolOutput"
+    ],
+    [
+      "toolout:pressure-pass",
+      "reportsPressureStatus",
+      "status:pressure_passed"
+    ],
+    [
+      "toolout:valve-closed",
+      "observesValveState",
+      "valve:closed"
+    ],
+    [
+      "toolout:valve-closed",
+      "rdf:type",
+      "ToolOutput"
+    ],
+    [
+      "valve:closed",
+      "rdf:type",
+      "ValveState"
+    ],
+    [
+      "valve:open",
+      "rdf:type",
+      "ValveState"
+    ],
+    [
+      "workorder:wo-17",
+      "assignedTechnician",
+      "tech:anika"
+    ],
+    [
+      "workorder:wo-17",
+      "hasStatus",
+      "status:open"
+    ],
+    [
+      "workorder:wo-17",
+      "hasStep",
+      "step:drain"
+    ],
+    [
+      "workorder:wo-17",
+      "hasStep",
+      "step:inspect"
+    ],
+    [
+      "workorder:wo-17",
+      "hasStep",
+      "step:pressure_test"
+    ],
+    [
+      "workorder:wo-17",
+      "hasStep",
+      "step:refill"
+    ],
+    [
+      "workorder:wo-17",
+      "hasStep",
+      "step:release"
+    ],
+    [
+      "workorder:wo-17",
+      "hasStep",
+      "step:replace_filter"
+    ],
+    [
+      "workorder:wo-17",
+      "rdf:type",
+      "WorkOrder"
+    ],
+    [
+      "workorder:wo-17",
+      "targetsAsset",
+      "asset:pump-a"
+    ],
+    [
+      "zone:lab-a",
+      "rdf:type",
+      "Zone"
+    ]
+  ],
+  "fixture_family_counts": {
+    "false_triple_update": 3,
+    "infeasible_retrieval": 1,
+    "stale_relation_update": 1,
+    "unsupported_memory_write": 3,
+    "valid_update": 4
+  },
+  "honest_verdict": "complete: ontology constraint memory fixture verified deterministically",
+  "inference_substrate": "deterministic_ontology_verifier",
+  "methodology_note": "Bounded ontology memory fixture over a finite maintenance workflow. SHACL-style validation and deterministic planner checks decide all memory outcomes; soft-logic residuals are advisory routing scores.",
+  "milestone": "2026.07.494",
+  "ontology_constraint_memory_ready": true,
+  "ontology_fixture_count": 12,
+  "random_seed": 5432,
+  "readiness_checks": {
+    "all_passed": true,
+    "checks": {
+      "deterministic_authority": true,
+      "false_triples_rejected": true,
+      "fixture_families_covered": true,
+      "soft_residuals_advisory": true,
+      "tests_recorded": true,
+      "unsupported_updates_abstained": true,
+      "valid_updates_preserved": true
+    },
+    "failed_checks": []
+  },
+  "reproducibility_checksum": "ded146f100221a5eb1f4e5719d780938995bdd478feefc1c1dce0cf582e17071",
+  "research_conductor_modified": false,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5432.ontology_softlogic_constraint_memory.v494",
+  "shacl_validation_pass_rate": 0.666667,
+  "soft_logic_overrode_solver": false,
+  "soft_logic_residuals_recorded": true,
+  "source_file_checksums": {
+    "module": "1dbdd92ecb3e1921f47aeb72c6986d4ef56bdd9ff660e5616559ffa646844f1d",
+    "spec": "4d8240dccd9b6aa1ffcbc6cd336357182fba08e3b7e3bfb7f980c8e7bf773631"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5432_ontology_softlogic_constraint_memory_v494.py",
+    "spec": "openspec/capabilities/constraint-store/spec.md"
+  },
+  "spec_refs": [
+    "REQ-STORE-5432",
+    "SCENARIO-STORE-5432"
+  ],
+  "status": "complete",
+  "task_id": "exp5432-v494-ontology-softlogic-constraint-memory",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5432_ontology_softlogic_constraint_memory_v494.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5432_ontology_softlogic_constraint_memory_v494.py -m pytest tests/python/test_experiment_5432_ontology_softlogic_constraint_memory_v494.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "triple_count": 51,
+  "unsupported_update_abstention_rate": 1.0,
+  "valid_update_preservation_rate": 1.0
+}
