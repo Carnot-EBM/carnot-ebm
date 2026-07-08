@@ -19523,3 +19523,121 @@ the active routing sidecar
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5409 | Implemented (`python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py`, `results/experiment_5409_uncertainty_gated_promotion_v492.json`) | Implemented (`tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py`) |
+
+---
+
+## REQ-LEARN-5421: Evidence-Reliance Drift CSL Diagnostic v493
+
+Experiment 5421 SHALL extend the Exp5408 resource-accounted CSL controller and
+the Exp5409 uncertainty-gated promotion sidecar with paired before/after
+episodes that expose hidden forgetting. The diagnostic SHALL construct replay
+pairs where answer accuracy can remain stable while the evidence relied on by
+the controller changes across grounding source, verifier dependency, constraint
+evidence, and learned-memory influence. The controller SHALL treat deterministic
+verifiers and raw retained episodes as authoritative, and SHALL NOT load, fine-tune, write, or mutate model weights or adapter weights.
+
+The diagnostic SHALL inject stale, poisoned, underspecified, and
+distribution-shift evidence episodes. The deterministic verifiers remain
+authoritative. When evidence reliance is uncertain, the controller SHALL
+abstain, route to deterministic verification, or retain the
+episode as non-promoted evidence. It SHALL measure hidden forgetting as
+evidence-reliance drift even when before/after answer accuracy is unchanged,
+SHALL retain all raw episode receipts, and SHALL verify rollback restores the
+pre-learning routing table after a deliberately injected bad promotion.
+
+The inference substrate SHALL be `deterministic_self_learning_controller`,
+because the experiment is a deterministic controller replay over retained
+episodes, promotion candidates, and verifier labels, not hidden live model
+inference.
+
+The result artifact SHALL be
+`results/experiment_5421_evidence_reliance_csl_v493.json` and SHALL include
+`episode_count`, `raw_episodes_retained`, `no_weight_mutation`,
+`rollback_verified`, `quality_preserved`, `resource_delta`,
+`verifier_cost_delta`, `reliance_drift_metric`,
+`hidden_forgetting_detected`, `stale_poison_deflection_rate`,
+`evidence_reliance_csl_ready`, `inference_substrate`, and `honest_verdict`.
+The artifact SHALL also include field principles documenting those required
+fields.
+
+The required field principles SHALL be:
+
+- `episode_count`: Scale and coverage.
+- `raw_episodes_retained`: Auditability.
+- `no_weight_mutation`: FR-11 boundary.
+- `rollback_verified`: Safety recovery.
+- `quality_preserved`: No learning regression.
+- `resource_delta`: Resource-aware learning.
+- `verifier_cost_delta`: Verifier economy.
+- `reliance_drift_metric`: Hidden-forgetting signal.
+- `hidden_forgetting_detected`: Explicit drift classification.
+- `stale_poison_deflection_rate`: Unsafe memory guard.
+- `evidence_reliance_csl_ready`: Downstream gate.
+- `inference_substrate`: No hidden live model inference.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5421 Sub-requirements
+
+- REQ-LEARN-5421-1: The diagnostic SHALL read Exp5408 and Exp5409 evidence and
+  SHALL reuse their resource-accounted routing, raw retained episodes,
+  promotion candidates, verifier-call accounting, and no-weight-mutation
+  receipts as source evidence.
+- REQ-LEARN-5421-2: Paired episodes SHALL record before/after routing
+  decisions, learned-memory influence shares, raw episode IDs, resource cost,
+  verifier calls, grounding source, verifier dependency, constraint evidence,
+  evidence-reliance labels, and answer accuracy.
+- REQ-LEARN-5421-3: Episode families SHALL include clean, stale, poisoned,
+  underspecified, and distribution-shift cases. Stale, poisoned,
+  underspecified, and distribution-shift cases SHALL be abstained, routed to
+  deterministic verification, or retained as non-promoted evidence when
+  reliance is uncertain.
+- REQ-LEARN-5421-4: Hidden forgetting SHALL be detected when answer accuracy is
+  preserved but evidence-reliance drift crosses the diagnostic threshold.
+- REQ-LEARN-5421-5: Rollback SHALL restore the prior routing table after a bad
+  promotion injection, and no model or adapter weight mutation SHALL be
+  reported.
+- REQ-LEARN-5421-6: `evidence_reliance_csl_ready` SHALL be true only when raw
+  episodes are retained, quality is preserved, hidden forgetting is measured
+  and classified, stale/poison controls are deflected, rollback succeeds,
+  resource and verifier deltas are numeric, tests are recorded, inference
+  substrate is `deterministic_self_learning_controller`, and no model or
+  adapter weights mutate.
+
+### SCENARIO-LEARN-5421-DRIFT: Stable Accuracy Can Hide Evidence Drift
+
+**Given** paired before/after episodes with unchanged correct answers
+**When** learned-memory reliance increases while grounding source, verifier
+dependency, or constraint evidence changes
+**Then** the diagnostic reports a positive `reliance_drift_metric`
+**And** `hidden_forgetting_detected` is true once the drift threshold is crossed.
+
+### SCENARIO-LEARN-5421-RAW-RETENTION: Raw Episodes Remain Auditable
+
+**Given** clean, stale, poisoned, underspecified, and distribution-shift
+episodes
+**When** the diagnostic builds paired replay rows
+**Then** every row retains raw episode IDs and raw payload checksums
+**And** rejected or uncertain rows remain retained as non-promoted evidence.
+
+### SCENARIO-LEARN-5421-SAFETY: Unsafe Reliance Is Deflected
+
+**Given** stale, poisoned, underspecified, or distribution-shift evidence
+**When** post-learning reliance is uncertain
+**Then** the controller either abstains, routes to deterministic verification,
+or retains the evidence without promotion
+**And** stale and poisoned rows have zero active learned-memory routing
+influence.
+
+### SCENARIO-LEARN-5421-ROLLBACK: Bad Reliance Promotion Is Reversible
+
+**Given** a poisoned learned-memory fragment is deliberately injected into the
+active routing table
+**When** rollback runs
+**Then** the pre-learning routing table is restored exactly
+**And** the raw audit row for the bad fragment remains retained.
+
+## Implementation Status (Exp 5421)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5421 | Implemented (`python/carnot/experiment_5421_evidence_reliance_csl_v493.py`, `results/experiment_5421_evidence_reliance_csl_v493.json`) | Implemented (`tests/python/test_experiment_5421_evidence_reliance_csl_v493.py`) |
