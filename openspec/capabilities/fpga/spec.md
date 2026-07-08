@@ -16834,6 +16834,114 @@ repeat counts, timing mean/median/p95/variance fields,
 
 ---
 
+### REQ-HW-5449
+
+**Title:** Exp5448-gated p-bit sparsity hardware timing receipts MUST compare timing only after workload and result hashes match
+
+**Description:**
+Experiment 5449 SHALL produce
+`results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json` as
+a hardware-continuity receipt for the Exp 5448 p-bit sparsity workload. The
+experiment SHALL first read
+`results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json` and
+confirm `pbit_assumption_bridge_ready=true`. If the gate is absent or false,
+the artifact SHALL fail closed with `gated_upstream_ready=false` and SHALL NOT
+claim hardware timing readiness.
+
+The workload SHALL be extracted from Exp 5448 and SHALL record the exact
+fixture subset, seeds, workload hash, and expected result hashes used for the
+receipt. The CPU receipt SHALL repeat the same deterministic workload and
+record `mean_s`, `median_s`, `variance_s2`, `min_s`, `max_s`, workload hash,
+and result hash. Reachable boards SHALL be probed only through safe existing
+interfaces: KV260 through SSH-only commands, PolarFire through SSH, and GateMate
+through non-destructive diagnostic/JTAG detection. KV260 checks MUST NOT
+inspect or require host `/dev/mmcblk*`, `/dev/disk`, or SD-card device nodes.
+If no board is reachable, the artifact SHALL emit `blocked_board_unreachable`
+while preserving CPU receipts.
+
+PolarFire and KV260 receipts, when reachable, SHALL run the same workload or a
+clearly labeled board-bound equivalent and record the command, board identity,
+workload hash, result hash, and timing distribution. GateMate SHALL remain diagnostic-only
+unless physical/JTAG execution evidence exists; a diagnostic receipt SHALL NOT
+be treated as workload execution. CPU and board timing SHALL be compared only
+after workload hashes and result hashes match. The artifact MUST set
+`hardware_speedup_claim=false` even when timing ratios are present.
+
+The artifact SHALL include top-level fields `preconditions_checked`,
+`gated_upstream_ready`, `workload_hash`, `cpu_result_hash`,
+`board_result_hashes`, `board_reachability`, `kv260_ssh_only_checked`,
+`timing_repeat_counts`, `timing_summary`,
+`hashes_match_before_timing_compare`, `hardware_speedup_claim`,
+`hardware_receipts_ready`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`cpu_and_reachable_board_timing_receipts`. `honest_verdict` SHALL start with
+`complete:` only when the upstream gate is true, CPU receipts are repeated, at
+least one reachable board has repeated matching workload/result hashes, and no
+speedup claim is made; otherwise it SHALL start with `blocked:`.
+
+Required field principles:
+
+- `preconditions_checked`: principle "hardware task must fail fast"
+- `gated_upstream_ready`: principle "structured gate provenance"
+- `workload_hash`: principle "matched workload"
+- `cpu_result_hash`: principle "correctness before timing"
+- `board_result_hashes`: principle "board correctness"
+- `board_reachability`: principle "hardware provenance"
+- `kv260_ssh_only_checked`: principle "no host SD-card anti-pattern"
+- `timing_repeat_counts`: principle "variance support"
+- `timing_summary`: principle "measured performance"
+- `hashes_match_before_timing_compare`: principle "no false speedup"
+- `hardware_speedup_claim`: principle "bounded claim"
+- `hardware_receipts_ready`: principle "capstone evidence"
+- `inference_substrate`: principle "explicit hardware substrate"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5449_gated_hardware_timing_sparsity_receipts_v495`
+  writes `results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5449` and
+  `SCENARIO-HW-5449`, `random_seed=5449`, `milestone="2026.07.495"`, and a
+  stable `reproducibility_checksum`.
+- `gated_upstream_ready=true` only when Exp 5448 reports
+  `pbit_assumption_bridge_ready=true`.
+- CPU timing repeats the extracted Exp 5448 p-bit sparsity workload and records
+  mean, median, variance, min, max, workload hash, and result hash.
+- Board timing repeats only on boards reachable through safe SSH/JTAG paths and
+  records command, board identity, workload hash, result hash, and timing
+  distribution.
+- `hashes_match_before_timing_compare=true` only when reachable board workload
+  and result hashes match the CPU receipt before any timing comparison.
+- `hardware_receipts_ready=false` and `honest_verdict` contains
+  `blocked_board_unreachable` when no board workload receipt is reachable.
+- `hardware_speedup_claim=false` in every valid artifact.
+- KV260 command receipts use only SSH and contain no host block-device or
+  SD-card markers; GateMate remains diagnostic-only without execution evidence.
+
+**Implementation status:** Planned (Exp 5449)
+
+---
+
+### SCENARIO-HW-5449
+
+**Scenario:** Exp 5449 records Exp5448-gated CPU and reachable-board timing receipts without a speedup claim.
+
+**Given:** Exp 5448 reports `pbit_assumption_bridge_ready=true` and exposes a
+deterministic p-bit sparsity workload with exact expected results,
+**When:** Experiment 5449 repeats that workload on CPU, probes KV260 through
+SSH-only reachability, probes PolarFire through SSH, and records GateMate as
+diagnostic-only unless physical execution evidence exists,
+**Then:** It writes
+`results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json`
+with the extracted workload hash, CPU result hash, per-board result hashes,
+board reachability, timing repeat counts, timing summaries, hash-before-timing
+comparison gate, `hardware_speedup_claim=false`,
+`inference_substrate="cpu_and_reachable_board_timing_receipts"`, and an
+`honest_verdict` beginning with `complete:` or `blocked:`.
+
+**Implementation status:** Planned (Exp 5449)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
