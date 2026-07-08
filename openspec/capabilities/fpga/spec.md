@@ -16714,6 +16714,126 @@ distributions, measurement-access metadata, `hardware_speedup_claim=false`,
 
 ---
 
+### REQ-HW-5434
+
+**Title:** gated p-bit active-constraint timing variance receipts MUST compare only hash-matched CPU and PolarFire runs
+
+**Description:**
+Experiment 5434 MUST produce
+`results/experiment_5434_pbit_polarfire_timing_variance_v494.json` as a
+variance-focused timing receipt for one deterministic p-bit/active-constraint
+workload selected from Exp 5433 active-constraint diversity evidence or its
+source rows. The experiment SHALL first verify that
+`results/experiment_5433_active_constraint_diversity_lns_v494.json` reports
+`active_constraint_diversity_ready=true`; if the gate is missing, the artifact
+SHALL block rather than invent a hardware timing result.
+
+The selected workload SHALL have exact solver validity, a stable
+`workload_hash`, a seed, and a deterministic `result_hash`. The CPU timing
+receipt SHALL repeat the exact workload at least ten times when practical and
+record seed, workload hash, result hash, mean, median, p95, and variance. If
+PolarFire is reachable over authenticated SSH, the board receipt SHALL run the
+same workload hash with a comparable repeat count and record the same timing
+distribution fields and result hash. If PolarFire is unreachable, the artifact
+SHALL emit blocked hardware precondition fields and SHALL NOT fabricate board
+timing or mark measurement access complete.
+
+Hardware checks SHALL use only paths documented in
+`research-hardware-wishlist.md`: PolarFire over authenticated SSH, KV260 over
+SSH-only reachability, and GateMate non-destructive DirtyJTAG diagnostics.
+KV260 checks, if attempted, MUST NOT use host SD-card, `/dev/mmcblk*`,
+`/dev/disk`, or block-device probes. GateMate diagnostics MUST be physical/JTAG
+honesty checks only and MUST remain non-destructive.
+
+The artifact SHALL compare CPU and board timing only when
+`same_workload_hash_match=true` and `same_result_hash_match=true`. When the
+comparison is valid, the artifact MAY record `board_cpu_ratio` as a timing
+distribution fact, including ratios greater than one when the board is slower.
+`hardware_speedup_claim` MUST be false in every valid Exp 5434 artifact.
+
+The artifact SHALL include top-level fields `preconditions_checked`,
+`gated_upstream_ready`, `workload_hash`, `cpu_repeat_count`,
+`board_repeat_count`, `cpu_result_hash`, `board_result_hash`,
+`same_workload_hash_match`, `same_result_hash_match`, `cpu_timing_variance`,
+`board_timing_variance`, `polarfire_reachable`, `kv260_ssh_checked`,
+`gatemate_diagnostic_checked`, `measurement_access_complete`,
+`hardware_speedup_claim`, `timing_variance_receipts_ready`,
+`inference_substrate`, and `honest_verdict`. `inference_substrate` SHALL equal
+`hardware_timing_with_cpu_reference`. `honest_verdict` SHALL start with
+`complete:` only when the gated workload, repeated CPU timing, repeated board
+timing, workload hash, and result hash are all valid; otherwise it SHALL start
+with `blocked:`.
+
+Required field principles:
+
+- `preconditions_checked`: principle "hardware task must fail fast"
+- `gated_upstream_ready`: principle "structured gate provenance"
+- `workload_hash`: principle "same-workload comparison"
+- `cpu_repeat_count`: principle "timing reliability"
+- `board_repeat_count`: principle "board reliability"
+- `cpu_result_hash`: principle "correctness comparison"
+- `board_result_hash`: principle "correctness comparison"
+- `same_workload_hash_match`: principle "no apples-to-oranges timing"
+- `same_result_hash_match`: principle "no invalid timing comparison"
+- `cpu_timing_variance`: principle "timing distribution"
+- `board_timing_variance`: principle "timing distribution"
+- `polarfire_reachable`: principle "board availability"
+- `kv260_ssh_checked`: principle "SSH-only discipline"
+- `gatemate_diagnostic_checked`: principle "physical/JTAG honesty"
+- `measurement_access_complete`: principle "physical evidence boundary"
+- `hardware_speedup_claim`: principle "no unsupported speedup"
+- `timing_variance_receipts_ready`: principle "capstone evidence"
+- `inference_substrate`: principle "explicit substrate"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5434_pbit_polarfire_timing_variance_v494 --date 20260708`
+  writes `results/experiment_5434_pbit_polarfire_timing_variance_v494.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5434` and
+  `SCENARIO-HW-5434`, `random_seed=5434`, `milestone="2026.07.494"`, and a
+  stable `reproducibility_checksum`.
+- `gated_upstream_ready=true` only when Exp 5433 reports
+  `active_constraint_diversity_ready=true`.
+- The CPU receipt repeats the selected deterministic p-bit/active-constraint
+  workload at least ten times and records mean, median, p95, and variance.
+- The board receipt repeats the same workload hash with a comparable repeat
+  count only when PolarFire is reachable; otherwise blocked hardware
+  precondition fields explain the missing board timing.
+- `timing_variance_receipts_ready=true` only when workload hashes and result
+  hashes match and both repeat-count thresholds are met.
+- `hardware_speedup_claim=false` in every valid artifact, even when a
+  `board_cpu_ratio` is recorded.
+- KV260 command receipts use only SSH reachability and contain no host
+  block-device or SD-card markers. GateMate command receipts are non-destructive
+  diagnostics only.
+
+**Implementation status:** Planned (Exp 5434)
+
+---
+
+### SCENARIO-HW-5434
+
+**Scenario:** Exp 5434 writes gated timing variance receipts without a speedup claim.
+
+**Given:** Exp 5433 reports `active_constraint_diversity_ready=true` and exposes
+a deterministic active-constraint workload with exact solver validity,
+**When:** Experiment 5434 repeats that workload at least ten times on CPU,
+checks KV260 through SSH-only reachability, checks GateMate through
+non-destructive diagnostics, and runs the same workload hash on PolarFire only
+when authenticated SSH is reachable,
+**Then:** It writes
+`results/experiment_5434_pbit_polarfire_timing_variance_v494.json` with
+gated-upstream provenance, matching workload/result hash gates, CPU and board
+repeat counts, timing mean/median/p95/variance fields,
+`measurement_access_complete` only for complete physical timing evidence,
+`hardware_speedup_claim=false`,
+`inference_substrate="hardware_timing_with_cpu_reference"`, and an
+`honest_verdict` beginning with `complete:` or `blocked:`.
+
+**Implementation status:** Planned (Exp 5434)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
