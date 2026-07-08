@@ -37714,6 +37714,95 @@ unchanged, and does not claim deduplication against planner work.
 |---|---|---|
 | REQ-REPORT-5416 | Planned (`python/carnot/experiment_5416_source_delta_v493.py`, `results/experiment_5416_source_delta_v493.json`) | Planned (`tests/python/test_experiment_5416_source_delta_v493.py`) |
 
+### REQ-REPORT-5429: V494 Execution-Time Source Delta Refresh
+
+The Exp5429 workflow SHALL search 2025-2026 arXiv and secondary sources for
+actionable Carnot deltas after the V494 planner refresh and write
+`results/experiment_5429_source_delta_v494.json`. It SHALL read
+`CLAUDE.md`, `research-program.md`, `research-references.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, and `ops/changelog.md`. It SHALL check arXiv
+topics covering energy-based verification and reasoning, neural constraint
+satisfaction, Ising applications in ML, hallucination mitigation,
+Kolmogorov-Arnold Networks, energy-guided decoding, hardware-accelerated
+sampling, and continual or online learning for constraint systems. It SHALL
+also check OpenReview, Extropic writing, Semantic Scholar routes for EBT `2507.02092`
+and ARM-EBM `2512.15605`, HuggingFace Papers, GitHub, Logical Intelligence
+public pages, V489/V490/V491/V492/V493/V494 duplicate history, and
+`ops/exclusion_manifest.yaml`.
+
+The workflow SHALL append a short `### V494 Execution Refresh - 20260708`
+block to `research-references.md` only when the sweep finds genuinely new,
+non-duplicate, actionable findings with concrete Carnot-local hooks. If no
+new actionable deltas are found, it SHALL leave `research-references.md`
+unchanged and explain the no-op in the JSON artifact. It SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`. It SHALL classify retired-scope, non-local hardware,
+external generated-text scorer, token/internal-feature-without-backend, broad fine-tuning,
+and duplicate ARC lane items as watch-only or excluded rather than reopening them.
+
+The artifact SHALL include required principle-annotated fields
+`sources_checked`, `new_references_added`, `duplicates_suppressed`,
+`retired_scopes_reopened`, `research_references_updated`,
+`prior_refresh_marker_found`, `inference_substrate`, and `honest_verdict`.
+It SHOULD also include `experiment_id`, `task_id`, `milestone`, `status`,
+`search_date`, `new_actionable_findings_count`, `searched_source_details`,
+`watch_only_or_excluded`, `spec_refs`, `field_principles`,
+`methodology_duration_s`, `tests_run`, `no_deep_research_used`,
+`research_conductor_modified`, `ops_docs_modified`, `traceability_modified`,
+and `roadmap_files_modified` so the receipt remains auditable.
+
+Required field principles:
+
+- `sources_checked`: principle "reproducible literature sweep"
+- `new_references_added`: principle "current-knowledge delta"
+- `duplicates_suppressed`: principle "no reference churn"
+- `retired_scopes_reopened`: principle "exclusion-manifest compliance"
+- `research_references_updated`: principle "doc alignment"
+- `prior_refresh_marker_found`: principle "dedupe against planner work"
+- `inference_substrate`: principle "source aggregation only"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+#### SCENARIO-REPORT-5429-APPEND-DELTAS: New Network Findings Append A V494 Refresh
+
+**Given** the V494 planner refresh marker exists in `research-references.md`
+**And** the focused source sweep finds source-verified actionable deltas not
+already present in V489-V494 history
+**And** those deltas do not reopen retired scopes
+**When** the Exp5429 workflow runs
+**Then** it appends one `### V494 Execution Refresh - 20260708` section to
+`research-references.md`, writes `results/experiment_5429_source_delta_v494.json`,
+records all required source families, records
+`prior_refresh_marker_found=true`, records
+`inference_substrate=aggregation_from_upstream_artifacts`, records
+`retired_scopes_reopened=false`, and starts `honest_verdict` with `complete:`.
+
+#### SCENARIO-REPORT-5429-NO-NEW-DELTA: No New Findings Leave References Unchanged
+
+**Given** the V494 planner refresh marker exists in `research-references.md`
+**And** the focused source sweep finds no source-verified actionable deltas
+after deduplication against V489-V494 history
+**When** the Exp5429 workflow runs
+**Then** it writes `results/experiment_5429_source_delta_v494.json`, records
+`new_references_added=[]`, records `research_references_updated=false`,
+records the duplicate and watch-only classifications, and leaves
+`research-references.md` unchanged.
+
+#### SCENARIO-REPORT-5429-BLOCKED-MISSING-PLANNER: Missing Planner Marker Fails Closed
+
+**Given** `research-references.md` does not contain the V494 planner refresh
+marker
+**When** the Exp5429 workflow runs
+**Then** it emits a `blocked:` verdict, records
+`prior_refresh_marker_found=false`, leaves `research-references.md`
+unchanged, and does not claim deduplication against planner work.
+
+## Implementation Status (REQ-REPORT-5429)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5429 | Planned (`python/carnot/experiment_5429_source_delta_v494.py`, `results/experiment_5429_source_delta_v494.json`) | Planned (`tests/python/test_experiment_5429_source_delta_v494.py`) |
+
 ### REQ-REPORT-5426: V493 PRD Gap And Agent-Failure Evidence Table
 
 The Exp5426 workflow SHALL read only the available `.493` upstream artifacts
