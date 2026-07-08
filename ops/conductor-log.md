@@ -10538,3 +10538,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 09:43 UTC | Gated uncertainty-aware memory and world-model pro | OK | 90 passed, 1 warning in 11.96s |
 | 2026-07-08 09:59 UTC | ARC live-path level-up attempt with trajectory/fro | OK | 88 passed, 1 warning in 13.98s |
 | 2026-07-08 10:17 UTC | Hardware repeatability restoration across availabl | OK | 89 passed, 1 warning in 12.13s |
+| 2026-07-08 10:29 UTC | KAN active-constraint counterexample certificate e | OK | 88 passed, 1 warning in 11.11s |
