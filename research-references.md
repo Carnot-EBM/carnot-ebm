@@ -28017,3 +28017,63 @@ Execution-time sweep after the `.491` planner refresh checked arXiv, OpenReview,
 - **Watch-only context:** RefChecker, VeriChat, OpenSIR, QAOA hardware-noise diagnostics, Extropic writing, and Logical Intelligence public pages were checked but not promoted because they are ops-only, non-local, training-scope, or hardware-claim context rather than immediate `.491` execution deltas.
 
 <!-- V491-EXECUTION-REFRESH-2026-07-08-END -->
+
+<!-- V492-PLANNER-REFRESH-2026-07-08-START -->
+### V492 Planner Refresh - 2026-07-08
+
+Planner sweep after the 2026.07.491 capstone checked recent 2025-2026
+work on arXiv, OpenReview, Extropic writing, Semantic Scholar citation
+surfaces for EBT/ARM-EBM, HuggingFace Papers, GitHub, and Logical
+Intelligence. DCCD, STATIC, AquaForte, LifelongAgentBench, the hard-CSP GNN
+benchmark, EPR, Semantic Energy, AgentLTL, OEP, CoACT, EBT, ARM-EBM, NRGPT,
+and fixed-point reasoner references were already present, so the entries below
+only capture deltas that affect the next milestone.
+
+- **SWEnergy** (https://arxiv.org/abs/2512.09543): profiles resource and
+  energy behavior of agentic issue-resolution frameworks using small language
+  models. Carnot hook: extend the FR-11 continuous self-learning router from
+  correctness and verifier-cost receipts to wall-time, token, memory, and
+  unproductive-loop accounting.
+- **Warm-starting active-set solvers with graph neural networks**
+  (https://arxiv.org/abs/2511.13174): predicts active constraints for
+  warm-started optimization while leaving the solver authoritative. Carnot
+  hook: after the overwrite and p-bit boundary-hint lanes, predict active
+  constraints or conflict fronts instead of full solutions, then let
+  deterministic solvers accept, reject, or overwrite the hints.
+- **UPSi uncertainty-aware predictive safety filters**
+  (https://arxiv.org/abs/2604.26836): combines reachable-set reasoning with a
+  certainty constraint to prevent policy exploitation of uncertain learned
+  dynamics. Carnot hook: require uncertainty-gated promotion before learned
+  ARC/world-model or memory fragments can affect live routing.
+- **HaluNet** (https://arxiv.org/abs/2512.24562): combines token likelihood,
+  predictive entropy, and hidden-state features for hallucination detection.
+  Carnot status: watch-only until a local backend emits authenticated
+  token/internal receipts; this does not reopen the retired external
+  generated-text scorer lane.
+- **BitsMoE** (https://arxiv.org/abs/2606.00079): uses a spectral-energy
+  criterion for mixed-precision MoE quantization. Carnot status: runtime
+  context for Qwen3.6 MoE GGUF variants, not a headline experiment unless
+  local quant variants and repeatable offload receipts are available.
+- **Extropic X0/XTR-0 public writing**
+  (https://extropic.ai/writing/inside-x0-and-xtr-0 and
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one): still
+  describes TSU hardware around a CPU/FPGA host path, but exposes no local SDK
+  or board access for this milestone. Treat as hardware-watch context only.
+- **Logical Intelligence Kona/Aleph public material**
+  (https://logicalintelligence.com/): remains relevant conceptual context for
+  verifier-first reasoning systems, but no reproducible local baseline was
+  found for .492 planning.
+
+### V492 Planning impact
+- Clean the Exp5392 formal-encoding tautology flag before any
+  formal-encoding safety fixture becomes headline evidence.
+- Scale structured constraint receipts on mandated local SOTA GGUF models,
+  with deterministic verifiers holding authority.
+- Add active-constraint warm-start solver guidance as a safer alternative to
+  full neural solution proposals.
+- Make continuous self-learning resource-accounted and uncertainty-gated.
+- Attempt ARC live-path level-up with trajectory/frontier generation rather
+  than another salience-only pass.
+- Restore hardware repeatability before any speedup claim.
+
+<!-- V492-PLANNER-REFRESH-2026-07-08-END -->
