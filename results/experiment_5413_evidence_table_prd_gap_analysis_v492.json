@@ -1,0 +1,474 @@
+{
+  "artifacts_read": [
+    "results/experiment_5402_transition_v492.json",
+    "results/experiment_5403_source_delta_v492.json",
+    "results/experiment_5404_formal_encoding_corrigendum_v492.json",
+    "results/experiment_5405_structured_safety_action_panel_v492.json",
+    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+    "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json",
+    "results/experiment_5408_resource_accounted_csl_controller_v492.json",
+    "results/experiment_5409_uncertainty_gated_promotion_v492.json",
+    "results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json",
+    "results/experiment_5411_hardware_repeatability_restoration_v492.json",
+    "results/experiment_5412_kan_active_constraint_certificate_v492.json"
+  ],
+  "blocked_gap_count": 3,
+  "claim_boundary_checks": {
+    "cpu_only_legacy_model_headline_evidence_relied_on": false,
+    "duplicate_arc_solve_relied_on": false,
+    "external_text_scoring_relied_on": false,
+    "hardware_speedup_claimed": false,
+    "planner_intent_used_as_evidence": false,
+    "token_internal_backend_claimed_without_receipt": false
+  },
+  "closed_gap_count": 5,
+  "experiment": "experiment_5413_evidence_table_prd_gap_analysis_v492",
+  "experiment_id": "exp5413-v492-evidence-table-and-prd-gap-analysis",
+  "field_principles": {
+    "artifacts_read": "provenance; list of upstream artifacts actually read.",
+    "blocked_gap_count": "honest blockers; count of rows blocked by nulls, failed gates, absent backend receipts, or unsupported claims.",
+    "closed_gap_count": "progress accounting; count of rows classified closed from actual artifacts.",
+    "headline_ready_lanes": "external claim boundary; only lanes with closed rows and no stronger blocked claim are listed.",
+    "honest_verdict": "terminal status; starts with complete: or blocked: and states the actual .492 evidence boundary.",
+    "inference_substrate": "synthesis only; must equal aggregation_from_upstream_artifacts.",
+    "missing_gap_count": "no silent omissions; count of rows whose required upstream artifact is absent or unreadable.",
+    "non_headline_lanes": "limitation clarity; partial, blocked, missing, bounded, and watch-only lanes stay out of headline claims.",
+    "partial_gap_count": "bounded evidence; count of rows classified partial because the evidence is useful but claim-limited.",
+    "prd_gap_table_path": "reviewable synthesis; path to the machine-readable PRD gap table emitted beside the artifact."
+  },
+  "gap_rows": [
+    {
+      "architecture_refs": [
+        "Verification Pipeline Tiers",
+        "Hidden-State Verifier Research Frontier"
+      ],
+      "claim_allowed": [
+        "row-level formal-encoding safety/intent fixture is corrigendum-clean",
+        "local GGUF inference receipt exists with deterministic policy authority"
+      ],
+      "claim_blocked": [
+        "broad safety proof or unconstrained reasoning correctness"
+      ],
+      "claim_strength": "headline_ready",
+      "evidence_status": "closed",
+      "next_action": "Use the clean row-level corrigendum as the gate for scaled structured panels.",
+      "prd_refs": [
+        "FR-12",
+        "FR-10"
+      ],
+      "principal_metric": {
+        "deterministic_policy_authority": true,
+        "false_negative_rate": 0.0,
+        "false_positive_rate": 0.0,
+        "fixture_count": 18,
+        "forbidden_leak_rate": 0.0,
+        "gpu_offload_verified": true
+      },
+      "row_id": "formal_encoding_corrigendum",
+      "source_artifacts": [
+        "results/experiment_5404_formal_encoding_corrigendum_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "Verification Pipeline Tiers"
+      ],
+      "claim_allowed": [
+        "structured safety/action panel passed deterministic final checks",
+        "local SOTA GGUF path has GPU offload receipt"
+      ],
+      "claim_blocked": [
+        "general local SOTA quality improvement outside the structured fixtures"
+      ],
+      "claim_strength": "headline_ready",
+      "evidence_status": "closed",
+      "next_action": "Feed this closed structured panel into the .492 capstone as local SOTA fixture evidence.",
+      "prd_refs": [
+        "FR-12",
+        "FR-07"
+      ],
+      "principal_metric": {
+        "constrained_validity": 1.0,
+        "fixture_count": 42,
+        "gpu_offload_verified": true,
+        "tool_action_reachability": 1.0,
+        "unconstrained_validity": 0.285714,
+        "unsafe_false_accept_rate": 0.0,
+        "wrong_valid_delta": 26
+      },
+      "row_id": "structured_safety_action_panel",
+      "source_artifacts": [
+        "results/experiment_5405_structured_safety_action_panel_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "Verification Pipeline Tiers"
+      ],
+      "claim_allowed": [
+        "active-constraint hints reduced solver work while solver authority was preserved"
+      ],
+      "claim_blocked": [
+        "hint authority, final-sequence certification, hardware sampler, or speedup claim"
+      ],
+      "claim_strength": "bounded",
+      "evidence_status": "closed",
+      "next_action": "Keep hints advisory and test larger solver workloads before promoting beyond bounded guidance.",
+      "prd_refs": [
+        "FR-12",
+        "FR-07"
+      ],
+      "principal_metric": {
+        "active_constraint_warmstart_ready": true,
+        "adversarial_hint_rejection_rate": 1.0,
+        "solver_conflict_delta": 21,
+        "solver_iteration_delta": 21,
+        "stale_hint_rejection_rate": 1.0,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "row_id": "active_constraint_warmstart",
+      "source_artifacts": [
+        "results/experiment_5406_active_constraint_warmstart_guidance_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "Asymptotic Hardware Mandate",
+        "Active hardware tracks"
+      ],
+      "claim_allowed": [
+        "CPU-only p-bit/QUBO stress matched exact enumeration on tiny instances"
+      ],
+      "claim_blocked": [
+        "hardware p-bit execution, board timing, or hardware speedup claim"
+      ],
+      "claim_strength": "bounded",
+      "evidence_status": "partial",
+      "next_action": "Do not headline p-bit hardware until a board-local sampler receipt exists.",
+      "prd_refs": [
+        "FR-07",
+        "FR-12"
+      ],
+      "principal_metric": {
+        "exact_enumeration_agreement_rate": 1.0,
+        "hardware_speedup_claim": false,
+        "pbit_acceptance_rate": 0.5,
+        "pbit_qubo_stress_ready": true,
+        "simulation_only": true,
+        "unsafe_false_accept_rate": 0.0,
+        "validity_rate": 1.0
+      },
+      "row_id": "pbit_qubo_boundary",
+      "source_artifacts": [
+        "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "DD-06: Autoresearch Two-Phase Loop"
+      ],
+      "claim_allowed": [
+        "resource-accounted CSL controller preserved quality while reducing verifier, wall-time, context, memory, and waste-loop costs"
+      ],
+      "claim_blocked": [
+        "model-weight mutation, adapter-weight mutation, or Rust-transpiled self-improvement"
+      ],
+      "claim_strength": "headline_ready",
+      "evidence_status": "closed",
+      "next_action": "Treat as FR-11 controller evidence, not autonomous model-weight self-improvement.",
+      "prd_refs": [
+        "FR-11"
+      ],
+      "principal_metric": {
+        "decision_count": 36,
+        "memory_delta_vs_baseline": 1362.0,
+        "no_weight_mutation": true,
+        "quality_delta_vs_baseline": 0.0,
+        "raw_episode_count": 7,
+        "resource_accounted_csl_ready": true,
+        "session_count": 12,
+        "token_or_context_delta_vs_baseline": 21570.0,
+        "unproductive_loop_reduction_rate": 1.0,
+        "verifier_cost_delta_vs_baseline": 22.2,
+        "wall_time_delta_vs_baseline": 3240.0
+      },
+      "row_id": "resource_accounted_csl",
+      "source_artifacts": [
+        "results/experiment_5408_resource_accounted_csl_controller_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "DD-06: Autoresearch Two-Phase Loop"
+      ],
+      "claim_allowed": [
+        "uncertainty gates promoted only supported reachable fragments and kept rejected fragments inactive"
+      ],
+      "claim_blocked": [
+        "ungated memory/world-model promotion or model-weight mutation"
+      ],
+      "claim_strength": "headline_ready",
+      "evidence_status": "closed",
+      "next_action": "Use accepted sidecars as durable learning guard evidence and keep rejected records inactive.",
+      "prd_refs": [
+        "FR-11"
+      ],
+      "principal_metric": {
+        "accepted_promotion_count": 3,
+        "no_weight_mutation": true,
+        "promotion_candidate_count": 9,
+        "rejected_retained_count": 6,
+        "rollback_success_rate": 1.0,
+        "routing_effect_row_count": 24
+      },
+      "row_id": "uncertainty_gated_promotion",
+      "source_artifacts": [
+        "results/experiment_5409_uncertainty_gated_promotion_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "ARC-AGI-3 Harness Architecture"
+      ],
+      "claim_allowed": [
+        "live-agent self-discovery path was exercised without offline BFS or per-game adapter shortcuts"
+      ],
+      "claim_blocked": [
+        "new ARC level banked or official live-score improvement"
+      ],
+      "claim_strength": "blocked",
+      "evidence_status": "blocked",
+      "next_action": "Keep the ARC lane as no-bank and continue trajectory generation from the recorded failure mode.",
+      "prd_refs": [
+        "FR-11",
+        "FR-12"
+      ],
+      "principal_metric": {
+        "arc_new_level_banked": false,
+        "attempt_count": 35,
+        "frontier_expansion_count": 17,
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "reproduced_levels": 0
+      },
+      "row_id": "arc_live_path",
+      "source_artifacts": [
+        "results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "Active hardware tracks",
+        "Asymptotic Hardware Mandate"
+      ],
+      "claim_allowed": [
+        "PolarFire repeated same-workload receipt is restored"
+      ],
+      "claim_blocked": [
+        "KV260 reachability, GateMate JTAG reachability, or any hardware speedup claim"
+      ],
+      "claim_strength": "partial",
+      "evidence_status": "partial",
+      "next_action": "Continue SSH/JTAG restoration before any speedup or multi-board headline.",
+      "prd_refs": [
+        "NFR-01",
+        "FR-04"
+      ],
+      "principal_metric": {
+        "gatemate_reachable": false,
+        "hardware_speedup_claim": false,
+        "kv260_ssh_reachable": false,
+        "polarfire_reachable": true,
+        "polarfire_repeat_count": 3,
+        "repeated_same_workload_ready": true
+      },
+      "row_id": "hardware_repeatability",
+      "source_artifacts": [
+        "results/experiment_5411_hardware_repeatability_restoration_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "KAN Fast-Path Tier"
+      ],
+      "claim_allowed": [
+        "bounded active-constraint certificate rejects stale and adversarial false hint-routing properties"
+      ],
+      "claim_blocked": [
+        "broad KAN verification, trained-network soundness, hardware execution, or speedup"
+      ],
+      "claim_strength": "bounded",
+      "evidence_status": "partial",
+      "next_action": "Use only as a bounded certificate and expand property families before broader claims.",
+      "prd_refs": [
+        "FR-12"
+      ],
+      "principal_metric": {
+        "broad_kan_verification_claim": false,
+        "counterexample_region_count": 8,
+        "false_property_count": 8,
+        "false_property_rejection_rate": 1.0,
+        "kan_active_constraint_certificate_ready": true,
+        "true_property_count": 3
+      },
+      "row_id": "kan_active_constraint_certificate",
+      "source_artifacts": [
+        "results/experiment_5412_kan_active_constraint_certificate_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "PHASE D Lifecycle And Retirement"
+      ],
+      "claim_allowed": [
+        "six execution-time source deltas were appended while retired scopes stayed closed"
+      ],
+      "claim_blocked": [
+        "external proof-agent, training/RL, non-local hardware, or browser-challenge sources as Carnot-local evidence"
+      ],
+      "claim_strength": "watch_only",
+      "evidence_status": "partial",
+      "next_action": "Keep watch-only sources as roadmap context until local deterministic artifacts exist.",
+      "prd_refs": [
+        "FR-10"
+      ],
+      "principal_metric": {
+        "new_actionable_findings_count": 6,
+        "no_deep_research_used": true,
+        "retired_scopes_reopened": false,
+        "watch_only_or_excluded_count": 8
+      },
+      "row_id": "source_delta_watch_only",
+      "source_artifacts": [
+        "results/experiment_5403_source_delta_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "Hidden-State Verifier Research Frontier"
+      ],
+      "claim_allowed": [
+        "token/internal lane remains explicitly tracked as closed"
+      ],
+      "claim_blocked": [
+        "no .492 backend feature artifact authorizes a token/internal-feature headline claim"
+      ],
+      "claim_strength": "blocked",
+      "evidence_status": "blocked",
+      "next_action": "Require a backend feature receipt before reopening token/internal-feature claims.",
+      "prd_refs": [
+        "FR-12"
+      ],
+      "principal_metric": {
+        "future_token_signal_allowed": false,
+        "transition_mentions_token_lane_closed": false
+      },
+      "row_id": "token_internal_feature_backend",
+      "source_artifacts": [
+        "results/experiment_5402_transition_v492.json"
+      ]
+    },
+    {
+      "architecture_refs": [
+        "Active hardware tracks"
+      ],
+      "claim_allowed": [
+        "no hardware speedup claim is made"
+      ],
+      "claim_blocked": [
+        "hardware speedup claim without comparable authenticated timing evidence"
+      ],
+      "claim_strength": "blocked",
+      "evidence_status": "blocked",
+      "next_action": "Collect comparable board-local and CPU timing receipts before revisiting speedup.",
+      "prd_refs": [
+        "NFR-01"
+      ],
+      "principal_metric": {
+        "hardware_evidence_level": "safe_board_repeatability_restoration_no_speedup",
+        "hardware_speedup_claim": false,
+        "repeated_same_workload_ready": true
+      },
+      "row_id": "hardware_speedup_claim",
+      "source_artifacts": [
+        "results/experiment_5411_hardware_repeatability_restoration_v492.json"
+      ]
+    }
+  ],
+  "headline_ready_lanes": [
+    "formal_encoding_corrigendum",
+    "structured_safety_action_panel",
+    "resource_accounted_csl",
+    "uncertainty_gated_promotion"
+  ],
+  "honest_verdict": "complete: .492 evidence table emitted with 5 closed, 4 partial, 3 blocked, and 0 missing rows; headline-ready lanes are formal encoding, structured safety/action, resource-accounted CSL, and uncertainty-gated promotion while ARC, hardware speedup, and token/internal backend claims remain non-headline.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.492",
+  "missing_artifacts": [],
+  "missing_gap_count": 0,
+  "non_headline_lanes": [
+    "active_constraint_warmstart",
+    "pbit_qubo_boundary",
+    "arc_live_path",
+    "hardware_repeatability",
+    "kan_active_constraint_certificate",
+    "source_delta_watch_only",
+    "token_internal_feature_backend",
+    "hardware_speedup_claim"
+  ],
+  "ops_docs_updated": false,
+  "partial_gap_count": 4,
+  "prd_gap_table_path": "results/experiment_5413_prd_gap_table_v492.json",
+  "random_seed": 5413,
+  "reproducibility_checksum": "sha256:0bbf342f04db5648fdd3e280891db6a30d3be161d227eb0672ad725b8fc5bd1a",
+  "research_conductor_modified": false,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5413.evidence_table_prd_gap_analysis.v492",
+  "source_artifact_checksums": {
+    "results/experiment_5402_transition_v492.json": "sha256:2c3e759e3f5cc5eb248d8aa825c4c98725c7b570526571fd294fc23640693e4f",
+    "results/experiment_5403_source_delta_v492.json": "sha256:7365db760262f6283aa9b940d0b86a23dc495eba6ee3af9ad759fff199aafd18",
+    "results/experiment_5404_formal_encoding_corrigendum_v492.json": "sha256:4d0234920fc1874d8532445c11d29722825c9754a8fa44a1a63b12b49ec31fec",
+    "results/experiment_5405_structured_safety_action_panel_v492.json": "sha256:1a2f51bc3bd06d4412a85d32a375018aaf61d97e42cd03e6ee7e09396ad9d8ee",
+    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json": "sha256:da53137b251675929032d9ef1e0f16548af268dcd84c137d269d71d6f0dea7d7",
+    "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json": "sha256:361d4af71c9de6b9d47938e3a6064228080be90e9d8d1d00abeef14d293e8130",
+    "results/experiment_5408_resource_accounted_csl_controller_v492.json": "sha256:387d76b9f34d110b40929b0d8146f576821b50ebf980947d01db4e99b1cc26e0",
+    "results/experiment_5409_uncertainty_gated_promotion_v492.json": "sha256:55d67196eeea0655c425c3e74ba7f188fa643c0e204766d21d6f121b972fc61b",
+    "results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json": "sha256:7e247e548558d9d9b8f13cbc83ccd4d042a9263dfa30f57b5b3a36b7975454b5",
+    "results/experiment_5411_hardware_repeatability_restoration_v492.json": "sha256:8f4df427315709e2e0b4d8008fa7d6e9a14e8c81152d39f2bb73f2dce577e37c",
+    "results/experiment_5412_kan_active_constraint_certificate_v492.json": "sha256:c8f794d12a968fee887226be2b1232403da2036bad445c5d3eb88754c443bc20"
+  },
+  "source_context_read": [
+    "CLAUDE.md",
+    "_bmad/prd.md",
+    "_bmad/architecture.md",
+    "ops/status.md",
+    "ops/changelog.md",
+    "research-roadmap.yaml",
+    "openspec/change-proposals/research-roadmap-vNEXT.md"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5413",
+    "SCENARIO-REPORT-5413",
+    "SCENARIO-REPORT-5413-MISSING-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5413_evidence_table_prd_gap_analysis_v492.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5413_evidence_table_prd_gap_analysis_v492.py -m pytest tests/python/test_experiment_5413_evidence_table_prd_gap_analysis_v492.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5413_evidence_table_prd_gap_analysis_v492.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}

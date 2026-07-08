@@ -37467,3 +37467,78 @@ missing paths in `missing_artifacts`, marks affected rows with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5400 | Planned (`python/carnot/experiment_5400_evidence_table_prd_gap_analysis_v491.py`, `results/experiment_5400_evidence_table_prd_gap_analysis_v491.json`) | Planned (`tests/python/test_experiment_5400_evidence_table_prd_gap_analysis_v491.py`) |
+
+### REQ-REPORT-5413: V492 PRD Evidence Table And Architecture Gap Analysis
+
+The Exp5413 workflow SHALL aggregate the available `.492` upstream artifacts
+from Exp5402 through Exp5412 into
+`results/experiment_5413_evidence_table_prd_gap_analysis_v492.json` and a
+reviewable PRD gap table at
+`results/experiment_5413_prd_gap_table_v492.json`. It SHALL read the
+repository research context (`CLAUDE.md`, `_bmad/prd.md`,
+`_bmad/architecture.md`, `ops/status.md`, `ops/changelog.md`, and the active
+`.492` roadmap metadata) and SHALL NOT modify `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
+
+The workflow SHALL use only checked-in upstream artifacts, not planner intent,
+to classify PRD and architecture gaps as `closed`, `partial`, `blocked`, or
+`missing`. It SHALL map evidence to FR-11 continuous self-learning and FR-12 verifiable reasoning,
+ARC live-path progress, hardware evidence, local SOTA inference,
+active-constraint solver guidance, p-bit/QUBO boundary evidence, bounded KAN
+certificates, source-delta watch-only evidence, and token/internal feature or
+hardware-speedup claim boundaries. It SHALL explicitly record gated, blocked,
+honest-null, watch-only, CPU-only, no-speedup, and missing-upstream conditions
+rather than promoting them to headline claims.
+
+The artifact SHALL include the required fields `artifacts_read`,
+`closed_gap_count`, `partial_gap_count`, `blocked_gap_count`,
+`missing_gap_count`, `headline_ready_lanes`, `non_headline_lanes`,
+`prd_gap_table_path`, `inference_substrate`, and `honest_verdict`. It SHOULD
+also include `schema`, `experiment`, `experiment_id`, `milestone`, `run_date`,
+`random_seed`, `spec_refs`, `field_principles`, `missing_artifacts`,
+`gap_rows`, `claim_boundary_checks`, `source_context_read`, `tests_run`,
+`research_conductor_modified`, `ops_docs_updated`, and
+`reproducibility_checksum` so the synthesis is auditable and deterministic.
+
+Required field principles:
+
+- `artifacts_read`: principle "provenance; list of upstream artifacts actually read."
+- `closed_gap_count`: principle "progress accounting; count of rows classified closed from actual artifacts."
+- `partial_gap_count`: principle "bounded evidence; count of rows classified partial because the evidence is useful but claim-limited."
+- `blocked_gap_count`: principle "honest blockers; count of rows blocked by nulls, failed gates, absent backend receipts, or unsupported claims."
+- `missing_gap_count`: principle "no silent omissions; count of rows whose required upstream artifact is absent or unreadable."
+- `headline_ready_lanes`: principle "external claim boundary; only lanes with closed rows and no stronger blocked claim are listed."
+- `non_headline_lanes`: principle "limitation clarity; partial, blocked, missing, bounded, and watch-only lanes stay out of headline claims."
+- `prd_gap_table_path`: principle "reviewable synthesis; path to the machine-readable PRD gap table emitted beside the artifact."
+- `inference_substrate`: principle "synthesis only; must equal aggregation_from_upstream_artifacts."
+- `honest_verdict`: principle "terminal status; starts with complete: or blocked: and states the actual .492 evidence boundary."
+
+#### SCENARIO-REPORT-5413: Available V492 Artifacts Produce A PRD Gap Table
+
+**Given** Exp5402 through Exp5412 `.492` artifacts are present when applicable
+**When** the Exp5413 workflow runs
+**Then** it writes
+`results/experiment_5413_evidence_table_prd_gap_analysis_v492.json` and
+`results/experiment_5413_prd_gap_table_v492.json`, records every upstream
+artifact read, sets `inference_substrate=aggregation_from_upstream_artifacts`,
+maps FR-11 and FR-12 evidence from actual artifacts, classifies the ARC
+live-path level-up as blocked when no level is banked, classifies hardware as
+partial when repeatability exists without speedup and some boards remain
+unreachable, keeps CPU-only p-bit/QUBO and bounded KAN evidence out of headline
+claims, and emits an `honest_verdict` starting with `complete:`.
+
+#### SCENARIO-REPORT-5413-MISSING-INPUT: Missing Upstream Artifacts Stay Missing
+
+**Given** one or more expected Exp5402 through Exp5412 upstream artifacts are
+absent or unreadable
+**When** the Exp5413 workflow runs
+**Then** it still writes both synthesis files, records missing paths in
+`missing_artifacts`, increments `missing_gap_count`, marks affected rows with
+`evidence_status=missing`, keeps affected lanes out of
+`headline_ready_lanes`, and emits an `honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-REPORT-5413)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5413 | Planned (`python/carnot/experiment_5413_evidence_table_prd_gap_analysis_v492.py`, `results/experiment_5413_evidence_table_prd_gap_analysis_v492.json`, `results/experiment_5413_prd_gap_table_v492.json`) | Planned (`tests/python/test_experiment_5413_evidence_table_prd_gap_analysis_v492.py`) |
