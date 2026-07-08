@@ -1,6 +1,28 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-08 (Milestone 2026.07.492 Planning Staged)
+**Last Updated:** 2026-07-08 (Milestone 2026.07.492 Operational Retro Complete)
+
+## Session 2026-07-08 - Milestone 2026.07.492 Operational Retro
+
+Filled `results/operational_retro_2026_07_492.json` from the locked timing
+artifact values and appended the corresponding entries to `ops/changelog.md`
+and `docs/research-log.md`. The locked fields record 0 wall-time minutes, 0
+completed experiments, 0 compute-bound tasks, an empty slowest-experiments
+list, and `gpu_idle_on_compute_bound_tasks: null`.
+
+The operational finding is a timing integrity mismatch, not an experiment
+runtime finding: both authorized timing assembly paths found 0 experiment
+commits while `ops/changelog.md` contains `2026.07.492` references. No
+experiment ID, duration, compute-bound slowest run, GPU-idle bottleneck, or
+DualGPURunner miss was inferred from the changelog.
+
+Validation for this documentation/results-only task: JSON parsing,
+locked-field assertions, protected-file diff check, touched-file
+`git diff --check`, and `scripts/operator_curated_docs_lint.py` passed.
+Repo-wide `scripts/validate-reconciliation.sh` and
+`scripts/check_spec_coverage.py` still fail on pre-existing stale-documentation
+metadata and spec-traceability issues outside this retrospective. No E2E
+model-training or hardware check applies to this operational retrospective.
 
 ## Session 2026-07-08 - Milestone 2026.07.492 Planning Staged
 

@@ -5817,3 +5817,9 @@ The critical path for milestone .250:
 - theme: operational retrospective for a milestone with no experiment commits after activation
 - key result: no data available this milestone; the timing block found no milestone-scoped experiment commits by live git-log or disk-mtime reconstruction, so compute-bound duration ranking, GPU efficiency, and DualGPURunner assessment cannot be derived
 - acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for acceptance scoring
+
+### Milestone 2026.07.492
+- exp_range: no data available this milestone
+- theme: timing integrity mismatch blocks operational runtime accounting
+- key result: honest negative -- no data available this milestone; both authorized timing paths found 0 experiment commits while ops/changelog.md contains 2026.07.492 references, so compute-bound duration ranking, GPU utilization efficiency, and DualGPURunner assessment are not derivable
+- acceptance: 0/0 criteria met -- the supplied timing block contains no milestone-scoped experiment entries to score

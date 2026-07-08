@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.492",
+  "generated_at": "2026-07-08T11:04:52Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true,
+  "summary": "No data available this milestone for experiment-level throughput: the locked fields record 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. The authoritative timing block reports a timing integrity mismatch because both assembly paths found 0 experiment commits while ops/changelog.md contains 2026.07.492 references, so no experiment IDs, durations, slowest runs, GPU-efficiency finding, or DualGPURunner miss is inferred.",
+  "bottlenecks_identified": [
+    "Timing integrity mismatch: live git-log and disk-mtime reconstruction both found 0 experiment commits while ops/changelog.md contains 2026.07.492 references, preventing milestone-scoped throughput accounting.",
+    "No compute-bound timing rows are available this milestone, so longest compute-bound runs, compute-bound GPU utilization, and 2+ parallel-model DualGPURunner coverage have no data available this milestone."
+  ],
+  "improvements_suggested": [
+    "Add a retro timing reconciliation gate that reports changelog-versus-timing disagreement before writing a full operational interpretation.",
+    "Persist a machine-readable milestone execution manifest as experiments complete, then use it as the primary source before falling back to git-log or disk-mtime reconstruction.",
+    "Keep GPU and DualGPURunner recommendations gated on explicit compute-bound timing rows so synthesis-only or no-data milestones do not produce false bottleneck claims."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the timing assembly bug that allows changelog references and reconstructed experiment commits to disagree for 2026.07.492.",
+    "Add a regression fixture for the mismatch case where changelog references exist but both timing reconstruction paths return 0 experiment commits.",
+    "Emit a structured no-data diagnostic in the retro artifact when experiment rows are absent, including why GPU-idle and DualGPURunner questions are unanswerable."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective treats the changelog references only as evidence of a timing-assembly mismatch, not as a source for experiment IDs, counts, durations, or metrics. With 0 compute-bound timing rows, the GPU snapshot remains observational context and is not promoted into a compute-bound bottleneck."
+}
