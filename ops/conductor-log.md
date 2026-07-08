@@ -10504,3 +10504,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 00:30 UTC | Gated live structured SOTA clean-gate rerun | OK | 89 passed, 1 warning in 12.06s |
 | 2026-07-08 00:47 UTC | Gated constraint-tax tool/action panel after clean | OK | 86 passed, 1 warning in 10.96s |
 | 2026-07-08 01:00 UTC | Budget-curated memory tautology corrigendum | OK | 89 passed, 1 warning in 12.03s |
+| 2026-07-08 01:14 UTC | Gated real-workflow continuous self-learning scale | OK | 90 passed, 1 warning in 11.32s |
