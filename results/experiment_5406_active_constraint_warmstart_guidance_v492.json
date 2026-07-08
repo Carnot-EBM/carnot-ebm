@@ -1,0 +1,963 @@
+{
+  "active_constraint_precision": 1.0,
+  "active_constraint_recall": 1.0,
+  "active_constraint_warmstart_ready": true,
+  "adversarial_hint_rejection_rate": 1.0,
+  "claim_limits": [
+    "deterministic CPU-local active-constraint diagnostic",
+    "hints are advisory and checked against solver-computed active sets",
+    "candidate hints may reduce work but cannot certify a final sequence",
+    "stale and adversarial hints fall back or are overwritten",
+    "no LLM, generated text judge, hardware sampler, or speedup claim"
+  ],
+  "duration_s": 1.05,
+  "experiment": 5406,
+  "experiment_id": "exp5406-active-constraint-warmstart-guidance-v492",
+  "field_principles": {
+    "active_constraint_precision": "hint quality.",
+    "active_constraint_recall": "hint quality.",
+    "active_constraint_warmstart_ready": "downstream gate.",
+    "adversarial_hint_rejection_rate": "safety control.",
+    "fixture_count": "coverage.",
+    "hint_modes": "control coverage.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "deterministic solver evidence.",
+    "solver_conflict_delta": "efficiency evidence.",
+    "solver_iteration_delta": "efficiency evidence.",
+    "solver_overwrite_rate": "authority boundary.",
+    "stale_hint_rejection_rate": "anti-staleness.",
+    "unsafe_false_accept_rate": "no solver bypass."
+  },
+  "fixture_count": 4,
+  "hint_modes": [
+    "no_hint",
+    "stale_hint",
+    "adversarial_hint",
+    "candidate_hint"
+  ],
+  "honest_verdict": "complete: active-constraint candidate hints reduced solver work by 21 conflicts and 21 iterations while solver authority rejected or overwrote wrong hints",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "milestone": "2026.07.492",
+  "mode_summaries": {
+    "adversarial_hint": {
+      "fallback_count": 4,
+      "overwrite_count": 4,
+      "row_count": 4,
+      "solver_conflicts": 21,
+      "solver_iterations": 39,
+      "validity_rate": 1.0
+    },
+    "candidate_hint": {
+      "fallback_count": 0,
+      "overwrite_count": 0,
+      "row_count": 4,
+      "solver_conflicts": 0,
+      "solver_iterations": 18,
+      "validity_rate": 1.0
+    },
+    "no_hint": {
+      "fallback_count": 0,
+      "overwrite_count": 0,
+      "row_count": 4,
+      "solver_conflicts": 21,
+      "solver_iterations": 39,
+      "validity_rate": 1.0
+    },
+    "stale_hint": {
+      "fallback_count": 4,
+      "overwrite_count": 0,
+      "row_count": 4,
+      "solver_conflicts": 21,
+      "solver_iterations": 39,
+      "validity_rate": 1.0
+    }
+  },
+  "random_seed": 5406,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "418871f8f4eaf06b65e2dac1d1539fb8029f56e1036590824dd488ceed331c5b",
+  "row_count": 16,
+  "row_records": [
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [],
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_linear_review",
+      "hint_decision": "ignored",
+      "hint_matches_active_set": false,
+      "hint_mode": "no_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "known_conflict_front": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "synthetic:linear_review",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "draft->review",
+        "review->submit"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 0.6666666666666666,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [
+        "review",
+        "submit"
+      ],
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_linear_review",
+      "hint_decision": "rejected",
+      "hint_matches_active_set": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "known_conflict_front": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "synthetic:linear_review",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "submit->outline"
+      ],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [
+        "outline"
+      ],
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_linear_review",
+      "hint_decision": "overwritten",
+      "hint_matches_active_set": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": false,
+      "known_active_constraints": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "known_conflict_front": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "synthetic:linear_review",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 1.0,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "expected_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_linear_review",
+      "hint_decision": "accepted",
+      "hint_matches_active_set": true,
+      "hint_mode": "candidate_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "known_conflict_front": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_fixture_id": "synthetic:linear_review",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_front_hint": [],
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_join_pack",
+      "hint_decision": "ignored",
+      "hint_matches_active_set": false,
+      "hint_mode": "no_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "known_conflict_front": [
+        "pack",
+        "ship"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 3,
+      "solver_iterations": 8,
+      "source_fixture_id": "synthetic:join_pack",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "pick->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 0.75,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_front_hint": [
+        "pack",
+        "ship"
+      ],
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_join_pack",
+      "hint_decision": "rejected",
+      "hint_matches_active_set": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "known_conflict_front": [
+        "pack",
+        "ship"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 3,
+      "solver_iterations": 8,
+      "source_fixture_id": "synthetic:join_pack",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "ship->label"
+      ],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_front_hint": [
+        "label"
+      ],
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_join_pack",
+      "hint_decision": "overwritten",
+      "hint_matches_active_set": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": false,
+      "known_active_constraints": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "known_conflict_front": [
+        "pack",
+        "ship"
+      ],
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 3,
+      "solver_iterations": 8,
+      "source_fixture_id": "synthetic:join_pack",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 1.0,
+      "active_set_source": "independent_spec",
+      "baseline_metrics": {
+        "solver_conflicts": 3,
+        "solver_iterations": 8
+      },
+      "conflict_front_hint": [
+        "pack",
+        "ship"
+      ],
+      "expected_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "synthetic_join_pack",
+      "hint_decision": "accepted",
+      "hint_matches_active_set": true,
+      "hint_mode": "candidate_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "known_conflict_front": [
+        "pack",
+        "ship"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 5,
+      "source_fixture_id": "synthetic:join_pack",
+      "source_kind": "synthetic",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [],
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_decision": "ignored",
+      "hint_matches_active_set": false,
+      "hint_mode": "no_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "known_conflict_front": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "exp5394:act_unlock_deliver",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 0.6666666666666666,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [
+        "enter_room",
+        "deliver_package"
+      ],
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_decision": "rejected",
+      "hint_matches_active_set": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "known_conflict_front": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "exp5394:act_unlock_deliver",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "deliver_package->pickup_key"
+      ],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [
+        "pickup_key"
+      ],
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_decision": "overwritten",
+      "hint_matches_active_set": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": false,
+      "known_active_constraints": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "known_conflict_front": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 10,
+      "source_fixture_id": "exp5394:act_unlock_deliver",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 1.0,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 10
+      },
+      "conflict_front_hint": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_decision": "accepted",
+      "hint_matches_active_set": true,
+      "hint_mode": "candidate_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "known_conflict_front": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_fixture_id": "exp5394:act_unlock_deliver",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_front_hint": [],
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_decision": "ignored",
+      "hint_matches_active_set": false,
+      "hint_mode": "no_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "known_conflict_front": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 11,
+      "source_fixture_id": "exp5394:act_build_deploy",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "deploy->monitor"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 0.75,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_front_hint": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_decision": "rejected",
+      "hint_matches_active_set": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "known_conflict_front": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 11,
+      "source_fixture_id": "exp5394:act_build_deploy",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "monitor->backup_config"
+      ],
+      "active_constraint_precision": 0.0,
+      "active_constraint_recall": 0.0,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_front_hint": [
+        "backup_config"
+      ],
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": true,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_decision": "overwritten",
+      "hint_matches_active_set": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": false,
+      "known_active_constraints": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "known_conflict_front": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 6,
+      "solver_iterations": 11,
+      "source_fixture_id": "exp5394:act_build_deploy",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "active_constraint_precision": 1.0,
+      "active_constraint_recall": 1.0,
+      "active_set_source": "solver_derived_from_exp5394_fixture",
+      "baseline_metrics": {
+        "solver_conflicts": 6,
+        "solver_iterations": 11
+      },
+      "conflict_front_hint": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_used": false,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_decision": "accepted",
+      "hint_matches_active_set": true,
+      "hint_mode": "candidate_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "known_conflict_front": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 5,
+      "source_fixture_id": "exp5394:act_build_deploy",
+      "source_kind": "carry_forward_exp5394",
+      "unsafe_false_accept": false
+    }
+  ],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5406.active_constraint_warmstart_guidance.v492",
+  "solver_conflict_delta": 21,
+  "solver_iteration_delta": 21,
+  "solver_overwrite_rate": 0.333333,
+  "spec_refs": [
+    "REQ-VERIFY-5406",
+    "SCENARIO-VERIFY-5406"
+  ],
+  "stale_hint_rejection_rate": 1.0,
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5406_active_constraint_warmstart_guidance_v492.py -q --no-cov",
+      "outcome": "passed"
+    }
+  ],
+  "unsafe_false_accept_rate": 0.0
+}
