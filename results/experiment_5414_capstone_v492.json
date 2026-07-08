@@ -1,0 +1,455 @@
+{
+  "active_constraint_warmstart_ready": true,
+  "active_roadmap_modified": false,
+  "arc_new_level_banked": false,
+  "artifact_read_errors": [],
+  "artifacts_read": [
+    "results/experiment_5402_transition_v492.json",
+    "results/experiment_5403_source_delta_v492.json",
+    "results/experiment_5404_formal_encoding_corrigendum_v492.json",
+    "results/experiment_5405_structured_safety_action_panel_v492.json",
+    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+    "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json",
+    "results/experiment_5408_resource_accounted_csl_controller_v492.json",
+    "results/experiment_5409_uncertainty_gated_promotion_v492.json",
+    "results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json",
+    "results/experiment_5411_hardware_repeatability_restoration_v492.json",
+    "results/experiment_5412_kan_active_constraint_certificate_v492.json",
+    "results/experiment_5413_evidence_table_prd_gap_analysis_v492.json",
+    "results/experiment_5413_prd_gap_table_v492.json",
+    "ops/conductor-log.md",
+    "ops/status.md",
+    "ops/changelog.md"
+  ],
+  "claim_boundary_checks": {
+    "adversarial_flagged_artifact_promoted": false,
+    "cpu_only_pbit_promoted_to_hardware": false,
+    "hardware_speedup_claimed": false,
+    "honest_null_arc_promoted": false,
+    "planner_intent_used_as_evidence": false,
+    "token_internal_backend_claimed_without_receipt": false
+  },
+  "conductor_modified": false,
+  "conductor_status_summary": {
+    "flagged_excerpts": [],
+    "flagged_rows": 0,
+    "path": "ops/conductor-log.md",
+    "present": true,
+    "v492_rows": 5
+  },
+  "experiment": "experiment_5414_capstone_v492",
+  "experiment_id": "exp5414-v492-capstone",
+  "field_principles": {
+    "active_constraint_warmstart_ready": "solver-guidance evidence; copied from Exp5406 but treated as advisory.",
+    "arc_new_level_banked": "ARC standing floor; must remain false for the Exp5410 honest-null no-bank run.",
+    "artifacts_read": "provenance; ordered list of upstream artifacts and conductor status inputs actually read.",
+    "formal_encoding_corrigendum_clean": "repaired safety evidence; copied from clean Exp5404 only.",
+    "future_token_signal_allowed": "closed token/internal lane unless a backend receipt exists.",
+    "hardware_repeatability_ready": "hardware evidence boundary; true only for repeated same-workload evidence and not a speedup claim.",
+    "hardware_speedup_claim": "must remain false without comparable authenticated timing speedup.",
+    "headline_ready_lanes": "external claim boundary; only lanes with closed row-level evidence and no stronger blocked claim are listed.",
+    "honest_verdict": "terminal status; starts with complete: or blocked: and summarizes what actually happened.",
+    "inference_substrate": "synthesis only; must equal aggregation_from_upstream_artifacts.",
+    "kan_active_constraint_certificate_ready": "bounded certificate evidence; copied from Exp5412 without broad KAN verification.",
+    "milestone": "terminal route key; must equal 2026.07.492.",
+    "next_recommendations": "next milestone seed; derived from actual artifact blockers and clean lanes.",
+    "pbit_qubo_stress_ready": "p-bit boundary evidence; true only for CPU-only exact-enumeration-matched stress evidence.",
+    "resource_accounted_csl_ready": "FR-11 evidence; copied from Exp5408 only with no weight mutation.",
+    "structured_safety_action_panel_ready": "local SOTA constraint evidence; copied from clean Exp5405 only.",
+    "uncertainty_gated_promotion_ready": "durable learning guard; copied from Exp5409 only with rejected fragments retained inactive."
+  },
+  "flagged_artifacts": [],
+  "formal_encoding_corrigendum_clean": true,
+  "future_token_signal_allowed": false,
+  "hardware_repeatability_ready": true,
+  "hardware_speedup_claim": false,
+  "headline_ready_lanes": [
+    "formal_encoding_corrigendum",
+    "structured_safety_action_panel",
+    "resource_accounted_csl",
+    "uncertainty_gated_promotion"
+  ],
+  "honest_verdict": "complete: .492 capstone emitted from actual artifacts; formal corrigendum, structured safety/action, resource-accounted CSL, and uncertainty-gated promotion are headline-ready; active-constraint, p-bit/QUBO, KAN, and local SOTA inference remain bounded; ARC no-bank, hardware has repeatability but no hardware speedup, and token/internal lane closed.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kan_active_constraint_certificate_ready": true,
+  "local_sota_inference_ready": true,
+  "milestone": "2026.07.492",
+  "missing_artifacts": [],
+  "next_recommendations": [
+    {
+      "recommendation": "Keep the ARC standing-floor slot, but aim the next run at banking a reproduction-gated level after the re86 L3 no-bank failure mode.",
+      "target": "arc_live_levelup"
+    },
+    {
+      "recommendation": "Do not claim speedup until comparable CPU and board-local timing receipts share workload hashes and stable outputs.",
+      "target": "hardware_speedup"
+    },
+    {
+      "recommendation": "Restore KV260 SSH and GateMate JTAG while preserving the PolarFire same-workload repeatability receipt as partial evidence.",
+      "target": "hardware_reachability"
+    },
+    {
+      "recommendation": "Scale active-constraint guidance beyond advisory hints only after larger solver workloads keep solver authority and reject stale/adversarial hints.",
+      "target": "active_constraint_scale"
+    },
+    {
+      "recommendation": "Move p-bit/QUBO stress from CPU simulation to reachable hardware only after the repeatability and speedup receipts exist.",
+      "target": "pbit_hardware_transfer"
+    },
+    {
+      "recommendation": "Expand the bounded active-constraint certificate to another false-property family without broad KAN soundness claims.",
+      "target": "kan_certificate_family"
+    },
+    {
+      "recommendation": "Keep token/internal claims closed until a backend artifact exposes logits, hidden states, attention, or intermediate exits.",
+      "target": "token_internal_backend"
+    },
+    {
+      "recommendation": "Stage 2026.07.493 around ARC banking, authenticated hardware timing, larger advisory-solver guidance, and bounded certificate expansion.",
+      "target": "next_milestone"
+    }
+  ],
+  "non_headline_lanes": [
+    "active_constraint_guidance",
+    "pbit_qubo_stress",
+    "arc_live_levelup",
+    "hardware_repeatability",
+    "kan_active_constraint_certificate",
+    "local_sota_inference",
+    "token_internal_lane"
+  ],
+  "ops_docs_modified": false,
+  "pbit_qubo_stress_ready": true,
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:573d779261942e7746ddb224486fd3d28c3b0baf4f59710a4c082062287e6664"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "ops/status.md",
+      "sha256": "sha256:f52ee8d3372156871ec21cc1dca25e6d8d5a0944aab984814ae39957503da71e"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "ops/changelog.md",
+      "sha256": "sha256:1b5116420993f94bd3d991e6f2210f86102218540e4af13677f84ad60d52314a"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "_bmad/traceability.md",
+      "sha256": "sha256:875f1ed0958033441e592dfbff7a53ff4676504a3e47a398649bbdbf9ab55987"
+    }
+  ],
+  "random_seed": 5414,
+  "reproducibility_checksum": "sha256:63727138c9111cb6d4629d3a7359301649c00f03d6e004c442a4470b8ee75ab1",
+  "resource_accounted_csl_ready": true,
+  "result_path": "results/experiment_5414_capstone_v492.json",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5414.capstone_v492.v1",
+  "source_artifact_checksums": {
+    "ops/changelog.md": "sha256:1b5116420993f94bd3d991e6f2210f86102218540e4af13677f84ad60d52314a",
+    "ops/conductor-log.md": "sha256:f9e50bdb90905cc91d381345e3ef54e946f5e73f25c1083d78ad0dc136bcddc6",
+    "ops/status.md": "sha256:f52ee8d3372156871ec21cc1dca25e6d8d5a0944aab984814ae39957503da71e",
+    "results/experiment_5402_transition_v492.json": "sha256:2c3e759e3f5cc5eb248d8aa825c4c98725c7b570526571fd294fc23640693e4f",
+    "results/experiment_5403_source_delta_v492.json": "sha256:7365db760262f6283aa9b940d0b86a23dc495eba6ee3af9ad759fff199aafd18",
+    "results/experiment_5404_formal_encoding_corrigendum_v492.json": "sha256:4d0234920fc1874d8532445c11d29722825c9754a8fa44a1a63b12b49ec31fec",
+    "results/experiment_5405_structured_safety_action_panel_v492.json": "sha256:1a2f51bc3bd06d4412a85d32a375018aaf61d97e42cd03e6ee7e09396ad9d8ee",
+    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json": "sha256:da53137b251675929032d9ef1e0f16548af268dcd84c137d269d71d6f0dea7d7",
+    "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json": "sha256:361d4af71c9de6b9d47938e3a6064228080be90e9d8d1d00abeef14d293e8130",
+    "results/experiment_5408_resource_accounted_csl_controller_v492.json": "sha256:387d76b9f34d110b40929b0d8146f576821b50ebf980947d01db4e99b1cc26e0",
+    "results/experiment_5409_uncertainty_gated_promotion_v492.json": "sha256:55d67196eeea0655c425c3e74ba7f188fa643c0e204766d21d6f121b972fc61b",
+    "results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json": "sha256:7e247e548558d9d9b8f13cbc83ccd4d042a9263dfa30f57b5b3a36b7975454b5",
+    "results/experiment_5411_hardware_repeatability_restoration_v492.json": "sha256:8f4df427315709e2e0b4d8008fa7d6e9a14e8c81152d39f2bb73f2dce577e37c",
+    "results/experiment_5412_kan_active_constraint_certificate_v492.json": "sha256:c8f794d12a968fee887226be2b1232403da2036bad445c5d3eb88754c443bc20",
+    "results/experiment_5413_evidence_table_prd_gap_analysis_v492.json": "sha256:ade9a712d8516fde7e77565f6608433fd263abd904e6afc20c0c0c9480fe546a",
+    "results/experiment_5413_prd_gap_table_v492.json": "sha256:eb4576cc549552be88162ea2b38f660b2af7c2d3ad6522564170f18840a0c8c0"
+  },
+  "source_context_read": [
+    {
+      "kind": "file",
+      "path": "CLAUDE.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "research-roadmap.yaml",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "ops/conductor-log.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "ops/status.md",
+      "present": true
+    },
+    {
+      "kind": "file",
+      "path": "ops/changelog.md",
+      "present": true
+    },
+    {
+      "kind": "directory",
+      "path": "results",
+      "present": true
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5414",
+    "SCENARIO-CAPSTONE-5414",
+    "SCENARIO-CAPSTONE-5414-MISSING-OR-BLOCKED-INPUT",
+    "SCENARIO-CAPSTONE-5414-FIELD-PRINCIPLES"
+  ],
+  "status": "complete",
+  "structured_safety_action_panel_ready": true,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5414_capstone_v492.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5414_capstone_v492.py -m pytest tests/python/test_experiment_5414_capstone_v492.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5414_capstone_v492.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "traceability_modified": false,
+  "truth_table": [
+    {
+      "blocked_reason": "",
+      "claim_boundary": "row_level_formal_encoding_safety_only",
+      "classification": "headline_ready",
+      "evidence": {
+        "deterministic_policy_authority": true,
+        "false_negative_rate": 0.0,
+        "false_positive_rate": 0.0,
+        "fixture_count": 18,
+        "forbidden_leak_rate": 0.0,
+        "formal_encoding_corrigendum_clean": true,
+        "gpu_offload_verified": true
+      },
+      "headline_ready": true,
+      "lane": "formal_corrigendum",
+      "source_artifacts": [
+        "results/experiment_5404_formal_encoding_corrigendum_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "structured_fixture_panel_not_general_sota_quality",
+      "classification": "headline_ready",
+      "evidence": {
+        "constrained_validity": 1.0,
+        "fixture_count": 42,
+        "gpu_offload_verified": true,
+        "structured_safety_action_panel_ready": true,
+        "tool_action_reachability": 1.0,
+        "unconstrained_validity": 0.285714,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "headline_ready": true,
+      "lane": "structured_safety_action_scaleup",
+      "source_artifacts": [
+        "results/experiment_5405_structured_safety_action_panel_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "advisory_hints_solver_authority_preserved",
+      "classification": "bounded_ready",
+      "evidence": {
+        "active_constraint_warmstart_ready": true,
+        "adversarial_hint_rejection_rate": 1.0,
+        "solver_conflict_delta": 21,
+        "solver_iteration_delta": 21,
+        "stale_hint_rejection_rate": 1.0,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "headline_ready": false,
+      "lane": "active_constraint_guidance",
+      "source_artifacts": [
+        "results/experiment_5406_active_constraint_warmstart_guidance_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "cpu_only_no_hardware_speedup",
+      "classification": "bounded_ready",
+      "evidence": {
+        "exact_enumeration_agreement_rate": 1.0,
+        "hardware_speedup_claim": false,
+        "pbit_acceptance_rate": 0.5,
+        "pbit_qubo_stress_ready": true,
+        "simulation_only": true,
+        "validity_rate": 1.0
+      },
+      "headline_ready": false,
+      "lane": "pbit_qubo_stress",
+      "source_artifacts": [
+        "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "controller_routing_no_weight_mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "decision_count": 36,
+        "no_weight_mutation": true,
+        "quality_delta_vs_baseline": 0.0,
+        "resource_accounted_csl_ready": true,
+        "session_count": 12,
+        "verifier_cost_delta_vs_baseline": 22.2,
+        "wall_time_delta_vs_baseline": 3240.0
+      },
+      "headline_ready": true,
+      "lane": "resource_accounted_csl",
+      "source_artifacts": [
+        "results/experiment_5408_resource_accounted_csl_controller_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "uncertainty_gate_no_ungated_memory_promotion",
+      "classification": "headline_ready",
+      "evidence": {
+        "accepted_promotion_count": 3,
+        "no_weight_mutation": true,
+        "promotion_candidate_count": 9,
+        "rejected_retained_count": 6,
+        "rollback_success_rate": 1.0,
+        "uncertainty_gated_promotion_ready": true
+      },
+      "headline_ready": true,
+      "lane": "uncertainty_gated_promotion",
+      "source_artifacts": [
+        "results/experiment_5409_uncertainty_gated_promotion_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live_agent_path_exercised_no_new_banked_level",
+      "classification": "honest_null",
+      "evidence": {
+        "arc_new_level_banked": false,
+        "attempt_count": 35,
+        "frontier_expansion_count": 17,
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "status": "honest_null"
+      },
+      "headline_ready": false,
+      "lane": "arc_live_levelup",
+      "source_artifacts": [
+        "results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "repeatability_receipt_not_speedup_or_multi_board_ready",
+      "classification": "partial",
+      "evidence": {
+        "gatemate_reachable": false,
+        "hardware_speedup_claim": false,
+        "kv260_ssh_reachable": false,
+        "polarfire_reachable": true,
+        "polarfire_repeat_count": 3,
+        "repeated_same_workload_ready": true
+      },
+      "headline_ready": false,
+      "lane": "hardware_repeatability",
+      "source_artifacts": [
+        "results/experiment_5411_hardware_repeatability_restoration_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded_certificate_no_broad_kan_verification",
+      "classification": "bounded_ready",
+      "evidence": {
+        "broad_kan_verification_claim": false,
+        "counterexample_region_count": 8,
+        "false_property_count": 8,
+        "false_property_rejection_rate": 1.0,
+        "kan_active_constraint_certificate_ready": true,
+        "true_property_count": 3
+      },
+      "headline_ready": false,
+      "lane": "kan_active_constraint_certificate",
+      "source_artifacts": [
+        "results/experiment_5412_kan_active_constraint_certificate_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "local_gguf_receipts_for_fixtures_only",
+      "classification": "bounded_ready",
+      "evidence": {
+        "local_sota_inference_ready": true,
+        "receipts": [
+          {
+            "gpu_offload_verified": true,
+            "inference_substrate": "live_llm_inference",
+            "model_count": 3,
+            "source_artifact": "results/experiment_5404_formal_encoding_corrigendum_v492.json"
+          },
+          {
+            "gpu_offload_verified": true,
+            "inference_substrate": "live_llm_inference",
+            "model_count": 3,
+            "source_artifact": "results/experiment_5405_structured_safety_action_panel_v492.json"
+          }
+        ]
+      },
+      "headline_ready": false,
+      "lane": "local_sota_inference",
+      "source_artifacts": [
+        "results/experiment_5404_formal_encoding_corrigendum_v492.json",
+        "results/experiment_5405_structured_safety_action_panel_v492.json"
+      ]
+    },
+    {
+      "blocked_reason": "no_logits_hidden_states_attention_or_intermediate_exit_receipt",
+      "claim_boundary": "closed_without_backend_feature_receipt",
+      "classification": "blocked",
+      "evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      },
+      "headline_ready": false,
+      "lane": "token_internal_lane",
+      "source_artifacts": [
+        "results/experiment_5402_transition_v492.json",
+        "results/experiment_5413_evidence_table_prd_gap_analysis_v492.json"
+      ]
+    }
+  ],
+  "uncertainty_gated_promotion_ready": true
+}
