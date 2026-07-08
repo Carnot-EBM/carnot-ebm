@@ -37713,3 +37713,88 @@ unchanged, and does not claim deduplication against planner work.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5416 | Planned (`python/carnot/experiment_5416_source_delta_v493.py`, `results/experiment_5416_source_delta_v493.json`) | Planned (`tests/python/test_experiment_5416_source_delta_v493.py`) |
+
+### REQ-REPORT-5426: V493 PRD Gap And Agent-Failure Evidence Table
+
+The Exp5426 workflow SHALL read only the available `.493` upstream artifacts
+listed by the roadmap prompt:
+`results/experiment_5415_transition_v493.json`,
+`results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json`,
+`results/experiment_5418_predictive_prefix_action_safety_v493.json`,
+`results/experiment_5419_active_constraint_lns_scale_v493.json`,
+`results/experiment_5420_pbit_hardware_transfer_preflight_v493.json`,
+`results/experiment_5421_evidence_reliance_csl_v493.json`,
+`results/experiment_5422_csl_promotion_reliance_scale_v493.json`,
+`results/experiment_5423_arc_coex_landmark_levelup_v493.json`,
+`results/experiment_5424_hardware_comparable_timing_receipts_v493.json`, and
+`results/experiment_5425_kan_measurement_access_certificate_v493.json`.
+Missing upstream artifacts SHALL be recorded as missing evidence rather than
+filled with planned roadmap expectations.
+
+The workflow SHALL map actual artifact fields to the PRD and research-program
+lanes for structured verification, continuous self-learning, solver guidance,
+ARC live progress, hardware, and certificates. Each lane SHALL be classified
+as `closed`, `partial`, `blocked`, or `missing`, and the lane evidence SHALL
+include artifact paths plus exact field names that were present at execution
+time. The workflow SHALL apply the failure taxonomy categories `tool-use`,
+`planning`, `reasoning`, `measurement-access`, `calibration`, and
+`live-environment` where the actual lane evidence shows that class of gap or
+diagnostic.
+
+The workflow SHALL write
+`results/experiment_5426_prd_gap_agent_failure_table_v493.json`, SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL NOT promote partial, blocked, bounded, no-speedup, or honest-null
+evidence into stronger claims.
+
+The artifact SHALL include required principle-annotated fields
+`upstream_artifacts_read`, `upstream_artifacts_missing`, `closed_lanes`,
+`partial_lanes`, `blocked_lanes`, `missing_lanes`,
+`failure_taxonomy_counts`, `prd_gap_table_ready`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include `schema`, `experiment`,
+`experiment_id`, `milestone`, `run_date`, `random_seed`, `spec_refs`,
+`field_principles`, `transition_context`, `lane_order`, `tests_run`, and
+`reproducibility_checksum` so the .493 capstone can replay the synthesis
+without hidden model inference.
+
+Required field principles:
+
+- `upstream_artifacts_read`: principle "provenance"
+- `upstream_artifacts_missing`: principle "no fabricated evidence"
+- `closed_lanes`: principle "PRD progress"
+- `partial_lanes`: principle "bounded evidence"
+- `blocked_lanes`: principle "honest gaps"
+- `missing_lanes`: principle "absent artifact handling"
+- `failure_taxonomy_counts`: principle "tool-use/planning/reasoning diagnosis"
+- `prd_gap_table_ready`: principle "capstone input"
+- `inference_substrate`: principle "no hidden live model inference"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+#### SCENARIO-REPORT-5426: Available V493 Artifacts Emit A Capstone-Ready Gap Table
+
+**Given** all listed `.493` upstream artifacts are readable
+**When** the Exp5426 workflow runs
+**Then** it writes the deliverable JSON, records every upstream artifact in
+`upstream_artifacts_read`, records no missing upstream artifacts, classifies
+structured verification and continuous self-learning from actual ready fields
+as closed, classifies solver guidance, hardware, and certificates as bounded
+partial evidence, classifies ARC live progress as blocked when no new level is
+banked, emits nonzero failure-taxonomy counts only from lane evidence, sets
+`prd_gap_table_ready=true`, and starts `honest_verdict` with `complete:`.
+
+#### SCENARIO-REPORT-5426-MISSING-UPSTREAM: Missing Inputs Stay Missing
+
+**Given** one or more listed `.493` upstream artifacts are absent or
+unreadable
+**When** the Exp5426 workflow runs
+**Then** it records those paths in `upstream_artifacts_missing`, marks any
+affected priority lanes as `missing`, keeps them out of closed, partial, and
+blocked lane lists, sets `prd_gap_table_ready=false`, and starts
+`honest_verdict` with `blocked:`.
+
+## Implementation Status (REQ-REPORT-5426)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5426 | Planned (`python/carnot/experiment_5426_prd_gap_agent_failure_table_v493.py`, `results/experiment_5426_prd_gap_agent_failure_table_v493.json`) | Planned (`tests/python/test_experiment_5426_prd_gap_agent_failure_table_v493.py`) |
