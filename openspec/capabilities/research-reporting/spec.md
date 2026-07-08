@@ -37226,3 +37226,85 @@ modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5389 | Implemented (`python/carnot/experiment_5389_transition_v491.py`, `results/experiment_5389_transition_v491.json`) | Implemented (`tests/python/test_experiment_5389_transition_v491.py`) |
+
+### REQ-REPORT-5400: V491 PRD-Aligned Evidence Table And Gap Analysis
+
+The Exp5400 workflow SHALL aggregate the available `.491` upstream artifacts
+for Exp5389 through Exp5399 into
+`results/experiment_5400_evidence_table_prd_gap_analysis_v491.json`. It SHALL
+read the repository research context (`CLAUDE.md`, `research-program.md`,
+`_bmad/prd.md`, `_bmad/architecture.md`, `research-roadmap-next.yaml` when
+present, `results/`, and `ops/conductor-log.md`) and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The workflow SHALL build an evidence table with one row for each of these PRD
+or research-program lanes: structured local SOTA, formal-encoding safety,
+solver corrigendum, p-bit ablation, continuous self-learning router, memory
+guard, ARC, hardware, KAN certificate, token/internal features, and PRD
+alignment. Each row SHALL record `row_id`, `source_artifact`, `claim_allowed`,
+`claim_blocked`, `evidence_strength`, `principal_metric`, `next_action`, and
+`guardrail_checks`. Missing upstream artifacts SHALL be represented as
+`missing_inputs` evidence rather than inferred outcomes.
+
+The workflow SHALL classify gaps into `closed_gaps`, `partial_gaps`, and
+`blocked_gaps` using only the checked-in upstream artifacts. It SHALL preserve
+these claim boundaries: no row may rely on external text scoring, CPU-only
+legacy model headline evidence, duplicate ARC solves, or hardware speedup
+without repeatability. Formal-encoding evidence flagged by adversarial checks
+MUST remain partial or blocked. CPU-only p-bit evidence MAY support bounded
+solver-hint wording but MUST NOT support a hardware claim. ARC evidence MAY
+support live-path instrumentation if registry and provenance guards passed,
+but MUST NOT claim a new banked level unless `new_level_banked=true` and
+offline reproduction is present. Hardware evidence MAY support hash-linked
+receipt wording, but MUST NOT claim speedup unless repeatability evidence and a
+same-workload speedup comparison exist.
+
+The artifact SHALL include principle-covered fields `status`, `milestone`,
+`artifacts_read`, `missing_artifacts`, `evidence_rows`, `closed_gaps`,
+`partial_gaps`, `blocked_gaps`, `disallowed_claims`,
+`next_action_recommendations`, and `honest_verdict`. It SHOULD also include
+`schema`, `experiment`, `experiment_id`, `run_date`, `random_seed`,
+`spec_refs`, `field_principles`, `source_context_read`,
+`claim_boundary_checks`, `tests_run`, and `reproducibility_checksum`.
+
+Required field principles:
+
+- `status`: principle "complete if table emitted, partial if required upstream artifacts are missing."
+- `milestone`: principle "must equal 2026.07.491."
+- `artifacts_read`: principle "list of upstream artifacts read."
+- `missing_artifacts`: principle "list of expected but missing artifacts."
+- `evidence_rows`: principle "structured list of PRD-aligned evidence rows."
+- `closed_gaps`: principle "list of PRD or research-program gaps closed by .491 evidence."
+- `partial_gaps`: principle "list of gaps partially closed."
+- `blocked_gaps`: principle "list of gaps blocked by failed gates or missing evidence."
+- `disallowed_claims`: principle "claims that remain forbidden."
+- `next_action_recommendations`: principle "concrete next-milestone recommendations."
+- `honest_verdict`: principle "one-line summary starting with complete: or partial:."
+
+#### SCENARIO-REPORT-5400: Available V491 Artifacts Produce A Guarded PRD Evidence Table
+
+**Given** Exp5389 through Exp5399 artifacts are present when applicable
+**When** the Exp5400 workflow runs
+**Then** it writes a complete
+`results/experiment_5400_evidence_table_prd_gap_analysis_v491.json` with the
+eleven required PRD-aligned evidence rows, lists every upstream artifact read,
+records no missing artifacts, keeps formal-encoding, ARC, hardware speedup,
+p-bit hardware, and token/internal feature claims bounded or blocked as the
+upstream artifacts require, and records guardrails proving no row relies on
+external text scoring, CPU-only legacy model headline evidence, duplicate ARC
+solves, or hardware speedup without repeatability.
+
+#### SCENARIO-REPORT-5400-MISSING-INPUT: Missing Upstream Artifacts Stay Partial
+
+**Given** one or more expected Exp5389 through Exp5399 artifacts are missing
+**When** the Exp5400 workflow runs
+**Then** it still writes the evidence table, sets `status=partial`, records the
+missing paths in `missing_artifacts`, marks affected rows with
+`evidence_strength=missing_inputs`, avoids inferred outcomes, and emits an
+`honest_verdict` starting with `partial:`.
+
+## Implementation Status (REQ-REPORT-5400)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5400 | Planned (`python/carnot/experiment_5400_evidence_table_prd_gap_analysis_v491.py`, `results/experiment_5400_evidence_table_prd_gap_analysis_v491.json`) | Planned (`tests/python/test_experiment_5400_evidence_table_prd_gap_analysis_v491.py`) |
