@@ -10564,3 +10564,4 @@ I’m going to append a small |
 | 2026-07-08 16:36 UTC | Transition .493 outcomes into .494 execution conte | OK | 86 passed, 1 warning in 10.06s |
 | 2026-07-08 16:51 UTC | Execution-time 2025-2026 source delta for .494 | OK | 120 passed, 1 warning in 11.81s |
 | 2026-07-08 17:09 UTC | Structured risk and prefix tautology corrigendum w | OK | 111 passed, 1 warning in 11.56s |
+| 2026-07-08 17:24 UTC | Gated structured constraint taxonomy replication a | OK | 87 passed, 1 warning in 8.43s |
