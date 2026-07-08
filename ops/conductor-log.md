@@ -10536,3 +10536,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 09:17 UTC | Gated p-bit/QUBO action-sequence stress with activ | OK | 90 passed, 1 warning in 8.20s |
 | 2026-07-08 09:30 UTC | Resource-accounted continuous self-learning contro | OK | 88 passed, 1 warning in 10.31s |
 | 2026-07-08 09:43 UTC | Gated uncertainty-aware memory and world-model pro | OK | 90 passed, 1 warning in 11.96s |
+| 2026-07-08 09:59 UTC | ARC live-path level-up attempt with trajectory/fro | OK | 88 passed, 1 warning in 13.98s |
