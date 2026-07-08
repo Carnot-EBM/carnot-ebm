@@ -10562,3 +10562,4 @@ I’m going to append a small |
 | 2026-07-08 16:21 UTC | Plan milestone 2026.07.494 | OK | 13 tasks proposed |
 | 2026-07-08 16:23 UTC | Milestone 2026.07.494 activated | OK | 13 tasks queued |
 | 2026-07-08 16:36 UTC | Transition .493 outcomes into .494 execution conte | OK | 86 passed, 1 warning in 10.06s |
+| 2026-07-08 16:51 UTC | Execution-time 2025-2026 source delta for .494 | OK | 120 passed, 1 warning in 11.81s |
