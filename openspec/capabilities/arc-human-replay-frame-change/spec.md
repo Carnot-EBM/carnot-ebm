@@ -1233,6 +1233,59 @@ Required field principles:
 - `inference_substrate`: principle "must be live_arc_agent_runtime."
 - `honest_verdict`: principle "terminal status starts with complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5437: Registry-Guided Live Reinduction Level-Up Attempt
+
+Experiment 5437 SHALL write
+`results/experiment_5437_arc_live_reinduction_levelup_v494.json` after a
+registry-prechecked bounded ARC live-agent level-up attempt. The workflow SHALL
+prefer `cn04` L4 when the registry records exactly three reproduced `cn04`
+levels and SHALL prefer `vc33` L3 when `cn04` is not eligible and the registry
+records exactly two reproduced `vc33` levels. If neither preferred frontier is
+eligible, it SHALL choose the nearest eligible unbanked next-level frontier from
+`ops/arc_solve_registry.yaml` or emit a blocked duplicate-solve artifact before
+spending live-agent budget. The credited mechanism SHALL run through the live
+ARC agent runtime and use registry-guided per-level reinduction evidence,
+runtime observation clustering, generic verifier routing, and
+measurement-access receipts from the agent's own attempts. It SHALL NOT inspect
+hidden game source, run offline ground-truth BFS as the credited solve path, or
+create a per-game adapter/calibration solver as the headline path.
+
+The result artifact SHALL include `registry_precheck`, `target_game`,
+`target_level`, `duplicate_solve_avoided`, `solve_provenance`,
+`offline_reproduced`, `reproduced_levels`, `arc_new_level_banked`,
+`attempt_count`, `frontier_expansion_count`, `runtime_predicate_count`,
+`action_sequence_receipts`, `no_offline_bfs`, `no_per_game_adapter`,
+`arc_levelup_lint_passed`, `inference_substrate`, and `honest_verdict`. A
+credited level-up SHALL require `solve_provenance=live_agent_self_discovery`,
+`inference_substrate=live_arc_agent_runtime`, `offline_reproduced=true`,
+`reproduced_levels>=1`, `arc_new_level_banked=true`,
+`duplicate_solve_avoided=true`, `no_offline_bfs=true`,
+`no_per_game_adapter=true`, at least one runtime predicate or frontier
+transition from the live attempt, and at least one replayable action sequence
+receipt. Otherwise the artifact SHALL report `honest_null:` with bounded
+live-attempt evidence or `blocked:` when the duplicate/precondition gate
+prevents a valid attempt.
+
+Required field principles:
+
+- `registry_precheck`: principle "duplicate-solve avoidance"
+- `target_game`: principle "target provenance"
+- `target_level`: principle "target provenance"
+- `duplicate_solve_avoided`: principle "no already-banked headline"
+- `solve_provenance`: principle "credited path"
+- `offline_reproduced`: principle "reproducible solve gate"
+- `reproduced_levels`: principle "level-up gate; must be >=1 for a banked solve"
+- `arc_new_level_banked`: principle "north-star metric"
+- `attempt_count`: principle "effort accounting"
+- `frontier_expansion_count`: principle "mechanism evidence"
+- `runtime_predicate_count`: principle "reinduction evidence"
+- `action_sequence_receipts`: principle "reproducibility"
+- `no_offline_bfs`: principle "live-path discipline"
+- `no_per_game_adapter`: principle "live-path discipline"
+- `arc_levelup_lint_passed`: principle "roadmap guarantee evidence"
+- `inference_substrate`: principle "actual live agent"
+- `honest_verdict`: principle "terminal status; start with complete: or honest_null: or blocked:"
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1666,3 +1719,27 @@ Then `offline_reproduced=false`, `reproduced_levels=0`,
 `honest_null:` while preserving attempt counts, reset counts, frontier
 transitions, landmarks, runtime observations, action-sequence receipts,
 `no_offline_bfs=true`, and `no_per_game_adapter=true`.
+
+### SCENARIO-ARC-FCP-5437: Registry-Guided Reinduction Attempts New Frontier
+
+Given `cn04` has three reproduced levels and no reproduced L4 in the ARC solve
+registry
+When experiment 5437 performs its registry precheck
+Then it selects `target_game=cn04`, `target_level=L4`, records the target as an
+eligible unbanked frontier, and sets `duplicate_solve_avoided=true` before any
+bounded live attempt runs.
+
+Given the live agent gathers frame-changing runtime observations from its own
+attempts
+When experiment 5437 summarizes the attempt
+Then it records runtime predicates, frontier transitions,
+measurement-access action sequence receipts, reset count, and action count
+without crediting any level unless the live-discovered sequence reproduces
+beyond the registry depth.
+
+Given the bounded reinduction attempt does not reproduce a new level
+When the artifact is validated
+Then `offline_reproduced=false`, `reproduced_levels=0`,
+`arc_new_level_banked=false`, and `honest_verdict` starts with `honest_null:`
+while preserving `registry_precheck=true`, `no_offline_bfs=true`,
+`no_per_game_adapter=true`, and `inference_substrate=live_arc_agent_runtime`.
