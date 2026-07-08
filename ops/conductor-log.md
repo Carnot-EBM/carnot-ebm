@@ -10556,3 +10556,4 @@ I’m going to append a small |
 | 2026-07-08 14:21 UTC | Gated CSL promotion scale-up with reliance and ris | OK | 91 passed, 1 warning in 11.21s |
 | 2026-07-08 14:40 UTC | ARC live CoEx landmark level-up attempt on unbanke | OK | 109 passed, 1 warning in 14.64s |
 | 2026-07-08 14:53 UTC | Hardware comparable CPU and board timing receipts | OK | 87 passed, 1 warning in 11.08s |
+| 2026-07-08 15:07 UTC | KAN measurement-access certificate for active-cons | OK | 89 passed, 1 warning in 11.75s |
