@@ -27971,6 +27971,99 @@ claim CPU-only legacy model evidence.
 |---|---|---|
 | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
 
+### REQ-VERIFY-5433: Active-Constraint Diversity LNS Diagnostic V494
+
+The repository SHALL provide Exp 5433 at
+`python/carnot/experiment_5433_active_constraint_diversity_lns_v494.py` and
+write `results/experiment_5433_active_constraint_diversity_lns_v494.json`
+without invoking a live LLM, generated text judge, hardware sampler, board
+timing path, or modifying `scripts/research_conductor.py`. The diagnostic
+SHALL reuse the Exp 5419 solver-guidance pattern while extending it across at
+least three subproblem families with different geometry or constraint graph
+structure.
+
+For every fixture, Exp 5433 SHALL expose LNS subproblem selection hints,
+active-constraint hints, active-tail and frozen-variable diagnostics,
+conflict-front hints, and stale or adversarial hint rows. The deterministic
+solver SHALL recompute every hinted active set, conflict front, LNS boundary,
+active tail, frozen-variable set, feasibility predicate, objective value, and
+validity predicate before final solve. Every hint SHALL be accepted, rejected, or overwritten
+before the final solution is accepted. Hints SHALL remain
+advisory and SHALL NOT determine final feasibility, objective preservation, or
+validity.
+
+For every row, Exp 5433 SHALL record fixture id, subproblem family, diversity
+descriptor, hint mode, LNS subproblem hint, active-constraint hint,
+conflict-front hint, active-tail/frozen-variable diagnostics, hint decision,
+baseline solver work, guided solver work, feasibility, objective preservation,
+final validity, conflict-front precision, solver-authoritative status, and
+unsafe false-accept status. Aggregate metrics SHALL be recomputed from row
+records only, not copied from precomputed constants.
+This ensures aggregate metrics are recomputed only from row records.
+
+The artifact SHALL include top-level fields `fixture_count`,
+`subproblem_family_count`, `diversity_descriptor_checksum`,
+`baseline_solver_work`, `guided_solver_work`, `work_delta`,
+`accepted_hint_count`, `rejected_hint_count`, `overwritten_hint_count`,
+`conflict_front_precision`, `solver_validity_preserved`,
+`aggregate_from_rows_only`, `active_constraint_diversity_ready`,
+`inference_substrate`, and `honest_verdict`, with field principles explaining
+each required field. `inference_substrate` SHALL equal
+`deterministic_solver_experiment`. `honest_verdict` SHALL start with
+`complete:` or `blocked:`. `active_constraint_diversity_ready` SHALL be true
+only if at least three subproblem families are measured, guided rows reduce
+aggregate solver work relative to solver-only baselines, stale and adversarial
+rows are rejected or overwritten, final validity and objective preservation are
+maintained, conflict-front precision is row-derived, and aggregate metrics are
+recomputed only from row records.
+
+Required field principles:
+
+- `fixture_count`: principle "scale."
+- `subproblem_family_count`: principle "diversity coverage."
+- `diversity_descriptor_checksum`: principle "reproducibility."
+- `baseline_solver_work`: principle "unguided comparison."
+- `guided_solver_work`: principle "guided comparison."
+- `work_delta`: principle "guidance effect."
+- `accepted_hint_count`: principle "hint behavior."
+- `rejected_hint_count`: principle "hint behavior."
+- `overwritten_hint_count`: principle "solver authority."
+- `conflict_front_precision`: principle "hint quality."
+- `solver_validity_preserved`: principle "no invalid speedup."
+- `aggregate_from_rows_only`: principle "tautology prevention."
+- `active_constraint_diversity_ready`: principle "downstream gate."
+- `inference_substrate`: principle "no hidden live model inference."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:."
+
+### SCENARIO-VERIFY-5433: Diverse LNS Hints Stay Solver-Authoritative
+
+Given diverse deterministic subproblem families extended from the Exp 5419
+active-constraint LNS interface, when Exp 5433 evaluates solver-only, guided,
+stale, and adversarial hint rows, then every row records diversity descriptors,
+LNS subproblem hints, active-tail/frozen-variable diagnostics, conflict-front
+precision, baseline and guided work, feasibility, objective preservation, final
+validity, and solver accept/reject/overwrite decisions. Accepted hints MAY
+reduce work only after matching the solver-computed active set, conflict front,
+and LNS boundary. Stale hints SHALL be rejected, adversarial hints SHALL be
+overwritten or rejected, and all invalid hint rows SHALL keep the same final
+solver-authoritative sequence and validity predicate as the solver-only row.
+
+If any stale or adversarial hint changes final validity, if any invalid hint is
+accepted as authoritative, if diversity descriptors are missing or produce an
+unstable checksum, if aggregate metrics are not exactly recomputed from row
+records, if conflict-front precision is not row-derived, if guided work does
+not improve on accepted guided rows, or if `inference_substrate` differs from
+`deterministic_solver_experiment`, then Exp 5433 SHALL write
+`results/experiment_5433_active_constraint_diversity_lns_v494.json` with
+`active_constraint_diversity_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5433)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5433 | Planned (`python/carnot/experiment_5433_active_constraint_diversity_lns_v494.py`, `results/experiment_5433_active_constraint_diversity_lns_v494.json`) | Planned (`tests/python/test_experiment_5433_active_constraint_diversity_lns_v494.py`) |
+
 ### REQ-VERIFY-5419: Active-Constraint LNS Scale-Up Diagnostic V493
 
 The repository SHALL provide Exp 5419 at

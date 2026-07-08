@@ -1,0 +1,2194 @@
+{
+  "accepted_hint_count": 4,
+  "active_constraint_diversity_ready": true,
+  "aggregate_from_rows_only": true,
+  "baseline_solver_work": 154,
+  "claim_limits": [
+    "deterministic CPU-local diversity diagnostic",
+    "LNS, active-constraint, active-tail, frozen-variable, and conflict-front hints are advisory",
+    "solver recomputes every hint before accept, reject, or overwrite decisions",
+    "stale and adversarial hint rows cannot determine final validity",
+    "no LLM, generated text judge, hardware sampler, or speedup claim"
+  ],
+  "conflict_front_precision": 0.666667,
+  "diversity_descriptor_checksum": "823475ad0de31b29a2cc1ec552b2c1bf35500dcc53822128b920893adf510831",
+  "duration_s": 1.07,
+  "experiment": 5433,
+  "experiment_id": "exp5433-active-constraint-diversity-lns-v494",
+  "field_principles": {
+    "accepted_hint_count": "hint behavior.",
+    "active_constraint_diversity_ready": "downstream gate.",
+    "aggregate_from_rows_only": "tautology prevention.",
+    "baseline_solver_work": "unguided comparison.",
+    "conflict_front_precision": "hint quality.",
+    "diversity_descriptor_checksum": "reproducibility.",
+    "fixture_count": "scale.",
+    "guided_solver_work": "guided comparison.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "no hidden live model inference.",
+    "overwritten_hint_count": "solver authority.",
+    "rejected_hint_count": "hint behavior.",
+    "solver_validity_preserved": "no invalid speedup.",
+    "subproblem_family_count": "diversity coverage.",
+    "work_delta": "guidance effect."
+  },
+  "fixture_count": 4,
+  "guided_solver_work": 16,
+  "hint_modes": [
+    "solver_only",
+    "lns_guided_hint",
+    "stale_hint",
+    "adversarial_hint"
+  ],
+  "honest_verdict": "complete: active-constraint LNS hints covered 4 families, reduced solver work by 138, and preserved solver authority",
+  "inference_substrate": "deterministic_solver_experiment",
+  "milestone": "2026.07.494",
+  "mode_summaries": {
+    "adversarial_hint": {
+      "accepted_count": 0,
+      "baseline_solver_work": 154,
+      "fallback_count": 4,
+      "guided_solver_work": 154,
+      "overwritten_count": 4,
+      "rejected_count": 0,
+      "row_count": 4,
+      "solver_conflicts": 63,
+      "solver_iterations": 91,
+      "validity_rate": 1.0,
+      "work_delta": 0
+    },
+    "lns_guided_hint": {
+      "accepted_count": 4,
+      "baseline_solver_work": 154,
+      "fallback_count": 0,
+      "guided_solver_work": 16,
+      "overwritten_count": 0,
+      "rejected_count": 0,
+      "row_count": 4,
+      "solver_conflicts": 0,
+      "solver_iterations": 16,
+      "validity_rate": 1.0,
+      "work_delta": 138
+    },
+    "solver_only": {
+      "accepted_count": 0,
+      "baseline_solver_work": 154,
+      "fallback_count": 0,
+      "guided_solver_work": 154,
+      "overwritten_count": 0,
+      "rejected_count": 0,
+      "row_count": 4,
+      "solver_conflicts": 63,
+      "solver_iterations": 91,
+      "validity_rate": 1.0,
+      "work_delta": 0
+    },
+    "stale_hint": {
+      "accepted_count": 0,
+      "baseline_solver_work": 154,
+      "fallback_count": 4,
+      "guided_solver_work": 154,
+      "overwritten_count": 0,
+      "rejected_count": 4,
+      "row_count": 4,
+      "solver_conflicts": 63,
+      "solver_iterations": 91,
+      "validity_rate": 1.0,
+      "work_delta": 0
+    }
+  },
+  "overwritten_hint_count": 4,
+  "random_seed": 5433,
+  "readiness_blockers": [],
+  "rejected_hint_count": 4,
+  "reproducibility_checksum": "5c3334c8901dc0a077af251f6f3a603a2fc9f2a53aff5fdece6c10cb53131621",
+  "row_count": 16,
+  "row_records": [
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_tail_hint": [],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_chain_release",
+        "frontier_width": 6,
+        "geometry": "path_precedence",
+        "lns_shape": "contiguous_path_window",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "linear_chain"
+      },
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_chain_release",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [],
+      "guided_solver_work": 49,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_active_tail": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_frozen_variables": [
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "lns_subproblem_hint": [],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "subproblem_family": "linear_chain",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "active_tail_hint": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_chain_release",
+        "frontier_width": 6,
+        "geometry": "path_precedence",
+        "lns_shape": "contiguous_path_window",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "linear_chain"
+      },
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_chain_release",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "guided_solver_work": 4,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_active_tail": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_frozen_variables": [
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "lns_subproblem_hint": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_kind": "synthetic_action_sequence",
+      "subproblem_family": "linear_chain",
+      "unsafe_false_accept": false,
+      "work_delta": 45
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "active_tail_hint": [
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "unit",
+        "compile",
+        "plan",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_chain_release",
+        "frontier_width": 6,
+        "geometry": "path_precedence",
+        "lns_shape": "contiguous_path_window",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "linear_chain"
+      },
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_chain_release",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [
+        "plan",
+        "signoff",
+        "deploy"
+      ],
+      "guided_solver_work": 49,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_active_tail": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_frozen_variables": [
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "lns_subproblem_hint": [
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "subproblem_family": "linear_chain",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "compile->plan"
+      ],
+      "active_tail_hint": [
+        "plan",
+        "compile"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "compile",
+        "plan",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [
+        "plan"
+      ],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_chain_release",
+        "frontier_width": 6,
+        "geometry": "path_precedence",
+        "lns_shape": "contiguous_path_window",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "linear_chain"
+      },
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_chain_release",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "guided_solver_work": 49,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_active_tail": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_frozen_variables": [
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration"
+      ],
+      "lns_subproblem_hint": [
+        "plan",
+        "compile"
+      ],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "subproblem_family": "linear_chain",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_tail_hint": [],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 8,
+        "fixture_id": "diverse_fork_join_fulfillment",
+        "frontier_width": 5,
+        "geometry": "two_branch_join",
+        "lns_shape": "join_frontier_slice",
+        "max_in_degree": 3,
+        "max_out_degree": 2,
+        "node_count": 8,
+        "subproblem_family": "fork_join_dag"
+      },
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_fork_join_fulfillment",
+      "frozen_variable_count": 4,
+      "frozen_variable_hint": [],
+      "guided_solver_work": 30,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_active_tail": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_frozen_variables": [
+        "invoice",
+        "verify",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "lns_subproblem_hint": [],
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 11,
+      "solver_iterations": 19,
+      "source_kind": "synthetic_scheduling",
+      "subproblem_family": "fork_join_dag",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "active_tail_hint": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 8,
+        "fixture_id": "diverse_fork_join_fulfillment",
+        "frontier_width": 5,
+        "geometry": "two_branch_join",
+        "lns_shape": "join_frontier_slice",
+        "max_in_degree": 3,
+        "max_out_degree": 2,
+        "node_count": 8,
+        "subproblem_family": "fork_join_dag"
+      },
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_fork_join_fulfillment",
+      "frozen_variable_count": 4,
+      "frozen_variable_hint": [
+        "invoice",
+        "verify",
+        "pack",
+        "ship"
+      ],
+      "guided_solver_work": 4,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_active_tail": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_frozen_variables": [
+        "invoice",
+        "verify",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "lns_subproblem_hint": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_kind": "synthetic_scheduling",
+      "subproblem_family": "fork_join_dag",
+      "unsafe_false_accept": false,
+      "work_delta": 26
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "pack->ship"
+      ],
+      "active_tail_hint": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "label",
+        "receive",
+        "invoice",
+        "verify",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 8,
+        "fixture_id": "diverse_fork_join_fulfillment",
+        "frontier_width": 5,
+        "geometry": "two_branch_join",
+        "lns_shape": "join_frontier_slice",
+        "max_in_degree": 3,
+        "max_out_degree": 2,
+        "node_count": 8,
+        "subproblem_family": "fork_join_dag"
+      },
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_fork_join_fulfillment",
+      "frozen_variable_count": 4,
+      "frozen_variable_hint": [
+        "invoice",
+        "verify",
+        "pack",
+        "ship"
+      ],
+      "guided_solver_work": 30,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_active_tail": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_frozen_variables": [
+        "invoice",
+        "verify",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "lns_subproblem_hint": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 11,
+      "solver_iterations": 19,
+      "source_kind": "synthetic_scheduling",
+      "subproblem_family": "fork_join_dag",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "label->receive"
+      ],
+      "active_tail_hint": [
+        "receive",
+        "label"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "label",
+        "receive",
+        "invoice",
+        "verify",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [
+        "receive"
+      ],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 8,
+        "fixture_id": "diverse_fork_join_fulfillment",
+        "frontier_width": 5,
+        "geometry": "two_branch_join",
+        "lns_shape": "join_frontier_slice",
+        "max_in_degree": 3,
+        "max_out_degree": 2,
+        "node_count": 8,
+        "subproblem_family": "fork_join_dag"
+      },
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_fork_join_fulfillment",
+      "frozen_variable_count": 4,
+      "frozen_variable_hint": [
+        "invoice",
+        "verify",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "guided_solver_work": 30,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_active_tail": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_frozen_variables": [
+        "invoice",
+        "verify",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick"
+      ],
+      "lns_subproblem_hint": [
+        "receive",
+        "label"
+      ],
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 11,
+      "solver_iterations": 19,
+      "source_kind": "synthetic_scheduling",
+      "subproblem_family": "fork_join_dag",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_tail_hint": [],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "conflict_front_hint": [],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_grid_route",
+        "frontier_width": 6,
+        "geometry": "two_dimensional_path",
+        "lns_shape": "route_prefix_repair",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "grid_route"
+      },
+      "expected_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_grid_route",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [],
+      "guided_solver_work": 49,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "route_00->route_10",
+        "route_10->route_20",
+        "route_20->route_21",
+        "route_21->route_22",
+        "route_22->pickup",
+        "pickup->deliver"
+      ],
+      "known_active_tail": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "known_conflict_front": [
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_frozen_variables": [
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_lns_subproblem": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "lns_subproblem_hint": [],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_grid_path",
+      "subproblem_family": "grid_route",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "route_00->route_10",
+        "route_10->route_20",
+        "route_20->route_21",
+        "route_21->route_22",
+        "route_22->pickup",
+        "pickup->deliver"
+      ],
+      "active_tail_hint": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "conflict_front_hint": [
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_grid_route",
+        "frontier_width": 6,
+        "geometry": "two_dimensional_path",
+        "lns_shape": "route_prefix_repair",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "grid_route"
+      },
+      "expected_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_grid_route",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "guided_solver_work": 4,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "route_00->route_10",
+        "route_10->route_20",
+        "route_20->route_21",
+        "route_21->route_22",
+        "route_22->pickup",
+        "pickup->deliver"
+      ],
+      "known_active_tail": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "known_conflict_front": [
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_frozen_variables": [
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_lns_subproblem": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "lns_subproblem_hint": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_kind": "synthetic_grid_path",
+      "subproblem_family": "grid_route",
+      "unsafe_false_accept": false,
+      "work_delta": 45
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "route_10->route_20",
+        "route_20->route_21",
+        "route_21->route_22",
+        "route_22->pickup",
+        "pickup->deliver"
+      ],
+      "active_tail_hint": [
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "route_20",
+        "route_10",
+        "route_00",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "conflict_front_hint": [
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_grid_route",
+        "frontier_width": 6,
+        "geometry": "two_dimensional_path",
+        "lns_shape": "route_prefix_repair",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "grid_route"
+      },
+      "expected_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_grid_route",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [
+        "route_00",
+        "pickup",
+        "deliver"
+      ],
+      "guided_solver_work": 49,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "route_00->route_10",
+        "route_10->route_20",
+        "route_20->route_21",
+        "route_21->route_22",
+        "route_22->pickup",
+        "pickup->deliver"
+      ],
+      "known_active_tail": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "known_conflict_front": [
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_frozen_variables": [
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_lns_subproblem": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "lns_subproblem_hint": [
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22"
+      ],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_grid_path",
+      "subproblem_family": "grid_route",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "route_10->route_00"
+      ],
+      "active_tail_hint": [
+        "route_00",
+        "route_10"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "route_10",
+        "route_00",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "conflict_front_hint": [
+        "route_00"
+      ],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_grid_route",
+        "frontier_width": 6,
+        "geometry": "two_dimensional_path",
+        "lns_shape": "route_prefix_repair",
+        "max_in_degree": 1,
+        "max_out_degree": 1,
+        "node_count": 7,
+        "subproblem_family": "grid_route"
+      },
+      "expected_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_grid_route",
+      "frozen_variable_count": 3,
+      "frozen_variable_hint": [
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "guided_solver_work": 49,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "route_00->route_10",
+        "route_10->route_20",
+        "route_20->route_21",
+        "route_21->route_22",
+        "route_22->pickup",
+        "pickup->deliver"
+      ],
+      "known_active_tail": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "known_conflict_front": [
+        "route_10",
+        "route_20",
+        "route_21",
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_frozen_variables": [
+        "route_22",
+        "pickup",
+        "deliver"
+      ],
+      "known_lns_subproblem": [
+        "route_00",
+        "route_10",
+        "route_20",
+        "route_21"
+      ],
+      "lns_subproblem_hint": [
+        "route_00",
+        "route_10"
+      ],
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_grid_path",
+      "subproblem_family": "grid_route",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "active_tail_hint": [],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 10,
+        "solver_iterations": 16,
+        "solver_work": 26
+      },
+      "baseline_objective_value": 70,
+      "baseline_solver_work": 26,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "conflict_front_hint": [],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_bipartite_coloring",
+        "frontier_width": 4,
+        "geometry": "bipartite_constraint_join",
+        "lns_shape": "constraint_group_slice",
+        "max_in_degree": 2,
+        "max_out_degree": 2,
+        "node_count": 6,
+        "subproblem_family": "bipartite_color_check"
+      },
+      "expected_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_bipartite_coloring",
+      "frozen_variable_count": 2,
+      "frozen_variable_hint": [],
+      "guided_solver_work": 26,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "choose_a->check_ab",
+        "choose_b->check_ab",
+        "check_ab->choose_c",
+        "choose_c->check_bc",
+        "choose_b->check_bc",
+        "check_bc->publish"
+      ],
+      "known_active_tail": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "known_conflict_front": [
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "known_frozen_variables": [
+        "check_bc",
+        "publish"
+      ],
+      "known_lns_subproblem": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "lns_subproblem_hint": [],
+      "objective_preserved": true,
+      "objective_value": 70,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 10,
+      "solver_iterations": 16,
+      "source_kind": "synthetic_csp",
+      "subproblem_family": "bipartite_color_check",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "choose_a->check_ab",
+        "choose_b->check_ab",
+        "check_ab->choose_c",
+        "choose_c->check_bc",
+        "choose_b->check_bc",
+        "check_bc->publish"
+      ],
+      "active_tail_hint": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 10,
+        "solver_iterations": 16,
+        "solver_work": 26
+      },
+      "baseline_objective_value": 70,
+      "baseline_solver_work": 26,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "conflict_front_hint": [
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_bipartite_coloring",
+        "frontier_width": 4,
+        "geometry": "bipartite_constraint_join",
+        "lns_shape": "constraint_group_slice",
+        "max_in_degree": 2,
+        "max_out_degree": 2,
+        "node_count": 6,
+        "subproblem_family": "bipartite_color_check"
+      },
+      "expected_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_bipartite_coloring",
+      "frozen_variable_count": 2,
+      "frozen_variable_hint": [
+        "check_bc",
+        "publish"
+      ],
+      "guided_solver_work": 4,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "choose_a->check_ab",
+        "choose_b->check_ab",
+        "check_ab->choose_c",
+        "choose_c->check_bc",
+        "choose_b->check_bc",
+        "check_bc->publish"
+      ],
+      "known_active_tail": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "known_conflict_front": [
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "known_frozen_variables": [
+        "check_bc",
+        "publish"
+      ],
+      "known_lns_subproblem": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "lns_subproblem_hint": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "objective_preserved": true,
+      "objective_value": 70,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 4,
+      "source_kind": "synthetic_csp",
+      "subproblem_family": "bipartite_color_check",
+      "unsafe_false_accept": false,
+      "work_delta": 22
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "choose_b->check_ab",
+        "check_ab->choose_c",
+        "choose_c->check_bc",
+        "choose_b->check_bc",
+        "check_bc->publish"
+      ],
+      "active_tail_hint": [
+        "choose_b",
+        "check_ab",
+        "choose_c"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 10,
+        "solver_iterations": 16,
+        "solver_work": 26
+      },
+      "baseline_objective_value": 70,
+      "baseline_solver_work": 26,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "check_ab",
+        "choose_b",
+        "choose_a",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "conflict_front_hint": [
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "conflict_front_precision": 1.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_bipartite_coloring",
+        "frontier_width": 4,
+        "geometry": "bipartite_constraint_join",
+        "lns_shape": "constraint_group_slice",
+        "max_in_degree": 2,
+        "max_out_degree": 2,
+        "node_count": 6,
+        "subproblem_family": "bipartite_color_check"
+      },
+      "expected_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_bipartite_coloring",
+      "frozen_variable_count": 2,
+      "frozen_variable_hint": [
+        "choose_a",
+        "check_bc",
+        "publish"
+      ],
+      "guided_solver_work": 26,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "choose_a->check_ab",
+        "choose_b->check_ab",
+        "check_ab->choose_c",
+        "choose_c->check_bc",
+        "choose_b->check_bc",
+        "check_bc->publish"
+      ],
+      "known_active_tail": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "known_conflict_front": [
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "known_frozen_variables": [
+        "check_bc",
+        "publish"
+      ],
+      "known_lns_subproblem": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "lns_subproblem_hint": [
+        "choose_b",
+        "check_ab",
+        "choose_c"
+      ],
+      "objective_preserved": true,
+      "objective_value": 70,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 10,
+      "solver_iterations": 16,
+      "source_kind": "synthetic_csp",
+      "subproblem_family": "bipartite_color_check",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "check_ab->choose_a"
+      ],
+      "active_tail_hint": [
+        "choose_a",
+        "check_ab"
+      ],
+      "active_tail_size": 4,
+      "baseline_metrics": {
+        "solver_conflicts": 10,
+        "solver_iterations": 16,
+        "solver_work": 26
+      },
+      "baseline_objective_value": 70,
+      "baseline_solver_work": 26,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "check_ab",
+        "choose_a",
+        "choose_b",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "conflict_front_hint": [
+        "choose_a"
+      ],
+      "conflict_front_precision": 0.0,
+      "constraint_violation_count": 0,
+      "diversity_descriptor": {
+        "edge_count": 6,
+        "fixture_id": "diverse_bipartite_coloring",
+        "frontier_width": 4,
+        "geometry": "bipartite_constraint_join",
+        "lns_shape": "constraint_group_slice",
+        "max_in_degree": 2,
+        "max_out_degree": 2,
+        "node_count": 6,
+        "subproblem_family": "bipartite_color_check"
+      },
+      "expected_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "choose_a",
+        "choose_b",
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "final_valid": true,
+      "final_validity_source": "solver_recomputed",
+      "fixture_id": "diverse_bipartite_coloring",
+      "frozen_variable_count": 2,
+      "frozen_variable_hint": [
+        "choose_b",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "guided_solver_work": 26,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "adversarial_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "choose_a->check_ab",
+        "choose_b->check_ab",
+        "check_ab->choose_c",
+        "choose_c->check_bc",
+        "choose_b->check_bc",
+        "check_bc->publish"
+      ],
+      "known_active_tail": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "known_conflict_front": [
+        "check_ab",
+        "choose_c",
+        "check_bc",
+        "publish"
+      ],
+      "known_frozen_variables": [
+        "check_bc",
+        "publish"
+      ],
+      "known_lns_subproblem": [
+        "choose_a",
+        "check_ab",
+        "choose_b",
+        "choose_c"
+      ],
+      "lns_subproblem_hint": [
+        "choose_a",
+        "check_ab"
+      ],
+      "objective_preserved": true,
+      "objective_value": 70,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 10,
+      "solver_iterations": 16,
+      "source_kind": "synthetic_csp",
+      "subproblem_family": "bipartite_color_check",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    }
+  ],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5433.active_constraint_diversity_lns.v494",
+  "solver_validity_preserved": true,
+  "source_artifacts": [
+    "results/experiment_5419_active_constraint_lns_scale_v493.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5433",
+    "SCENARIO-VERIFY-5433"
+  ],
+  "status": "complete",
+  "subproblem_family_count": 4,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5433_active_constraint_diversity_lns_v494.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5433_active_constraint_diversity_lns_v494.py -m pytest tests/python/test_experiment_5433_active_constraint_diversity_lns_v494.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5433_active_constraint_diversity_lns_v494.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "passed"
+    }
+  ],
+  "work_delta": 138
+}
