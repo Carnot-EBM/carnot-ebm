@@ -203,6 +203,23 @@ The audit shall report how many roadmaps, tests, and local import targets were
 checked, how many missing imports were found, and how many missing imports were
 allowed because the roadmap explicitly declared the implementation deliverable.
 
+### REQ-HARNESS-015: Upstream-Only PRD Gap And Failure Taxonomy Tables
+
+The repository shall provide a deterministic aggregation helper for PRD gap and
+agent-failure taxonomy tables. The helper shall read only the upstream result
+artifact files that exist at execution time, record absent upstream files as
+missing, and avoid fabricating field values from roadmap expectations or hidden
+live model inference. Each lane classification shall cite artifact paths and
+exact supporting field names, classify lanes as `closed`, `partial`, `blocked`,
+`honest_null`, or `missing`, and count the applicable failure-taxonomy tags.
+
+For Exp5439 specifically, the terminal artifact shall write
+`results/experiment_5439_prd_gap_agent_failure_table_v494.json` with
+`upstream_artifacts_read`, `upstream_artifacts_missing`, `closed_lanes`,
+`partial_lanes`, `blocked_lanes`, `honest_null_lanes`, `missing_lanes`,
+`failure_taxonomy_counts`, `prd_gap_table_ready`, `inference_substrate`, and a
+terminal-prefixed `honest_verdict`.
+
 ### REQ-HARNESS-SAMPLER-NO-SPECANN: Phase 3 SpecAnn Ban
 
 Phase 3 substrate sampler MUST NOT use Spectral Annealing (Deep Think
@@ -290,6 +307,18 @@ deliverable
 **Then** the audit fails before pytest collection
 **And** the orphan import is reported with the test file and module path.
 
+### SCENARIO-HARNESS-010: PRD Gap Table Uses Existing Artifact Fields Only
+
+**Given** a PRD gap table task names a fixed set of upstream result artifacts
+**When** at least one upstream file exists and at least one upstream file is
+absent
+**Then** the helper records the existing paths in `upstream_artifacts_read`
+**And** records the absent paths in `upstream_artifacts_missing`
+**And** every non-missing lane cites exact `supporting_fields.field_name`
+entries from existing artifacts
+**And** the terminal artifact declares
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
 ### SCENARIO-HARNESS-SAMPLER-1: Direct HUBO Evaluation At Production Scale
 
 **Given** a Phase 3 substrate sampler evaluates an unreduced HUBO energy
@@ -324,4 +353,5 @@ applies.
 | REQ-HARNESS-012 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented |
 | REQ-HARNESS-013 | Implemented (`scripts/conductor_supervisor.py`) | Implemented (`results/experiment_1027_conductor_supervisor.json`) |
 | REQ-HARNESS-014 | Implemented (`scripts/audit_orphan_test_imports.py`) | Implemented (`tests/python/test_audit_orphan_test_imports.py`) |
+| REQ-HARNESS-015 | Implemented (`python/carnot/reporting/prd_gap_agent_failure_table_v494_5439.py`) | Implemented (`results/experiment_5439_prd_gap_agent_failure_table_v494.json`) |
 | REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
