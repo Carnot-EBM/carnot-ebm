@@ -1755,3 +1755,71 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5414 | Planned (`python/carnot/experiment_5414_capstone_v492.py`, `results/experiment_5414_capstone_v492.json`) | Planned (`tests/python/test_experiment_5414_capstone_v492.py`) |
+
+- REQ-CAPSTONE-5427: The `.493` milestone-close capstone aggregator
+  `exp5427-v493-capstone` in
+  `python/carnot/experiment_5427_capstone_v493.py` SHALL write
+  `results/experiment_5427_capstone_v493.json` without modifying
+  `research-roadmap.yaml` and without modifying `scripts/research_conductor.py`.
+  It SHALL read the listed `.493` source context and upstream artifacts from
+  Exp5415 through Exp5426, record any missing or unreadable input, and classify
+  the milestone hypotheses into headline-ready, bounded, honest-null, blocked,
+  or missing lanes from artifact fields only. It SHALL keep adversarially flagged
+  structured SOTA artifacts out of headline-ready lanes even when their local
+  GGUF/GPU-offload receipts are valid. It SHALL keep `hardware_speedup_claim`
+  false without authenticated acceleration evidence, keep
+  `future_token_signal_allowed` false without backend logits/hidden-state/token
+  receipts, and set `arc_new_level_banked` only from the ARC reproduction-gated
+  artifact.
+- SCENARIO-CAPSTONE-5427: The artifact
+  `results/experiment_5427_capstone_v493.json` must emit top-level fields
+  `milestone`, `upstream_artifacts_read`, `upstream_artifacts_missing`,
+  `headline_ready_lanes`, `bounded_lanes`, `honest_null_lanes`,
+  `blocked_lanes`, `arc_new_level_banked`, `hardware_speedup_claim`,
+  `future_token_signal_allowed`, `local_sota_gguf_receipts_valid`,
+  `research_roadmap_yaml_unchanged`, `conductor_unchanged`,
+  `next_recommendations`, `inference_substrate`, and `honest_verdict`. The
+  default `.493` aggregation must classify Exp5417 risk-calibrated structured
+  verification and Exp5418 predictive prefix/action safety as blocked from
+  headline readiness while their local GGUF receipts remain valid, Exp5419
+  active-constraint LNS scale as bounded, Exp5420 p-bit hardware-transfer
+  preflight as bounded, Exp5421 evidence-reliance CSL and Exp5422 gated CSL
+  promotion as headline-ready, Exp5423 ARC level-up as honest-null/no-bank,
+  Exp5424 comparable hardware timing as bounded with no speedup claim, and
+  Exp5425 KAN measurement-access certificates as bounded with no broad KAN
+  verification claim.
+- SCENARIO-CAPSTONE-5427-MISSING-INPUT: If any expected `.493` source context
+  or upstream artifact is absent or unreadable, the workflow must still write
+  the capstone artifact, list the path in `upstream_artifacts_missing`, classify
+  affected lanes as missing instead of inferring success from roadmap or PRD
+  prose, and start `honest_verdict` with `blocked:`.
+- SCENARIO-CAPSTONE-5427-FIELD-PRINCIPLES: The required field principles are:
+  `milestone` = "conductor route key; must equal 2026.07.493.",
+  `upstream_artifacts_read` = "provenance; ordered list of source context and
+  result artifacts actually read.", `upstream_artifacts_missing` = "no
+  fabricated evidence; missing or unreadable inputs are recorded here.",
+  `headline_ready_lanes` = "positive evidence boundary; only unflagged closed
+  rows with no stronger blocker.", `bounded_lanes` = "partial evidence boundary;
+  useful but limited receipts that must not become headline claims.",
+  `honest_null_lanes` = "null-result honesty; executed lanes with no banked or
+  positive outcome.", `blocked_lanes` = "precondition honesty; flagged, closed,
+  or missing-precondition lanes.", `arc_new_level_banked` = "ARC north-star
+  metric; true only for a reproduction-gated new level.",
+  `hardware_speedup_claim` = "no unsupported acceleration; must remain false for
+  `.493`.", `future_token_signal_allowed` = "token/internal lane closure; must
+  remain false without authenticated backend receipts.",
+  `local_sota_gguf_receipts_valid` = "SOTA model provenance; true only when the
+  structured/prefix artifacts carry GGUF model specs and GPU-offload receipts.",
+  `research_roadmap_yaml_unchanged` = "user prohibition; derived from git
+  status.", `conductor_unchanged` = "user prohibition; derived from git status.",
+  `next_recommendations` = "evidence-based planning handoff; no detailed next
+  milestone plan.", `inference_substrate` = "no hidden live model inference;
+  must equal aggregation_from_upstream_artifacts.", and `honest_verdict` =
+  "terminal status; starts with complete: or blocked: and names the capstone
+  evidence boundary."
+
+## Implementation Status (REQ-CAPSTONE-5427)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5427 | Planned (`python/carnot/experiment_5427_capstone_v493.py`, `results/experiment_5427_capstone_v493.json`) | Planned (`tests/python/test_experiment_5427_capstone_v493.py`) |

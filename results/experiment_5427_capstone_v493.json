@@ -1,0 +1,607 @@
+{
+  "arc_new_level_banked": false,
+  "artifact_read_errors": [],
+  "blocked_lanes": [
+    {
+      "blocked_reason": "flagged_adversarial_and_corrigendum_pending",
+      "claim_boundary": "structured fixture safety with abstention; blocked from headline while adversarial flags remain",
+      "classification": "blocked",
+      "evidence": {
+        "abstention_rate": 0.619048,
+        "accepted_risk_bound": 0.193608,
+        "accepted_risk_bound_threshold": 0.25,
+        "accepted_risk_estimate": 0.0,
+        "flag_reasons": [
+          "flagged_adversarial",
+          "corrigendum_pending"
+        ],
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: risk-calibrated structured panel ready with abstention",
+        "risk_calibrated_structured_panel_ready": true,
+        "semantic_error_rate": 0.619048,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "lane": "risk_calibrated_structured_verification",
+      "source_artifacts": [
+        "results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "flagged_adversarial_and_corrigendum_pending",
+      "claim_boundary": "prefix-gated unsafe-action diagnostic; blocked from headline while adversarial flags remain",
+      "classification": "blocked",
+      "evidence": {
+        "deterministic_verifier_final_authority": true,
+        "final_only_unreachable_tool_action_rate": 0.47619,
+        "final_only_unsafe_false_accept_rate": 0.666667,
+        "flag_reasons": [
+          "flagged_adversarial",
+          "corrigendum_pending"
+        ],
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: predictive prefix safety diagnostic ready",
+        "predictive_prefix_safety_ready": true,
+        "prefix_gated_unreachable_tool_action_rate": 0.0,
+        "prefix_gated_unsafe_false_accept_rate": 0.0
+      },
+      "lane": "predictive_prefix_action_safety",
+      "source_artifacts": [
+        "results/experiment_5418_predictive_prefix_action_safety_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "no_authenticated_backend_receipt",
+      "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+      "classification": "blocked",
+      "evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      },
+      "lane": "token_internal_feature_lane_closed",
+      "source_artifacts": [
+        "results/experiment_5415_transition_v493.json",
+        "results/experiment_5426_prd_gap_agent_failure_table_v493.json"
+      ]
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "blocked_reason": "",
+      "claim_boundary": "deterministic CPU-local LNS guidance; hints are advisory and solver authority is preserved",
+      "classification": "bounded",
+      "evidence": {
+        "accepted_hint_count": 5,
+        "active_constraint_lns_scale_ready": true,
+        "claim_limits": [
+          "deterministic CPU-local scale-up diagnostic",
+          "LNS, active-constraint, and conflict-front hints are advisory only",
+          "solver recomputes hint validity before accept/reject/overwrite decisions",
+          "dual residuals are final constraint-violation diagnostics",
+          "no LLM, generated text judge, p-bit hardware, or speedup claim"
+        ],
+        "dual_residual_sanity": true,
+        "honest_verdict": "complete: active-constraint LNS hints scaled to 5 fixtures, reduced solver work by 234, and preserved solver authority",
+        "overwritten_hint_count": 5,
+        "rejected_hint_count": 10,
+        "solver_validity_preserved": true,
+        "work_delta": 234
+      },
+      "lane": "active_constraint_lns_scale",
+      "source_artifacts": [
+        "results/experiment_5419_active_constraint_lns_scale_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "hash-matched CPU and PolarFire preflight only; no speedup claim",
+      "classification": "bounded",
+      "evidence": {
+        "board_repeat_count": 3,
+        "cpu_repeat_count": 3,
+        "exact_enumeration_match": true,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: p-bit/QUBO workload has hash-matched repeated CPU and PolarFire preflight receipts for Exp5424 timing; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "pbit_transfer_preflight_ready": true,
+        "polarfire_reachable": true,
+        "same_workload_hash_match": true
+      },
+      "lane": "pbit_hardware_transfer_preflight",
+      "source_artifacts": [
+        "results/experiment_5420_pbit_hardware_transfer_preflight_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "comparable CPU and PolarFire timing receipts only; no acceleration claim",
+      "classification": "bounded",
+      "evidence": {
+        "board_repeat_count": 3,
+        "comparable_timing_receipts_ready": true,
+        "cpu_repeat_count": 3,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: comparable CPU and PolarFire timing receipts are hash-matched; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "measurement_access_complete": true,
+        "polarfire_reachable": true,
+        "same_result_hash_match": true,
+        "same_workload_hash_match": true
+      },
+      "lane": "comparable_hardware_timing",
+      "source_artifacts": [
+        "results/experiment_5424_hardware_comparable_timing_receipts_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded measurement-access certificate; no broad KAN verification claim",
+      "classification": "bounded",
+      "evidence": {
+        "broad_kan_verification_claim": false,
+        "certificate_count": 14,
+        "claim_limits": [
+          "bounded measurement-access active-constraint fixture only",
+          "observable false properties are rejected only when measured rows contradict them",
+          "board timing, token logprob, and internal activation claims require evidence absent here",
+          "missing evidence is classified as unsupported, not as a negative broad proof",
+          "no broad KAN verification claim",
+          "no trained-network soundness claim",
+          "no hardware execution or hardware speedup claim",
+          "no live LLM inference claim"
+        ],
+        "false_property_rejection_rate": 1.0,
+        "honest_verdict": "complete: bounded measurement-access KAN certificate rejected observable false active-constraint claims and unsupported board/token/internal claims while preserving true measured properties with no broad KAN verification claim",
+        "kan_measurement_access_certificate_ready": true,
+        "missing_evidence_detected": true,
+        "true_property_preservation_rate": 1.0
+      },
+      "lane": "kan_measurement_access_certificates",
+      "source_artifacts": [
+        "results/experiment_5425_kan_measurement_access_certificate_v493.json"
+      ]
+    }
+  ],
+  "conductor_unchanged": true,
+  "experiment": "experiment_5427_capstone_v493",
+  "experiment_id": "exp5427-v493-capstone",
+  "field_principles": {
+    "arc_new_level_banked": "ARC north-star metric; true only for a reproduction-gated new level.",
+    "blocked_lanes": "precondition honesty; flagged, closed, or missing-precondition lanes.",
+    "bounded_lanes": "partial evidence boundary; useful but limited receipts that must not become headline claims.",
+    "conductor_unchanged": "user prohibition; derived from git status.",
+    "future_token_signal_allowed": "token/internal lane closure; must remain false without authenticated backend receipts.",
+    "hardware_speedup_claim": "no unsupported acceleration; must remain false for `.493`.",
+    "headline_ready_lanes": "positive evidence boundary; only unflagged closed rows with no stronger blocker.",
+    "honest_null_lanes": "null-result honesty; executed lanes with no banked or positive outcome.",
+    "honest_verdict": "terminal status; starts with complete: or blocked: and names the capstone evidence boundary.",
+    "inference_substrate": "no hidden live model inference; must equal aggregation_from_upstream_artifacts.",
+    "local_sota_gguf_receipts_valid": "SOTA model provenance; true only when the structured/prefix artifacts carry GGUF model specs and GPU-offload receipts.",
+    "milestone": "conductor route key; must equal 2026.07.493.",
+    "next_recommendations": "evidence-based planning handoff; no detailed next milestone plan.",
+    "research_roadmap_yaml_unchanged": "user prohibition; derived from git status.",
+    "upstream_artifacts_missing": "no fabricated evidence; missing or unreadable inputs are recorded here.",
+    "upstream_artifacts_read": "provenance; ordered list of source context and result artifacts actually read."
+  },
+  "future_token_signal_allowed": false,
+  "hardware_speedup_claim": false,
+  "headline_ready_lanes": [
+    {
+      "blocked_reason": "",
+      "claim_boundary": "controller-level CSL reliance audit; no model weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "evidence_reliance_csl_ready": true,
+        "hidden_forgetting_detected": true,
+        "honest_verdict": "complete: evidence-reliance CSL detected hidden forgetting under stable accuracy, retained raw episodes, deflected unsafe reliance, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "quality_preserved": true,
+        "reliance_drift_metric": 0.8075,
+        "rollback_verified": true,
+        "stale_poison_deflection_rate": 1.0,
+        "uncertain_reliance_deflection_rate": 1.0
+      },
+      "lane": "evidence_reliance_csl",
+      "source_artifacts": [
+        "results/experiment_5421_evidence_reliance_csl_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "gated promotion with rejected and abstained fragments retained inactive; no weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "abstained_fragment_count": 3,
+        "csl_promotion_reliance_scale_ready": true,
+        "grounding_preserved": true,
+        "honest_verdict": "complete: gated CSL promotion scale-up promoted only threshold-passing fragments, retained rejected and abstained fragments inactive, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "promoted_fragment_count": 3,
+        "rejected_fragment_count": 5,
+        "rejected_fragments_quarantined": true,
+        "rollback_verified": true
+      },
+      "lane": "gated_csl_promotion",
+      "source_artifacts": [
+        "results/experiment_5422_csl_promotion_reliance_scale_v493.json"
+      ]
+    }
+  ],
+  "honest_null_lanes": [
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live ARC path was exercised; no reproduced new level was banked",
+      "classification": "honest_null",
+      "evidence": {
+        "arc_new_level_banked": false,
+        "attempt_count": 46,
+        "failure_mode": "bounded_budget_no_levelup",
+        "frontier_expansion_count": 22,
+        "honest_verdict": "honest_null: lf52 L3 bounded_budget_no_levelup",
+        "landmark_count": 45,
+        "newly_reached_levels": [],
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "reproduced_levels": 0,
+        "status": "honest_null"
+      },
+      "lane": "arc_levelup",
+      "source_artifacts": [
+        "results/experiment_5423_arc_coex_landmark_levelup_v493.json"
+      ]
+    }
+  ],
+  "honest_verdict": "complete: .493 capstone emitted from actual artifacts; CSL reliance and gated promotion are headline-ready, active constraints/p-bit timing/KAN and comparable hardware timing are bounded, risk-calibrated and predictive-prefix structured lanes remain blocked by adversarial flags despite valid GGUF receipts, ARC no-bank keeps the north-star count unchanged, no hardware speedup is claimed, and token/internal lane closed.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "local_sota_gguf_receipts_valid": true,
+  "milestone": "2026.07.493",
+  "missing_lanes": [],
+  "next_recommendations": [
+    {
+      "evidence": {
+        "arc_new_level_banked": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69
+      },
+      "recommendation": "Keep the ARC slot because Exp5423 banked no new level; only count a future result after reproduction-gated level growth.",
+      "target": "arc_live_levelup"
+    },
+    {
+      "evidence": {
+        "comparable_timing_receipts_ready": true,
+        "hardware_speedup_claim": false,
+        "same_result_hash_match": true,
+        "same_workload_hash_match": true
+      },
+      "recommendation": "Move p-bit beyond preflight only against the comparable CPU/PolarFire timing receipt, and keep acceleration unclaimed until board-local speedup evidence exists.",
+      "target": "pbit_hardware_transfer"
+    },
+    {
+      "evidence": {
+        "no_weight_mutation": true,
+        "promotion_grounding_preserved": true,
+        "quality_preserved": true,
+        "rollback_verified": true
+      },
+      "recommendation": "Expand CSL only under the same reliance-drift, rollback, grounding, and no-weight-mutation gates because Exp5421/Exp5422 were stable there.",
+      "target": "continuous_self_learning"
+    },
+    {
+      "evidence": {
+        "future_token_signal_allowed": false
+      },
+      "recommendation": "Keep token/internal lanes closed unless a future artifact carries authenticated logits, hidden-state, attention, token-logprob, or intermediate-exit backend receipts.",
+      "target": "token_internal_backend"
+    }
+  ],
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:df14ad0798b753e2488d79ce6753375caa2e838844f4bdc26f64018ad7e1e4fd"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5427,
+  "reproducibility_checksum": "sha256:b6736185455b1f1b0a235e9f02ed3d51f0224a84fd37e713c69171bbe8078cd7",
+  "research_roadmap_yaml_unchanged": true,
+  "result_path": "results/experiment_5427_capstone_v493.json",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5427.capstone_v493.v1",
+  "source_artifact_checksums": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "_bmad/architecture.md": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a",
+    "_bmad/prd.md": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+    "ops/changelog.md": "sha256:e8f6f87bad36ed8059bfb18680125703e179776f78dc025231d76a9d7c534cc3",
+    "ops/status.md": "sha256:550fb09ec1dd20f779a335ba51e308ea9308421e3fcbecdd53b7d5d51c6ead1a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_5415_transition_v493.json": "sha256:293979a8cd61718b6118ae9ad1adb0a47856f7a03dc11184134fda925e80248f",
+    "results/experiment_5416_source_delta_v493.json": "sha256:f03571f27a7849b0f3a841a9eaa6ea3be527bd740c5b1a2bac18c652068662f7",
+    "results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json": "sha256:9756bca7f93ef92fb1d77e196c873e53e4d39bf0f9a6d0b48ae7454146a45f0b",
+    "results/experiment_5418_predictive_prefix_action_safety_v493.json": "sha256:d329e5f24e554990c26ec7d46365e4d94058b2087c3d317ea532af75a7caf790",
+    "results/experiment_5419_active_constraint_lns_scale_v493.json": "sha256:2036c690b7f509cd36b3cc381c629c8d5a5c0c2c2988db7853a08809edf42f4f",
+    "results/experiment_5420_pbit_hardware_transfer_preflight_v493.json": "sha256:809b8fdfffdde07ee0642681c76ecdd3e8c623e181ed66b9b66901fb491a90c5",
+    "results/experiment_5421_evidence_reliance_csl_v493.json": "sha256:fe9490a23b17ffc082fb6c2e24f27e6288beafd90fdcaed6d5c3cd5c515c555e",
+    "results/experiment_5422_csl_promotion_reliance_scale_v493.json": "sha256:d3f66ff1947a183d45a407417bcf91cde7347583b1bc945b2129b9ee0c8a13e4",
+    "results/experiment_5423_arc_coex_landmark_levelup_v493.json": "sha256:da66f6dbeb26854776571add5fcd34eb53489006a21831e6b4565dff33abd76a",
+    "results/experiment_5424_hardware_comparable_timing_receipts_v493.json": "sha256:86638beae6c271a9da3a91c714d8a238e2a2a38664318c6d2f7e1c8bcc7a39a1",
+    "results/experiment_5425_kan_measurement_access_certificate_v493.json": "sha256:27a0d61c8b252208588d0e6429612b5085823bb5dd8b334ed9e00e530ee1b3a2",
+    "results/experiment_5426_prd_gap_agent_failure_table_v493.json": "sha256:abb8eee338ba8327e4a33e15b94a38134ef354064e1bd2efc20382fad024d36c"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-5427",
+    "SCENARIO-CAPSTONE-5427",
+    "SCENARIO-CAPSTONE-5427-MISSING-INPUT",
+    "SCENARIO-CAPSTONE-5427-FIELD-PRINCIPLES"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5427_capstone_v493.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5427_capstone_v493.py -m pytest tests/python/test_experiment_5427_capstone_v493.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5427_capstone_v493.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "truth_table": [
+    {
+      "blocked_reason": "flagged_adversarial_and_corrigendum_pending",
+      "claim_boundary": "structured fixture safety with abstention; blocked from headline while adversarial flags remain",
+      "classification": "blocked",
+      "evidence": {
+        "abstention_rate": 0.619048,
+        "accepted_risk_bound": 0.193608,
+        "accepted_risk_bound_threshold": 0.25,
+        "accepted_risk_estimate": 0.0,
+        "flag_reasons": [
+          "flagged_adversarial",
+          "corrigendum_pending"
+        ],
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: risk-calibrated structured panel ready with abstention",
+        "risk_calibrated_structured_panel_ready": true,
+        "semantic_error_rate": 0.619048,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "lane": "risk_calibrated_structured_verification",
+      "source_artifacts": [
+        "results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "flagged_adversarial_and_corrigendum_pending",
+      "claim_boundary": "prefix-gated unsafe-action diagnostic; blocked from headline while adversarial flags remain",
+      "classification": "blocked",
+      "evidence": {
+        "deterministic_verifier_final_authority": true,
+        "final_only_unreachable_tool_action_rate": 0.47619,
+        "final_only_unsafe_false_accept_rate": 0.666667,
+        "flag_reasons": [
+          "flagged_adversarial",
+          "corrigendum_pending"
+        ],
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: predictive prefix safety diagnostic ready",
+        "predictive_prefix_safety_ready": true,
+        "prefix_gated_unreachable_tool_action_rate": 0.0,
+        "prefix_gated_unsafe_false_accept_rate": 0.0
+      },
+      "lane": "predictive_prefix_action_safety",
+      "source_artifacts": [
+        "results/experiment_5418_predictive_prefix_action_safety_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "deterministic CPU-local LNS guidance; hints are advisory and solver authority is preserved",
+      "classification": "bounded",
+      "evidence": {
+        "accepted_hint_count": 5,
+        "active_constraint_lns_scale_ready": true,
+        "claim_limits": [
+          "deterministic CPU-local scale-up diagnostic",
+          "LNS, active-constraint, and conflict-front hints are advisory only",
+          "solver recomputes hint validity before accept/reject/overwrite decisions",
+          "dual residuals are final constraint-violation diagnostics",
+          "no LLM, generated text judge, p-bit hardware, or speedup claim"
+        ],
+        "dual_residual_sanity": true,
+        "honest_verdict": "complete: active-constraint LNS hints scaled to 5 fixtures, reduced solver work by 234, and preserved solver authority",
+        "overwritten_hint_count": 5,
+        "rejected_hint_count": 10,
+        "solver_validity_preserved": true,
+        "work_delta": 234
+      },
+      "lane": "active_constraint_lns_scale",
+      "source_artifacts": [
+        "results/experiment_5419_active_constraint_lns_scale_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "hash-matched CPU and PolarFire preflight only; no speedup claim",
+      "classification": "bounded",
+      "evidence": {
+        "board_repeat_count": 3,
+        "cpu_repeat_count": 3,
+        "exact_enumeration_match": true,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: p-bit/QUBO workload has hash-matched repeated CPU and PolarFire preflight receipts for Exp5424 timing; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "pbit_transfer_preflight_ready": true,
+        "polarfire_reachable": true,
+        "same_workload_hash_match": true
+      },
+      "lane": "pbit_hardware_transfer_preflight",
+      "source_artifacts": [
+        "results/experiment_5420_pbit_hardware_transfer_preflight_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "controller-level CSL reliance audit; no model weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "evidence_reliance_csl_ready": true,
+        "hidden_forgetting_detected": true,
+        "honest_verdict": "complete: evidence-reliance CSL detected hidden forgetting under stable accuracy, retained raw episodes, deflected unsafe reliance, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "quality_preserved": true,
+        "reliance_drift_metric": 0.8075,
+        "rollback_verified": true,
+        "stale_poison_deflection_rate": 1.0,
+        "uncertain_reliance_deflection_rate": 1.0
+      },
+      "lane": "evidence_reliance_csl",
+      "source_artifacts": [
+        "results/experiment_5421_evidence_reliance_csl_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "gated promotion with rejected and abstained fragments retained inactive; no weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "abstained_fragment_count": 3,
+        "csl_promotion_reliance_scale_ready": true,
+        "grounding_preserved": true,
+        "honest_verdict": "complete: gated CSL promotion scale-up promoted only threshold-passing fragments, retained rejected and abstained fragments inactive, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "promoted_fragment_count": 3,
+        "rejected_fragment_count": 5,
+        "rejected_fragments_quarantined": true,
+        "rollback_verified": true
+      },
+      "lane": "gated_csl_promotion",
+      "source_artifacts": [
+        "results/experiment_5422_csl_promotion_reliance_scale_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live ARC path was exercised; no reproduced new level was banked",
+      "classification": "honest_null",
+      "evidence": {
+        "arc_new_level_banked": false,
+        "attempt_count": 46,
+        "failure_mode": "bounded_budget_no_levelup",
+        "frontier_expansion_count": 22,
+        "honest_verdict": "honest_null: lf52 L3 bounded_budget_no_levelup",
+        "landmark_count": 45,
+        "newly_reached_levels": [],
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "reproduced_levels": 0,
+        "status": "honest_null"
+      },
+      "lane": "arc_levelup",
+      "source_artifacts": [
+        "results/experiment_5423_arc_coex_landmark_levelup_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "comparable CPU and PolarFire timing receipts only; no acceleration claim",
+      "classification": "bounded",
+      "evidence": {
+        "board_repeat_count": 3,
+        "comparable_timing_receipts_ready": true,
+        "cpu_repeat_count": 3,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: comparable CPU and PolarFire timing receipts are hash-matched; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "measurement_access_complete": true,
+        "polarfire_reachable": true,
+        "same_result_hash_match": true,
+        "same_workload_hash_match": true
+      },
+      "lane": "comparable_hardware_timing",
+      "source_artifacts": [
+        "results/experiment_5424_hardware_comparable_timing_receipts_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded measurement-access certificate; no broad KAN verification claim",
+      "classification": "bounded",
+      "evidence": {
+        "broad_kan_verification_claim": false,
+        "certificate_count": 14,
+        "claim_limits": [
+          "bounded measurement-access active-constraint fixture only",
+          "observable false properties are rejected only when measured rows contradict them",
+          "board timing, token logprob, and internal activation claims require evidence absent here",
+          "missing evidence is classified as unsupported, not as a negative broad proof",
+          "no broad KAN verification claim",
+          "no trained-network soundness claim",
+          "no hardware execution or hardware speedup claim",
+          "no live LLM inference claim"
+        ],
+        "false_property_rejection_rate": 1.0,
+        "honest_verdict": "complete: bounded measurement-access KAN certificate rejected observable false active-constraint claims and unsupported board/token/internal claims while preserving true measured properties with no broad KAN verification claim",
+        "kan_measurement_access_certificate_ready": true,
+        "missing_evidence_detected": true,
+        "true_property_preservation_rate": 1.0
+      },
+      "lane": "kan_measurement_access_certificates",
+      "source_artifacts": [
+        "results/experiment_5425_kan_measurement_access_certificate_v493.json"
+      ]
+    },
+    {
+      "blocked_reason": "no_authenticated_backend_receipt",
+      "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+      "classification": "blocked",
+      "evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      },
+      "lane": "token_internal_feature_lane_closed",
+      "source_artifacts": [
+        "results/experiment_5415_transition_v493.json",
+        "results/experiment_5426_prd_gap_agent_failure_table_v493.json"
+      ]
+    }
+  ],
+  "upstream_artifacts_missing": [],
+  "upstream_artifacts_read": [
+    "AGENTS.md",
+    "CODEX.md",
+    "CLAUDE.md",
+    "research-program.md",
+    "_bmad/prd.md",
+    "_bmad/architecture.md",
+    "ops/status.md",
+    "ops/changelog.md",
+    "results/experiment_5415_transition_v493.json",
+    "results/experiment_5416_source_delta_v493.json",
+    "results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json",
+    "results/experiment_5418_predictive_prefix_action_safety_v493.json",
+    "results/experiment_5419_active_constraint_lns_scale_v493.json",
+    "results/experiment_5420_pbit_hardware_transfer_preflight_v493.json",
+    "results/experiment_5421_evidence_reliance_csl_v493.json",
+    "results/experiment_5422_csl_promotion_reliance_scale_v493.json",
+    "results/experiment_5423_arc_coex_landmark_levelup_v493.json",
+    "results/experiment_5424_hardware_comparable_timing_receipts_v493.json",
+    "results/experiment_5425_kan_measurement_access_certificate_v493.json",
+    "results/experiment_5426_prd_gap_agent_failure_table_v493.json"
+  ]
+}
