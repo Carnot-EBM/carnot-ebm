@@ -1,0 +1,410 @@
+{
+  "blocked_lanes": [
+    {
+      "blocked_reason": "flagged_adversarial_and_corrigendum_pending",
+      "claim_boundary": "structured fixture safety with abstention; blocked from headline while adversarial flags remain",
+      "classification": "blocked",
+      "lane": "risk_calibrated_structured_verification",
+      "source_artifacts": [
+        "results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json"
+      ],
+      "terminal_evidence": {
+        "abstention_rate": 0.619048,
+        "accepted_risk_bound": 0.193608,
+        "accepted_risk_bound_threshold": 0.25,
+        "accepted_risk_estimate": 0.0,
+        "flag_reasons": [
+          "flagged_adversarial",
+          "corrigendum_pending"
+        ],
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: risk-calibrated structured panel ready with abstention",
+        "risk_calibrated_structured_panel_ready": true,
+        "semantic_error_rate": 0.619048,
+        "unsafe_false_accept_rate": 0.0
+      }
+    },
+    {
+      "blocked_reason": "flagged_adversarial_and_corrigendum_pending",
+      "claim_boundary": "prefix-gated unsafe-action diagnostic; blocked from headline while adversarial flags remain",
+      "classification": "blocked",
+      "lane": "predictive_prefix_action_safety",
+      "source_artifacts": [
+        "results/experiment_5418_predictive_prefix_action_safety_v493.json"
+      ],
+      "terminal_evidence": {
+        "deterministic_verifier_final_authority": true,
+        "final_only_unreachable_tool_action_rate": 0.47619,
+        "final_only_unsafe_false_accept_rate": 0.666667,
+        "flag_reasons": [
+          "flagged_adversarial",
+          "corrigendum_pending"
+        ],
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: predictive prefix safety diagnostic ready",
+        "predictive_prefix_safety_ready": true,
+        "prefix_gated_unreachable_tool_action_rate": 0.0,
+        "prefix_gated_unsafe_false_accept_rate": 0.0
+      }
+    },
+    {
+      "blocked_reason": "no_authenticated_backend_receipt",
+      "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+      "classification": "blocked",
+      "lane": "token_internal_feature_lane_closed",
+      "source_artifacts": [
+        "results/experiment_5415_transition_v493.json",
+        "results/experiment_5426_prd_gap_agent_failure_table_v493.json"
+      ],
+      "terminal_evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      }
+    }
+  ],
+  "closed_lanes": [
+    {
+      "claim_boundary": "controller-level CSL reliance audit; no model weight mutation",
+      "classification": "headline_ready",
+      "lane": "evidence_reliance_csl",
+      "source_artifacts": [
+        "results/experiment_5421_evidence_reliance_csl_v493.json"
+      ],
+      "terminal_evidence": {
+        "evidence_reliance_csl_ready": true,
+        "hidden_forgetting_detected": true,
+        "honest_verdict": "complete: evidence-reliance CSL detected hidden forgetting under stable accuracy, retained raw episodes, deflected unsafe reliance, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "quality_preserved": true,
+        "reliance_drift_metric": 0.8075,
+        "rollback_verified": true,
+        "stale_poison_deflection_rate": 1.0,
+        "uncertain_reliance_deflection_rate": 1.0
+      }
+    },
+    {
+      "claim_boundary": "gated promotion with rejected and abstained fragments retained inactive; no weight mutation",
+      "classification": "headline_ready",
+      "lane": "gated_csl_promotion",
+      "source_artifacts": [
+        "results/experiment_5422_csl_promotion_reliance_scale_v493.json"
+      ],
+      "terminal_evidence": {
+        "abstained_fragment_count": 3,
+        "csl_promotion_reliance_scale_ready": true,
+        "grounding_preserved": true,
+        "honest_verdict": "complete: gated CSL promotion scale-up promoted only threshold-passing fragments, retained rejected and abstained fragments inactive, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "promoted_fragment_count": 3,
+        "rejected_fragment_count": 5,
+        "rejected_fragments_quarantined": true,
+        "rollback_verified": true
+      }
+    }
+  ],
+  "conductor_unchanged": true,
+  "experiment": "experiment_5428_transition_v494",
+  "experiment_id": "exp5428-transition-v494",
+  "failed_preconditions": [],
+  "field_principles": {
+    "blocked_lanes": "no unsupported claims",
+    "closed_lanes": "positive evidence boundary",
+    "conductor_unchanged": "user prohibition",
+    "honest_null_lanes": "null-result honesty",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "no hidden live model inference",
+    "milestone": "conductor route key",
+    "next_task_range": "activation sanity",
+    "partial_lanes": "bounded evidence boundary",
+    "previous_milestone": "traceability",
+    "previous_task_range": "closed execution boundary",
+    "prior_capstone_path": "provenance",
+    "roadmap_yaml_unchanged": "user prohibition"
+  },
+  "honest_null_lanes": [
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live ARC path was exercised; no reproduced new level was banked",
+      "classification": "honest_null",
+      "lane": "arc_levelup",
+      "source_artifacts": [
+        "results/experiment_5423_arc_coex_landmark_levelup_v493.json"
+      ],
+      "terminal_evidence": {
+        "arc_new_level_banked": false,
+        "attempt_count": 46,
+        "failure_mode": "bounded_budget_no_levelup",
+        "frontier_expansion_count": 22,
+        "honest_verdict": "honest_null: lf52 L3 bounded_budget_no_levelup",
+        "landmark_count": 45,
+        "newly_reached_levels": [],
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "reproduced_levels": 0,
+        "status": "honest_null"
+      }
+    },
+    {
+      "blocked_reason": "no_board_local_speedup_observed",
+      "claim_boundary": "hash-matched CPU and board timing receipts exist, but no hardware speedup claim is supported",
+      "classification": "honest_null",
+      "lane": "hardware_speedup_claim",
+      "source_artifacts": [
+        "results/experiment_5420_pbit_hardware_transfer_preflight_v493.json",
+        "results/experiment_5424_hardware_comparable_timing_receipts_v493.json",
+        "results/experiment_5427_capstone_v493.json"
+      ],
+      "terminal_evidence": {
+        "hardware_speedup_claim": false
+      }
+    }
+  ],
+  "honest_verdict": "complete: archived .493 terminal evidence into .494 transition receipt; closed lanes are evidence-reliance CSL and gated CSL promotion; partial lanes are active-constraint LNS scale, p-bit hardware-transfer preflight, comparable hardware timing, and KAN measurement-access certificates; blocked lanes are structured risk/prefix adversarial tautology flags and token/internal features; honest-null lanes are lf52 L3 ARC no-bank and no hardware speedup; next_task_range=exp5428-exp5440.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.494",
+  "next_task_range": "exp5428-exp5440",
+  "partial_lanes": [
+    {
+      "claim_boundary": "deterministic CPU-local LNS guidance; hints are advisory and solver authority is preserved",
+      "classification": "bounded",
+      "lane": "active_constraint_lns_scale",
+      "source_artifacts": [
+        "results/experiment_5419_active_constraint_lns_scale_v493.json"
+      ],
+      "terminal_evidence": {
+        "accepted_hint_count": 5,
+        "active_constraint_lns_scale_ready": true,
+        "claim_limits": [
+          "deterministic CPU-local scale-up diagnostic",
+          "LNS, active-constraint, and conflict-front hints are advisory only",
+          "solver recomputes hint validity before accept/reject/overwrite decisions",
+          "dual residuals are final constraint-violation diagnostics",
+          "no LLM, generated text judge, p-bit hardware, or speedup claim"
+        ],
+        "dual_residual_sanity": true,
+        "honest_verdict": "complete: active-constraint LNS hints scaled to 5 fixtures, reduced solver work by 234, and preserved solver authority",
+        "overwritten_hint_count": 5,
+        "rejected_hint_count": 10,
+        "solver_validity_preserved": true,
+        "work_delta": 234
+      }
+    },
+    {
+      "claim_boundary": "hash-matched CPU and PolarFire preflight only; no speedup claim",
+      "classification": "bounded",
+      "lane": "pbit_hardware_transfer_preflight",
+      "source_artifacts": [
+        "results/experiment_5420_pbit_hardware_transfer_preflight_v493.json"
+      ],
+      "terminal_evidence": {
+        "board_repeat_count": 3,
+        "cpu_repeat_count": 3,
+        "exact_enumeration_match": true,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: p-bit/QUBO workload has hash-matched repeated CPU and PolarFire preflight receipts for Exp5424 timing; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "pbit_transfer_preflight_ready": true,
+        "polarfire_reachable": true,
+        "same_workload_hash_match": true
+      }
+    },
+    {
+      "claim_boundary": "comparable CPU and PolarFire timing receipts only; no acceleration claim",
+      "classification": "bounded",
+      "lane": "comparable_hardware_timing",
+      "source_artifacts": [
+        "results/experiment_5424_hardware_comparable_timing_receipts_v493.json"
+      ],
+      "terminal_evidence": {
+        "board_repeat_count": 3,
+        "comparable_timing_receipts_ready": true,
+        "cpu_repeat_count": 3,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: comparable CPU and PolarFire timing receipts are hash-matched; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "measurement_access_complete": true,
+        "polarfire_reachable": true,
+        "same_result_hash_match": true,
+        "same_workload_hash_match": true
+      }
+    },
+    {
+      "claim_boundary": "bounded measurement-access certificate; no broad KAN verification claim",
+      "classification": "bounded",
+      "lane": "kan_measurement_access_certificates",
+      "source_artifacts": [
+        "results/experiment_5425_kan_measurement_access_certificate_v493.json"
+      ],
+      "terminal_evidence": {
+        "broad_kan_verification_claim": false,
+        "certificate_count": 14,
+        "claim_limits": [
+          "bounded measurement-access active-constraint fixture only",
+          "observable false properties are rejected only when measured rows contradict them",
+          "board timing, token logprob, and internal activation claims require evidence absent here",
+          "missing evidence is classified as unsupported, not as a negative broad proof",
+          "no broad KAN verification claim",
+          "no trained-network soundness claim",
+          "no hardware execution or hardware speedup claim",
+          "no live LLM inference claim"
+        ],
+        "false_property_rejection_rate": 1.0,
+        "honest_verdict": "complete: bounded measurement-access KAN certificate rejected observable false active-constraint claims and unsupported board/token/internal claims while preserving true measured properties with no broad KAN verification claim",
+        "kan_measurement_access_certificate_ready": true,
+        "missing_evidence_detected": true,
+        "true_property_preservation_rate": 1.0
+      }
+    }
+  ],
+  "preconditions_checked": {
+    "capstone_loadable": true,
+    "capstone_milestone": "2026.07.493",
+    "capstone_present": true,
+    "conductor_unchanged": true,
+    "expected_next_task_range": "exp5428-exp5440",
+    "expected_previous_task_range": "exp5415-exp5427",
+    "gap_table_loadable": true,
+    "gap_table_milestone": "2026.07.493",
+    "gap_table_present": true,
+    "roadmap_doc_names_milestone": true,
+    "roadmap_doc_present": true,
+    "roadmap_doc_task_range": "exp5428-exp5440",
+    "roadmap_loadable": true,
+    "roadmap_milestone": "2026.07.494",
+    "roadmap_present": true,
+    "roadmap_task_count": 13,
+    "roadmap_yaml_unchanged": true
+  },
+  "previous_milestone": "2026.07.493",
+  "previous_task_range": "exp5415-exp5427",
+  "prior_capstone_path": "results/experiment_5427_capstone_v493.json",
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:d74991d2eb5fa240bc811906fa6f6891b4d6dc30761018c614b777bc9d322b64"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5428,
+  "reproducibility_checksum": "sha256:804b46341a431328b0258c17d0dc8611cb45ae9796682b1bf7b5dea072bb8a87",
+  "result_path": "results/experiment_5428_transition_v494.json",
+  "roadmap_doc_task_range": "exp5428-exp5440",
+  "roadmap_task_ids": [
+    "exp5428-transition-v494",
+    "exp5429-source-delta-v494",
+    "exp5430-structured-tautology-corrigendum-v494",
+    "exp5431-structured-constraint-taxonomy-replication-v494",
+    "exp5432-ontology-softlogic-constraint-memory-v494",
+    "exp5433-active-constraint-diversity-lns-v494",
+    "exp5434-pbit-polarfire-timing-variance-v494",
+    "exp5435-verified-workflow-memory-csl-v494",
+    "exp5436-csl-memory-transfer-stress-v494",
+    "exp5437-arc-live-reinduction-levelup-v494",
+    "exp5438-kan-ontology-measurement-certificate-v494",
+    "exp5439-prd-gap-agent-failure-table-v494",
+    "exp5440-capstone-v494"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5428.transition_v494.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:d74991d2eb5fa240bc811906fa6f6891b4d6dc30761018c614b777bc9d322b64"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:3712b242b01860066fb037e6ac63e4df8ccac7c807aa5d8c56ea42c898d3e7b7"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:a3e9fe056ef355b1b5520ec9d10a504fafd12341801af6590fb131d6c61f15bf"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:04de0d189d883fe5300764fc112fa470aa4df04472e03ef3fbf53126ec863e3b"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:394bf9ce3e295258c0998ceca063ecd42272a4a9f61a837c306d694a8dd491ef"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5427_capstone_v493.json",
+      "read_only": true,
+      "sha256": "sha256:9186357cc356c0bf170f89adfb1e9ed58b7bb1c8805073bb7a1091d4ca28890d"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5426_prd_gap_agent_failure_table_v493.json",
+      "read_only": true,
+      "sha256": "sha256:abb8eee338ba8327e4a33e15b94a38134ef354064e1bd2efc20382fad024d36c"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5428",
+    "SCENARIO-REPORT-5428",
+    "SCENARIO-REPORT-5428-BLOCKED-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5428_transition_v494.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5428_transition_v494.py -m pytest tests/python/test_experiment_5428_transition_v494.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5428_transition_v494.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}

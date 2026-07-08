@@ -37798,3 +37798,91 @@ blocked lane lists, sets `prd_gap_table_ready=false`, and starts
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5426 | Planned (`python/carnot/experiment_5426_prd_gap_agent_failure_table_v493.py`, `results/experiment_5426_prd_gap_agent_failure_table_v493.json`) | Planned (`tests/python/test_experiment_5426_prd_gap_agent_failure_table_v493.py`) |
+
+### REQ-REPORT-5428: Archive .493 Truth And Emit .494 Transition Receipt
+
+The Exp5428 workflow SHALL write
+`results/experiment_5428_transition_v494.json` without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL read
+`CLAUDE.md`, `CODEX.md`, `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/status.md`,
+`ops/changelog.md`, `ops/conductor-log.md`,
+`results/experiment_5427_capstone_v493.json`, and
+`results/experiment_5426_prd_gap_agent_failure_table_v493.json`.
+
+The workflow SHALL use `results/experiment_5427_capstone_v493.json` as the
+prior-milestone source of truth. It SHALL record the CalVer transition from
+`2026.07.493` to `2026.07.494`, the previous task range `exp5415-exp5427`,
+and the next task range `exp5428-exp5440`. It SHALL summarize the `.493`
+closed lanes as evidence-reliance CSL and gated CSL promotion. It SHALL
+summarize the `.493` partial lanes as active-constraint LNS scale, p-bit
+hardware-transfer preflight, comparable hardware timing, and KAN
+measurement-access certificates. It SHALL summarize the `.493` blocked lanes
+as risk-calibrated structured verification, predictive-prefix action safety,
+and token/internal feature lanes still closed. It SHALL summarize the `.493`
+honest-null lanes as the ARC `lf52` L3 no-bank result and the absence of a
+hardware speedup claim. It SHALL not re-plan `.494`, rerun live model
+inference, or convert bounded, honest-null, adversarial-flagged,
+closed-backend, or no-speedup evidence into stronger claims.
+
+The artifact SHALL include required principle-annotated fields `milestone`,
+`previous_milestone`, `prior_capstone_path`, `previous_task_range`,
+`closed_lanes`, `partial_lanes`, `blocked_lanes`, `honest_null_lanes`,
+`next_task_range`, `roadmap_yaml_unchanged`, `conductor_unchanged`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include `status`,
+`schema`, `experiment`, `experiment_id`, `spec_refs`, `run_date`,
+`field_principles`, `roadmap_task_ids`, `roadmap_doc_task_range`,
+`source_artifacts`, `protected_file_checks`, `preconditions_checked`,
+`failed_preconditions`, `tests_run`, `random_seed`, and
+`reproducibility_checksum` so the transition receipt remains auditable without
+rerunning the prior milestone.
+
+Required field principles:
+
+- `milestone`: principle "conductor route key"
+- `previous_milestone`: principle "traceability"
+- `prior_capstone_path`: principle "provenance"
+- `previous_task_range`: principle "closed execution boundary"
+- `closed_lanes`: principle "positive evidence boundary"
+- `partial_lanes`: principle "bounded evidence boundary"
+- `blocked_lanes`: principle "no unsupported claims"
+- `honest_null_lanes`: principle "null-result honesty"
+- `next_task_range`: principle "activation sanity"
+- `roadmap_yaml_unchanged`: principle "user prohibition"
+- `conductor_unchanged`: principle "user prohibition"
+- `inference_substrate`: principle "no hidden live model inference"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+#### SCENARIO-REPORT-5428: Active .494 Emits Complete Transition Receipt
+
+**Given** `results/experiment_5427_capstone_v493.json` is loadable and terminal
+**And** `research-roadmap.yaml` names `2026.07.494` with ordered tasks
+Exp5428 through Exp5440
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
+`2026.07.494` and task range `Exp 5428-5440`
+**And** git status reports no changes to `research-roadmap.yaml` or
+`scripts/research_conductor.py`
+**When** the Exp5428 workflow runs
+**Then** it writes a complete `results/experiment_5428_transition_v494.json`
+with the required fields, copies the .493 closed, partial, blocked, and
+honest-null lane boundaries from Exp5427, records
+`previous_task_range=exp5415-exp5427`, records
+`next_task_range=exp5428-exp5440`, records
+`inference_substrate=aggregation_from_upstream_artifacts`, and keeps
+`roadmap_yaml_unchanged=true` and `conductor_unchanged=true`.
+
+#### SCENARIO-REPORT-5428-BLOCKED-INPUT: Missing Or Dirty Inputs Fail Closed
+
+**Given** the `.493` capstone is missing or non-terminal, the `.494` roadmap
+document is absent or mismatched, the active roadmap does not carry ordered
+Exp5428-5440 tasks, or either protected file is dirty at execution time
+**When** the Exp5428 workflow runs
+**Then** it emits a terminal `blocked:` verdict, preserves the observed failed
+preconditions, keeps the protected-file booleans tied to actual git status, and
+does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5428)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5428 | Implemented (`python/carnot/experiment_5428_transition_v494.py`, `results/experiment_5428_transition_v494.json`) | Implemented (`tests/python/test_experiment_5428_transition_v494.py`) |
