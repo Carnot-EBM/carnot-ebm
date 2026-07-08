@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.491",
+  "generated_at": "2026-07-08T07:00:54Z",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "summary": "No milestone-scoped experiment timing data was available for 2026.07.491: both authorized reconstruction paths found 0 experiment commits since activation. With 0 completed experiments and 0 compute-bound tasks, there is no supported slowest-run, GPU-idle bottleneck, or DualGPURunner finding.",
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone; no experiment-level wall-time bottleneck can be identified from the authoritative timing block"
+  ],
+  "improvements_suggested": [
+    "Emit a milestone-scoped timing receipt at experiment completion so retrospectives do not depend only on git-log and disk-mtime reconstruction.",
+    "Add an explicit no-data retrospective path when both authorized timing reconstruction methods find no experiment commits since activation.",
+    "Keep GPU-utilization interpretation gated on compute-bound task tags so idle synthesis-only or empty milestones do not produce false bottleneck findings."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Persist per-experiment start/end timing receipts under the active milestone identifier.",
+    "Fail closed during retrospective assembly when authoritative timing reconstruction returns no milestone-scoped experiment commits.",
+    "Require explicit 2+ parallel-model compute-bound metadata before recommending DualGPURunner changes."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The authoritative timing block has 0 completed experiments, so the retro cannot name any experiment ID, duration, or compute-bound slow path. The GPU snapshot shows idle devices, but without any compute-bound timing entries it is not evidence of wasted compute.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}
