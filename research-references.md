@@ -28098,3 +28098,104 @@ Execution-time sweep after the `.492` planner refresh checked arXiv, OpenReview,
 - **Watch-only/excluded:** CARL, external code-agent verification, GRS-KAN, StructuredEdit, energy-based structural attribution, MxGLUT, SafeDec, Extropic writing, and Logical Intelligence public pages were checked but not promoted because they are training-scope, duplicate, domain-specific, non-local, challenge-blocked, or retired-lane context.
 
 <!-- V492-EXECUTION-REFRESH-20260708-END -->
+
+
+<!-- V493-PLANNER-REFRESH-2026-07-08-START -->
+### V493 Planner Refresh - 2026-07-08
+
+Planner sweep after the 2026.07.492 capstone checked arXiv primary
+sources, OpenReview search results, HuggingFace Papers/search surfaces,
+Semantic Scholar EBT/ARM-EBM routes, GitHub repositories, Extropic writing,
+Logical Intelligence public posts, V489-V492 duplicate history, and the
+exclusion manifest. The entries below were absent from nearby V489-V492
+blocks and are actionable for the next roadmap.
+
+### New actionable findings
+- **Constrained Flow Matching via Lagrangian Dual Flows** (https://arxiv.org/abs/2607.04513):
+  adds dual-state constrained generation for nonlinear constraints without
+  expensive projection subproblems. Carnot hook: prototype only a bounded
+  deterministic analogue first, where generated tool/action candidates carry a
+  dual residual and the solver remains final authority. Do not claim diffusion
+  or flow-model performance without an actual local generator.
+- **Neuro-Symbolic Safety Guidance for Vision-Language-Action Models via
+  Constrained Flow Matching** (https://arxiv.org/abs/2607.01378): interleaves
+  symbolic safety corrections with trajectory generation and reports stronger
+  long-horizon collision avoidance than one-step filters. Carnot hook: extend
+  structured safety/action receipts from final JSON validity to predictive
+  multi-step hazard or forbidden-action prefixes, still with deterministic
+  policy/solver authority.
+- **Uncertainty-Aware Abstention in Large Language Models with Provable
+  Alignment Guarantees** (https://arxiv.org/abs/2607.04430): converts arbitrary
+  uncertainty scores into selective-answering thresholds with finite-sample
+  accepted-error control. Carnot hook: add calibration-set confidence intervals
+  to local SOTA structured safety and memory/world-model promotion so low-risk
+  accepted rows are separated from abstained rows by a measurable risk bound.
+- **Weave of Formal Thought** (https://arxiv.org/abs/2606.25987): combines
+  sound Tree-sitter-prefix constrained decoding with latent grammar-symbol
+  reasoning. Carnot hook: for code/formal fixtures, distinguish syntax-complete
+  grammar masking from semantic/tool-state validity, and record parse-prefix
+  completeness separately from correctness.
+- **Empirical Study for Structured Output Control in LLMs for Software
+  Engineering** (https://arxiv.org/abs/2606.09395): finds syntax control is
+  necessary but insufficient because structural and semantic errors remain.
+  Carnot hook: keep the `.492` structured safety/action lane focused on
+  row-level semantic validity, wrong-valid counts, and downstream tool-state
+  effects rather than treating schema validity as success.
+- **Measurement-Access Risk Frontiers for Autonomous Scientific Control**
+  (https://arxiv.org/abs/2607.05696): formalizes that missing physical records
+  cannot be recovered by compute alone. Carnot hook: for hardware and ARC,
+  record which observations were physically accessible before action; separate
+  missing-measurement blockers from solver/search failures.
+- **Hidden Forgetting in Continual Multimodal Learning: When Accuracy Survives
+  but Grounding Fails** (https://arxiv.org/abs/2607.02020): shows answer
+  accuracy can survive while evidence-channel reliance drifts. Carnot hook:
+  continuous self-learning must track evidence/reliance-path stability, not
+  only quality deltas, context savings, and no-weight-mutation status.
+- **Beyond the Leaderboard: A Synthesis of Tool-Use, Planning, and Reasoning
+  Failures in Large Language Model Agents** (https://arxiv.org/abs/2607.05775):
+  synthesizes tool invocation, planning/constraint, long-horizon, coordination,
+  safety, and measurement-validity failure clusters. Carnot hook: next capstone
+  and self-learning diagnostics should emit a failure-taxonomy table so
+  tool/action errors are not hidden behind aggregate pass/fail labels.
+
+### Secondary-source status
+- **OpenReview:** searches surfaced Spilled Energy, JSONSchemaBench,
+  Semantic Reflective Verification, parser-stack constrained decoding, DIVER,
+  and constrained-diffusion entries. The actionable methods were either already
+  in V489-V492 history or had arXiv/GitHub mirrors, so no OpenReview-only claim
+  is promoted.
+- **HuggingFace Papers:** pages mirrored AgentCL, EBT, constrained-decoding,
+  hallucination, and continual-learning items already present in nearby
+  reference blocks. No HuggingFace-only experiment basis was added.
+- **Semantic Scholar:** direct API requests for EBT `2507.02092` and ARM-EBM
+  `2512.15605` returned HTTP 429 on 2026-07-08, so no citation-count delta is
+  claimed.
+- **GitHub:** `guidance-ai/llguidance`, `Saibo-creator/Awesome-LLM-Constrained-Decoding`,
+  `dolphin-in-a-coma/arc-agi-3-just-explore`, `arcprize/arc-agi-3-benchmarking`,
+  and `Thinklab-SJTU/awesome-ml4co` remain implementation/watch references.
+  No new repository replaces Carnot's deterministic solver authority or ARC
+  live-path provenance requirements.
+- **Extropic:** `thermodynamic-computing-from-zero-to-one`, `inside-x0-and-xtr-0`,
+  and `tsu-101` still describe TSU/XTR-0 architecture and `thrml`, but Carnot
+  has no authenticated local TSU hardware path.
+- **Logical Intelligence:** the June 2026 automatic formal-verification post
+  reinforces verifier-first, proof/checker authority for code generation.
+  Treat Kona/Aleph public posts as architecture context only; no reproducible
+  local baseline or comparison claim is available.
+
+### V493 Planning impact
+- Scale `.492` local SOTA structured safety/action evidence with confidence
+  intervals and accepted-risk/abstention accounting before calling it a broader
+  verifier result.
+- Add a predictive prefix/action-safety fixture that separates syntax/schema
+  validity from semantic, policy, and tool-state validity.
+- Extend continuous self-learning with evidence-reliance and hidden-forgetting
+  checks so resource savings cannot silently change the evidence path.
+- For hardware and ARC, add measurement-access ledgers that distinguish missing
+  observations from solver failures.
+- Keep ARC as a live-path level-up attempt, but change mechanism and target
+  after repeated re86 L3 no-bank results.
+- Keep hardware speedup closed until repeated board-local timing and matched CPU
+  baselines share workload hashes and accessible measurement records.
+
+<!-- V493-PLANNER-REFRESH-2026-07-08-END -->
