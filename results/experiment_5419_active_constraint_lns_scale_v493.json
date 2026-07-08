@@ -1,0 +1,2760 @@
+{
+  "accepted_hint_count": 5,
+  "active_constraint_lns_scale_ready": true,
+  "aggregate_from_rows_only": true,
+  "baseline_solver_work": 273,
+  "claim_limits": [
+    "deterministic CPU-local scale-up diagnostic",
+    "LNS, active-constraint, and conflict-front hints are advisory only",
+    "solver recomputes hint validity before accept/reject/overwrite decisions",
+    "dual residuals are final constraint-violation diagnostics",
+    "no LLM, generated text judge, p-bit hardware, or speedup claim"
+  ],
+  "dual_residual_sanity": true,
+  "duration_s": 1.19,
+  "experiment": 5419,
+  "experiment_id": "exp5419-active-constraint-lns-scale-v493",
+  "field_principles": {
+    "accepted_hint_count": "hint behavior.",
+    "active_constraint_lns_scale_ready": "downstream gate.",
+    "aggregate_from_rows_only": "tautology prevention.",
+    "baseline_solver_work": "unguided comparison.",
+    "dual_residual_sanity": "constrained-flow diagnostic.",
+    "fixture_count": "scale.",
+    "guided_solver_work": "guided comparison.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "no hidden live model inference.",
+    "lns_subproblem_count": "scale-up mechanism.",
+    "overwritten_hint_count": "solver authority.",
+    "rejected_hint_count": "hint behavior.",
+    "solver_validity_preserved": "no invalid speedup.",
+    "work_delta": "guidance effect."
+  },
+  "fixture_count": 5,
+  "guided_solver_work": 39,
+  "hint_modes": [
+    "solver_only",
+    "lns_guided_hint",
+    "stale_hint",
+    "contradictory_hint",
+    "overconfident_hint"
+  ],
+  "honest_verdict": "complete: active-constraint LNS hints scaled to 5 fixtures, reduced solver work by 234, and preserved solver authority",
+  "inference_substrate": "deterministic_solver_experiment",
+  "lns_subproblem_count": 5,
+  "milestone": "2026.07.493",
+  "mode_summaries": {
+    "contradictory_hint": {
+      "accepted_count": 0,
+      "baseline_solver_work": 273,
+      "fallback_count": 5,
+      "guided_solver_work": 273,
+      "overwritten_count": 5,
+      "rejected_count": 0,
+      "row_count": 5,
+      "solver_conflicts": 117,
+      "solver_iterations": 156,
+      "validity_rate": 1.0,
+      "work_delta": 0
+    },
+    "lns_guided_hint": {
+      "accepted_count": 5,
+      "baseline_solver_work": 273,
+      "fallback_count": 0,
+      "guided_solver_work": 39,
+      "overwritten_count": 0,
+      "rejected_count": 0,
+      "row_count": 5,
+      "solver_conflicts": 0,
+      "solver_iterations": 39,
+      "validity_rate": 1.0,
+      "work_delta": 234
+    },
+    "overconfident_hint": {
+      "accepted_count": 0,
+      "baseline_solver_work": 273,
+      "fallback_count": 5,
+      "guided_solver_work": 273,
+      "overwritten_count": 0,
+      "rejected_count": 5,
+      "row_count": 5,
+      "solver_conflicts": 117,
+      "solver_iterations": 156,
+      "validity_rate": 1.0,
+      "work_delta": 0
+    },
+    "solver_only": {
+      "accepted_count": 0,
+      "baseline_solver_work": 273,
+      "fallback_count": 0,
+      "guided_solver_work": 273,
+      "overwritten_count": 0,
+      "rejected_count": 0,
+      "row_count": 5,
+      "solver_conflicts": 117,
+      "solver_iterations": 156,
+      "validity_rate": 1.0,
+      "work_delta": 0
+    },
+    "stale_hint": {
+      "accepted_count": 0,
+      "baseline_solver_work": 273,
+      "fallback_count": 5,
+      "guided_solver_work": 273,
+      "overwritten_count": 0,
+      "rejected_count": 5,
+      "row_count": 5,
+      "solver_conflicts": 117,
+      "solver_iterations": 156,
+      "validity_rate": 1.0,
+      "work_delta": 0
+    }
+  },
+  "overwritten_hint_count": 5,
+  "random_seed": 5419,
+  "readiness_blockers": [],
+  "rejected_hint_count": 10,
+  "reproducibility_checksum": "67acf0fa624da90e62bf46b99f08b8de32715265b0c310bfbbd02740f51a1fe6",
+  "row_count": 25,
+  "row_records": [
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_release_train",
+      "guided_solver_work": 49,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "lns_subproblem_hint": [],
+      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_release_train",
+      "guided_solver_work": 7,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "lns_subproblem_hint": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 7,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 42
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "unit",
+        "compile",
+        "plan",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_release_train",
+      "guided_solver_work": 49,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "lns_subproblem_hint": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff"
+      ],
+      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "compile->plan"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "compile",
+        "plan",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [
+        "plan"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_release_train",
+      "guided_solver_work": 49,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "contradictory_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "lns_subproblem_hint": [
+        "plan",
+        "compile"
+      ],
+      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy",
+        "deploy->plan"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "compile",
+        "plan",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "conflict_front_hint": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_release_train",
+      "guided_solver_work": 49,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "overconfident_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "plan->compile",
+        "compile->unit",
+        "unit->integration",
+        "integration->package",
+        "package->signoff",
+        "signoff->deploy"
+      ],
+      "known_conflict_front": [
+        "compile",
+        "unit",
+        "integration",
+        "package",
+        "signoff",
+        "deploy"
+      ],
+      "known_lns_subproblem": [
+        "plan",
+        "compile",
+        "unit",
+        "integration",
+        "package"
+      ],
+      "lns_subproblem_hint": [
+        "deploy",
+        "signoff",
+        "package",
+        "integration",
+        "unit",
+        "compile",
+        "plan"
+      ],
+      "lns_subproblem_id": "scale_release_train:plan,compile,unit,integration,package",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_joined_fulfillment",
+      "guided_solver_work": 30,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "verify",
+        "ship",
+        "invoice"
+      ],
+      "lns_subproblem_hint": [],
+      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 11,
+      "solver_iterations": 19,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_joined_fulfillment",
+      "guided_solver_work": 8,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "verify",
+        "ship",
+        "invoice"
+      ],
+      "lns_subproblem_hint": [
+        "receive",
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "verify",
+        "ship",
+        "invoice"
+      ],
+      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 8,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 22
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "pack->ship"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "label",
+        "receive",
+        "invoice",
+        "verify",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_joined_fulfillment",
+      "guided_solver_work": 30,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "verify",
+        "ship",
+        "invoice"
+      ],
+      "lns_subproblem_hint": [
+        "receive",
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "verify",
+        "ship"
+      ],
+      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 11,
+      "solver_iterations": 19,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "label->receive"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "label",
+        "receive",
+        "invoice",
+        "verify",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [
+        "receive"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_joined_fulfillment",
+      "guided_solver_work": 30,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "contradictory_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "verify",
+        "ship",
+        "invoice"
+      ],
+      "lns_subproblem_hint": [
+        "receive",
+        "label"
+      ],
+      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 11,
+      "solver_iterations": 19,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship",
+        "ship->invoice"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 11,
+        "solver_iterations": 19,
+        "solver_work": 30
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 30,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "label",
+        "receive",
+        "invoice",
+        "verify",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "conflict_front_hint": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "invoice",
+        "verify",
+        "receive",
+        "reserve",
+        "label",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_joined_fulfillment",
+      "guided_solver_work": 30,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "overconfident_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "receive->label",
+        "receive->reserve",
+        "reserve->pick",
+        "label->pack",
+        "pick->pack",
+        "verify->ship",
+        "invoice->ship",
+        "pack->ship"
+      ],
+      "known_conflict_front": [
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "known_lns_subproblem": [
+        "receive",
+        "label",
+        "reserve",
+        "pick",
+        "pack",
+        "verify",
+        "ship",
+        "invoice"
+      ],
+      "lns_subproblem_hint": [
+        "ship",
+        "invoice",
+        "pack",
+        "pick",
+        "verify",
+        "reserve",
+        "label",
+        "receive"
+      ],
+      "lns_subproblem_id": "scale_joined_fulfillment:receive,label,reserve,pick,pack,verify,ship,invoice",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 11,
+      "solver_iterations": 19,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "conflict_front_hint": [],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_unlock_delivery",
+      "guided_solver_work": 49,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "scan_badge->pickup_key",
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery"
+      ],
+      "known_conflict_front": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "known_lns_subproblem": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room"
+      ],
+      "lns_subproblem_hint": [],
+      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "scan_badge->pickup_key",
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "conflict_front_hint": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_unlock_delivery",
+      "guided_solver_work": 7,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "scan_badge->pickup_key",
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery"
+      ],
+      "known_conflict_front": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "known_lns_subproblem": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room"
+      ],
+      "lns_subproblem_hint": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room"
+      ],
+      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 7,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 42
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "unlock_door",
+        "pickup_key",
+        "scan_badge",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "conflict_front_hint": [
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_unlock_delivery",
+      "guided_solver_work": 49,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "scan_badge->pickup_key",
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery"
+      ],
+      "known_conflict_front": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "known_lns_subproblem": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room"
+      ],
+      "lns_subproblem_hint": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package"
+      ],
+      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "pickup_key->scan_badge"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "pickup_key",
+        "scan_badge",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "conflict_front_hint": [
+        "scan_badge"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_unlock_delivery",
+      "guided_solver_work": 49,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "contradictory_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "scan_badge->pickup_key",
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery"
+      ],
+      "known_conflict_front": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "known_lns_subproblem": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room"
+      ],
+      "lns_subproblem_hint": [
+        "scan_badge",
+        "pickup_key"
+      ],
+      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "scan_badge->pickup_key",
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery",
+        "confirm_delivery->scan_badge"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 21,
+        "solver_iterations": 28,
+        "solver_work": 49
+      },
+      "baseline_objective_value": 112,
+      "baseline_solver_work": 49,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "pickup_key",
+        "scan_badge",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "conflict_front_hint": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_unlock_delivery",
+      "guided_solver_work": 49,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "overconfident_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "scan_badge->pickup_key",
+        "pickup_key->unlock_door",
+        "unlock_door->open_door",
+        "open_door->enter_room",
+        "enter_room->drop_package",
+        "drop_package->confirm_delivery"
+      ],
+      "known_conflict_front": [
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room",
+        "drop_package",
+        "confirm_delivery"
+      ],
+      "known_lns_subproblem": [
+        "scan_badge",
+        "pickup_key",
+        "unlock_door",
+        "open_door",
+        "enter_room"
+      ],
+      "lns_subproblem_hint": [
+        "confirm_delivery",
+        "drop_package",
+        "enter_room",
+        "open_door",
+        "unlock_door",
+        "pickup_key",
+        "scan_badge"
+      ],
+      "lns_subproblem_id": "scale_unlock_delivery:scan_badge,pickup_key,unlock_door,open_door,enter_room",
+      "objective_preserved": true,
+      "objective_value": 112,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 21,
+      "solver_iterations": 28,
+      "source_kind": "synthetic_action_sequence",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 36,
+        "solver_iterations": 45,
+        "solver_work": 81
+      },
+      "baseline_objective_value": 240,
+      "baseline_solver_work": 81,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "conflict_front_hint": [],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_csp_coloring_pipeline",
+      "guided_solver_work": 81,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "color_region_a->check_region_a",
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors"
+      ],
+      "known_conflict_front": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "known_lns_subproblem": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c"
+      ],
+      "lns_subproblem_hint": [],
+      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
+      "objective_preserved": true,
+      "objective_value": 240,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 36,
+      "solver_iterations": 45,
+      "source_kind": "synthetic_csp",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "color_region_a->check_region_a",
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 36,
+        "solver_iterations": 45,
+        "solver_work": 81
+      },
+      "baseline_objective_value": 240,
+      "baseline_solver_work": 81,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "conflict_front_hint": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_csp_coloring_pipeline",
+      "guided_solver_work": 9,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "color_region_a->check_region_a",
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors"
+      ],
+      "known_conflict_front": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "known_lns_subproblem": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c"
+      ],
+      "lns_subproblem_hint": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c"
+      ],
+      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
+      "objective_preserved": true,
+      "objective_value": 240,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 9,
+      "source_kind": "synthetic_csp",
+      "unsafe_false_accept": false,
+      "work_delta": 72
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 36,
+        "solver_iterations": 45,
+        "solver_work": 81
+      },
+      "baseline_objective_value": 240,
+      "baseline_solver_work": 81,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "color_region_b",
+        "check_region_a",
+        "color_region_a",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "conflict_front_hint": [
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_csp_coloring_pipeline",
+      "guided_solver_work": 81,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "color_region_a->check_region_a",
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors"
+      ],
+      "known_conflict_front": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "known_lns_subproblem": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c"
+      ],
+      "lns_subproblem_hint": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d"
+      ],
+      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
+      "objective_preserved": true,
+      "objective_value": 240,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 36,
+      "solver_iterations": 45,
+      "source_kind": "synthetic_csp",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "check_region_a->color_region_a"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 36,
+        "solver_iterations": 45,
+        "solver_work": 81
+      },
+      "baseline_objective_value": 240,
+      "baseline_solver_work": 81,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "check_region_a",
+        "color_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "conflict_front_hint": [
+        "color_region_a"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_csp_coloring_pipeline",
+      "guided_solver_work": 81,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "contradictory_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "color_region_a->check_region_a",
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors"
+      ],
+      "known_conflict_front": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "known_lns_subproblem": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c"
+      ],
+      "lns_subproblem_hint": [
+        "color_region_a",
+        "check_region_a"
+      ],
+      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
+      "objective_preserved": true,
+      "objective_value": 240,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 36,
+      "solver_iterations": 45,
+      "source_kind": "synthetic_csp",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "color_region_a->check_region_a",
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors",
+        "publish_colors->color_region_a"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 36,
+        "solver_iterations": 45,
+        "solver_work": 81
+      },
+      "baseline_objective_value": 240,
+      "baseline_solver_work": 81,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "check_region_a",
+        "color_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "conflict_front_hint": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_csp_coloring_pipeline",
+      "guided_solver_work": 81,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "overconfident_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "color_region_a->check_region_a",
+        "check_region_a->color_region_b",
+        "color_region_b->check_region_b",
+        "check_region_b->color_region_c",
+        "color_region_c->check_region_c",
+        "check_region_c->color_region_d",
+        "color_region_d->check_region_d",
+        "check_region_d->publish_colors"
+      ],
+      "known_conflict_front": [
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c",
+        "color_region_d",
+        "check_region_d",
+        "publish_colors"
+      ],
+      "known_lns_subproblem": [
+        "color_region_a",
+        "check_region_a",
+        "color_region_b",
+        "check_region_b",
+        "color_region_c",
+        "check_region_c"
+      ],
+      "lns_subproblem_hint": [
+        "publish_colors",
+        "check_region_d",
+        "color_region_d",
+        "check_region_c",
+        "color_region_c",
+        "check_region_b",
+        "color_region_b",
+        "check_region_a",
+        "color_region_a"
+      ],
+      "lns_subproblem_id": "scale_csp_coloring_pipeline:color_region_a,check_region_a,color_region_b,check_region_b,color_region_c,check_region_c",
+      "objective_preserved": true,
+      "objective_value": 240,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 36,
+      "solver_iterations": 45,
+      "source_kind": "synthetic_csp",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [],
+      "baseline_metrics": {
+        "solver_conflicts": 28,
+        "solver_iterations": 36,
+        "solver_work": 64
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 64,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "conflict_front_hint": [],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_data_pipeline",
+      "guided_solver_work": 64,
+      "hint_decision": "ignored",
+      "hint_matches_solver_view": false,
+      "hint_mode": "solver_only",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "ingest->schema_check",
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report"
+      ],
+      "known_conflict_front": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "known_lns_subproblem": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join"
+      ],
+      "lns_subproblem_hint": [],
+      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 28,
+      "solver_iterations": 36,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "ingest->schema_check",
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 28,
+        "solver_iterations": 36,
+        "solver_work": 64
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 64,
+      "candidate_constraint_violation_count": 0,
+      "candidate_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "conflict_front_hint": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "fallback_used": false,
+      "feasible": true,
+      "final_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_data_pipeline",
+      "guided_solver_work": 8,
+      "hint_decision": "accepted",
+      "hint_matches_solver_view": true,
+      "hint_mode": "lns_guided_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "ingest->schema_check",
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report"
+      ],
+      "known_conflict_front": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "known_lns_subproblem": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join"
+      ],
+      "lns_subproblem_hint": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join"
+      ],
+      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 0,
+      "solver_iterations": 8,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 56
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 28,
+        "solver_iterations": 36,
+        "solver_work": 64
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 64,
+      "candidate_constraint_violation_count": 2,
+      "candidate_sequence": [
+        "extract",
+        "schema_check",
+        "ingest",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "conflict_front_hint": [
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_data_pipeline",
+      "guided_solver_work": 64,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "stale_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "ingest->schema_check",
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report"
+      ],
+      "known_conflict_front": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "known_lns_subproblem": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join"
+      ],
+      "lns_subproblem_hint": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train"
+      ],
+      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 28,
+      "solver_iterations": 36,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "schema_check->ingest"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 28,
+        "solver_iterations": 36,
+        "solver_work": 64
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 64,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "schema_check",
+        "ingest",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "conflict_front_hint": [
+        "ingest"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_data_pipeline",
+      "guided_solver_work": 64,
+      "hint_decision": "overwritten",
+      "hint_matches_solver_view": false,
+      "hint_mode": "contradictory_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "ingest->schema_check",
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report"
+      ],
+      "known_conflict_front": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "known_lns_subproblem": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join"
+      ],
+      "lns_subproblem_hint": [
+        "ingest",
+        "schema_check"
+      ],
+      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": true,
+      "solver_authoritative": true,
+      "solver_conflicts": 28,
+      "solver_iterations": 36,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    },
+    {
+      "accepted_without_verification": false,
+      "active_constraint_hint": [
+        "ingest->schema_check",
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report",
+        "serve_report->ingest"
+      ],
+      "baseline_metrics": {
+        "solver_conflicts": 28,
+        "solver_iterations": 36,
+        "solver_work": 64
+      },
+      "baseline_objective_value": 168,
+      "baseline_solver_work": 64,
+      "candidate_constraint_violation_count": 1,
+      "candidate_sequence": [
+        "schema_check",
+        "ingest",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "conflict_front_hint": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "constraint_violation_count": 0,
+      "dual_residual_norm": 0.0,
+      "expected_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "fallback_used": true,
+      "feasible": true,
+      "final_sequence": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "final_valid": true,
+      "fixture_id": "scale_data_pipeline",
+      "guided_solver_work": 64,
+      "hint_decision": "rejected",
+      "hint_matches_solver_view": false,
+      "hint_mode": "overconfident_hint",
+      "hint_structurally_valid": true,
+      "known_active_constraints": [
+        "ingest->schema_check",
+        "schema_check->extract",
+        "extract->clean",
+        "clean->feature_join",
+        "feature_join->train",
+        "train->audit",
+        "audit->serve_report"
+      ],
+      "known_conflict_front": [
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join",
+        "train",
+        "audit",
+        "serve_report"
+      ],
+      "known_lns_subproblem": [
+        "ingest",
+        "schema_check",
+        "extract",
+        "clean",
+        "feature_join"
+      ],
+      "lns_subproblem_hint": [
+        "serve_report",
+        "audit",
+        "train",
+        "feature_join",
+        "clean",
+        "extract",
+        "schema_check",
+        "ingest"
+      ],
+      "lns_subproblem_id": "scale_data_pipeline:ingest,schema_check,extract,clean,feature_join",
+      "objective_preserved": true,
+      "objective_value": 168,
+      "overwrite_used": false,
+      "solver_authoritative": true,
+      "solver_conflicts": 28,
+      "solver_iterations": 36,
+      "source_kind": "synthetic_scheduling",
+      "unsafe_false_accept": false,
+      "work_delta": 0
+    }
+  ],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5419.active_constraint_lns_scale.v493",
+  "solver_validity_preserved": true,
+  "source_artifacts": [
+    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5419",
+    "SCENARIO-VERIFY-5419"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5419_active_constraint_lns_scale_v493.py -m pytest tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5419_active_constraint_lns_scale_v493.py --fail-under=100",
+      "outcome": "passed"
+    }
+  ],
+  "work_delta": 234
+}
