@@ -1507,3 +1507,86 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5375 | Implemented (`python/carnot/experiment_5375_capstone_v489.py`, `results/experiment_5375_capstone_v489.json`) | Added (`tests/python/test_experiment_5375_capstone_v489.py`) |
+
+- REQ-CAPSTONE-5388: The `.490` milestone-close capstone aggregator
+  `exp5388-capstone-v490` in `python/carnot/experiment_5388_capstone_v490.py`
+  SHALL write `results/experiment_5388_capstone_v490.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read the expected `.490`
+  upstream result artifacts from Exp5376 through Exp5387, record missing or
+  unreadable expected artifacts separately, and preserve conductor gate
+  semantics by treating a present gate-skipped or gate-blocked artifact as a
+  blocked upstream result rather than a missing experiment. It SHALL copy or
+  derive the structured methodology receipt, structured protocol, constraint
+  tax, budget-memory corrigendum, real-workflow continuous self-learning,
+  overwrite guidance, p-bit boundary/overwrite, ARC, hardware hash-chain, and
+  token/backend reopen booleans from the upstream artifacts without upgrading
+  no-bank ARC, flagged overwrite-guidance evidence, token/backend no-signal
+  evidence, or reachability-only hardware receipts into stronger claims.
+- SCENARIO-CAPSTONE-5388: The artifact
+  `results/experiment_5388_capstone_v490.json` must emit top-level fields
+  `status`, `milestone`, `expected_artifacts`, `artifacts_found`,
+  `artifacts_missing`, `skipped_by_gate`,
+  `structured_methodology_receipt_ready`, `structured_protocol_clean`,
+  `constraint_tax_panel_ready`, `budget_memory_corrigendum_clean`,
+  `continuous_self_learning_real_workflow_ready`,
+  `continuous_self_learning_requirement_satisfied`,
+  `overwrite_guidance_scale_ready`, `pbit_boundary_overwrite_ready`,
+  `arc_new_level_banked`, `hardware_hash_chained_receipt_ready`,
+  `hardware_speedup_claim`, `future_token_signal_allowed`,
+  `retired_or_blocked_lanes`, `next_milestone_recommendations`,
+  `active_roadmap_modified`, `conductor_modified`, and `honest_verdict`. The
+  default `.490` aggregation must summarize Exp5378 and Exp5379 as clean
+  structured SOTA receipts, Exp5380 as ready constraint-tax state/tool evidence,
+  Exp5381 and Exp5382 as the real-workflow continuous self-learning requirement
+  satisfied with no model-weight mutation, Exp5383 as overwrite-guidance-ready
+  but adversarially flagged and therefore not headline-clean until reconciled,
+  Exp5384 as CPU-only p-bit/overwrite diagnostic evidence with no hardware
+  speedup claim, Exp5385 as an honest ARC no-bank result, Exp5386 as
+  hash-chained board receipts with KV260 unreachable, PolarFire reachable,
+  GateMate blocked, and no repeatable timing speedup, and Exp5387 as a closed token/internal-feature backend gate with no future token signal allowed.
+- SCENARIO-CAPSTONE-5388-MISSING-OR-GATED-INPUT: If any expected `.490`
+  upstream artifact is absent or unreadable, the workflow must still write
+  `results/experiment_5388_capstone_v490.json` with `status=honest_partial`,
+  list the absent path in `artifacts_missing`, and set affected readiness fields
+  false instead of inferring success. If a gated task artifact is present but
+  reports a conductor skip, gate block, or failed upstream gate, the workflow
+  must include the path in `artifacts_found`, must not include it in
+  `artifacts_missing`, must record the failed upstream condition in
+  `skipped_by_gate`, and must keep that lane's readiness field false.
+- SCENARIO-CAPSTONE-5388-FIELD-PRINCIPLES: The required field principles are:
+  `status` = "complete if aggregation ran with every expected artifact readable;
+  honest_partial if critical artifacts are missing or unreadable.",
+  `milestone` = "must equal 2026.07.490.",
+  `expected_artifacts` = "ordered list of expected .490 artifact paths.",
+  `artifacts_found` = "ordered list of found artifact paths.",
+  `artifacts_missing` = "ordered list of missing or unreadable artifact paths.",
+  `skipped_by_gate` = "object mapping gated task ids to upstream gate
+  conditions when a present artifact was skipped or blocked by a gate.",
+  `structured_methodology_receipt_ready` = "copied or derived from Exp5378.",
+  `structured_protocol_clean` = "copied or derived from Exp5379.",
+  `constraint_tax_panel_ready` = "copied or derived from Exp5380.",
+  `budget_memory_corrigendum_clean` = "copied or derived from Exp5381.",
+  `continuous_self_learning_real_workflow_ready` = "copied or derived from
+  Exp5382.", `continuous_self_learning_requirement_satisfied` = "true only if
+  Exp5382 ran and reported continuous_self_learning_real_workflow_ready=true, or
+  false with the upstream gate block recorded.",
+  `overwrite_guidance_scale_ready` = "copied or derived from Exp5383, with
+  flagged evidence recorded separately instead of laundered.",
+  `pbit_boundary_overwrite_ready` = "copied or derived from Exp5384.",
+  `arc_new_level_banked` = "copied or derived from Exp5385.",
+  `hardware_hash_chained_receipt_ready` = "copied or derived from Exp5386.",
+  `hardware_speedup_claim` = "must be false unless Exp5386 has repeatable board
+  timing evidence.", `future_token_signal_allowed` = "copied or derived from
+  Exp5387.", `retired_or_blocked_lanes` = "list of lanes that remain closed or
+  should retire.", `next_milestone_recommendations` = "concrete
+  recommendations for `.491` grounded in clean evidence and blockers.",
+  `active_roadmap_modified` = "must be false.", `conductor_modified` = "must be
+  false.", and `honest_verdict` = "one-line capstone truth summary."
+
+## Implementation Status (REQ-CAPSTONE-5388)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5388 | Planned (`python/carnot/experiment_5388_capstone_v490.py`, `results/experiment_5388_capstone_v490.json`) | Planned (`tests/python/test_experiment_5388_capstone_v490.py`) |
