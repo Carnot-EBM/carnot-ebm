@@ -19308,3 +19308,112 @@ episode remains in the audit ledger.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5396 | Implemented (`python/carnot/experiment_5396_memory_guard_raw_episode_retention_v491.py`, `results/experiment_5396_memory_guard_raw_episode_retention_v491.json`) | Implemented (`tests/python/test_experiment_5396_memory_guard_raw_episode_retention_v491.py`) |
+
+---
+
+## REQ-LEARN-5408: Resource-Accounted Continuous Self-Learning Controller v492
+
+Experiment 5408 SHALL extend the Exp5395 influence-share router and the
+Exp5396 raw-episode memory guard with resource accounting over the same real
+workflow trace family. The controller SHALL replay the same ordered sessions
+under baseline routing and resource-accounted routing, SHALL add wall-time,
+token-or-context proxy, memory proxy, verifier-call, and unproductive-loop
+counters to every routing decision, and SHALL preserve the Exp5395 influence
+share ledger invariant that every decision sums to exactly 100 percent.
+
+Every resource-accounted decision SHALL link to raw episode provenance from
+Exp5396 and SHALL include controls for stale memory, locally-correct but
+nontransferable poisoned experiences, and rollback. The resource-accounted
+controller MAY update controller routing state and controller memory sidecars,
+but SHALL NOT load, fine-tune, write, or mutate model weights or adapter weights.
+The inference substrate SHALL be
+`verifier_ensemble_against_cached_candidates` because the experiment
+deterministically replays cached workflow candidates and verifier decisions.
+
+The result artifact SHALL be
+`results/experiment_5408_resource_accounted_csl_controller_v492.json` and SHALL
+include `session_count`, `decision_count`, `raw_episode_count`,
+`influence_share_sum_valid_rate`, `quality_delta_vs_baseline`,
+`verifier_cost_delta_vs_baseline`, `wall_time_delta_vs_baseline`,
+`token_or_context_delta_vs_baseline`, `memory_delta_vs_baseline`,
+`unproductive_loop_reduction_rate`, `stale_memory_deflection_rate`,
+`poison_memory_deflection_rate`, `rollback_success_rate`,
+`no_weight_mutation`, `resource_accounted_csl_ready`,
+`inference_substrate`, and `honest_verdict`. The artifact SHALL also include
+field principles documenting those required fields.
+
+The required field principles SHALL be:
+
+- `session_count`: Real workflow scope.
+- `decision_count`: Router coverage.
+- `raw_episode_count`: Provenance retention.
+- `influence_share_sum_valid_rate`: Accountable routing.
+- `quality_delta_vs_baseline`: No quality regression.
+- `verifier_cost_delta_vs_baseline`: Verifier efficiency.
+- `wall_time_delta_vs_baseline`: Resource accounting.
+- `token_or_context_delta_vs_baseline`: Resource accounting.
+- `memory_delta_vs_baseline`: Resource accounting.
+- `unproductive_loop_reduction_rate`: SWEnergy-inspired waste guard.
+- `stale_memory_deflection_rate`: Anti-staleness.
+- `poison_memory_deflection_rate`: Anti-poisoning.
+- `rollback_success_rate`: Reversible learning.
+- `no_weight_mutation`: Online learning boundary.
+- `resource_accounted_csl_ready`: Downstream gate and FR-11 evidence.
+- `inference_substrate`: Deterministic replay over traces.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5408 Sub-requirements
+
+- REQ-LEARN-5408-1: The workflow SHALL reuse the Exp5395 routing decisions and
+  Exp5396 raw episodes so baseline and resource-accounted routing compare the
+  same ordered sessions and event IDs.
+- REQ-LEARN-5408-2: Each resource-accounted routing decision SHALL include
+  wall-time, token-or-context, memory, verifier-call, and unproductive-loop
+  counters for both baseline routing and resource-accounted routing.
+- REQ-LEARN-5408-3: Each resource-accounted routing decision SHALL retain the
+  Exp5395 influence-share ledger and SHALL link to at least one Exp5396 raw
+  episode provenance record.
+- REQ-LEARN-5408-4: The controller SHALL deflect stale memory and
+  locally-correct but nontransferable poisoned experiences before those
+  experiences can reduce verifier scrutiny.
+- REQ-LEARN-5408-5: Rollback controls SHALL recover every rollback-required
+  decision while retaining raw provenance.
+- REQ-LEARN-5408-6: `resource_accounted_csl_ready` SHALL be true only when
+  quality is preserved, verifier cost, wall time, token-or-context, memory, and
+  unproductive-loop metrics improve versus baseline, influence-share ledgers
+  sum to 100 percent, stale and poison controls are deflected, rollback
+  succeeds, every decision links to raw episode provenance, tests are recorded,
+  inference substrate is `verifier_ensemble_against_cached_candidates`, and no
+  model or adapter weights mutate.
+
+### SCENARIO-LEARN-5408-RESOURCE-COUNTERS: Decisions Carry Resource Counters
+
+**Given** the Exp5395 real workflow routing decisions
+**When** Exp5408 builds resource-accounted decisions
+**Then** each decision records baseline and resource-accounted wall-time,
+token-or-context, memory, verifier-call, and unproductive-loop counters
+**And** the artifact reports deltas versus baseline for those resources.
+
+### SCENARIO-LEARN-5408-PROVENANCE: Decisions Link To Raw Episodes
+
+**Given** Exp5396 raw episodes and consolidated memory decisions
+**When** Exp5408 replays routing with resource accounting
+**Then** every routing decision links to raw episode provenance
+**And** rejected stale or poisoned memories remain unavailable as cheap-routing
+priors.
+
+### SCENARIO-LEARN-5408-READY: Readiness Is Evidence-Gated
+
+**Given** the resource-accounted replay evidence
+**When** Exp5408 builds its terminal artifact
+**Then** `resource_accounted_csl_ready` is true only when quality is preserved,
+resource metrics improve, waste loops fall, stale and poisoned memories are
+deflected, rollback succeeds, the declared inference substrate matches cached
+candidate replay, no model or adapter weights mutate, and required field
+principles are present.
+
+## Implementation Status (Exp 5408)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5408 | Planned (`python/carnot/experiment_5408_resource_accounted_csl_controller_v492.py`, `results/experiment_5408_resource_accounted_csl_controller_v492.json`) | Planned (`tests/python/test_experiment_5408_resource_accounted_csl_controller_v492.py`) |

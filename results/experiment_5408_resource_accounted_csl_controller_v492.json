@@ -1,0 +1,2828 @@
+{
+  "decision_count": 36,
+  "experiment": "experiment_5408_resource_accounted_csl_controller_v492",
+  "experiment_id": "exp5408-v492-resource-accounted-csl-controller",
+  "field_principles": {
+    "decision_count": "Router coverage.",
+    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "Deterministic replay over traces.",
+    "influence_share_sum_valid_rate": "Accountable routing.",
+    "memory_delta_vs_baseline": "Resource accounting.",
+    "no_weight_mutation": "Online learning boundary.",
+    "poison_memory_deflection_rate": "Anti-poisoning.",
+    "quality_delta_vs_baseline": "No quality regression.",
+    "raw_episode_count": "Provenance retention.",
+    "resource_accounted_csl_ready": "Downstream gate and FR-11 evidence.",
+    "rollback_success_rate": "Reversible learning.",
+    "session_count": "Real workflow scope.",
+    "stale_memory_deflection_rate": "Anti-staleness.",
+    "token_or_context_delta_vs_baseline": "Resource accounting.",
+    "unproductive_loop_reduction_rate": "SWEnergy-inspired waste guard.",
+    "verifier_cost_delta_vs_baseline": "Verifier efficiency.",
+    "wall_time_delta_vs_baseline": "Resource accounting."
+  },
+  "honest_verdict": "complete: resource-accounted controller preserved quality while reducing verifier cost, wall time, context, memory, and waste loops with raw provenance, stale and poison deflection, rollback, and no model or adapter weight mutation",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "influence_share_sum_valid_rate": 1.0,
+  "memory_candidates": [
+    {
+      "control_kind": "benign_useful",
+      "decision": {
+        "accepted": true,
+        "keep": "KEEP",
+        "rationale_ignored": true,
+        "share": "SHARE",
+        "trust": "TRUST"
+      },
+      "decision_inputs": {
+        "byte_cost": 120,
+        "forged_reasoning_risk": 0.04,
+        "model_generated_rationale_used": false,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 0,
+        "sharing_risk": 0.04,
+        "stale_risk": 0.03,
+        "value_score": 0.94
+      },
+      "memory_claim": "Dependency edge improves verifier routing when provenance is present.",
+      "memory_id": "mem5396-clean-dependency-edge",
+      "provenance_hash": {
+        "algorithm": "sha256:carnot.raw_episode.v1",
+        "memory_id": "mem5396-clean-dependency-edge",
+        "raw_episode_ids": [
+          "raw5396-clean-dependency-edge"
+        ],
+        "record_type": "provenance_hash",
+        "valid": true,
+        "value": "sha256:52ac3955eadba340040b576455da79b0d935100e891897a59c8b36b92530c72f"
+      },
+      "raw_episode_ids": [
+        "raw5396-clean-dependency-edge"
+      ],
+      "record_type": "consolidated_memory",
+      "rollback_pointer": {
+        "action": "not_required",
+        "memory_id": "mem5396-clean-dependency-edge",
+        "pointer_id": "rollback:mem5396-clean-dependency-edge",
+        "record_type": "rollback_pointer",
+        "rollback_success": true,
+        "target_raw_episode_ids": [
+          "raw5396-clean-dependency-edge"
+        ]
+      },
+      "score": {
+        "net_value_per_byte": 0.006917,
+        "rejected_for_safety": false,
+        "rejected_for_value": false
+      },
+      "trust_label": {
+        "allowed_for_routing": true,
+        "label": "verified_clean",
+        "memory_id": "mem5396-clean-dependency-edge",
+        "record_type": "trust_label",
+        "source": "row_level_evidence"
+      }
+    },
+    {
+      "control_kind": "benign_useful",
+      "decision": {
+        "accepted": true,
+        "keep": "KEEP",
+        "rationale_ignored": true,
+        "share": "SHARE",
+        "trust": "TRUST"
+      },
+      "decision_inputs": {
+        "byte_cost": 110,
+        "forged_reasoning_risk": 0.03,
+        "model_generated_rationale_used": false,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 0,
+        "sharing_risk": 0.05,
+        "stale_risk": 0.04,
+        "value_score": 0.89
+      },
+      "memory_claim": "Rollback route restores clean selection after a bad update.",
+      "memory_id": "mem5396-clean-rollback-route",
+      "provenance_hash": {
+        "algorithm": "sha256:carnot.raw_episode.v1",
+        "memory_id": "mem5396-clean-rollback-route",
+        "raw_episode_ids": [
+          "raw5396-clean-rollback-route"
+        ],
+        "record_type": "provenance_hash",
+        "valid": true,
+        "value": "sha256:ef4f589a7e0ef70563f2969dd9adf74989114aca928cd2b017bc57eb9e4ed4fc"
+      },
+      "raw_episode_ids": [
+        "raw5396-clean-rollback-route"
+      ],
+      "record_type": "consolidated_memory",
+      "rollback_pointer": {
+        "action": "not_required",
+        "memory_id": "mem5396-clean-rollback-route",
+        "pointer_id": "rollback:mem5396-clean-rollback-route",
+        "record_type": "rollback_pointer",
+        "rollback_success": true,
+        "target_raw_episode_ids": [
+          "raw5396-clean-rollback-route"
+        ]
+      },
+      "score": {
+        "net_value_per_byte": 0.007,
+        "rejected_for_safety": false,
+        "rejected_for_value": false
+      },
+      "trust_label": {
+        "allowed_for_routing": true,
+        "label": "verified_clean",
+        "memory_id": "mem5396-clean-rollback-route",
+        "record_type": "trust_label",
+        "source": "row_level_evidence"
+      }
+    },
+    {
+      "control_kind": "benign_useful",
+      "decision": {
+        "accepted": true,
+        "keep": "KEEP",
+        "rationale_ignored": true,
+        "share": "SHARE",
+        "trust": "TRUST"
+      },
+      "decision_inputs": {
+        "byte_cost": 150,
+        "forged_reasoning_risk": 0.05,
+        "model_generated_rationale_used": false,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 1,
+        "sharing_risk": 0.06,
+        "stale_risk": 0.06,
+        "value_score": 0.81
+      },
+      "memory_claim": "Scale-up summary is useful only with the raw replay receipt.",
+      "memory_id": "mem5396-clean-scaleup-summary",
+      "provenance_hash": {
+        "algorithm": "sha256:carnot.raw_episode.v1",
+        "memory_id": "mem5396-clean-scaleup-summary",
+        "raw_episode_ids": [
+          "raw5396-clean-scaleup-summary"
+        ],
+        "record_type": "provenance_hash",
+        "valid": true,
+        "value": "sha256:0cb234a125d0dbb5194ea6d2e609f627d1d2fa20e295e7b3a2fa696d8818e042"
+      },
+      "raw_episode_ids": [
+        "raw5396-clean-scaleup-summary"
+      ],
+      "record_type": "consolidated_memory",
+      "rollback_pointer": {
+        "action": "not_required",
+        "memory_id": "mem5396-clean-scaleup-summary",
+        "pointer_id": "rollback:mem5396-clean-scaleup-summary",
+        "record_type": "rollback_pointer",
+        "rollback_success": true,
+        "target_raw_episode_ids": [
+          "raw5396-clean-scaleup-summary"
+        ]
+      },
+      "score": {
+        "net_value_per_byte": 0.003933,
+        "rejected_for_safety": false,
+        "rejected_for_value": false
+      },
+      "trust_label": {
+        "allowed_for_routing": true,
+        "label": "verified_clean",
+        "memory_id": "mem5396-clean-scaleup-summary",
+        "record_type": "trust_label",
+        "source": "row_level_evidence"
+      }
+    },
+    {
+      "control_kind": "stale_memory",
+      "decision": {
+        "accepted": false,
+        "keep": "QUARANTINE",
+        "rationale_ignored": true,
+        "share": "DO_NOT_SHARE",
+        "trust": "UNTRUST"
+      },
+      "decision_inputs": {
+        "byte_cost": 130,
+        "forged_reasoning_risk": 0.16,
+        "model_generated_rationale_used": false,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 0,
+        "sharing_risk": 0.18,
+        "stale_risk": 0.93,
+        "value_score": 0.62
+      },
+      "memory_claim": "Old runtime receipt should still steer cheap verifier routing.",
+      "memory_id": "mem5396-stale-runtime-receipt",
+      "provenance_hash": {
+        "algorithm": "sha256:carnot.raw_episode.v1",
+        "memory_id": "mem5396-stale-runtime-receipt",
+        "raw_episode_ids": [
+          "raw5396-stale-runtime-receipt"
+        ],
+        "record_type": "provenance_hash",
+        "valid": true,
+        "value": "sha256:7cca3d8ed93a7a073cf22e7175b63103264d5733d6c487735cba07a8b4f02711"
+      },
+      "raw_episode_ids": [
+        "raw5396-stale-runtime-receipt"
+      ],
+      "record_type": "consolidated_memory",
+      "rollback_pointer": {
+        "action": "retain_raw_episode_and_exclude_consolidated_memory",
+        "memory_id": "mem5396-stale-runtime-receipt",
+        "pointer_id": "rollback:mem5396-stale-runtime-receipt",
+        "record_type": "rollback_pointer",
+        "rollback_success": true,
+        "target_raw_episode_ids": [
+          "raw5396-stale-runtime-receipt"
+        ]
+      },
+      "score": {
+        "net_value_per_byte": -0.005,
+        "rejected_for_safety": true,
+        "rejected_for_value": true
+      },
+      "trust_label": {
+        "allowed_for_routing": false,
+        "label": "stale_memory",
+        "memory_id": "mem5396-stale-runtime-receipt",
+        "record_type": "trust_label",
+        "source": "row_level_evidence"
+      }
+    },
+    {
+      "control_kind": "forged_reasoning_history",
+      "decision": {
+        "accepted": false,
+        "keep": "QUARANTINE",
+        "rationale_ignored": true,
+        "share": "DO_NOT_SHARE",
+        "trust": "UNTRUST"
+      },
+      "decision_inputs": {
+        "byte_cost": 100,
+        "forged_reasoning_risk": 0.96,
+        "model_generated_rationale_used": false,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 1,
+        "sharing_risk": 0.42,
+        "stale_risk": 0.14,
+        "value_score": 0.77
+      },
+      "memory_claim": "Inserted reasoning history claims prior proof of a routing shortcut.",
+      "memory_id": "mem5396-forged-reasoning-history",
+      "provenance_hash": {
+        "algorithm": "sha256:carnot.raw_episode.v1",
+        "memory_id": "mem5396-forged-reasoning-history",
+        "raw_episode_ids": [
+          "raw5396-forged-reasoning-history"
+        ],
+        "record_type": "provenance_hash",
+        "valid": true,
+        "value": "sha256:833c6ad673c8e76047e20895fcd8f7d8e5c2cf75fd5da7ef34ab36656ffb26df"
+      },
+      "raw_episode_ids": [
+        "raw5396-forged-reasoning-history"
+      ],
+      "record_type": "consolidated_memory",
+      "rollback_pointer": {
+        "action": "retain_raw_episode_and_exclude_consolidated_memory",
+        "memory_id": "mem5396-forged-reasoning-history",
+        "pointer_id": "rollback:mem5396-forged-reasoning-history",
+        "record_type": "rollback_pointer",
+        "rollback_success": true,
+        "target_raw_episode_ids": [
+          "raw5396-forged-reasoning-history"
+        ]
+      },
+      "score": {
+        "net_value_per_byte": -0.008,
+        "rejected_for_safety": true,
+        "rejected_for_value": true
+      },
+      "trust_label": {
+        "allowed_for_routing": false,
+        "label": "forged_reasoning_history",
+        "memory_id": "mem5396-forged-reasoning-history",
+        "record_type": "trust_label",
+        "source": "row_level_evidence"
+      }
+    },
+    {
+      "control_kind": "self_referential_amplification",
+      "decision": {
+        "accepted": false,
+        "keep": "QUARANTINE",
+        "rationale_ignored": true,
+        "share": "DO_NOT_SHARE",
+        "trust": "UNTRUST"
+      },
+      "decision_inputs": {
+        "byte_cost": 105,
+        "forged_reasoning_risk": 0.72,
+        "model_generated_rationale_used": false,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 5,
+        "sharing_risk": 0.37,
+        "stale_risk": 0.12,
+        "value_score": 0.74
+      },
+      "memory_claim": "Reflection says to trust itself because prior reflections agreed.",
+      "memory_id": "mem5396-self-reference-amplification",
+      "provenance_hash": {
+        "algorithm": "sha256:carnot.raw_episode.v1",
+        "memory_id": "mem5396-self-reference-amplification",
+        "raw_episode_ids": [
+          "raw5396-self-reference-amplification"
+        ],
+        "record_type": "provenance_hash",
+        "valid": true,
+        "value": "sha256:a771f1b32baed630f3c8ef7ceded1baeed4b0fe53c37f9a14a4a13a21e74072e"
+      },
+      "raw_episode_ids": [
+        "raw5396-self-reference-amplification"
+      ],
+      "record_type": "consolidated_memory",
+      "rollback_pointer": {
+        "action": "retain_raw_episode_and_exclude_consolidated_memory",
+        "memory_id": "mem5396-self-reference-amplification",
+        "pointer_id": "rollback:mem5396-self-reference-amplification",
+        "record_type": "rollback_pointer",
+        "rollback_success": true,
+        "target_raw_episode_ids": [
+          "raw5396-self-reference-amplification"
+        ]
+      },
+      "score": {
+        "net_value_per_byte": -0.006857,
+        "rejected_for_safety": true,
+        "rejected_for_value": true
+      },
+      "trust_label": {
+        "allowed_for_routing": false,
+        "label": "self_referential_amplification",
+        "memory_id": "mem5396-self-reference-amplification",
+        "record_type": "trust_label",
+        "source": "row_level_evidence"
+      }
+    },
+    {
+      "control_kind": "high_cost_low_value",
+      "decision": {
+        "accepted": false,
+        "keep": "DROP",
+        "rationale_ignored": true,
+        "share": "DO_NOT_SHARE",
+        "trust": "UNTRUST"
+      },
+      "decision_inputs": {
+        "byte_cost": 640,
+        "forged_reasoning_risk": 0.18,
+        "model_generated_rationale_used": false,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 1,
+        "sharing_risk": 0.2,
+        "stale_risk": 0.18,
+        "value_score": 0.18
+      },
+      "memory_claim": "Locally correct but non-transferable episode should become a broad rule.",
+      "memory_id": "mem5396-high-cost-low-value",
+      "provenance_hash": {
+        "algorithm": "sha256:carnot.raw_episode.v1",
+        "memory_id": "mem5396-high-cost-low-value",
+        "raw_episode_ids": [
+          "raw5396-high-cost-low-value"
+        ],
+        "record_type": "provenance_hash",
+        "valid": true,
+        "value": "sha256:676f8e2762459fbcf57d1dc253456186e7db6b6e47d072ba381d71ae20709f31"
+      },
+      "raw_episode_ids": [
+        "raw5396-high-cost-low-value"
+      ],
+      "record_type": "consolidated_memory",
+      "rollback_pointer": {
+        "action": "retain_raw_episode_and_exclude_consolidated_memory",
+        "memory_id": "mem5396-high-cost-low-value",
+        "pointer_id": "rollback:mem5396-high-cost-low-value",
+        "record_type": "rollback_pointer",
+        "rollback_success": true,
+        "target_raw_episode_ids": [
+          "raw5396-high-cost-low-value"
+        ]
+      },
+      "score": {
+        "net_value_per_byte": -0.000672,
+        "rejected_for_safety": false,
+        "rejected_for_value": true
+      },
+      "trust_label": {
+        "allowed_for_routing": false,
+        "label": "high_cost_low_value",
+        "memory_id": "mem5396-high-cost-low-value",
+        "record_type": "trust_label",
+        "source": "row_level_evidence"
+      }
+    }
+  ],
+  "memory_delta_vs_baseline": 1362.0,
+  "methodology_note": "Exp5408 replays cached workflow candidates and verifier decisions from Exp5395/Exp5396. Resource counters are deterministic proxies attached to real workflow events; no LLM, base-model, or adapter weights are loaded or mutated.",
+  "milestone": "2026.07.492",
+  "no_weight_mutation": true,
+  "poison_control_summary": {
+    "locally_correct_nontransferable_deflected": true,
+    "poison_probe_count": 9,
+    "poison_probe_deflected_count": 9
+  },
+  "poison_memory_deflection_rate": 1.0,
+  "provenance_link_rate": 1.0,
+  "quality_delta_vs_baseline": 0.0,
+  "random_seed": 5408,
+  "raw_episode_count": 7,
+  "raw_episodes": [
+    {
+      "captured_at": "2026-07-08",
+      "control_kind": "benign_useful",
+      "raw_episode_id": "raw5396-clean-dependency-edge",
+      "raw_payload_checksum": "sha256:827c7da4fb4fc1df6256dd1d880be20464a15a25c4d1c752c3ec8849547ee567",
+      "record_type": "raw_episode",
+      "row_evidence": {
+        "byte_cost": 120,
+        "claim": "Dependency edge improves verifier routing when provenance is present.",
+        "forged_reasoning_risk": 0.04,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 0,
+        "sharing_risk": 0.04,
+        "stale_risk": 0.03,
+        "value_score": 0.94
+      },
+      "session_id": "session-5369-01",
+      "source_artifact": "results/experiment_5382_real_workflow_continuous_self_learning_v490.json",
+      "source_event_id": "t01-e1-retrieve",
+      "trace_id": "trace-5369-01-clean"
+    },
+    {
+      "captured_at": "2026-07-08",
+      "control_kind": "benign_useful",
+      "raw_episode_id": "raw5396-clean-rollback-route",
+      "raw_payload_checksum": "sha256:d3746cfcf5dddae3a378e20c291356d406a12a7d5309c3d4cadcb566d271762f",
+      "record_type": "raw_episode",
+      "row_evidence": {
+        "byte_cost": 110,
+        "claim": "Rollback route restores clean selection after a bad update.",
+        "forged_reasoning_risk": 0.03,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 0,
+        "sharing_risk": 0.05,
+        "stale_risk": 0.04,
+        "value_score": 0.89
+      },
+      "session_id": "session-5369-01",
+      "source_artifact": "results/experiment_5382_real_workflow_continuous_self_learning_v490.json",
+      "source_event_id": "t01-e2-commit",
+      "trace_id": "trace-5369-01-clean"
+    },
+    {
+      "captured_at": "2026-07-08",
+      "control_kind": "benign_useful",
+      "raw_episode_id": "raw5396-clean-scaleup-summary",
+      "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+      "record_type": "raw_episode",
+      "row_evidence": {
+        "byte_cost": 150,
+        "claim": "Scale-up summary is useful only with the raw replay receipt.",
+        "forged_reasoning_risk": 0.05,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 1,
+        "sharing_risk": 0.06,
+        "stale_risk": 0.06,
+        "value_score": 0.81
+      },
+      "session_id": "session-5369-01",
+      "source_artifact": "results/experiment_5382_real_workflow_continuous_self_learning_v490.json",
+      "source_event_id": "t01-e3-summarize",
+      "trace_id": "trace-5369-01-clean"
+    },
+    {
+      "captured_at": "2026-07-08",
+      "control_kind": "stale_memory",
+      "raw_episode_id": "raw5396-stale-runtime-receipt",
+      "raw_payload_checksum": "sha256:3a4e9f1ec04d0e32082db8e848d808f1921cbeb12bb39a62d85cf945a1a06f8a",
+      "record_type": "raw_episode",
+      "row_evidence": {
+        "byte_cost": 130,
+        "claim": "Old runtime receipt should still steer cheap verifier routing.",
+        "forged_reasoning_risk": 0.16,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 0,
+        "sharing_risk": 0.18,
+        "stale_risk": 0.93,
+        "value_score": 0.62
+      },
+      "session_id": "session-5369-02",
+      "source_artifact": "results/experiment_5382_real_workflow_continuous_self_learning_v490.json",
+      "source_event_id": "t02-e1-retrieve",
+      "trace_id": "trace-5369-02-stale"
+    },
+    {
+      "captured_at": "2026-07-08",
+      "control_kind": "forged_reasoning_history",
+      "raw_episode_id": "raw5396-forged-reasoning-history",
+      "raw_payload_checksum": "sha256:389ddc70ced1858462a1c54745a6f6e5baebf87f72af255386a19c842b2bc578",
+      "record_type": "raw_episode",
+      "row_evidence": {
+        "byte_cost": 100,
+        "claim": "Inserted reasoning history claims prior proof of a routing shortcut.",
+        "forged_reasoning_risk": 0.96,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 1,
+        "sharing_risk": 0.42,
+        "stale_risk": 0.14,
+        "value_score": 0.77
+      },
+      "session_id": "session-5369-04",
+      "source_artifact": "results/experiment_5382_real_workflow_continuous_self_learning_v490.json",
+      "source_event_id": "t04-e1-revise",
+      "trace_id": "trace-5369-04-dependency"
+    },
+    {
+      "captured_at": "2026-07-08",
+      "control_kind": "self_referential_amplification",
+      "raw_episode_id": "raw5396-self-reference-amplification",
+      "raw_payload_checksum": "sha256:48c8b0387a6e5ddeeb59073f6c726b54a2df3fef487adf7498b41439ec7dc35b",
+      "record_type": "raw_episode",
+      "row_evidence": {
+        "byte_cost": 105,
+        "claim": "Reflection says to trust itself because prior reflections agreed.",
+        "forged_reasoning_risk": 0.72,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 5,
+        "sharing_risk": 0.37,
+        "stale_risk": 0.12,
+        "value_score": 0.74
+      },
+      "session_id": "session-5369-04",
+      "source_artifact": "results/experiment_5382_real_workflow_continuous_self_learning_v490.json",
+      "source_event_id": "t04-e3-revise",
+      "trace_id": "trace-5369-04-dependency"
+    },
+    {
+      "captured_at": "2026-07-08",
+      "control_kind": "high_cost_low_value",
+      "raw_episode_id": "raw5396-high-cost-low-value",
+      "raw_payload_checksum": "sha256:e7a08a52b850ff1801344b9eb5047eae9a0694264cd151353cfb15588679ef71",
+      "record_type": "raw_episode",
+      "row_evidence": {
+        "byte_cost": 640,
+        "claim": "Locally correct but non-transferable episode should become a broad rule.",
+        "forged_reasoning_risk": 0.18,
+        "provenance_verified": true,
+        "rollback_available": true,
+        "rollback_verified": true,
+        "self_reference_count": 1,
+        "sharing_risk": 0.2,
+        "stale_risk": 0.18,
+        "value_score": 0.18
+      },
+      "session_id": "session-5369-04",
+      "source_artifact": "results/experiment_5382_real_workflow_continuous_self_learning_v490.json",
+      "source_event_id": "t04-e1-revise",
+      "trace_id": "trace-5369-04-dependency"
+    }
+  ],
+  "readiness_checks": {
+    "all_passed": true,
+    "decisions_present": true,
+    "failed_checks": [],
+    "inference_substrate_cached": true,
+    "locally_correct_poison_deflected": true,
+    "memory_improved": true,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true,
+    "poison_deflected": true,
+    "provenance_linked": true,
+    "quality_preserved": true,
+    "raw_episodes_present": true,
+    "rollback_succeeded": true,
+    "session_target_met": true,
+    "share_sums_valid": true,
+    "stale_deflected": true,
+    "tests_recorded": true,
+    "token_context_improved": true,
+    "verifier_cost_improved": true,
+    "wall_time_improved": true,
+    "waste_loop_reduced": true
+  },
+  "reproducibility_checksum": "sha256:dc15212d792f812b75a74c01705a678d73208ad3d809073fcee70e24c7c2f800",
+  "resource_accounted_csl_ready": true,
+  "resource_accounted_decisions": [
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 1,
+      "event_id": "t01-e1-retrieve",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 13,
+        "evidence-confidence": 7,
+        "novelty": 15,
+        "poison-risk": 5,
+        "stale-risk": 6,
+        "user-impact": 54,
+        "verifier-cost": 0
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-dependency-edge",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-dependency-edge",
+        "raw_payload_checksum": "sha256:827c7da4fb4fc1df6256dd1d880be20464a15a25c4d1c752c3ec8849547ee567",
+        "source_event_id": "t01-e1-retrieve"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-01",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-01-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 2,
+      "event_id": "t01-e2-commit",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 12,
+        "evidence-confidence": 7,
+        "novelty": 14,
+        "poison-risk": 4,
+        "stale-risk": 5,
+        "user-impact": 58,
+        "verifier-cost": 0
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-rollback-route",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-rollback-route",
+        "raw_payload_checksum": "sha256:d3746cfcf5dddae3a378e20c291356d406a12a7d5309c3d4cadcb566d271762f",
+        "source_event_id": "t01-e2-commit"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-01",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-01-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 3,
+      "event_id": "t01-e3-summarize",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 16,
+        "evidence-confidence": 9,
+        "novelty": 18,
+        "poison-risk": 5,
+        "stale-risk": 7,
+        "user-impact": 44,
+        "verifier-cost": 1
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-01",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-01-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 4,
+      "event_id": "t02-e1-retrieve",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 26,
+        "evidence-confidence": 11,
+        "novelty": 13,
+        "poison-risk": 2,
+        "stale-risk": 27,
+        "user-impact": 21,
+        "verifier-cost": 0
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "stale_memory",
+        "raw_episode_id": "raw5396-stale-runtime-receipt",
+        "raw_payload_checksum": "sha256:3a4e9f1ec04d0e32082db8e848d808f1921cbeb12bb39a62d85cf945a1a06f8a",
+        "source_event_id": "t02-e1-retrieve"
+      },
+      "reason": "high_uncertainty_high_impact_budget_headroom_use_local_sota",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 52,
+        "token_or_context_units": 650,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 110
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 24.0,
+        "token_or_context_units": 410.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 0.0,
+        "wall_time_ms": 55.0
+      },
+      "rollback_status": "recovered",
+      "selected_verifier_tier": "local_sota",
+      "session_id": "session-5369-02",
+      "stale_control_deflected": true,
+      "stale_probe": true,
+      "trace_id": "trace-5369-02-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 5,
+      "event_id": "t02-e2-restore",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 13,
+        "evidence-confidence": 7,
+        "novelty": 14,
+        "poison-risk": 4,
+        "stale-risk": 6,
+        "user-impact": 50,
+        "verifier-cost": 6
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-02",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-02-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 6,
+      "event_id": "t02-e3-verify",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 15,
+        "evidence-confidence": 8,
+        "novelty": 17,
+        "poison-risk": 5,
+        "stale-risk": 7,
+        "user-impact": 41,
+        "verifier-cost": 7
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-02",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-02-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 7,
+      "event_id": "t03-e1-tool_select",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 24,
+        "evidence-confidence": 10,
+        "novelty": 12,
+        "poison-risk": 26,
+        "stale-risk": 2,
+        "user-impact": 23,
+        "verifier-cost": 3
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "high_cost_low_value",
+        "raw_episode_id": "raw5396-high-cost-low-value",
+        "raw_payload_checksum": "sha256:e7a08a52b850ff1801344b9eb5047eae9a0694264cd151353cfb15588679ef71",
+        "source_event_id": "t04-e1-revise"
+      },
+      "reason": "high_uncertainty_high_impact_budget_headroom_use_local_sota",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 52,
+        "token_or_context_units": 650,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 110
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 24.0,
+        "token_or_context_units": 410.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 0.0,
+        "wall_time_ms": 55.0
+      },
+      "rollback_status": "recovered",
+      "selected_verifier_tier": "local_sota",
+      "session_id": "session-5369-03",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-03-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 8,
+      "event_id": "t03-e2-restore",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 12,
+        "evidence-confidence": 7,
+        "novelty": 13,
+        "poison-risk": 4,
+        "stale-risk": 5,
+        "user-impact": 48,
+        "verifier-cost": 11
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-03",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-03-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 9,
+      "event_id": "t03-e3-commit",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 11,
+        "evidence-confidence": 6,
+        "novelty": 12,
+        "poison-risk": 4,
+        "stale-risk": 5,
+        "user-impact": 52,
+        "verifier-cost": 10
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-rollback-route",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-rollback-route",
+        "raw_payload_checksum": "sha256:d3746cfcf5dddae3a378e20c291356d406a12a7d5309c3d4cadcb566d271762f",
+        "source_event_id": "t01-e2-commit"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-03",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-03-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 10,
+      "event_id": "t04-e1-revise",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 29,
+        "evidence-confidence": 9,
+        "novelty": 22,
+        "poison-risk": 15,
+        "stale-risk": 3,
+        "user-impact": 16,
+        "verifier-cost": 6
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "high_cost_low_value",
+        "raw_episode_id": "raw5396-high-cost-low-value",
+        "raw_payload_checksum": "sha256:e7a08a52b850ff1801344b9eb5047eae9a0694264cd151353cfb15588679ef71",
+        "source_event_id": "t04-e1-revise"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-04",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-04-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 11,
+      "event_id": "t04-e2-fold",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 29,
+        "evidence-confidence": 9,
+        "novelty": 22,
+        "poison-risk": 2,
+        "stale-risk": 3,
+        "user-impact": 28,
+        "verifier-cost": 7
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-04",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-04-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 12,
+      "event_id": "t04-e3-revise",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 10,
+        "evidence-confidence": 6,
+        "novelty": 37,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 27,
+        "verifier-cost": 13
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "self_referential_amplification",
+        "raw_episode_id": "raw5396-self-reference-amplification",
+        "raw_payload_checksum": "sha256:48c8b0387a6e5ddeeb59073f6c726b54a2df3fef487adf7498b41439ec7dc35b",
+        "source_event_id": "t04-e3-revise"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-04",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-04-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 13,
+      "event_id": "t05-e1-retrieve",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 11,
+        "evidence-confidence": 6,
+        "novelty": 13,
+        "poison-risk": 4,
+        "stale-risk": 5,
+        "user-impact": 45,
+        "verifier-cost": 16
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-dependency-edge",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-dependency-edge",
+        "raw_payload_checksum": "sha256:827c7da4fb4fc1df6256dd1d880be20464a15a25c4d1c752c3ec8849547ee567",
+        "source_event_id": "t01-e1-retrieve"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-05",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-05-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 14,
+      "event_id": "t05-e2-commit",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 10,
+        "evidence-confidence": 6,
+        "novelty": 12,
+        "poison-risk": 3,
+        "stale-risk": 5,
+        "user-impact": 49,
+        "verifier-cost": 15
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-rollback-route",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-rollback-route",
+        "raw_payload_checksum": "sha256:d3746cfcf5dddae3a378e20c291356d406a12a7d5309c3d4cadcb566d271762f",
+        "source_event_id": "t01-e2-commit"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-05",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-05-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 15,
+      "event_id": "t05-e3-summarize",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 13,
+        "evidence-confidence": 7,
+        "novelty": 15,
+        "poison-risk": 4,
+        "stale-risk": 6,
+        "user-impact": 36,
+        "verifier-cost": 19
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-05",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-05-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 16,
+      "event_id": "t06-e1-retrieve",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 24,
+        "evidence-confidence": 10,
+        "novelty": 12,
+        "poison-risk": 2,
+        "stale-risk": 26,
+        "user-impact": 19,
+        "verifier-cost": 7
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "stale_memory",
+        "raw_episode_id": "raw5396-stale-runtime-receipt",
+        "raw_payload_checksum": "sha256:3a4e9f1ec04d0e32082db8e848d808f1921cbeb12bb39a62d85cf945a1a06f8a",
+        "source_event_id": "t02-e1-retrieve"
+      },
+      "reason": "high_uncertainty_high_impact_budget_headroom_use_local_sota",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 52,
+        "token_or_context_units": 650,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 110
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 24.0,
+        "token_or_context_units": 410.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 0.0,
+        "wall_time_ms": 55.0
+      },
+      "rollback_status": "recovered",
+      "selected_verifier_tier": "local_sota",
+      "session_id": "session-5369-06",
+      "stale_control_deflected": true,
+      "stale_probe": true,
+      "trace_id": "trace-5369-06-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 17,
+      "event_id": "t06-e2-restore",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 11,
+        "evidence-confidence": 6,
+        "novelty": 12,
+        "poison-risk": 3,
+        "stale-risk": 5,
+        "user-impact": 43,
+        "verifier-cost": 20
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-06",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-06-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 18,
+      "event_id": "t06-e3-verify",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 12,
+        "evidence-confidence": 7,
+        "novelty": 14,
+        "poison-risk": 4,
+        "stale-risk": 5,
+        "user-impact": 34,
+        "verifier-cost": 24
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-06",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-06-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 19,
+      "event_id": "t07-e1-tool_select",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 23,
+        "evidence-confidence": 10,
+        "novelty": 11,
+        "poison-risk": 24,
+        "stale-risk": 2,
+        "user-impact": 21,
+        "verifier-cost": 9
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "high_cost_low_value",
+        "raw_episode_id": "raw5396-high-cost-low-value",
+        "raw_payload_checksum": "sha256:e7a08a52b850ff1801344b9eb5047eae9a0694264cd151353cfb15588679ef71",
+        "source_event_id": "t04-e1-revise"
+      },
+      "reason": "high_uncertainty_high_impact_budget_headroom_use_local_sota",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 52,
+        "token_or_context_units": 650,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 110
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 24.0,
+        "token_or_context_units": 410.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 0.0,
+        "wall_time_ms": 55.0
+      },
+      "rollback_status": "recovered",
+      "selected_verifier_tier": "local_sota",
+      "session_id": "session-5369-07",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-07-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 20,
+      "event_id": "t07-e2-restore",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 10,
+        "evidence-confidence": 6,
+        "novelty": 11,
+        "poison-risk": 3,
+        "stale-risk": 5,
+        "user-impact": 41,
+        "verifier-cost": 24
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-07",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-07-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 21,
+      "event_id": "t07-e3-commit",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 10,
+        "evidence-confidence": 5,
+        "novelty": 11,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 45,
+        "verifier-cost": 22
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-rollback-route",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-rollback-route",
+        "raw_payload_checksum": "sha256:d3746cfcf5dddae3a378e20c291356d406a12a7d5309c3d4cadcb566d271762f",
+        "source_event_id": "t01-e2-commit"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-07",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-07-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 22,
+      "event_id": "t08-e1-revise",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 27,
+        "evidence-confidence": 8,
+        "novelty": 21,
+        "poison-risk": 14,
+        "stale-risk": 2,
+        "user-impact": 15,
+        "verifier-cost": 13
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "forged_reasoning_history",
+        "raw_episode_id": "raw5396-forged-reasoning-history",
+        "raw_payload_checksum": "sha256:389ddc70ced1858462a1c54745a6f6e5baebf87f72af255386a19c842b2bc578",
+        "source_event_id": "t04-e1-revise"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-08",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-08-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 23,
+      "event_id": "t08-e2-fold",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 27,
+        "evidence-confidence": 8,
+        "novelty": 21,
+        "poison-risk": 2,
+        "stale-risk": 2,
+        "user-impact": 26,
+        "verifier-cost": 14
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-08",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-08-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 24,
+      "event_id": "t08-e3-revise",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 8,
+        "evidence-confidence": 5,
+        "novelty": 33,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 24,
+        "verifier-cost": 23
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "self_referential_amplification",
+        "raw_episode_id": "raw5396-self-reference-amplification",
+        "raw_payload_checksum": "sha256:48c8b0387a6e5ddeeb59073f6c726b54a2df3fef487adf7498b41439ec7dc35b",
+        "source_event_id": "t04-e3-revise"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-08",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-08-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 25,
+      "event_id": "t09-e1-retrieve",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 10,
+        "evidence-confidence": 5,
+        "novelty": 11,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 39,
+        "verifier-cost": 28
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-dependency-edge",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-dependency-edge",
+        "raw_payload_checksum": "sha256:827c7da4fb4fc1df6256dd1d880be20464a15a25c4d1c752c3ec8849547ee567",
+        "source_event_id": "t01-e1-retrieve"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-09",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-09-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 26,
+      "event_id": "t09-e2-commit",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 9,
+        "evidence-confidence": 5,
+        "novelty": 10,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 43,
+        "verifier-cost": 26
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-rollback-route",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-rollback-route",
+        "raw_payload_checksum": "sha256:d3746cfcf5dddae3a378e20c291356d406a12a7d5309c3d4cadcb566d271762f",
+        "source_event_id": "t01-e2-commit"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-09",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-09-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 27,
+      "event_id": "t09-e3-summarize",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 11,
+        "evidence-confidence": 6,
+        "novelty": 12,
+        "poison-risk": 4,
+        "stale-risk": 5,
+        "user-impact": 30,
+        "verifier-cost": 32
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-09",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-09-clean",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 28,
+      "event_id": "t10-e1-retrieve",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 23,
+        "evidence-confidence": 10,
+        "novelty": 11,
+        "poison-risk": 1,
+        "stale-risk": 24,
+        "user-impact": 18,
+        "verifier-cost": 13
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "stale_memory",
+        "raw_episode_id": "raw5396-stale-runtime-receipt",
+        "raw_payload_checksum": "sha256:3a4e9f1ec04d0e32082db8e848d808f1921cbeb12bb39a62d85cf945a1a06f8a",
+        "source_event_id": "t02-e1-retrieve"
+      },
+      "reason": "high_uncertainty_high_impact_budget_headroom_use_local_sota",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 52,
+        "token_or_context_units": 650,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 110
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 24.0,
+        "token_or_context_units": 410.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 0.0,
+        "wall_time_ms": 55.0
+      },
+      "rollback_status": "recovered",
+      "selected_verifier_tier": "local_sota",
+      "session_id": "session-5369-10",
+      "stale_control_deflected": true,
+      "stale_probe": true,
+      "trace_id": "trace-5369-10-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 29,
+      "event_id": "t10-e2-restore",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 9,
+        "evidence-confidence": 5,
+        "novelty": 11,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 37,
+        "verifier-cost": 31
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-10",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-10-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 30,
+      "event_id": "t10-e3-verify",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 10,
+        "evidence-confidence": 6,
+        "novelty": 12,
+        "poison-risk": 3,
+        "stale-risk": 5,
+        "user-impact": 29,
+        "verifier-cost": 35
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-10",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-10-stale",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 31,
+      "event_id": "t11-e1-tool_select",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 21,
+        "evidence-confidence": 9,
+        "novelty": 11,
+        "poison-risk": 23,
+        "stale-risk": 2,
+        "user-impact": 20,
+        "verifier-cost": 14
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "high_cost_low_value",
+        "raw_episode_id": "raw5396-high-cost-low-value",
+        "raw_payload_checksum": "sha256:e7a08a52b850ff1801344b9eb5047eae9a0694264cd151353cfb15588679ef71",
+        "source_event_id": "t04-e1-revise"
+      },
+      "reason": "high_uncertainty_high_impact_budget_headroom_use_local_sota",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 52,
+        "token_or_context_units": 650,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 110
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 24.0,
+        "token_or_context_units": 410.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 0.0,
+        "wall_time_ms": 55.0
+      },
+      "rollback_status": "recovered",
+      "selected_verifier_tier": "local_sota",
+      "session_id": "session-5369-11",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-11-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 32,
+      "event_id": "t11-e2-restore",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 9,
+        "evidence-confidence": 5,
+        "novelty": 10,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 36,
+        "verifier-cost": 33
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-11",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-11-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 64,
+        "token_or_context_units": 900,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 3,
+        "wall_time_ms": 140
+      },
+      "decision_index": 33,
+      "event_id": "t11-e3-commit",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 8,
+        "evidence-confidence": 5,
+        "novelty": 9,
+        "poison-risk": 3,
+        "stale-risk": 4,
+        "user-impact": 40,
+        "verifier-cost": 31
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-rollback-route",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-rollback-route",
+        "raw_payload_checksum": "sha256:d3746cfcf5dddae3a378e20c291356d406a12a7d5309c3d4cadcb566d271762f",
+        "source_event_id": "t01-e2-commit"
+      },
+      "reason": "low_risk_high_confidence_use_cheap_deterministic",
+      "rejected_tier": "rich_deterministic",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 24,
+        "token_or_context_units": 260,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 1,
+        "wall_time_ms": 40
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 40.0,
+        "token_or_context_units": 640.0,
+        "unproductive_loop_count": 0.0,
+        "verifier_calls": 2.0,
+        "wall_time_ms": 100.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "cheap_deterministic",
+      "session_id": "session-5369-11",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-11-poison",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 34,
+      "event_id": "t12-e1-revise",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 25,
+        "evidence-confidence": 8,
+        "novelty": 19,
+        "poison-risk": 13,
+        "stale-risk": 2,
+        "user-impact": 14,
+        "verifier-cost": 19
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "forged_reasoning_history",
+        "raw_episode_id": "raw5396-forged-reasoning-history",
+        "raw_payload_checksum": "sha256:389ddc70ced1858462a1c54745a6f6e5baebf87f72af255386a19c842b2bc578",
+        "source_event_id": "t04-e1-revise"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-12",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-12-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 35,
+      "event_id": "t12-e2-fold",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 25,
+        "evidence-confidence": 8,
+        "novelty": 19,
+        "poison-risk": 2,
+        "stale-risk": 2,
+        "user-impact": 24,
+        "verifier-cost": 20
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": false,
+      "poison_probe": false,
+      "raw_episode_provenance": {
+        "accepted_memory_id": "mem5396-clean-scaleup-summary",
+        "allowed_for_routing": true,
+        "control_kind": "benign_useful",
+        "raw_episode_id": "raw5396-clean-scaleup-summary",
+        "raw_payload_checksum": "sha256:ca44a4c508d9d4428ebc6e5c3b544a5e25240f442f4068ddb3e58da52bae9ba8",
+        "source_event_id": "t01-e3-summarize"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-12",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-12-dependency",
+      "variant_name": "resource_accounted_routing"
+    },
+    {
+      "baseline_resources": {
+        "memory_proxy_mb": 76,
+        "token_or_context_units": 1060,
+        "unproductive_loop_count": 1,
+        "verifier_calls": 3,
+        "wall_time_ms": 165
+      },
+      "decision_index": 36,
+      "event_id": "t12-e3-revise",
+      "influence_share_sum": 100,
+      "influence_shares": {
+        "constraint-risk": 8,
+        "evidence-confidence": 4,
+        "novelty": 29,
+        "poison-risk": 3,
+        "stale-risk": 3,
+        "user-impact": 21,
+        "verifier-cost": 32
+      },
+      "no_adapter_weight_mutation": true,
+      "no_weight_mutation": true,
+      "poison_control_deflected": true,
+      "poison_probe": true,
+      "raw_episode_provenance": {
+        "accepted_memory_id": null,
+        "allowed_for_routing": false,
+        "control_kind": "self_referential_amplification",
+        "raw_episode_id": "raw5396-self-reference-amplification",
+        "raw_payload_checksum": "sha256:48c8b0387a6e5ddeeb59073f6c726b54a2df3fef487adf7498b41439ec7dc35b",
+        "source_event_id": "t04-e3-revise"
+      },
+      "reason": "moderate_uncertainty_or_constraint_risk_use_rich_deterministic",
+      "rejected_tier": "local_sota",
+      "resource_accounted_resources": {
+        "memory_proxy_mb": 34,
+        "token_or_context_units": 430,
+        "unproductive_loop_count": 0,
+        "verifier_calls": 2,
+        "wall_time_ms": 75
+      },
+      "resource_savings": {
+        "memory_proxy_mb": 42.0,
+        "token_or_context_units": 630.0,
+        "unproductive_loop_count": 1.0,
+        "verifier_calls": 1.0,
+        "wall_time_ms": 90.0
+      },
+      "rollback_status": "not_required",
+      "selected_verifier_tier": "rich_deterministic",
+      "session_id": "session-5369-12",
+      "stale_control_deflected": false,
+      "stale_probe": false,
+      "trace_id": "trace-5369-12-dependency",
+      "variant_name": "resource_accounted_routing"
+    }
+  ],
+  "resource_totals": {
+    "baseline_unproductive_loop_count": 15.0,
+    "memory_proxy_mb": 1362.0,
+    "resource_accounted_unproductive_loop_count": 0.0,
+    "token_or_context_units": 21570.0,
+    "unproductive_loop_count": 15.0,
+    "verifier_calls": 51.0,
+    "wall_time_ms": 3240.0
+  },
+  "rollback_success_rate": 1.0,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5408.resource_accounted_csl_controller.v492",
+  "session_count": 12,
+  "source_artifact_checksums": {
+    "exp5395": "sha256:4fd249154db75cffc4680d08efac1cf97502760252757ac82169c36c178a6fec",
+    "exp5395_module": "sha256:4b5340cd8fb61c39d498806e2e6278dc575f5d775e837347796f3fdd69a53961",
+    "exp5396": "sha256:b5102fc833d7f93587ca9d893bd86c8d90d298353c797856bf31bff5cd4463c9",
+    "exp5396_module": "sha256:8c2f7861fab98824eebf6c268c920e05560d47ddb365a799dbe077d8e5a06074",
+    "module": "sha256:6a8dd28e6315a4861ae97c634dfb43701443c216839446afd330f3e1670cad24",
+    "spec": "sha256:1d22c38fa3a50e7cd894794fe4c1ae124fda8d6b000a8c4c9b7897a64d71ae25"
+  },
+  "source_artifacts": [
+    "results/experiment_5395_influence_share_verifier_budget_router_v491.json",
+    "results/experiment_5396_memory_guard_raw_episode_retention_v491.json"
+  ],
+  "source_router_metrics": {
+    "baseline_variant": {
+      "context_efficiency": 0.661765,
+      "event_ids": [
+        "t01-e1-retrieve",
+        "t01-e2-commit",
+        "t01-e3-summarize",
+        "t02-e1-retrieve",
+        "t02-e2-restore",
+        "t02-e3-verify",
+        "t03-e1-tool_select",
+        "t03-e2-restore",
+        "t03-e3-commit",
+        "t04-e1-revise",
+        "t04-e2-fold",
+        "t04-e3-revise",
+        "t05-e1-retrieve",
+        "t05-e2-commit",
+        "t05-e3-summarize",
+        "t06-e1-retrieve",
+        "t06-e2-restore",
+        "t06-e3-verify",
+        "t07-e1-tool_select",
+        "t07-e2-restore",
+        "t07-e3-commit",
+        "t08-e1-revise",
+        "t08-e2-fold",
+        "t08-e3-revise",
+        "t09-e1-retrieve",
+        "t09-e2-commit",
+        "t09-e3-summarize",
+        "t10-e1-retrieve",
+        "t10-e2-restore",
+        "t10-e3-verify",
+        "t11-e1-tool_select",
+        "t11-e2-restore",
+        "t11-e3-commit",
+        "t12-e1-revise",
+        "t12-e2-fold",
+        "t12-e3-revise"
+      ],
+      "model_weights_mutated": false,
+      "quality": 1.0,
+      "unsafe_false_accepts": 0,
+      "variant_name": "baseline_routing",
+      "verifier_cost": 36.0
+    },
+    "resource_variant": {
+      "context_efficiency": 0.90875,
+      "event_ids": [
+        "t01-e1-retrieve",
+        "t01-e2-commit",
+        "t01-e3-summarize",
+        "t02-e1-retrieve",
+        "t02-e2-restore",
+        "t02-e3-verify",
+        "t03-e1-tool_select",
+        "t03-e2-restore",
+        "t03-e3-commit",
+        "t04-e1-revise",
+        "t04-e2-fold",
+        "t04-e3-revise",
+        "t05-e1-retrieve",
+        "t05-e2-commit",
+        "t05-e3-summarize",
+        "t06-e1-retrieve",
+        "t06-e2-restore",
+        "t06-e3-verify",
+        "t07-e1-tool_select",
+        "t07-e2-restore",
+        "t07-e3-commit",
+        "t08-e1-revise",
+        "t08-e2-fold",
+        "t08-e3-revise",
+        "t09-e1-retrieve",
+        "t09-e2-commit",
+        "t09-e3-summarize",
+        "t10-e1-retrieve",
+        "t10-e2-restore",
+        "t10-e3-verify",
+        "t11-e1-tool_select",
+        "t11-e2-restore",
+        "t11-e3-commit",
+        "t12-e1-revise",
+        "t12-e2-fold",
+        "t12-e3-revise"
+      ],
+      "model_weights_mutated": false,
+      "quality": 1.0,
+      "tier_counts": {
+        "cheap_deterministic": 21,
+        "local_sota": 6,
+        "rich_deterministic": 9
+      },
+      "unsafe_false_accepts": 0,
+      "variant_name": "influence_share_routing",
+      "verifier_cost": 13.8
+    }
+  },
+  "spec_refs": [
+    "REQ-LEARN-5408",
+    "SCENARIO-LEARN-5408-RESOURCE-COUNTERS",
+    "SCENARIO-LEARN-5408-PROVENANCE",
+    "SCENARIO-LEARN-5408-READY"
+  ],
+  "stale_memory_deflection_rate": 1.0,
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5408_resource_accounted_csl_controller_v492.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5408_resource_accounted_csl_controller_v492.py -m pytest tests/python/test_experiment_5408_resource_accounted_csl_controller_v492.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "token_or_context_delta_vs_baseline": 21570.0,
+  "unproductive_loop_reduction_rate": 1.0,
+  "verifier_cost_delta_vs_baseline": 22.2,
+  "wall_time_delta_vs_baseline": 3240.0,
+  "weight_mutation_receipt": {
+    "adapter_weights_loaded": false,
+    "adapter_weights_written": false,
+    "learned_state_scope": "controller_resource_accounting_only",
+    "model_weights_loaded": false,
+    "model_weights_written": false,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true
+  }
+}
