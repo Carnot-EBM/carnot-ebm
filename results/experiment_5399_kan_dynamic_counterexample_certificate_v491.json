@@ -1,0 +1,413 @@
+{
+  "broad_kan_verification_claim": false,
+  "candidate_dynamics": {
+    "cheap_low_risk_cell": {
+      "formula": "max(stale, poison, constraint)<0.45 and novelty<0.60 and uncertainty<0.30",
+      "monotone_non_decreasing_features": [],
+      "tier": "cheap_deterministic",
+      "training_support": 14
+    },
+    "constraint_or_novelty_cell": {
+      "formula": "max(stale, poison, constraint)>=0.45 or novelty>=0.60 or uncertainty>=0.30",
+      "monotone_non_decreasing_features": [
+        "constraint_risk",
+        "novelty",
+        "uncertainty"
+      ],
+      "tier": "rich_deterministic",
+      "training_support": 6
+    },
+    "severe_memory_onset_cell": {
+      "formula": "max(stale, poison)>=0.80 and uncertainty>=0.30 and user_impact>=0.70 and budget>=1.20",
+      "monotone_non_decreasing_features": [
+        "stale_risk",
+        "poison_risk",
+        "uncertainty",
+        "user_impact"
+      ],
+      "tier": "local_sota",
+      "training_support": 4
+    }
+  },
+  "claim_limits": [
+    "bounded Exp5395 verifier-routing fixture only",
+    "KAN/KANDy-style lifted features are an interpretable diagnostic, not a trained governing-equation discovery claim",
+    "counterexample cells cover held-out false routing properties only",
+    "no broad KAN verification claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "counterexample_region_count": 4,
+  "counterexample_regions": [
+    {
+      "bounded_fixture_only": true,
+      "cell_id": "dyn_cell_stale_memory_onset_local_sota",
+      "event_id": "t10-e1-retrieve",
+      "false_property_id": "false_stale_onset_can_remain_cheap",
+      "feature_bounds": {
+        "constraint_risk": [
+          0.45,
+          1.0
+        ],
+        "novelty": [
+          0.45,
+          0.45
+        ],
+        "poison_risk": [
+          0.06,
+          0.06
+        ],
+        "stale_risk": [
+          0.8,
+          1.0
+        ],
+        "uncertainty": [
+          0.3,
+          1.0
+        ],
+        "user_impact": [
+          0.7,
+          1.0
+        ]
+      },
+      "model_tier": "local_sota",
+      "model_tier_rank": 2,
+      "previous_tier_rank": 0,
+      "rejects_false_property": true,
+      "risk_velocity": 0.75,
+      "trace_id": "trace-5369-10-stale"
+    },
+    {
+      "bounded_fixture_only": true,
+      "cell_id": "dyn_cell_poison_memory_onset_local_sota",
+      "event_id": "t11-e1-tool_select",
+      "false_property_id": "false_poison_onset_can_remain_cheap",
+      "feature_bounds": {
+        "constraint_risk": [
+          0.45,
+          1.0
+        ],
+        "novelty": [
+          0.45,
+          0.45
+        ],
+        "poison_risk": [
+          0.8,
+          1.0
+        ],
+        "stale_risk": [
+          0.08,
+          0.08
+        ],
+        "uncertainty": [
+          0.3,
+          1.0
+        ],
+        "user_impact": [
+          0.7,
+          1.0
+        ]
+      },
+      "model_tier": "local_sota",
+      "model_tier_rank": 2,
+      "previous_tier_rank": 0,
+      "rejects_false_property": true,
+      "risk_velocity": 0.75,
+      "trace_id": "trace-5369-11-poison"
+    },
+    {
+      "bounded_fixture_only": true,
+      "cell_id": "dyn_cell_constraint_reject_rich",
+      "event_id": "t12-e1-revise",
+      "false_property_id": "false_constraint_reject_can_remain_cheap",
+      "feature_bounds": {
+        "constraint_risk": [
+          0.45,
+          1.0
+        ],
+        "novelty": [
+          0.6,
+          1.0
+        ],
+        "poison_risk": [
+          0.45,
+          0.45
+        ],
+        "stale_risk": [
+          0.08,
+          0.08
+        ],
+        "uncertainty": [
+          0.28,
+          0.28
+        ],
+        "user_impact": [
+          0.5,
+          0.5
+        ]
+      },
+      "model_tier": "rich_deterministic",
+      "model_tier_rank": 1,
+      "previous_tier_rank": 0,
+      "rejects_false_property": true,
+      "risk_velocity": 0.7,
+      "trace_id": "trace-5369-12-dependency"
+    },
+    {
+      "bounded_fixture_only": true,
+      "cell_id": "dyn_cell_cyclic_dependency_rich",
+      "event_id": "t12-e2-fold",
+      "false_property_id": "false_cyclic_dependency_can_remain_cheap",
+      "feature_bounds": {
+        "constraint_risk": [
+          0.45,
+          1.0
+        ],
+        "novelty": [
+          0.6,
+          1.0
+        ],
+        "poison_risk": [
+          0.06,
+          0.06
+        ],
+        "stale_risk": [
+          0.08,
+          0.08
+        ],
+        "uncertainty": [
+          0.28,
+          0.28
+        ],
+        "user_impact": [
+          0.7,
+          1.0
+        ]
+      },
+      "model_tier": "rich_deterministic",
+      "model_tier_rank": 1,
+      "previous_tier_rank": 1,
+      "rejects_false_property": true,
+      "risk_velocity": 0.0,
+      "trace_id": "trace-5369-12-dependency"
+    }
+  ],
+  "dynamic_counterexample_certificate_ready": true,
+  "experiment": "experiment_5399_kan_dynamic_counterexample_certificate_v491",
+  "experiment_id": "exp5399-v491-kan-dynamic-counterexample-certificate",
+  "false_property_checks": [
+    {
+      "base_event_id": "t10-e1-retrieve",
+      "counterexample_cell_id": "dyn_cell_stale_memory_onset_local_sota",
+      "false_claimed_tier": "cheap_deterministic",
+      "false_property_id": "false_stale_onset_can_remain_cheap",
+      "heldout_only": true,
+      "lifted_features": {
+        "constraint_risk": 0.9,
+        "novelty": 0.45,
+        "poison_risk": 0.06,
+        "previous_tier_rank": 0,
+        "risk_pressure": 0.95,
+        "risk_velocity": 0.75,
+        "stale_risk": 0.95,
+        "uncertainty": 0.38,
+        "user_impact": 0.72,
+        "verifier_cost_pressure": 0.527778
+      },
+      "model_tier": "local_sota",
+      "rejected": true
+    },
+    {
+      "base_event_id": "t11-e1-tool_select",
+      "counterexample_cell_id": "dyn_cell_poison_memory_onset_local_sota",
+      "false_claimed_tier": "cheap_deterministic",
+      "false_property_id": "false_poison_onset_can_remain_cheap",
+      "heldout_only": true,
+      "lifted_features": {
+        "constraint_risk": 0.9,
+        "novelty": 0.45,
+        "poison_risk": 0.95,
+        "previous_tier_rank": 0,
+        "risk_pressure": 0.95,
+        "risk_velocity": 0.75,
+        "stale_risk": 0.08,
+        "uncertainty": 0.38,
+        "user_impact": 0.85,
+        "verifier_cost_pressure": 0.605556
+      },
+      "model_tier": "local_sota",
+      "rejected": true
+    },
+    {
+      "base_event_id": "t12-e1-revise",
+      "counterexample_cell_id": "dyn_cell_constraint_reject_rich",
+      "false_claimed_tier": "cheap_deterministic",
+      "false_property_id": "false_constraint_reject_can_remain_cheap",
+      "heldout_only": true,
+      "lifted_features": {
+        "constraint_risk": 0.9,
+        "novelty": 0.68,
+        "poison_risk": 0.45,
+        "previous_tier_rank": 0,
+        "risk_pressure": 0.9,
+        "risk_velocity": 0.7,
+        "stale_risk": 0.08,
+        "uncertainty": 0.28,
+        "user_impact": 0.5,
+        "verifier_cost_pressure": 0.683333
+      },
+      "model_tier": "rich_deterministic",
+      "rejected": true
+    },
+    {
+      "base_event_id": "t12-e2-fold",
+      "counterexample_cell_id": "dyn_cell_cyclic_dependency_rich",
+      "false_claimed_tier": "cheap_deterministic",
+      "false_property_id": "false_cyclic_dependency_can_remain_cheap",
+      "heldout_only": true,
+      "lifted_features": {
+        "constraint_risk": 0.9,
+        "novelty": 0.68,
+        "poison_risk": 0.06,
+        "previous_tier_rank": 1,
+        "risk_pressure": 0.9,
+        "risk_velocity": 0.0,
+        "stale_risk": 0.08,
+        "uncertainty": 0.28,
+        "user_impact": 0.85,
+        "verifier_cost_pressure": 0.711111
+      },
+      "model_tier": "rich_deterministic",
+      "rejected": true
+    }
+  ],
+  "false_property_count": 4,
+  "false_property_rejection_rate": 1.0,
+  "field_principles": {
+    "broad_kan_verification_claim": "must be false.",
+    "counterexample_region_count": "number of localized dynamic regions.",
+    "dynamic_counterexample_certificate_ready": "true only if false properties are rejected and limits are explicit.",
+    "false_property_count": "number of false properties tested.",
+    "false_property_rejection_rate": "deterministic false-property rejection rate.",
+    "honest_verdict": "one-line summary starting with complete: or blocked:.",
+    "lifted_feature_count": "number of KAN/KANDy-style lifted features.",
+    "milestone": "must equal 2026.07.491.",
+    "sample_count": "number of trace samples.",
+    "status": "complete if bounded certificate emitted or blocked if required traces are missing.",
+    "trace_source": "Exp5395 path or synthetic fallback with reason.",
+    "true_property_count": "number of true properties tested.",
+    "true_property_preservation_rate": "deterministic true-property preservation rate."
+  },
+  "heldout_sample_count": 12,
+  "honest_verdict": "complete: bounded Exp5395 verifier-routing dynamics rejected held-out false properties with localized certificate cells while preserving true properties and making no broad KAN verification claim",
+  "lifted_feature_count": 10,
+  "lifted_features": [
+    "stale_risk",
+    "poison_risk",
+    "constraint_risk",
+    "novelty",
+    "uncertainty",
+    "user_impact",
+    "verifier_cost_pressure",
+    "previous_tier_rank",
+    "risk_pressure",
+    "risk_velocity"
+  ],
+  "methodology_note": "Exp5399 uses a bounded lifted-feature dynamics diagnostic over verifier routing traces. It emits interpretable false-property counterexample cells only; it does not verify KANs broadly.",
+  "milestone": "2026.07.491",
+  "random_seed": 5399,
+  "reproducibility_checksum": "sha256:ef4ea9005317908347b6bff33f9c83cff0b310b799bd85105fcb838b5a6d6966",
+  "run_date": "2026-07-08",
+  "sample_count": 36,
+  "schema": "carnot.experiment_5399.kan_dynamic_counterexample_certificate.v491",
+  "source_artifact_checksums": {
+    "exp5395": "sha256:4fd249154db75cffc4680d08efac1cf97502760252757ac82169c36c178a6fec",
+    "module": "sha256:1ab0a9bb0e2d2a6a0e1071c3be392f2259c30856a85d3b97ce7901fb95cc6e16",
+    "spec": "sha256:eb38730f81bd629eb66a1c323e54b1c19baa2de0fc288f13eee0c0fa2a8cc889"
+  },
+  "source_artifacts": [
+    "results/experiment_5395_influence_share_verifier_budget_router_v491.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5399",
+    "SCENARIO-KAN-5399"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5399_kan_dynamic_counterexample_certificate_v491.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5399_kan_dynamic_counterexample_certificate_v491.py -m pytest tests/python/test_experiment_5399_kan_dynamic_counterexample_certificate_v491.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5399_kan_dynamic_counterexample_certificate_v491.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "trace_source": {
+    "fallback_reason": null,
+    "path": "results/experiment_5395_influence_share_verifier_budget_router_v491.json",
+    "source_type": "exp5395"
+  },
+  "train_sample_count": 24,
+  "true_property_checks": [
+    {
+      "event_ids": [
+        "t09-e1-retrieve",
+        "t09-e2-commit",
+        "t09-e3-summarize",
+        "t10-e1-retrieve",
+        "t10-e2-restore",
+        "t10-e3-verify",
+        "t11-e1-tool_select",
+        "t11-e2-restore",
+        "t11-e3-commit",
+        "t12-e1-revise",
+        "t12-e2-fold",
+        "t12-e3-revise"
+      ],
+      "heldout_only": true,
+      "preserved": true,
+      "property_id": "heldout_tier_replay_matches_lifted_dynamics",
+      "sample_count": 12
+    },
+    {
+      "event_ids": [
+        "t10-e1-retrieve",
+        "t11-e1-tool_select",
+        "t12-e1-revise",
+        "t12-e2-fold",
+        "t12-e3-revise"
+      ],
+      "heldout_only": true,
+      "preserved": true,
+      "property_id": "heldout_risky_or_novel_rows_are_not_cheap",
+      "sample_count": 5
+    },
+    {
+      "event_ids": [
+        "t09-e1-retrieve",
+        "t09-e2-commit",
+        "t09-e3-summarize",
+        "t10-e2-restore",
+        "t10-e3-verify",
+        "t11-e2-restore",
+        "t11-e3-commit"
+      ],
+      "heldout_only": true,
+      "preserved": true,
+      "property_id": "heldout_clean_low_risk_rows_remain_cheap",
+      "sample_count": 7
+    }
+  ],
+  "true_property_count": 3,
+  "true_property_preservation_rate": 1.0
+}
