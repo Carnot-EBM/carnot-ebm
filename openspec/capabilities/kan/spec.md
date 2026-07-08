@@ -1157,6 +1157,71 @@ preservation rate, solve-time delta, cut count, unsafe false accepts, neutral
 certificate-success delta, and `constraint_bridge_ready` without claiming a
 broad certificate improvement.
 
+## REQ-KAN-5399: V491 Bounded Dynamic Counterexample Certificate For Verifier-Routing Drift
+
+The KAN verification tier SHALL add an Exp 5399 CPU-only bounded diagnostic
+that uses a compact KAN/KANDy-style lifted-feature model to explain verifier
+routing drift or constraint-drift traces. The experiment MUST use the committed
+Exp 5395 influence-share verifier-budget routing artifact at
+`results/experiment_5395_influence_share_verifier_budget_router_v491.json` when
+it is available, and MUST fall back only to a deterministic synthetic
+verifier-drift fixture with an explicit fallback reason when Exp 5395 is
+unavailable. It MUST NOT modify `scripts/research_conductor.py`.
+
+The diagnostic MUST keep the claim narrow: it MAY fit or emulate a small
+piecewise-linear lifted-feature dynamics model over bounded trace features such
+as stale risk, poison risk, constraint risk, novelty, uncertainty, verifier-cost
+pressure, user impact, previous tier state, and transition velocity. It MUST
+extract interpretable candidate dynamics or monotonicity constraints, evaluate
+held-out true properties and held-out false-property perturbations, and emit
+localized counterexample regions or certificate cells for rejected false
+properties. It MUST state directly that the result is limited to the bounded
+trace fixture and MUST NOT claim broad KAN verification, trained-network
+soundness, hardware execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json` with
+the required top-level fields `status`, `milestone`, `trace_source`,
+`sample_count`, `lifted_feature_count`, `true_property_count`,
+`false_property_count`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `counterexample_region_count`,
+`broad_kan_verification_claim`,
+`dynamic_counterexample_certificate_ready`, and `honest_verdict`. `status` MUST
+be `complete` only when bounded certificate cells are emitted. `milestone` MUST
+equal `2026.07.491`. `trace_source` MUST identify the Exp 5395 path or the
+synthetic fallback plus reason. `broad_kan_verification_claim` MUST be false.
+`dynamic_counterexample_certificate_ready` MUST be true only when false
+properties are deterministically rejected, true properties are preserved, and
+claim limits are explicit. `honest_verdict` MUST start with `complete:` or
+`blocked:`.
+
+Required field principles:
+- `status`: complete if bounded certificate emitted or blocked if required traces are missing.
+- `milestone`: must equal 2026.07.491.
+- `trace_source`: Exp5395 path or synthetic fallback with reason.
+- `sample_count`: number of trace samples.
+- `lifted_feature_count`: number of KAN/KANDy-style lifted features.
+- `true_property_count`: number of true properties tested.
+- `false_property_count`: number of false properties tested.
+- `false_property_rejection_rate`: deterministic false-property rejection rate.
+- `true_property_preservation_rate`: deterministic true-property preservation rate.
+- `counterexample_region_count`: number of localized dynamic regions.
+- `broad_kan_verification_claim`: must be false.
+- `dynamic_counterexample_certificate_ready`: true only if false properties are rejected and limits are explicit.
+- `honest_verdict`: one-line summary starting with complete: or blocked:.
+
+### SCENARIO-KAN-5399: False Routing-Dynamics Properties Produce Certificate Cells
+
+Given the committed Exp 5395 routing trace family or the deterministic fallback
+fixture,
+When Exp 5399 builds the bounded lifted-feature dynamics model and evaluates
+held-out true routing properties plus held-out false-property perturbations,
+Then the artifact reports the trace source, sample count, lifted feature count,
+true and false property counts, preservation and rejection rates, localized
+counterexample regions, explicit claim limits,
+`broad_kan_verification_claim=false`, and
+`dynamic_counterexample_certificate_ready=true` only for the bounded fixture.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1205,6 +1270,7 @@ broad certificate improvement.
 | REQ-KAN-5316 | Planned | Exp 5316 target: V485 bounded DP/knapsack-style PWA piece allocation under global error and piece budgets, compared with static and `.484` dynamic abstraction without broad KAN claims. |
 | REQ-KAN-5332 | Planned | Exp 5332 target: V486 bounded false-property sensitivity and counterexample-localization diagnostic over Exp 5277/5316 fixtures, with per-unit perturbations and no broad certificate claim. |
 | REQ-KAN-5346 | Planned | Exp 5346 target: V487 bounded bridge from Exp 5332 localized counterexample cells to explicit downstream KAN cuts / Ising penalties, with before/after false-property rejection and true-property preservation checks. |
+| REQ-KAN-5399 | Planned | Exp 5399 target: V491 bounded KAN/KANDy-style dynamic counterexample certificate over Exp 5395 verifier-routing drift traces or an explicit synthetic fallback, with held-out true/false checks and no broad KAN verification claim. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
