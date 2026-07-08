@@ -16,19 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (48 modul
 
 ## Hostile LLM review
 
-TL;DR: **NO NEW LIVE SOLVE CREDIT.** Reachability lint passes, but there are **zero recent ARC solve artifacts**, so there is no evidence of `SELF_DISCOVERY_ADVANCE`.
+TL;DR: **No recent ARC solve artifacts to credit.** Reachability passes, but there is **zero new evidence of live self-discovery capability** in the last 7 days.
 
-**Per-Artifact Review**
+Per-artifact review: none.
 
-No artifacts to classify.
-
-Evidence:
-`RECENT ARC SOLVE ARTIFACTS (last 7d): 0 []`
-
-Recommended action:
-Do not claim progress, solves, or capability gain from this batch. Keep the reachability pass as hygiene only; it is not solve evidence.
-
-**Pattern Watch**
-
-No direct outer-loop drift is visible because there are no artifacts. The main risk is metric laundering: treating “all solver modules are reachable” as equivalent to “the live agent discovered hidden-game solves.” It is not. Reachability only says the path exists; it does not prove the live agent used attempts/runtime reverse-engineering to solve anything.
+Pattern watch: The reachability pre-pass is clean, but it only proves solver modules are on the live path. It does **not** prove solves came from the live agent’s own attempts or runtime reverse-engineering. Keep rejecting any future artifact that lacks explicit live-agent provenance.
 
