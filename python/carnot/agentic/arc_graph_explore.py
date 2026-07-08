@@ -66,6 +66,26 @@ _TIER_MIN_WIDTH = 2
 _TIER_MAX_WIDTH = 32
 
 
+def _action_prior_click_points(
+    action_prior: Any | None,
+    frame: Any,
+    *,
+    max_click: int,
+) -> list[tuple[int, int]] | None:
+    """REQ-ARC-FCP-5397: let live action priors shape click generation before caps."""
+
+    prior = action_prior
+    if prior is not None and not hasattr(prior, "click_points"):
+        prior = getattr(prior, "base_prior", None)
+    if prior is None or not hasattr(prior, "click_points"):
+        return None
+    try:
+        points = prior.click_points(frame, max_points=max_click)
+    except Exception:
+        return None
+    return [(int(x), int(y)) for x, y in points]
+
+
 def _tier_ordered_click_points(grid) -> list:
     """Object-click (x, y) points ordered by just-explore's 5 salience tiers (T0 first):
     T0 salient AND medium-width, T1 medium-width, T2 salient, T3 other, T4 status-bar. Stable
@@ -138,17 +158,18 @@ def rich_action_candidates(
         import os
 
         grid = grid_of(frame)
+        pts = _action_prior_click_points(action_prior, frame, max_click=max_click)
         # CARNOT_ARC_TIER_SCHEDULE=1 orders object-clicks by just-explore's 5 salience tiers (button-like
         # medium-width salient objects first) instead of the flat area*rarity sort. Default off -> the
         # path below is byte-identical to the proven order (parity preserved; the SUBMITTED agent unchanged
         # until the A/B greenlights it). A scoring failure falls back to the flat order (no-regression).
-        if os.environ.get("CARNOT_ARC_TIER_SCHEDULE") == "1":
+        if pts is None and os.environ.get("CARNOT_ARC_TIER_SCHEDULE") == "1":
             try:
-                pts = _tier_ordered_click_points(grid) or None  # None -> fall back to the flat order
+                pts = (
+                    _tier_ordered_click_points(grid) or None
+                )  # None -> fall back to the flat order
             except Exception:
                 pts = None
-        else:
-            pts = None
         if pts is None:
             comps = _components_detailed(grid)
             if by_salience and comps:
@@ -635,7 +656,9 @@ def graph_explore_solve_v2(
         frontier_seed_actions_injected += len(rows)
         return rows
 
-    def _apply_frontier_seed_sequence(state: dict, frame_here, sequence: list[dict], *, policy: str):
+    def _apply_frontier_seed_sequence(
+        state: dict, frame_here, sequence: list[dict], *, policy: str
+    ):
         nonlocal expansions, best
         traj = list(state["path"])
         nf = frame_here
@@ -894,8 +917,7 @@ def graph_explore_solve_v2(
                         heapq.heappush(
                             heap,
                             (
-                                len(traj)
-                                + _priority_value(nf, states[nh]["untested"]),
+                                len(traj) + _priority_value(nf, states[nh]["untested"]),
                                 next(counter),
                                 nh,
                             ),

@@ -1,7 +1,8 @@
 """Classical color-blob salience for ARC live exploration.
 
 Spec refs: REQ-ARC-FCP-5360, SCENARIO-ARC-FCP-5360,
-REQ-ARC-FCP-5373, SCENARIO-ARC-FCP-5373.
+REQ-ARC-FCP-5373, SCENARIO-ARC-FCP-5373,
+REQ-ARC-FCP-5397, SCENARIO-ARC-FCP-5397.
 
 The live ARC agent already has learned frame-diff and action-prior hooks. This
 module adds the cheap perception-grounded fallback those hooks were missing:
@@ -137,6 +138,17 @@ class ColorBlobSaliencePrior:
     button_like_max_area: int = 64
     button_like_max_aspect: float = 3.0
 
+    def _blob_sort_key(
+        self, blob: ColorBlob
+    ) -> tuple[float, float, int, tuple[int, int, int, int]]:
+        tier = int(self.tier(blob))
+        return (
+            float(tier),
+            -float(self.button_likelihood(blob)),
+            -int(blob.pixel_count),
+            tuple(int(value) for value in blob.bbox),
+        )
+
     def is_status_bar_like(self, blob: ColorBlob) -> bool:
         """Return true for status-colored or frame-edge status-strip components."""
 
@@ -190,6 +202,20 @@ class ColorBlobSaliencePrior:
             and aspect <= float(self.button_like_max_aspect)
         )
 
+    def button_likelihood(self, blob: ColorBlob) -> float:
+        """Return a small morphology score used only to order blobs inside a tier."""
+
+        if self.is_status_bar_like(blob):
+            return 0.0
+        score = 0.0
+        if int(blob.color) in self.salient_colors:
+            score += 0.35
+        if self.is_button_like_blob(blob):
+            score += 1.0
+        area = max(1.0, float(self.button_like_max_area))
+        score += 0.15 * min(1.0, float(blob.pixel_count) / area)
+        return float(score)
+
     def tier(self, blob: ColorBlob) -> int:
         """Return 0..4 where lower means earlier exploration priority."""
 
@@ -217,6 +243,54 @@ class ColorBlobSaliencePrior:
             return 2
         return 3
 
+    def tier_rows(self, frame: Any) -> list[dict[str, Any]]:
+        """Emit connected-component tier evidence for live-path diagnostics."""
+
+        grid = _as_grid(frame)
+        blobs = connected_color_blobs(
+            grid,
+            min_pixels=self.min_pixels,
+            max_component_fraction=1.0
+            if self.large_flat_deprioritization
+            else self.max_component_fraction,
+        )
+        rows: list[dict[str, Any]] = []
+        for blob in sorted(blobs, key=self._blob_sort_key):
+            tier = int(self.tier(blob))
+            rows.append(
+                {
+                    "tier": tier,
+                    "color": int(blob.color),
+                    "pixel_count": int(blob.pixel_count),
+                    "bbox": [int(value) for value in blob.bbox],
+                    "centroid_y": float(blob.centroid[0]),
+                    "centroid_x": float(blob.centroid[1]),
+                    "button_like": bool(self.is_button_like_blob(blob)),
+                    "button_likelihood": float(self.button_likelihood(blob)),
+                    "salient_color": int(blob.color) in self.salient_colors,
+                    "status_bar": bool(self.is_status_bar_like(blob)),
+                    "large_flat": bool(self.is_large_flat_blob(blob)),
+                    "non_status_region": not self.is_status_bar_like(blob),
+                }
+            )
+        return rows
+
+    def click_points(self, frame: Any, *, max_points: int | None = None) -> list[tuple[int, int]]:
+        """Return blob-centroid click points in salience-tier generation order."""
+
+        rows = self.tier_rows(frame)
+        points: list[tuple[int, int]] = []
+        seen: set[tuple[int, int]] = set()
+        for row in rows:
+            point = (int(row["centroid_x"]), int(row["centroid_y"]))
+            if point in seen:
+                continue
+            seen.add(point)
+            points.append(point)
+            if max_points is not None and len(points) >= int(max_points):
+                break
+        return points
+
     def _candidate_action_id(self, candidate: Any) -> int:
         value = (
             candidate.get("action", candidate.get("action_id", 0))
@@ -242,6 +316,75 @@ class ColorBlobSaliencePrior:
         return min(
             blobs,
             key=lambda blob: math.dist((float(y), float(x)), blob.centroid),
+        )
+
+    def action_tier_rows(self, frame: Any, candidates: Sequence[Any]) -> list[dict[str, Any]]:
+        """Return candidate-tier diagnostics in the same order the prior prefers."""
+
+        grid = _as_grid(frame)
+        blobs = connected_color_blobs(
+            grid,
+            min_pixels=self.min_pixels,
+            max_component_fraction=1.0
+            if self.large_flat_deprioritization
+            else self.max_component_fraction,
+        )
+        rows: list[dict[str, Any]] = []
+        for index, candidate in enumerate(candidates):
+            action_id = self._candidate_action_id(candidate)
+            data = self._candidate_data(candidate)
+            source = (
+                candidate.get("source", "")
+                if isinstance(candidate, Mapping)
+                else getattr(candidate, "source", "")
+            )
+            if action_id != 6 or "x" not in data or "y" not in data:
+                rows.append(
+                    {
+                        "index": int(index),
+                        "action": int(action_id),
+                        "data": dict(data),
+                        "source": str(source),
+                        "tier": None,
+                        "score": float(self.score(frame, candidate)),
+                    }
+                )
+                continue
+            blob = self._blob_for_click(blobs, int(data["x"]), int(data["y"]))
+            if blob is None:
+                tier = None
+                row = {
+                    "index": int(index),
+                    "action": int(action_id),
+                    "data": dict(data),
+                    "source": str(source),
+                    "tier": tier,
+                    "score": 0.0,
+                }
+            else:
+                tier = int(self.tier(blob))
+                row = {
+                    "index": int(index),
+                    "action": int(action_id),
+                    "data": dict(data),
+                    "source": str(source),
+                    "tier": tier,
+                    "score": float(self.score(frame, candidate)),
+                    "color": int(blob.color),
+                    "button_like": bool(self.is_button_like_blob(blob)),
+                    "button_likelihood": float(self.button_likelihood(blob)),
+                    "status_bar": bool(self.is_status_bar_like(blob)),
+                    "large_flat": bool(self.is_large_flat_blob(blob)),
+                    "non_status_region": not self.is_status_bar_like(blob),
+                }
+            rows.append(row)
+        return sorted(
+            rows,
+            key=lambda row: (
+                99 if row.get("tier") is None else int(row["tier"]),
+                -float(row.get("score") or 0.0),
+                int(row["index"]),
+            ),
         )
 
     def score(self, frame: Any, candidate: Any) -> float:
@@ -277,6 +420,8 @@ class ColorBlobSaliencePrior:
     def as_dict(self) -> dict[str, Any]:
         return {
             "source": "single_color_connected_component_tiers",
+            "connected_component_salience_enabled": True,
+            "salience_tiers_emitted": True,
             "salient_colors": sorted(int(color) for color in self.salient_colors),
             "status_bar_color": int(self.status_bar_color),
             "max_component_fraction": float(self.max_component_fraction),

@@ -355,6 +355,13 @@ class StepwiseExplorer:
             self.action_effect_expansion_prior = None
         self.action_prior = action_prior
         self.action_prior_prune_quantile = action_prior_prune_quantile
+        self._last_action_salience_diagnostics: dict[str, Any] = {
+            "connected_component_salience_enabled": False,
+            "salience_tiers_emitted": False,
+            "generation_stage_action_prioritization": False,
+            "tier_rows": [],
+            "action_tier_rows": [],
+        }
         self.adaptive_budget_threshold = adaptive_budget_threshold
         self.adaptive_budget_value_head = adaptive_budget_value_head
         self.adaptive_budget_noop_threshold = float(adaptive_budget_noop_threshold)
@@ -734,6 +741,54 @@ class StepwiseExplorer:
             return dict(self.action_effect_expansion_prior.diagnostics())
         return {"enabled": True}
 
+    @staticmethod
+    def _salience_diagnostic_prior(action_prior: Any | None) -> Any | None:
+        prior = action_prior
+        if prior is not None and not hasattr(prior, "tier_rows"):
+            prior = getattr(prior, "base_prior", None)
+        return prior if prior is not None and hasattr(prior, "tier_rows") else None
+
+    def _record_action_salience_diagnostics(
+        self,
+        frame: Any,
+        candidates: Sequence[Any],
+        action_prior: Any | None,
+    ) -> None:
+        prior = self._salience_diagnostic_prior(action_prior)
+        if prior is None:
+            self._last_action_salience_diagnostics = {
+                "connected_component_salience_enabled": False,
+                "salience_tiers_emitted": False,
+                "generation_stage_action_prioritization": False,
+                "tier_rows": [],
+                "action_tier_rows": [],
+            }
+            return
+        try:
+            tier_rows = list(prior.tier_rows(frame))
+        except Exception:
+            tier_rows = []
+        try:
+            action_tier_rows = (
+                list(prior.action_tier_rows(frame, candidates))
+                if hasattr(prior, "action_tier_rows")
+                else []
+            )
+        except Exception:
+            action_tier_rows = []
+        self._last_action_salience_diagnostics = {
+            "connected_component_salience_enabled": True,
+            "salience_tiers_emitted": bool(tier_rows or action_tier_rows),
+            "generation_stage_action_prioritization": hasattr(prior, "click_points"),
+            "tier_rows": tier_rows,
+            "action_tier_rows": action_tier_rows,
+        }
+
+    def action_salience_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-FCP-5397: expose live candidate-generation salience evidence."""
+
+        return dict(self._last_action_salience_diagnostics)
+
     def curiosity_diagnostics(self) -> dict[str, Any]:
         if self.dense_curiosity is None:
             return {"enabled": False}
@@ -879,6 +934,7 @@ class StepwiseExplorer:
             candidate_router=self.candidate_router,
             previous_frame=previous_frame,
         )
+        self._record_action_salience_diagnostics(frame, candidates, action_prior)
         if self.adaptive_budget_threshold is not None and candidates:
             from carnot.agentic.arc_adaptive_budget import apply_adaptive_budget
 

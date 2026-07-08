@@ -1080,6 +1080,56 @@ Required field principles:
 - `failure_mode`: principle "if no bank, concrete live-path blocker."
 - `honest_verdict`: principle "one-line ARC outcome."
 
+### REQ-ARC-FCP-5397: Blob Salience Generation-Stage Live-Path Level-Up Attempt
+
+Experiment 5397 SHALL write
+`results/experiment_5397_arc_blob_salience_live_path_v491.json` after a
+registry-prechecked ARC live-path attempt. The workflow SHALL prefer `re86` L3
+when the registry still records fewer than three reproduced `re86` levels; if
+that depth is already reproducible, it SHALL choose the next unsolved reachable
+target and SHALL NOT duplicate a prior solved level. The salience mechanism
+SHALL segment rendered frames into single-color connected components, mask or
+deprioritize status-bar regions, classify blobs into tiers from button
+likelihood, salient color, size, and non-status evidence, and SHALL apply those
+tiers in the live `E3AgentPolicy`/`StepwiseExplorer` generation stage before the
+click candidate cap. It SHALL NOT use a per-game adapter, offline BFS,
+outer-loop reverse engineering, or a hand-coded game model for a credited solve.
+
+The result artifact SHALL include `status`, `milestone`, `target_game`,
+`attempted_level`, `registry_precheck_done`, `duplicate_solve_avoided`,
+`solve_provenance`, `live_agent_policy_modified`,
+`connected_component_salience_enabled`, `salience_tiers_emitted`,
+`per_game_adapter_used`, `offline_bfs_used`, `outer_loop_re_used`,
+`live_attempt_count`, `offline_reproduced`, `reproduced_levels`,
+`new_level_banked`, `failure_mode`, and `honest_verdict`. A credited level-up
+SHALL require `status=complete`, `solve_provenance=live_agent_self_discovery`,
+`offline_reproduced=true`, `reproduced_levels>=1`, `new_level_banked=true`,
+`per_game_adapter_used=false`, `offline_bfs_used=false`, and
+`outer_loop_re_used=false`; otherwise the artifact SHALL report `honest_null`
+with a concise failure mode, or `blocked` only when harness access is missing.
+
+Required field principles:
+
+- `status`: principle "complete for a banked +1 level, honest_null for a real no-bank attempt, or blocked for missing harness access."
+- `milestone`: principle "must equal 2026.07.491."
+- `target_game`: principle "game selected after registry precheck."
+- `attempted_level`: principle "level attempted after registry precheck."
+- `registry_precheck_done`: principle "must be true."
+- `duplicate_solve_avoided`: principle "must be true."
+- `solve_provenance`: principle "must be live_agent_self_discovery for a credited solve."
+- `live_agent_policy_modified`: principle "true only if E3AgentPolicy generation-stage action prioritization was changed."
+- `connected_component_salience_enabled`: principle "true if the blob salience mechanism was active."
+- `salience_tiers_emitted`: principle "true if action tiers were logged."
+- `per_game_adapter_used`: principle "must be false."
+- `offline_bfs_used`: principle "must be false."
+- `outer_loop_re_used`: principle "must be false."
+- `live_attempt_count`: principle "count of live harness attempts."
+- `offline_reproduced`: principle "true only if the live-discovered new level is reproduced."
+- `reproduced_levels`: principle "number of newly reproduced levels, success requires reproduced_levels>=1."
+- `new_level_banked`: principle "true only for a +1 reproducible level."
+- `failure_mode`: principle "null on success or concise no-bank reason."
+- `honest_verdict`: principle "one-line summary starting with complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1460,3 +1510,19 @@ When Experiment 5385 performs its registry precheck
 Then it selects `re86` L3, marks duplicate credit disallowed, and only sets
 `new_level_banked=true` if the live-agent-discovered action labels reproduce
 beyond the prior level.
+
+### SCENARIO-ARC-FCP-5397: Blob Tiers Shape Live Candidate Generation
+
+Given a rendered ARC frame containing a status strip, a large flat colored
+region, and a compact salient button-like component
+When the live `StepwiseExplorer` asks `rich_action_candidates` for click
+candidates with the connected-component salience prior enabled
+Then the compact salient button-like component is generated before the click cap
+can drop it, status-bar components are pushed to the lowest tier, and the live
+explorer records emitted salience tiers.
+
+Given `ops/arc_solve_registry.yaml` records `re86` below L3
+When Experiment 5397 performs its registry precheck
+Then it selects `re86` L3, marks duplicate solve avoidance complete, runs a
+bounded live-agent attempt, and only emits `complete:` when a
+live-agent-discovered new level is reproduced offline.
