@@ -10586,3 +10586,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-08 22:38 UTC | Deterministic AST and KB witness constraints for c | OK | 88 passed, 1 warning in 11.13s |
 | 2026-07-08 22:52 UTC | Continuous self-learning governed online workflow  | OK | 92 passed, 1 warning in 12.02s |
 | 2026-07-08 23:05 UTC | Gated CSL memory-failure and negative-transfer str | OK | 92 passed, 1 warning in 13.73s |
+| 2026-07-08 23:19 UTC | Active-constraint p-bit assumption bridge with res | OK | 89 passed, 1 warning in 12.09s |
