@@ -10534,3 +10534,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 08:53 UTC | Gated scaled structured safety/action panel after  | OK | 105 passed, 1 warning in 8.12s |
 | 2026-07-08 09:05 UTC | Active-constraint warm-start guidance with solver  | OK | 89 passed, 1 warning in 8.35s |
 | 2026-07-08 09:17 UTC | Gated p-bit/QUBO action-sequence stress with activ | OK | 90 passed, 1 warning in 8.20s |
+| 2026-07-08 09:30 UTC | Resource-accounted continuous self-learning contro | OK | 88 passed, 1 warning in 10.31s |
