@@ -2966,5 +2966,18 @@
     "tests/python/test_experiment_5417_risk_calibrated_sota_structured_panel_v493.py"
   ],
   "unconstrained_validity": 0.285714,
-  "unsafe_false_accept_rate": 0.0
+  "unsafe_false_accept_rate": 0.0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "abstention_rate=0.619048 and semantic_error_rate=0.619048 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
