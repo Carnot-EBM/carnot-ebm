@@ -37052,3 +37052,95 @@ modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5376 | Planned (`python/carnot/experiment_5376_transition_v490.py`, `results/experiment_5376_transition_v490.json`) | Planned (`tests/python/test_experiment_5376_transition_v490.py`) |
+
+### REQ-REPORT-5389: Archive .490 Truth And Emit .491 Transition Artifact
+
+The Exp 5389 workflow SHALL write
+`results/experiment_5389_transition_v491.json` without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL read
+`AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`results/experiment_5388_capstone_v490.json`, `ops/status.md`,
+`ops/changelog.md`, and `ops/conductor-log.md`.
+
+The workflow SHALL copy the `.490` capstone truth table for
+`structured_methodology_receipt_ready`, `structured_protocol_clean`,
+`constraint_tax_panel_ready`, `budget_memory_corrigendum_clean`,
+`continuous_self_learning_real_workflow_ready`,
+`continuous_self_learning_requirement_satisfied`,
+`overwrite_guidance_scale_ready`, `pbit_boundary_overwrite_ready`,
+`arc_new_level_banked`, `hardware_hash_chained_receipt_ready`,
+`hardware_speedup_claim`, and `future_token_signal_allowed`. It SHALL record
+the `.490` caution boundaries: Exp5383 was adversarially flagged
+`CRITICAL TAUTOLOGY`, Exp5385 banked no ARC level, Exp5386 made no speedup
+claim and found KV260 unreachable, and Exp5387 kept token/internal-feature
+signal closed. It SHALL read the `.491` roadmap document and the executable
+`.491` roadmap source available at execution time to record task count, phase
+names, and ordered task ids. If the literal `research-roadmap-next.yaml` is
+absent after the active roadmap already names `2026.07.491`, the artifact
+SHALL record `roadmap_next_present=false` and may still complete by using
+`research-roadmap.yaml` as the task source.
+
+The artifact SHALL include required principle-annotated fields `status`,
+`milestone`, `prior_milestone`, `prior_capstone_path`,
+`prior_gate_summary`, `prior_blockers`, `roadmap_next_present`,
+`roadmap_doc_present`, `planned_task_count`, `planned_task_ids`,
+`downstream_gate_expectations`, `active_roadmap_modified`,
+`conductor_modified`, and `honest_verdict`. It SHOULD also include
+`experiment_id`, `schema`, `spec_refs`, `run_date`, `planned_phase_names`,
+`roadmap_doc_task_range`, `planned_task_source`, `preconditions_checked`,
+`cited_upstream_artifacts`, `duration_s`, `random_seed`, and
+`reproducibility_checksum` so downstream reconciliation can audit the
+transition without rerunning prior experiments.
+
+Required field principles:
+
+- `status`: principle "Honest terminal state; complete only when the .490 capstone, .491 roadmap document, executable .491 task source, and no-edit guards are present."
+- `milestone`: principle "Must equal 2026.07.491 so this artifact cannot be confused with the completed .490 capstone."
+- `prior_milestone`: principle "Must equal 2026.07.490 because all inherited gates come from the completed prior milestone."
+- `prior_capstone_path`: principle "Names the exact .490 capstone used as the source of truth."
+- `prior_gate_summary`: principle "Copies only the requested .490 gate booleans without laundering flagged solver, no-bank ARC, no-speedup hardware, or closed token-feature lanes."
+- `prior_blockers`: principle "Summarizes solver-tautology, ARC, token-feature, and hardware blockers for downstream gating."
+- `roadmap_next_present`: principle "Bare boolean proving whether the literal pre-staged next-roadmap file existed at execution time."
+- `roadmap_doc_present`: principle "Bare boolean proving the vNEXT roadmap document existed for task-range and phase extraction."
+- `planned_task_count`: principle "Counts the .491 tasks in the executable roadmap source used by this transition."
+- `planned_task_ids`: principle "Ordered task ids preserve the Exp5389-5401 conductor execution range for downstream gates."
+- `downstream_gate_expectations`: principle "Lists the structured, self-learning, solver, ARC, token, and hardware expectations .491 tasks must honor."
+- `active_roadmap_modified`: principle "Must remain false because Exp5389 is record-only and must not edit the active roadmap."
+- `conductor_modified`: principle "Must remain false because Exp5389 must not edit scripts/research_conductor.py."
+- `honest_verdict`: principle "One-line terminal summary that distinguishes a clean transition from a missing-input block."
+
+#### SCENARIO-REPORT-5389: Active .491 Emits Complete Transition Context
+
+**Given** `results/experiment_5388_capstone_v490.json` is loadable and terminal
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
+`2026.07.491` and task range `Exp 5389-5401`
+**And** `research-roadmap.yaml` names milestone `2026.07.491` with the ordered
+Exp5389-5401 tasks
+**And** git status reports no changes to `research-roadmap.yaml` or
+`scripts/research_conductor.py`
+**When** the Exp 5389 workflow runs
+**Then** it writes a complete `results/experiment_5389_transition_v491.json`,
+sets `roadmap_next_present` from the literal filesystem state, sets
+`planned_task_source` to the executable roadmap source used, carries the `.490`
+gate summary and blockers, records the downstream gate expectations, and does
+not overwrite `research-roadmap.yaml` or edit `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-5389-BLOCKED-INPUT: Missing Or Mismatched Inputs Fail Closed
+
+**Given** the `.490` capstone is missing or non-terminal, the `.491` roadmap
+document is absent or mismatched, no executable `.491` roadmap source is
+available, ordered task ids are not Exp5389-5401, or either protected file is
+dirty at execution time
+**When** the Exp 5389 workflow runs
+**Then** it emits a terminal `blocked_` verdict, preserves all observed missing
+or mismatched preconditions, keeps `active_roadmap_modified=false` and
+`conductor_modified=false` unless the guard observed otherwise, and does not
+modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5389)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5389 | Implemented (`python/carnot/experiment_5389_transition_v491.py`, `results/experiment_5389_transition_v491.json`) | Implemented (`tests/python/test_experiment_5389_transition_v491.py`) |
