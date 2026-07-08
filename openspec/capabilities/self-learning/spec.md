@@ -19096,3 +19096,114 @@ The required field principles SHALL be:
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5382 | Planned (`python/carnot/experiment_5382_real_workflow_continuous_self_learning_v490.py`, `results/experiment_5382_real_workflow_continuous_self_learning_v490.json`) | Planned (`tests/python/test_experiment_5382_real_workflow_continuous_self_learning_v490.py`) |
+
+---
+
+## REQ-LEARN-5395: Influence-Share Verifier-Budget Router v491
+
+Experiment 5395 SHALL extend the Exp5382 real dependency/drift verifier
+workflow with a bounded verifier-budget router. The experiment SHALL compare
+three variants on the same ordered workflow events: a baseline routing variant,
+a fixed self-learning routing variant, and an influence-share routing variant.
+The router SHALL choose between cheap deterministic checks, richer
+deterministic verification, and local SOTA calls only when uncertainty and the
+remaining verifier budget justify the higher-cost tier. The router MAY update
+controller routing state, but SHALL NOT load, fine-tune, write, or mutate model weights.
+
+Every influence-share routing decision SHALL record raw evidence, selected
+verifier tier, rejected tier, reason, rollback status, and influence shares for
+`stale-risk`, `poison-risk`, `constraint-risk`, `novelty`, `user-impact`,
+`verifier-cost`, and `evidence-confidence`. The influence shares SHALL sum to
+100 percent per decision after deterministic rounding. The workflow SHALL run
+at least 12 self-learning sessions and SHALL use deterministic event checks to
+compare context efficiency, verifier cost, quality, stale-memory deflection,
+poisoned-memory deflection, rollback, and no-weight-mutation evidence.
+
+The result artifact SHALL be
+`results/experiment_5395_influence_share_verifier_budget_router_v491.json` and
+SHALL include `status`, `milestone`, `session_count`, `trace_count`,
+`checked_event_count`, `influence_factor_names`,
+`influence_share_sum_valid_rate`, `routed_decision_count`,
+`verifier_cost_delta_vs_baseline`,
+`context_efficiency_delta_vs_baseline`, `quality_delta_vs_baseline`,
+`stale_memory_deflection_rate`, `poison_deflection_rate`,
+`rollback_success_rate`, `no_weight_mutation`,
+`continuous_self_learning_router_ready`, and `honest_verdict`. The artifact
+SHALL also include field principles documenting those required fields.
+
+The required field principles SHALL be:
+
+- `status`: Complete if the workflow ran with routing evidence.
+- `milestone`: Must equal 2026.07.491.
+- `session_count`: Number of self-learning sessions, target >=12.
+- `trace_count`: Number of comparable baseline/router traces.
+- `checked_event_count`: Deterministic event checks across traces.
+- `influence_factor_names`: List of factors used in routing.
+- `influence_share_sum_valid_rate`: Fraction of routing rows whose shares sum to 100%.
+- `routed_decision_count`: Number of verifier routing decisions.
+- `verifier_cost_delta_vs_baseline`: Cost reduction or increase with sign.
+- `context_efficiency_delta_vs_baseline`: Efficiency delta with sign.
+- `quality_delta_vs_baseline`: Deterministic quality delta with sign.
+- `stale_memory_deflection_rate`: Rate for stale-memory controls.
+- `poison_deflection_rate`: Rate for forged/poisoned-memory controls.
+- `rollback_success_rate`: Rollback rate for bad routing decisions.
+- `no_weight_mutation`: Must be true.
+- `continuous_self_learning_router_ready`: True only if quality is preserved and cost or context improves.
+- `honest_verdict`: One-line summary starting with complete: or blocked:.
+
+### REQ-LEARN-5395 Sub-requirements
+
+- REQ-LEARN-5395-1: The workflow SHALL reuse the Exp5382
+  `budgeted_dependency_drift_verifier_tool_workflow` event family and compare
+  baseline routing, fixed self-learning routing, and influence-share routing
+  variants on the same event IDs.
+- REQ-LEARN-5395-2: Each influence-share routing decision SHALL expose the
+  seven named factor shares, and every row SHALL sum those shares to 100
+  percent after deterministic rounding.
+- REQ-LEARN-5395-3: The router SHALL select the cheapest deterministic tier
+  for low-risk, high-confidence events, richer deterministic verification for
+  moderate uncertainty or constraint risk, and local SOTA only when high
+  uncertainty, high user impact, and budget headroom justify escalation.
+- REQ-LEARN-5395-4: Routing traces SHALL record raw evidence, selected verifier
+  tier, rejected tier, reason, rollback status, stale or poison deflection, and
+  whether model weights were untouched.
+- REQ-LEARN-5395-5: `continuous_self_learning_router_ready` SHALL be true only
+  when the workflow has at least 12 sessions, comparable traces, deterministic
+  event checks, valid influence-share sums, preserved quality versus baseline,
+  improved verifier cost or context efficiency, full stale and poison
+  deflection, successful rollback, zero unsafe false accepts, no model weight
+  mutation, and recorded tests.
+
+### SCENARIO-LEARN-5395-SHARES: Influence Shares Sum To 100
+
+**Given** an influence-share routing decision with stale, poison, constraint,
+novelty, user-impact, verifier-cost, and evidence-confidence evidence
+**When** the router computes influence shares
+**Then** the seven factor shares sum to exactly 100 percent
+**And** the routing row records the raw evidence used to compute them.
+
+### SCENARIO-LEARN-5395-ROUTING: Tier Escalation Is Budgeted
+
+**Given** low-risk clean events, moderate constraint-risk events, and high-risk
+stale or poisoned events in the Exp5382 workflow
+**When** baseline, fixed self-learning, and influence-share variants are
+compared
+**Then** the influence-share variant uses cheap deterministic checks where
+confidence is high
+**And** escalates to richer deterministic verification or local SOTA only when
+uncertainty and budget justify the extra cost.
+
+### SCENARIO-LEARN-5395-ARTIFACT: Router Readiness Is Evidence-Gated
+
+**Given** the routed workflow evidence
+**When** Exp5395 builds its terminal artifact
+**Then** the artifact is complete only when quality is preserved, cost or
+context efficiency improves versus baseline, stale and poisoned memory are
+deflected, rollback succeeds, no model weights mutate, and every required
+field principle is present.
+
+## Implementation Status (Exp 5395)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5395 | Planned (`python/carnot/experiment_5395_influence_share_verifier_budget_router_v491.py`, `results/experiment_5395_influence_share_verifier_budget_router_v491.json`) | Planned (`tests/python/test_experiment_5395_influence_share_verifier_budget_router_v491.py`) |
