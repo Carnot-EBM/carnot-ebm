@@ -82,3 +82,68 @@ The system MUST be able to compile natural language rules into executable Python
 
 ### SCENARIO-CONSTRAIN-001 — Compile and validate
 Given a natural language rule, the compiler returns a callable Python validator that correctly evaluates boolean assignments.
+
+### REQ-STORE-5432 — Ontology-backed constraint-memory fixture V494
+
+Carnot SHALL provide Exp5432 at
+`python/carnot/experiment_5432_ontology_softlogic_constraint_memory_v494.py`
+and write
+`results/experiment_5432_ontology_softlogic_constraint_memory_v494.json`
+without modifying `scripts/research_conductor.py`. The fixture SHALL be a
+bounded finite-domain workflow with RDF-like triples, typed entities, relation
+constraints, deterministic tool-output evidence, and explicit memory-update
+records.
+
+The verifier SHALL implement local SHACL-style validation for predicate
+domain/range, known entity/type membership, unsupported predicate/type
+abstention, and stale relation checks. It SHALL also run deterministic planner/solver checks over the workflow order, prerequisite coverage, evidence
+availability, and finite-domain reachability. SHACL and deterministic solver
+checks SHALL be the final authority for accept, reject, or abstain decisions.
+
+The fixture rows SHALL include valid triple updates, false triple updates,
+stale relation updates, unsupported memory writes, and semantically plausible but infeasible retrievals. Soft-logic residual scores MAY be recorded as
+advisory conflict scores and MAY route rows to exact verification, but they
+MUST NOT override the deterministic verifier or create a learned logical truth
+claim.
+
+The terminal result artifact MUST include bare JSON fields:
+`ontology_fixture_count`, `triple_count`, `shacl_validation_pass_rate`,
+`deterministic_solver_authority`, `false_triple_rejection_rate`,
+`valid_update_preservation_rate`, `unsupported_update_abstention_rate`,
+`soft_logic_residuals_recorded`, `soft_logic_overrode_solver`,
+`ontology_constraint_memory_ready`, `inference_substrate`, and
+`honest_verdict`. `inference_substrate` MUST be
+`deterministic_ontology_verifier`; `soft_logic_overrode_solver` MUST be false;
+and `honest_verdict` MUST start with `complete:` or `blocked:`.
+
+Field principles:
+- `ontology_fixture_count`: coverage.
+- `triple_count`: graph scale.
+- `shacl_validation_pass_rate`: structural validity.
+- `deterministic_solver_authority`: no learned oracle.
+- `false_triple_rejection_rate`: safety guard.
+- `valid_update_preservation_rate`: no over-rejection.
+- `unsupported_update_abstention_rate`: missing-evidence guard.
+- `soft_logic_residuals_recorded`: advisory conflict signal.
+- `soft_logic_overrode_solver`: final authority boundary.
+- `ontology_constraint_memory_ready`: downstream gate.
+- `inference_substrate`: no hidden live model inference.
+- `honest_verdict`: terminal status; starts with complete: or blocked:.
+
+### SCENARIO-STORE-5432 — Deterministic ontology verifier owns memory decisions
+
+Given the V494 finite-domain workflow fixture with typed entities, RDF-like
+triples, tool-output evidence, valid updates, false updates, stale updates,
+unsupported writes, and infeasible retrievals,
+
+When Exp5432 evaluates the rows,
+
+Then valid triple updates are preserved, false triples are rejected,
+unsupported writes abstain, stale relation updates fail the deterministic
+authority check, infeasible retrievals are rejected by the planner/solver, and
+soft-logic residuals are recorded only as advisory routing scores.
+
+And if a soft residual is low for an invalid row or high for a valid row,
+
+Then the final decision remains the deterministic verifier decision and the
+artifact records `soft_logic_overrode_solver=false`.
