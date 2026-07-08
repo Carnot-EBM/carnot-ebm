@@ -76,19 +76,62 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    retired PoE-World work; the source paper's own headline result (20/25 solved) did NOT survive this
    project's adversarial verification; 6-day-old, single-author, unreviewed preprint (submitted 2026-07-01).
    Pilot only if task 2 lands and there's slack — not a standing commitment.
+4. **(Lower priority, high-effort) J-lens generation-time confabulation filter.** Anthropic's "Verbalizable
+   Representations Form a Global Workspace in Language Models" (transformer-circuits.pub/2026/workspace)
+   introduces the Jacobian Lens: a narrow, causally-verified subspace of internal representations that
+   mediates multi-step reasoning (ablating it crashes multi-hop accuracy to near zero, leaves shallow tasks
+   untouched). Candidate use: a pre-execution probe on the local generator during trajectory proposal, to
+   detect confabulated-but-fluent action sequences (the Sensi failure mode in task 1) BEFORE spending action
+   budget on them — a generation-time filter, not a post-hoc selector. Caution: exp5263 already tried a
+   simpler internal logit/attention-energy hallucination probe and it was HARMFUL (underperformed a lexical
+   baseline by delta -0.35); any J-lens attempt must beat both that null and a cheap lexical control, not
+   just show nonzero signal in isolation. J-lens itself is not published as reusable code — replicating it is
+   real engineering effort, not a quick pilot. See `reference_transformer_circuits_jlens_workspace.md` (memory).
+5. **(Cheap, run alongside task 1) Null-coordinate exploit validity check on our OWN benchmarking.** A
+   2026-07-08 deep-research follow-up (re-running the "Go-Explore archive + LLM-world-model-induction"
+   angle that errored out in the first pass) found AERA (arXiv:2605.25931) documents a "null-coordinate"
+   exploit that bypasses 18 of the 25 public ARC-AGI-3 games in a SINGLE step — a much more specific and
+   severe version of the general "public games are trivially gameable" caution already on file. Audit
+   `arc_solver_kit`/`ops/arc_solve_registry.yaml`'s banked levels for this exact degenerate pattern (does any
+   solved level's winning trajectory reduce to a no-op/null action at a fixed coordinate, rather than genuine
+   multi-step exploration?) to confirm `reproducible_total_levels` is not partly exploit-inflated rather than
+   real capability. This is metric-integrity work, not a new lever, but should run before further salience-
+   front-end iterations claim progress against a baseline that might itself be contaminated.
+
+**Watch-item, NOT actionable yet (do not build against this until independently verified):** AGI Maze
+(arXiv:2607.00627, posted 2026-07-01) surfaced in the same 2026-07-08 follow-up but was only search-snippeted,
+never fetched or adversarially checked. Reportedly tests whether LLM agents form persistent internal
+world-state representations under partial observability, with an early claim that vanilla LLMs fail to do
+so at inference time — if that holds up, it would support building explicit archive/model machinery (tasks
+2-4 above) over relying on an LLM's implicit context. Flagged for a future SOTA-ingestion pass to actually
+fetch and verify before it informs any task.
+
+**Also surveyed this pass and found NOT applicable (real papers, wrong shape for our setting):** Mind-Studio
+(arXiv:2606.16070) induces a Python world model from interaction but requires a pre-extracted "game skill
+file" from screenshots first — a materially weaker discovery precondition than our zero-prior setting.
+Loop-OWM (arXiv:2606.12316) is a strong neural architecture for the STATIC ARC-1/ARC-2 benchmark (given
+demonstration pairs) with no interactive exploration, no action budget, and no runtime win-condition
+induction — at most a representation-encoder donor, not a generator. Neither is a level-up task candidate.
 
 **Explicitly checked and rejected in this pass (do not re-propose without a real differentiator):** an IGE
 archive-granularity fix (already tested at bins=6 AND bins=16, both null — the wall is not granularity); the
 Code-World-Models/CEGIS-style "LLM induces an explicit Python simulator, then classical search plans inside
 it" pattern (arXiv:2510.04542, arXiv:2605.05138) is closely related to the already-run, ceiling-negative
 frontier tool-use/MCP loop (re86/ft09) — needs an `operator_override` naming a mechanism genuinely distinct
-from "LLM interrogates/drives the loop via tool calls" before another attempt.
+from "LLM interrogates/drives the loop via tool calls" before another attempt. A literal combined "Go-Explore
+archive + LLM-induced-explicit-dynamics-model" mechanism does not exist in the literature surveyed either
+(2026-07-08 follow-up): archive-based papers (IGE, GLoW) don't induce explicit models, model-inducing papers
+(CoEx, Mind-Studio) don't use a Go-Explore archive — do not propose this combination as literature-backed;
+it would be a from-scratch novel construction, not a validated technique.
 
 **Falsifiable gate:** task 2 is decision-grade if it moves `ops/arc_solve_registry.yaml`'s
 `reproducible_total_levels` OR produces a genuine new first-contact win on a held-out unsolved game (rotate
 targets per the Level-Up Attempt Guarantee) that the current pipeline doesn't reach. Record the result with
 the same rigor as every other row in `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`
 (update that ledger too). `solve_provenance` must be declared per the ARC Live-Path Reachability Discipline.
+Task 5 (the null-coordinate validity check) is decision-grade on its own terms regardless of task 2's
+outcome: if it finds contamination, `reproducible_total_levels` needs an honest corrigendum before it's
+cited as progress anywhere; if clean, it's a one-line confirmation and the metric stands as-is.
 
 **Reserved slots still apply** (2 infra, 1-per-board hardware-continuity, SOTA-ingestion, Phase D majority per
 the entry below). Per the 2026-07-06 UPDATE above, this is now the content for ARC's **standing floor**
@@ -98,6 +141,9 @@ D's majority share, but no longer merely opportunistic either.
 **Cross-references:**
 - 2026-07-06 operator directive (this session) — origin
 - Internal do-not-repeat audit + external deep-research pass (this session, not yet filed as a standalone doc)
+- 2026-07-08 deep-research follow-up (re-ran the errored "Go-Explore archive + LLM-world-model-induction"
+  angle; also read arXiv:2606.16070 and arXiv:2606.12316 in full) — source of tasks 4/5 and the watch-item
+- `reference_transformer_circuits_jlens_workspace.md` (memory) — full J-lens paper notes for task 4
 - `ops/exclusion_manifest.yaml:generation_axis_exploration_signal_retired_exp5154_v473` — the retirement whose
   own reason field carves out representation/perception fixes as in-scope
 - CLAUDE.md "ARC Live-Path Reachability Discipline" — task 2 must be wired into the live entrypoint
