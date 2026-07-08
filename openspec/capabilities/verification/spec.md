@@ -27971,6 +27971,93 @@ claim CPU-only legacy model evidence.
 |---|---|---|
 | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
 
+### REQ-VERIFY-5394: Gated Overwrite p-bit Action-Sequence Ablation V491
+
+The repository SHALL provide Exp 5394 at
+`python/carnot/experiment_5394_gated_overwrite_pbit_ablation_v491.py` and
+write `results/experiment_5394_gated_overwrite_pbit_ablation_v491.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, board timing path, or modifying
+`scripts/research_conductor.py`. Exp 5394 SHALL run only after
+`results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json`
+reports `overwrite_guidance_corrigendum_clean=true`; if that gate is missing
+or false, Exp 5394 SHALL write the same result path with `status=blocked`,
+record the gate value in `gate_source`, and SHALL NOT claim p-bit ablation
+readiness.
+
+Exp 5394 SHALL build deterministic action-sequence fixtures where each case
+has actions, precedence constraints, an expected valid final sequence, and an
+advisory hint channel. The p-bit/Ising boundary-exchange channel SHALL propose
+trajectory or ordering hints only. A symbolic solver SHALL remain the final
+authority for every accepted action sequence: it MAY accept a valid hint,
+overwrite a harmful or contradictory p-bit hint, or ignore advisory hints and
+fall back to the solver-only sequence. The ablation SHALL compare exactly four
+modes: `monolithic`, `hint_only`, `pbit_boundary_hint`, and `fallback_only`.
+It SHALL record per-mode final validity, convergence steps, conflict/backtrack
+counts, fallback use, overwrite use, unsafe false accepts, and whether any
+p-bit proposal caused final-answer harm.
+
+The artifact SHALL include top-level fields `status`, `milestone`,
+`gate_source`, `simulation_only`, `hardware_speedup_claim`, `fixture_count`,
+`compared_modes`, `validity_rate_by_mode`, `conflict_delta_by_mode`,
+`convergence_delta_by_mode`, `overwrite_rate`,
+`fallback_completeness_rate`, `pbit_boundary_ablation_ready`, and
+`honest_verdict`, with field principles explaining each required field.
+`status` SHALL be `complete` only when the gate passed and the ablation ran,
+and `blocked` if the gate failed. `milestone` SHALL equal `2026.07.491`.
+`simulation_only` SHALL be true unless authenticated hardware timing evidence
+is present, which this experiment does not expect. `hardware_speedup_claim`
+SHALL be false. `pbit_boundary_ablation_ready` SHALL be true only if solver
+authoritative validity is preserved for every compared mode and unsafe false
+accepts are zero. `honest_verdict` SHALL start with `complete:` or
+`blocked:`.
+
+Required field principles:
+
+- `status`: principle "complete if gate passed and ablation ran; blocked if gate failed."
+- `milestone`: principle "must equal 2026.07.491."
+- `gate_source`: principle "Exp5393 artifact path and gate value."
+- `simulation_only`: principle "must be true unless real hardware timing evidence is present."
+- `hardware_speedup_claim`: principle "must be false."
+- `fixture_count`: principle "number of action-sequence fixtures."
+- `compared_modes`: principle "list of monolithic, hint_only, pbit_boundary_hint, and fallback_only modes."
+- `validity_rate_by_mode`: principle "deterministic solver-authoritative validity rates."
+- `conflict_delta_by_mode`: principle "conflict or backtrack delta relative to monolithic."
+- `convergence_delta_by_mode`: principle "convergence-step delta relative to monolithic."
+- `overwrite_rate`: principle "solver overwrite rate for harmful or contradictory p-bit hints."
+- `fallback_completeness_rate`: principle "fallback completion rate."
+- `pbit_boundary_ablation_ready`: principle "true only if validity is preserved and no unsafe false accepts occur."
+- `honest_verdict`: principle "one-line summary starting with complete: or blocked:."
+
+### SCENARIO-VERIFY-5394: Boundary Hints Are Ablated Under Solver Authority
+
+Given Exp 5393 reports `overwrite_guidance_corrigendum_clean=true`,
+When Exp 5394 runs the action-sequence ablation,
+Then it builds deterministic action fixtures with trajectory or ordering hints,
+compares `monolithic`, `hint_only`, `pbit_boundary_hint`, and `fallback_only`
+modes, validates every final sequence with the symbolic solver, records
+validity, convergence steps, conflict deltas versus monolithic, overwrite and
+fallback rates, p-bit harm status, `simulation_only=true`, and
+`hardware_speedup_claim=false`, writes
+`results/experiment_5394_gated_overwrite_pbit_ablation_v491.json`, and sets
+`pbit_boundary_ablation_ready=true` only when validity is preserved and unsafe
+false accepts are zero.
+
+If Exp 5393 is missing, unreadable, or reports
+`overwrite_guidance_corrigendum_clean=false`, if any required comparison mode
+is absent, if the solver accepts an invalid sequence, if fallback fails to
+complete, if unsafe false accepts are nonzero, if the run claims hardware
+speedup, or if real hardware timing evidence is not present but
+`simulation_only` is false, then Exp 5394 writes a `blocked` artifact with
+precise blocker details, `pbit_boundary_ablation_ready=false`, and no hardware
+speedup claim.
+
+## Implementation Status (REQ-VERIFY-5394)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5394 | Planned (`python/carnot/experiment_5394_gated_overwrite_pbit_ablation_v491.py`, `results/experiment_5394_gated_overwrite_pbit_ablation_v491.json`) | Planned (`tests/python/test_experiment_5394_gated_overwrite_pbit_ablation_v491.py`) |
+
 ### REQ-VERIFY-5393: Overwrite Guidance Tautology Corrigendum V491
 
 The repository SHALL provide Exp 5393 at

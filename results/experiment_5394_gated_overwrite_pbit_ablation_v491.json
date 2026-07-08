@@ -1,0 +1,652 @@
+{
+  "claim_limits": [
+    "deterministic CPU-only action-sequence ablation",
+    "p-bit/Ising boundary exchange proposes hints only",
+    "symbolic solver remains final authority for sequence validity",
+    "no board timing evidence is present",
+    "no hardware speedup claim"
+  ],
+  "compared_modes": [
+    "monolithic",
+    "hint_only",
+    "pbit_boundary_hint",
+    "fallback_only"
+  ],
+  "conflict_delta_by_mode": {
+    "fallback_only": 0,
+    "hint_only": -14,
+    "monolithic": 0,
+    "pbit_boundary_hint": -10
+  },
+  "convergence_delta_by_mode": {
+    "fallback_only": 0,
+    "hint_only": -14,
+    "monolithic": 0,
+    "pbit_boundary_hint": -10
+  },
+  "experiment": 5394,
+  "experiment_id": "exp5394-gated-overwrite-pbit-ablation-v491",
+  "fallback_completeness_rate": 1.0,
+  "field_principles": {
+    "compared_modes": "list of monolithic, hint_only, pbit_boundary_hint, and fallback_only modes.",
+    "conflict_delta_by_mode": "conflict or backtrack delta relative to monolithic.",
+    "convergence_delta_by_mode": "convergence-step delta relative to monolithic.",
+    "fallback_completeness_rate": "fallback completion rate.",
+    "fixture_count": "number of action-sequence fixtures.",
+    "gate_source": "Exp5393 artifact path and gate value.",
+    "hardware_speedup_claim": "must be false.",
+    "honest_verdict": "one-line summary starting with complete: or blocked:.",
+    "milestone": "must equal 2026.07.491.",
+    "overwrite_rate": "solver overwrite rate for harmful or contradictory p-bit hints.",
+    "pbit_boundary_ablation_ready": "true only if validity is preserved and no unsafe false accepts occur.",
+    "simulation_only": "must be true unless real hardware timing evidence is present.",
+    "status": "complete if gate passed and ablation ran; blocked if gate failed.",
+    "validity_rate_by_mode": "deterministic solver-authoritative validity rates."
+  },
+  "fixture_count": 4,
+  "gate_source": {
+    "artifact_path": "results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json",
+    "gate_field": "overwrite_guidance_corrigendum_clean",
+    "gate_value": true,
+    "source_status": "complete"
+  },
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: CPU-only p-bit boundary hints improved aggregate solver conflict delta -10 while solver-authoritative overwrite/fallback preserved validity",
+  "milestone": "2026.07.491",
+  "mode_results": [
+    {
+      "conflicts": 6,
+      "convergence_steps": 10,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "monolithic",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 1,
+      "convergence_steps": 5,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "pickup_key",
+        "unlock_door"
+      ],
+      "mode": "hint_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "accepted",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 0,
+      "convergence_steps": 4,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "mode": "pbit_boundary_hint",
+      "pbit_hint_class": "helpful",
+      "pbit_hint_kind": "trajectory",
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "accepted",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 6,
+      "convergence_steps": 10,
+      "expected_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_sequence": [
+        "pickup_key",
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_unlock_deliver",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "fallback_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 6,
+      "convergence_steps": 10,
+      "expected_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_assemble_inspect",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "monolithic",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 3,
+      "convergence_steps": 7,
+      "expected_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_assemble_inspect",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "gather_parts"
+      ],
+      "mode": "hint_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "accepted",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 6,
+      "convergence_steps": 10,
+      "expected_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_assemble_inspect",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "gather_parts",
+        "install_panel",
+        "assemble_frame",
+        "inspect_panel"
+      ],
+      "mode": "pbit_boundary_hint",
+      "pbit_hint_class": "harmful",
+      "pbit_hint_kind": "ordering",
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "overwritten",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 6,
+      "convergence_steps": 10,
+      "expected_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_sequence": [
+        "gather_parts",
+        "assemble_frame",
+        "install_panel",
+        "inspect_panel"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_assemble_inspect",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "fallback_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 4,
+      "convergence_steps": 9,
+      "expected_sequence": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_prepare_bake",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "monolithic",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 1,
+      "convergence_steps": 6,
+      "expected_sequence": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "mix",
+        "preheat",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_prepare_bake",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "mix",
+        "preheat"
+      ],
+      "mode": "hint_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "accepted",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 0,
+      "convergence_steps": 5,
+      "expected_sequence": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_prepare_bake",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "mode": "pbit_boundary_hint",
+      "pbit_hint_class": "helpful",
+      "pbit_hint_kind": "trajectory",
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "accepted",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 4,
+      "convergence_steps": 9,
+      "expected_sequence": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_sequence": [
+        "preheat",
+        "mix",
+        "bake",
+        "cool",
+        "frost"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_prepare_bake",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "fallback_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 6,
+      "convergence_steps": 11,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "monolithic",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 3,
+      "convergence_steps": 8,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_complete": true,
+      "fallback_used": false,
+      "final_sequence": [
+        "build_artifact",
+        "backup_config",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "build_artifact",
+        "backup_config"
+      ],
+      "mode": "hint_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "accepted",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 6,
+      "convergence_steps": 11,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint": [
+        "deploy",
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "monitor"
+      ],
+      "mode": "pbit_boundary_hint",
+      "pbit_hint_class": "contradictory",
+      "pbit_hint_kind": "ordering",
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "overwritten",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    },
+    {
+      "conflicts": 6,
+      "convergence_steps": 11,
+      "expected_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_sequence": [
+        "backup_config",
+        "build_artifact",
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "final_valid": true,
+      "fixture_id": "act_build_deploy",
+      "hardware_speedup_claim": false,
+      "hint": null,
+      "mode": "fallback_only",
+      "pbit_hint_class": null,
+      "pbit_hint_kind": null,
+      "pbit_proposal_caused_harm": false,
+      "simulation_only": true,
+      "solver_action": "ignored",
+      "solver_authoritative": true,
+      "unsafe_false_accept": false
+    }
+  ],
+  "mode_summaries": {
+    "fallback_only": {
+      "conflicts": 22,
+      "convergence_steps": 40,
+      "fallback_count": 4,
+      "overwrite_count": 0,
+      "row_count": 4,
+      "unsafe_false_accepts": 0,
+      "validity_rate": 1.0
+    },
+    "hint_only": {
+      "conflicts": 8,
+      "convergence_steps": 26,
+      "fallback_count": 0,
+      "overwrite_count": 0,
+      "row_count": 4,
+      "unsafe_false_accepts": 0,
+      "validity_rate": 1.0
+    },
+    "monolithic": {
+      "conflicts": 22,
+      "convergence_steps": 40,
+      "fallback_count": 0,
+      "overwrite_count": 0,
+      "row_count": 4,
+      "unsafe_false_accepts": 0,
+      "validity_rate": 1.0
+    },
+    "pbit_boundary_hint": {
+      "conflicts": 12,
+      "convergence_steps": 30,
+      "fallback_count": 2,
+      "overwrite_count": 2,
+      "row_count": 4,
+      "unsafe_false_accepts": 0,
+      "validity_rate": 1.0
+    }
+  },
+  "overwrite_rate": 1.0,
+  "pbit_boundary_ablation_ready": true,
+  "pbit_proposal_caused_harm": false,
+  "pbit_proposal_harm_count": 0,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "b329ac851b088322c9bfc653dc39fd1a61b8f706d6ccf5ae4b61e25bb2ec6bd0",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5394.gated_overwrite_pbit_ablation.v491",
+  "simulation_only": true,
+  "spec_refs": [
+    "REQ-VERIFY-5394",
+    "SCENARIO-VERIFY-5394"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5394_gated_overwrite_pbit_ablation_v491.py -q -o addopts=",
+      "outcome": "passed"
+    }
+  ],
+  "unsafe_false_accepts": 0,
+  "validity_rate_by_mode": {
+    "fallback_only": 1.0,
+    "hint_only": 1.0,
+    "monolithic": 1.0,
+    "pbit_boundary_hint": 1.0
+  }
+}
