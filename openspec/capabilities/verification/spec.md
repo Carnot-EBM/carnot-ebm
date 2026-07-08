@@ -29222,6 +29222,103 @@ a terminal blocked artifact or fails validation with
 |---|---|---|
 | REQ-VERIFY-5372 | Planned (`python/carnot/experiment_5372_token_feature_precondition_gate_v489.py`, `results/experiment_5372_token_feature_precondition_gate_v489.json`) | Planned (`tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py`) |
 
+### REQ-VERIFY-5387: Token/Internal-Feature Backend Reopen Gate V490
+
+The repository SHALL provide Exp 5387 at
+`python/carnot/experiment_5387_token_feature_backend_reopen_gate_v490.py`
+and write
+`results/experiment_5387_token_feature_backend_reopen_gate_v490.json`
+without running a new live signal benchmark, reopening retired external
+generated-text scorer scope, claiming token/internal-feature energy quality, or
+modifying `scripts/research_conductor.py`. Exp 5387 is a backend-feature gate
+check only. It SHALL inspect current local inference helper code and existing
+runtime receipts to decide whether token/internal-feature energy work may
+reopen.
+
+The gate SHALL read the Exp 5331 internal-energy receipt harness artifact,
+Exp 5331 receipt schema, Exp 5331 tiny receipt, Exp 5353 token-probability
+feature audit, Exp 5354 arithmetic carry diagnostic, and Exp 5372
+token/internal-feature precondition gate. If the task prompt names the stale
+Exp 5372 `token_internal_feature` path while the repository contains the
+canonical `token_feature` path, the gate SHALL record the missing prompt path
+and the resolved canonical path rather than silently dropping the source. It
+SHALL also inspect the current Exp 5331 and Exp 5353 helper modules for the
+feature surfaces they know how to audit: completion probabilities/top-logprobs,
+logits, hidden-state proxies or hidden states, attention, token timing,
+prompt/completion token split, and any intermediate-depth exit support.
+
+`backend_reopen_allowed` SHALL be true only when a backend exposes at least one
+clean, claim-matching feature receipt among logits, hidden states, attention
+tensors, or intermediate-depth exits, and every available row can be traced to
+live runtime outputs with receipt path provenance. `future_signal_allowed`
+SHALL be true only under the same clean feature condition. Top-logprob rows,
+completion probabilities, token timing, prompt/completion token counts,
+embedding-only helper options without live hidden-state rows, generated text,
+external generated-text scoring, and historical synthetic logits SHALL NOT
+reopen token/internal-feature energy.
+
+The artifact SHALL include principle-wrapped top-level fields `status`,
+`backend_reopen_allowed`, `future_signal_allowed`, `logits_available`,
+`hidden_states_available`, `attention_available`,
+`intermediate_depth_exits_available`, `clean_feature_row_provenance`,
+`forbidden_claims`, `no_live_signal_claim`, `retired_scope_reopened`, and
+`honest_verdict`. It SHALL also include receipt/helper evidence paths,
+`source_evidence`, `backend_feature_matrix`, `minimum_next_experiment`, and
+`tests_run`. `status.value` SHALL be `complete` only when the gate check loaded
+the required semantic source evidence or `honest_blocked` when required files
+are missing and no canonical replacement exists. `honest_verdict.value` SHALL
+start with `complete:` or `honest_blocked`.
+
+Required field principles:
+
+- `status`: principle "complete gate check or honest_blocked if required files are missing."
+- `backend_reopen_allowed`: principle "true only if a backend exposes clean feature receipts."
+- `future_signal_allowed`: principle "true only if logits, hidden states, attention, or depth exits are available with provenance."
+- `logits_available`: principle "backend availability boolean with evidence path."
+- `hidden_states_available`: principle "backend availability boolean with evidence path."
+- `attention_available`: principle "backend availability boolean with evidence path."
+- `intermediate_depth_exits_available`: principle "backend availability boolean with evidence path."
+- `clean_feature_row_provenance`: principle "true only if rows can be traced to live runtime outputs."
+- `forbidden_claims`: principle "list of claims that remain disallowed."
+- `no_live_signal_claim`: principle "must be true."
+- `retired_scope_reopened`: principle "must be false unless a clean backend feature receipt exists."
+- `honest_verdict`: principle "one-line gate result."
+
+### SCENARIO-VERIFY-5387: Current Logprob Receipts Keep Backend Reopen Closed
+
+Given Exp 5331, Exp 5353, Exp 5354, and Exp 5372 receipts are readable and show
+token probabilities/top-logprob rows but no logits, no hidden states, no
+attention tensors, no intermediate-depth exits, and no clean feature-complete
+carry signal, when Exp 5387 runs, then it writes
+`results/experiment_5387_token_feature_backend_reopen_gate_v490.json` with
+`status.value=complete`, `backend_reopen_allowed.value=false`,
+`future_signal_allowed.value=false`, `logits_available.value=false`,
+`hidden_states_available.value=false`, `attention_available.value=false`,
+`intermediate_depth_exits_available.value=false`,
+`clean_feature_row_provenance.value=false`,
+`no_live_signal_claim.value=true`, `retired_scope_reopened.value=false`, and
+an `honest_verdict.value` explaining that the backend gate remains closed.
+
+The artifact SHALL list the still-forbidden claims: text-only energy,
+incomplete token rows, arithmetic carry signal, external generated-text
+scoring, and DEX-style depth claims without depth exits. It SHALL NOT run a
+new live signal benchmark and SHALL NOT claim signal quality. If a future
+backend receipt newly exposes logits, hidden states, attention, or
+intermediate-depth exits with clean row provenance, then the artifact may set
+the matching availability field true and SHALL describe only the minimum next
+experiment needed; it SHALL still make no signal-quality claim.
+
+If the required source evidence is missing with no canonical replacement, the
+same runner writes an `honest_blocked` artifact, sets all reopen and future
+signal booleans false, keeps `no_live_signal_claim.value=true`, records missing
+paths, and makes no token/internal-feature energy claim.
+
+## Implementation Status (REQ-VERIFY-5387)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5387 | Planned (`python/carnot/experiment_5387_token_feature_backend_reopen_gate_v490.py`, `results/experiment_5387_token_feature_backend_reopen_gate_v490.json`) | Planned (`tests/python/test_experiment_5387_token_feature_backend_reopen_gate_v490.py`) |
+
 ### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
 
 The repository SHALL provide Exp 5345 at
