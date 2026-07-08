@@ -10520,3 +10520,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 04:54 UTC | Overwrite-guidance tautology corrigendum from row- | OK | 89 passed, 1 warning in 8.62s |
 | 2026-07-08 05:07 UTC | Gated overwrite/p-bit action-sequence ablation aft | OK | 89 passed, 1 warning in 11.65s |
 | 2026-07-08 05:21 UTC | Continuous self-learning influence-share verifier- | OK | 88 passed, 1 warning in 11.28s |
+| 2026-07-08 05:33 UTC | Self-learning memory guard with raw episode retent | OK | 89 passed, 1 warning in 9.77s |
