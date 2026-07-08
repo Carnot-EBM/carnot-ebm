@@ -28849,6 +28849,96 @@ solver-guidance baseline claim.
 |---|---|---|
 | REQ-VERIFY-5370 | Planned (`python/carnot/experiment_5370_overwrite_solver_guidance_matrix_v489.py`, `results/experiment_5370_overwrite_solver_guidance_matrix_v489.json`) | Planned (`tests/python/test_experiment_5370_overwrite_solver_guidance_matrix_v489.py`) |
 
+### REQ-VERIFY-5383: Overwrite Guidance Scale Validity Report V490
+
+The repository SHALL provide Exp 5383 at
+`python/carnot/experiment_5383_overwrite_guidance_scale_validity_v490.py` and
+write `results/experiment_5383_overwrite_guidance_scale_validity_v490.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, retired text-verifier path, or modifying
+`scripts/research_conductor.py`. Exp 5383 SHALL reuse the existing Exp 5358
+solver-projection fixtures and Exp 5370 overwrite-guidance matrix fixtures
+where available, then scale the matrix into a larger deterministic fixture set
+that includes benign hints, harmful hints, incomplete hints, and contradictory
+hints. Neural or heuristic hints SHALL remain advisory only; the symbolic
+solver or deterministic verifier SHALL remain authoritative and SHALL be able
+to overwrite, complete, reject, or fallback from hints before any final output
+is accepted.
+
+The matrix SHALL compare no-hint, forced-hint, and overwrite-capable baselines
+for every scaled fixture. The no-hint mode SHALL replay the solver-only
+baseline. The forced-hint mode SHALL measure harm when hints cannot be
+overwritten and SHALL not treat invalid forced outputs as valid accepts. The
+overwrite-capable mode SHALL use solver authority to accept benign hints,
+complete incomplete hints, reject harmful hints, reject contradictory hints, or
+route to fallback while preserving final validity. Exp 5383 SHALL explicitly
+explain invalid projection cases by root cause so the Exp 5370
+post-projection-validity regression can be attributed to forced-hint contrast
+rows rather than to unsafe solver-authoritative accepts.
+
+The runner SHALL record overwrite rate, conflict delta versus no-hint,
+convergence delta versus no-hint, forced-hint harm rate, post-projection
+validity after solver authority, fallback completeness, harmful hint classes,
+invalid projection root causes, and unsafe false accepts. `status` SHALL be
+`complete` only if the scaled matrix ran; otherwise it SHALL be
+`honest_blocked` with precise blocker details. `overwrite_guidance_scale_ready`
+SHALL be true only when overwrite-capable guidance preserves fallback
+completeness, the solver/verifier is authoritative, post-projection validity is
+complete after solver authority, unsafe false accepts are zero, and tests are
+recorded.
+
+The artifact SHALL include `status`, `overwrite_guidance_scale_ready`,
+`solver_authoritative`, `fixture_count`, `forced_hint_harm_rate`,
+`overwrite_rate`, `post_projection_validity_rate`,
+`invalid_projection_root_causes`, `fallback_completeness_rate`,
+`conflict_delta_vs_no_hint`, `convergence_delta_vs_no_hint`,
+`unsafe_false_accepts`, and `honest_verdict`. `honest_verdict` SHALL start with
+`complete:` or `blocked_` and SHALL state whether overwrite-capable guidance
+preserved solver-authoritative validity and fallback completeness.
+
+Required field principles:
+
+- `status`: principle "complete only if the matrix ran or honest_blocked if prerequisites are missing."
+- `overwrite_guidance_scale_ready`: principle "true only if overwrite guidance preserves fallback completeness and unsafe_false_accepts=0."
+- `solver_authoritative`: principle "must be true."
+- `fixture_count`: principle "number of fixtures."
+- `forced_hint_harm_rate`: principle "harm rate when hints cannot be overwritten."
+- `overwrite_rate`: principle "fraction of bad or incomplete hints overwritten by the solver."
+- `post_projection_validity_rate`: principle "fraction of projected outputs valid after solver authority."
+- `invalid_projection_root_causes`: principle "categorized root causes for invalid projections."
+- `fallback_completeness_rate`: principle "fraction of cases solved or safely completed by fallback."
+- `conflict_delta_vs_no_hint`: principle "conflict count difference vs no-hint baseline."
+- `convergence_delta_vs_no_hint`: principle "convergence step difference vs no-hint baseline."
+- `unsafe_false_accepts`: principle "count of invalid solver outputs accepted as valid."
+- `honest_verdict`: principle "one-line result or block reason."
+
+### SCENARIO-VERIFY-5383: Scaled Guidance Keeps Solver Authority
+
+Given the checked-in Exp 5358 projection fixture evidence and Exp 5370
+overwrite-guidance fixture matrix,
+When Exp 5383 evaluates benign, harmful, incomplete, and contradictory hint
+fixtures across no-hint, forced-hint, and overwrite-capable baselines,
+Then every row records final verifier validity, overwrite behavior, fallback
+behavior, conflict delta, convergence delta, and unsafe false-accept status;
+forced-hint invalid rows are categorized as invalid projection root causes;
+overwrite-capable rows return solver-authoritative valid outputs; fallback
+completeness is preserved; `unsafe_false_accepts=0`; and
+`overwrite_guidance_scale_ready=true` only when tests are recorded and the
+scaled matrix has run.
+
+If any source fixture is missing, required hint classes or modes are absent,
+fallback completeness drops below 1.0, an invalid solver output is accepted as
+valid, the solver/verifier is not authoritative, invalid projection root causes
+are not categorized, or tests are not recorded, then the same runner writes an
+`honest_blocked` artifact with `overwrite_guidance_scale_ready=false`, blocker
+details, and no learned or forced-hint acceptance claim.
+
+## Implementation Status (REQ-VERIFY-5383)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5383 | Planned (`python/carnot/experiment_5383_overwrite_guidance_scale_validity_v490.py`, `results/experiment_5383_overwrite_guidance_scale_validity_v490.json`) | Planned (`tests/python/test_experiment_5383_overwrite_guidance_scale_validity_v490.py`) |
+
 ### REQ-VERIFY-5371: CPU p-bit Boundary-Exchange Schedule Diagnostic V489
 
 The repository SHALL provide Exp 5371 at
