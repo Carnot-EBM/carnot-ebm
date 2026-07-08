@@ -16,30 +16,19 @@ OK: all solver-like ARC modules are reachable from the live agent path (48 modul
 
 ## Hostile LLM review
 
-TL;DR: **No recent ARC solve artifacts to credit.** Reachability is clean, but there is **zero evidence of new live self-discovery capability** in the last 7 days.
+TL;DR verdict: **No recent ARC solve artifacts to credit.** Reachability lint passes, but there are **zero new solves** and therefore **zero demonstrated live self-discovery advance**.
 
-**Per-Artifact Review**
+Per-artifact review: none.
 
-None.
+Evidence:
+- `RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
+- `[]`
+- Solver reachability check passed: all solver-like ARC modules are reachable from live paths.
 
-`RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
+Recommended action:
+- Record **no new capability claim**.
+- Do not mark progress unless a solve artifact shows the live agent reached the solve from its own attempts/runtime reverse-engineering through `scripts/arc_loop_solve.py` or `python/carnot/agentic/arc_competition_agent.py`.
 
-No artifact can be classified as `SELF_DISCOVERY_ADVANCE`, `OUTER_LOOP_RE`, `OFF_PATH`, `DUPLICATE`, or `UNCLEAR` because there are no claimed solves.
-
-**Evidence**
-
-- Live entrypoints checked:
-  - `scripts/arc_loop_solve.py`
-  - `python/carnot/agentic/arc_competition_agent.py`
-- Reachability pre-pass passed:
-  - `OK: all solver-like ARC modules are reachable from the live agent path`
-- But reachability only proves modules are callable from the live path. It does **not** prove any hidden game was solved by the live agent from its own attempts/runtime reverse-engineering.
-
-**Recommended Action**
-
-Do not record any new capability advance. Require the next claimed solve artifact to include clear live-run provenance: entrypoint used, attempt trace, observations gathered by the agent, inferred model/actions, and successful solve produced without source reading, offline BFS, or hand-built per-game adapters.
-
-**Pattern Watch**
-
-Current risk is **false credit from infrastructure health**: “reachable from live path” is useful hygiene, but it is not evidence of autonomous discovery. Keep rejecting any future artifact that shows a solve result without proving the live agent reached it through its own runtime attempts.
+Pattern watch:
+- No artifact-level drift visible because there are no artifacts. The main risk is claiming progress from reachability alone; reachable code is not evidence of live self-discovery.
 
