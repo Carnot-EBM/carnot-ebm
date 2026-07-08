@@ -436,5 +436,18 @@
   ],
   "traceability_modified": false,
   "unconstrained_intent_consistency_rate": 1.0,
-  "unconstrained_model_false_negative_rate": 0.0
+  "unconstrained_model_false_negative_rate": 0.0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "constrained_intent_consistency_rate=0.6666666666666666 and constrained_model_false_negative_rate=0.6666666666666666 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
