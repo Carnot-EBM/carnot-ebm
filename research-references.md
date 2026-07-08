@@ -28077,3 +28077,24 @@ only capture deltas that affect the next milestone.
 - Restore hardware repeatability before any speedup claim.
 
 <!-- V492-PLANNER-REFRESH-2026-07-08-END -->
+
+
+### V492 Execution Refresh - 20260708
+
+Execution-time sweep after the `.492` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V489/V490/V491/V492 duplicate history, and the exclusion manifest. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **Mitigating Errors in LLM-Generated Web API Invocations via Retrieval-Augmented Generation and Constrained Decoding** (https://arxiv.org/abs/2607.05936): For Exp5405, add OpenAPI-to-regex and tool-schema constrained invocation fixtures; separate retrieved endpoint-spec evidence from hard constrained decoding, and record illegal URL, method, and argument false accepts.
+- **LLMs for Agentic Home Energy Management** (https://arxiv.org/abs/2607.04569): For Exp5405 and Exp5406, add a MILP-oracle scheduling fixture comparing native structured tool calls against text-parsed actions while keeping the deterministic MILP solver, not an external judge, as final authority.
+- **Ising-Machine-Assisted Large Neighborhood Search with Flexibly Tunable Subproblem Size** (https://arxiv.org/abs/2607.05169): For Exp5407, sweep active-constraint and p-bit QUBO subproblem-size controls with feasibility-preserving reinsertion and current-solution-quality telemetry.
+- **Geometric Characteristics of Subproblems in Ising-Machine-Assisted Large Neighborhood Search** (https://arxiv.org/abs/2607.05014): For Exp5407, record semantic and geometric subproblem descriptors, not just variable count, and compare route/current-solution-structured subproblems against raw QUBO-constraint slices.
+- **iSTAR: an algebraic-collapse framework for variational reduction in quantum-inspired continuous Ising solvers** (https://arxiv.org/abs/2607.05448): For Exp5406 and Exp5407, add a CPU-only active-tail/frozen-variable diagnostic: fold stabilized coordinates into induced fields, preserve the same-seed baseline, and report dense-work reduction separately from solution quality without making a hardware speedup claim.
+- **Measuring Harness-Induced Belief Divergence in Multi-Step LLM Agents** (https://arxiv.org/abs/2607.04528): For Exp5408 and Exp5409, add harness-divergence controls: log censored branches, verification masks, shadow-risky branches, and belief-rollout changes under raw versus compressed or resource-pruned harnesses before memory or world-model promotion.
+
+### Execution impact
+- **Plan impact:** No active `.492` roadmap edit is required. The deltas sharpen Exp5405 API/tool-schema and MILP-oracle fixtures, Exp5406/Exp5407 Ising active-tail and LNS subproblem design, and Exp5408/Exp5409 harness divergence checks.
+- **Duplicates suppressed:** SWEnergy, GNN active-set warm starts, UPSi, HaluNet, BitsMoE, EBT, ARM-EBM, Distributional EBM, Energy-Based Decoding, NSVIF, KAN PWA/MILP, GRS-KAN, AgentLTL, OEP, CoACT, sorting-network QUBO, DEX, GeoWorld, QCIVET, llguidance, and LongMemEval-V2 were already covered by V489/V490/V491/V492 history and are not re-added.
+- **Retired scope:** No retired scope was reopened. External generated-text scorers, CPU-only SOTA offload, non-local TSU/Kona/Aleph claims, KV260 host block-device probes, retired ARC first-contact exploration, and hardware speedup claims without repeatable board timing remain closed.
+- **Watch-only/excluded:** CARL, external code-agent verification, GRS-KAN, StructuredEdit, energy-based structural attribution, MxGLUT, SafeDec, Extropic writing, and Logical Intelligence public pages were checked but not promoted because they are training-scope, duplicate, domain-specific, non-local, challenge-blocked, or retired-lane context.
+
+<!-- V492-EXECUTION-REFRESH-20260708-END -->

@@ -504,6 +504,88 @@ sets `findings=[]`, keeps `retired_scopes_reopened=false`, and does not edit
 |---|---|---|
 | REQ-REPORT-5390 | Implemented (`python/carnot/experiment_5390_sota_source_delta_v491.py`, `results/experiment_5390_sota_source_delta_v491.json`) | Implemented (`tests/python/test_experiment_5390_sota_source_delta_v491.py`) |
 
+### REQ-REPORT-5403: V492 Execution-Time Source Delta Refresh
+
+The Exp 5403 workflow SHALL perform the execution-time freshness check after
+the `.492` planner refresh in `research-references.md`. It SHALL check arXiv,
+OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT `2507.02092`
+and ARM-EBM `2512.15605`, GitHub, Extropic writing, Logical Intelligence
+public pages, local V489/V490/V491/V492 duplicate history, and
+`ops/exclusion_manifest.yaml` for sources not already covered by the V489,
+V490, V491, or V492 reference blocks.
+
+The workflow SHALL focus only on 2025-2026 work relevant to energy-based
+models for verification/reasoning, neural constraint satisfaction, Ising/ML,
+hallucination mitigation, KANs, energy-guided decoding, hardware-accelerated
+sampling, and continual or online learning for constraint systems. It SHALL
+append to `research-references.md` only when a finding is both absent from the
+existing V489/V490/V491/V492 blocks and actionable for Carnot-local `.492`
+work. When it appends, it SHALL add one clearly delimited
+`V492 Execution Refresh - 20260708` section with source URLs and Carnot hooks.
+When no new actionable finding exists, it SHALL write a complete no-new-delta
+artifact and SHALL NOT churn `research-references.md`.
+
+The workflow SHALL classify retired-scope items as watch-only or excluded and
+SHALL NOT reopen external generated-text scorers, retired ARC first-contact
+exploration-signal work, CPU-only SOTA offload headlines, non-local TSU/Kona/Aleph execution claims, KV260 host block-device probes, or
+hardware speedup claims without repeatable board-local timing. It SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or active roadmap files for this conductor-scoped
+source refresh.
+
+The artifact SHALL write
+`results/experiment_5403_source_delta_v492.json`. It SHALL include the
+required top-level fields `sources_checked`, `new_references_added`,
+`duplicates_suppressed`, `retired_scopes_reopened`,
+`research_references_updated`, `inference_substrate`, and `honest_verdict`.
+It SHOULD also include experiment/task metadata, source details, watch-only or
+excluded candidates, field principles, tests run, methodology duration, and
+protected-file booleans so downstream reconciliation can audit the refresh
+without relying on prose.
+
+Required artifact field principles:
+
+- `sources_checked`: principle "reproducible literature sweep"
+- `new_references_added`: principle "current-knowledge delta"
+- `duplicates_suppressed`: principle "no reference churn"
+- `retired_scopes_reopened`: principle "exclusion-manifest compliance"
+- `research_references_updated`: principle "doc alignment"
+- `inference_substrate`: principle "source aggregation only"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+#### SCENARIO-REPORT-5403-APPEND-DELTAS: New Network Findings Append A V492 Refresh
+
+**Given** the V492 planner refresh is present in `research-references.md`
+**And** the source check finds one or more genuinely new Carnot-actionable
+findings outside retired scopes
+**When** the Exp 5403 workflow runs
+**Then** it writes the JSON artifact, appends one clearly delimited V492
+execution-refresh section, records every required source family checked, sets
+`status=complete`, sets `research_references_updated=true`, sets
+`new_references_added` to the promoted rows, keeps
+`retired_scopes_reopened=false`, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and does not modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or active roadmap files.
+
+#### SCENARIO-REPORT-5403-NO-NEW-DELTA: No New Findings Leave References Unchanged
+
+**Given** the V492 planner refresh is present in `research-references.md`
+**And** the source check finds no genuinely new Carnot-actionable finding
+outside retired scopes
+**When** the Exp 5403 workflow runs
+**Then** it writes a terminal complete no-new-delta JSON artifact, records every
+required source family checked, sets `research_references_updated=false`, sets
+`new_references_added=[]`, keeps `retired_scopes_reopened=false`, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and does not edit
+`research-references.md`.
+
+## Implementation Status (REQ-REPORT-5403)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5403 | Implemented (`python/carnot/experiment_5403_source_delta_v492.py`, `results/experiment_5403_source_delta_v492.json`) | Implemented (`tests/python/test_experiment_5403_source_delta_v492.py`) |
+
 ### REQ-REPORT-5336: V487 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5336 workflow SHALL perform an execution-time 2025-2026 source-delta
