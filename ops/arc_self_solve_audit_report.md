@@ -16,16 +16,15 @@ OK: all solver-like ARC modules are reachable from the live agent path (48 modul
 
 ## Hostile LLM review
 
-TL;DR: **No recent ARC solve artifacts to credit.** Reachability is clean, but there are **0 live self-discovery advances** in the last 7 days.
+TL;DR: **No recent self-discovery advance is evidenced.** Reachability is clean, but there are **0 recent ARC solve artifacts**, so there is nothing to credit.
 
 **Per-Artifact Review**
 
-No artifacts provided: `RECENT ARC SOLVE ARTIFACTS (last 7d): 0`.
+No artifacts to classify.
 
-Verdict: `UNCLEAR` is not needed per artifact because there are no artifacts.  
-Recommended action: Do not claim progress from this window. Keep the registry unchanged.
+`RECENT ARC SOLVE ARTIFACTS (last 7d): 0 []`
 
 **Pattern Watch**
 
-Reachability passing is necessary but not proof of live solving. No current evidence of outer-loop reverse engineering drift, but also no evidence of new hidden-game capability. Continue rejecting any future “solve” that depends on source reading, offline BFS, hand-built game adapters, or solver paths the live agent cannot actually invoke.
+The live closure check is good but only proves solver modules are reachable from `scripts/arc_loop_solve.py` / `python/carnot/agentic/arc_competition_agent.py`. It does **not** prove live self-discovery. Any future solve artifact must show the live agent discovered the solve from its own attempts/runtime reverse-engineering, not source inspection, offline BFS, hand-built per-game logic, or unreachable parallel machinery.
 
