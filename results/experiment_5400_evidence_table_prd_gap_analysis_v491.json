@@ -1,0 +1,531 @@
+{
+  "artifacts_read": [
+    "results/experiment_5389_transition_v491.json",
+    "results/experiment_5390_sota_source_delta_v491.json",
+    "results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json",
+    "results/experiment_5392_formal_encoding_safety_fixture_v491.json",
+    "results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json",
+    "results/experiment_5394_gated_overwrite_pbit_ablation_v491.json",
+    "results/experiment_5395_influence_share_verifier_budget_router_v491.json",
+    "results/experiment_5396_memory_guard_raw_episode_retention_v491.json",
+    "results/experiment_5397_arc_blob_salience_live_path_v491.json",
+    "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json",
+    "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json",
+    "results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json"
+  ],
+  "blocked_gaps": [
+    {
+      "blocked_by": [
+        "arc"
+      ],
+      "gap_id": "ARC-live-level-bank",
+      "reason": "live salience attempt banked no reproduced new level"
+    },
+    {
+      "blocked_by": [
+        "token_internal_features"
+      ],
+      "gap_id": "token-internal-feature-backend-provenance",
+      "reason": "logits, hidden states, attention, and intermediate exits unavailable"
+    }
+  ],
+  "claim_boundary_checks": {
+    "cpu_only_legacy_headline_evidence_relied_on": false,
+    "duplicate_arc_solve_relied_on": false,
+    "external_text_scoring_relied_on": false,
+    "hardware_speedup_without_repeatability_relied_on": false
+  },
+  "closed_gaps": [
+    {
+      "closed_by": [
+        "structured_local_sota",
+        "solver_corrigendum",
+        "kan_certificate"
+      ],
+      "gap_id": "FR-12-local-verifiable-reasoning",
+      "scope": "bounded deterministic fixtures with solver/certificate final authority"
+    },
+    {
+      "closed_by": [
+        "continuous_self_learning_router",
+        "memory_guard"
+      ],
+      "gap_id": "FR-11-controller-self-learning-guarded-routing",
+      "scope": "controller-level routing and memory updates; no model-weight mutation"
+    },
+    {
+      "closed_by": [
+        "solver_corrigendum"
+      ],
+      "gap_id": "solver-overwrite-tautology-corrigendum",
+      "scope": "row-level solver evidence replaced the flagged aggregate"
+    }
+  ],
+  "disallowed_claims": [
+    "external generated-text scoring as final authority",
+    "CPU-only legacy model headline evidence",
+    "duplicate ARC solve or offline BFS as a live banked level",
+    "hardware speedup without repeated same-workload timing",
+    "p-bit hardware acceleration from CPU-only ablation",
+    "token/internal feature energy without backend provenance",
+    "broad KAN verification from bounded certificate",
+    "formal-encoding safety clean claim while TAUTOLOGY flag pending"
+  ],
+  "evidence_rows": [
+    {
+      "claim_allowed": [
+        "bounded deterministic local SOTA constraint-tax scale-up",
+        "constrained generation improved deterministic semantic validity",
+        "wrong-valid accepts were reduced without unsafe constrained accepts"
+      ],
+      "claim_blocked": [
+        "broad SOTA headline beyond the deterministic fixture panel",
+        "generated text as verifier or judge"
+      ],
+      "evidence_strength": "closed",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Carry deterministic final-state and tool/action checks into capstone scaling.",
+      "principal_metric": {
+        "constrained_semantic_validity_rate": 1.0,
+        "fixture_count": 24,
+        "unconstrained_semantic_validity_rate": 0.0,
+        "unsafe_false_accept_count": 0,
+        "wrong_valid_reduction": 20
+      },
+      "row_id": "structured_local_sota",
+      "source_artifact": "results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "safe synthetic encoded-intent fixture ran with deterministic checks",
+        "no forbidden operational detail leakage was observed"
+      ],
+      "claim_blocked": [
+        "adversarial TAUTOLOGY flag remains pending",
+        "clean formal-encoding safety claim until corrigendum removes methodology flag"
+      ],
+      "evidence_strength": "partial",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Recompute distinct safety metrics with checksum-backed methodology receipt.",
+      "principal_metric": {
+        "benign_false_positive_rate": 0.0,
+        "encoded_intent_false_negative_rate": 0.0,
+        "fixture_count": 6,
+        "flagged_adversarial": true,
+        "forbidden_detail_leak_count": 0
+      },
+      "row_id": "formal_encoding_safety",
+      "source_artifact": "results/experiment_5392_formal_encoding_safety_fixture_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "Exp5383 overwrite-guidance TAUTOLOGY was repaired from row-level evidence",
+        "solver or deterministic verifier remained final authority"
+      ],
+      "claim_blocked": [
+        "forced hint trust as an authority",
+        "neural, LLM, hardware, or generated-text judge execution claim"
+      ],
+      "evidence_strength": "closed",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Use the cleaned row-level solver contract as the gate source for capstone.",
+      "principal_metric": {
+        "fallback_completeness_rate_from_rows": 1.0,
+        "negative_control_pass_rate": 1.0,
+        "row_count": 98,
+        "unsafe_false_accept_count": 0
+      },
+      "row_id": "solver_corrigendum",
+      "source_artifact": "results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "bounded CPU-only p-bit boundary hints improved solver conflict delta",
+        "symbolic solver authority preserved overwrite and fallback validity"
+      ],
+      "claim_blocked": [
+        "hardware p-bit or speedup claim",
+        "general solver improvement beyond four deterministic action-sequence fixtures"
+      ],
+      "evidence_strength": "partial",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Move the same action-sequence boundary workload onto repeatable hardware timing.",
+      "principal_metric": {
+        "fixture_count": 4,
+        "hardware_speedup_claim": false,
+        "pbit_boundary_ablation_ready": true,
+        "simulation_only": true,
+        "unsafe_false_accepts": 0
+      },
+      "row_id": "pbit_ablation",
+      "source_artifact": "results/experiment_5394_gated_overwrite_pbit_ablation_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "continuous self-learning router preserved quality while reducing verifier cost",
+        "influence-share ledgers, rollback, stale/poison controls, and no weight mutation passed"
+      ],
+      "claim_blocked": [
+        "model-weight self-training or autonomous architecture rewrite",
+        "memory influence without raw evidence and rollback"
+      ],
+      "evidence_strength": "closed",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Connect router decisions to retained raw episodes and capstone FR-11 wording.",
+      "principal_metric": {
+        "quality_delta_vs_baseline": 0.0,
+        "rollback_success_rate": 1.0,
+        "routed_decision_count": 36,
+        "trace_count": 12,
+        "unsafe_false_accepts": 0,
+        "verifier_cost_delta_vs_baseline": 22.2
+      },
+      "row_id": "continuous_self_learning_router",
+      "source_artifact": "results/experiment_5395_influence_share_verifier_budget_router_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "raw episodes were retained before memory consolidation",
+        "forged reasoning and stale controls were deflected with no weight mutation"
+      ],
+      "claim_blocked": [
+        "rationale-only memory authority",
+        "rejected memories influencing downstream verifier routing"
+      ],
+      "evidence_strength": "closed",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Preserve accepted/rejected raw episodes as capstone audit anchors.",
+      "principal_metric": {
+        "accepted_memory_count": 3,
+        "forged_reasoning_deflection_rate": 1.0,
+        "provenance_hash_valid_rate": 1.0,
+        "raw_episode_count": 7,
+        "rejected_memory_count": 4,
+        "stale_memory_deflection_rate": 1.0
+      },
+      "row_id": "memory_guard",
+      "source_artifact": "results/experiment_5396_memory_guard_raw_episode_retention_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "live-agent connected-component salience reached the submitted policy path",
+        "registry precheck, duplicate-solve avoidance, and no offline BFS guards passed"
+      ],
+      "claim_blocked": [
+        "new ARC level banked",
+        "leaderboard or hidden-game score improvement"
+      ],
+      "evidence_strength": "blocked",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Keep blob salience but target trajectory generation before claiming level credit.",
+      "principal_metric": {
+        "failure_mode": "bounded_budget_no_levelup",
+        "live_attempt_count": 1,
+        "new_level_banked": false,
+        "reproduced_levels": 0,
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "row_id": "arc",
+      "source_artifact": "results/experiment_5397_arc_blob_salience_live_path_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "hash-linked hardware evidence graph emitted and offline verifier passed",
+        "board reachability failures were recorded without destructive actions"
+      ],
+      "claim_blocked": [
+        "hardware speedup",
+        "KV260 or PolarFire board-local repeatability while boards are unreachable"
+      ],
+      "evidence_strength": "partial",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Restore board reachability and rerun the same workload until repeatable timing exists.",
+      "principal_metric": {
+        "destructive_action_taken": false,
+        "hardware_speedup_claim": false,
+        "offline_verifier_passed": true,
+        "polar_fire_repeat_count": 0,
+        "repeatability_evidence_present": false
+      },
+      "row_id": "hardware",
+      "source_artifact": [
+        "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json",
+        "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json"
+      ]
+    },
+    {
+      "claim_allowed": [
+        "bounded verifier-routing dynamics rejected held-out false properties",
+        "localized counterexample cells were emitted for the fixture"
+      ],
+      "claim_blocked": [
+        "broad KAN verification",
+        "trained-network soundness or hardware execution claim"
+      ],
+      "evidence_strength": "closed",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Use counterexample cells to choose the next bounded certificate family.",
+      "principal_metric": {
+        "broad_kan_verification_claim": false,
+        "counterexample_region_count": 4,
+        "false_property_rejection_rate": 1.0,
+        "sample_count": 36,
+        "true_property_preservation_rate": 1.0
+      },
+      "row_id": "kan_certificate",
+      "source_artifact": "results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "token/internal-feature lane remains honestly closed"
+      ],
+      "claim_blocked": [
+        "token/internal feature energy signal",
+        "backend reopening without logits, hidden states, attention, or intermediate exits"
+      ],
+      "evidence_strength": "blocked",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Do not reopen token/internal claims until backend feature provenance exists.",
+      "principal_metric": {
+        "attention_available": false,
+        "backend_reopen_allowed": false,
+        "future_token_signal_allowed": false,
+        "hidden_states_available": false,
+        "intermediate_depth_exits_available": false,
+        "logits_available": false
+      },
+      "row_id": "token_internal_features",
+      "source_artifact": "results/experiment_5389_transition_v491.json"
+    },
+    {
+      "claim_allowed": [
+        "PRD FR-12 local verifiable reasoning has bounded deterministic support",
+        "PRD FR-11 controller-level self-learning has guarded routing and memory evidence",
+        "hardware discipline is present as receipt/graph evidence rather than speedup"
+      ],
+      "claim_blocked": [
+        "full PRD autonomous self-improving model realization",
+        "live ARC level progress, hardware acceleration, and token/internal signals"
+      ],
+      "evidence_strength": "partial",
+      "guardrail_checks": {
+        "cpu_only_legacy_headline_evidence_relied_on": false,
+        "duplicate_arc_solve_relied_on": false,
+        "external_text_scoring_relied_on": false,
+        "hardware_speedup_without_repeatability_relied_on": false
+      },
+      "next_action": "Use the capstone to separate closed bounded PRD gaps from open ARC/hardware lanes.",
+      "principal_metric": {
+        "hardware_repeatability_evidence_present": false,
+        "local_execution_sources_updated": 4,
+        "self_learning_routed_decision_count": 36,
+        "structured_fixture_count": 24
+      },
+      "row_id": "prd_alignment",
+      "source_artifact": [
+        "results/experiment_5390_sota_source_delta_v491.json",
+        "results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json",
+        "results/experiment_5395_influence_share_verifier_budget_router_v491.json",
+        "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json"
+      ]
+    }
+  ],
+  "experiment": "experiment_5400_evidence_table_prd_gap_analysis_v491",
+  "experiment_id": "exp5400-v491-evidence-table-and-prd-gap-analysis",
+  "field_principles": {
+    "artifacts_read": "list of upstream artifacts read.",
+    "blocked_gaps": "list of gaps blocked by failed gates or missing evidence.",
+    "closed_gaps": "list of PRD or research-program gaps closed by .491 evidence.",
+    "disallowed_claims": "claims that remain forbidden.",
+    "evidence_rows": "structured list of PRD-aligned evidence rows.",
+    "honest_verdict": "one-line summary starting with complete: or partial:.",
+    "milestone": "must equal 2026.07.491.",
+    "missing_artifacts": "list of expected but missing artifacts.",
+    "next_action_recommendations": "concrete next-milestone recommendations.",
+    "partial_gaps": "list of gaps partially closed.",
+    "status": "complete if table emitted, partial if required upstream artifacts are missing."
+  },
+  "honest_verdict": "complete: PRD evidence table emitted with 5 closed, 4 partial, 2 blocked, and 0 missing-input rows",
+  "milestone": "2026.07.491",
+  "missing_artifacts": [],
+  "next_action_recommendations": [
+    {
+      "next_action": "Recompute distinct safety metrics with checksum-backed methodology receipt.",
+      "row_id": "formal_encoding_safety"
+    },
+    {
+      "next_action": "Move the same action-sequence boundary workload onto repeatable hardware timing.",
+      "row_id": "pbit_ablation"
+    },
+    {
+      "next_action": "Keep blob salience but target trajectory generation before claiming level credit.",
+      "row_id": "arc"
+    },
+    {
+      "next_action": "Restore board reachability and rerun the same workload until repeatable timing exists.",
+      "row_id": "hardware"
+    },
+    {
+      "next_action": "Do not reopen token/internal claims until backend feature provenance exists.",
+      "row_id": "token_internal_features"
+    },
+    {
+      "next_action": "Use the capstone to separate closed bounded PRD gaps from open ARC/hardware lanes.",
+      "row_id": "prd_alignment"
+    }
+  ],
+  "partial_gaps": [
+    {
+      "gap_id": "formal-encoding-safety-methodology",
+      "partial_by": [
+        "formal_encoding_safety"
+      ],
+      "remaining": "adversarial TAUTOLOGY flag and checksum methodology gap"
+    },
+    {
+      "gap_id": "pbit-boundary-hardware-transfer",
+      "partial_by": [
+        "pbit_ablation"
+      ],
+      "remaining": "CPU-only solver-hint evidence needs repeatable board timing"
+    },
+    {
+      "gap_id": "hardware-repeatability-discipline",
+      "partial_by": [
+        "hardware"
+      ],
+      "remaining": "graph receipt exists but no repeated board-local workload timing"
+    },
+    {
+      "gap_id": "prd-alignment-capstone-readiness",
+      "partial_by": [
+        "prd_alignment"
+      ],
+      "remaining": "closed bounded rows coexist with ARC, token, and hardware blockers"
+    }
+  ],
+  "random_seed": 5400,
+  "reproducibility_checksum": "sha256:feb3493961588e617e233b9ade8fda5c5015497ceeb08cd855145a3d8ea0d8f7",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5400.evidence_table_prd_gap_analysis.v491",
+  "source_artifact_checksums": {
+    "results/experiment_5389_transition_v491.json": "sha256:2f029ff430702a52d28036ec0b9bfd0a652f8c04a4f2565a381c052a510a1702",
+    "results/experiment_5390_sota_source_delta_v491.json": "sha256:8e1550cc2db1281827411c40ea40026bf21a9dbab64e3e2f1184b0aad536252f",
+    "results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json": "sha256:370941f9c71492d5cb2234b1862bb006c57221da408259f41935d462b195403c",
+    "results/experiment_5392_formal_encoding_safety_fixture_v491.json": "sha256:2221e08f2596722cbf32ac3f2e5fdd32dbc1cabe1bed763d94357420fc2a3198",
+    "results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json": "sha256:5ba1e6f38fd66748c0efb62b5cbdfc36e77da015511db0ad5ad4613f417dfb31",
+    "results/experiment_5394_gated_overwrite_pbit_ablation_v491.json": "sha256:28753e047d58c2ed4646e2586b43277877adcaaddf4fc46bcef652cabde1a949",
+    "results/experiment_5395_influence_share_verifier_budget_router_v491.json": "sha256:4fd249154db75cffc4680d08efac1cf97502760252757ac82169c36c178a6fec",
+    "results/experiment_5396_memory_guard_raw_episode_retention_v491.json": "sha256:b5102fc833d7f93587ca9d893bd86c8d90d298353c797856bf31bff5cd4463c9",
+    "results/experiment_5397_arc_blob_salience_live_path_v491.json": "sha256:29df40ea7c40534c539becfd96141f1f90b35d25087daf1af511822d4f8ad9e0",
+    "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json": "sha256:7506af8732bebe2623e533ee87080ae85c8eff36adc9e9ca03b72600eb27cf7d",
+    "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json": "sha256:fc79593c53972ff15b28d0c3a3b3cb93f0f2d95783ba6cb694319b0c2ab4390e",
+    "results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json": "sha256:0d25575b62615f1dc32e235c48c9a8998680d163cbc690ce10ef9fa8f266a914"
+  },
+  "source_context_read": [
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "sha256": "sha256:3f0b49b310cd2e507887754c891ab2ae9758b3ee7e6fd0b79b9928a85f5d9ca2"
+    },
+    {
+      "path": "research-program.md",
+      "present": true,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "path": "_bmad/prd.md",
+      "present": true,
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "path": "_bmad/architecture.md",
+      "present": true,
+      "sha256": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "sha256": "sha256:88d5cb6dbf459b40e0d39135c092eb09a5efcc4367077187925d387e6c69e746"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5400",
+    "SCENARIO-REPORT-5400",
+    "SCENARIO-REPORT-5400-MISSING-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5400_evidence_table_prd_gap_analysis_v491.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5400_evidence_table_prd_gap_analysis_v491.py -m pytest tests/python/test_experiment_5400_evidence_table_prd_gap_analysis_v491.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5400_evidence_table_prd_gap_analysis_v491.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}
