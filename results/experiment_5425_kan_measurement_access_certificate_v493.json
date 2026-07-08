@@ -1,0 +1,2501 @@
+{
+  "broad_kan_verification_claim": false,
+  "certificate_count": 14,
+  "claim_limits": [
+    "bounded measurement-access active-constraint fixture only",
+    "observable false properties are rejected only when measured rows contradict them",
+    "board timing, token logprob, and internal activation claims require evidence absent here",
+    "missing evidence is classified as unsupported, not as a negative broad proof",
+    "no broad KAN verification claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "counterexample_records": [
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_linear_review_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "draft->review",
+          "review->submit"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "review",
+          "submit"
+        ],
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_synthetic_linear_review",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:e367a874a2485ccb88018e33a25b556030937ee1380ed2c89a109b1314b0dbc6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:stale_hint",
+          "row_index": 1,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_linear_review_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "submit->outline"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "outline"
+        ],
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_synthetic_linear_review",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:bae8681f055df77480d030d383eb9bf2f5fd4b7108a515011d1d43653d50e9ce",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:adversarial_hint",
+          "row_index": 2,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_join_pack_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "pick->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "pack",
+          "ship"
+        ],
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_synthetic_join_pack",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:256a7558c29b01fc02ce8291927bd2cbfe3223fba337506db2395ffef346a1b4",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:stale_hint",
+          "row_index": 5,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_join_pack_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "ship->label"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "label"
+        ],
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_synthetic_join_pack",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:1d118335aa7dae13fe79f44ca44da3688f5721c988006e7fc047f21a1058b9d6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:adversarial_hint",
+          "row_index": 6,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_unlock_deliver_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "enter_room",
+          "deliver_package"
+        ],
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_carry_forward_act_unlock_deliver",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:22b21960b1bfe81513b00803b2950404abff2e9ddf2f3e7949cda4791caae43d",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:stale_hint",
+          "row_index": 9,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_unlock_deliver_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "deliver_package->pickup_key"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "pickup_key"
+        ],
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_carry_forward_act_unlock_deliver",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:d13fac2c710079d408fe14634463bb3e1369acc91af66644e6e401a9e00c7148",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:adversarial_hint",
+          "row_index": 10,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_build_deploy_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "deploy->monitor"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ],
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_carry_forward_act_build_deploy",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:f725d523d539f9bb690745da458315b5dbd9f5ace06979fbcad4071c3a5e9e41",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:stale_hint",
+          "row_index": 13,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_build_deploy_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "monitor->backup_config"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "backup_config"
+        ],
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_carry_forward_act_build_deploy",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:c33fbfa6a0f5b5a5d840a6a4be4e66e7ad2f1a5b183114636fb26cfb05df7aba",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:adversarial_hint",
+          "row_index": 14,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    }
+  ],
+  "experiment": "experiment_5425_kan_measurement_access_certificate_v493",
+  "experiment_id": "exp5425-v493-kan-measurement-access-certificate",
+  "false_property_controls": [
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_linear_review_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "draft->review",
+          "review->submit"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "review",
+          "submit"
+        ],
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_synthetic_linear_review",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:e367a874a2485ccb88018e33a25b556030937ee1380ed2c89a109b1314b0dbc6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:stale_hint",
+          "row_index": 1,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_linear_review_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "submit->outline"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "outline"
+        ],
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_synthetic_linear_review",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:bae8681f055df77480d030d383eb9bf2f5fd4b7108a515011d1d43653d50e9ce",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:adversarial_hint",
+          "row_index": 2,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_join_pack_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "pick->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "pack",
+          "ship"
+        ],
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_synthetic_join_pack",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:256a7558c29b01fc02ce8291927bd2cbfe3223fba337506db2395ffef346a1b4",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:stale_hint",
+          "row_index": 5,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_join_pack_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "ship->label"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "label"
+        ],
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_synthetic_join_pack",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:1d118335aa7dae13fe79f44ca44da3688f5721c988006e7fc047f21a1058b9d6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:adversarial_hint",
+          "row_index": 6,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_unlock_deliver_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "enter_room",
+          "deliver_package"
+        ],
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_carry_forward_act_unlock_deliver",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:22b21960b1bfe81513b00803b2950404abff2e9ddf2f3e7949cda4791caae43d",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:stale_hint",
+          "row_index": 9,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_unlock_deliver_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "deliver_package->pickup_key"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "pickup_key"
+        ],
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_carry_forward_act_unlock_deliver",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:d13fac2c710079d408fe14634463bb3e1369acc91af66644e6e401a9e00c7148",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:adversarial_hint",
+          "row_index": 10,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_build_deploy_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "deploy->monitor"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ],
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_carry_forward_act_build_deploy",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:f725d523d539f9bb690745da458315b5dbd9f5ace06979fbcad4071c3a5e9e41",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:stale_hint",
+          "row_index": 13,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_build_deploy_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "monitor->backup_config"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "backup_config"
+        ],
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_carry_forward_act_build_deploy",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:c33fbfa6a0f5b5a5d840a6a4be4e66e7ad2f1a5b183114636fb26cfb05df7aba",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:adversarial_hint",
+          "row_index": 14,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves authenticated board timing.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_board_timing",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "authenticated_board_timing_receipt",
+        "board_serial",
+        "timing_trace_checksum"
+      ],
+      "property_id": "false_board_timing_receipt_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "authenticated_board_timing_receipt",
+        "board_serial",
+        "timing_trace_checksum"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "board_timing"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves token-level logprob access.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_token_access",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "token_ids",
+        "token_logprobs",
+        "scoring_model_receipt"
+      ],
+      "property_id": "false_token_logprob_access_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "token_ids",
+        "token_logprobs",
+        "scoring_model_receipt"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "token_access"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves hidden/internal activation access.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_internal_state",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "hidden_state_tensor",
+        "layer_index",
+        "activation_checksum"
+      ],
+      "property_id": "false_internal_state_access_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "hidden_state_tensor",
+        "layer_index",
+        "activation_checksum"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "internal_state"
+    }
+  ],
+  "false_property_rejection_rate": 1.0,
+  "field_principles": {
+    "broad_kan_verification_claim": "bounded claim.",
+    "certificate_count": "coverage.",
+    "false_property_rejection_rate": "counterexample strength.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "no hidden live model inference.",
+    "kan_measurement_access_certificate_ready": "capstone evidence.",
+    "measurement_access_controls": "observable-vs-missing evidence.",
+    "missing_evidence_detected": "measurement-access boundary.",
+    "property_family": "bounded claim scope.",
+    "row_checksums": "provenance.",
+    "true_property_preservation_rate": "no over-rejection."
+  },
+  "honest_verdict": "complete: bounded measurement-access KAN certificate rejected observable false active-constraint claims and unsupported board/token/internal claims while preserving true measured properties with no broad KAN verification claim",
+  "inference_substrate": "deterministic_certificate_experiment",
+  "kan_measurement_access_certificate_ready": true,
+  "measurement_access_controls": [
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_linear_review_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "draft->review",
+          "review->submit"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "review",
+          "submit"
+        ],
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_synthetic_linear_review",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:e367a874a2485ccb88018e33a25b556030937ee1380ed2c89a109b1314b0dbc6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:stale_hint",
+          "row_index": 1,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_linear_review_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "submit->outline"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "outline"
+        ],
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_synthetic_linear_review",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:bae8681f055df77480d030d383eb9bf2f5fd4b7108a515011d1d43653d50e9ce",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:adversarial_hint",
+          "row_index": 2,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_join_pack_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "pick->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "pack",
+          "ship"
+        ],
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_synthetic_join_pack",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:256a7558c29b01fc02ce8291927bd2cbfe3223fba337506db2395ffef346a1b4",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:stale_hint",
+          "row_index": 5,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_synthetic_join_pack_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "ship->label"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "label"
+        ],
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_synthetic_join_pack",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:1d118335aa7dae13fe79f44ca44da3688f5721c988006e7fc047f21a1058b9d6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:adversarial_hint",
+          "row_index": 6,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_unlock_deliver_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "enter_room",
+          "deliver_package"
+        ],
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_carry_forward_act_unlock_deliver",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:22b21960b1bfe81513b00803b2950404abff2e9ddf2f3e7949cda4791caae43d",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:stale_hint",
+          "row_index": 9,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_unlock_deliver_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "deliver_package->pickup_key"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "pickup_key"
+        ],
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_carry_forward_act_unlock_deliver",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:d13fac2c710079d408fe14634463bb3e1369acc91af66644e6e401a9e00c7148",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:adversarial_hint",
+          "row_index": 10,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_build_deploy_stale_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "deploy->monitor"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ],
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_stale_hint_accepted_without_measurement_access_carry_forward_act_build_deploy",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:f725d523d539f9bb690745da458315b5dbd9f5ace06979fbcad4071c3a5e9e41",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:stale_hint",
+          "row_index": 13,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "claim": "A stale or adversarial active-constraint hint can be accepted as a candidate route.",
+      "classification": "observable_false",
+      "control_id": "ctrl5425_false_carry_forward_act_build_deploy_adversarial_hint",
+      "control_kind": "false_property",
+      "counterexample": {
+        "active_constraint_hint": [
+          "monitor->backup_config"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "backup_config"
+        ],
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "evidence_status": "measured_row_counterexample",
+      "missing_evidence": [],
+      "property_id": "false_adversarial_hint_accepted_without_measurement_access_carry_forward_act_build_deploy",
+      "rejected": true,
+      "required_evidence": [
+        "hint_decision",
+        "active_constraint_precision",
+        "active_constraint_recall",
+        "solver_authoritative",
+        "final_valid"
+      ],
+      "row_provenance": [
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:c33fbfa6a0f5b5a5d840a6a4be4e66e7ad2f1a5b183114636fb26cfb05df7aba",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:adversarial_hint",
+          "row_index": 14,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ],
+      "unsupported_claim_type": "active_constraint_hint"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves authenticated board timing.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_board_timing",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "authenticated_board_timing_receipt",
+        "board_serial",
+        "timing_trace_checksum"
+      ],
+      "property_id": "false_board_timing_receipt_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "authenticated_board_timing_receipt",
+        "board_serial",
+        "timing_trace_checksum"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "board_timing"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves token-level logprob access.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_token_access",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "token_ids",
+        "token_logprobs",
+        "scoring_model_receipt"
+      ],
+      "property_id": "false_token_logprob_access_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "token_ids",
+        "token_logprobs",
+        "scoring_model_receipt"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "token_access"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves hidden/internal activation access.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_internal_state",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "hidden_state_tensor",
+        "layer_index",
+        "activation_checksum"
+      ],
+      "property_id": "false_internal_state_access_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "hidden_state_tensor",
+        "layer_index",
+        "activation_checksum"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "internal_state"
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "classification": "observable_supported",
+      "control_id": "ctrl5425_true_exact_candidate_hints_supported_by_measured_rows",
+      "control_kind": "true_property",
+      "evidence_status": "supported_by_measured_rows",
+      "missing_evidence": [],
+      "preserved": true,
+      "property_id": "true_exact_candidate_hints_supported_by_measured_rows",
+      "required_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "row_count": 4,
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:1b2ade94dca763bbee6a26a58af173e5a37032b22127a41a31d569c673e69ef7",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:candidate_hint",
+          "row_index": 3,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:0ec261704e1519d7e6812f3dbcfe6f39c77c6c580066d0abba40172cff640913",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:candidate_hint",
+          "row_index": 7,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:e9b3bf5453287dfce442e2026310f8ba07ccdb2fd5d9cdd17fea0093bb4be7b6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:candidate_hint",
+          "row_index": 11,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:3a878ae59bde296006d2b0d522dc1c0bda0c756ea8c3e83db31d29dc81eae895",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:candidate_hint",
+          "row_index": 15,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ]
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "classification": "observable_supported",
+      "control_id": "ctrl5425_true_no_hint_solver_baseline_supported_by_measured_rows",
+      "control_kind": "true_property",
+      "evidence_status": "supported_by_measured_rows",
+      "missing_evidence": [],
+      "preserved": true,
+      "property_id": "true_no_hint_solver_baseline_supported_by_measured_rows",
+      "required_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "row_count": 4,
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:0979e79c46f13006c39a5147b518d3d21310eff606086584bcfa6842b8ab7f6e",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:no_hint",
+          "row_index": 0,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:8536ccc839e99bd7d6890a74662d0d8559a9390f863df2422a1a3f4703e220d1",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:no_hint",
+          "row_index": 4,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:b59be07b111dbe62cef77be5344682ea53a188cda8d5b952314411b24e9a861a",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:no_hint",
+          "row_index": 8,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:e83fd6ceb55f258694040a1c7e961eeea9bb3c35fceb0281989dcf2b639c2bcf",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:no_hint",
+          "row_index": 12,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ]
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "classification": "observable_supported",
+      "control_id": "ctrl5425_true_solver_authority_and_final_validity_supported_by_measured_rows",
+      "control_kind": "true_property",
+      "evidence_status": "supported_by_measured_rows",
+      "missing_evidence": [],
+      "preserved": true,
+      "property_id": "true_solver_authority_and_final_validity_supported_by_measured_rows",
+      "required_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "row_count": 16,
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:0979e79c46f13006c39a5147b518d3d21310eff606086584bcfa6842b8ab7f6e",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:no_hint",
+          "row_index": 0,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:e367a874a2485ccb88018e33a25b556030937ee1380ed2c89a109b1314b0dbc6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:stale_hint",
+          "row_index": 1,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:bae8681f055df77480d030d383eb9bf2f5fd4b7108a515011d1d43653d50e9ce",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:adversarial_hint",
+          "row_index": 2,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:1b2ade94dca763bbee6a26a58af173e5a37032b22127a41a31d569c673e69ef7",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:candidate_hint",
+          "row_index": 3,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:8536ccc839e99bd7d6890a74662d0d8559a9390f863df2422a1a3f4703e220d1",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:no_hint",
+          "row_index": 4,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:256a7558c29b01fc02ce8291927bd2cbfe3223fba337506db2395ffef346a1b4",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:stale_hint",
+          "row_index": 5,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:1d118335aa7dae13fe79f44ca44da3688f5721c988006e7fc047f21a1058b9d6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:adversarial_hint",
+          "row_index": 6,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:0ec261704e1519d7e6812f3dbcfe6f39c77c6c580066d0abba40172cff640913",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:candidate_hint",
+          "row_index": 7,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:b59be07b111dbe62cef77be5344682ea53a188cda8d5b952314411b24e9a861a",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:no_hint",
+          "row_index": 8,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:22b21960b1bfe81513b00803b2950404abff2e9ddf2f3e7949cda4791caae43d",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:stale_hint",
+          "row_index": 9,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:d13fac2c710079d408fe14634463bb3e1369acc91af66644e6e401a9e00c7148",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:adversarial_hint",
+          "row_index": 10,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:e9b3bf5453287dfce442e2026310f8ba07ccdb2fd5d9cdd17fea0093bb4be7b6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:candidate_hint",
+          "row_index": 11,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:e83fd6ceb55f258694040a1c7e961eeea9bb3c35fceb0281989dcf2b639c2bcf",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:no_hint",
+          "row_index": 12,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:f725d523d539f9bb690745da458315b5dbd9f5ace06979fbcad4071c3a5e9e41",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:stale_hint",
+          "row_index": 13,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:c33fbfa6a0f5b5a5d840a6a4be4e66e7ad2f1a5b183114636fb26cfb05df7aba",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:adversarial_hint",
+          "row_index": 14,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:3a878ae59bde296006d2b0d522dc1c0bda0c756ea8c3e83db31d29dc81eae895",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:candidate_hint",
+          "row_index": 15,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ]
+    }
+  ],
+  "methodology_note": "Exp5425 is a deterministic certificate experiment over the bounded Exp5412/Exp5406 active-constraint rows. It separates measured, row-supported properties from missing board, token, and internal evidence; it does not verify KANs broadly.",
+  "milestone": "2026.07.493",
+  "missing_evidence_controls": [
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves authenticated board timing.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_board_timing",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "authenticated_board_timing_receipt",
+        "board_serial",
+        "timing_trace_checksum"
+      ],
+      "property_id": "false_board_timing_receipt_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "authenticated_board_timing_receipt",
+        "board_serial",
+        "timing_trace_checksum"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "board_timing"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves token-level logprob access.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_token_access",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "token_ids",
+        "token_logprobs",
+        "scoring_model_receipt"
+      ],
+      "property_id": "false_token_logprob_access_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "token_ids",
+        "token_logprobs",
+        "scoring_model_receipt"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "token_access"
+    },
+    {
+      "available_evidence": [],
+      "bounded_fixture_only": true,
+      "claim": "The bounded KAN certificate proves hidden/internal activation access.",
+      "classification": "missing_evidence_unsupported",
+      "control_id": "ctrl5425_missing_internal_state",
+      "control_kind": "false_property",
+      "counterexample": null,
+      "evidence_status": "missing_required_evidence",
+      "missing_evidence": [
+        "hidden_state_tensor",
+        "layer_index",
+        "activation_checksum"
+      ],
+      "property_id": "false_internal_state_access_implied_by_kan_certificate",
+      "rejected": true,
+      "required_evidence": [
+        "hidden_state_tensor",
+        "layer_index",
+        "activation_checksum"
+      ],
+      "row_provenance": [],
+      "unsupported_claim_type": "internal_state"
+    }
+  ],
+  "missing_evidence_detected": true,
+  "property_family": "bounded_kan_measurement_access_active_constraint_certificate",
+  "random_seed": 5425,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "sha256:7ba70a6986c30f3c27765b0410f2e3c2a2c5cca27b0fb50cfd937b730db50370",
+  "row_checksums": [
+    "sha256:0979e79c46f13006c39a5147b518d3d21310eff606086584bcfa6842b8ab7f6e",
+    "sha256:e367a874a2485ccb88018e33a25b556030937ee1380ed2c89a109b1314b0dbc6",
+    "sha256:bae8681f055df77480d030d383eb9bf2f5fd4b7108a515011d1d43653d50e9ce",
+    "sha256:1b2ade94dca763bbee6a26a58af173e5a37032b22127a41a31d569c673e69ef7",
+    "sha256:8536ccc839e99bd7d6890a74662d0d8559a9390f863df2422a1a3f4703e220d1",
+    "sha256:256a7558c29b01fc02ce8291927bd2cbfe3223fba337506db2395ffef346a1b4",
+    "sha256:1d118335aa7dae13fe79f44ca44da3688f5721c988006e7fc047f21a1058b9d6",
+    "sha256:0ec261704e1519d7e6812f3dbcfe6f39c77c6c580066d0abba40172cff640913",
+    "sha256:b59be07b111dbe62cef77be5344682ea53a188cda8d5b952314411b24e9a861a",
+    "sha256:22b21960b1bfe81513b00803b2950404abff2e9ddf2f3e7949cda4791caae43d",
+    "sha256:d13fac2c710079d408fe14634463bb3e1369acc91af66644e6e401a9e00c7148",
+    "sha256:e9b3bf5453287dfce442e2026310f8ba07ccdb2fd5d9cdd17fea0093bb4be7b6",
+    "sha256:e83fd6ceb55f258694040a1c7e961eeea9bb3c35fceb0281989dcf2b639c2bcf",
+    "sha256:f725d523d539f9bb690745da458315b5dbd9f5ace06979fbcad4071c3a5e9e41",
+    "sha256:c33fbfa6a0f5b5a5d840a6a4be4e66e7ad2f1a5b183114636fb26cfb05df7aba",
+    "sha256:3a878ae59bde296006d2b0d522dc1c0bda0c756ea8c3e83db31d29dc81eae895"
+  ],
+  "row_provenance": [
+    {
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "no_hint",
+      "row_checksum": "sha256:0979e79c46f13006c39a5147b518d3d21310eff606086584bcfa6842b8ab7f6e",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:no_hint",
+      "row_index": 0,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "stale_hint",
+      "row_checksum": "sha256:e367a874a2485ccb88018e33a25b556030937ee1380ed2c89a109b1314b0dbc6",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:stale_hint",
+      "row_index": 1,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "adversarial_hint",
+      "row_checksum": "sha256:bae8681f055df77480d030d383eb9bf2f5fd4b7108a515011d1d43653d50e9ce",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:adversarial_hint",
+      "row_index": 2,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "candidate_hint",
+      "row_checksum": "sha256:1b2ade94dca763bbee6a26a58af173e5a37032b22127a41a31d569c673e69ef7",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:candidate_hint",
+      "row_index": 3,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "no_hint",
+      "row_checksum": "sha256:8536ccc839e99bd7d6890a74662d0d8559a9390f863df2422a1a3f4703e220d1",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:no_hint",
+      "row_index": 4,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "stale_hint",
+      "row_checksum": "sha256:256a7558c29b01fc02ce8291927bd2cbfe3223fba337506db2395ffef346a1b4",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:stale_hint",
+      "row_index": 5,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "adversarial_hint",
+      "row_checksum": "sha256:1d118335aa7dae13fe79f44ca44da3688f5721c988006e7fc047f21a1058b9d6",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:adversarial_hint",
+      "row_index": 6,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "candidate_hint",
+      "row_checksum": "sha256:0ec261704e1519d7e6812f3dbcfe6f39c77c6c580066d0abba40172cff640913",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:candidate_hint",
+      "row_index": 7,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "no_hint",
+      "row_checksum": "sha256:b59be07b111dbe62cef77be5344682ea53a188cda8d5b952314411b24e9a861a",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:no_hint",
+      "row_index": 8,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "stale_hint",
+      "row_checksum": "sha256:22b21960b1bfe81513b00803b2950404abff2e9ddf2f3e7949cda4791caae43d",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:stale_hint",
+      "row_index": 9,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "adversarial_hint",
+      "row_checksum": "sha256:d13fac2c710079d408fe14634463bb3e1369acc91af66644e6e401a9e00c7148",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:adversarial_hint",
+      "row_index": 10,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "candidate_hint",
+      "row_checksum": "sha256:e9b3bf5453287dfce442e2026310f8ba07ccdb2fd5d9cdd17fea0093bb4be7b6",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:candidate_hint",
+      "row_index": 11,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "no_hint",
+      "row_checksum": "sha256:e83fd6ceb55f258694040a1c7e961eeea9bb3c35fceb0281989dcf2b639c2bcf",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:no_hint",
+      "row_index": 12,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "stale_hint",
+      "row_checksum": "sha256:f725d523d539f9bb690745da458315b5dbd9f5ace06979fbcad4071c3a5e9e41",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:stale_hint",
+      "row_index": 13,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "adversarial_hint",
+      "row_checksum": "sha256:c33fbfa6a0f5b5a5d840a6a4be4e66e7ad2f1a5b183114636fb26cfb05df7aba",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:adversarial_hint",
+      "row_index": 14,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "candidate_hint",
+      "row_checksum": "sha256:3a878ae59bde296006d2b0d522dc1c0bda0c756ea8c3e83db31d29dc81eae895",
+      "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:candidate_hint",
+      "row_index": 15,
+      "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    }
+  ],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5425.kan_measurement_access_certificate.v493",
+  "source_artifact_checksums": {
+    "exp5406": "sha256:da53137b251675929032d9ef1e0f16548af268dcd84c137d269d71d6f0dea7d7",
+    "exp5412": "sha256:c8f794d12a968fee887226be2b1232403da2036bad445c5d3eb88754c443bc20",
+    "module": "sha256:fea71cf739bd1f3999e4c4999636ec03df8e164e52ec6f109d68b4c45dba46c6",
+    "spec": "sha256:8c3dd20148f5a5dcb1f32c78e7fde29a77449f8d5fa13a7837b7763965ae8cf9"
+  },
+  "source_artifacts": [
+    "results/experiment_5412_kan_active_constraint_certificate_v492.json",
+    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json"
+  ],
+  "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492",
+  "source_rows": 16,
+  "spec_refs": [
+    "REQ-KAN-5425",
+    "SCENARIO-KAN-5425"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5425_kan_measurement_access_certificate_v493.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5425_kan_measurement_access_certificate_v493.py -m pytest tests/python/test_experiment_5425_kan_measurement_access_certificate_v493.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5425_kan_measurement_access_certificate_v493.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py",
+      "outcome": "failed_pre_existing_1262_missing_spec_refs"
+    },
+    {
+      "command": "ruff check python/carnot/experiment_5425_kan_measurement_access_certificate_v493.py tests/python/test_experiment_5425_kan_measurement_access_certificate_v493.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "true_property_controls": [
+    {
+      "available_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "classification": "observable_supported",
+      "control_id": "ctrl5425_true_exact_candidate_hints_supported_by_measured_rows",
+      "control_kind": "true_property",
+      "evidence_status": "supported_by_measured_rows",
+      "missing_evidence": [],
+      "preserved": true,
+      "property_id": "true_exact_candidate_hints_supported_by_measured_rows",
+      "required_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "row_count": 4,
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:1b2ade94dca763bbee6a26a58af173e5a37032b22127a41a31d569c673e69ef7",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:candidate_hint",
+          "row_index": 3,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:0ec261704e1519d7e6812f3dbcfe6f39c77c6c580066d0abba40172cff640913",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:candidate_hint",
+          "row_index": 7,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:e9b3bf5453287dfce442e2026310f8ba07ccdb2fd5d9cdd17fea0093bb4be7b6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:candidate_hint",
+          "row_index": 11,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:3a878ae59bde296006d2b0d522dc1c0bda0c756ea8c3e83db31d29dc81eae895",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:candidate_hint",
+          "row_index": 15,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ]
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "classification": "observable_supported",
+      "control_id": "ctrl5425_true_no_hint_solver_baseline_supported_by_measured_rows",
+      "control_kind": "true_property",
+      "evidence_status": "supported_by_measured_rows",
+      "missing_evidence": [],
+      "preserved": true,
+      "property_id": "true_no_hint_solver_baseline_supported_by_measured_rows",
+      "required_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "row_count": 4,
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:0979e79c46f13006c39a5147b518d3d21310eff606086584bcfa6842b8ab7f6e",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:no_hint",
+          "row_index": 0,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:8536ccc839e99bd7d6890a74662d0d8559a9390f863df2422a1a3f4703e220d1",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:no_hint",
+          "row_index": 4,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:b59be07b111dbe62cef77be5344682ea53a188cda8d5b952314411b24e9a861a",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:no_hint",
+          "row_index": 8,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:e83fd6ceb55f258694040a1c7e961eeea9bb3c35fceb0281989dcf2b639c2bcf",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:no_hint",
+          "row_index": 12,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ]
+    },
+    {
+      "available_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "bounded_fixture_only": true,
+      "classification": "observable_supported",
+      "control_id": "ctrl5425_true_solver_authority_and_final_validity_supported_by_measured_rows",
+      "control_kind": "true_property",
+      "evidence_status": "supported_by_measured_rows",
+      "missing_evidence": [],
+      "preserved": true,
+      "property_id": "true_solver_authority_and_final_validity_supported_by_measured_rows",
+      "required_evidence": [
+        "hint_decision",
+        "solver_authoritative",
+        "accepted_without_verification",
+        "unsafe_false_accept",
+        "final_valid"
+      ],
+      "row_count": 16,
+      "row_provenance": [
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:0979e79c46f13006c39a5147b518d3d21310eff606086584bcfa6842b8ab7f6e",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:no_hint",
+          "row_index": 0,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:e367a874a2485ccb88018e33a25b556030937ee1380ed2c89a109b1314b0dbc6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:stale_hint",
+          "row_index": 1,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:bae8681f055df77480d030d383eb9bf2f5fd4b7108a515011d1d43653d50e9ce",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:adversarial_hint",
+          "row_index": 2,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_linear_review",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:1b2ade94dca763bbee6a26a58af173e5a37032b22127a41a31d569c673e69ef7",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_linear_review:candidate_hint",
+          "row_index": 3,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:8536ccc839e99bd7d6890a74662d0d8559a9390f863df2422a1a3f4703e220d1",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:no_hint",
+          "row_index": 4,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:256a7558c29b01fc02ce8291927bd2cbfe3223fba337506db2395ffef346a1b4",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:stale_hint",
+          "row_index": 5,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:1d118335aa7dae13fe79f44ca44da3688f5721c988006e7fc047f21a1058b9d6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:adversarial_hint",
+          "row_index": 6,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "synthetic_join_pack",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:0ec261704e1519d7e6812f3dbcfe6f39c77c6c580066d0abba40172cff640913",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:synthetic_join_pack:candidate_hint",
+          "row_index": 7,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:b59be07b111dbe62cef77be5344682ea53a188cda8d5b952314411b24e9a861a",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:no_hint",
+          "row_index": 8,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:22b21960b1bfe81513b00803b2950404abff2e9ddf2f3e7949cda4791caae43d",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:stale_hint",
+          "row_index": 9,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:d13fac2c710079d408fe14634463bb3e1369acc91af66644e6e401a9e00c7148",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:adversarial_hint",
+          "row_index": 10,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_unlock_deliver",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:e9b3bf5453287dfce442e2026310f8ba07ccdb2fd5d9cdd17fea0093bb4be7b6",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_unlock_deliver:candidate_hint",
+          "row_index": 11,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "no_hint",
+          "row_checksum": "sha256:e83fd6ceb55f258694040a1c7e961eeea9bb3c35fceb0281989dcf2b639c2bcf",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:no_hint",
+          "row_index": 12,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "stale_hint",
+          "row_checksum": "sha256:f725d523d539f9bb690745da458315b5dbd9f5ace06979fbcad4071c3a5e9e41",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:stale_hint",
+          "row_index": 13,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "adversarial_hint",
+          "row_checksum": "sha256:c33fbfa6a0f5b5a5d840a6a4be4e66e7ad2f1a5b183114636fb26cfb05df7aba",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:adversarial_hint",
+          "row_index": 14,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        },
+        {
+          "fixture_id": "carry_forward_act_build_deploy",
+          "hint_mode": "candidate_hint",
+          "row_checksum": "sha256:3a878ae59bde296006d2b0d522dc1c0bda0c756ea8c3e83db31d29dc81eae895",
+          "row_id": "experiment_5406_active_constraint_warmstart_guidance_v492:carry_forward_act_build_deploy:candidate_hint",
+          "row_index": 15,
+          "source_artifact": "results/experiment_5406_active_constraint_warmstart_guidance_v492.json",
+          "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+        }
+      ]
+    }
+  ],
+  "true_property_preservation_rate": 1.0
+}
