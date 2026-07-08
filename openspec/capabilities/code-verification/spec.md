@@ -1042,6 +1042,43 @@ Then one candidate may carry multiple independent labels such as
 `true_test_failure`, and the terminal artifact reports rates and grouped
 summaries without fabricating missing upstream evidence.
 
+### REQ-CODE-5445: Deterministic AST/KB Witness Constraints For Code/API Hallucinations
+
+The repository shall provide a deterministic Exp 5445 AST/KB witness fixture
+for code/API hallucination rows. The verifier MUST:
+
+- use a bounded fixture set covering valid API calls, nonexistent methods,
+  wrong-module aliases, bare calls with missing imports, unavailable imported
+  symbols, argument-intent mismatches, and benign controls;
+- parse every fixture through Python AST and emit the parse status before any
+  API judgment;
+- resolve simple `import X as Y` and `from X import Y as Z` aliases into a
+  row-level alias map;
+- validate imported symbols and fully qualified call sites against a safe
+  local knowledge base built from whitelisted installed-library introspection
+  with committed fallback metadata when imports are unavailable;
+- emit inspectable witness fields for each row, including source checksum,
+  alias map, fully qualified call sites, imported-symbol checks, KB lookup
+  results, semantic intent evidence, deterministic accept/reject outcome,
+  reject reasons, and a witness checksum; and
+- write `results/experiment_5445_static_ast_kb_witness_constraints_v495.json`
+  with `fixture_count`, `api_family_counts`, `ast_parse_success_rate`,
+  `kb_source_paths`, `witness_field_names`, `nonexistent_call_reject_rate`,
+  `valid_call_accept_rate`, `unsafe_false_accepts`,
+  `row_provenance_checksum`, `ast_kb_witness_ready`,
+  `inference_substrate="deterministic_ast_kb_verifier_no_llm"`, and a terminal
+  `honest_verdict` beginning with `complete:` or `blocked:`.
+
+### SCENARIO-CODE-5445: Witness Rows Reject Hallucinated API Structure And Keep Controls Clean
+
+Given the Exp 5445 bounded fixture set, when the AST/KB verifier evaluates the
+rows, then alias-resolved valid calls are accepted, nonexistent methods and
+unavailable imported symbols are rejected, bare calls without matching imports
+are rejected, argument-intent mismatches are rejected even when the API exists,
+benign controls are accepted, per-row witness checksums are reproducible, and
+the terminal artifact is ready only when all invalid hallucination rows are
+rejected with zero unsafe false accepts and no live LLM inference.
+
 ### REQ-CODE-2946: AUPRC-Gated SOTA Code-Generation Continuation
 
 The repository shall provide an Exp 2946 continuation runner that reads Exp
@@ -1886,6 +1923,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2905 | Implemented (`python/carnot/eval/sota_code_generation_bounded_budget_expansion.py`) |
 | REQ-CODE-2910 | Implemented (`python/carnot/eval/sota_code_generation_corrigendum.py`) |
 | REQ-CODE-2911 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_verifier.py`) |
+| REQ-CODE-5445 | Implemented (`python/carnot/experiment_5445_static_ast_kb_witness_constraints_v495.py`) |
 | REQ-CODE-2925 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_provenance_corrigendum.py`) |
 | REQ-CODE-2946 | Implemented (`python/carnot/eval/sota_code_generation_continuation.py`) |
 | REQ-CODE-2950 | Implemented (`python/carnot/eval/code_taxonomy_repair_prompt_manifest.py`) |
