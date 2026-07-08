@@ -19641,3 +19641,117 @@ active routing table
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5421 | Implemented (`python/carnot/experiment_5421_evidence_reliance_csl_v493.py`, `results/experiment_5421_evidence_reliance_csl_v493.json`) | Implemented (`tests/python/test_experiment_5421_evidence_reliance_csl_v493.py`) |
+
+---
+
+## REQ-LEARN-5422: Gated CSL Promotion Reliance Scale-Up v493
+
+Experiment 5422 SHALL gate learned-memory and world-fragment routing influence
+on Exp5421 evidence-reliance readiness. The scale-up SHALL require
+`evidence_reliance_csl_ready=true` before any candidate can be promoted, then
+SHALL evaluate a candidate pool spanning reachable fragments, unsupported fragments, stale fragments, poisoned fragments, and fragments with ambiguous
+evidence reliance. The controller SHALL use only deterministic retained
+evidence from Exp5409 and Exp5421, and SHALL NOT load, fine-tune, write, or
+mutate model weights or adapter weights.
+
+Each candidate SHALL expose explicit promotion gates for uncertainty, grounding
+source, accepted risk, resource savings, rollback availability, and reliance
+drift. A fragment SHALL be promoted only when all thresholds pass. Fragments
+with unsafe grounding, stale or poisoned provenance, excessive accepted risk, or
+missing rollback evidence SHALL be rejected and quarantined. Fragments with
+unsupported or ambiguous evidence reliance SHALL be retained as abstentions
+without routing influence. Accepted fragments MAY influence controller routing
+through a sidecar, but model weights SHALL remain unchanged.
+
+The inference substrate SHALL be `deterministic_self_learning_controller`,
+because the experiment is deterministic replay over retained promotion
+candidates, paired reliance episodes, and verifier labels rather than hidden
+live model inference.
+
+The result artifact SHALL be
+`results/experiment_5422_csl_promotion_reliance_scale_v493.json` and SHALL
+include `candidate_fragment_count`, `promoted_fragment_count`,
+`rejected_fragment_count`, `abstained_fragment_count`, `grounding_preserved`,
+`reliance_drift_threshold`, `accepted_risk_threshold`, `rollback_verified`,
+`rejected_fragments_quarantined`, `no_weight_mutation`,
+`csl_promotion_reliance_scale_ready`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL also include field principles documenting
+those required fields.
+
+The required field principles SHALL be:
+
+- `candidate_fragment_count`: Scale.
+- `promoted_fragment_count`: Accepted memory evidence.
+- `rejected_fragment_count`: Guard behavior.
+- `abstained_fragment_count`: Uncertainty handling.
+- `grounding_preserved`: Evidence stability.
+- `reliance_drift_threshold`: Explicit gate.
+- `accepted_risk_threshold`: Risk gate.
+- `rollback_verified`: Recovery.
+- `rejected_fragments_quarantined`: No silent influence.
+- `no_weight_mutation`: FR-11 boundary.
+- `csl_promotion_reliance_scale_ready`: Capstone evidence.
+- `inference_substrate`: No hidden live model inference.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5422 Sub-requirements
+
+- REQ-LEARN-5422-1: The scale-up SHALL read Exp5421 evidence and SHALL set
+  `source_readiness.exp5421_evidence_reliance_csl_ready` true only when Exp5421
+  reports `evidence_reliance_csl_ready=true`.
+- REQ-LEARN-5422-2: The candidate pool SHALL include at least one reachable,
+  unsupported, stale, poisoned, and ambiguous-evidence-reliance fragment.
+- REQ-LEARN-5422-3: Promotion thresholds SHALL explicitly include a maximum
+  uncertainty score, allowed grounding sources, maximum accepted risk, minimum
+  resource savings, required rollback availability, and maximum reliance drift.
+- REQ-LEARN-5422-4: Promotion SHALL require every threshold to pass; rejection
+  and abstention SHALL retain raw provenance, audit status, and inactive
+  routing state.
+- REQ-LEARN-5422-5: Rollback SHALL remove a deliberately injected bad fragment
+  from active routing and restore the prior active sidecar exactly.
+- REQ-LEARN-5422-6: `csl_promotion_reliance_scale_ready` SHALL be true only
+  when Exp5421 readiness is true, candidate families cover the scale-up pool,
+  promoted fragments have routing influence, rejected and abstained fragments
+  have zero routing influence, grounding is preserved, rollback succeeds, tests
+  are recorded, inference substrate is `deterministic_self_learning_controller`,
+  and no model or adapter weights mutate.
+
+### SCENARIO-LEARN-5422-THRESHOLDS: Promotion Requires Every Gate
+
+**Given** reachable, unsupported, stale, poisoned, and ambiguous reliance
+fragments
+**When** the scale-up evaluates uncertainty, grounding, risk, resource,
+rollback, and reliance-drift thresholds
+**Then** only candidates satisfying every threshold are promoted
+**And** every threshold failure records a deterministic rejection or abstention
+reason.
+
+### SCENARIO-LEARN-5422-QUARANTINE: Rejected Fragments Cannot Route
+
+**Given** rejected stale or poisoned fragments and abstained unsupported or
+ambiguous fragments
+**When** routing inputs are assembled
+**Then** rejected fragments are quarantined
+**And** rejected and abstained fragments have zero active routing influence
+while their audit rows remain retained.
+
+### SCENARIO-LEARN-5422-ROLLBACK: Bad Scale-Up Promotion Is Reversible
+
+**Given** a bad learned fragment is deliberately injected into the active
+promotion sidecar
+**When** rollback runs
+**Then** the bad fragment is removed from active routing
+**And** the pre-injection active fragment set is restored exactly.
+
+### SCENARIO-LEARN-5422-NO-WEIGHT-MUTATION: Promotion Uses Controller Sidecars Only
+
+**Given** promoted fragments influence deterministic controller routing
+**When** the scale-up completes
+**Then** the artifact reports no model or adapter weights loaded, written, or
+mutated.
+
+## Implementation Status (Exp 5422)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5422 | Implemented (`python/carnot/experiment_5422_csl_promotion_reliance_scale_v493.py`, `results/experiment_5422_csl_promotion_reliance_scale_v493.json`) | Implemented (`tests/python/test_experiment_5422_csl_promotion_reliance_scale_v493.py`) |

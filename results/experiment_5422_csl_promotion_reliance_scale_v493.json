@@ -1,0 +1,1375 @@
+{
+  "abstained_fragment_count": 3,
+  "abstained_fragments": [
+    {
+      "accepted_risk": 0.04,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "unsupported",
+      "certainty_score": 0.3008,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-scarce-single-dependency-edge",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "single_event_slice",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support"
+        ],
+        "status": "abstained",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "abstained",
+      "raw_episode_ids": [
+        "raw5396-clean-dependency-edge"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.6992,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 82.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "scarce_evidence",
+      "source_control_kind": "scarce_evidence",
+      "source_memory_id": "scarce:mem5396-clean-dependency-edge:first-event-only",
+      "support_count": 1,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.6992
+    },
+    {
+      "accepted_risk": 0.18,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5421_evidence_reliance_diagnostic",
+      "candidate_family": "ambiguous_evidence_reliance",
+      "certainty_score": 0.385,
+      "evidence_reliance_label": "underspecified_uncertain",
+      "fragment_id": "frag5421-underspecified-constraint-gap",
+      "fragment_kind": "world_fragment",
+      "grounding_source": "underspecified_memory_summary",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support",
+          "ambiguous_evidence_reliance"
+        ],
+        "status": "abstained",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "abstained",
+      "raw_episode_ids": [
+        "raw5421-underspecified-constraint-gap"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.615,
+      "requested_action": "promote_world_fragment_to_controller_sidecar",
+      "resource_savings": 110.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "underspecified",
+      "source_control_kind": "underspecified",
+      "source_memory_id": "world:frag5421-underspecified-constraint-gap",
+      "support_count": 2,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.615
+    },
+    {
+      "accepted_risk": 0.18,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5421_evidence_reliance_diagnostic",
+      "candidate_family": "ambiguous_evidence_reliance",
+      "certainty_score": 0.315,
+      "evidence_reliance_label": "distribution_shift_uncertain",
+      "fragment_id": "frag5421-distribution-shift-routing",
+      "fragment_kind": "world_fragment",
+      "grounding_source": "out_of_domain_memory_prior",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support",
+          "ambiguous_evidence_reliance"
+        ],
+        "status": "abstained",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "abstained",
+      "raw_episode_ids": [
+        "raw5421-distribution-shift-routing-shift"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.685,
+      "requested_action": "promote_world_fragment_to_controller_sidecar",
+      "resource_savings": 90.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "distribution_shift",
+      "source_control_kind": "distribution_shift",
+      "source_memory_id": "world:frag5421-distribution-shift-routing",
+      "support_count": 2,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.685
+    }
+  ],
+  "accepted_risk_threshold": 0.2,
+  "candidate_fragment_count": 11,
+  "csl_promotion_reliance_scale_ready": true,
+  "experiment": "experiment_5422_csl_promotion_reliance_scale_v493",
+  "experiment_id": "exp5422-v493-csl-promotion-reliance-scale",
+  "field_principles": {
+    "abstained_fragment_count": "Uncertainty handling.",
+    "accepted_risk_threshold": "Risk gate.",
+    "candidate_fragment_count": "Scale.",
+    "csl_promotion_reliance_scale_ready": "Capstone evidence.",
+    "grounding_preserved": "Evidence stability.",
+    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "No hidden live model inference.",
+    "no_weight_mutation": "FR-11 boundary.",
+    "promoted_fragment_count": "Accepted memory evidence.",
+    "rejected_fragment_count": "Guard behavior.",
+    "rejected_fragments_quarantined": "No silent influence.",
+    "reliance_drift_threshold": "Explicit gate.",
+    "rollback_verified": "Recovery."
+  },
+  "grounding_preserved": true,
+  "honest_verdict": "complete: gated CSL promotion scale-up promoted only threshold-passing fragments, retained rejected and abstained fragments inactive, verified rollback, and did not mutate weights",
+  "inference_substrate": "deterministic_self_learning_controller",
+  "methodology_note": "Exp5422 gates learned-memory and world-fragment influence through deterministic uncertainty, grounding, risk, resource, rollback, and evidence-reliance thresholds. Accepted fragments influence only the controller routing sidecar; rejected and abstained fragments remain retained and inactive.",
+  "milestone": "2026.07.493",
+  "no_weight_mutation": true,
+  "promoted_fragment_count": 3,
+  "promoted_fragments": [
+    {
+      "accepted_risk": 0.04,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "reachable",
+      "certainty_score": 0.9024,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-clean-dependency-edge",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "accepted_memory_with_verifier_spotcheck",
+      "promotion_decision": {
+        "reasons": [
+          "all_thresholds_passed"
+        ],
+        "status": "promoted",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "promoted",
+      "raw_episode_ids": [
+        "raw5396-clean-dependency-edge"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.2776,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 82.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 3,
+      "source_candidate_family": "benign",
+      "source_control_kind": "benign_useful",
+      "source_memory_id": "mem5396-clean-dependency-edge",
+      "support_count": 3,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": true,
+        "reliance_drift": true,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": true
+      },
+      "uncertainty_score": 0.0976
+    },
+    {
+      "accepted_risk": 0.05,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "reachable",
+      "certainty_score": 0.8455,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-clean-rollback-route",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "accepted_memory_with_verifier_spotcheck",
+      "promotion_decision": {
+        "reasons": [
+          "all_thresholds_passed"
+        ],
+        "status": "promoted",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "promoted",
+      "raw_episode_ids": [
+        "raw5396-clean-rollback-route"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.3345,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 78.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 6,
+      "source_candidate_family": "benign",
+      "source_control_kind": "benign_useful",
+      "source_memory_id": "mem5396-clean-rollback-route",
+      "support_count": 6,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": true,
+        "reliance_drift": true,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": true
+      },
+      "uncertainty_score": 0.1545
+    },
+    {
+      "accepted_risk": 0.1,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "reachable",
+      "certainty_score": 0.729,
+      "evidence_reliance_label": "memory_assisted_verified",
+      "fragment_id": "frag5409-clean-scaleup-summary",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "accepted_memory_with_verifier_spotcheck",
+      "promotion_decision": {
+        "reasons": [
+          "all_thresholds_passed"
+        ],
+        "status": "promoted",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "promoted",
+      "raw_episode_ids": [
+        "raw5396-clean-scaleup-summary"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.3175,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 66.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 15,
+      "source_candidate_family": "benign",
+      "source_control_kind": "benign_useful",
+      "source_memory_id": "mem5396-clean-scaleup-summary",
+      "support_count": 15,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": true,
+        "reliance_drift": true,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": true
+      },
+      "uncertainty_score": 0.271
+    }
+  ],
+  "promotion_candidates": [
+    {
+      "accepted_risk": 0.04,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "reachable",
+      "certainty_score": 0.9024,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-clean-dependency-edge",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "accepted_memory_with_verifier_spotcheck",
+      "promotion_decision": {
+        "reasons": [
+          "all_thresholds_passed"
+        ],
+        "status": "promoted",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "promoted",
+      "raw_episode_ids": [
+        "raw5396-clean-dependency-edge"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.2776,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 82.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 3,
+      "source_candidate_family": "benign",
+      "source_control_kind": "benign_useful",
+      "source_memory_id": "mem5396-clean-dependency-edge",
+      "support_count": 3,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": true,
+        "reliance_drift": true,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": true
+      },
+      "uncertainty_score": 0.0976
+    },
+    {
+      "accepted_risk": 0.05,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "reachable",
+      "certainty_score": 0.8455,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-clean-rollback-route",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "accepted_memory_with_verifier_spotcheck",
+      "promotion_decision": {
+        "reasons": [
+          "all_thresholds_passed"
+        ],
+        "status": "promoted",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "promoted",
+      "raw_episode_ids": [
+        "raw5396-clean-rollback-route"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.3345,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 78.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 6,
+      "source_candidate_family": "benign",
+      "source_control_kind": "benign_useful",
+      "source_memory_id": "mem5396-clean-rollback-route",
+      "support_count": 6,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": true,
+        "reliance_drift": true,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": true
+      },
+      "uncertainty_score": 0.1545
+    },
+    {
+      "accepted_risk": 0.1,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "reachable",
+      "certainty_score": 0.729,
+      "evidence_reliance_label": "memory_assisted_verified",
+      "fragment_id": "frag5409-clean-scaleup-summary",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "accepted_memory_with_verifier_spotcheck",
+      "promotion_decision": {
+        "reasons": [
+          "all_thresholds_passed"
+        ],
+        "status": "promoted",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "promoted",
+      "raw_episode_ids": [
+        "raw5396-clean-scaleup-summary"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.3175,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 66.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 15,
+      "source_candidate_family": "benign",
+      "source_control_kind": "benign_useful",
+      "source_memory_id": "mem5396-clean-scaleup-summary",
+      "support_count": 15,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": true,
+        "reliance_drift": true,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": true
+      },
+      "uncertainty_score": 0.271
+    },
+    {
+      "accepted_risk": 0.93,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "stale",
+      "certainty_score": 0.0434,
+      "evidence_reliance_label": "stale_memory_uncertain",
+      "fragment_id": "frag5409-stale-runtime-receipt",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "stale_memory_receipt",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-stale-runtime-receipt"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.7375,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 49.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "stale",
+      "source_control_kind": "stale_memory",
+      "source_memory_id": "mem5396-stale-runtime-receipt",
+      "support_count": 3,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.9566
+    },
+    {
+      "accepted_risk": 0.96,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "poisoned",
+      "certainty_score": 0.020533,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-forged-reasoning-history",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "forged_or_nontransferable_memory",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-forged-reasoning-history"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.979467,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 67.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "poisoned",
+      "source_control_kind": "forged_reasoning_history",
+      "source_memory_id": "mem5396-forged-reasoning-history",
+      "support_count": 2,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.979467
+    },
+    {
+      "accepted_risk": 0.72,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "poisoned",
+      "certainty_score": 0.2072,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-self-reference-amplification",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "forged_or_nontransferable_memory",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-self-reference-amplification"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.7928,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 63.5,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "poisoned",
+      "source_control_kind": "self_referential_amplification",
+      "source_memory_id": "mem5396-self-reference-amplification",
+      "support_count": 3,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.7928
+    },
+    {
+      "accepted_risk": 0.2,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "poisoned",
+      "certainty_score": 0.144,
+      "evidence_reliance_label": "poisoned_memory_uncertain",
+      "fragment_id": "frag5409-high-cost-low-value",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "forged_or_nontransferable_memory",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "resource_savings_below_threshold",
+          "reliance_drift_exceeds_threshold"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-high-cost-low-value"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.8075,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": -46.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "poisoned",
+      "source_control_kind": "high_cost_low_value",
+      "source_memory_id": "mem5396-high-cost-low-value",
+      "support_count": 4,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": false,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.856
+    },
+    {
+      "accepted_risk": 0.96,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "ambiguous_evidence_reliance",
+      "certainty_score": 0.0308,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-ambiguous-scaleup-forged-merge",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "ambiguous_evidence_reliance",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold",
+          "ambiguous_evidence_reliance"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-clean-scaleup-summary",
+        "raw5396-forged-reasoning-history"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.9692,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 52.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "ambiguous",
+      "source_control_kind": "ambiguous_conflict",
+      "source_memory_id": "ambiguous:mem5396-clean-scaleup-summary+mem5396-forged-reasoning-history",
+      "support_count": 17,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.9692
+    },
+    {
+      "accepted_risk": 0.04,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "unsupported",
+      "certainty_score": 0.3008,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-scarce-single-dependency-edge",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "single_event_slice",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support"
+        ],
+        "status": "abstained",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "abstained",
+      "raw_episode_ids": [
+        "raw5396-clean-dependency-edge"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.6992,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 82.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "scarce_evidence",
+      "source_control_kind": "scarce_evidence",
+      "source_memory_id": "scarce:mem5396-clean-dependency-edge:first-event-only",
+      "support_count": 1,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.6992
+    },
+    {
+      "accepted_risk": 0.18,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5421_evidence_reliance_diagnostic",
+      "candidate_family": "ambiguous_evidence_reliance",
+      "certainty_score": 0.385,
+      "evidence_reliance_label": "underspecified_uncertain",
+      "fragment_id": "frag5421-underspecified-constraint-gap",
+      "fragment_kind": "world_fragment",
+      "grounding_source": "underspecified_memory_summary",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support",
+          "ambiguous_evidence_reliance"
+        ],
+        "status": "abstained",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "abstained",
+      "raw_episode_ids": [
+        "raw5421-underspecified-constraint-gap"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.615,
+      "requested_action": "promote_world_fragment_to_controller_sidecar",
+      "resource_savings": 110.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "underspecified",
+      "source_control_kind": "underspecified",
+      "source_memory_id": "world:frag5421-underspecified-constraint-gap",
+      "support_count": 2,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.615
+    },
+    {
+      "accepted_risk": 0.18,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5421_evidence_reliance_diagnostic",
+      "candidate_family": "ambiguous_evidence_reliance",
+      "certainty_score": 0.315,
+      "evidence_reliance_label": "distribution_shift_uncertain",
+      "fragment_id": "frag5421-distribution-shift-routing",
+      "fragment_kind": "world_fragment",
+      "grounding_source": "out_of_domain_memory_prior",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support",
+          "ambiguous_evidence_reliance"
+        ],
+        "status": "abstained",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "abstained",
+      "raw_episode_ids": [
+        "raw5421-distribution-shift-routing-shift"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.685,
+      "requested_action": "promote_world_fragment_to_controller_sidecar",
+      "resource_savings": 90.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "distribution_shift",
+      "source_control_kind": "distribution_shift",
+      "source_memory_id": "world:frag5421-distribution-shift-routing",
+      "support_count": 2,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.685
+    }
+  ],
+  "promotion_thresholds": {
+    "accepted_risk_threshold": 0.2,
+    "allowed_grounding_sources": [
+      "accepted_memory_with_verifier_spotcheck"
+    ],
+    "max_uncertainty_score": 0.3,
+    "min_resource_savings": 20.0,
+    "reliance_drift_threshold": 0.45,
+    "rollback_required": true
+  },
+  "random_seed": 5422,
+  "readiness_checks": {
+    "abstained_present": true,
+    "abstained_zero_routing_influence": true,
+    "all_passed": true,
+    "candidate_families_covered": true,
+    "candidates_present": true,
+    "failed_checks": [],
+    "grounding_preserved": true,
+    "inference_substrate_deterministic": true,
+    "no_weight_mutation": true,
+    "promoted_have_routing_influence": true,
+    "promoted_present": true,
+    "rejected_fragments_quarantined": true,
+    "rejected_present": true,
+    "rejected_zero_routing_influence": true,
+    "rollback_verified": true,
+    "source_exp5409_ready": true,
+    "source_exp5421_ready": true,
+    "tests_recorded": true
+  },
+  "rejected_fragment_count": 5,
+  "rejected_fragments": [
+    {
+      "accepted_risk": 0.93,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "stale",
+      "certainty_score": 0.0434,
+      "evidence_reliance_label": "stale_memory_uncertain",
+      "fragment_id": "frag5409-stale-runtime-receipt",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "stale_memory_receipt",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-stale-runtime-receipt"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.7375,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 49.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "stale",
+      "source_control_kind": "stale_memory",
+      "source_memory_id": "mem5396-stale-runtime-receipt",
+      "support_count": 3,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.9566
+    },
+    {
+      "accepted_risk": 0.96,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "poisoned",
+      "certainty_score": 0.020533,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-forged-reasoning-history",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "forged_or_nontransferable_memory",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold",
+          "insufficient_support"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-forged-reasoning-history"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.979467,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 67.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "poisoned",
+      "source_control_kind": "forged_reasoning_history",
+      "source_memory_id": "mem5396-forged-reasoning-history",
+      "support_count": 2,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.979467
+    },
+    {
+      "accepted_risk": 0.72,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "poisoned",
+      "certainty_score": 0.2072,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-self-reference-amplification",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "forged_or_nontransferable_memory",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-self-reference-amplification"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.7928,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 63.5,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "poisoned",
+      "source_control_kind": "self_referential_amplification",
+      "source_memory_id": "mem5396-self-reference-amplification",
+      "support_count": 3,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.7928
+    },
+    {
+      "accepted_risk": 0.2,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "poisoned",
+      "certainty_score": 0.144,
+      "evidence_reliance_label": "poisoned_memory_uncertain",
+      "fragment_id": "frag5409-high-cost-low-value",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "forged_or_nontransferable_memory",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "resource_savings_below_threshold",
+          "reliance_drift_exceeds_threshold"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-high-cost-low-value"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.8075,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": -46.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "poisoned",
+      "source_control_kind": "high_cost_low_value",
+      "source_memory_id": "mem5396-high-cost-low-value",
+      "support_count": 4,
+      "threshold_results": {
+        "accepted_risk": true,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": false,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.856
+    },
+    {
+      "accepted_risk": 0.96,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "audit_source": "exp5409_uncertainty_gated_promotion",
+      "candidate_family": "ambiguous_evidence_reliance",
+      "certainty_score": 0.0308,
+      "evidence_reliance_label": "exp5409_trace_reliance",
+      "fragment_id": "frag5409-ambiguous-scaleup-forged-merge",
+      "fragment_kind": "learned_memory",
+      "grounding_source": "ambiguous_evidence_reliance",
+      "promotion_decision": {
+        "reasons": [
+          "uncertainty_exceeds_threshold",
+          "grounding_not_allowed",
+          "accepted_risk_exceeds_threshold",
+          "reliance_drift_exceeds_threshold",
+          "ambiguous_evidence_reliance"
+        ],
+        "status": "rejected",
+        "thresholds": {
+          "accepted_risk_threshold": 0.2,
+          "allowed_grounding_sources": [
+            "accepted_memory_with_verifier_spotcheck"
+          ],
+          "max_uncertainty_score": 0.3,
+          "min_resource_savings": 20.0,
+          "reliance_drift_threshold": 0.45,
+          "rollback_required": true
+        }
+      },
+      "promotion_status": "rejected",
+      "raw_episode_ids": [
+        "raw5396-clean-scaleup-summary",
+        "raw5396-forged-reasoning-history"
+      ],
+      "record_type": "csl_promotion_scale_candidate",
+      "reliance_drift": 0.9692,
+      "requested_action": "promote_to_controller_sidecar",
+      "resource_savings": 52.0,
+      "rollback_available": true,
+      "rollback_verified": true,
+      "routing_influence": 0,
+      "source_candidate_family": "ambiguous",
+      "source_control_kind": "ambiguous_conflict",
+      "source_memory_id": "ambiguous:mem5396-clean-scaleup-summary+mem5396-forged-reasoning-history",
+      "support_count": 17,
+      "threshold_results": {
+        "accepted_risk": false,
+        "grounding": false,
+        "reliance_drift": false,
+        "resource_savings": true,
+        "rollback": true,
+        "uncertainty": false
+      },
+      "uncertainty_score": 0.9692
+    }
+  ],
+  "rejected_fragments_quarantined": true,
+  "reliance_drift_threshold": 0.45,
+  "reproducibility_checksum": "sha256:76983062b255e491220f478c78f2292f1f2e6b659a49c364a7dfe76d7d580b40",
+  "rollback_audit": {
+    "bad_fragment_id": "frag5422-poisoned-rollback-probe",
+    "injected_into_active_routing": true,
+    "prior_active_sidecar_restored": true,
+    "retained_audit_record_after_rollback": true,
+    "rollback_removed_from_active_routing": true,
+    "rollback_success": true
+  },
+  "rollback_verified": true,
+  "routing_report": {
+    "abstained_fragment_routing_influence_count": 0,
+    "active_fragment_ids": [
+      "frag5409-clean-dependency-edge",
+      "frag5409-clean-rollback-route",
+      "frag5409-clean-scaleup-summary"
+    ],
+    "quarantined_rejected_fragment_ids": [
+      "frag5409-ambiguous-scaleup-forged-merge",
+      "frag5409-forged-reasoning-history",
+      "frag5409-high-cost-low-value",
+      "frag5409-self-reference-amplification",
+      "frag5409-stale-runtime-receipt"
+    ],
+    "rejected_fragment_routing_influence_count": 0,
+    "retained_abstained_fragment_ids": [
+      "frag5409-scarce-single-dependency-edge",
+      "frag5421-distribution-shift-routing",
+      "frag5421-underspecified-constraint-gap"
+    ],
+    "rollback_probe_audit_fragment_ids": [
+      "frag5422-poisoned-rollback-probe"
+    ],
+    "routing_effect_records": [
+      {
+        "fragment_id": "frag5409-clean-dependency-edge",
+        "routing_effect_count": 3,
+        "routing_effect_source": "exp5409_controller_sidecar"
+      },
+      {
+        "fragment_id": "frag5409-clean-rollback-route",
+        "routing_effect_count": 6,
+        "routing_effect_source": "exp5409_controller_sidecar"
+      },
+      {
+        "fragment_id": "frag5409-clean-scaleup-summary",
+        "routing_effect_count": 15,
+        "routing_effect_source": "exp5409_controller_sidecar"
+      }
+    ],
+    "routing_effect_row_count": 24
+  },
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5422.csl_promotion_reliance_scale.v493",
+  "source_artifact_checksums": {
+    "exp5409": "sha256:55d67196eeea0655c425c3e74ba7f188fa643c0e204766d21d6f121b972fc61b",
+    "exp5409_module": "sha256:980e7bdb28ef76ab781e053943683bd14d6dbaf3f1b2768c9fe7c57fc7876627",
+    "exp5421": "sha256:fe9490a23b17ffc082fb6c2e24f27e6288beafd90fdcaed6d5c3cd5c515c555e",
+    "exp5421_module": "sha256:a140c63a9419f05b8444a764b2679df0f19379f525dfaaf56180141554755f8f",
+    "module": "sha256:b066f0aceda755b7a57f6f50510df5e3dbc33f19a53dacd17f8476b82c41d474",
+    "spec": "sha256:17c6291647f55d113b7c5044cf6b8fa9dfc0a94fe626f19055fd1946805c6819"
+  },
+  "source_artifacts": [
+    "results/experiment_5409_uncertainty_gated_promotion_v492.json",
+    "results/experiment_5421_evidence_reliance_csl_v493.json"
+  ],
+  "source_readiness": {
+    "exp5409_uncertainty_gated_promotion_ready": true,
+    "exp5421_evidence_reliance_csl_ready": true
+  },
+  "spec_refs": [
+    "REQ-LEARN-5422",
+    "SCENARIO-LEARN-5422-THRESHOLDS",
+    "SCENARIO-LEARN-5422-QUARANTINE",
+    "SCENARIO-LEARN-5422-ROLLBACK",
+    "SCENARIO-LEARN-5422-NO-WEIGHT-MUTATION"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5422_csl_promotion_reliance_scale_v493.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5422_csl_promotion_reliance_scale_v493.py -m pytest tests/python/test_experiment_5422_csl_promotion_reliance_scale_v493.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "weight_mutation_receipt": {
+    "adapter_weights_loaded": false,
+    "adapter_weights_written": false,
+    "learned_state_scope": "controller_promotion_reliance_sidecar_only",
+    "model_weights_loaded": false,
+    "model_weights_written": false,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true
+  }
+}
