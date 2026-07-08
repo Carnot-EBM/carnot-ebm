@@ -1,0 +1,1156 @@
+{
+  "abstained_memories": [
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "scarce_evidence",
+      "episode_id": "ep5435-scarce-skill-one-tool-receipt",
+      "evidence_reliance_valid": false,
+      "expected_evidence": [
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm"
+      ],
+      "expected_promotion_status": "abstained",
+      "expected_structural_valid": true,
+      "failure_note": "single receipt cannot support a reusable two-step skill",
+      "gate_results": {
+        "evidence_reliance": false,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-scarce-one-receipt",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:pocket_depth_3mm"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "evidence_reliance_failed"
+        ],
+        "status": "abstained"
+      },
+      "promotion_status": "abstained",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-scarce-skill-one-tool-receipt",
+      "raw_episode_receipt": {
+        "checksum": "sha256:7e557dcd7e14b902748cbb8a7a3c2671b38942709956b717cc56efc4ec9bf69e",
+        "raw_episode_id": "raw-ep5435-scarce-skill-one-tool-receipt",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.31,
+      "resource_savings": 17.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.9,
+      "verifier_cost_after": 2,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:pocket_cut",
+        "step:drill_mounts"
+      ]
+    }
+  ],
+  "case_memory_count": 2,
+  "experiment": "experiment_5435_verified_workflow_memory_csl_v494",
+  "experiment_id": "exp5435-v494-verified-workflow-memory-csl",
+  "field_principles": {
+    "case_memory_count": "Memory organization.",
+    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "No hidden live model inference.",
+    "no_weight_mutation": "FR-11 boundary.",
+    "ontology_kernel_validation_rate": "Structural grounding.",
+    "quality_preserved": "No learning regression.",
+    "raw_episodes_retained": "Auditability.",
+    "reliance_drift_metric": "Hidden-forgetting guard.",
+    "resource_delta": "Resource-aware learning.",
+    "retrieval_trap_deflection_rate": "Memory safety.",
+    "rollback_verified": "Safety recovery.",
+    "skill_memory_count": "Memory organization.",
+    "verified_workflow_memory_ready": "Downstream gate.",
+    "verify_before_store_pass_rate": "Promotion gate.",
+    "workflow_episode_count": "Scale."
+  },
+  "honest_verdict": "complete: verified workflow memory promoted only validated case and skill sidecars, deflected retrieval traps, retained raw episodes, verified rollback, and did not mutate weights",
+  "inference_substrate": "deterministic_self_learning_controller",
+  "methodology_note": "Exp5435 is a bounded deterministic workflow-memory replay. Case and skill fragments influence routing only after verify-before-store validates ontology, kernel/planner, evidence reliance, rollback, and resource gates. No live model inference or weight mutation is used.",
+  "milestone": "2026.07.494",
+  "no_weight_mutation": true,
+  "ontology_kernel_validation_rate": 1.0,
+  "promoted_memories": [
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-case-full-bracket",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "case5435-bracket-clearance-v1",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-case-full-bracket",
+      "raw_episode_receipt": {
+        "checksum": "sha256:f4a7c0553776fb84a71181b3a54c9322bbba9c12ffac8d6c40d1f004b1e35bd0",
+        "raw_episode_id": "raw-ep5435-positive-case-full-bracket",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.08,
+      "resource_savings": 46.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 2,
+      "semantic_similarity_to_positive": 1.0,
+      "verifier_cost_after": 3,
+      "verifier_cost_before": 6,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-skill-pocket-after-stock",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-pocket-after-stock",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-skill-pocket-after-stock",
+      "raw_episode_receipt": {
+        "checksum": "sha256:7af3488c5268eb6da81aa9b9feea70f6c8fb9e7ea739c312fe04a1b1430a5ed0",
+        "raw_episode_id": "raw-ep5435-positive-skill-pocket-after-stock",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.11,
+      "resource_savings": 22.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 3,
+      "semantic_similarity_to_positive": 0.94,
+      "verifier_cost_after": 1,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:set_stock",
+        "step:pocket_cut"
+      ]
+    },
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-skill-finish-after-clearance",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-finish-after-clearance",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-skill-finish-after-clearance",
+      "raw_episode_receipt": {
+        "checksum": "sha256:ca0e913b993d03842f783724f00203d2cf306c287c70559326a083300d9329a8",
+        "raw_episode_id": "raw-ep5435-positive-skill-finish-after-clearance",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.12,
+      "resource_savings": 18.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 3,
+      "semantic_similarity_to_positive": 0.93,
+      "verifier_cost_after": 1,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-case-drill-subflow",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "case5435-drill-measure-subflow",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-case-drill-subflow",
+      "raw_episode_receipt": {
+        "checksum": "sha256:8b2cef354fe12a4d28d985d1f1d3e2c5bfbf2e0a0be669d988dbdbf417724a0e",
+        "raw_episode_id": "raw-ep5435-positive-case-drill-subflow",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.1,
+      "resource_savings": 31.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 2,
+      "semantic_similarity_to_positive": 0.97,
+      "verifier_cost_after": 2,
+      "verifier_cost_before": 5,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:drill_mounts",
+        "step:measure_clearance"
+      ]
+    }
+  ],
+  "quality_preserved": true,
+  "random_seed": 5435,
+  "raw_episodes_retained": true,
+  "readiness_checks": {
+    "all_passed": true,
+    "checks": {
+      "case_skill_separated": true,
+      "families_covered": true,
+      "inactive_failures_cannot_route": true,
+      "no_weight_mutation": true,
+      "ontology_kernel_validated": true,
+      "quality_preserved": true,
+      "raw_episodes_retained": true,
+      "reliance_stable": true,
+      "resource_accounted": true,
+      "retrieval_traps_deflected": true,
+      "rollback_verified": true,
+      "tests_recorded": true,
+      "verify_before_store_promoted": true
+    },
+    "failed_checks": []
+  },
+  "rejected_memories": [
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "stale",
+      "episode_id": "ep5435-stale-case-old-stock",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "rejected",
+      "expected_structural_valid": false,
+      "failure_note": "stock receipt predates current material lot",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": false,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": false,
+      "memory_id": "case5435-stale-old-stock",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": false,
+      "promotion_decision": {
+        "reasons": [
+          "kernel_planner_validation_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_status": "rejected",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-stale-case-old-stock",
+      "raw_episode_receipt": {
+        "checksum": "sha256:a23309c6c77f93c0e6ebd7a337da9cc925d11b870b7c7981024fba3aafccf037",
+        "raw_episode_id": "raw-ep5435-stale-case-old-stock",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.54,
+      "resource_savings": 40.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.96,
+      "verifier_cost_after": 6,
+      "verifier_cost_before": 6,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "poisoned",
+      "episode_id": "ep5435-poisoned-skill-forged-cmm",
+      "evidence_reliance_valid": false,
+      "expected_evidence": [
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "rejected",
+      "expected_structural_valid": false,
+      "failure_note": "forged CMM output is outside the tool ontology",
+      "gate_results": {
+        "evidence_reliance": false,
+        "kernel_planner": true,
+        "ontology": false,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-poisoned-forged-clearance",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:forged_clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": false,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "ontology_validation_failed",
+          "evidence_reliance_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_status": "rejected",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-poisoned-skill-forged-cmm",
+      "raw_episode_receipt": {
+        "checksum": "sha256:416232d13fcd30d1b68ed08fa82bbf28b45b879ff936f8cef841eddafba73bfd",
+        "raw_episode_id": "raw-ep5435-poisoned-skill-forged-cmm",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.63,
+      "resource_savings": 20.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.91,
+      "verifier_cost_after": 3,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "retrieval_trap",
+      "episode_id": "ep5435-trap-case-drill-before-pocket",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:pocket_depth_3mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "rejected",
+      "expected_structural_valid": false,
+      "failure_note": "text match is high but tool order violates the kernel",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": false,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": false,
+      "memory_id": "case5435-trap-drill-before-pocket",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:pocket_depth_3mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": false,
+      "promotion_decision": {
+        "reasons": [
+          "kernel_planner_validation_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_status": "rejected",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-trap-case-drill-before-pocket",
+      "raw_episode_receipt": {
+        "checksum": "sha256:91dbf02131fcf637a0b5fefe4040a89db4daff57f2ecc6a83e8a07f974a6a83a",
+        "raw_episode_id": "raw-ep5435-trap-case-drill-before-pocket",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.49,
+      "resource_savings": 38.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.95,
+      "verifier_cost_after": 6,
+      "verifier_cost_before": 6,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:drill_mounts",
+        "step:pocket_cut",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    }
+  ],
+  "reliance_drift_metric": 0.12,
+  "reproducibility_checksum": "82c4d80c6d98cfb0bc758054b3c4a48298922da1d2f86d75c02bf56b47692ce6",
+  "research_conductor_modified": false,
+  "resource_delta": 117.0,
+  "retrieval_trap_deflection_rate": 1.0,
+  "rollback_audit": {
+    "bad_memory_id": "mem5435-poisoned-rollback-probe",
+    "injected_into_case_sidecar": true,
+    "injected_into_skill_sidecar": true,
+    "prior_case_sidecar_restored": true,
+    "prior_skill_sidecar_restored": true,
+    "retained_audit_record_after_rollback": true,
+    "rollback_removed_from_case_sidecar": true,
+    "rollback_removed_from_skill_sidecar": true,
+    "rollback_success": true
+  },
+  "rollback_verified": true,
+  "routing_report": {
+    "abstained_memory_routing_influence_count": 0,
+    "active_case_memory_ids": [
+      "case5435-bracket-clearance-v1",
+      "case5435-drill-measure-subflow"
+    ],
+    "active_skill_memory_ids": [
+      "skill5435-finish-after-clearance",
+      "skill5435-pocket-after-stock"
+    ],
+    "deflected_trap_memory_ids": [
+      "case5435-trap-drill-before-pocket"
+    ],
+    "quarantined_rejected_memory_ids": [
+      "case5435-stale-old-stock",
+      "case5435-trap-drill-before-pocket",
+      "skill5435-poisoned-forged-clearance"
+    ],
+    "rejected_memory_routing_influence_count": 0,
+    "retained_abstained_memory_ids": [
+      "skill5435-scarce-one-receipt"
+    ],
+    "rollback_probe_audit_memory_ids": [
+      "mem5435-poisoned-rollback-probe"
+    ],
+    "routing_effect_records": [
+      {
+        "memory_id": "case5435-bracket-clearance-v1",
+        "memory_kind": "case",
+        "routing_influence": 2
+      },
+      {
+        "memory_id": "skill5435-pocket-after-stock",
+        "memory_kind": "skill",
+        "routing_influence": 3
+      },
+      {
+        "memory_id": "skill5435-finish-after-clearance",
+        "memory_kind": "skill",
+        "routing_influence": 3
+      },
+      {
+        "memory_id": "case5435-drill-measure-subflow",
+        "memory_kind": "case",
+        "routing_influence": 2
+      }
+    ]
+  },
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5435.verified_workflow_memory_csl.v494",
+  "skill_memory_count": 2,
+  "source_file_checksums": {
+    "module": "eb5c265f57495de1924b995bb201da4e3af189a6f27e5f2af9eecedf820e6f7f",
+    "spec": "79e08f3fe3515348e22cad3d637641767df2933697b0d9c7aebd849c3d1501dc"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5435_verified_workflow_memory_csl_v494.py",
+    "spec": "openspec/capabilities/self-learning/spec.md"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5435",
+    "SCENARIO-LEARN-5435-CASE-SKILL-SEPARATION",
+    "SCENARIO-LEARN-5435-VERIFY-BEFORE-STORE",
+    "SCENARIO-LEARN-5435-TRAP-DEFLECTION",
+    "SCENARIO-LEARN-5435-ROLLBACK",
+    "SCENARIO-LEARN-5435-RAW-RETENTION-NO-WEIGHT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5435_verified_workflow_memory_csl_v494.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5435_verified_workflow_memory_csl_v494.py -m pytest tests/python/test_experiment_5435_verified_workflow_memory_csl_v494.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "verified_workflow_memory_ready": true,
+  "verify_before_store_pass_rate": 0.5,
+  "weight_mutation_receipt": {
+    "adapter_weights_loaded": false,
+    "adapter_weights_written": false,
+    "learned_state_scope": "verified_workflow_memory_sidecars_only",
+    "model_weights_loaded": false,
+    "model_weights_written": false,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true
+  },
+  "workflow_episode_count": 8,
+  "workflow_episodes": [
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-case-full-bracket",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "case5435-bracket-clearance-v1",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-case-full-bracket",
+      "raw_episode_receipt": {
+        "checksum": "sha256:f4a7c0553776fb84a71181b3a54c9322bbba9c12ffac8d6c40d1f004b1e35bd0",
+        "raw_episode_id": "raw-ep5435-positive-case-full-bracket",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.08,
+      "resource_savings": 46.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 2,
+      "semantic_similarity_to_positive": 1.0,
+      "verifier_cost_after": 3,
+      "verifier_cost_before": 6,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-skill-pocket-after-stock",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-pocket-after-stock",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-skill-pocket-after-stock",
+      "raw_episode_receipt": {
+        "checksum": "sha256:7af3488c5268eb6da81aa9b9feea70f6c8fb9e7ea739c312fe04a1b1430a5ed0",
+        "raw_episode_id": "raw-ep5435-positive-skill-pocket-after-stock",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.11,
+      "resource_savings": 22.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 3,
+      "semantic_similarity_to_positive": 0.94,
+      "verifier_cost_after": 1,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:set_stock",
+        "step:pocket_cut"
+      ]
+    },
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-skill-finish-after-clearance",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-finish-after-clearance",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-skill-finish-after-clearance",
+      "raw_episode_receipt": {
+        "checksum": "sha256:ca0e913b993d03842f783724f00203d2cf306c287c70559326a083300d9329a8",
+        "raw_episode_id": "raw-ep5435-positive-skill-finish-after-clearance",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.12,
+      "resource_savings": 18.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 3,
+      "semantic_similarity_to_positive": 0.93,
+      "verifier_cost_after": 1,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": true,
+      "audit_retained": true,
+      "episode_family": "positive",
+      "episode_id": "ep5435-positive-case-drill-subflow",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass"
+      ],
+      "expected_promotion_status": "promoted",
+      "expected_structural_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "case5435-drill-measure-subflow",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_verify_before_store_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_status": "promoted",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-positive-case-drill-subflow",
+      "raw_episode_receipt": {
+        "checksum": "sha256:8b2cef354fe12a4d28d985d1f1d3e2c5bfbf2e0a0be669d988dbdbf417724a0e",
+        "raw_episode_id": "raw-ep5435-positive-case-drill-subflow",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.1,
+      "resource_savings": 31.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 2,
+      "semantic_similarity_to_positive": 0.97,
+      "verifier_cost_after": 2,
+      "verifier_cost_before": 5,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:drill_mounts",
+        "step:measure_clearance"
+      ]
+    },
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "stale",
+      "episode_id": "ep5435-stale-case-old-stock",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "rejected",
+      "expected_structural_valid": false,
+      "failure_note": "stock receipt predates current material lot",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": false,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": false,
+      "memory_id": "case5435-stale-old-stock",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": false,
+      "promotion_decision": {
+        "reasons": [
+          "kernel_planner_validation_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_status": "rejected",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-stale-case-old-stock",
+      "raw_episode_receipt": {
+        "checksum": "sha256:a23309c6c77f93c0e6ebd7a337da9cc925d11b870b7c7981024fba3aafccf037",
+        "raw_episode_id": "raw-ep5435-stale-case-old-stock",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.54,
+      "resource_savings": 40.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.96,
+      "verifier_cost_after": 6,
+      "verifier_cost_before": 6,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "poisoned",
+      "episode_id": "ep5435-poisoned-skill-forged-cmm",
+      "evidence_reliance_valid": false,
+      "expected_evidence": [
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "rejected",
+      "expected_structural_valid": false,
+      "failure_note": "forged CMM output is outside the tool ontology",
+      "gate_results": {
+        "evidence_reliance": false,
+        "kernel_planner": true,
+        "ontology": false,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-poisoned-forged-clearance",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:forged_clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": false,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "ontology_validation_failed",
+          "evidence_reliance_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_status": "rejected",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-poisoned-skill-forged-cmm",
+      "raw_episode_receipt": {
+        "checksum": "sha256:416232d13fcd30d1b68ed08fa82bbf28b45b879ff936f8cef841eddafba73bfd",
+        "raw_episode_id": "raw-ep5435-poisoned-skill-forged-cmm",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.63,
+      "resource_savings": 20.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.91,
+      "verifier_cost_after": 3,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "retrieval_trap",
+      "episode_id": "ep5435-trap-case-drill-before-pocket",
+      "evidence_reliance_valid": true,
+      "expected_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:pocket_depth_3mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "expected_promotion_status": "rejected",
+      "expected_structural_valid": false,
+      "failure_note": "text match is high but tool order violates the kernel",
+      "gate_results": {
+        "evidence_reliance": true,
+        "kernel_planner": false,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": false,
+      "memory_id": "case5435-trap-drill-before-pocket",
+      "memory_kind": "case",
+      "observed_evidence": [
+        "toolout:sketch_hash_ok",
+        "toolout:stock_6061",
+        "toolout:hole_spacing_32mm",
+        "toolout:pocket_depth_3mm",
+        "toolout:clearance_pass",
+        "toolout:surface_finish_pass"
+      ],
+      "ontology_valid": true,
+      "planner_valid": false,
+      "promotion_decision": {
+        "reasons": [
+          "kernel_planner_validation_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_status": "rejected",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-trap-case-drill-before-pocket",
+      "raw_episode_receipt": {
+        "checksum": "sha256:91dbf02131fcf637a0b5fefe4040a89db4daff57f2ecc6a83e8a07f974a6a83a",
+        "raw_episode_id": "raw-ep5435-trap-case-drill-before-pocket",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.49,
+      "resource_savings": 38.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.95,
+      "verifier_cost_after": 6,
+      "verifier_cost_before": 6,
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:drill_mounts",
+        "step:pocket_cut",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "active_for_routing": false,
+      "audit_retained": true,
+      "episode_family": "scarce_evidence",
+      "episode_id": "ep5435-scarce-skill-one-tool-receipt",
+      "evidence_reliance_valid": false,
+      "expected_evidence": [
+        "toolout:pocket_depth_3mm",
+        "toolout:hole_spacing_32mm"
+      ],
+      "expected_promotion_status": "abstained",
+      "expected_structural_valid": true,
+      "failure_note": "single receipt cannot support a reusable two-step skill",
+      "gate_results": {
+        "evidence_reliance": false,
+        "kernel_planner": true,
+        "ontology": true,
+        "resource_accounting": true,
+        "rollback": true
+      },
+      "kernel_valid": true,
+      "memory_id": "skill5435-scarce-one-receipt",
+      "memory_kind": "skill",
+      "observed_evidence": [
+        "toolout:pocket_depth_3mm"
+      ],
+      "ontology_valid": true,
+      "planner_valid": true,
+      "promotion_decision": {
+        "reasons": [
+          "evidence_reliance_failed"
+        ],
+        "status": "abstained"
+      },
+      "promotion_status": "abstained",
+      "quality_after": 1.0,
+      "quality_before": 1.0,
+      "raw_episode_id": "raw-ep5435-scarce-skill-one-tool-receipt",
+      "raw_episode_receipt": {
+        "checksum": "sha256:7e557dcd7e14b902748cbb8a7a3c2671b38942709956b717cc56efc4ec9bf69e",
+        "raw_episode_id": "raw-ep5435-scarce-skill-one-tool-receipt",
+        "retention_reason": "audit-before-store"
+      },
+      "reliance_drift": 0.31,
+      "resource_savings": 17.0,
+      "rollback_pointer": "rollback:workflow-sidecar",
+      "routing_influence": 0,
+      "semantic_similarity_to_positive": 0.9,
+      "verifier_cost_after": 2,
+      "verifier_cost_before": 3,
+      "workflow_steps": [
+        "step:pocket_cut",
+        "step:drill_mounts"
+      ]
+    }
+  ],
+  "workflow_family_counts": {
+    "poisoned": 1,
+    "positive": 4,
+    "retrieval_trap": 1,
+    "scarce_evidence": 1,
+    "stale": 1
+  }
+}
