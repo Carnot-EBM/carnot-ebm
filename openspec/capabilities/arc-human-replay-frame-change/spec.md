@@ -1286,6 +1286,61 @@ Required field principles:
 - `inference_substrate`: principle "actual live agent"
 - `honest_verdict`: principle "terminal status; start with complete: or honest_null: or blocked:"
 
+### REQ-ARC-FCP-5450: Measurement-Access Live Level-Up Target Rotation
+
+Experiment 5450 SHALL write
+`results/experiment_5450_arc_measurement_access_live_levelup_v495.json` after a
+registry-prechecked bounded ARC live-path +1 level-up attempt. The workflow
+SHALL precheck all public-game frontier depths from
+`ops/arc_solve_registry.yaml` and the current `results/arc_loop_solve*.json`
+artifacts before selecting a target. It SHALL rotate away from stale recent
+no-bank targets including `cn04` L4 and repeated `re86` L3 salience attempts
+unless the selected live mechanism explicitly addresses their recorded residual
+gap. The credited mechanism SHALL use only the live agent's own runtime
+measurement access: frame-level measurements, action-effect observations,
+state-change summaries, and verifier-routed predicates induced from attempted
+transitions. It SHALL NOT read hidden game source, run offline ground-truth BFS
+as the credited path, or credit a hand per-game `GameAdapter` as the solve path.
+
+The result artifact SHALL include `solve_provenance`,
+`registry_precheck_total_levels`, `selected_game`, `selected_target_level`,
+`target_rotation_reason`, `live_attempt_count`,
+`runtime_predicates_induced`, `offline_reproduced`, `reproduced_levels`,
+`new_levels_banked`, `new_level_reproduced`, `no_offline_bfs`,
+`no_source_reading`, `no_per_game_adapter_credited`,
+`arc_new_level_banked`, `inference_substrate`, and `honest_verdict`. A
+credited level-up SHALL require
+`solve_provenance=live_agent_self_discovery`,
+`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+`offline_reproduced=true`, `reproduced_levels>=1`,
+`new_levels_banked>=1`, `new_level_reproduced=true`,
+`arc_new_level_banked=true`, `no_offline_bfs=true`,
+`no_source_reading=true`, `no_per_game_adapter_credited=true`, a selected
+target level deeper than the registry precheck, and at least one runtime
+predicate induced from the live attempt. Otherwise the artifact SHALL report
+`honest_null:` with frontier expansions, attempted predicates, and the residual
+wall, or `blocked:` when preconditions prevent a valid attempt.
+
+Required field principles:
+
+- `solve_provenance`: principle "live_agent_self_discovery -- credited path is the live agent's own attempts."
+- `registry_precheck_total_levels`: principle "duplicate-solve prevention."
+- `selected_game`: principle "target audit."
+- `selected_target_level`: principle "target audit."
+- `target_rotation_reason`: principle "no stale rerun."
+- `live_attempt_count`: principle "live effort evidence."
+- `runtime_predicates_induced`: principle "credited mechanism evidence."
+- `offline_reproduced`: principle "official reproduction gate."
+- `reproduced_levels`: principle "level-up acceptance."
+- `new_levels_banked`: principle "north-star movement."
+- `new_level_reproduced`: principle "lint-readable solve gate."
+- `no_offline_bfs`: principle "no outer-loop solve."
+- `no_source_reading`: principle "no hidden source path."
+- `no_per_game_adapter_credited`: principle "live mechanism only."
+- `arc_new_level_banked`: principle "capstone field."
+- `inference_substrate`: principle "explicit runtime path."
+- `honest_verdict`: principle "terminal status; start with complete: or honest_null: or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1743,3 +1798,28 @@ Then `offline_reproduced=false`, `reproduced_levels=0`,
 `arc_new_level_banked=false`, and `honest_verdict` starts with `honest_null:`
 while preserving `registry_precheck=true`, `no_offline_bfs=true`,
 `no_per_game_adapter=true`, and `inference_substrate=live_arc_agent_runtime`.
+
+### SCENARIO-ARC-FCP-5450: Measurement-Access Rotation Avoids Stale Frontiers
+
+Given the registry records `cn04` L3 and `re86` L2, and recent artifacts record
+no-bank `cn04` L4 and repeated `re86` L3 salience attempts
+When experiment 5450 performs its target precheck
+Then it selects a different eligible next-level frontier, records
+`registry_precheck_total_levels`, `selected_game`, `selected_target_level`, and
+`target_rotation_reason`, and runs the bounded attempt only after duplicate
+solve avoidance.
+
+Given the live attempt gathers frame measurements, action-effect observations,
+state-change summaries, or verifier-routed predicates from its own transitions
+When the artifact is built
+Then `runtime_predicates_induced` records those predicates and
+`live_attempt_count` records the bounded live effort without reading hidden
+source, running offline ground-truth BFS, or crediting a per-game adapter.
+
+Given the bounded measurement-access attempt does not reproduce a level deeper
+than the registry precheck
+When the artifact is validated
+Then `offline_reproduced=false`, `new_level_reproduced=false`,
+`new_levels_banked=0`, `arc_new_level_banked=false`, and `honest_verdict`
+starts with `honest_null:` while preserving the target rotation reason,
+frontier evidence, attempted predicates, and residual wall.
