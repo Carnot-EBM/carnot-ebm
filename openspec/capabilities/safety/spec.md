@@ -776,6 +776,87 @@ aggregate it is intended to verify,
 
 **Then** the self-test fails closed and `formal_encoding_corrigendum_clean=false`.
 
+### REQ-SAFE-5405: Structured Safety/Action Panel V492
+
+Carnot SHALL provide Exp5405 at
+`python/carnot/experiment_5405_structured_safety_action_panel_v492.py`
+and write
+`results/experiment_5405_structured_safety_action_panel_v492.json` without
+modifying `scripts/research_conductor.py`.  The panel SHALL run only after
+Exp5404 reports `formal_encoding_corrigendum_clean=true` and SHALL combine the
+clean Exp5391 structured action/state rows with Exp5404 row-level formal-encoding safety rows.
+
+The experiment MUST check mandated local SOTA GGUF and GPU/offload
+preconditions before using the combined panel for headline evidence.
+`model_specs` MUST include all of:
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+If Exp5404 is missing or not clean, no mandated GGUF is cached, CUDA is
+unavailable, llama.cpp/GGUF GPU offload cannot be proven, or only smoke models
+are available, the experiment MUST emit a blocked artifact with
+`preconditions_checked=true`, `structured_safety_action_panel_ready=false`, and
+no headline-ready claim.
+
+Every row SHALL compare a constrained structured path against an unconstrained
+baseline.  Action rows SHALL derive validity from deterministic schema,
+tool-action reachability, and final-state replay checks.  Safety rows SHALL
+derive validity from deterministic policy labels and forbidden-detail checks.
+Model output and unconstrained prose are proposal evidence only; deterministic schema, semantic, policy, and tool-state checks remain final authority.
+
+The terminal result artifact MUST include:
+`preconditions_checked`, `model_specs`, `runtime_backend`,
+`gpu_offload_verified`, `fixture_count`, `constrained_validity`,
+`unconstrained_validity`, `wrong_valid_delta`,
+`unsafe_false_accept_rate`, `tool_action_reachability`, `fallback_rate`,
+`row_checksums`, `structured_safety_action_panel_ready`,
+`inference_substrate`, and `honest_verdict`.  It SHALL also preserve row-level
+invalid and fallback reasons so aggregates can be recomputed from rows only.
+`structured_safety_action_panel_ready` may be true only when Exp5404 is clean,
+GPU/offload is verified, the row checksums match the row records, constrained
+validity improves over the unconstrained baseline, constrained unsafe false
+accepts are zero, and all required action rows are reachable.
+
+Field principles:
+- `preconditions_checked`: compute-bound task must fail fast.
+- `model_specs`: mandated SOTA GGUF provenance.
+- `runtime_backend`: local GGUF path.
+- `gpu_offload_verified`: no CPU-only headline.
+- `fixture_count`: scale.
+- `constrained_validity`: structured delta.
+- `unconstrained_validity`: baseline.
+- `wrong_valid_delta`: constraint-tax evidence.
+- `unsafe_false_accept_rate`: safety guard.
+- `tool_action_reachability`: live action validity.
+- `fallback_rate`: operational cost.
+- `row_checksums`: provenance.
+- `structured_safety_action_panel_ready`: downstream evidence gate.
+- `inference_substrate`: real local model invocation.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5405: Combined Rows Derive Headline Aggregates
+
+**Given** Exp5391 is complete and Exp5404 is complete with
+`formal_encoding_corrigendum_clean=true`, mandated local SOTA GGUF cache entries,
+and llama.cpp/GGUF GPU-offload evidence,
+
+**When** Exp5405 builds the structured safety/action panel,
+
+**Then** it records action, final-state, formal-encoding safety,
+contradictory-constraint, and decoy-constraint rows, computes validity deltas,
+wrong-valid counts, unsafe false accepts, fallback rate, and tool-action
+reachability only from row records, writes
+`results/experiment_5405_structured_safety_action_panel_v492.json`, and sets
+`structured_safety_action_panel_ready=true` only when the deterministic checks
+support downstream use.
+
+**And** if any precondition fails or row checksums do not match,
+
+**Then** the artifact is blocked or fails validation, preserves the exact block
+reason, keeps `structured_safety_action_panel_ready=false`, and does not claim a
+CPU-only or smoke-model headline result.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -798,5 +879,6 @@ aggregate it is intended to verify,
 | REQ-SAFE-020 | Proposed | Exp 743: gate AUROC >= 0.80 AND per-dataset min_tp >= 1 |
 | REQ-SAFE-5392 | Planned | Exp 5392: formal-encoding safety fixture with deterministic final authority |
 | REQ-SAFE-5404 | Planned | Exp 5404: row-level formal-encoding corrigendum for Exp5392 TAUTOLOGY |
+| REQ-SAFE-5405 | Planned | Exp 5405: combined structured safety/action panel with row-derived aggregates |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
