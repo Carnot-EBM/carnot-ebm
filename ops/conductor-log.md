@@ -10523,3 +10523,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 05:33 UTC | Self-learning memory guard with raw episode retent | OK | 89 passed, 1 warning in 9.77s |
 | 2026-07-08 05:52 UTC | ARC live-path connected-component blob salience +1 | OK | 110 passed, 1 warning in 15.71s |
 | 2026-07-08 06:10 UTC | Hardware hash-linked evidence graph and repeatabil | OK | 90 passed, 1 warning in 10.54s |
+| 2026-07-08 06:28 UTC | KAN/KANDy dynamic counterexample certificate for v | OK | 89 passed, 1 warning in 8.94s |
