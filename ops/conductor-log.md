@@ -10517,3 +10517,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 04:05 UTC | Execution-time SOTA source delta for .491 | OK | 116 passed, 1 warning in 8.37s |
 | 2026-07-08 04:20 UTC | Scale the local SOTA constraint-tax panel with det | OK | 107 passed, 1 warning in 8.69s |
 | 2026-07-08 04:40 UTC | Formal-encoding safety and intent constraint fixtu | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-07-08 04:54 UTC | Overwrite-guidance tautology corrigendum from row- | OK | 89 passed, 1 warning in 8.62s |
