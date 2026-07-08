@@ -1041,6 +1041,104 @@ learned/model signal is treated as final authority,
 **Then** validation fails closed and
 `predictive_prefix_safety_ready=false`.
 
+### REQ-SAFE-5430: Structured Tautology Corrigendum V494
+
+Carnot SHALL provide Exp5430 at
+`python/carnot/experiment_5430_structured_tautology_corrigendum_v494.py`
+and write
+`results/experiment_5430_structured_tautology_corrigendum_v494.json`
+without modifying `scripts/research_conductor.py`.  The corrigendum SHALL
+repair the evidence boundary for Exp5417 and Exp5418 by reloading their
+row-level records, treating Exp5427 as the capstone/adversarial boundary
+source, and recomputing every structured-risk and predictive-prefix aggregate
+from independent row predicates instead of copied aggregate fields.
+
+The workflow MUST check mandated local SOTA GGUF availability and llama.cpp
+GPU/offload viability before any long inference is attempted. `model_specs`
+MUST include all of:
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+If row records are missing or preconditions fail, the artifact MUST fail
+closed with `structured_corrigendum_clean=false` and an `honest_verdict` that
+starts with `blocked:`.  Legacy small models MAY be used only by tests as
+mocked smoke fixtures and MUST NOT appear in headline rows.
+
+The risk-side reanalysis SHALL recompute `abstention_rate`,
+`semantic_error_rate`, `accepted_risk_estimate`, and
+`unsafe_false_accept_rate` from separate row predicates over the Exp5417
+`risk_rows`.  The prefix-side reanalysis SHALL recompute final-only action-unreachability,
+prefix-gated action-unreachability, and their delta from
+separate row predicates over the Exp5418 `prefix_traces`.  The equality of two
+aggregate values SHALL NOT be accepted as evidence of independence; the
+corrigendum must preserve the predicate names, source row IDs, fixture IDs, row
+labels, and row checksums used for each aggregate family.
+
+The artifact MUST include reproducibility evidence with a
+`row_provenance_checksum` over source artifact hashes, mandated model specs,
+fixture IDs, row labels, and the aggregate code version, plus a
+`reproducibility_checksum` over the same provenance and the recomputed
+aggregate payload.  `structured_corrigendum_clean` may be true only when row
+records and checksums are present, risk and prefix metrics pass independence
+checks, the abstention and semantic predicates are separated, the
+unreachability delta is recomputed from both component rates, and the
+adversarial verifier or an equivalent local check has no recurring TAUTOLOGY or
+METHODOLOGY_MISSING finding.  If the same verdict recurs,
+`structured_corrigendum_clean` MUST be false and `honest_verdict` MUST start
+with `blocked:`.
+
+The terminal result artifact MUST include:
+`preconditions_checked`, `model_specs`, `runtime_backend`,
+`gpu_offload_verified`, `source_artifact_paths`, `row_count_recomputed`,
+`row_provenance_checksum`, `risk_metric_independence_check`,
+`prefix_metric_independence_check`,
+`abstention_semantic_metric_separated`, `unreachable_delta_recomputed`,
+`reproducibility_checksum`, `adversarial_verify_clean`,
+`structured_corrigendum_clean`, `inference_substrate`, and
+`honest_verdict`.
+
+Field principles:
+- `preconditions_checked`: compute-bound task must fail fast.
+- `model_specs`: mandated SOTA GGUF provenance.
+- `runtime_backend`: no hidden transformers path.
+- `gpu_offload_verified`: no CPU-only SOTA headline.
+- `source_artifact_paths`: provenance.
+- `row_count_recomputed`: aggregate basis.
+- `row_provenance_checksum`: row-level reproducibility.
+- `risk_metric_independence_check`: tautology prevention.
+- `prefix_metric_independence_check`: tautology prevention.
+- `abstention_semantic_metric_separated`: semantic/schema separation.
+- `unreachable_delta_recomputed`: baseline-vs-delta separation.
+- `reproducibility_checksum`: methodology completeness.
+- `adversarial_verify_clean`: no known critical flags.
+- `structured_corrigendum_clean`: downstream gate.
+- `inference_substrate`: explicit evidence source.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5430: Row-Level Corrigendum Repairs Tautology Boundary
+
+**Given** Exp5417 and Exp5418 are complete, carry local SOTA GGUF/GPU-offload
+receipts, and preserve risk rows and prefix traces with checksums,
+
+**When** Exp5430 builds the corrigendum,
+
+**Then** it reloads Exp5417, Exp5418, and Exp5427, recomputes the risk and
+prefix aggregates from row predicates, writes
+`results/experiment_5430_structured_tautology_corrigendum_v494.json`, records
+source artifact hashes, records both reproducibility checksums, records
+`inference_substrate=live_llm_inference_and_row_reanalysis`, and sets
+`structured_corrigendum_clean=true` only when the focused adversarial check is
+clean.
+
+**And** if `abstention_rate` is assigned from `semantic_error_rate`, if an
+action delta is assigned from the final-only baseline rate, if row checksums
+are missing, or if the focused adversarial check still reports TAUTOLOGY or
+METHODOLOGY_MISSING,
+
+**Then** validation fails closed or emits a blocked artifact, and no structured
+verifier readiness claim is made.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1066,5 +1164,6 @@ learned/model signal is treated as final authority,
 | REQ-SAFE-5405 | Planned | Exp 5405: combined structured safety/action panel with row-derived aggregates |
 | REQ-SAFE-5417 | Planned | Exp 5417: risk-calibrated structured safety/action panel with abstention |
 | REQ-SAFE-5418 | Planned | Exp 5418: predictive prefix/tool-action safety diagnostic |
+| REQ-SAFE-5430 | Planned | Exp 5430: row-level structured tautology corrigendum |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
