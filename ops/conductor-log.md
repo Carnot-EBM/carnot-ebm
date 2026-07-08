@@ -10501,3 +10501,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 23:33 UTC | Archive .489 outcomes and stage .490 execution con | OK | 87 passed, 1 warning in 7.95s |
 | 2026-07-07 23:56 UTC | Execution-time SOTA source delta for .490 | OK | 116 passed, 1 warning in 7.44s |
 | 2026-07-08 00:12 UTC | Repair live structured SOTA methodology-duration r | OK | 87 passed, 1 warning in 10.48s |
+| 2026-07-08 00:30 UTC | Gated live structured SOTA clean-gate rerun | OK | 89 passed, 1 warning in 12.06s |
