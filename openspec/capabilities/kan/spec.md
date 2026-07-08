@@ -1286,6 +1286,78 @@ no-hint solver baselines remain valid true-property controls,
 `kan_active_constraint_certificate_ready=true` only for the bounded
 active-constraint fixture.
 
+## REQ-KAN-5425: V493 Measurement-Access KAN/KANDy Certificate Boundary
+
+The KAN verification tier SHALL add an Exp 5425 CPU-only deterministic
+certificate experiment that extends the Exp 5412 bounded KAN/KANDy
+active-constraint certificate family to measurement-access boundaries. The
+experiment MUST reuse the Exp 5412/Exp 5406 active-constraint row evidence and
+define a bounded property family that distinguishes properties supported by
+measured rows from properties that are unsupported because required evidence is
+missing. It MUST NOT modify `scripts/research_conductor.py`.
+
+The false-property controls MUST include active-constraint hint controls with
+measured row counterexamples, measurement-access gap controls, and unsupported board, token, and internal-state claims. The unsupported board, token, and internal-state claims MUST be classified
+as missing evidence rather than silently accepted or treated as broad KAN
+verification. The true-property controls MUST preserve exact candidate hints,
+no-hint solver baselines, solver authority, and final validity under the same
+bounded certificate. Every certificate or counterexample record MUST carry
+row-level provenance and stable checksums. The experiment MUST state directly
+that it is a bounded measurement-access certificate only and MUST NOT claim
+broad KAN verification, trained-network soundness, hardware execution, hardware
+speedup, token-level access, or hidden/internal-state access.
+
+The deliverable MUST be written to
+`results/experiment_5425_kan_measurement_access_certificate_v493.json` with the
+required top-level fields `certificate_count`, `property_family`,
+`measurement_access_controls`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `row_checksums`,
+`missing_evidence_detected`, `broad_kan_verification_claim`,
+`kan_measurement_access_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `certificate_count` MUST be an integer count of bounded
+certificate controls. `property_family` MUST name a bounded claim scope.
+`measurement_access_controls` MUST classify each checked property as supported,
+observable-false, or missing-evidence unsupported. `row_checksums` MUST contain
+stable row-level provenance checksums. `missing_evidence_detected` MUST be true
+when any false property requires evidence unavailable to the bounded fixture.
+`broad_kan_verification_claim` MUST be false. `inference_substrate` MUST equal
+`deterministic_certificate_experiment`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_measurement_access_certificate_ready` MUST be
+true only when false properties are rejected, true properties are preserved,
+missing-evidence controls are detected, row checksums are present, and claim
+limits are explicit.
+
+Required field principles:
+- `certificate_count`: coverage.
+- `property_family`: bounded claim scope.
+- `measurement_access_controls`: observable-vs-missing evidence.
+- `false_property_rejection_rate`: counterexample strength.
+- `true_property_preservation_rate`: no over-rejection.
+- `row_checksums`: provenance.
+- `missing_evidence_detected`: measurement-access boundary.
+- `broad_kan_verification_claim`: bounded claim.
+- `kan_measurement_access_certificate_ready`: capstone evidence.
+- `inference_substrate`: no hidden live model inference.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5425: Measurement-Access Gaps Do Not Become Verification Claims
+
+Given the committed Exp 5412 bounded active-constraint certificate pattern and
+the replayed Exp 5406 row evidence,
+When Exp 5425 evaluates measured active-constraint false controls, missing
+board/token/internal evidence controls, and true active-constraint preservation
+controls,
+Then measured stale and adversarial hint claims produce row-backed
+counterexamples, unsupported board/token/internal claims are classified as
+missing-evidence unsupported, true exact-hint and solver-baseline controls stay
+provable, `false_property_rejection_rate=1.0`,
+`true_property_preservation_rate=1.0`,
+`missing_evidence_detected=true`,
+`broad_kan_verification_claim=false`,
+`inference_substrate=deterministic_certificate_experiment`, and
+`kan_measurement_access_certificate_ready=true` only for the bounded
+measurement-access fixture.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
