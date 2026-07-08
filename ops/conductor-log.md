@@ -10550,3 +10550,4 @@ I’m going to append a small |
 | 2026-07-08 12:51 UTC | Execution-time 2025-2026 source delta for .493 | OK | 120 passed, 1 warning in 11.27s |
 | 2026-07-08 13:07 UTC | Risk-calibrated SOTA structured safety/action pane | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-08 13:23 UTC | Gated predictive prefix/action safety after Exp541 | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-07-08 13:35 UTC | Active-constraint LNS scale-up with dual-residual  | OK | 90 passed, 1 warning in 7.70s |
