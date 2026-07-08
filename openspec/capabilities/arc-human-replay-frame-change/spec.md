@@ -1130,6 +1130,55 @@ Required field principles:
 - `failure_mode`: principle "null on success or concise no-bank reason."
 - `honest_verdict`: principle "one-line summary starting with complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5410: Live Trajectory Frontier Self-Discovery Level-Up Attempt
+
+Experiment 5410 SHALL write
+`results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json` after a
+registry-prechecked bounded ARC live-agent level-up attempt. The workflow SHALL
+prefer `re86` L3 when that level is not already live/reproduction reached; if
+the registry already records the target level, it SHALL choose the next eligible
+target or emit a blocked duplicate-solve artifact without replaying the solved
+level. The mechanism SHALL reuse Exp5397's connected-component blob/color
+salience only as a live perception route, SHALL generate action prefixes from
+the live agent's own attempted actions and observed runtime transitions, and
+SHALL reject or cautiously withhold low-support inferred dynamics through an
+uncertainty gate. It SHALL NOT use offline BFS, game source inspection,
+per-game adapters, hidden-source probes, or outer-loop reverse engineering for
+credited progress.
+
+The result artifact SHALL include `registry_precheck_done`, `target_game`,
+`target_level`, `solve_provenance`, `offline_reproduced`, `attempt_count`,
+`frontier_expansion_count`, `salience_routes_used`,
+`uncertainty_rejections`, `reproduced_levels`, `arc_new_level_banked`,
+`duplicate_solve_avoided`, `no_offline_bfs`, `no_per_game_adapter`,
+`inference_substrate`, and `honest_verdict`. A credited level-up SHALL require
+`solve_provenance=live_agent_self_discovery`,
+`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+`offline_reproduced=true`, `reproduced_levels>=1`,
+`arc_new_level_banked=true`, `duplicate_solve_avoided=true`,
+`no_offline_bfs=true`, and `no_per_game_adapter=true`; otherwise the artifact
+SHALL report `honest_null:` with bounded live-attempt evidence or `blocked:`
+when the duplicate/precondition gate prevents a valid attempt.
+
+Required field principles:
+
+- `registry_precheck_done`: principle "bare bool proving no duplicate solve attempt starts before reading the registry."
+- `target_game`: principle "selected game id for reproducibility."
+- `target_level`: principle "selected target level label for reproducibility."
+- `solve_provenance`: principle "must be live_agent_self_discovery for credited progress."
+- `offline_reproduced`: principle "legacy ARC lint field; true only for a live-agent self-discovered registry-compatible new level."
+- `attempt_count`: principle "bounded live-agent effort count."
+- `frontier_expansion_count`: principle "number of trajectory/frontier prefixes emitted by the new mechanism."
+- `salience_routes_used`: principle "auditable blob/color salience routes used by prefix generation."
+- `uncertainty_rejections`: principle "low-support inferred dynamics rejected by the gate."
+- `reproduced_levels`: principle "registry-compatible new level count."
+- `arc_new_level_banked`: principle "standing ARC floor success flag."
+- `duplicate_solve_avoided`: principle "registry discipline prevents duplicate solved-level credit."
+- `no_offline_bfs`: principle "must be true; forbidden solve path was not used."
+- `no_per_game_adapter`: principle "must be true; no hand per-game shortcut was used."
+- `inference_substrate`: principle "must be offline_arcade_live_agent_runtime_self_discovery_no_llm."
+- `honest_verdict`: principle "terminal status starts with complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1526,3 +1575,18 @@ When Experiment 5397 performs its registry precheck
 Then it selects `re86` L3, marks duplicate solve avoidance complete, runs a
 bounded live-agent attempt, and only emits `complete:` when a
 live-agent-discovered new level is reproduced offline.
+
+### SCENARIO-ARC-FCP-5410: Trajectory Prefixes Are Live-Observed And Uncertainty-Gated
+
+Given the live agent observes repeated frame-changing button-like blob clicks
+from its own attempts
+When the trajectory frontier generator is asked for a multi-action prefix
+Then it emits only prefixes supported by the observed transition stream,
+records the blob/color salience route, and increments frontier expansion
+evidence.
+
+Given a single low-support or conflicting inferred dynamic
+When the same generator is asked to promote that dynamic into a prefix
+Then the uncertainty gate rejects it, records an uncertainty rejection, and
+keeps `offline_reproduced=false` unless a live self-discovered solution later
+passes the reproduction gate.
