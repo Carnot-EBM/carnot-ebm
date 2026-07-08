@@ -27971,6 +27971,97 @@ claim CPU-only legacy model evidence.
 |---|---|---|
 | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
 
+### REQ-VERIFY-5419: Active-Constraint LNS Scale-Up Diagnostic V493
+
+The repository SHALL provide Exp 5419 at
+`python/carnot/experiment_5419_active_constraint_lns_scale_v493.py` and write
+`results/experiment_5419_active_constraint_lns_scale_v493.json` without
+invoking a live LLM, generated text judge, hardware sampler, board timing path,
+or modifying `scripts/research_conductor.py`. The diagnostic SHALL reuse the
+Exp 5406 active-constraint solver-guidance pattern and scale it to larger
+synthetic CSP, scheduling, or action-sequence fixtures before any p-bit or
+hardware-transfer work consumes the interface.
+
+The runner SHALL expose LNS-style subproblem selection hints, active-constraint
+hints, and conflict-front hints for every fixture. The deterministic solver
+SHALL recompute the active constraints, conflict front, subproblem boundary,
+constraint violations, and dual-residual-style sanity diagnostics before using
+any hint. Matching LNS/active/front hints MAY reduce deterministic solver work,
+but stale, contradictory, overconfident, malformed, or otherwise invalid hints
+SHALL be rejected or overwritten before final acceptance. The solver SHALL
+remain authoritative for final feasibility, objective/validity preservation,
+and row-level accept/reject/overwrite decisions.
+
+For every row, Exp 5419 SHALL record fixture id, hint mode, baseline solver
+work, guided solver work, accepted/rejected/overwritten hint decisions,
+LNS subproblem id, active-constraint hint, conflict-front hint, feasibility,
+objective preservation, final validity, constraint violation count, dual
+residual norm, unsafe false-accept status, and whether aggregation inputs came
+from row records. The row set SHALL include clean guided rows and adversarial
+rows for stale, contradictory, and overconfident hints. Invalid hints SHALL NOT
+change the final solver-authoritative sequence or validity predicate.
+
+The artifact SHALL include top-level fields `fixture_count`,
+`baseline_solver_work`, `guided_solver_work`, `work_delta`,
+`accepted_hint_count`, `rejected_hint_count`, `overwritten_hint_count`,
+`lns_subproblem_count`, `dual_residual_sanity`,
+`solver_validity_preserved`, `aggregate_from_rows_only`,
+`active_constraint_lns_scale_ready`, `inference_substrate`, and
+`honest_verdict`, with field principles explaining each required field.
+`inference_substrate` SHALL equal `deterministic_solver_experiment`.
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+`active_constraint_lns_scale_ready` SHALL be true only if fixture scale exceeds
+Exp 5406, guided rows reduce aggregate solver work relative to solver-only
+baselines, invalid rows are rejected or overwritten, dual residual and
+constraint-violation diagnostics remain sane, final validity is preserved, and
+aggregate metrics are recomputed only from row records.
+
+Required field principles:
+
+- `fixture_count`: principle "scale."
+- `baseline_solver_work`: principle "unguided comparison."
+- `guided_solver_work`: principle "guided comparison."
+- `work_delta`: principle "guidance effect."
+- `accepted_hint_count`: principle "hint behavior."
+- `rejected_hint_count`: principle "hint behavior."
+- `overwritten_hint_count`: principle "solver authority."
+- `lns_subproblem_count`: principle "scale-up mechanism."
+- `dual_residual_sanity`: principle "constrained-flow diagnostic."
+- `solver_validity_preserved`: principle "no invalid speedup."
+- `aggregate_from_rows_only`: principle "tautology prevention."
+- `active_constraint_lns_scale_ready`: principle "downstream gate."
+- `inference_substrate`: principle "no hidden live model inference."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:."
+
+### SCENARIO-VERIFY-5419: Invalid LNS Hints Cannot Override Solver Authority
+
+Given larger synthetic action-order fixtures extended from the Exp 5406
+active-constraint interface, when Exp 5419 evaluates solver-only, guided LNS,
+stale, contradictory, and overconfident hint rows, then every row records
+solver accept/reject/overwrite decisions, LNS subproblem hints,
+active-constraint hints, conflict-front hints, baseline and guided work,
+constraint violations, dual residuals, feasibility, final validity, and
+objective preservation. Accepted hints MAY reduce work only after matching the
+solver-computed active set and subproblem boundary. Stale hints SHALL be
+rejected, contradictory hints SHALL be overwritten, and overconfident hints
+SHALL be rejected or overwritten before the final solution is accepted.
+
+If a stale, contradictory, overconfident, malformed, or nonmatching hint changes
+the final validity predicate, if any invalid hint is accepted as authoritative,
+if aggregate metrics are not exactly recomputed from row records, if dual
+residual sanity fails, if solver work does not improve on accepted guided rows,
+or if `inference_substrate` differs from `deterministic_solver_experiment`,
+then Exp 5419 SHALL write
+`results/experiment_5419_active_constraint_lns_scale_v493.json` with
+`active_constraint_lns_scale_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5419)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5419 | Planned (`python/carnot/experiment_5419_active_constraint_lns_scale_v493.py`, `results/experiment_5419_active_constraint_lns_scale_v493.json`) | Planned (`tests/python/test_experiment_5419_active_constraint_lns_scale_v493.py`) |
+
 ### REQ-VERIFY-5407: Gated p-bit/QUBO Active-Constraint Stress Diagnostic V492
 
 The repository SHALL provide Exp 5407 at
