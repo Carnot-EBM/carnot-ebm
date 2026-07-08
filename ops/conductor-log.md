@@ -10553,3 +10553,4 @@ I’m going to append a small |
 | 2026-07-08 13:35 UTC | Active-constraint LNS scale-up with dual-residual  | OK | 90 passed, 1 warning in 7.70s |
 | 2026-07-08 13:54 UTC | Gated p-bit hardware-transfer preflight after Exp5 | OK | 90 passed, 1 warning in 11.21s |
 | 2026-07-08 14:08 UTC | Continuous self-learning evidence-reliance drift a | OK | 90 passed, 1 warning in 12.78s |
+| 2026-07-08 14:21 UTC | Gated CSL promotion scale-up with reliance and ris | OK | 91 passed, 1 warning in 11.21s |
