@@ -1,6 +1,35 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-07 (Milestone 2026.07.490 Planning Staged)
+**Last Updated:** 2026-07-08 (Milestone 2026.07.492 Planning Staged)
+
+## Session 2026-07-08 - Milestone 2026.07.492 Planning Staged
+
+Planned the next research milestone after `.491` completed. The staged `.492`
+roadmap focuses on repairing the Exp5392 formal-encoding tautology flag,
+scaling structured safety/action receipts only after that clean gate,
+introducing active-constraint warm-start solver guidance, extending continuous
+self-learning with resource accounting and uncertainty-gated promotion,
+attempting an ARC live-path level-up through trajectory/frontier generation,
+restoring hardware repeatability receipts without speedup claims, and extending
+bounded KAN counterexample certificates.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`.
+
+Validation for this planning task: YAML parsing,
+`scripts/audit_roadmap_gates.py`, `scripts/arc_levelup_guarantee_lint.py --min
+1`, `scripts/exclusion_manifest_lint.py`, and
+`scripts/validate_prior_failures.py` passed for `research-roadmap-next.yaml`.
+Touched-file `git diff --check` passed for the roadmap and reference files.
+Protected-file diff confirmed `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified. Repo-wide
+`scripts/check_spec_coverage.py` still fails on the pre-existing traceability
+backlog (`1262 test(s) missing spec traceability`). A full repo
+`git diff --check` is also still blocked by pre-existing trailing whitespace in
+`ops/verifier_authenticity_audit_report.md`, outside this planning change.
+No implementation code, active roadmap, conductor, model-training run, or
+hardware workload was changed.
 
 ## Session 2026-07-07 - Milestone 2026.07.490 Planning Staged
 
