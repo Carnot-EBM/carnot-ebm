@@ -19755,3 +19755,140 @@ mutated.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5422 | Implemented (`python/carnot/experiment_5422_csl_promotion_reliance_scale_v493.py`, `results/experiment_5422_csl_promotion_reliance_scale_v493.json`) | Implemented (`tests/python/test_experiment_5422_csl_promotion_reliance_scale_v493.py`) |
+
+---
+
+## REQ-LEARN-5435: Verified Workflow Memory CSL v494
+
+Experiment 5435 SHALL implement a deterministic continuous self-learning
+workflow-memory fixture inspired by A-MEM-style linked memory and CAD workflow
+case/skill memory. The fixture SHALL use a finite workflow with typed tool
+steps, kernel-like constraints, expected tool evidence, reusable case memories,
+and reusable skill memories. It SHALL include positive examples, stale examples,
+poisoned examples, semantically similar but infeasible retrieval traps, and
+scarce-evidence fragments. The fixture SHALL explicitly cover positive
+examples, stale examples, poisoned examples, retrieval traps, and
+scarce-evidence controls. The phrase positive examples, stale examples, poisoned examples
+is intentionally recorded contiguously for test traceability.
+
+Memory fragments SHALL be unable to influence routing until verify-before-store
+passes ontology validation, deterministic kernel/planner validation,
+evidence-reliance checks, rollback-pointer checks, and resource accounting.
+Rejected and abstained memories SHALL retain their raw episodes for audit but
+SHALL have zero routing influence. Case memories and skill memories SHALL remain
+separate typed records: case memories describe reusable solved workflow cases,
+while skill memories describe reusable step/tool patterns and preconditions.
+Case memories and skill memories SHALL remain separate typed records.
+
+The workflow-memory controller SHALL measure quality preservation, verifier
+cost, retrieval-trap deflection, reliance drift, promoted memory influence, and
+rollback behavior. It SHALL NOT load, fine-tune, write, or mutate model weights
+or adapter weights. The inference substrate SHALL be
+`deterministic_self_learning_controller`, because the experiment is a
+deterministic controller replay over finite workflow episodes, verifier labels,
+and sidecar memories rather than hidden live model inference.
+
+The result artifact SHALL be
+`results/experiment_5435_verified_workflow_memory_csl_v494.json` and SHALL
+include `workflow_episode_count`, `raw_episodes_retained`,
+`case_memory_count`, `skill_memory_count`, `verify_before_store_pass_rate`,
+`ontology_kernel_validation_rate`, `retrieval_trap_deflection_rate`,
+`reliance_drift_metric`, `quality_preserved`, `resource_delta`,
+`rollback_verified`, `no_weight_mutation`, `verified_workflow_memory_ready`,
+`inference_substrate`, and `honest_verdict`. The artifact SHALL also include
+field principles documenting those required fields.
+
+The required field principles SHALL be:
+
+- `workflow_episode_count`: Scale.
+- `raw_episodes_retained`: Auditability.
+- `case_memory_count`: Memory organization.
+- `skill_memory_count`: Memory organization.
+- `verify_before_store_pass_rate`: Promotion gate.
+- `ontology_kernel_validation_rate`: Structural grounding.
+- `retrieval_trap_deflection_rate`: Memory safety.
+- `reliance_drift_metric`: Hidden-forgetting guard.
+- `quality_preserved`: No learning regression.
+- `resource_delta`: Resource-aware learning.
+- `rollback_verified`: Safety recovery.
+- `no_weight_mutation`: FR-11 boundary.
+- `verified_workflow_memory_ready`: Downstream gate.
+- `inference_substrate`: No hidden live model inference.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5435 Sub-requirements
+
+- REQ-LEARN-5435-1: The fixture SHALL contain typed workflow episodes with
+  tool steps, expected evidence, reusable case memories, reusable skill
+  memories, stale memories, poisoned memories, retrieval traps, and
+  scarce-evidence fragments.
+- REQ-LEARN-5435-2: Verify-before-store SHALL require ontology validation,
+  deterministic kernel/planner validation, evidence-reliance validation,
+  rollback availability, and resource accounting before a memory can influence
+  routing.
+- REQ-LEARN-5435-3: Case memories and skill memories SHALL be counted and
+  routed separately, and neither memory type SHALL be promoted from a fragment
+  that fails verify-before-store.
+- REQ-LEARN-5435-4: Semantically similar but infeasible retrieval traps SHALL
+  be deflected by deterministic ontology/kernel checks rather than by learned
+  text similarity.
+- REQ-LEARN-5435-5: Rejected and abstained memories SHALL retain raw episode
+  receipts for audit but SHALL have zero routing influence.
+- REQ-LEARN-5435-6: Rollback SHALL remove a deliberately injected bad workflow
+  memory from active routing and restore the prior active case/skill sidecars
+  exactly.
+- REQ-LEARN-5435-7: `verified_workflow_memory_ready` SHALL be true only when
+  raw episodes are retained, case/skill separation holds, verify-before-store
+  promotes only passing fragments, ontology/kernel validation deflects unsafe
+  memories, retrieval traps are fully deflected, quality is preserved, resource
+  delta is numeric and non-negative, rollback succeeds, tests are recorded,
+  inference substrate is `deterministic_self_learning_controller`, and no model
+  or adapter weights mutate.
+
+### SCENARIO-LEARN-5435-CASE-SKILL-SEPARATION: Case And Skill Memories Stay Typed
+
+**Given** verified workflow fragments that include both solved cases and reusable
+step/tool skills
+**When** verify-before-store promotes passing fragments
+**Then** promoted case memories appear only in the case-memory sidecar
+**And** promoted skill memories appear only in the skill-memory sidecar.
+
+### SCENARIO-LEARN-5435-VERIFY-BEFORE-STORE: Failed Gates Cannot Route
+
+**Given** stale, poisoned, scarce-evidence, and unsupported fragments
+**When** verify-before-store evaluates ontology, kernel, evidence, rollback,
+and resource gates
+**Then** every failed fragment is rejected or abstained
+**And** failed fragments retain audit receipts but receive zero routing
+influence.
+
+### SCENARIO-LEARN-5435-TRAP-DEFLECTION: Similar But Infeasible Retrievals Fail Closed
+
+**Given** a retrieval trap that is semantically similar to a verified workflow
+but violates kernel ordering, tool evidence, or type constraints
+**When** routing asks whether the trap may influence workflow planning
+**Then** the deterministic ontology/kernel verifier deflects the trap
+**And** retrieval-trap deflection rate is 1.0 for the fixture traps.
+
+### SCENARIO-LEARN-5435-ROLLBACK: Bad Workflow Memory Is Reversible
+
+**Given** a bad workflow memory is deliberately injected into active case and
+skill routing sidecars
+**When** rollback runs
+**Then** the bad memory is removed
+**And** the prior active sidecars are restored exactly while the audit record
+remains retained.
+
+### SCENARIO-LEARN-5435-RAW-RETENTION-NO-WEIGHT: Audit State Is Sidecar-Only
+
+**Given** promoted, rejected, and abstained workflow fragments
+**When** the fixture completes
+**Then** every raw episode is retained with a checksum
+**And** the artifact reports no model or adapter weights loaded, written, or
+mutated.
+
+## Implementation Status (Exp 5435)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5435 | Implemented (`python/carnot/experiment_5435_verified_workflow_memory_csl_v494.py`, `results/experiment_5435_verified_workflow_memory_csl_v494.json`) | Implemented (`tests/python/test_experiment_5435_verified_workflow_memory_csl_v494.py`) |
