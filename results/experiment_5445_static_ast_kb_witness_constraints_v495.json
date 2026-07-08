@@ -1,0 +1,594 @@
+{
+  "api_family_counts": {
+    "builtins": 1,
+    "json": 5,
+    "math": 2,
+    "no_api": 1,
+    "statistics": 1
+  },
+  "ast_kb_witness_ready": true,
+  "ast_parse_success_rate": 1.0,
+  "experiment_id": "experiment_5445_static_ast_kb_witness_constraints_v495",
+  "field_principles": {
+    "api_family_counts": "fixture diversity.",
+    "ast_kb_witness_ready": "downstream readiness.",
+    "ast_parse_success_rate": "structural basis.",
+    "fixture_count": "bounded coverage.",
+    "honest_verdict": "terminal status; start with \"complete:\" or \"blocked:\".",
+    "inference_substrate": "no hidden live model inference.",
+    "kb_source_paths": "KB provenance.",
+    "nonexistent_call_reject_rate": "hallucination catch.",
+    "row_provenance_checksum": "row reproducibility.",
+    "unsafe_false_accepts": "safety boundary.",
+    "valid_call_accept_rate": "false rejection guard.",
+    "witness_field_names": "inspectable evidence."
+  },
+  "fixture_count": 10,
+  "honest_verdict": "complete: deterministic AST/KB witness constraints ready",
+  "inference_substrate": "deterministic_ast_kb_verifier_no_llm",
+  "kb_source_paths": [
+    "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py",
+    "builtin:math",
+    "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/statistics.py",
+    "builtin:builtins"
+  ],
+  "milestone": "2026.07.495",
+  "nonexistent_call_reject_rate": 1.0,
+  "random_seed": 5445,
+  "research_conductor_modified": false,
+  "row_provenance_checksum": "5d3f32f8237156db5cb942703599eabdf80e9ccbc66e5564c2fb69b2c8079bc4",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5445.static_ast_kb_witness_constraints.v495",
+  "spec_refs": [
+    "REQ-CODE-5445",
+    "SCENARIO-CODE-5445"
+  ],
+  "task_id": "exp5445-v495-static-ast-kb-witness-constraints",
+  "tests_run": [
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5445_static_ast_kb_witness_constraints_v495.py tests/python/test_experiment_5445_static_ast_kb_witness_constraints_v495.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5445_static_ast_kb_witness_constraints_v495.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run -m pytest tests/python/test_experiment_5445_static_ast_kb_witness_constraints_v495.py -q -o addopts= && .venv/bin/coverage report --fail-under=100 --show-missing python/carnot/experiment_5445_static_ast_kb_witness_constraints_v495.py",
+      "outcome": "passed"
+    }
+  ],
+  "unsafe_false_accepts": 0,
+  "valid_call_accept_rate": 1.0,
+  "witness_field_names": [
+    "row_id",
+    "fixture_family",
+    "api_family",
+    "source_sha256",
+    "ast_parse_ok",
+    "ast_error",
+    "alias_map",
+    "imported_symbol_checks",
+    "fully_qualified_call_sites",
+    "kb_lookup_results",
+    "semantic_intent",
+    "expected_outcome",
+    "outcome",
+    "accepted",
+    "reject_reasons",
+    "witness_checksum"
+  ],
+  "witness_rows": [
+    {
+      "accepted": true,
+      "alias_map": {
+        "js": "json"
+      },
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "accept",
+      "fixture_family": "valid_api_call",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "loads",
+          "col_offset": 9,
+          "fqn": "json.loads",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "js.loads(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": true,
+          "fully_qualified_name": "json.loads",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "valid_call"
+      ],
+      "outcome": "accept",
+      "reject_reasons": [],
+      "row_id": "fixture.valid_json_alias",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "json.loads"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": true
+      },
+      "source": "import json as js\nresult = js.loads(payload)\n",
+      "source_sha256": "c12bf5948a37a0eabf20d603e92ee0def35b17407ab4cad260a91c4955c8ef7e",
+      "witness_checksum": "fcc6b8b5f7dd6ae14844bb994848d915d756268e3b41cdf793958857b2f77b83"
+    },
+    {
+      "accepted": true,
+      "alias_map": {
+        "sqrt": "math.sqrt"
+      },
+      "api_family": "math",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "accept",
+      "fixture_family": "valid_api_call",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "imported_symbol",
+          "call_name": "sqrt",
+          "col_offset": 9,
+          "fqn": "math.sqrt",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "sqrt(x)"
+        }
+      ],
+      "imported_symbol_checks": [
+        {
+          "exists": true,
+          "fully_qualified_name": "math.sqrt",
+          "kb_source": "local_introspection",
+          "local_name": "sqrt",
+          "module": "math",
+          "symbol": "sqrt"
+        }
+      ],
+      "kb_lookup_results": [
+        {
+          "exists": true,
+          "fully_qualified_name": "math.sqrt",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "valid_call"
+      ],
+      "outcome": "accept",
+      "reject_reasons": [],
+      "row_id": "fixture.valid_math_from_import",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "math.sqrt"
+        ],
+        "expected_call_fqns": [
+          "math.sqrt"
+        ],
+        "intent": "compute_square_root",
+        "matched": true
+      },
+      "source": "from math import sqrt\nresult = sqrt(x)\n",
+      "source_sha256": "469300b6c0c42c003ab535be02abfcf096dc4a57fba61eb9a43efdacb12decc2",
+      "witness_checksum": "487ba63330228738bf7b0bef619c7c78db2c46c735f196b74a0516dd39a4b23e"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "json": "json"
+      },
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "nonexistent_method",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "parse",
+          "col_offset": 9,
+          "fqn": "json.parse",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "json.parse(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "json.parse",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "nonexistent_call",
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object",
+        "kb_missing_call:json.parse"
+      ],
+      "row_id": "fixture.nonexistent_json_method",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "json.parse"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "import json\nresult = json.parse(payload)\n",
+      "source_sha256": "0d3ee49a692ad1fac05ba03168842627301c2c808a6bb7565e7a1da0c13b94c9",
+      "witness_checksum": "fe691e9a14eba423067e880771602eafa892872d3c944bb7e577193b295c91e0"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "m": "math"
+      },
+      "api_family": "math",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "nonexistent_method",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "relu",
+          "col_offset": 9,
+          "fqn": "math.relu",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "m.relu(x)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "math.relu",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "nonexistent_call",
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "kb_missing_call:math.relu"
+      ],
+      "row_id": "fixture.nonexistent_math_alias_method",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "math.relu"
+        ],
+        "expected_call_fqns": [
+          "math.relu"
+        ],
+        "intent": "compute_relu",
+        "matched": true
+      },
+      "source": "import math as m\nresult = m.relu(x)\n",
+      "source_sha256": "8bf5630b6bca6ec026907e6856efe578282107b6a5ebee4db3614a9360f6c283",
+      "witness_checksum": "784f895887fe160bbea08f206dc312147dffbf0e5d5e191d63ccd7c1b453e26b"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "json": "statistics"
+      },
+      "api_family": "statistics",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "wrong_module_alias",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "loads",
+          "col_offset": 9,
+          "fqn": "statistics.loads",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "json.loads(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "statistics.loads",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "nonexistent_call",
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object",
+        "kb_missing_call:statistics.loads"
+      ],
+      "row_id": "fixture.wrong_module_alias",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "statistics.loads"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "import statistics as json\nresult = json.loads(payload)\n",
+      "source_sha256": "0ba4f1c96a928657e2e616484a65b20e690f9abad1fbcfed00f16cacd73e6d3c",
+      "witness_checksum": "ef3d46497c687327e23aa89772fc93799def074667da6fdeb691b372de51145a"
+    },
+    {
+      "accepted": false,
+      "alias_map": {},
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "bare_call_missing_import",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "bare",
+          "call_name": "loads",
+          "col_offset": 9,
+          "fqn": "<unresolved>.loads",
+          "lineno": 1,
+          "resolved": false,
+          "source_segment": "loads(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "<unresolved>.loads",
+          "kb_source": "none",
+          "status": "unresolved_bare_call"
+        }
+      ],
+      "metric_tags": [
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object",
+        "missing_import_for_bare_call:loads"
+      ],
+      "row_id": "fixture.missing_bare_import",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "<unresolved>.loads"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "result = loads(payload)\n",
+      "source_sha256": "94fea9b9ef3f2599e5e2b5dfb9a1b7d63d412df6318f1de1fffec741d2066a8b",
+      "witness_checksum": "e08f399b08176259cde98ef476731119ada980df3b6f358d97e6fdf9ec931980"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "parse": "json.parse"
+      },
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "imported_symbol_missing",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "imported_symbol",
+          "call_name": "parse",
+          "col_offset": 9,
+          "fqn": "json.parse",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "parse(payload)"
+        }
+      ],
+      "imported_symbol_checks": [
+        {
+          "exists": false,
+          "fully_qualified_name": "json.parse",
+          "kb_source": "local_introspection",
+          "local_name": "parse",
+          "module": "json",
+          "symbol": "parse"
+        }
+      ],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "json.parse",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "imported_symbol_missing:json.parse",
+        "intent_mismatch:parse_json_to_object",
+        "kb_missing_call:json.parse"
+      ],
+      "row_id": "fixture.imported_symbol_missing",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "json.parse"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "from json import parse\nresult = parse(payload)\n",
+      "source_sha256": "0f8937283cfd4a4c419aa2bd7cbf30981451b351c32478e2a2a4112f3c839243",
+      "witness_checksum": "7e25351bdc9b609b10b4fc1b64ae8918517838910bc4c5359f49faab91441406"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "json": "json"
+      },
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "argument_intent_mismatch",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "dumps",
+          "col_offset": 7,
+          "fqn": "json.dumps",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "json.dumps(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": true,
+          "fully_qualified_name": "json.dumps",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object"
+      ],
+      "row_id": "fixture.argument_intent_mismatch",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "json.dumps"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "import json\ntext = json.dumps(payload)\n",
+      "source_sha256": "e88b27c88925d4fb33300f14ee516d93400ae5d978b9ff254b64e56c1daefd71",
+      "witness_checksum": "fbd907933e89de4246e552641bc4f68c573399b22886861b2c3fa0649c9ec500"
+    },
+    {
+      "accepted": true,
+      "alias_map": {},
+      "api_family": "builtins",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "accept",
+      "fixture_family": "benign_control",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "builtin",
+          "call_name": "len",
+          "col_offset": 8,
+          "fqn": "builtins.len",
+          "lineno": 1,
+          "resolved": true,
+          "source_segment": "len(items)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": true,
+          "fully_qualified_name": "builtins.len",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "valid_call"
+      ],
+      "outcome": "accept",
+      "reject_reasons": [],
+      "row_id": "fixture.benign_builtin_control",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "builtins.len"
+        ],
+        "expected_call_fqns": [
+          "builtins.len"
+        ],
+        "intent": "count_items",
+        "matched": true
+      },
+      "source": "count = len(items)\n",
+      "source_sha256": "4d0d3152b9da1caa7e4d5af2ac37c7d3bb71add329cb732aab84bcb8a8b830e8",
+      "witness_checksum": "abbb8cf7acfa5c295968e7c8812137b688089805d8ace20e350a36af35fbccd0"
+    },
+    {
+      "accepted": true,
+      "alias_map": {},
+      "api_family": "no_api",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "accept",
+      "fixture_family": "benign_control",
+      "fully_qualified_call_sites": [],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [],
+      "metric_tags": [
+        "valid_call"
+      ],
+      "outcome": "accept",
+      "reject_reasons": [],
+      "row_id": "fixture.benign_no_call_control",
+      "semantic_intent": {
+        "actual_call_fqns": [],
+        "expected_call_fqns": [],
+        "intent": "plain_arithmetic",
+        "matched": true
+      },
+      "source": "total = 1 + 2\n",
+      "source_sha256": "42a2c360152f2f2aacff5011894f8ab6111de1591f277a080079aa6a76478f9e",
+      "witness_checksum": "3c503ef5ce6b2ae34dda3723a4fc5771d2cf83e0ac9b61623f85cca62066c6a2"
+    }
+  ]
+}
