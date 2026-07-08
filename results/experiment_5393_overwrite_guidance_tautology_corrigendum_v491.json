@@ -1,0 +1,6100 @@
+{
+  "claim_limits": [
+    "corrigendum over flagged Exp5383 only",
+    "readiness metrics recomputed from row_evidence",
+    "solver or deterministic verifier remains final authority",
+    "hints are optional and may be ignored, completed, overwritten, or rejected",
+    "no neural, LLM, hardware, or generated text judge execution"
+  ],
+  "duration_s": 0.05,
+  "experiment": 5393,
+  "experiment_id": "exp5393-overwrite-guidance-tautology-corrigendum-v491",
+  "fallback_completeness_denominator": 28,
+  "fallback_completeness_rate_from_rows": 1.0,
+  "field_principles": {
+    "fallback_completeness_rate_from_rows": "fallback rate when hints are invalid or harmful.",
+    "fixture_families": "list covering benign, incomplete, harmful, contradictory, and no_hint controls.",
+    "forced_hint_harm_rate_from_rows": "computed only from harmful/contradictory rows.",
+    "honest_verdict": "one-line summary starting with complete:, flagged:, or blocked:.",
+    "milestone": "must equal 2026.07.491.",
+    "negative_control_pass_rate": "pass rate for controls that must not benefit from hinting.",
+    "overwrite_guidance_corrigendum_clean": "true only if row-level evidence is clean and adversarial checks pass.",
+    "overwrite_rate_from_rows": "computed only from row-level outcomes.",
+    "post_projection_validity_rate_from_rows": "solver-authoritative validity rate.",
+    "row_count": "number of row-level solver fixtures.",
+    "source_flagged_artifact": "must point to Exp5383.",
+    "status": "complete if row-level corrigendum ran, flagged if tautology remains, or blocked if required inputs are missing.",
+    "tautology_checks_passed": "true only if readiness fields are recomputed from independent row evidence.",
+    "unsafe_false_accept_count": "number of invalid/harmful solver outputs accepted."
+  },
+  "fixture_families": [
+    "benign",
+    "incomplete",
+    "harmful",
+    "contradictory",
+    "no_hint"
+  ],
+  "forced_hint_harm_denominator": 28,
+  "forced_hint_harm_rate_from_rows": 1.0,
+  "honest_verdict": "complete: row-level overwrite-guidance corrigendum recomputed readiness from solver evidence with clean adversarial checks",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "methodology_note": "Rates of 1.0 are deterministic solver-invariant checks over explicit row denominators, not classifier accuracy or sampled benchmark claims.",
+  "milestone": "2026.07.491",
+  "negative_control_denominator": 42,
+  "negative_control_pass_rate": 1.0,
+  "negative_control_passed_count": 42,
+  "overwrite_guidance_corrigendum_clean": true,
+  "overwrite_rate_denominator": 42,
+  "overwrite_rate_from_rows": 1.0,
+  "post_projection_validity_denominator": 70,
+  "post_projection_validity_rate_from_rows": 1.0,
+  "random_seed": 5393,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "356d9325cd0c8abd040e5b4596b3be97e753c481212dd23c758778f03fed5143",
+  "row_count": 98,
+  "row_evidence": [
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "t-before:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "001:t-before:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-before",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "t-before:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "before"
+      ],
+      "row_id": "002:t-before:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-before",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "t-before:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "before"
+      ],
+      "row_id": "003:t-before:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-before",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-before:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_before"
+      ],
+      "row_id": "004:t-before:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_before"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-before",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-before:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_before"
+      ],
+      "row_id": "005:t-before:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-before",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-before:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "before",
+        "contradicts_before"
+      ],
+      "row_id": "006:t-before:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "before",
+          "contradicts_before"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-before",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-before:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "before",
+        "contradicts_before"
+      ],
+      "row_id": "007:t-before:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "before"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-before",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "t-overlaps:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "008:t-overlaps:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-overlaps",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "t-overlaps:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "overlaps"
+      ],
+      "row_id": "009:t-overlaps:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-overlaps",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "t-overlaps:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "overlaps"
+      ],
+      "row_id": "010:t-overlaps:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-overlaps",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-overlaps:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_overlaps"
+      ],
+      "row_id": "011:t-overlaps:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_overlaps"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-overlaps",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-overlaps:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_overlaps"
+      ],
+      "row_id": "012:t-overlaps:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-overlaps",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-overlaps:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "overlaps",
+        "contradicts_overlaps"
+      ],
+      "row_id": "013:t-overlaps:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "overlaps",
+          "contradicts_overlaps"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-overlaps",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-overlaps:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "overlaps",
+        "contradicts_overlaps"
+      ],
+      "row_id": "014:t-overlaps:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlaps"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-overlaps",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "t-during:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "015:t-during:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-during",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "t-during:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "during"
+      ],
+      "row_id": "016:t-during:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-during",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "t-during:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "during"
+      ],
+      "row_id": "017:t-during:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-during",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-during:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_during"
+      ],
+      "row_id": "018:t-during:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_during"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-during",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-during:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_during"
+      ],
+      "row_id": "019:t-during:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-during",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-during:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "during",
+        "contradicts_during"
+      ],
+      "row_id": "020:t-during:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "during",
+          "contradicts_during"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-during",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-during:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "during",
+        "contradicts_during"
+      ],
+      "row_id": "021:t-during:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "during"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-during",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "t-meets:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "022:t-meets:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "t-meets:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets"
+      ],
+      "row_id": "023:t-meets:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "t-meets:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets"
+      ],
+      "row_id": "024:t-meets:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-meets:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_meets"
+      ],
+      "row_id": "025:t-meets:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_meets"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-meets:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_meets"
+      ],
+      "row_id": "026:t-meets:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-meets:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "meets",
+        "contradicts_meets"
+      ],
+      "row_id": "027:t-meets:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "meets",
+          "contradicts_meets"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-meets:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets",
+        "contradicts_meets"
+      ],
+      "row_id": "028:t-meets:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "t-contradiction-before-vs-meets:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "029:t-contradiction-before-vs-meets:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-contradiction-before-vs-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "t-contradiction-before-vs-meets:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets"
+      ],
+      "row_id": "030:t-contradiction-before-vs-meets:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-contradiction-before-vs-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "t-contradiction-before-vs-meets:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets"
+      ],
+      "row_id": "031:t-contradiction-before-vs-meets:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-contradiction-before-vs-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-contradiction-before-vs-meets:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_meets"
+      ],
+      "row_id": "032:t-contradiction-before-vs-meets:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_meets"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-contradiction-before-vs-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-contradiction-before-vs-meets:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_meets"
+      ],
+      "row_id": "033:t-contradiction-before-vs-meets:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-contradiction-before-vs-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-contradiction-before-vs-meets:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "meets",
+        "contradicts_meets"
+      ],
+      "row_id": "034:t-contradiction-before-vs-meets:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "meets",
+          "contradicts_meets"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-contradiction-before-vs-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-contradiction-before-vs-meets:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets",
+        "contradicts_meets"
+      ],
+      "row_id": "035:t-contradiction-before-vs-meets:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-contradiction-before-vs-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "t-ambiguous-before-or-meets:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "036:t-ambiguous-before-or-meets:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-ambiguous-before-or-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "t-ambiguous-before-or-meets:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets"
+      ],
+      "row_id": "037:t-ambiguous-before-or-meets:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-ambiguous-before-or-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "t-ambiguous-before-or-meets:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets"
+      ],
+      "row_id": "038:t-ambiguous-before-or-meets:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-ambiguous-before-or-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-ambiguous-before-or-meets:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_meets"
+      ],
+      "row_id": "039:t-ambiguous-before-or-meets:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_meets"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-ambiguous-before-or-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "t-ambiguous-before-or-meets:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_meets"
+      ],
+      "row_id": "040:t-ambiguous-before-or-meets:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-ambiguous-before-or-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-ambiguous-before-or-meets:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "meets",
+        "contradicts_meets"
+      ],
+      "row_id": "041:t-ambiguous-before-or-meets:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "meets",
+          "contradicts_meets"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-ambiguous-before-or-meets",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "t-ambiguous-before-or-meets:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "meets",
+        "contradicts_meets"
+      ],
+      "row_id": "042:t-ambiguous-before-or-meets:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "meets"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "t-ambiguous-before-or-meets",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "s-disconnected:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "043:s-disconnected:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "s-disconnected:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected",
+        "west_of"
+      ],
+      "row_id": "044:s-disconnected:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "s-disconnected:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected"
+      ],
+      "row_id": "045:s-disconnected:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-disconnected:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_disconnected"
+      ],
+      "row_id": "046:s-disconnected:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_disconnected"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-disconnected:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_disconnected"
+      ],
+      "row_id": "047:s-disconnected:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-disconnected:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "disconnected",
+        "contradicts_disconnected"
+      ],
+      "row_id": "048:s-disconnected:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "disconnected",
+          "contradicts_disconnected"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-disconnected:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected",
+        "contradicts_disconnected"
+      ],
+      "row_id": "049:s-disconnected:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "s-overlap:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "050:s-overlap:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-overlap",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "s-overlap:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "overlap"
+      ],
+      "row_id": "051:s-overlap:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-overlap",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "s-overlap:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "overlap"
+      ],
+      "row_id": "052:s-overlap:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-overlap",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-overlap:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_overlap"
+      ],
+      "row_id": "053:s-overlap:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_overlap"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-overlap",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-overlap:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_overlap"
+      ],
+      "row_id": "054:s-overlap:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-overlap",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-overlap:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "overlap",
+        "contradicts_overlap"
+      ],
+      "row_id": "055:s-overlap:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "overlap",
+          "contradicts_overlap"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-overlap",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-overlap:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "overlap",
+        "contradicts_overlap"
+      ],
+      "row_id": "056:s-overlap:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "overlap"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-overlap",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "s-containment:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "057:s-containment:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-containment",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "s-containment:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "contains"
+      ],
+      "row_id": "058:s-containment:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-containment",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "s-containment:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "contains"
+      ],
+      "row_id": "059:s-containment:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-containment",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-containment:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_contains"
+      ],
+      "row_id": "060:s-containment:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_contains"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-containment",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-containment:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_contains"
+      ],
+      "row_id": "061:s-containment:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-containment",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-containment:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "contains",
+        "contradicts_contains"
+      ],
+      "row_id": "062:s-containment:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "contains",
+          "contradicts_contains"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-containment",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-containment:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "contains",
+        "contradicts_contains"
+      ],
+      "row_id": "063:s-containment:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "contains"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-containment",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "s-east-of:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "064:s-east-of:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-east-of",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "s-east-of:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected",
+        "east_of"
+      ],
+      "row_id": "065:s-east-of:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-east-of",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "s-east-of:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected"
+      ],
+      "row_id": "066:s-east-of:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-east-of",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-east-of:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_disconnected"
+      ],
+      "row_id": "067:s-east-of:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_disconnected"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-east-of",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-east-of:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_disconnected"
+      ],
+      "row_id": "068:s-east-of:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-east-of",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-east-of:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "disconnected",
+        "contradicts_disconnected"
+      ],
+      "row_id": "069:s-east-of:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "disconnected",
+          "contradicts_disconnected"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-east-of",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-east-of:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected",
+        "contradicts_disconnected"
+      ],
+      "row_id": "070:s-east-of:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "east_of"
+        ],
+        "status": "satisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-east-of",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "s-contradiction-contains-vs-disconnected:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "071:s-contradiction-contains-vs-disconnected:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-contradiction-contains-vs-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "s-contradiction-contains-vs-disconnected:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected",
+        "west_of"
+      ],
+      "row_id": "072:s-contradiction-contains-vs-disconnected:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 1,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-contradiction-contains-vs-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "s-contradiction-contains-vs-disconnected:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected"
+      ],
+      "row_id": "073:s-contradiction-contains-vs-disconnected:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 0,
+        "convergence_steps": 2,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-contradiction-contains-vs-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-contradiction-contains-vs-disconnected:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "not_disconnected"
+      ],
+      "row_id": "074:s-contradiction-contains-vs-disconnected:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "not_disconnected"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-contradiction-contains-vs-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "s-contradiction-contains-vs-disconnected:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "not_disconnected"
+      ],
+      "row_id": "075:s-contradiction-contains-vs-disconnected:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 4,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-contradiction-contains-vs-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-contradiction-contains-vs-disconnected:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        "disconnected",
+        "contradicts_disconnected"
+      ],
+      "row_id": "076:s-contradiction-contains-vs-disconnected:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 5,
+        "solution": [
+          "disconnected",
+          "contradicts_disconnected"
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-contradiction-contains-vs-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "s-contradiction-contains-vs-disconnected:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        "disconnected",
+        "contradicts_disconnected"
+      ],
+      "row_id": "077:s-contradiction-contains-vs-disconnected:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 1,
+        "convergence_steps": 2,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "solver_pre_state": {
+        "conflicts": 1,
+        "convergence_steps": 3,
+        "solution": [
+          "disconnected",
+          "west_of"
+        ],
+        "status": "unsatisfiable"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "s-contradiction-contains-vs-disconnected",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "exp5292_aligned_factor_sat:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "078:exp5292_aligned_factor_sat:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_aligned_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "exp5292_aligned_factor_sat:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1,
+        -2
+      ],
+      "row_id": "079:exp5292_aligned_factor_sat:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 39,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_aligned_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "exp5292_aligned_factor_sat:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1
+      ],
+      "row_id": "080:exp5292_aligned_factor_sat:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 40,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_aligned_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "exp5292_aligned_factor_sat:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        1
+      ],
+      "row_id": "081:exp5292_aligned_factor_sat:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 5,
+        "convergence_steps": 43,
+        "solution": [
+          1
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_aligned_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "exp5292_aligned_factor_sat:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        1
+      ],
+      "row_id": "082:exp5292_aligned_factor_sat:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 4,
+        "convergence_steps": 42,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_aligned_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "exp5292_aligned_factor_sat:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        -1,
+        1
+      ],
+      "row_id": "083:exp5292_aligned_factor_sat:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 5,
+        "convergence_steps": 43,
+        "solution": [
+          -1,
+          1
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_aligned_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "exp5292_aligned_factor_sat:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1,
+        1
+      ],
+      "row_id": "084:exp5292_aligned_factor_sat:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 40,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_aligned_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "exp5292_misleading_factor_sat:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "085:exp5292_misleading_factor_sat:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_misleading_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "exp5292_misleading_factor_sat:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1,
+        -2
+      ],
+      "row_id": "086:exp5292_misleading_factor_sat:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 39,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_misleading_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "exp5292_misleading_factor_sat:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1
+      ],
+      "row_id": "087:exp5292_misleading_factor_sat:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 40,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_misleading_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "exp5292_misleading_factor_sat:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        1
+      ],
+      "row_id": "088:exp5292_misleading_factor_sat:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 5,
+        "convergence_steps": 43,
+        "solution": [
+          1
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_misleading_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "exp5292_misleading_factor_sat:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        1
+      ],
+      "row_id": "089:exp5292_misleading_factor_sat:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 4,
+        "convergence_steps": 42,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_misleading_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "exp5292_misleading_factor_sat:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        -1,
+        1
+      ],
+      "row_id": "090:exp5292_misleading_factor_sat:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 5,
+        "convergence_steps": 43,
+        "solution": [
+          -1,
+          1
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_misleading_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "exp5292_misleading_factor_sat:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1,
+        1
+      ],
+      "row_id": "091:exp5292_misleading_factor_sat:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 40,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_misleading_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 0,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "no_hint",
+      "fixture_id": "exp5292_neutral_factor_sat:benign_hints",
+      "guidance_mode": "no_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "benign_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "no_hint_must_not_benefit_from_guidance",
+        "passed": true,
+        "reason": "No-hint control must exactly match solver-only baseline."
+      },
+      "raw_hint": null,
+      "row_id": "092:exp5292_neutral_factor_sat:no_hint:no_hint",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_neutral_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "solver_only_baseline",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 2,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "benign",
+      "fixture_id": "exp5292_neutral_factor_sat:benign_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": true,
+      "hint_action": "accepted",
+      "hint_class": "benign_hints",
+      "hint_ignored": false,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1,
+        -2
+      ],
+      "row_id": "093:exp5292_neutral_factor_sat:benign:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 39,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_neutral_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_accept_exact",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "incomplete",
+      "fixture_id": "exp5292_neutral_factor_sat:incomplete_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "incomplete_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1
+      ],
+      "row_id": "094:exp5292_neutral_factor_sat:incomplete:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 2,
+        "convergence_steps": 40,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_neutral_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_complete_incomplete_hint",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "exp5292_neutral_factor_sat:harmful_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "harmful_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_harmful_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        1
+      ],
+      "row_id": "095:exp5292_neutral_factor_sat:harmful:forced_hint",
+      "solver_post_state": {
+        "conflicts": 5,
+        "convergence_steps": 43,
+        "solution": [
+          1
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_neutral_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "convergence_delta_vs_no_hint": -1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "harmful",
+      "fixture_id": "exp5292_neutral_factor_sat:harmful_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "harmful_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        1
+      ],
+      "row_id": "096:exp5292_neutral_factor_sat:harmful:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 4,
+        "convergence_steps": 42,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_neutral_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_reject_harmful_hint_and_fallback",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": false,
+      "conflict_delta_vs_no_hint": -2,
+      "convergence_delta_vs_no_hint": -2,
+      "fallback_result": {
+        "complete": false,
+        "status": "not_needed",
+        "used": false
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "exp5292_neutral_factor_sat:contradictory_hints",
+      "guidance_mode": "forced_hint",
+      "hint_accepted": false,
+      "hint_action": "ignored",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": true,
+      "hint_overwritten": false,
+      "negative_control": {
+        "control_kind": "forced_contradictory_no_improvement",
+        "passed": true,
+        "reason": "Forced harmful or contradictory hints are contrast rows; they must not improve or certify validity."
+      },
+      "raw_hint": [
+        -1,
+        1
+      ],
+      "row_id": "097:exp5292_neutral_factor_sat:contradictory:forced_hint",
+      "solver_post_state": {
+        "conflicts": 5,
+        "convergence_steps": 43,
+        "solution": [
+          -1,
+          1
+        ],
+        "status": "invalid_forced_hint"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_neutral_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": false,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": false,
+        "final_matches_baseline": false,
+        "projection_valid": false,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "forced_hint_rejected_by_verifier",
+        "solver_authoritative": true
+      }
+    },
+    {
+      "accepted_as_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "convergence_delta_vs_no_hint": 1,
+      "fallback_result": {
+        "complete": true,
+        "status": "fallback_completed",
+        "used": true
+      },
+      "fixture_family": "contradictory",
+      "fixture_id": "exp5292_neutral_factor_sat:contradictory_hints",
+      "guidance_mode": "overwrite_capable",
+      "hint_accepted": false,
+      "hint_action": "overwritten",
+      "hint_class": "contradictory_hints",
+      "hint_ignored": false,
+      "hint_overwritten": true,
+      "negative_control": {
+        "control_kind": null,
+        "passed": true,
+        "reason": "not a negative control"
+      },
+      "raw_hint": [
+        -1,
+        1
+      ],
+      "row_id": "098:exp5292_neutral_factor_sat:contradictory:overwrite_capable",
+      "solver_post_state": {
+        "conflicts": 3,
+        "convergence_steps": 40,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "solver_pre_state": {
+        "conflicts": 3,
+        "convergence_steps": 41,
+        "solution": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+      "source_fixture_id": "exp5292_neutral_factor_sat",
+      "unsafe_status": {
+        "accepted_as_valid": true,
+        "invalid_hint_accepted": false,
+        "unsafe_false_accept": false
+      },
+      "validity_proof": {
+        "accepted_as_valid": true,
+        "final_matches_baseline": true,
+        "projection_valid": true,
+        "proof_kind": "solver_authoritative_projection",
+        "solver_action": "overwrite_detect_contradiction_and_fallback",
+        "solver_authoritative": true
+      }
+    }
+  ],
+  "row_field_completeness": true,
+  "row_level_evidence_clean": true,
+  "row_metric_denominator": 98,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5393.overwrite_guidance_tautology_corrigendum.v491",
+  "source_flagged_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+  "source_tautology_review": {
+    "corrigendum_rule": "Do not copy Exp5383 readiness metrics; recompute from row_evidence.",
+    "reused_aggregate_fields": [],
+    "source_experiment_id": "exp5383-overwrite-guidance-scale-validity-v490",
+    "source_flagged_artifact": "results/experiment_5383_overwrite_guidance_scale_validity_v490.json",
+    "source_honest_verdict": "complete: overwrite-capable guidance scaled to benign, incomplete, harmful, and contradictory hints with solver-authoritative validity and fallback completeness preserved",
+    "tautological_fields": [
+      {
+        "left": "forced_hint_harm_rate",
+        "left_value": 0.75,
+        "right": "legacy_all_mode_projection_validity_rate",
+        "right_value": 0.75,
+        "why_suspect": "forced-hint harm and all-mode projection validity are distinct aggregate concepts and must not be treated as independent evidence when they agree exactly."
+      }
+    ]
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5393",
+    "SCENARIO-VERIFY-5393"
+  ],
+  "status": "complete",
+  "tautology_checks_passed": true,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5393_overwrite_guidance_tautology_corrigendum_v491.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.py -m pytest tests/python/test_experiment_5393_overwrite_guidance_tautology_corrigendum_v491.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": "python scripts/adversarial_verify.py results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json",
+      "outcome": "passed"
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "unsafe_false_accept_count": 0
+}

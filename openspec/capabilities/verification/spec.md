@@ -27971,6 +27971,99 @@ claim CPU-only legacy model evidence.
 |---|---|---|
 | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
 
+### REQ-VERIFY-5393: Overwrite Guidance Tautology Corrigendum V491
+
+The repository SHALL provide Exp 5393 at
+`python/carnot/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.py`
+and write
+`results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, retired text-verifier path, or modifying
+`scripts/research_conductor.py`. Exp 5393 SHALL treat
+`results/experiment_5383_overwrite_guidance_scale_validity_v490.json` as a
+flagged upstream artifact and SHALL NOT copy its readiness, rate, or verdict
+fields into the corrigendum. Instead, it SHALL recover or rebuild row-level
+solver evidence for benign hints, incomplete hints, harmful hints,
+contradictory hints, and no-hint controls, then recompute all readiness fields
+from those rows only.
+
+For every row, the runner SHALL record the raw hint, solver pre-state, solver
+post-state, whether the hint was accepted, overwritten, or ignored, the
+solver-authoritative validity proof, conflict delta versus the solver-only
+baseline, fallback result, and unsafe status. Harmful and contradictory hint
+rows SHALL include forced-hint negative controls proving that harmful guidance
+does not improve the result when it must be measured as a contrast, and
+overwrite-capable rows proving that forced harmful or contradictory hints are
+overwritten or routed through fallback before any final output is accepted.
+The solver or deterministic verifier SHALL remain the only final authority;
+hints are optional evidence and SHALL be safely ignored, completed,
+overwritten, or rejected.
+
+The artifact SHALL include top-level fields `status`, `milestone`,
+`source_flagged_artifact`, `row_count`, `fixture_families`,
+`overwrite_rate_from_rows`, `forced_hint_harm_rate_from_rows`,
+`post_projection_validity_rate_from_rows`,
+`fallback_completeness_rate_from_rows`, `negative_control_pass_rate`,
+`tautology_checks_passed`, `unsafe_false_accept_count`,
+`overwrite_guidance_corrigendum_clean`, and `honest_verdict`, with field
+principles explaining each required field. `status` SHALL be `complete` only
+when row-level evidence was evaluated, `flagged` if a tautology remains, and
+`blocked` if required inputs are missing. `milestone` SHALL equal
+`2026.07.491`. `tautology_checks_passed` SHALL be true only when the readiness
+fields are recomputed from independent row evidence and the local adversarial
+verifier reports no critical tautology on the emitted artifact.
+`overwrite_guidance_corrigendum_clean` SHALL be true only if row-level evidence
+is clean, unsafe false accepts are zero, negative controls pass, and
+adversarial checks pass. `honest_verdict` SHALL start with `complete:`,
+`flagged:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "complete if row-level corrigendum ran, flagged if tautology remains, or blocked if required inputs are missing."
+- `milestone`: principle "must equal 2026.07.491."
+- `source_flagged_artifact`: principle "must point to Exp5383."
+- `row_count`: principle "number of row-level solver fixtures."
+- `fixture_families`: principle "list covering benign, incomplete, harmful, contradictory, and no_hint controls."
+- `overwrite_rate_from_rows`: principle "computed only from row-level outcomes."
+- `forced_hint_harm_rate_from_rows`: principle "computed only from harmful/contradictory rows."
+- `post_projection_validity_rate_from_rows`: principle "solver-authoritative validity rate."
+- `fallback_completeness_rate_from_rows`: principle "fallback rate when hints are invalid or harmful."
+- `negative_control_pass_rate`: principle "pass rate for controls that must not benefit from hinting."
+- `tautology_checks_passed`: principle "true only if readiness fields are recomputed from independent row evidence."
+- `unsafe_false_accept_count`: principle "number of invalid/harmful solver outputs accepted."
+- `overwrite_guidance_corrigendum_clean`: principle "true only if row-level evidence is clean and adversarial checks pass."
+- `honest_verdict`: principle "one-line summary starting with complete:, flagged:, or blocked:."
+
+### SCENARIO-VERIFY-5393: Corrigendum Recomputes Guidance Claims From Rows
+
+Given Exp 5383 is present but locally flagged for tautological aggregate
+fields, when Exp 5393 runs, then it identifies the flagged aggregate fields,
+recovers row-level solver evidence for benign, incomplete, harmful,
+contradictory, and no-hint control families, records raw hint, solver
+pre-state, solver post-state, hint action, validity proof, conflict delta,
+fallback result, and unsafe status for every row, recomputes every required
+rate from those rows, writes
+`results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json`,
+and sets `overwrite_guidance_corrigendum_clean=true` only when unsafe false
+accepts are zero, negative controls pass, fallback completeness is preserved,
+post-projection validity is solver-authoritative, and the local adversarial
+verifier reports no critical tautology on the emitted artifact.
+
+If Exp 5383 is missing or unreadable, if the required fixture families are
+absent, if any row lacks the required solver evidence fields, if a harmful or
+contradictory hint is accepted unsafely, if negative controls show guidance
+benefit where none is allowed, or if the adversarial verifier still reports a
+critical tautology, then Exp 5393 writes the same result path with
+`status=blocked` or `status=flagged`,
+`overwrite_guidance_corrigendum_clean=false`, precise blocker details, and no
+downstream solver-guidance readiness claim.
+
+## Implementation Status (REQ-VERIFY-5393)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5393 | Planned (`python/carnot/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.py`, `results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json`) | Planned (`tests/python/test_experiment_5393_overwrite_guidance_tautology_corrigendum_v491.py`) |
+
 ### REQ-VERIFY-5380: Constraint-Tax Tool/Action Reachability Panel V490
 
 The repository SHALL provide Exp 5380 at
