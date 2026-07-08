@@ -1,0 +1,1583 @@
+{
+  "broad_kan_verification_claim": false,
+  "certificate_family": "bounded_active_constraint_hint_routing_certificate",
+  "certificate_records": {
+    "counterexample_regions": [
+      {
+        "actual_route": "reject_to_solver_fallback",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_synthetic_linear_review_stale_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "draft->review",
+            "review->submit"
+          ],
+          "conflict_front_hint": [
+            "review",
+            "submit"
+          ],
+          "known_active_constraints": [
+            "outline->draft",
+            "draft->review",
+            "review->submit"
+          ],
+          "known_conflict_front": [
+            "draft",
+            "review",
+            "submit"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            1.0,
+            1.0
+          ],
+          "active_constraint_recall": [
+            0.666667,
+            0.666667
+          ],
+          "conflict_front_overlap": [
+            0.666667,
+            0.666667
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            0.0,
+            0.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            1.0,
+            1.0
+          ]
+        },
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "stale_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      },
+      {
+        "actual_route": "overwrite_with_solver_active_set",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_synthetic_linear_review_adversarial_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "submit->outline"
+          ],
+          "conflict_front_hint": [
+            "outline"
+          ],
+          "known_active_constraints": [
+            "outline->draft",
+            "draft->review",
+            "review->submit"
+          ],
+          "known_conflict_front": [
+            "draft",
+            "review",
+            "submit"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            0.0,
+            0.0
+          ],
+          "active_constraint_recall": [
+            0.0,
+            0.0
+          ],
+          "conflict_front_overlap": [
+            0.0,
+            0.0
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            1.0,
+            1.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            0.0,
+            0.0
+          ]
+        },
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "adversarial_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      },
+      {
+        "actual_route": "reject_to_solver_fallback",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_synthetic_join_pack_stale_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "pick->pack",
+            "pack->ship",
+            "verify->ship"
+          ],
+          "conflict_front_hint": [
+            "pack",
+            "ship"
+          ],
+          "known_active_constraints": [
+            "pick->pack",
+            "label->pack",
+            "pack->ship",
+            "verify->ship"
+          ],
+          "known_conflict_front": [
+            "pack",
+            "ship"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            1.0,
+            1.0
+          ],
+          "active_constraint_recall": [
+            0.75,
+            0.75
+          ],
+          "conflict_front_overlap": [
+            1.0,
+            1.0
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            0.0,
+            0.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            1.0,
+            1.0
+          ]
+        },
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "stale_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      },
+      {
+        "actual_route": "overwrite_with_solver_active_set",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_synthetic_join_pack_adversarial_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "ship->label"
+          ],
+          "conflict_front_hint": [
+            "label"
+          ],
+          "known_active_constraints": [
+            "pick->pack",
+            "label->pack",
+            "pack->ship",
+            "verify->ship"
+          ],
+          "known_conflict_front": [
+            "pack",
+            "ship"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            0.0,
+            0.0
+          ],
+          "active_constraint_recall": [
+            0.0,
+            0.0
+          ],
+          "conflict_front_overlap": [
+            0.0,
+            0.0
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            1.0,
+            1.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            0.0,
+            0.0
+          ]
+        },
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "adversarial_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      },
+      {
+        "actual_route": "reject_to_solver_fallback",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_carry_forward_act_unlock_deliver_stale_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "unlock_door->enter_room",
+            "enter_room->deliver_package"
+          ],
+          "conflict_front_hint": [
+            "enter_room",
+            "deliver_package"
+          ],
+          "known_active_constraints": [
+            "pickup_key->unlock_door",
+            "unlock_door->enter_room",
+            "enter_room->deliver_package"
+          ],
+          "known_conflict_front": [
+            "unlock_door",
+            "enter_room",
+            "deliver_package"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            1.0,
+            1.0
+          ],
+          "active_constraint_recall": [
+            0.666667,
+            0.666667
+          ],
+          "conflict_front_overlap": [
+            0.666667,
+            0.666667
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            0.0,
+            0.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            1.0,
+            1.0
+          ]
+        },
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "stale_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      },
+      {
+        "actual_route": "overwrite_with_solver_active_set",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_carry_forward_act_unlock_deliver_adversarial_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "deliver_package->pickup_key"
+          ],
+          "conflict_front_hint": [
+            "pickup_key"
+          ],
+          "known_active_constraints": [
+            "pickup_key->unlock_door",
+            "unlock_door->enter_room",
+            "enter_room->deliver_package"
+          ],
+          "known_conflict_front": [
+            "unlock_door",
+            "enter_room",
+            "deliver_package"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            0.0,
+            0.0
+          ],
+          "active_constraint_recall": [
+            0.0,
+            0.0
+          ],
+          "conflict_front_overlap": [
+            0.0,
+            0.0
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            1.0,
+            1.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            0.0,
+            0.0
+          ]
+        },
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "adversarial_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      },
+      {
+        "actual_route": "reject_to_solver_fallback",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_carry_forward_act_build_deploy_stale_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "build_artifact->run_tests",
+            "run_tests->deploy",
+            "deploy->monitor"
+          ],
+          "conflict_front_hint": [
+            "run_tests",
+            "deploy",
+            "monitor"
+          ],
+          "known_active_constraints": [
+            "build_artifact->run_tests",
+            "run_tests->deploy",
+            "backup_config->deploy",
+            "deploy->monitor"
+          ],
+          "known_conflict_front": [
+            "run_tests",
+            "deploy",
+            "monitor"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            1.0,
+            1.0
+          ],
+          "active_constraint_recall": [
+            0.75,
+            0.75
+          ],
+          "conflict_front_overlap": [
+            1.0,
+            1.0
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            0.0,
+            0.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            1.0,
+            1.0
+          ]
+        },
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "stale_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      },
+      {
+        "actual_route": "overwrite_with_solver_active_set",
+        "bounded_fixture_only": true,
+        "cell_id": "active_constraint_cell_carry_forward_act_build_deploy_adversarial_hint",
+        "counterexample": {
+          "active_constraint_hint": [
+            "monitor->backup_config"
+          ],
+          "conflict_front_hint": [
+            "backup_config"
+          ],
+          "known_active_constraints": [
+            "build_artifact->run_tests",
+            "run_tests->deploy",
+            "backup_config->deploy",
+            "deploy->monitor"
+          ],
+          "known_conflict_front": [
+            "run_tests",
+            "deploy",
+            "monitor"
+          ]
+        },
+        "deterministic_check_passed": true,
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "feature_bounds": {
+          "active_constraint_precision": [
+            0.0,
+            0.0
+          ],
+          "active_constraint_recall": [
+            0.0,
+            0.0
+          ],
+          "conflict_front_overlap": [
+            0.0,
+            0.0
+          ],
+          "fallback_pressure": [
+            1.0,
+            1.0
+          ],
+          "overwrite_pressure": [
+            1.0,
+            1.0
+          ],
+          "solver_authority": [
+            1.0,
+            1.0
+          ],
+          "structural_validity": [
+            0.0,
+            0.0
+          ]
+        },
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "adversarial_hint",
+        "rejects_false_property": true,
+        "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+      }
+    ],
+    "false_property_checks": [
+      {
+        "active_constraint_hint": [
+          "draft->review",
+          "review->submit"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "review",
+          "submit"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ],
+        "rejected": true
+      },
+      {
+        "active_constraint_hint": [
+          "submit->outline"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "outline"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "fixture_id": "synthetic_linear_review",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ],
+        "rejected": true
+      },
+      {
+        "active_constraint_hint": [
+          "pick->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "pack",
+          "ship"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ],
+        "rejected": true
+      },
+      {
+        "active_constraint_hint": [
+          "ship->label"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "label"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "fixture_id": "synthetic_join_pack",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ],
+        "rejected": true
+      },
+      {
+        "active_constraint_hint": [
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "enter_room",
+          "deliver_package"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ],
+        "rejected": true
+      },
+      {
+        "active_constraint_hint": [
+          "deliver_package->pickup_key"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "pickup_key"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "fixture_id": "carry_forward_act_unlock_deliver",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ],
+        "rejected": true
+      },
+      {
+        "active_constraint_hint": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "deploy->monitor"
+        ],
+        "actual_route": "reject_to_solver_fallback",
+        "conflict_front_hint": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "stale_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ],
+        "rejected": true
+      },
+      {
+        "active_constraint_hint": [
+          "monitor->backup_config"
+        ],
+        "actual_route": "overwrite_with_solver_active_set",
+        "conflict_front_hint": [
+          "backup_config"
+        ],
+        "deterministic_check_passed": true,
+        "false_claimed_route": "accept_candidate_hint",
+        "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+        "fixture_id": "carry_forward_act_build_deploy",
+        "hint_mode": "adversarial_hint",
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ],
+        "rejected": true
+      }
+    ],
+    "true_property_checks": [
+      {
+        "deterministic_check_passed": true,
+        "fixture_ids": [
+          "synthetic_linear_review",
+          "synthetic_join_pack",
+          "carry_forward_act_unlock_deliver",
+          "carry_forward_act_build_deploy"
+        ],
+        "preserved": true,
+        "property_id": "exact_candidate_active_sets_remain_accepted",
+        "sample_count": 4
+      },
+      {
+        "deterministic_check_passed": true,
+        "fixture_ids": [
+          "synthetic_linear_review",
+          "synthetic_join_pack",
+          "carry_forward_act_unlock_deliver",
+          "carry_forward_act_build_deploy"
+        ],
+        "preserved": true,
+        "property_id": "no_hint_solver_baseline_remains_valid",
+        "sample_count": 4
+      },
+      {
+        "deterministic_check_passed": true,
+        "fixture_ids": [
+          "synthetic_linear_review",
+          "synthetic_linear_review",
+          "synthetic_linear_review",
+          "synthetic_linear_review",
+          "synthetic_join_pack",
+          "synthetic_join_pack",
+          "synthetic_join_pack",
+          "synthetic_join_pack",
+          "carry_forward_act_unlock_deliver",
+          "carry_forward_act_unlock_deliver",
+          "carry_forward_act_unlock_deliver",
+          "carry_forward_act_unlock_deliver",
+          "carry_forward_act_build_deploy",
+          "carry_forward_act_build_deploy",
+          "carry_forward_act_build_deploy",
+          "carry_forward_act_build_deploy"
+        ],
+        "preserved": true,
+        "property_id": "solver_authority_and_final_validity_preserved",
+        "sample_count": 16
+      }
+    ]
+  },
+  "certificate_size_bytes": 13354,
+  "claim_limits": [
+    "bounded active-constraint hint-routing fixture only",
+    "KAN/KANDy-style lifted features are deterministic certificate features, not trained KAN verification",
+    "counterexample regions cover Exp5406 stale and adversarial hint rows only",
+    "no broad KAN verification claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "counterexample_region_count": 8,
+  "counterexample_regions": [
+    {
+      "actual_route": "reject_to_solver_fallback",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_synthetic_linear_review_stale_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "draft->review",
+          "review->submit"
+        ],
+        "conflict_front_hint": [
+          "review",
+          "submit"
+        ],
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          1.0,
+          1.0
+        ],
+        "active_constraint_recall": [
+          0.666667,
+          0.666667
+        ],
+        "conflict_front_overlap": [
+          0.666667,
+          0.666667
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          0.0,
+          0.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          1.0,
+          1.0
+        ]
+      },
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "stale_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "actual_route": "overwrite_with_solver_active_set",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_synthetic_linear_review_adversarial_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "submit->outline"
+        ],
+        "conflict_front_hint": [
+          "outline"
+        ],
+        "known_active_constraints": [
+          "outline->draft",
+          "draft->review",
+          "review->submit"
+        ],
+        "known_conflict_front": [
+          "draft",
+          "review",
+          "submit"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          0.0,
+          0.0
+        ],
+        "active_constraint_recall": [
+          0.0,
+          0.0
+        ],
+        "conflict_front_overlap": [
+          0.0,
+          0.0
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          1.0,
+          1.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          0.0,
+          0.0
+        ]
+      },
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "adversarial_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "actual_route": "reject_to_solver_fallback",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_synthetic_join_pack_stale_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "pick->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "conflict_front_hint": [
+          "pack",
+          "ship"
+        ],
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          1.0,
+          1.0
+        ],
+        "active_constraint_recall": [
+          0.75,
+          0.75
+        ],
+        "conflict_front_overlap": [
+          1.0,
+          1.0
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          0.0,
+          0.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          1.0,
+          1.0
+        ]
+      },
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "stale_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "actual_route": "overwrite_with_solver_active_set",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_synthetic_join_pack_adversarial_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "ship->label"
+        ],
+        "conflict_front_hint": [
+          "label"
+        ],
+        "known_active_constraints": [
+          "pick->pack",
+          "label->pack",
+          "pack->ship",
+          "verify->ship"
+        ],
+        "known_conflict_front": [
+          "pack",
+          "ship"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          0.0,
+          0.0
+        ],
+        "active_constraint_recall": [
+          0.0,
+          0.0
+        ],
+        "conflict_front_overlap": [
+          0.0,
+          0.0
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          1.0,
+          1.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          0.0,
+          0.0
+        ]
+      },
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "adversarial_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "actual_route": "reject_to_solver_fallback",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_carry_forward_act_unlock_deliver_stale_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "conflict_front_hint": [
+          "enter_room",
+          "deliver_package"
+        ],
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          1.0,
+          1.0
+        ],
+        "active_constraint_recall": [
+          0.666667,
+          0.666667
+        ],
+        "conflict_front_overlap": [
+          0.666667,
+          0.666667
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          0.0,
+          0.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          1.0,
+          1.0
+        ]
+      },
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "stale_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "actual_route": "overwrite_with_solver_active_set",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_carry_forward_act_unlock_deliver_adversarial_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "deliver_package->pickup_key"
+        ],
+        "conflict_front_hint": [
+          "pickup_key"
+        ],
+        "known_active_constraints": [
+          "pickup_key->unlock_door",
+          "unlock_door->enter_room",
+          "enter_room->deliver_package"
+        ],
+        "known_conflict_front": [
+          "unlock_door",
+          "enter_room",
+          "deliver_package"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          0.0,
+          0.0
+        ],
+        "active_constraint_recall": [
+          0.0,
+          0.0
+        ],
+        "conflict_front_overlap": [
+          0.0,
+          0.0
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          1.0,
+          1.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          0.0,
+          0.0
+        ]
+      },
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "adversarial_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "actual_route": "reject_to_solver_fallback",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_carry_forward_act_build_deploy_stale_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "deploy->monitor"
+        ],
+        "conflict_front_hint": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ],
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          1.0,
+          1.0
+        ],
+        "active_constraint_recall": [
+          0.75,
+          0.75
+        ],
+        "conflict_front_overlap": [
+          1.0,
+          1.0
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          0.0,
+          0.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          1.0,
+          1.0
+        ]
+      },
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "stale_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    },
+    {
+      "actual_route": "overwrite_with_solver_active_set",
+      "bounded_fixture_only": true,
+      "cell_id": "active_constraint_cell_carry_forward_act_build_deploy_adversarial_hint",
+      "counterexample": {
+        "active_constraint_hint": [
+          "monitor->backup_config"
+        ],
+        "conflict_front_hint": [
+          "backup_config"
+        ],
+        "known_active_constraints": [
+          "build_artifact->run_tests",
+          "run_tests->deploy",
+          "backup_config->deploy",
+          "deploy->monitor"
+        ],
+        "known_conflict_front": [
+          "run_tests",
+          "deploy",
+          "monitor"
+        ]
+      },
+      "deterministic_check_passed": true,
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "feature_bounds": {
+        "active_constraint_precision": [
+          0.0,
+          0.0
+        ],
+        "active_constraint_recall": [
+          0.0,
+          0.0
+        ],
+        "conflict_front_overlap": [
+          0.0,
+          0.0
+        ],
+        "fallback_pressure": [
+          1.0,
+          1.0
+        ],
+        "overwrite_pressure": [
+          1.0,
+          1.0
+        ],
+        "solver_authority": [
+          1.0,
+          1.0
+        ],
+        "structural_validity": [
+          0.0,
+          0.0
+        ]
+      },
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "adversarial_hint",
+      "rejects_false_property": true,
+      "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492"
+    }
+  ],
+  "deterministic_verifier_passed": true,
+  "experiment": "experiment_5412_kan_active_constraint_certificate_v492",
+  "experiment_id": "exp5412-v492-kan-active-constraint-certificate",
+  "false_property_checks": [
+    {
+      "active_constraint_hint": [
+        "draft->review",
+        "review->submit"
+      ],
+      "actual_route": "reject_to_solver_fallback",
+      "conflict_front_hint": [
+        "review",
+        "submit"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "stale_hint",
+      "known_active_constraints": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "known_conflict_front": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "rejected": true
+    },
+    {
+      "active_constraint_hint": [
+        "submit->outline"
+      ],
+      "actual_route": "overwrite_with_solver_active_set",
+      "conflict_front_hint": [
+        "outline"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "fixture_id": "synthetic_linear_review",
+      "hint_mode": "adversarial_hint",
+      "known_active_constraints": [
+        "outline->draft",
+        "draft->review",
+        "review->submit"
+      ],
+      "known_conflict_front": [
+        "draft",
+        "review",
+        "submit"
+      ],
+      "rejected": true
+    },
+    {
+      "active_constraint_hint": [
+        "pick->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "actual_route": "reject_to_solver_fallback",
+      "conflict_front_hint": [
+        "pack",
+        "ship"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "stale_hint",
+      "known_active_constraints": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "known_conflict_front": [
+        "pack",
+        "ship"
+      ],
+      "rejected": true
+    },
+    {
+      "active_constraint_hint": [
+        "ship->label"
+      ],
+      "actual_route": "overwrite_with_solver_active_set",
+      "conflict_front_hint": [
+        "label"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "fixture_id": "synthetic_join_pack",
+      "hint_mode": "adversarial_hint",
+      "known_active_constraints": [
+        "pick->pack",
+        "label->pack",
+        "pack->ship",
+        "verify->ship"
+      ],
+      "known_conflict_front": [
+        "pack",
+        "ship"
+      ],
+      "rejected": true
+    },
+    {
+      "active_constraint_hint": [
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "actual_route": "reject_to_solver_fallback",
+      "conflict_front_hint": [
+        "enter_room",
+        "deliver_package"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "stale_hint",
+      "known_active_constraints": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "known_conflict_front": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "rejected": true
+    },
+    {
+      "active_constraint_hint": [
+        "deliver_package->pickup_key"
+      ],
+      "actual_route": "overwrite_with_solver_active_set",
+      "conflict_front_hint": [
+        "pickup_key"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "fixture_id": "carry_forward_act_unlock_deliver",
+      "hint_mode": "adversarial_hint",
+      "known_active_constraints": [
+        "pickup_key->unlock_door",
+        "unlock_door->enter_room",
+        "enter_room->deliver_package"
+      ],
+      "known_conflict_front": [
+        "unlock_door",
+        "enter_room",
+        "deliver_package"
+      ],
+      "rejected": true
+    },
+    {
+      "active_constraint_hint": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "deploy->monitor"
+      ],
+      "actual_route": "reject_to_solver_fallback",
+      "conflict_front_hint": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_stale_partial_active_set_can_route_candidate",
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "stale_hint",
+      "known_active_constraints": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "known_conflict_front": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "rejected": true
+    },
+    {
+      "active_constraint_hint": [
+        "monitor->backup_config"
+      ],
+      "actual_route": "overwrite_with_solver_active_set",
+      "conflict_front_hint": [
+        "backup_config"
+      ],
+      "deterministic_check_passed": true,
+      "false_claimed_route": "accept_candidate_hint",
+      "false_property_id": "false_adversarial_contradiction_can_route_candidate",
+      "fixture_id": "carry_forward_act_build_deploy",
+      "hint_mode": "adversarial_hint",
+      "known_active_constraints": [
+        "build_artifact->run_tests",
+        "run_tests->deploy",
+        "backup_config->deploy",
+        "deploy->monitor"
+      ],
+      "known_conflict_front": [
+        "run_tests",
+        "deploy",
+        "monitor"
+      ],
+      "rejected": true
+    }
+  ],
+  "false_property_count": 8,
+  "false_property_rejection_rate": 1.0,
+  "field_principles": {
+    "broad_kan_verification_claim": "no overclaim.",
+    "certificate_family": "bounded claim scope.",
+    "certificate_size_bytes": "compactness.",
+    "counterexample_region_count": "falsification evidence.",
+    "deterministic_verifier_passed": "final authority.",
+    "false_property_rejection_rate": "certificate utility.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "deterministic certificate checks.",
+    "kan_active_constraint_certificate_ready": "downstream evidence.",
+    "true_property_preservation_rate": "no over-rejection."
+  },
+  "honest_verdict": "complete: bounded active-constraint certificate rejected stale and adversarial false hint-routing properties while preserving exact candidate hints and making no broad KAN verification claim",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "kan_active_constraint_certificate_ready": true,
+  "methodology_note": "Exp5412 certifies only the bounded active-constraint hint-routing rows replayed from Exp5406. It rejects stale/adversarial false properties and preserves exact candidate hints; it does not verify KANs broadly.",
+  "milestone": "2026.07.492",
+  "random_seed": 5412,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "sha256:57e9577b388f6128c21724abc733a6a3d7bd1022183d6d1f5d7614a21b71ce7f",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5412.kan_active_constraint_certificate.v492",
+  "source_artifact_checksums": {
+    "exp5406": "sha256:da53137b251675929032d9ef1e0f16548af268dcd84c137d269d71d6f0dea7d7",
+    "module": "sha256:5029c7927d665e530fb4f553cb180204772c7d3342ddc1db2e989329080810e6",
+    "spec": "sha256:6b4418f5fecc9aa3732b8579925d173366670c95c45721325aae26e75933a7eb"
+  },
+  "source_artifacts": [
+    "results/experiment_5406_active_constraint_warmstart_guidance_v492.json"
+  ],
+  "source_experiment": "experiment_5406_active_constraint_warmstart_guidance_v492",
+  "source_rows": 16,
+  "spec_refs": [
+    "REQ-KAN-5412",
+    "SCENARIO-KAN-5412"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5412_kan_active_constraint_certificate_v492.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5412_kan_active_constraint_certificate_v492.py -m pytest tests/python/test_experiment_5412_kan_active_constraint_certificate_v492.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5412_kan_active_constraint_certificate_v492.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "true_property_checks": [
+    {
+      "deterministic_check_passed": true,
+      "fixture_ids": [
+        "synthetic_linear_review",
+        "synthetic_join_pack",
+        "carry_forward_act_unlock_deliver",
+        "carry_forward_act_build_deploy"
+      ],
+      "preserved": true,
+      "property_id": "exact_candidate_active_sets_remain_accepted",
+      "sample_count": 4
+    },
+    {
+      "deterministic_check_passed": true,
+      "fixture_ids": [
+        "synthetic_linear_review",
+        "synthetic_join_pack",
+        "carry_forward_act_unlock_deliver",
+        "carry_forward_act_build_deploy"
+      ],
+      "preserved": true,
+      "property_id": "no_hint_solver_baseline_remains_valid",
+      "sample_count": 4
+    },
+    {
+      "deterministic_check_passed": true,
+      "fixture_ids": [
+        "synthetic_linear_review",
+        "synthetic_linear_review",
+        "synthetic_linear_review",
+        "synthetic_linear_review",
+        "synthetic_join_pack",
+        "synthetic_join_pack",
+        "synthetic_join_pack",
+        "synthetic_join_pack",
+        "carry_forward_act_unlock_deliver",
+        "carry_forward_act_unlock_deliver",
+        "carry_forward_act_unlock_deliver",
+        "carry_forward_act_unlock_deliver",
+        "carry_forward_act_build_deploy",
+        "carry_forward_act_build_deploy",
+        "carry_forward_act_build_deploy",
+        "carry_forward_act_build_deploy"
+      ],
+      "preserved": true,
+      "property_id": "solver_authority_and_final_validity_preserved",
+      "sample_count": 16
+    }
+  ],
+  "true_property_count": 3,
+  "true_property_preservation_rate": 1.0
+}

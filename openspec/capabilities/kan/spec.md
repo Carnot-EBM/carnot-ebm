@@ -1222,6 +1222,70 @@ counterexample regions, explicit claim limits,
 `broad_kan_verification_claim=false`, and
 `dynamic_counterexample_certificate_ready=true` only for the bounded fixture.
 
+## REQ-KAN-5412: V492 Bounded Active-Constraint KAN/KANDy Certificate
+
+The KAN verification tier SHALL add an Exp 5412 CPU-only bounded diagnostic that
+connects the Exp 5399 KAN/KANDy-style counterexample certificate shape to the
+Exp 5406 active-constraint warm-start guidance lane. The experiment MUST read
+or replay the committed Exp 5406 active-constraint rows, derive a compact
+lifted-feature certificate over hint precision, recall, structural validity,
+conflict-front agreement, overwrite pressure, fallback pressure, and solver
+authority, and emit explicit counterexample regions for false active-constraint
+or routing properties. It MUST NOT modify `scripts/research_conductor.py`.
+
+The false-property family MUST be bounded to active-constraint hint routing:
+stale partial active-set hints and adversarial contradictory active-set hints
+MUST NOT be accepted as candidate warm-start routes. The matching true-property
+controls MUST preserve exact candidate active-set hints, no-hint solver
+baselines, final sequence validity, and solver authority so the certificate
+does not over-reject useful hints. The deterministic verifier MUST check every
+counterexample region against the Exp 5406 row records. The experiment MUST
+state directly that the result is a bounded active-constraint certificate only
+and MUST NOT claim broad KAN verification, trained-network soundness, hardware
+execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5412_kan_active_constraint_certificate_v492.json` with the
+required top-level fields `certificate_family`,
+`counterexample_region_count`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `certificate_size_bytes`,
+`broad_kan_verification_claim`, `deterministic_verifier_passed`,
+`kan_active_constraint_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `certificate_family` MUST name a bounded claim scope.
+`broad_kan_verification_claim` MUST be false.
+`inference_substrate` MUST equal
+`verifier_ensemble_against_cached_candidates`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_active_constraint_certificate_ready` MUST be
+true only when false active-constraint properties are deterministically
+rejected, true-property controls are preserved, the certificate is compactly
+serialized, and claim limits are explicit.
+
+Required field principles:
+- `certificate_family`: bounded claim scope.
+- `counterexample_region_count`: falsification evidence.
+- `false_property_rejection_rate`: certificate utility.
+- `true_property_preservation_rate`: no over-rejection.
+- `certificate_size_bytes`: compactness.
+- `broad_kan_verification_claim`: no overclaim.
+- `deterministic_verifier_passed`: final authority.
+- `kan_active_constraint_certificate_ready`: downstream evidence.
+- `inference_substrate`: deterministic certificate checks.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5412: Active-Constraint False Properties Produce Certificate Regions
+
+Given the committed Exp 5406 active-constraint warm-start rows,
+When Exp 5412 builds the bounded KAN/KANDy-style active-constraint certificate,
+Then stale partial active-set hints and adversarial contradictory active-set
+hints produce explicit counterexample regions, exact candidate hints and
+no-hint solver baselines remain valid true-property controls,
+`false_property_rejection_rate=1.0`,
+`true_property_preservation_rate=1.0`,
+`broad_kan_verification_claim=false`,
+`deterministic_verifier_passed=true`, and
+`kan_active_constraint_certificate_ready=true` only for the bounded
+active-constraint fixture.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1271,6 +1335,7 @@ counterexample regions, explicit claim limits,
 | REQ-KAN-5332 | Planned | Exp 5332 target: V486 bounded false-property sensitivity and counterexample-localization diagnostic over Exp 5277/5316 fixtures, with per-unit perturbations and no broad certificate claim. |
 | REQ-KAN-5346 | Planned | Exp 5346 target: V487 bounded bridge from Exp 5332 localized counterexample cells to explicit downstream KAN cuts / Ising penalties, with before/after false-property rejection and true-property preservation checks. |
 | REQ-KAN-5399 | Planned | Exp 5399 target: V491 bounded KAN/KANDy-style dynamic counterexample certificate over Exp 5395 verifier-routing drift traces or an explicit synthetic fallback, with held-out true/false checks and no broad KAN verification claim. |
+| REQ-KAN-5412 | Planned | Exp 5412 target: V492 bounded KAN/KANDy-style active-constraint hint-routing certificate over Exp 5406 rows, with stale/adversarial false-property counterexamples, true-property preservation, and no broad KAN verification claim. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
