@@ -10570,3 +10570,4 @@ I’m going to append a small |
 | 2026-07-08 18:14 UTC | Gated p-bit PolarFire timing variance receipts aft | OK | 87 passed, 1 warning in 9.27s |
 | 2026-07-08 18:27 UTC | Continuous self-learning verified workflow memory  | OK | 92 passed, 1 warning in 11.02s |
 | 2026-07-08 18:41 UTC | Gated CSL workflow-memory transfer and negative-tr | OK | 92 passed, 1 warning in 10.66s |
+| 2026-07-08 18:55 UTC | ARC live registry-guided reinduction level-up atte | OK | 86 passed, 1 warning in 8.33s |
