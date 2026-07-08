@@ -1307,6 +1307,105 @@ aggregate, or if cost accounting no longer matches row records,
 **Then** validation fails closed and no downstream verifier-potential fixture
 readiness claim is made.
 
+### REQ-SAFE-5444: Gated SOTA Verifier-Potential Decoding Pilot V495
+
+Carnot SHALL provide Exp5444 at
+`python/carnot/experiment_5444_gated_sota_energy_guided_decoding_v495.py`
+and write
+`results/experiment_5444_gated_sota_energy_guided_decoding_v495.json`
+without modifying `scripts/research_conductor.py`.  The workflow SHALL run only
+when Exp5443 reports `verifier_potential_fixture_ready=true`; otherwise it
+SHALL emit a blocked artifact before model generation.
+
+Before generation, the workflow SHALL verify a CUDA-visible
+llama.cpp-compatible GGUF runtime, non-empty local `model_path` entries for the
+mandated local SOTA GGUF IDs, and GPU-offload evidence.  `model_specs` SHALL
+include all of:
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+The pilot SHALL select a bounded Exp5443 fixture set that exact final verifiers
+can score.  For every selected fixture it SHALL attempt three conditions where
+the local runtime supports them: unconstrained decoding,
+grammar-only constrained decoding, and
+verifier-potential guided prefix/particle decoding.
+Every generated candidate SHALL record the model spec, GGUF path,
+runtime backend, `n_gpu_layers`/offload evidence, random seed, prompt hash,
+token budget, reward-evaluation count, and generation duration.
+
+Exact final verifiers SHALL run on every candidate.  Model self-verdicts,
+prompt compliance claims, grammar validity, and verifier-potential scores SHALL
+be advisory only and SHALL NOT replace deterministic final authority.  Aggregate
+metrics SHALL be recomputed from row records with independent predicates:
+accepted-validity, semantic false accepts, unsafe false accepts, action
+unreachability false accepts, abstention, reward budget, and guided-validity
+deltas.  `guided_validity_delta_vs_unconstrained` and
+`guided_validity_delta_vs_grammar_only` SHALL be computed as
+guided accepted rate minus the respective baseline rate; validation SHALL fail
+if either delta is copied from a baseline rate.
+
+The terminal result artifact MUST include:
+`preconditions_checked`, `model_specs`, `headline_required_any_of`,
+`runtime_backend`, `gpu_offload_verified`, `fixture_count`, `condition_names`,
+`row_results_path`, `exact_final_authority`, `reward_evaluation_budget`,
+`guided_validity_delta_vs_unconstrained`,
+`guided_validity_delta_vs_grammar_only`, `semantic_false_accept_rate`,
+`unsafe_false_accept_rate`, `action_unreachability_rate`, `abstention_rate`,
+`metric_independence_checks_passed`, `verifier_guided_decoding_ready`,
+`inference_substrate`, and `honest_verdict`.  A complete artifact SHALL set
+`inference_substrate=live_llm_inference`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+Field principles:
+- `preconditions_checked`: compute-bound task must fail fast.
+- `model_specs`: mandated SOTA GGUF provenance.
+- `headline_required_any_of`: confirms at least one mandated SOTA model ran.
+- `runtime_backend`: GGUF/llama.cpp path, not transformers tokenizer path.
+- `gpu_offload_verified`: no CPU-only SOTA headline.
+- `fixture_count`: bounded evaluation size.
+- `condition_names`: baseline clarity.
+- `row_results_path`: inspectable evidence.
+- `exact_final_authority`: deterministic verifier authority.
+- `reward_evaluation_budget`: inference cost accounting.
+- `guided_validity_delta_vs_unconstrained`: utility measurement.
+- `guided_validity_delta_vs_grammar_only`: incremental utility measurement.
+- `semantic_false_accept_rate`: hallucination boundary.
+- `unsafe_false_accept_rate`: safety boundary.
+- `action_unreachability_rate`: action-reachability boundary.
+- `abstention_rate`: selective behavior boundary.
+- `metric_independence_checks_passed`: tautology prevention.
+- `verifier_guided_decoding_ready`: capstone evidence.
+- `inference_substrate`: real local model invocation.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5444: Guided Decoding Rows Are Judged By Exact Final Verifiers
+
+**Given** Exp5443 is ready, at least one mandated local SOTA GGUF resolves to a
+local `.gguf` file, and the llama.cpp runtime reports CUDA/GPU-offload evidence,
+
+**When** Exp5444 runs the bounded unconstrained, grammar-only, and
+verifier-potential guided conditions,
+
+**Then** it writes
+`results/experiment_5444_gated_sota_energy_guided_decoding_v495.json`, writes
+row-level evidence to
+`results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl`,
+records the three
+mandated model specs, records the runtime/backend/offload receipts, runs exact
+final verifiers on every candidate, computes the two guided-validity deltas from
+row-derived condition rates, and sets `verifier_guided_decoding_ready=true` only
+when exact authority, offload, row evidence, reward-budget accounting, and
+metric-independence checks all pass.
+
+**And** if the Exp5443 gate is false, mandated model specs are missing, GPU
+offload is absent, final verifier authority is bypassed, row evidence is
+missing, a guided delta is copied from a baseline rate, or
+`scripts/research_conductor.py` is modified,
+
+**Then** validation fails closed or emits a blocked artifact, and no
+verifier-guided decoding readiness claim is made.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1335,5 +1434,6 @@ readiness claim is made.
 | REQ-SAFE-5430 | Planned | Exp 5430: row-level structured tautology corrigendum |
 | REQ-SAFE-5431 | Planned | Exp 5431: structured constraint taxonomy replication |
 | REQ-SAFE-5443 | Planned | Exp 5443: deterministic verifier-potential prefix fixture |
+| REQ-SAFE-5444 | Planned | Exp 5444: gated local SOTA verifier-potential decoding pilot |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
