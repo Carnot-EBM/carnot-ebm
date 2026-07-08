@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.493",
+  "generated_at": "2026-07-08T15:39:14.488791Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No data available this milestone for experiment-level throughput: the authoritative timing block records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. The idle GPU snapshot is not evidence of a compute-bound execution bug because the timing block contains no compute_bound rows.",
+  "bottlenecks_identified": [
+    "No data available this milestone for experiment-level bottlenecks.",
+    "No compute-bound slow path, GPU-utilization bottleneck, or 2+ parallel-model scheduling miss can be identified from the supplied timing block."
+  ],
+  "improvements_suggested": [
+    "Persist a structured milestone execution manifest as experiments are launched and completed so retrospectives do not depend only on post-hoc commit or mtime reconstruction.",
+    "Emit an explicit no-experiment-closeout diagnostic when both timing reconstruction paths find no post-activation experiment commits.",
+    "Keep GPU-idle and DualGPURunner recommendations gated on explicit compute_bound and parallel-model markers."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a conductor-side manifest record for each experiment launch, completion, duration, compute_bound flag, and model-parallelism marker.",
+    "Add a closeout check that distinguishes a genuinely empty milestone from missing timing capture before asking for operational interpretation.",
+    "Add regression coverage that keeps GPU-idle warnings out of retrospectives when compute_bound_experiments_count is 0."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective does not infer experiment IDs, durations, or metrics from outside the supplied timing block. With no compute-bound entries, the correct GPU conclusion is null rather than a utilization complaint.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}
