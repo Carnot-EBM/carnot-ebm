@@ -16314,6 +16314,96 @@ discipline rather than speedup.
 
 ---
 
+### REQ-HW-5398
+
+**Title:** Hardware-continuity v491 MUST emit a hash-linked evidence graph with repeatability classes
+
+**Description:**
+Experiment 5398 MUST produce
+`results/experiment_5398_hardware_evidence_graph_repeatability_v491.json` as a
+principle-annotated v491 receipt for KV260, PolarFire, and GateMate. The
+artifact MUST extend the v490 hash-chain receipt into a separate hash-linked
+evidence graph containing command nodes, observation nodes, verification nodes,
+board-state hashes, input hashes, output hashes, edge relations, and offline
+verifier status.
+
+KV260 evidence MUST be SSH/board-local reachability only. The experiment MUST
+record DNS or SSH-alias diagnostics for `kria`, then run the exact
+non-destructive reachability command
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. If KV260 is
+unreachable, the artifact MUST report `kv260_reachability.value.status` as
+`unreachable` with the blocked reason. Host block-device paths such as
+`/dev/mmcblk*`, `/dev/disk`, or host SD-card probes MUST NOT be used as KV260
+evidence.
+
+PolarFire MUST run the established safe board-local deterministic hash workload
+at least three times when authenticated SSH is reachable. The artifact MUST
+record the repeated board-local timings, output hashes, timing variance,
+repeat count, and a reproducibility class. If PolarFire is not reachable, the
+artifact MUST record repeat count zero, null timing variance, and an honest
+blocked class.
+
+GateMate MUST record DirtyJTAG USB visibility, current toolchain state, and
+whether a real workload path is available. It may run only non-destructive
+detection or workload commands when the physical/JTAG path is actually
+available. If that path is unavailable, GateMate MUST be marked
+`blocked_physical_or_jtag`, and `gatemate_workload_path_available.value` MUST
+be false.
+
+`hardware_speedup_claim.value` MUST remain false unless repeated board-local
+timing evidence and a valid same-workload speedup comparison both exist. In
+this v491 receipt, repeated PolarFire workload timing may set
+`repeatability_evidence_present.value=true`, but it MUST NOT by itself enable a
+speedup claim because no board-vs-baseline acceleration comparison is made.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5398_hardware_evidence_graph_repeatability_v491 --date 20260708`
+  writes `results/experiment_5398_hardware_evidence_graph_repeatability_v491.json`
+  and the separate evidence graph named by `evidence_graph_path.value`.
+- The artifact includes `spec_refs` containing `REQ-HW-5398` and
+  `SCENARIO-HW-5398`, `random_seed=5398`, `milestone.value="2026.07.491"`,
+  and a stable `reproducibility_checksum`.
+- Required fields include `status`, `milestone`, `boards_checked`,
+  `evidence_graph_path`, `evidence_graph_hash`, `offline_verifier_path`,
+  `offline_verifier_passed`, `polar_fire_repeat_count`,
+  `polar_fire_timing_variance`, `kv260_reachability`,
+  `gatemate_workload_path_available`, `repeatability_evidence_present`,
+  `hardware_speedup_claim`, `destructive_action_taken`, and
+  `honest_verdict`.
+- The evidence graph verifier recomputes every node hash, checks the
+  previous-hash links, validates edges, rejects destructive commands, rejects
+  host block-device KV260 evidence, and confirms the graph hash.
+- `hardware_speedup_claim.value=false` and
+  `destructive_action_taken.value=false` in every valid v491 artifact.
+
+**Implementation status:** Planned (Exp 5398)
+
+---
+
+### SCENARIO-HW-5398
+
+**Scenario:** Exp 5398 writes v491 evidence graph repeatability receipts without speedup claims.
+
+**Given:** Exp 5386 recorded hash-chained board receipts but lacked repeated
+board-local timing evidence for a speedup claim.
+**When:** Experiment 5398 records KV260 DNS/SSH diagnostics, attempts the exact
+KV260 BatchMode SSH reachability command, repeats the safe PolarFire workload
+three times when SSH is reachable, records GateMate DirtyJTAG/toolchain and
+physical/JTAG status, constructs a hash-linked evidence graph, and runs the
+offline graph verifier.
+**Then:** It writes the v491 artifact and evidence graph with the required
+principle-wrapped fields, KV260 SSH-only evidence, PolarFire repeatability
+class and timing variance when available, GateMate blocked or detected status,
+`offline_verifier_passed.value=true` for a valid graph,
+`repeatability_evidence_present.value=true` only when repeated board-local
+timing evidence exists, `hardware_speedup_claim.value=false`,
+`destructive_action_taken.value=false`, and an `honest_verdict.value` beginning
+with `complete:` or `blocked:`.
+
+**Implementation status:** Planned (Exp 5398)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
