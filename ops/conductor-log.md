@@ -10567,3 +10567,4 @@ I’m going to append a small |
 | 2026-07-08 17:24 UTC | Gated structured constraint taxonomy replication a | OK | 87 passed, 1 warning in 8.43s |
 | 2026-07-08 17:38 UTC | Ontology and soft-logic constraint-memory fixture | OK | 91 passed, 1 warning in 10.16s |
 | 2026-07-08 17:51 UTC | Active-constraint LNS diversity scale-up with conf | OK | 90 passed, 1 warning in 9.96s |
+| 2026-07-08 18:14 UTC | Gated p-bit PolarFire timing variance receipts aft | OK | 87 passed, 1 warning in 9.27s |
