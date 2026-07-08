@@ -5835,3 +5835,9 @@ The critical path for milestone .250:
 - theme: operational retrospective with no authorized post-activation experiment timing rows
 - key result: no data available this milestone; live git-log and disk-mtime reconstruction found no experiment commits, leaving 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks, so the idle GPU snapshot stays gated off and no DualGPURunner conclusion is supportable
 - acceptance: 0/0 criteria met -- the timing block supplies no milestone-scoped experiment rows to score
+
+### Milestone 2026.07.494
+- exp_range: no data available this milestone
+- theme: timing assembly mismatch blocks operational retrospective accounting
+- key result: no data available this milestone; the authoritative timing data reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also reporting changelog references for 2026.07.494, so compute-bound durations, GPU efficiency, and DualGPURunner assessment cannot be derived
+- acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for scoring
