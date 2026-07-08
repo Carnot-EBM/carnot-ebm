@@ -1,0 +1,677 @@
+{
+  "arc_new_level_banked": false,
+  "artifact_read_errors": [],
+  "blocked_lanes": [
+    {
+      "blocked_reason": "no_authenticated_backend_receipt",
+      "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+      "classification": "blocked",
+      "evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      },
+      "lane": "token_internal_feature_lane_closed",
+      "source_artifacts": [
+        "results/experiment_5428_transition_v494.json",
+        "results/experiment_5438_kan_ontology_measurement_certificate_v494.json",
+        "results/experiment_5439_prd_gap_agent_failure_table_v494.json"
+      ]
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded solver-guidance evidence; LNS hints are advisory and solver authority is final",
+      "classification": "bounded",
+      "evidence": {
+        "accepted_hint_count": 4,
+        "active_constraint_diversity_ready": true,
+        "claim_limits": [
+          "deterministic CPU-local diversity diagnostic",
+          "LNS, active-constraint, active-tail, frozen-variable, and conflict-front hints are advisory",
+          "solver recomputes every hint before accept, reject, or overwrite decisions",
+          "stale and adversarial hint rows cannot determine final validity",
+          "no LLM, generated text judge, hardware sampler, or speedup claim"
+        ],
+        "conflict_front_precision": 0.666667,
+        "fixture_count": 4,
+        "honest_verdict": "complete: active-constraint LNS hints covered 4 families, reduced solver work by 138, and preserved solver authority",
+        "overwritten_hint_count": 4,
+        "rejected_hint_count": 4,
+        "solver_validity_preserved": true,
+        "subproblem_family_count": 4,
+        "work_delta": 138
+      },
+      "lane": "active_constraint_diversity_lns",
+      "source_artifacts": [
+        "results/experiment_5433_active_constraint_diversity_lns_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "matched CPU and PolarFire timing variance receipts only; no acceleration claim",
+      "classification": "bounded",
+      "evidence": {
+        "board_repeat_count": 10,
+        "board_timing_variance": 1.45851e-07,
+        "claim_refusal": "No hardware speedup is claimed; slower board timing is a valid outcome and this artifact only records matched variance receipts.",
+        "cpu_repeat_count": 10,
+        "cpu_timing_variance": 3.75e-09,
+        "gatemate_diagnostic_checked": true,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: gated CPU and PolarFire timing variance receipts are hash-matched; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "measurement_access_complete": true,
+        "polarfire_reachable": true,
+        "same_result_hash_match": true,
+        "same_workload_hash_match": true,
+        "timing_variance_receipts_ready": true
+      },
+      "lane": "pbit_polarfire_timing_variance",
+      "source_artifacts": [
+        "results/experiment_5434_pbit_polarfire_timing_variance_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded KAN ontology/workflow-memory measurement certificate; no broad KAN verification claim",
+      "classification": "bounded",
+      "evidence": {
+        "broad_kan_verification_claim": false,
+        "certificate_count": 16,
+        "claim_limits": [
+          "bounded ontology/workflow-memory measurement-access fixture only",
+          "observable false properties are rejected only when Exp5432 measured rows contradict them",
+          "graph, kernel, board, token, and internal claims require evidence absent here",
+          "missing evidence is classified as unsupported, not as a negative broad proof",
+          "no broad KAN verification claim",
+          "no trained-network soundness claim",
+          "no hardware execution or hardware speedup claim",
+          "no live LLM inference claim"
+        ],
+        "false_property_rejection_rate": 1.0,
+        "honest_verdict": "complete: bounded ontology/workflow-memory KAN certificate rejected observable false ontology and retrieval claims and unsupported graph/kernel/board/token/internal claims while preserving true measured properties with no broad KAN verification claim",
+        "kan_ontology_certificate_ready": true,
+        "missing_evidence_detected": true,
+        "ontology_property_count": 9,
+        "true_property_preservation_rate": 1.0,
+        "workflow_memory_property_count": 7
+      },
+      "lane": "kan_ontology_certificates",
+      "source_artifacts": [
+        "results/experiment_5438_kan_ontology_measurement_certificate_v494.json"
+      ]
+    }
+  ],
+  "conductor_unchanged": true,
+  "experiment": "experiment_5440_capstone_v494",
+  "experiment_id": "exp5440-v494-capstone",
+  "field_principles": {
+    "arc_new_level_banked": "ARC north-star metric; true only for a reproduction-gated new level.",
+    "blocked_lanes": "precondition honesty; flagged, closed, or missing-precondition lanes.",
+    "bounded_lanes": "partial evidence boundary; useful but limited receipts that must not become headline claims.",
+    "conductor_unchanged": "user prohibition; derived from git status.",
+    "future_token_signal_allowed": "token/internal lane closure; must remain false without authenticated backend receipts.",
+    "hardware_speedup_claim": "no unsupported acceleration; must remain false for `.494`.",
+    "headline_ready_lanes": "positive evidence boundary; only unflagged closed rows with no stronger blocker.",
+    "honest_null_lanes": "null-result honesty; executed lanes with no banked or positive outcome.",
+    "honest_verdict": "terminal status; starts with complete: or blocked: and names the capstone evidence boundary.",
+    "inference_substrate": "no hidden live model inference; must equal aggregation_from_upstream_artifacts.",
+    "local_sota_gguf_receipts_valid": "SOTA model provenance; true only when the structured artifacts carry GGUF model specs and GPU-offload receipts.",
+    "milestone": "conductor route key; must equal 2026.07.494.",
+    "next_recommendations": "evidence-based planning handoff; no detailed next milestone plan.",
+    "research_roadmap_yaml_unchanged": "user prohibition; derived from git status.",
+    "upstream_artifacts_missing": "no fabricated evidence; missing or unreadable inputs are recorded here.",
+    "upstream_artifacts_read": "provenance; ordered list of source context and result artifacts actually read."
+  },
+  "future_token_signal_allowed": false,
+  "hardware_speedup_claim": false,
+  "headline_ready_lanes": [
+    {
+      "blocked_reason": "",
+      "claim_boundary": "clean row-level corrigendum; this unlocks structured verification but is not itself a broad SOTA claim",
+      "classification": "headline_ready",
+      "evidence": {
+        "adversarial_verify_clean": true,
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: structured tautology corrigendum clean with row checksums",
+        "prefix_metric_independence_check": true,
+        "risk_metric_independence_check": true,
+        "row_count_recomputed": 84,
+        "structured_corrigendum_clean": true,
+        "unreachable_delta_recomputed": true
+      },
+      "lane": "structured_corrigendum",
+      "source_artifacts": [
+        "results/experiment_5430_structured_tautology_corrigendum_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "local structured taxonomy replication with independent metrics and bounded risk; not a broad quality claim",
+      "classification": "headline_ready",
+      "evidence": {
+        "abstention_rate": 0.619048,
+        "accepted_risk_bound": 0.25884,
+        "accepted_risk_bound_threshold": 0.35,
+        "fixture_count": 42,
+        "gated_upstream_clean": true,
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: structured constraint taxonomy replication ready",
+        "metric_independence_checks_passed": true,
+        "semantic_false_accept_rate": 0.0,
+        "structured_taxonomy_replication_ready": true,
+        "unreachable_action_false_accept_rate": 0.0,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "lane": "structured_taxonomy_replication",
+      "source_artifacts": [
+        "results/experiment_5431_structured_constraint_taxonomy_replication_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "deterministic ontology-memory fixture with solver authority preserved",
+      "classification": "headline_ready",
+      "evidence": {
+        "deterministic_solver_authority": true,
+        "false_triple_rejection_rate": 1.0,
+        "honest_verdict": "complete: ontology constraint memory fixture verified deterministically",
+        "ontology_constraint_memory_ready": true,
+        "ontology_fixture_count": 12,
+        "soft_logic_overrode_solver": false,
+        "soft_logic_residuals_recorded": true,
+        "triple_count": 51,
+        "unsupported_update_abstention_rate": 1.0,
+        "valid_update_preservation_rate": 1.0
+      },
+      "lane": "ontology_softlogic_memory",
+      "source_artifacts": [
+        "results/experiment_5432_ontology_softlogic_constraint_memory_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "controller-level workflow memory with verification-before-store, rollback, and no weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "case_memory_count": 2,
+        "honest_verdict": "complete: verified workflow memory promoted only validated case and skill sidecars, deflected retrieval traps, retained raw episodes, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "ontology_kernel_validation_rate": 1.0,
+        "quality_preserved": true,
+        "raw_episodes_retained": true,
+        "reliance_drift_metric": 0.12,
+        "retrieval_trap_deflection_rate": 1.0,
+        "rollback_verified": true,
+        "skill_memory_count": 2,
+        "verified_workflow_memory_ready": true,
+        "verify_before_store_pass_rate": 0.5,
+        "workflow_episode_count": 8
+      },
+      "lane": "verified_workflow_memory_csl",
+      "source_artifacts": [
+        "results/experiment_5435_verified_workflow_memory_csl_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "workflow-memory transfer stress with in-domain lift, shift deflection, rollback, and no weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "csl_transfer_stress_ready": true,
+        "honest_verdict": "complete: verified workflow memory transferred in-domain, deflected negative transfer under shift, verified rollback, and did not mutate model or adapter weights",
+        "in_domain_quality_delta": 0.08,
+        "negative_transfer_deflection_rate": 1.0,
+        "no_weight_mutation": true,
+        "out_of_domain_quality_delta": 0.0,
+        "promoted_transfer_count": 4,
+        "quarantined_transfer_count": 3,
+        "reliance_drift_metric": 0.74,
+        "rollback_verified": true,
+        "transfer_fixture_count": 9
+      },
+      "lane": "csl_memory_transfer_stress",
+      "source_artifacts": [
+        "results/experiment_5436_csl_memory_transfer_stress_v494.json"
+      ]
+    }
+  ],
+  "honest_null_lanes": [
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live ARC path ran through the reproduction gate; no new level was banked",
+      "classification": "honest_null",
+      "evidence": {
+        "arc_levelup_lint_passed": true,
+        "arc_new_level_banked": false,
+        "attempt_count": 51,
+        "failure_mode": "bounded_budget_no_levelup",
+        "frontier_expansion_count": 22,
+        "honest_verdict": "honest_null: cn04 L4 bounded_budget_no_levelup",
+        "newly_reached_levels": [],
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "reproduced_levels": 0,
+        "solve_provenance": "live_agent_self_discovery",
+        "status": "honest_null",
+        "target_game": "cn04",
+        "target_level": "L4"
+      },
+      "lane": "arc_live_reinduction_levelup",
+      "source_artifacts": [
+        "results/experiment_5437_arc_live_reinduction_levelup_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "no_board_local_speedup_observed",
+      "claim_boundary": "timing receipts exist, but no matched board acceleration claim is supported",
+      "classification": "honest_null",
+      "evidence": {
+        "hardware_speedup_claim": false
+      },
+      "lane": "hardware_speedup_claim",
+      "source_artifacts": [
+        "results/experiment_5434_pbit_polarfire_timing_variance_v494.json",
+        "results/experiment_5439_prd_gap_agent_failure_table_v494.json"
+      ]
+    }
+  ],
+  "honest_verdict": "complete: .494 capstone emitted from actual artifacts; structured corrigendum and taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress are headline-ready; active constraints, p-bit timing, and KAN ontology certificates are bounded; ARC no-bank keeps the north-star count unchanged; no hardware speedup is claimed; token/internal lane closed.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "local_sota_gguf_receipts_valid": true,
+  "milestone": "2026.07.494",
+  "missing_lanes": [],
+  "next_recommendations": [
+    {
+      "evidence": {
+        "adversarial_verify_clean": true,
+        "metric_independence_checks_passed": true,
+        "structured_corrigendum_clean": true,
+        "structured_taxonomy_replication_ready": true
+      },
+      "recommendation": "Scale structured verification only while the Exp5430 corrigendum stays clean and Exp5431 keeps independent bounded-risk replication receipts.",
+      "target": "structured_verification"
+    },
+    {
+      "evidence": {
+        "csl_transfer_stress_ready": true,
+        "in_domain_quality_delta": 0.08,
+        "negative_transfer_deflection_rate": 1.0,
+        "no_weight_mutation": true,
+        "verified_workflow_memory_ready": true
+      },
+      "recommendation": "Expand CSL only while workflow-memory transfer remains stable under rollback, negative-transfer deflection, and no-weight-mutation gates.",
+      "target": "continuous_self_learning"
+    },
+    {
+      "evidence": {
+        "arc_new_level_banked": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "target_game": "cn04",
+        "target_level": "L4"
+      },
+      "recommendation": "Keep the ARC slot because Exp5437 banked no new level; only count future growth after offline reproduction-gated level increase.",
+      "target": "arc_live_levelup"
+    },
+    {
+      "evidence": {
+        "board_repeat_count": 10,
+        "cpu_repeat_count": 10,
+        "hardware_speedup_claim": false,
+        "same_result_hash_match": true,
+        "same_workload_hash_match": true,
+        "timing_variance_receipts_ready": true
+      },
+      "recommendation": "Keep hardware speedup closed until matched repeated board evidence supports acceleration; Exp5434 supplies timing variance receipts but not a speedup.",
+      "target": "pbit_hardware_timing"
+    },
+    {
+      "evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      },
+      "recommendation": "Keep token/internal lanes closed unless a future artifact carries authenticated logits, hidden-state, attention, token-logprob, or intermediate-exit backend receipts.",
+      "target": "token_internal_backend"
+    }
+  ],
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:d74991d2eb5fa240bc811906fa6f6891b4d6dc30761018c614b777bc9d322b64"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5440,
+  "reproducibility_checksum": "sha256:0791299dcb143ceed75d9864b134116c5744eb815e85201e88124a5b9856a431",
+  "research_roadmap_yaml_unchanged": true,
+  "result_path": "results/experiment_5440_capstone_v494.json",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5440.capstone_v494.v1",
+  "source_artifact_checksums": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "_bmad/architecture.md": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a",
+    "_bmad/prd.md": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+    "ops/changelog.md": "sha256:26078b6bf05f73174a3aa46ddcafe8d4080afccbc68727faa0a8ddbd11689c34",
+    "ops/status.md": "sha256:a3e9fe056ef355b1b5520ec9d10a504fafd12341801af6590fb131d6c61f15bf",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_5428_transition_v494.json": "sha256:0d2fe94eeb800ee2d313debc3a8eca00620cc688e50a2e3b86ff79584129dba7",
+    "results/experiment_5429_source_delta_v494.json": "sha256:3220a7b4dc09639b9ea073eb1434351d9b55b9deba09b427714d3ddb5057eb16",
+    "results/experiment_5430_structured_tautology_corrigendum_v494.json": "sha256:7e008164f27e09afee3485ca71853deac13f4956a26a30b88ec3f445e8c05bcc",
+    "results/experiment_5431_structured_constraint_taxonomy_replication_v494.json": "sha256:93e97123f547364657df668562021d0b1732ebeb858cfa418c27d6a648170eb7",
+    "results/experiment_5432_ontology_softlogic_constraint_memory_v494.json": "sha256:03c765ba5a5347d648cf13986edd6d1deccf1fbf69556e2a77e4a8644f8917ea",
+    "results/experiment_5433_active_constraint_diversity_lns_v494.json": "sha256:533e2b76150591f66b15279f1efed1800724e5354d6f9c98e33b3c92415158e2",
+    "results/experiment_5434_pbit_polarfire_timing_variance_v494.json": "sha256:4753a07280cdd195026fbf89ea42555cdf054f7fad1688a0783c2afe1959caf3",
+    "results/experiment_5435_verified_workflow_memory_csl_v494.json": "sha256:52e1d1b1b65fad3f982386ce3d69f2f71dd1ccebcd3d1598ae6b43165bd54f87",
+    "results/experiment_5436_csl_memory_transfer_stress_v494.json": "sha256:40632d99797d93a6e1985745b7a8d42969ac4339a109074cb469f63a4c698a41",
+    "results/experiment_5437_arc_live_reinduction_levelup_v494.json": "sha256:469bb9dfd868aaa0ce1b739dcbc07fdfe6316e4449e7425b61c65207833cc607",
+    "results/experiment_5438_kan_ontology_measurement_certificate_v494.json": "sha256:18cb59d3f6562cb0437f1c9632909f1939eda2164d51b3f6c45721cf1000a361",
+    "results/experiment_5439_prd_gap_agent_failure_table_v494.json": "sha256:0e177fe11c3f0e17687e59a0b3f4d2f5360852ccbc4065372af26dc1f85c4ab8"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-5440",
+    "SCENARIO-CAPSTONE-5440",
+    "SCENARIO-CAPSTONE-5440-MISSING-INPUT",
+    "SCENARIO-CAPSTONE-5440-FIELD-PRINCIPLES"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5440_capstone_v494.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5440_capstone_v494.py -m pytest tests/python/test_experiment_5440_capstone_v494.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5440_capstone_v494.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "truth_table": [
+    {
+      "blocked_reason": "",
+      "claim_boundary": "clean row-level corrigendum; this unlocks structured verification but is not itself a broad SOTA claim",
+      "classification": "headline_ready",
+      "evidence": {
+        "adversarial_verify_clean": true,
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: structured tautology corrigendum clean with row checksums",
+        "prefix_metric_independence_check": true,
+        "risk_metric_independence_check": true,
+        "row_count_recomputed": 84,
+        "structured_corrigendum_clean": true,
+        "unreachable_delta_recomputed": true
+      },
+      "lane": "structured_corrigendum",
+      "source_artifacts": [
+        "results/experiment_5430_structured_tautology_corrigendum_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "local structured taxonomy replication with independent metrics and bounded risk; not a broad quality claim",
+      "classification": "headline_ready",
+      "evidence": {
+        "abstention_rate": 0.619048,
+        "accepted_risk_bound": 0.25884,
+        "accepted_risk_bound_threshold": 0.35,
+        "fixture_count": 42,
+        "gated_upstream_clean": true,
+        "gpu_offload_verified": true,
+        "honest_verdict": "complete: structured constraint taxonomy replication ready",
+        "metric_independence_checks_passed": true,
+        "semantic_false_accept_rate": 0.0,
+        "structured_taxonomy_replication_ready": true,
+        "unreachable_action_false_accept_rate": 0.0,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "lane": "structured_taxonomy_replication",
+      "source_artifacts": [
+        "results/experiment_5431_structured_constraint_taxonomy_replication_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "deterministic ontology-memory fixture with solver authority preserved",
+      "classification": "headline_ready",
+      "evidence": {
+        "deterministic_solver_authority": true,
+        "false_triple_rejection_rate": 1.0,
+        "honest_verdict": "complete: ontology constraint memory fixture verified deterministically",
+        "ontology_constraint_memory_ready": true,
+        "ontology_fixture_count": 12,
+        "soft_logic_overrode_solver": false,
+        "soft_logic_residuals_recorded": true,
+        "triple_count": 51,
+        "unsupported_update_abstention_rate": 1.0,
+        "valid_update_preservation_rate": 1.0
+      },
+      "lane": "ontology_softlogic_memory",
+      "source_artifacts": [
+        "results/experiment_5432_ontology_softlogic_constraint_memory_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded solver-guidance evidence; LNS hints are advisory and solver authority is final",
+      "classification": "bounded",
+      "evidence": {
+        "accepted_hint_count": 4,
+        "active_constraint_diversity_ready": true,
+        "claim_limits": [
+          "deterministic CPU-local diversity diagnostic",
+          "LNS, active-constraint, active-tail, frozen-variable, and conflict-front hints are advisory",
+          "solver recomputes every hint before accept, reject, or overwrite decisions",
+          "stale and adversarial hint rows cannot determine final validity",
+          "no LLM, generated text judge, hardware sampler, or speedup claim"
+        ],
+        "conflict_front_precision": 0.666667,
+        "fixture_count": 4,
+        "honest_verdict": "complete: active-constraint LNS hints covered 4 families, reduced solver work by 138, and preserved solver authority",
+        "overwritten_hint_count": 4,
+        "rejected_hint_count": 4,
+        "solver_validity_preserved": true,
+        "subproblem_family_count": 4,
+        "work_delta": 138
+      },
+      "lane": "active_constraint_diversity_lns",
+      "source_artifacts": [
+        "results/experiment_5433_active_constraint_diversity_lns_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "matched CPU and PolarFire timing variance receipts only; no acceleration claim",
+      "classification": "bounded",
+      "evidence": {
+        "board_repeat_count": 10,
+        "board_timing_variance": 1.45851e-07,
+        "claim_refusal": "No hardware speedup is claimed; slower board timing is a valid outcome and this artifact only records matched variance receipts.",
+        "cpu_repeat_count": 10,
+        "cpu_timing_variance": 3.75e-09,
+        "gatemate_diagnostic_checked": true,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: gated CPU and PolarFire timing variance receipts are hash-matched; hardware_speedup_claim=false",
+        "kv260_ssh_checked": true,
+        "measurement_access_complete": true,
+        "polarfire_reachable": true,
+        "same_result_hash_match": true,
+        "same_workload_hash_match": true,
+        "timing_variance_receipts_ready": true
+      },
+      "lane": "pbit_polarfire_timing_variance",
+      "source_artifacts": [
+        "results/experiment_5434_pbit_polarfire_timing_variance_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "controller-level workflow memory with verification-before-store, rollback, and no weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "case_memory_count": 2,
+        "honest_verdict": "complete: verified workflow memory promoted only validated case and skill sidecars, deflected retrieval traps, retained raw episodes, verified rollback, and did not mutate weights",
+        "no_weight_mutation": true,
+        "ontology_kernel_validation_rate": 1.0,
+        "quality_preserved": true,
+        "raw_episodes_retained": true,
+        "reliance_drift_metric": 0.12,
+        "retrieval_trap_deflection_rate": 1.0,
+        "rollback_verified": true,
+        "skill_memory_count": 2,
+        "verified_workflow_memory_ready": true,
+        "verify_before_store_pass_rate": 0.5,
+        "workflow_episode_count": 8
+      },
+      "lane": "verified_workflow_memory_csl",
+      "source_artifacts": [
+        "results/experiment_5435_verified_workflow_memory_csl_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "workflow-memory transfer stress with in-domain lift, shift deflection, rollback, and no weight mutation",
+      "classification": "headline_ready",
+      "evidence": {
+        "csl_transfer_stress_ready": true,
+        "honest_verdict": "complete: verified workflow memory transferred in-domain, deflected negative transfer under shift, verified rollback, and did not mutate model or adapter weights",
+        "in_domain_quality_delta": 0.08,
+        "negative_transfer_deflection_rate": 1.0,
+        "no_weight_mutation": true,
+        "out_of_domain_quality_delta": 0.0,
+        "promoted_transfer_count": 4,
+        "quarantined_transfer_count": 3,
+        "reliance_drift_metric": 0.74,
+        "rollback_verified": true,
+        "transfer_fixture_count": 9
+      },
+      "lane": "csl_memory_transfer_stress",
+      "source_artifacts": [
+        "results/experiment_5436_csl_memory_transfer_stress_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live ARC path ran through the reproduction gate; no new level was banked",
+      "classification": "honest_null",
+      "evidence": {
+        "arc_levelup_lint_passed": true,
+        "arc_new_level_banked": false,
+        "attempt_count": 51,
+        "failure_mode": "bounded_budget_no_levelup",
+        "frontier_expansion_count": 22,
+        "honest_verdict": "honest_null: cn04 L4 bounded_budget_no_levelup",
+        "newly_reached_levels": [],
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "reproduced_levels": 0,
+        "solve_provenance": "live_agent_self_discovery",
+        "status": "honest_null",
+        "target_game": "cn04",
+        "target_level": "L4"
+      },
+      "lane": "arc_live_reinduction_levelup",
+      "source_artifacts": [
+        "results/experiment_5437_arc_live_reinduction_levelup_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "",
+      "claim_boundary": "bounded KAN ontology/workflow-memory measurement certificate; no broad KAN verification claim",
+      "classification": "bounded",
+      "evidence": {
+        "broad_kan_verification_claim": false,
+        "certificate_count": 16,
+        "claim_limits": [
+          "bounded ontology/workflow-memory measurement-access fixture only",
+          "observable false properties are rejected only when Exp5432 measured rows contradict them",
+          "graph, kernel, board, token, and internal claims require evidence absent here",
+          "missing evidence is classified as unsupported, not as a negative broad proof",
+          "no broad KAN verification claim",
+          "no trained-network soundness claim",
+          "no hardware execution or hardware speedup claim",
+          "no live LLM inference claim"
+        ],
+        "false_property_rejection_rate": 1.0,
+        "honest_verdict": "complete: bounded ontology/workflow-memory KAN certificate rejected observable false ontology and retrieval claims and unsupported graph/kernel/board/token/internal claims while preserving true measured properties with no broad KAN verification claim",
+        "kan_ontology_certificate_ready": true,
+        "missing_evidence_detected": true,
+        "ontology_property_count": 9,
+        "true_property_preservation_rate": 1.0,
+        "workflow_memory_property_count": 7
+      },
+      "lane": "kan_ontology_certificates",
+      "source_artifacts": [
+        "results/experiment_5438_kan_ontology_measurement_certificate_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "no_authenticated_backend_receipt",
+      "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+      "classification": "blocked",
+      "evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      },
+      "lane": "token_internal_feature_lane_closed",
+      "source_artifacts": [
+        "results/experiment_5428_transition_v494.json",
+        "results/experiment_5438_kan_ontology_measurement_certificate_v494.json",
+        "results/experiment_5439_prd_gap_agent_failure_table_v494.json"
+      ]
+    },
+    {
+      "blocked_reason": "no_board_local_speedup_observed",
+      "claim_boundary": "timing receipts exist, but no matched board acceleration claim is supported",
+      "classification": "honest_null",
+      "evidence": {
+        "hardware_speedup_claim": false
+      },
+      "lane": "hardware_speedup_claim",
+      "source_artifacts": [
+        "results/experiment_5434_pbit_polarfire_timing_variance_v494.json",
+        "results/experiment_5439_prd_gap_agent_failure_table_v494.json"
+      ]
+    }
+  ],
+  "upstream_artifacts_missing": [],
+  "upstream_artifacts_read": [
+    "AGENTS.md",
+    "CODEX.md",
+    "CLAUDE.md",
+    "research-program.md",
+    "_bmad/prd.md",
+    "_bmad/architecture.md",
+    "ops/status.md",
+    "ops/changelog.md",
+    "results/experiment_5428_transition_v494.json",
+    "results/experiment_5429_source_delta_v494.json",
+    "results/experiment_5430_structured_tautology_corrigendum_v494.json",
+    "results/experiment_5431_structured_constraint_taxonomy_replication_v494.json",
+    "results/experiment_5432_ontology_softlogic_constraint_memory_v494.json",
+    "results/experiment_5433_active_constraint_diversity_lns_v494.json",
+    "results/experiment_5434_pbit_polarfire_timing_variance_v494.json",
+    "results/experiment_5435_verified_workflow_memory_csl_v494.json",
+    "results/experiment_5436_csl_memory_transfer_stress_v494.json",
+    "results/experiment_5437_arc_live_reinduction_levelup_v494.json",
+    "results/experiment_5438_kan_ontology_measurement_certificate_v494.json",
+    "results/experiment_5439_prd_gap_agent_failure_table_v494.json"
+  ]
+}
