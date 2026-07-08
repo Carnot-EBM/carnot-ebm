@@ -10583,3 +10583,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-08 21:39 UTC | Execution-time 2025-2026 source delta for .495 | OK | 121 passed, 1 warning in 10.34s |
 | 2026-07-08 21:59 UTC | Verifier-potential prefix fixture with exact final | OK | 88 passed, 1 warning in 11.33s |
 | 2026-07-08 22:21 UTC | Gated local SOTA verifier-potential decoding pilot | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
+| 2026-07-08 22:38 UTC | Deterministic AST and KB witness constraints for c | OK | 88 passed, 1 warning in 11.13s |
