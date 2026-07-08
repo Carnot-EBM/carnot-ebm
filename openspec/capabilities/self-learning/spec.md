@@ -19417,3 +19417,109 @@ principles are present.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5408 | Planned (`python/carnot/experiment_5408_resource_accounted_csl_controller_v492.py`, `results/experiment_5408_resource_accounted_csl_controller_v492.json`) | Planned (`tests/python/test_experiment_5408_resource_accounted_csl_controller_v492.py`) |
+
+---
+
+## REQ-LEARN-5409: Uncertainty-Gated Promotion for Learned Fragments v492
+
+Experiment 5409 SHALL add a certainty constraint and reachable-set check before
+learned memory or world-model fragments can influence verifier routing. The
+experiment SHALL gate on Exp5408 by requiring
+`resource_accounted_csl_ready=true`, then SHALL derive promotion candidates from
+the deterministic Exp5408 replay ledger and raw retained episodes. Candidate
+families SHALL include benign, stale, poisoned, ambiguous, and scarce-evidence
+episodes so the gate is tested against useful reusable fragments and the main
+ways a learned fragment can be unsafe to transfer.
+
+Each promotion candidate SHALL expose deterministic support counts, a certainty
+score, a reachability envelope, and conflict checks. The gate SHALL accept only
+fragments with enough support, high certainty, no stale or poisoned provenance,
+no reachability violation, no unresolved conflict, valid rollback evidence, and
+no model or adapter weight mutation. Rejected fragments SHALL remain retained in
+the audit ledger with rejection reasons and raw provenance, but SHALL have zero
+routing influence. Accepted fragments SHALL be routed through the controller
+sidecar and SHALL have at least one deterministic routing row showing live
+routing use.
+
+The result artifact SHALL be
+`results/experiment_5409_uncertainty_gated_promotion_v492.json` and SHALL
+include `gated_on_resource_accounted_csl`, `promotion_candidate_count`,
+`accepted_promotion_count`, `rejected_retained_count`,
+`uncertainty_gate_rejection_rate`, `stale_promotion_rejection_rate`,
+`poisoned_promotion_rejection_rate`, `reachability_violation_rejection_rate`,
+`rollback_success_rate`, `no_weight_mutation`,
+`uncertainty_gated_promotion_ready`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL also include field principles documenting
+those required fields.
+
+The required field principles SHALL be:
+
+- `gated_on_resource_accounted_csl`: Precondition.
+- `promotion_candidate_count`: Coverage.
+- `accepted_promotion_count`: Live routing effect.
+- `rejected_retained_count`: Audit retention without activation.
+- `uncertainty_gate_rejection_rate`: Certainty constraint.
+- `stale_promotion_rejection_rate`: Anti-staleness.
+- `poisoned_promotion_rejection_rate`: Anti-poisoning.
+- `reachability_violation_rejection_rate`: Reachable-set safety.
+- `rollback_success_rate`: Reversible learning.
+- `no_weight_mutation`: Online learning boundary.
+- `uncertainty_gated_promotion_ready`: Downstream evidence.
+- `inference_substrate`: Deterministic trace replay.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5409 Sub-requirements
+
+- REQ-LEARN-5409-1: The promotion gate SHALL read Exp5408 evidence and SHALL
+  set `gated_on_resource_accounted_csl` true only when Exp5408 reports
+  `resource_accounted_csl_ready=true`.
+- REQ-LEARN-5409-2: Promotion candidates SHALL include at least one benign,
+  stale, poisoned, ambiguous, and scarce-evidence fragment, all linked to raw
+  retained episode provenance.
+- REQ-LEARN-5409-3: Each candidate SHALL compute a deterministic support count,
+  certainty score, reachability envelope, and conflict check from Exp5408
+  memory candidates and routing decisions.
+- REQ-LEARN-5409-4: The gate SHALL reject uncertainty bypass attempts, stale
+  promotions, poisoned or non-transferable promotions, reachability violations,
+  and unresolved conflicts before those fragments can affect routing.
+- REQ-LEARN-5409-5: Accepted fragments SHALL be routed through the controller
+  sidecar, while rejected fragments SHALL remain retained for audit with zero
+  routing influence.
+- REQ-LEARN-5409-6: Rollback SHALL remove a deliberately injected bad
+  promotion from active routing while retaining its audit row.
+- REQ-LEARN-5409-7: `uncertainty_gated_promotion_ready` SHALL be true only when
+  Exp5408 readiness is true, candidates cover all required families, at least
+  one accepted promotion has live routing influence, every rejected candidate is
+  retained but inactive, stale, poisoned, uncertainty, and reachability controls
+  reject at rate 1.0, rollback succeeds, inference substrate is
+  `verifier_ensemble_against_cached_candidates`, tests are recorded, and no
+  model or adapter weights mutate.
+
+### SCENARIO-LEARN-5409-UNCERTAINTY-BYPASS: Low-Certainty Fragments Cannot Route
+
+**Given** an ambiguous or scarce-evidence fragment that asks to be promoted
+**When** the promotion gate computes certainty and support from deterministic
+trace evidence
+**Then** the fragment is retained for audit
+**And** it has zero routing influence.
+
+### SCENARIO-LEARN-5409-STALE-PROMOTION: Stale Memory Stays Inactive
+
+**Given** a stale retained episode with valid raw provenance
+**When** it is presented as a promotion candidate
+**Then** the stale candidate is rejected for anti-staleness
+**And** no controller routing row can use it as an active fragment.
+
+### SCENARIO-LEARN-5409-ROLLBACK: Bad Promotion Is Reversible
+
+**Given** a poisoned or non-transferable fragment is deliberately injected into
+the active routing sidecar
+**When** rollback runs
+**Then** the fragment is removed from active routing
+**And** its retained audit record remains available.
+
+## Implementation Status (Exp 5409)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5409 | Implemented (`python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py`, `results/experiment_5409_uncertainty_gated_promotion_v492.json`) | Implemented (`tests/python/test_experiment_5409_uncertainty_gated_promotion_v492.py`) |
