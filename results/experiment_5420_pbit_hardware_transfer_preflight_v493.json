@@ -1,0 +1,381 @@
+{
+  "board_repeat_count": 3,
+  "claim_limits": [
+    "preflight only for Exp5424 timing readiness",
+    "CPU exact-enumeration receipt is a reference, not a board baseline speedup claim",
+    "PolarFire receipt is same-workload availability and timing evidence only",
+    "KV260 check is SSH-only and never host storage evidence",
+    "GateMate check is non-destructive DirtyJTAG diagnostics only"
+  ],
+  "command_receipts": [
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "command_sha256": "dfcb05ec95a68b9ca25ea5227c0ff787385cda524db9d23617679e6cf2f2d0f4",
+      "duration_s": 5.008268,
+      "exit_code": 124,
+      "kind": "kv260_ssh_only_reachability",
+      "outcome": "blocked",
+      "stderr_excerpt": "timeout",
+      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "command_sha256": "b9e814f65c86bee7dd7fe7a7d7944e2e76fdcd1330e6f7f0cb813bcf9cd690aa",
+      "duration_s": 0.883406,
+      "exit_code": 0,
+      "kind": "polarfire_ssh_reachability",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"submit\", \"review\", \"draft\", \"outline\"], \"precedence\": [[\"outline\", \"draft\"], [\"draft\", \"review\"], [\"review\", \"submit\"]], \"seed\": 5420, \"workload_hash\": \"3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'exact_result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,6)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "7285c00aa68220c4c1059c9dfd31118c22a138a5dac771cdc83db88bf4788775",
+      "duration_s": 1.367638,
+      "exit_code": 0,
+      "kind": "polarfire_same_workload_repeat_1",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"board_local\": true, \"exact_best_sequence\": [\"outline\", \"draft\", \"review\", \"submit\"], \"exact_min_energy\": 0, \"exact_result_hash\": \"a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8\", \"seed\": 5420, \"wall_time_s\": 0.002325, \"w",
+      "stdout_sha256": "dba1152a3e4669323f3aa3cf0285e18632a8e6577258795a59e154ce56564b38",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"submit\", \"review\", \"draft\", \"outline\"], \"precedence\": [[\"outline\", \"draft\"], [\"draft\", \"review\"], [\"review\", \"submit\"]], \"seed\": 5420, \"workload_hash\": \"3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'exact_result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,6)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "7285c00aa68220c4c1059c9dfd31118c22a138a5dac771cdc83db88bf4788775",
+      "duration_s": 1.311958,
+      "exit_code": 0,
+      "kind": "polarfire_same_workload_repeat_2",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"board_local\": true, \"exact_best_sequence\": [\"outline\", \"draft\", \"review\", \"submit\"], \"exact_min_energy\": 0, \"exact_result_hash\": \"a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8\", \"seed\": 5420, \"wall_time_s\": 0.002315, \"w",
+      "stdout_sha256": "0f2332773069ad562add95f14031fb34dd7019c7fd30c0e65687b282adcbbe5e",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\nworkload=json.loads('\"'\"'{\"actions\": [\"submit\", \"review\", \"draft\", \"outline\"], \"precedence\": [[\"outline\", \"draft\"], [\"draft\", \"review\"], [\"review\", \"submit\"]], \"seed\": 5420, \"workload_hash\": \"3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9\"}'\"'\"')\nstarted=time.perf_counter()\ndef energy(seq):\n    positions={action:index for index,action in enumerate(seq)}\n    return 10*sum(int(positions[before]>positions[after]) for before,after in workload['\"'\"'precedence'\"'\"'])\nbest_seq=None; best_energy=None; valid_count=0; enumerated=0\nfor perm in itertools.permutations(workload['\"'\"'actions'\"'\"']):\n    enumerated+=1\n    e=energy(perm)\n    valid_count+=int(e==0)\n    if best_energy is None or e<best_energy:\n        best_energy=e; best_seq=list(perm)\nexact={'\"'\"'exact_min_energy'\"'\"':int(best_energy),'\"'\"'exact_best_sequence'\"'\"':best_seq,'\"'\"'enumerated_permutation_count'\"'\"':enumerated,'\"'\"'exact_valid_permutation_count'\"'\"':valid_count}\nencoded=json.dumps(exact,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'))\nreceipt={'\"'\"'board_local'\"'\"':True,'\"'\"'workload_hash'\"'\"':workload['\"'\"'workload_hash'\"'\"'],'\"'\"'seed'\"'\"':workload['\"'\"'seed'\"'\"'],'\"'\"'exact_min_energy'\"'\"':exact['\"'\"'exact_min_energy'\"'\"'],'\"'\"'exact_best_sequence'\"'\"':exact['\"'\"'exact_best_sequence'\"'\"'],'\"'\"'exact_result_hash'\"'\"':hashlib.sha256(encoded.encode()).hexdigest(),'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,6)}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "7285c00aa68220c4c1059c9dfd31118c22a138a5dac771cdc83db88bf4788775",
+      "duration_s": 1.33542,
+      "exit_code": 0,
+      "kind": "polarfire_same_workload_repeat_3",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"board_local\": true, \"exact_best_sequence\": [\"outline\", \"draft\", \"review\", \"submit\"], \"exact_min_energy\": 0, \"exact_result_hash\": \"a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8\", \"seed\": 5420, \"wall_time_s\": 0.002226, \"w",
+      "stdout_sha256": "600606b74cb7395328743d10edeeaea4327e6c2791056637fc0f425781b0620a",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "command_sha256": "67601b438fbb88a70c1b25f3a913790ab47e5e19b36bc9c3b9f32a8a52363cd4",
+      "duration_s": 0.018085,
+      "exit_code": 0,
+      "kind": "gatemate_non_destructive_dirtyjtag_detect",
+      "outcome": "blocked",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "stdout_sha256": "e96e9c9bdc5e9e0dc606129428b9716fe745efc6402f52cc56db17f800d12437",
+      "timeout_s": 30.0
+    }
+  ],
+  "commit": "unknown",
+  "cpu_repeat_count": 3,
+  "duration_s": 9.926863,
+  "exact_enumeration_match": true,
+  "experiment": 5420,
+  "experiment_id": "exp5420-pbit-hardware-transfer-preflight-v493",
+  "field_principles": {
+    "board_repeat_count": "board reliability",
+    "cpu_repeat_count": "timing reliability",
+    "exact_enumeration_match": "validity preservation",
+    "gated_upstream_ready": "structured gate provenance",
+    "gatemate_diagnostic_checked": "physical/JTAG honesty",
+    "hardware_speedup_claim": "no unsupported speedup",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "explicit substrate",
+    "kv260_ssh_checked": "SSH-only discipline",
+    "pbit_transfer_preflight_ready": "downstream evidence",
+    "polarfire_reachable": "hardware availability",
+    "preconditions_checked": "hardware task must fail fast",
+    "same_workload_hash_match": "no apples-to-oranges timing",
+    "timing_receipts": "reproducible evidence",
+    "workload_hash": "same-workload comparison"
+  },
+  "gate_source": {
+    "artifact_path": "results/experiment_5419_active_constraint_lns_scale_v493.json",
+    "gate_field": "active_constraint_lns_scale_ready",
+    "gate_value": true,
+    "source_status": "complete"
+  },
+  "gated_upstream_ready": true,
+  "gatemate_diagnostic_checked": true,
+  "hardware_speedup_claim": false,
+  "hardware_summary": {
+    "board_exact_match": true,
+    "board_repeat_count": 3,
+    "gatemate_diagnostic_checked": true,
+    "gatemate_reachable": false,
+    "kv260_ssh_checked": true,
+    "kv260_ssh_reachable": false,
+    "polarfire_reachable": true,
+    "same_workload_hash_match": true
+  },
+  "honest_verdict": "complete: p-bit/QUBO workload has hash-matched repeated CPU and PolarFire preflight receipts for Exp5424 timing; hardware_speedup_claim=false",
+  "inference_substrate": "hardware_preflight_with_cpu_reference",
+  "kv260_ssh_checked": true,
+  "milestone": "2026.07.493",
+  "pbit_transfer_preflight_ready": true,
+  "polarfire_reachable": true,
+  "preconditions_checked": true,
+  "random_seed": 5420,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "18432f1aa7d3ae839ff3bf1e623abefff97e24c812a95b2cb756aae857e37848",
+  "run_date": "20260708",
+  "same_workload_hash_match": true,
+  "schema": "carnot.experiment_5420.pbit_hardware_transfer_preflight.v493",
+  "selected_workload": {
+    "actions": [
+      "submit",
+      "review",
+      "draft",
+      "outline"
+    ],
+    "exact_result": {
+      "enumerated_permutation_count": 24,
+      "exact_best_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "exact_min_energy": 0,
+      "exact_valid_permutation_count": 1
+    },
+    "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+    "expected_sequence": [
+      "outline",
+      "draft",
+      "review",
+      "submit"
+    ],
+    "fixture_id": "stress_synthetic_linear_review",
+    "precedence": [
+      [
+        "outline",
+        "draft"
+      ],
+      [
+        "draft",
+        "review"
+      ],
+      [
+        "review",
+        "submit"
+      ]
+    ],
+    "seed": 5420,
+    "source_artifact": "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json",
+    "source_experiment_id": "exp5407-pbit-qubo-active-constraint-stress-v492",
+    "upstream_exact_result": {
+      "enumerated_permutation_count": 24,
+      "exact_best_sequence": [
+        "outline",
+        "draft",
+        "review",
+        "submit"
+      ],
+      "exact_min_energy": 0,
+      "exact_valid_permutation_count": 1
+    },
+    "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+  },
+  "spec_refs": [
+    "REQ-HW-5420",
+    "SCENARIO-HW-5420"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5420_pbit_hardware_transfer_preflight_v493.py -q --no-cov; .venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5420_pbit_hardware_transfer_preflight_v493.py -q -n0 --no-cov; .venv/bin/coverage report --include=\"python/carnot/experiment_5420_pbit_hardware_transfer_preflight_v493.py\" --fail-under=100 -m",
+      "outcome": "passed"
+    }
+  ],
+  "timing_receipts": [
+    {
+      "exact_enumeration_match": true,
+      "exact_result": {
+        "enumerated_permutation_count": 24,
+        "exact_best_sequence": [
+          "outline",
+          "draft",
+          "review",
+          "submit"
+        ],
+        "exact_min_energy": 0,
+        "exact_valid_permutation_count": 1
+      },
+      "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+      "kind": "cpu_reference",
+      "repeat_count": 3,
+      "repeat_timings_s": [
+        4.7e-05,
+        4.2e-05,
+        4e-05
+      ],
+      "repeats": [
+        {
+          "exact_result": {
+            "enumerated_permutation_count": 24,
+            "exact_best_sequence": [
+              "outline",
+              "draft",
+              "review",
+              "submit"
+            ],
+            "exact_min_energy": 0,
+            "exact_valid_permutation_count": 1
+          },
+          "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+          "matches_upstream_exact": true,
+          "repeat_index": 1,
+          "seed": 5420,
+          "wall_time_s": 4.7e-05,
+          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+        },
+        {
+          "exact_result": {
+            "enumerated_permutation_count": 24,
+            "exact_best_sequence": [
+              "outline",
+              "draft",
+              "review",
+              "submit"
+            ],
+            "exact_min_energy": 0,
+            "exact_valid_permutation_count": 1
+          },
+          "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+          "matches_upstream_exact": true,
+          "repeat_index": 2,
+          "seed": 5420,
+          "wall_time_s": 4.2e-05,
+          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+        },
+        {
+          "exact_result": {
+            "enumerated_permutation_count": 24,
+            "exact_best_sequence": [
+              "outline",
+              "draft",
+              "review",
+              "submit"
+            ],
+            "exact_min_energy": 0,
+            "exact_valid_permutation_count": 1
+          },
+          "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+          "matches_upstream_exact": true,
+          "repeat_index": 3,
+          "seed": 5420,
+          "wall_time_s": 4e-05,
+          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+        }
+      ],
+      "seed": 5420,
+      "substrate": "cpu_exact_enumeration",
+      "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+    },
+    {
+      "attempts": [
+        {
+          "exact_match": true,
+          "parse_error": null,
+          "receipt": {
+            "board_local": true,
+            "exact_best_sequence": [
+              "outline",
+              "draft",
+              "review",
+              "submit"
+            ],
+            "exact_min_energy": 0,
+            "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+            "seed": 5420,
+            "wall_time_s": 0.002325,
+            "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+          },
+          "repeat_index": 1,
+          "valid": true,
+          "wall_time_s": 0.002325,
+          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+        },
+        {
+          "exact_match": true,
+          "parse_error": null,
+          "receipt": {
+            "board_local": true,
+            "exact_best_sequence": [
+              "outline",
+              "draft",
+              "review",
+              "submit"
+            ],
+            "exact_min_energy": 0,
+            "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+            "seed": 5420,
+            "wall_time_s": 0.002315,
+            "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+          },
+          "repeat_index": 2,
+          "valid": true,
+          "wall_time_s": 0.002315,
+          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+        },
+        {
+          "exact_match": true,
+          "parse_error": null,
+          "receipt": {
+            "board_local": true,
+            "exact_best_sequence": [
+              "outline",
+              "draft",
+              "review",
+              "submit"
+            ],
+            "exact_min_energy": 0,
+            "exact_result_hash": "a792953c7d2c17b8e9bf8bc507f4fa8cea918afa1ec1cb5605e15fb6f52cecb8",
+            "seed": 5420,
+            "wall_time_s": 0.002226,
+            "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+          },
+          "repeat_index": 3,
+          "valid": true,
+          "wall_time_s": 0.002226,
+          "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+        }
+      ],
+      "invalid_repeat_count": 0,
+      "kind": "polarfire_board_preflight",
+      "reachable": true,
+      "repeat_count": 3,
+      "repeat_target": 3,
+      "repeat_timings_s": [
+        0.002325,
+        0.002315,
+        0.002226
+      ],
+      "substrate": "polarfire_board_local_python",
+      "valid_repeat_count": 3,
+      "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+    }
+  ],
+  "workload_hash": "3cd0012c9ebc96ab6fed43c1de91c273bf8abf20fdbea7faad9509b9e0c9cea9"
+}
