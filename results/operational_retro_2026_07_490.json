@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.490",
+  "generated_at": "2026-07-08T02:46:23.311580Z",
+  "retro_type": "operational_in_progress",
+  "summary": "No data available this milestone for timing-based experiment accounting: total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0. The timing block reports a TIMING INTEGRITY MISMATCH: both reconstruction paths found 0 experiment commits for 2026.07.490 while ops/changelog.md contains 2026.07.490 references, so no duration, slowest-run, GPU-efficiency, or DualGPURunner conclusion is supported.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "Timing assembly mismatch blocked operational throughput accounting: live git-log and disk-mtime reconstruction found 0 experiment commits while ops/changelog.md contains 2026.07.490 entries.",
+    "No data available this milestone for compute-bound execution analysis because experiments_completed=0, compute_bound_experiments_count=0, and slowest_experiments is empty.",
+    "Compute-bound GPU utilization could not be evaluated because no compute-bound timing rows were present."
+  ],
+  "improvements_suggested": [
+    "Fix the timing assembler to reconcile changelog-referenced milestone entries with live git-log and disk-mtime reconstruction before retrospective content is generated.",
+    "Emit a dedicated timing_integrity_mismatch diagnostic artifact when both timing paths return 0 experiment commits but milestone references exist.",
+    "Carry explicit compute_bound, parallel_model_count, and runner fields in timing rows before generating GPU-idle or DualGPURunner recommendations.",
+    "Keep estimated_time_savings_pct at 0 when no experiment rows are available, even if a tooling issue is visible."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the zero-experiment timing mismatch path before the next milestone closeout.",
+    "Add a regression test for git-log=0 and disk-mtime=0 with changelog milestone references.",
+    "Preserve the compute-bound gate for GPU conclusions and require timing-row evidence before recommending DualGPURunner."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The correct retrospective is a no-data operational finding, not a performance story. The GPU monitor snapshot is useful context, but without compute-bound timing rows it cannot support an idle-GPU defect or a DualGPURunner conclusion.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true
+}
