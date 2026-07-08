@@ -28199,3 +28199,24 @@ blocks and are actionable for the next roadmap.
   baselines share workload hashes and accessible measurement records.
 
 <!-- V493-PLANNER-REFRESH-2026-07-08-END -->
+
+
+### V493 Execution Refresh - 20260708
+
+Execution-time sweep after the `.493` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V489/V490/V491/V492/V493 duplicate history, and the exclusion manifest. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **Evaluating LLM Personalization via Semantic Constraint Verification** (https://arxiv.org/abs/2606.16368): For Exp5417, add an NLI-backed semantic constraint ablation that maps structured outputs to truth-condition sets and records semantic false-accept, sycophancy/generalization/failure labels, and sentence attribution separately from schema validity.
+- **Resource-Aware Neuro-Symbolic Reasoning for Local Small Language Models** (https://arxiv.org/abs/2606.27281): For Exp5417 and Exp5418, compare one-call formalization plus deterministic finite-domain solving against self-consistency on bounded logical-deduction fixtures, with traceability/consistency repair receipts and token/model-call accounting.
+- **GroundEval: A Deterministic Replacement for LLM-as-Judge in Stateful Agent Evaluation** (https://arxiv.org/abs/2606.22737): For Exp5426 and self-learning evidence tables, represent agent runs as an event log, artifact corpus, access policy, and eval config, then score answer correctness, evidence path validity, and silence/counterfactual violations without an LLM judge.
+- **PreAct: Computer-Using Agents that Get Faster on Repeated Tasks** (https://arxiv.org/abs/2606.17929): For Exp5421 and Exp5422, treat repeated verified workflows as compiled state-machine memories: replay only while predicates match, fall back on mismatch, and require a clean verify-before-store rerun before any learned fragment can influence routing.
+- **Online LLM Selection via Constrained Bandits with Time-Varying Demand** (https://arxiv.org/abs/2606.17489): For Exp5421 and Exp5422, add routing telemetry for packing and covering constraints: confidence-bound resource estimates, demand-shift buckets, regret proxies, and cumulative constraint-violation counts under the no-weight-mutation controller.
+- **A Stackelberg Framework for Resource-Aware LLM Agents: Learning, Repair, and Conditional Guarantees** (https://arxiv.org/abs/2606.23026): For Exp5421 and Exp5422, add real-workflow resource-governance controls where a learned route policy is repaired by real-call calibration and safe-set projection; report token-cost and quality deltas without claiming a certified equilibrium.
+
+### Execution impact
+- **Plan impact:** No active `.493` roadmap edit is required. The deltas sharpen Exp5417/Exp5418 semantic, formalization, and prefix/action checks; Exp5421/Exp5422 verify-before-store and resource-routing gates; and Exp5426 deterministic evidence-path scoring.
+- **Duplicates suppressed:** V493 planner sources, EBT, ARM-EBM, NRGPT, Distributional EBMs, Energy-Based Decoding, NSVIF, REVES, Formalize-Don't-Optimize, Cycle-Consistent certificates, AgentLTL, OEP, CoACT, V492 Ising/LNS/iSTAR items, and nearby Extropic/Logical Intelligence context were already covered and are not re-added.
+- **Retired scope:** No retired scope was reopened. Retired ARC first-contact reruns, external generated-text/logprob scorers, CPU-only SOTA offload, token/internal-feature claims without backend receipts, non-local TSU/Kona/Aleph execution claims, and hardware speedup claims without matched board timing remain closed.
+- **Watch-only/excluded:** NatATL strategy synthesis, Extropic THRML/TSU repos, Logical Intelligence Aleph/Kona pages, and OpenReview EBT/NRGPT surfaces were checked but not promoted as executable `.493` dependencies.
+
+<!-- V493-EXECUTION-REFRESH-20260708-END -->
