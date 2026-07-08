@@ -27971,6 +27971,100 @@ claim CPU-only legacy model evidence.
 |---|---|---|
 | REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
 
+### REQ-VERIFY-5406: Active-Constraint Warm-Start Guidance Diagnostic V492
+
+The repository SHALL provide Exp 5406 at
+`python/carnot/experiment_5406_active_constraint_warmstart_guidance_v492.py`
+and write
+`results/experiment_5406_active_constraint_warmstart_guidance_v492.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, board timing path, or modifying
+`scripts/research_conductor.py`. The diagnostic SHALL extend the existing
+solver-guidance fixture pattern with advisory active-constraint and
+conflict-front hint fields. These hints MAY reduce deterministic solver work,
+but the symbolic solver SHALL accept, reject, overwrite, or ignore every hint
+before any final assignment is accepted.
+
+Exp 5406 SHALL build both synthetic constraint instances with independently
+known active sets and carry-forward instances derived from the Exp 5394
+action-sequence fixtures. Every instance SHALL expose precedence constraints,
+the independently known or solver-derived active constraint set, the
+conflict-front actions blocked by those constraints, and a solver-authoritative
+validity predicate. The diagnostic SHALL compare exactly four hint modes:
+`no_hint`, `stale_hint`, `adversarial_hint`, and `candidate_hint`. `no_hint`
+SHALL establish the solver-only baseline; `candidate_hint` SHALL propose the
+expected active constraint/conflict-front set; `stale_hint` SHALL propose a
+plausible but out-of-date active set; and `adversarial_hint` SHALL propose an
+invalid or contradictory front.
+
+For every row, Exp 5406 SHALL record the fixture id, hint mode, active
+constraint hint, conflict-front hint, independently known active set, solver
+decision, overwrite decision, fallback decision, solver iterations, solver
+conflicts, final validity, unsafe false-accept status, precision, and recall.
+Wrong hints SHALL NOT bypass the solver's independent active-set computation:
+stale hints SHALL be rejected or fall back to solver-only behavior, adversarial
+hints SHALL be rejected or overwritten before final acceptance, and unsafe
+false accepts SHALL remain zero.
+
+The artifact SHALL include top-level fields `fixture_count`, `hint_modes`,
+`active_constraint_precision`, `active_constraint_recall`,
+`solver_conflict_delta`, `solver_iteration_delta`, `solver_overwrite_rate`,
+`stale_hint_rejection_rate`, `adversarial_hint_rejection_rate`,
+`unsafe_false_accept_rate`, `active_constraint_warmstart_ready`,
+`inference_substrate`, and `honest_verdict`, with field principles explaining
+each required field. `inference_substrate` SHALL equal
+`verifier_ensemble_against_cached_candidates`. `honest_verdict` SHALL start
+with `complete:` or `blocked:`. `active_constraint_warmstart_ready` SHALL be
+true only if all four hint modes are measured, candidate hints reduce aggregate
+solver conflicts and iterations relative to no-hint baselines, solver
+authority preserves validity for every row, stale/adversarial hints are
+rejected or overwritten, and unsafe false accepts are zero.
+
+Required field principles:
+
+- `fixture_count`: principle "coverage."
+- `hint_modes`: principle "control coverage."
+- `active_constraint_precision`: principle "hint quality."
+- `active_constraint_recall`: principle "hint quality."
+- `solver_conflict_delta`: principle "efficiency evidence."
+- `solver_iteration_delta`: principle "efficiency evidence."
+- `solver_overwrite_rate`: principle "authority boundary."
+- `stale_hint_rejection_rate`: principle "anti-staleness."
+- `adversarial_hint_rejection_rate`: principle "safety control."
+- `unsafe_false_accept_rate`: principle "no solver bypass."
+- `active_constraint_warmstart_ready`: principle "downstream gate."
+- `inference_substrate`: principle "deterministic solver evidence."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:."
+
+### SCENARIO-VERIFY-5406: Wrong Active-Constraint Hints Cannot Bypass Solver Authority
+
+Given synthetic precedence fixtures and carry-forward Exp 5394 action-sequence
+fixtures with known active constraint sets, when Exp 5406 evaluates `no_hint`,
+`stale_hint`, `adversarial_hint`, and `candidate_hint` rows, then every row
+records active-constraint hints, conflict-front hints, solver decisions,
+overwrite/fallback telemetry, solver iterations, solver conflicts, final
+validity, and unsafe false-accept status. Candidate hints MAY reduce conflicts
+and iterations, but only after matching the solver-computed active set and
+conflict front. Stale and adversarial hints SHALL be rejected or overwritten
+before final acceptance. The result SHALL set
+`active_constraint_warmstart_ready=true` only when every final result remains
+solver-authoritative and unsafe false accepts are zero.
+
+If any required hint mode is missing, if a stale or adversarial hint is accepted
+as authoritative without matching the independently computed active set, if a
+wrong hint changes the final validity predicate, if candidate hints fail to
+reduce aggregate conflicts and iterations, if the inference substrate is not
+`verifier_ensemble_against_cached_candidates`, or if any unsafe false accept is
+observed, then Exp 5406 SHALL write the same result path with
+`active_constraint_warmstart_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5406)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5406 | Planned (`python/carnot/experiment_5406_active_constraint_warmstart_guidance_v492.py`, `results/experiment_5406_active_constraint_warmstart_guidance_v492.json`) | Planned (`tests/python/test_experiment_5406_active_constraint_warmstart_guidance_v492.py`) |
+
 ### REQ-VERIFY-5394: Gated Overwrite p-bit Action-Sequence Ablation V491
 
 The repository SHALL provide Exp 5394 at
