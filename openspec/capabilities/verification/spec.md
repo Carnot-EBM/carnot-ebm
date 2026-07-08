@@ -27877,6 +27877,84 @@ keeps `no_quality_claim=true`, and does not modify
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
 
+### REQ-VERIFY-5379: Live Structured Clean Gate Rerun V490
+
+The repository SHALL provide Exp 5379 at
+`python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py`
+and write
+`results/experiment_5379_live_structured_clean_gate_rerun_v490.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL be the
+canonical `.490` `structured_protocol_clean` truth source for downstream
+constraint-tax work. It SHALL first read Exp 5378 and SHALL attempt live local
+SOTA inference only when Exp 5378 reports `live_sota_receipt_ready=true` and
+`methodology_duration_s>=60`.
+
+Before headline inference, Exp 5379 SHALL verify the Exp 5378 gate fields,
+CUDA/GPU visibility, llama.cpp/GGUF-compatible runtime availability, locally
+resolved GGUF model paths, and machine-readable GPU/offload evidence. If Exp
+5378 is missing, malformed, not ready, or shorter than 60 seconds; if only the
+retired CPU-only llama.cpp path is available; or if CUDA/GPU visibility, the
+GGUF runtime, or all mandated GGUF files are unavailable, Exp 5379 SHALL write a
+terminal blocked artifact and SHALL NOT invoke live prompt generation. The
+workflow SHALL use llama.cpp/GGUF-compatible loading only and SHALL NOT use
+`AutoTokenizer.from_pretrained`, `AutoModel`, or direct transformers loading on
+any `-GGUF` repository.
+
+The headline-eligible `MODEL_SPECS` SHALL contain all mandated local GGUF model
+ids considered for the run:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. `selected_model_spec` SHALL be the exact
+mandated GGUF model used for headline measurements. Exp 5379 SHALL run the
+structured fixtures with at least one mandated SOTA GGUF and record parse,
+schema, semantic, final JSON extraction, truncation, wrong-valid, and unsafe
+false-accept metrics. The repaired Exp 5378 receipt duration SHALL be applied
+to the canonical gate so `structured_protocol_clean` can only become true when
+the live measurement duration is at least 60 seconds.
+
+The artifact SHALL include bare top-level `status`, `upstream_receipt_ready`,
+`structured_protocol_clean`, `MODEL_SPECS`, `selected_model_spec`,
+`inference_substrate`, `gpu_or_offload_receipt`, `no_autotokenizer_used`,
+`prompt_count`, `parse_success_rate`, `schema_success_rate`,
+`final_json_extraction_rate`, `semantic_success_rate`, `wrong_valid_count`,
+`truncation_failure_rate`, `unsafe_false_accepts`, `methodology_duration_s`,
+and `honest_verdict`, plus field provenance explaining each required field's
+principle. `upstream_receipt_ready` SHALL be copied from Exp 5378
+`live_sota_receipt_ready`. `structured_protocol_clean` SHALL be true only when
+`parse_success_rate>=0.95`, `schema_success_rate>=0.90`,
+`final_json_extraction_rate>=0.95`, `unsafe_false_accepts=0`, and
+`methodology_duration_s>=60`. `status` SHALL be `complete` only if live local
+SOTA inference actually ran under the Exp 5378 gated preconditions; otherwise
+it SHALL be `blocked`.
+
+### SCENARIO-VERIFY-5379: Gated Rerun Produces Canonical Clean Structured Receipt
+
+Given Exp 5378 reports `live_sota_receipt_ready=true` and
+`methodology_duration_s>=60`, and given at least one mandated local GGUF model
+has a concrete `.gguf` path plus non-retired GPU/offload evidence, when Exp
+5379 runs, then it records all mandated `MODEL_SPECS`, selects the exact
+mandated model used for headline measurements, uses only the llama.cpp/GGUF
+loader family, records `no_autotokenizer_used=true`, evaluates the structured
+fixture prompts, records parse/schema/final-JSON/semantic/wrong-valid/
+truncation/unsafe-false-accept metrics, writes the required `.490` result
+artifact, copies `upstream_receipt_ready` from Exp 5378, and sets
+`structured_protocol_clean=true` only if the configured parse/schema/final
+JSON/unsafe false-accept/duration thresholds pass.
+
+If Exp 5378 is not ready, Exp 5378 duration is less than 60 seconds, CUDA/GPU
+visibility is absent, llama.cpp/GGUF support is unavailable, every mandated
+local GGUF is missing, or the runtime cannot provide non-retired GPU/offload
+evidence, then Exp 5379 writes the same result path with `status=blocked`,
+`structured_protocol_clean=false`, `selected_model_spec=null`, a
+machine-readable blocker in `gpu_or_offload_receipt`, `honest_verdict`
+starting with `blocked_`, and no headline model prompt execution.
+
+## Implementation Status (REQ-VERIFY-5379)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5379 | Planned (`python/carnot/experiment_5379_live_structured_clean_gate_rerun_v490.py`, `results/experiment_5379_live_structured_clean_gate_rerun_v490.json`) | Planned (`tests/python/test_experiment_5379_live_structured_clean_gate_rerun_v490.py`) |
+
 ### REQ-VERIFY-5378: Structured Methodology-Duration Receipt V490
 
 The repository SHALL provide Exp 5378 at
