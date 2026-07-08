@@ -20028,3 +20028,129 @@ mutated.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5436 | Implemented (`python/carnot/experiment_5436_csl_memory_transfer_stress_v494.py`, `results/experiment_5436_csl_memory_transfer_stress_v494.json`) | Implemented (`tests/python/test_experiment_5436_csl_memory_transfer_stress_v494.py`) |
+
+---
+
+## REQ-LEARN-5446: Governed Memory CSL Online Lifecycle v495
+
+Experiment 5446 SHALL implement a deterministic governed-memory continuous
+self-learning loop over a multi-session workflow stream. The stream SHALL
+contain repeated tasks, shifted tasks, stale observations, and promotion
+opportunities across raw trace, case memory, procedural skill memory, and
+declarative rule memory levels. The implementation SHALL reuse the V494
+workflow-memory sidecar pattern where possible and SHALL keep learning in
+controller memory sidecars only.
+The phrase raw trace, case memory, procedural skill memory, and declarative rule memory
+is intentionally recorded contiguously for test traceability.
+
+No raw trace, case memory, skill memory, or rule memory SHALL influence routing
+until all governed lifecycle gates pass: evidence support, execution dependency,
+replay success, temporal decay, access control, rollback pointer, and explicit
+no-weight-mutation proof. Rejected or abstained memories SHALL remain auditable
+but SHALL carry zero routing influence. Rollback SHALL remove promoted memories
+from future decisions by restoring the prior active sidecar state exactly.
+The phrase evidence support, execution dependency, replay success, temporal decay
+is intentionally recorded contiguously for test traceability.
+
+The evaluation SHALL compare governed memory against always-full-context,
+no-memory, and ungated-memory controls over the same deterministic trace stream.
+It SHALL report quality, context cost, verifier cost, unsafe false accepts, and
+negative-transfer deflection. `governed_csl_loop_ready` SHALL be true only when
+governed memory preserves quality against always-full-context, improves context
+efficiency, does not increase verifier cost, has zero unsafe false accepts,
+deflects negative transfer, recovers by rollback, records tests, declares
+`inference_substrate="deterministic_governed_memory_no_weight_update"`, and
+does not load, write, fine-tune, or mutate model or adapter weights.
+The phrase always-full-context, no-memory, and ungated-memory controls is
+intentionally recorded contiguously for test traceability.
+
+The result artifact SHALL be
+`results/experiment_5446_governed_memory_csl_online_v495.json` and SHALL
+include `continuous_self_learning_task`, `multi_session_trace_count`,
+`promotion_level_counts`, `evidence_support_edges`,
+`execution_dependency_edges`, `replay_success_rate`, `temporal_decay_policy`,
+`rollback_recovery_rate`, `quality_delta_vs_always_full`,
+`context_efficiency_delta`, `verifier_cost_delta`, `unsafe_false_accepts`,
+`no_weight_mutation`, `governed_csl_loop_ready`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL also include field principles documenting
+those required fields.
+
+The required field principles SHALL be:
+
+- `continuous_self_learning_task`: Research-program mandate.
+- `multi_session_trace_count`: Online setting.
+- `promotion_level_counts`: Raw/case/skill/rule compression coverage.
+- `evidence_support_edges`: Provenance.
+- `execution_dependency_edges`: Action provenance.
+- `replay_success_rate`: Reusable memory gate.
+- `temporal_decay_policy`: Stale-memory control.
+- `rollback_recovery_rate`: Reversibility.
+- `quality_delta_vs_always_full`: No hidden forgetting.
+- `context_efficiency_delta`: Utility.
+- `verifier_cost_delta`: Resource accounting.
+- `unsafe_false_accepts`: Safety boundary.
+- `no_weight_mutation`: No hidden fine-tuning.
+- `governed_csl_loop_ready`: Downstream gate.
+- `inference_substrate`: Explicit learning substrate.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5446 Sub-requirements
+
+- REQ-LEARN-5446-1: The fixture SHALL include at least six multi-session trace
+  rows covering repeated tasks, shifted tasks, stale observations, unsupported
+  evidence, access denial, and rollback-required controls.
+- REQ-LEARN-5446-2: Promotion SHALL count raw trace, case, skill, and rule
+  levels separately, and active routing influence SHALL be assigned only to
+  case, skill, or rule memories whose lifecycle gates all pass.
+- REQ-LEARN-5446-3: Lifecycle gates SHALL include evidence support, execution
+  dependency, replay success, temporal decay, access control, rollback pointer,
+  and no-weight-mutation proof.
+- REQ-LEARN-5446-4: The governed, always-full-context, no-memory, and ungated
+  controls SHALL be evaluated over identical trace IDs.
+- REQ-LEARN-5446-5: Memory with missing replay or provenance gates SHALL have
+  zero routing influence, even when ungated memory would accept it.
+- REQ-LEARN-5446-6: Rollback SHALL remove promoted case, skill, and rule
+  memories from future decisions and restore the prior sidecar exactly.
+- REQ-LEARN-5446-7: `governed_csl_loop_ready` SHALL be true only when all
+  required artifact fields are present with principles, unsafe false accepts are
+  zero, replay success and rollback recovery are complete, negative-transfer
+  candidates are deflected, tests are recorded, inference substrate is
+  `deterministic_governed_memory_no_weight_update`, and no model or adapter
+  weights mutate.
+
+### SCENARIO-LEARN-5446-GATES: Replay And Provenance Gates Precede Routing
+
+**Given** multi-session memory candidates with repeated and shifted workflow
+tasks
+**When** governed lifecycle gates are evaluated
+**Then** only candidates with evidence support, execution dependency, replay,
+freshness, access, rollback, and no-weight proof may influence routing
+**And** unsupported candidates retain audit records with zero routing influence.
+
+### SCENARIO-LEARN-5446-CONTROLS: Governed Memory Beats Unsafe Controls
+
+**Given** the same trace IDs are evaluated by always-full-context, no-memory,
+ungated-memory, and governed-memory policies
+**When** metrics are aggregated
+**Then** governed memory preserves quality against always-full-context
+**And** improves context efficiency while producing zero unsafe false accepts.
+
+### SCENARIO-LEARN-5446-ROLLBACK: Promoted Memories Are Reversible
+
+**Given** promoted case, skill, and rule memories exist in active sidecars
+**When** rollback removes those promoted memories before future routing
+**Then** the active sidecars match the pre-promotion state exactly
+**And** future decisions do not cite the rolled-back memories.
+
+### SCENARIO-LEARN-5446-NO-WEIGHT-MUTATION: Online Learning Is Sidecar-Only
+
+**Given** governed memory promotion occurs across sessions
+**When** the experiment completes
+**Then** the artifact reports no model or adapter weights loaded, written,
+fine-tuned, or mutated.
+
+## Implementation Status (Exp 5446)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5446 | Planned (`python/carnot/experiment_5446_governed_memory_csl_online_v495.py`, `results/experiment_5446_governed_memory_csl_online_v495.json`) | Planned (`tests/python/test_experiment_5446_governed_memory_csl_online_v495.py`) |
