@@ -1,0 +1,782 @@
+milestone: "2026.07.493"
+milestone_title: "Risk-Calibrated Structured Verification, Evidence-Stable Self-Learning, ARC Level-Up, and Hardware Timing Receipts"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp5415-transition-v493
+    milestone: "2026.07.493"
+    title: "Transition .492 outcomes into .493 execution context"
+    priority: critical
+    track: planning
+    deliverable: results/experiment_5415_transition_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 20
+    prior_failures:
+      - experiment_id: exp5414-capstone-v492
+        verdict: "complete: .492 capstone classified formal, structured safety/action, resource-CSL, and uncertainty-gated promotion as headline-ready while ARC remained no-bank and hardware speedup unclaimed"
+        addressed_by: "This is the routine next-milestone transition from .492 to .493 and carries terminal facts forward rather than rerunning the capstone."
+        retire_if_same_verdict: true
+      - experiment_id: exp5402-transition-v492
+        verdict: "complete: .492 transition archived .491 outcomes and staged the .492 execution context"
+        addressed_by: "This transition targets the newer .492 artifact set and increments the CalVer sequence to 2026.07.493."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      You are starting milestone 2026.07.493 after all 2026.07.492 tasks completed. The planner has staged openspec/change-proposals/research-roadmap-vNEXT.md and research-roadmap-next.yaml. Your job is to archive the prior milestone facts into a transition receipt, not to re-plan the milestone.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/results/experiment_5414_capstone_v492.json
+
+      TASK:
+      Emit results/experiment_5415_transition_v493.json summarizing the exact .492 terminal evidence and the .493 execution gates.
+
+      CONCRETE STEPS:
+      1. Read the listed files and extract .492 facts from real artifacts, especially Exp5414.
+      2. Record the CalVer transition to 2026.07.493 and the expected task range exp5415-exp5427.
+      3. Summarize .492 closed lanes: formal-encoding corrigendum, structured safety/action panel, resource-accounted CSL, and uncertainty-gated promotion.
+      4. Summarize .492 partial lanes: active-constraint guidance, p-bit/QUBO CPU stress, hardware repeatability without speedup, and bounded KAN certificates.
+      5. Summarize .492 open/blocked lanes: Exp5410 ARC no-bank, KV260/GateMate availability limits, and token/internal feature lanes still closed.
+      6. Confirm that research-roadmap.yaml and scripts/research_conductor.py were not modified.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.493  # principle: conductor route key
+         - previous_milestone: 2026.07.492  # principle: traceability
+         - prior_capstone_path: results/experiment_5414_capstone_v492.json  # principle: provenance
+         - previous_task_range: exp5402-exp5414  # principle: closed execution boundary
+         - closed_lanes: list  # principle: positive evidence boundary
+         - partial_lanes: list  # principle: bounded evidence boundary
+         - blocked_lanes: list  # principle: no unsupported claims
+         - next_task_range: exp5415-exp5427  # principle: activation sanity
+         - roadmap_yaml_unchanged: bool  # principle: user prohibition
+         - conductor_unchanged: bool  # principle: user prohibition
+         - inference_substrate: aggregation_from_upstream_artifacts  # principle: no hidden live model inference
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5416-source-delta-v493
+    milestone: "2026.07.493"
+    title: "Execution-time 2025-2026 source delta for .493"
+    priority: high
+    track: literature
+    deliverable: results/experiment_5416_source_delta_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    estimated_wall_time_min: 35
+    prior_failures:
+      - experiment_id: exp5403-source-delta-v492
+        verdict: "complete: .492 execution source delta appended or confirmed actionable references without reopening retired scopes"
+        addressed_by: "This task refreshes source deltas at .493 execution time and must dedupe against the V493 planner refresh already appended to research-references.md."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The planner already appended a V493 Planner Refresh to research-references.md on {date}. This task is the execution-time freshness check before implementation experiments run. It must add only genuinely new actionable deltas and must not reopen retired lanes.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/changelog.md
+
+      TASK:
+      Search arXiv and secondary sources for 2025-2026 work relevant to Carnot since the V493 planner refresh, append only non-duplicate actionable findings to research-references.md, and emit a source-delta receipt.
+
+      CONCRETE STEPS:
+      1. Search arXiv for Energy-Based Models for verification/reasoning, neural constraint satisfaction, Ising applications in ML, hallucination mitigation, Kolmogorov-Arnold Networks, energy-guided decoding, hardware-accelerated sampling, and continual/online learning for constraint systems.
+      2. Check OpenReview, Extropic writing, Semantic Scholar citation routes for EBT 2507.02092 and ARM-EBM 2512.15605, HuggingFace Papers, GitHub, and Logical Intelligence public pages.
+      3. Dedupe against research-references.md, especially V489-V493 blocks.
+      4. Append a short "V493 Execution Refresh - {date}" block only if new actionable deltas exist. If none exist, append nothing and explain the no-op in the artifact.
+      5. Explicitly classify retired-scope items as watch-only or excluded.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - sources_checked: list  # principle: reproducible literature sweep
+         - new_references_added: list  # principle: current-knowledge delta
+         - duplicates_suppressed: list  # principle: no reference churn
+         - retired_scopes_reopened: false  # principle: exclusion-manifest compliance
+         - research_references_updated: bool  # principle: doc alignment
+         - prior_refresh_marker_found: bool  # principle: dedupe against planner work
+         - inference_substrate: aggregation_from_upstream_artifacts  # principle: source aggregation only
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5417-risk-calibrated-sota-structured-panel-v493
+    milestone: "2026.07.493"
+    title: "Risk-calibrated SOTA structured safety/action panel with abstention"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json
+    requires_gpu: true
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 110
+    prior_failures:
+      - experiment_id: exp5405-scaled-structured-safety-action-panel-v492
+        verdict: "complete: structured_safety_action_panel_ready=true with local SOTA GGUF receipts and deterministic verifier authority"
+        addressed_by: "This extends the clean .492 panel with confidence-interval risk accounting and abstention, instead of rerunning the same validity panel."
+        retire_if_same_verdict: true
+      - experiment_id: exp5404-formal-encoding-tautology-corrigendum-v492
+        verdict: "complete: formal_encoding_corrigendum_clean=true after row-level checksum repair of the prior tautology"
+        addressed_by: "This task consumes the cleaned formal fixture as an input and adds risk calibration, not another tautology corrigendum."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5404 and Exp5405 made structured formal/safety/action verification headline-ready at bounded scale. Recent abstention and structured-output work says the next gap is risk-calibrated selective answering: schema validity is not enough, and uncertain rows should abstain rather than become false accepts.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5404_formal_encoding_corrigendum_v492.json
+      - {project_root}/results/experiment_5405_structured_safety_action_panel_v492.json
+      - {project_root}/tests/python
+
+      TASK:
+      Build a risk-calibrated structured safety/action panel that compares constrained local SOTA GGUF outputs against unconstrained baselines, deterministic policy/semantic/reachability checks, and an explicit abstention rule.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify local SOTA GGUF availability and GPU/offload viability before long inference. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use legacy small models only for CPU smoke tests, never headline rows.
+      1. Reuse the Exp5404/Exp5405 row-record pattern and add confidence/uncertainty signals that can be computed from deterministic checks, repeated samples, verifier margins, or model self-reports clearly marked as advisory.
+      2. Build fixtures across schema-only traps, semantic contradictions, unsafe policy rows, unreachable tool actions, benign rows, and decoy constraints.
+      3. Compare constrained, unconstrained, and abstaining variants. The deterministic verifier remains final authority for acceptance.
+      4. Compute confidence intervals, accepted-risk estimates, abstention rates, false accept rates, false reject rates, and semantic-error rates from row records only.
+      5. Add focused tests that fail if schema validity is used as semantic correctness or if readiness booleans are assigned without row provenance.
+      6. If GPU/offload is unavailable, emit a blocked artifact with preconditions_checked and no headline claim.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - preconditions_checked: bool  # principle: compute-bound task must fail fast
+         - model_specs: list  # principle: mandated SOTA GGUF provenance
+         - runtime_backend: string  # principle: no hidden transformers path
+         - gpu_offload_verified: bool  # principle: no CPU-only SOTA headline
+         - fixture_count: int  # principle: scale and coverage
+         - row_checksums: list  # principle: aggregate provenance
+         - constrained_validity: number  # principle: structured baseline
+         - unconstrained_validity: number  # principle: comparison baseline
+         - semantic_error_rate: number  # principle: schema is not semantics
+         - accepted_risk_bound: number  # principle: risk-calibrated decision
+         - abstention_rate: number  # principle: selective answering behavior
+         - unsafe_false_accept_rate: number  # principle: safety guard
+         - confidence_interval_method: string  # principle: calibration provenance
+         - aggregate_from_rows_only: bool  # principle: tautology prevention
+         - risk_calibrated_structured_panel_ready: bool  # principle: downstream gate
+         - inference_substrate: live_llm_inference  # principle: real local model invocation
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5418-predictive-prefix-action-safety-v493
+    milestone: "2026.07.493"
+    title: "Gated predictive prefix/action safety after Exp5417 risk panel"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5418_predictive_prefix_action_safety_v493.json
+    requires_gpu: true
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 100
+    gated_on:
+      - upstream: exp5417-risk-calibrated-sota-structured-panel-v493
+        artifact_field: risk_calibrated_structured_panel_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5405-scaled-structured-safety-action-panel-v492
+        verdict: "complete: final-state structured safety/action verification was clean at bounded scale"
+        addressed_by: "This gated task tests predictive prefix/tool-action checks before final-state verification, a different failure surface from Exp5405."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5417 must first prove the risk-calibrated panel is ready. Recent constrained-flow and neuro-symbolic safety work motivates predictive safety checks before a final answer or final tool state exists. Carnot should test an executable deterministic analogue: prefix/action candidates are screened early, but deterministic verifiers remain final authority.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json
+      - {project_root}/results/experiment_5405_structured_safety_action_panel_v492.json
+      - {project_root}/tests/python
+
+      TASK:
+      Add a predictive prefix/tool-action safety diagnostic that compares final-only verification against early prefix/action gating on local mandated SOTA GGUF outputs.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: confirm Exp5417 risk_calibrated_structured_panel_ready is true; verify local SOTA GGUF runtime/offload. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF.
+      1. Build or reuse fixture rows where unsafe or unreachable behavior appears before the final answer, including tool-sequence prefixes, partial formal traces, and multi-step action plans.
+      2. Run final-only acceptance and prefix-gated acceptance. Record which prefixes were rejected, abstained, repaired, or allowed.
+      3. Treat any learned/model signal as advisory. The deterministic schema, semantic, policy, and reachability verifiers must determine the final label.
+      4. Measure whether prefix gating reduces unsafe false accepts or unreachable tool actions without increasing false rejects beyond an explicit threshold.
+      5. Add focused tests for prefix-to-final row provenance and aggregate derivation.
+      6. Emit a blocked artifact rather than a headline claim if SOTA runtime/offload is unavailable.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - preconditions_checked: bool  # principle: gate and compute check
+         - model_specs: list  # principle: mandated SOTA GGUF provenance
+         - runtime_backend: string  # principle: local GGUF path
+         - gpu_offload_verified: bool  # principle: no CPU-only headline
+         - fixture_count: int  # principle: coverage
+         - prefix_trace_count: int  # principle: predictive-safety evidence
+         - final_only_unsafe_false_accept_rate: number  # principle: baseline risk
+         - prefix_gated_unsafe_false_accept_rate: number  # principle: early-filter risk
+         - unreachable_tool_action_delta: number  # principle: action reachability
+         - false_reject_delta: number  # principle: overblocking guard
+         - abstention_rate: number  # principle: selective behavior
+         - row_checksums: list  # principle: provenance
+         - deterministic_verifier_final_authority: bool  # principle: no learned oracle
+         - predictive_prefix_safety_ready: bool  # principle: downstream evidence
+         - inference_substrate: live_llm_inference  # principle: real local model invocation
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5419-active-constraint-lns-scale-v493
+    milestone: "2026.07.493"
+    title: "Active-constraint LNS scale-up with dual-residual diagnostics"
+    priority: high
+    track: solver-guidance
+    deliverable: results/experiment_5419_active_constraint_lns_scale_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    estimated_wall_time_min: 80
+    prior_failures:
+      - experiment_id: exp5406-active-constraint-warmstart-guidance-v492
+        verdict: "complete: active_constraint_warmstart_ready=true with solver overwrite authority and reduced conflict/iteration work"
+        addressed_by: "This scales the active-constraint interface to LNS-style subproblem hints and dual-residual diagnostics rather than repeating the small warm-start panel."
+        retire_if_same_verdict: true
+      - experiment_id: exp5407-pbit-qubo-active-constraint-stress-v492
+        verdict: "complete: pbit_qubo_stress_ready=true on CPU-only exact-enumeration stress; hardware speedup claim remained false"
+        addressed_by: "This task prepares a broader solver-guidance precondition before any hardware-transfer preflight."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5406 showed active-constraint hints can reduce solver work while the solver remains authoritative. Recent constrained-flow work suggests tracking dual residuals and constraint violations as diagnostics. This task scales the guidance interface before any p-bit or hardware transfer.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5406_active_constraint_warmstart_guidance_v492.json
+      - {project_root}/results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/tests/python
+
+      TASK:
+      Build a deterministic active-constraint scale-up diagnostic using LNS-style subproblem hints, conflict-front hints, and dual-residual sanity checks under solver accept/reject/overwrite authority.
+
+      CONCRETE STEPS:
+      1. Reuse the Exp5406 solver-guidance pattern and extend fixtures to larger synthetic CSP, scheduling, or action-sequence instances.
+      2. Add LNS-style subproblem selection hints and active-constraint/conflict-front hints. The solver must validate every hint and overwrite invalid hints.
+      3. Track baseline solver work, guided solver work, accepted hints, rejected hints, overwritten hints, feasibility, objective/validity preservation, and dual-residual or constraint-violation diagnostics.
+      4. Include adversarial hint rows with stale, contradictory, and overconfident hints.
+      5. Add focused tests that ensure invalid hints cannot change the solver's final authority.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - fixture_count: int  # principle: scale
+         - baseline_solver_work: number  # principle: unguided comparison
+         - guided_solver_work: number  # principle: guided comparison
+         - work_delta: number  # principle: guidance effect
+         - accepted_hint_count: int  # principle: hint behavior
+         - rejected_hint_count: int  # principle: hint behavior
+         - overwritten_hint_count: int  # principle: solver authority
+         - lns_subproblem_count: int  # principle: scale-up mechanism
+         - dual_residual_sanity: bool  # principle: constrained-flow diagnostic
+         - solver_validity_preserved: bool  # principle: no invalid speedup
+         - aggregate_from_rows_only: bool  # principle: tautology prevention
+         - active_constraint_lns_scale_ready: bool  # principle: downstream gate
+         - inference_substrate: deterministic_solver_experiment  # principle: no hidden live model inference
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5420-pbit-hardware-transfer-preflight-v493
+    milestone: "2026.07.493"
+    title: "Gated p-bit hardware-transfer preflight after Exp5419 scale-up"
+    priority: high
+    track: hardware
+    deliverable: results/experiment_5420_pbit_hardware_transfer_preflight_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 100
+    gated_on:
+      - upstream: exp5419-active-constraint-lns-scale-v493
+        artifact_field: active_constraint_lns_scale_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5407-pbit-qubo-active-constraint-stress-v492
+        verdict: "complete: CPU-only p-bit/QUBO stress matched exact enumeration and made hardware_speedup_claim=false"
+        addressed_by: "This task is gated on a larger active-constraint panel and only preflights hardware-transfer receipts; it still refuses speedup claims without comparable timing."
+        retire_if_same_verdict: true
+      - experiment_id: exp5411-hardware-repeatability-restoration-v492
+        verdict: "complete: PolarFire repeated same-workload receipts restored while KV260 and GateMate remained limited; hardware_speedup_claim=false"
+        addressed_by: "This task transfers one validated p-bit workload into the repeatability harness and records preconditions rather than claiming acceleration."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5407 validated CPU-only p-bit/QUBO stress, and Exp5411 restored repeatability evidence for PolarFire without speedup claims. This task should determine whether a p-bit workload is ready for hardware timing, not claim hardware acceleration.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json
+      - {project_root}/results/experiment_5411_hardware_repeatability_restoration_v492.json
+      - {project_root}/results/experiment_5419_active_constraint_lns_scale_v493.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/tests/python
+
+      TASK:
+      Run a gated p-bit/QUBO hardware-transfer preflight that preserves exact-enumeration validity, captures same-workload hashes, and refuses hardware speedup claims unless comparable CPU and board timing receipts exist.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: confirm Exp5419 active_constraint_lns_scale_ready is true. Probe only available hardware paths documented in research-hardware-wishlist.md. KV260 checks, if attempted, must be SSH-only and must not use host block-device or SD-card probes.
+      1. Select one validated Exp5407/Exp5419 workload that has exact-enumeration or deterministic-solver ground truth.
+      2. Emit a CPU reference receipt with workload hash, seed, exact result, repeat count, and timing.
+      3. If PolarFire is reachable, emit a board preflight receipt for the same workload hash and repeat count. If not reachable, record a blocked hardware precondition.
+      4. Do not claim speedup unless CPU and board receipts are comparable, repeated, and hash-matched. If all receipts exist, classify only readiness for Exp5424 timing, not a broad hardware result.
+      5. Add or update focused tests for hash matching, exact-enumeration preservation, and speedup-claim refusal.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - preconditions_checked: bool  # principle: hardware task must fail fast
+         - gated_upstream_ready: bool  # principle: structured gate provenance
+         - workload_hash: string  # principle: same-workload comparison
+         - cpu_repeat_count: int  # principle: timing reliability
+         - board_repeat_count: int  # principle: board reliability
+         - exact_enumeration_match: bool  # principle: validity preservation
+         - same_workload_hash_match: bool  # principle: no apples-to-oranges timing
+         - polarfire_reachable: bool  # principle: hardware availability
+         - kv260_ssh_checked: bool  # principle: SSH-only discipline
+         - gatemate_diagnostic_checked: bool  # principle: physical/JTAG honesty
+         - timing_receipts: list  # principle: reproducible evidence
+         - hardware_speedup_claim: false  # principle: no unsupported speedup
+         - pbit_transfer_preflight_ready: bool  # principle: downstream evidence
+         - inference_substrate: hardware_preflight_with_cpu_reference  # principle: explicit substrate
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5421-evidence-reliance-csl-v493
+    milestone: "2026.07.493"
+    title: "Continuous self-learning evidence-reliance drift and hidden-forgetting diagnostic"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5421_evidence_reliance_csl_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 90
+    prior_failures:
+      - experiment_id: exp5408-resource-accounted-csl-controller-v492
+        verdict: "complete: resource_accounted_csl_ready=true with quality preservation, verifier-cost reduction, rollback, raw episodes, and no weight mutation"
+        addressed_by: "This required CSL task adds evidence-reliance and hidden-forgetting diagnostics rather than rerunning resource accounting."
+        retire_if_same_verdict: true
+      - experiment_id: exp5409-uncertainty-gated-promotion-v492
+        verdict: "complete: uncertainty_gated_promotion_ready=true with accepted reachable fragments, rejected unsupported fragments, rollback, and no weight mutation"
+        addressed_by: "This task measures whether learned routing preserves evidence reliance before the next promotion scale-up."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The research program requires at least one continuous self-learning experiment per milestone. Exp5408 and Exp5409 proved resource accounting and uncertainty-gated promotion without weight mutation. Recent hidden-forgetting work warns that scores can stay stable while evidence reliance drifts.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5408_resource_accounted_csl_controller_v492.json
+      - {project_root}/results/experiment_5409_uncertainty_gated_promotion_v492.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/tests/python
+
+      TASK:
+      Implement a continuous self-learning diagnostic that measures evidence-reliance drift and hidden forgetting while preserving the existing constraints: raw episodes retained, rollback available, no model-weight mutation, and deterministic verifiers authoritative.
+
+      CONCRETE STEPS:
+      1. Reuse the Exp5408/Exp5409 CSL controller pattern and build paired episodes where surface success can remain constant while grounding source, verifier dependency, or constraint evidence changes.
+      2. Track routing decisions, learned-memory influence shares, raw episodes, resource cost, verifier calls, grounding source, and evidence-reliance labels before and after learning.
+      3. Inject stale, poisoned, underspecified, and distribution-shift episodes. The controller should either abstain, route to verification, or retain as non-promoted evidence when reliance is uncertain.
+      4. Measure hidden forgetting as evidence-reliance drift even when answer accuracy remains stable.
+      5. Verify rollback restores prior routing and that no model weights are mutated.
+      6. Add focused tests for drift detection, raw episode retention, rollback, and no-weight-mutation checks.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - episode_count: int  # principle: scale and coverage
+         - raw_episodes_retained: bool  # principle: auditability
+         - no_weight_mutation: bool  # principle: FR-11 boundary
+         - rollback_verified: bool  # principle: safety recovery
+         - quality_preserved: bool  # principle: no learning regression
+         - resource_delta: number  # principle: resource-aware learning
+         - verifier_cost_delta: number  # principle: verifier economy
+         - reliance_drift_metric: number  # principle: hidden-forgetting signal
+         - hidden_forgetting_detected: bool  # principle: explicit drift classification
+         - stale_poison_deflection_rate: number  # principle: unsafe memory guard
+         - evidence_reliance_csl_ready: bool  # principle: downstream gate
+         - inference_substrate: deterministic_self_learning_controller  # principle: no hidden live model inference
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5422-csl-promotion-reliance-scale-v493
+    milestone: "2026.07.493"
+    title: "Gated CSL promotion scale-up with reliance and risk thresholds"
+    priority: high
+    track: self-learning
+    deliverable: results/experiment_5422_csl_promotion_reliance_scale_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    estimated_wall_time_min: 80
+    gated_on:
+      - upstream: exp5421-evidence-reliance-csl-v493
+        artifact_field: evidence_reliance_csl_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5409-uncertainty-gated-promotion-v492
+        verdict: "complete: uncertainty_gated_promotion_ready=true with accepted/rejected fragments, rollback, and no model-weight mutation"
+        addressed_by: "This task scales promotion with explicit reliance-drift and risk thresholds after Exp5421, not just the .492 uncertainty gate."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5421 must first prove that the CSL controller can detect evidence-reliance drift. This task scales learned-memory and world-fragment promotion only if risk, grounding, resource, and reliance thresholds are satisfied.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5421_evidence_reliance_csl_v493.json
+      - {project_root}/results/experiment_5409_uncertainty_gated_promotion_v492.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/tests/python
+
+      TASK:
+      Build a gated CSL promotion scale-up where learned fragments can influence routing only after uncertainty, grounding, resource, rollback, and evidence-reliance checks pass.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: confirm Exp5421 evidence_reliance_csl_ready is true.
+      1. Expand the promotion candidate pool across reachable fragments, unsupported fragments, stale fragments, poisoned fragments, and fragments with ambiguous evidence reliance.
+      2. Define explicit promotion thresholds for uncertainty, grounding source, accepted risk, resource savings, rollback availability, and reliance drift.
+      3. Run promotion, rejection, abstention, and rollback paths. Accepted fragments may influence routing but must not mutate model weights.
+      4. Retain rejected and abstained fragments for audit. Verify they cannot silently influence routing.
+      5. Add tests for promotion-threshold enforcement, rollback, rejected-fragment quarantine, and no-weight-mutation checks.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - candidate_fragment_count: int  # principle: scale
+         - promoted_fragment_count: int  # principle: accepted memory evidence
+         - rejected_fragment_count: int  # principle: guard behavior
+         - abstained_fragment_count: int  # principle: uncertainty handling
+         - grounding_preserved: bool  # principle: evidence stability
+         - reliance_drift_threshold: number  # principle: explicit gate
+         - accepted_risk_threshold: number  # principle: risk gate
+         - rollback_verified: bool  # principle: recovery
+         - rejected_fragments_quarantined: bool  # principle: no silent influence
+         - no_weight_mutation: bool  # principle: FR-11 boundary
+         - csl_promotion_reliance_scale_ready: bool  # principle: capstone evidence
+         - inference_substrate: deterministic_self_learning_controller  # principle: no hidden live model inference
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5423-arc-coex-landmark-levelup-v493
+    milestone: "2026.07.493"
+    title: "ARC live CoEx landmark level-up attempt on unbanked frontier"
+    priority: critical
+    track: arc
+    deliverable: results/experiment_5423_arc_coex_landmark_levelup_v493.json
+    solve_provenance: live_agent_self_discovery
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 120
+    prior_failures:
+      - experiment_id: exp5410-arc-live-trajectory-frontier-levelup-v492
+        verdict: "honest_null: re86 L3 bounded_budget_no_levelup with live_agent_self_discovery, duplicate-solve avoidance, no offline BFS, and no per-game adapter"
+        addressed_by: "This task rotates away from another re86 salience-only attempt and uses CoEx-style frontier persistence plus hierarchical landmarks on a registry-checked unbanked frontier."
+        retire_if_same_verdict: true
+      - experiment_id: exp5397-arc-trajectory-frontier-v491
+        verdict: "honest_null: live ARC attempt did not bank a new level under bounded budget"
+        addressed_by: "The mechanism changes from bounded salience/frontier generation to persistent cross-episode frontier memory with landmark subgoals and measurement-access receipts."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The ARC sprint requires at least one concrete level-up attempt per roadmap. Exp5410 honestly no-banked re86 L3. This task must attempt a new reproducible level through the live agent's own attempts and runtime reverse engineering, not through offline source reading, offline ground-truth BFS, or a hand-built per-game adapter.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py
+      - {project_root}/scripts/arc_levelup_guarantee_lint.py
+      - {project_root}/tests/python
+
+      TASK:
+      Attempt to bank +1 reproducible ARC level using live_agent_self_discovery. Preferred target is lf52 L3 if registry precheck confirms it is not already banked; otherwise choose the nearest eligible unbanked frontier from ops/arc_solve_registry.yaml. The acceptance gate is offline_reproduced=true AND reproduced_levels>=1 for a new level reproduced by the live path.
+
+      CONCRETE STEPS:
+      1. Registry-precheck ops/arc_solve_registry.yaml before running. Do not target an already-banked level. Record target_game, target_level, and why the target is eligible.
+      2. Implement or configure a live mechanism that differs from repeated re86 salience-only attempts: CoEx-style frontier persistence, hierarchical landmarks, action-history clustering, and measurement-access receipts from the agent's own runtime attempts are allowed.
+      3. Do not inspect hidden game source, do not run offline ground-truth BFS as the credited solve path, and do not create a per-game GameAdapter or calibration solver as the headline path.
+      4. Run bounded live attempts. Record attempt count, reset count, discovered landmarks, frontier transitions, action sequences, runtime observations, and whether the agent can reproduce the solved level from its own discovered policy.
+      5. If a new level is solved, update the artifact with offline_reproduced=true and reproduced_levels>=1 for the new level, plus the exact live trajectory evidence. If no level is banked, emit an honest_null artifact with frontier evidence and no claimed solve.
+      6. Run the ARC level-up lint against the staged roadmap if practical and include its result in the artifact.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - registry_precheck: bool  # principle: duplicate-solve avoidance
+         - target_game: string  # principle: target provenance
+         - target_level: string  # principle: target provenance
+         - duplicate_solve_avoided: bool  # principle: no already-banked headline
+         - solve_provenance: live_agent_self_discovery  # principle: credited path
+         - offline_reproduced: bool  # principle: reproducible solve gate
+         - reproduced_levels: int  # principle: level-up gate; must be >=1 for a banked solve
+         - arc_new_level_banked: bool  # principle: north-star metric
+         - attempt_count: int  # principle: effort accounting
+         - frontier_expansion_count: int  # principle: mechanism evidence
+         - landmark_count: int  # principle: hierarchical evidence
+         - action_sequence_receipts: list  # principle: reproducibility
+         - no_offline_bfs: bool  # principle: live-path discipline
+         - no_per_game_adapter: bool  # principle: live-path discipline
+         - arc_levelup_lint_passed: bool  # principle: roadmap guarantee evidence
+         - inference_substrate: live_arc_agent_runtime  # principle: actual live agent
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "honest_null:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5424-hardware-comparable-timing-receipts-v493
+    milestone: "2026.07.493"
+    title: "Hardware comparable CPU and board timing receipts"
+    priority: high
+    track: hardware
+    deliverable: results/experiment_5424_hardware_comparable_timing_receipts_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 120
+    prior_failures:
+      - experiment_id: exp5411-hardware-repeatability-restoration-v492
+        verdict: "complete: repeated_same_workload_ready=true on PolarFire; KV260 and GateMate remained limited; hardware_speedup_claim=false"
+        addressed_by: "This task adds comparable CPU-vs-board timing receipts and measurement-access checks rather than only restoring repeatability."
+        retire_if_same_verdict: true
+      - experiment_id: exp5398-hardware-repeatability-v491
+        verdict: "blocked: KV260 unreachable, PolarFire repeat count 0, GateMate workload path false, and no speedup claim"
+        addressed_by: "This task starts from the later Exp5411 repeatability restoration and requires hash-matched CPU and board timing receipts before any timing interpretation."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5411 restored repeated same-workload hardware receipts but made no speedup claim. Recent measurement-access work emphasizes that missing physical records cannot be fixed after the fact. This task should create comparable timing evidence, not a speedup headline.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5411_hardware_repeatability_restoration_v492.json
+      - {project_root}/results/experiment_5420_pbit_hardware_transfer_preflight_v493.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/tests/python
+
+      TASK:
+      Emit comparable CPU and board timing receipts for at least one same-workload solver or p-bit diagnostic, with hashes, seeds, repeat counts, measurement-access metadata, and explicit refusal of unsupported speedup claims.
+
+      CONCRETE STEPS:
+      1. Select a workload from Exp5411 or Exp5420 with deterministic validity and a stable workload hash.
+      2. Run or assemble CPU timing receipts with repeat count, environment, seed, workload hash, result hash, and timing distribution.
+      3. If PolarFire is reachable, run the same workload hash on the board with repeat count and result hash. If unreachable, emit a blocked hardware precondition with the command attempted.
+      4. KV260 checks, if attempted, must use SSH-only reachability and must not use host SD-card or block-device probes. GateMate remains diagnostic-only unless physical/JTAG evidence returns.
+      5. Compare CPU and board receipts only when hashes and result hashes match. Record timing comparability separately from speedup.
+      6. Add focused tests for receipt schema, hash matching, repeat-count thresholds, and speedup-claim refusal.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - preconditions_checked: bool  # principle: hardware task must fail fast
+         - workload_hash: string  # principle: same-workload comparison
+         - cpu_repeat_count: int  # principle: CPU timing reliability
+         - board_repeat_count: int  # principle: board timing reliability
+         - cpu_result_hash: string  # principle: correctness comparison
+         - board_result_hash: string  # principle: correctness comparison
+         - same_workload_hash_match: bool  # principle: no apples-to-oranges timing
+         - same_result_hash_match: bool  # principle: no invalid speedup
+         - polarfire_reachable: bool  # principle: board availability
+         - kv260_ssh_checked: bool  # principle: SSH-only discipline
+         - gatemate_diagnostic_checked: bool  # principle: physical/JTAG honesty
+         - timing_receipts: list  # principle: reproducible evidence
+         - measurement_access_complete: bool  # principle: physical evidence boundary
+         - comparable_timing_receipts_ready: bool  # principle: capstone evidence
+         - hardware_speedup_claim: false  # principle: no unsupported speedup
+         - inference_substrate: hardware_timing_with_cpu_reference  # principle: explicit substrate
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5425-kan-measurement-access-certificate-v493
+    milestone: "2026.07.493"
+    title: "KAN measurement-access certificate for active-constraint false-property controls"
+    priority: high
+    track: certificates
+    deliverable: results/experiment_5425_kan_measurement_access_certificate_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    estimated_wall_time_min: 75
+    prior_failures:
+      - experiment_id: exp5412-kan-active-constraint-certificate-v492
+        verdict: "complete: kan_active_constraint_certificate_ready=true with bounded false-property rejection and true-property preservation"
+        addressed_by: "This expands the bounded certificate family to measurement-access and active-constraint controls rather than repeating the same certificate."
+        retire_if_same_verdict: true
+      - experiment_id: exp5399-kan-counterexample-v491
+        verdict: "complete: bounded KAN/KANDy counterexample certificate preserved true properties and rejected false properties without a broad KAN verification claim"
+        addressed_by: "This task keeps the same bounded-claim discipline while targeting a new measurement-access false-property family."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5412 showed bounded KAN active-constraint certificates are useful but not broad verification. Recent measurement-access work gives a new certificate target: distinguish properties that are observable from properties that are unsupported because required evidence is missing.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5412_kan_active_constraint_certificate_v492.json
+      - {project_root}/results/experiment_5399_kan_counterexample_v491.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/tests/python
+
+      TASK:
+      Extend the bounded KAN/KANDy certificate family to measurement-access and active-constraint false-property controls, with explicit true-property preservation and no broad KAN verification claim.
+
+      CONCRETE STEPS:
+      1. Reuse the Exp5412 certificate pattern and define a new bounded family where some properties are supported by measured rows and others require missing evidence.
+      2. Include false-property controls tied to measurement-access gaps, active-constraint hints, and unsupported board/token/internal claims.
+      3. Include true-property controls that should remain provable under the same bounded certificate.
+      4. Generate counterexamples or certificates with row-level provenance and checksums.
+      5. Add focused tests for false-property rejection, true-property preservation, missing-evidence classification, and no broad-claim leakage.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - certificate_count: int  # principle: coverage
+         - property_family: string  # principle: bounded claim scope
+         - measurement_access_controls: list  # principle: observable-vs-missing evidence
+         - false_property_rejection_rate: number  # principle: counterexample strength
+         - true_property_preservation_rate: number  # principle: no over-rejection
+         - row_checksums: list  # principle: provenance
+         - missing_evidence_detected: bool  # principle: measurement-access boundary
+         - broad_kan_verification_claim: false  # principle: bounded claim
+         - kan_measurement_access_certificate_ready: bool  # principle: capstone evidence
+         - inference_substrate: deterministic_certificate_experiment  # principle: no hidden live model inference
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5426-prd-gap-agent-failure-table-v493
+    milestone: "2026.07.493"
+    title: "PRD gap table with tool-use planning and reasoning failure taxonomy"
+    priority: high
+    track: synthesis
+    deliverable: results/experiment_5426_prd_gap_agent_failure_table_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp5413-evidence-table-prd-gap-analysis-v492
+        verdict: "complete: .492 evidence table classified closed, partial, blocked, and missing PRD gaps from actual artifacts"
+        addressed_by: "This task refreshes the evidence table for .493 and adds the 2026 tool-use/planning/reasoning failure taxonomy."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5426 is the synthesis step before the .493 capstone. It should aggregate actual .493 artifacts, not planned expectations. Recent failure-taxonomy work gives a useful classification layer for tool-use, planning, and reasoning gaps.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/_bmad/prd.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5415_transition_v493.json
+      - {project_root}/results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json
+      - {project_root}/results/experiment_5418_predictive_prefix_action_safety_v493.json
+      - {project_root}/results/experiment_5419_active_constraint_lns_scale_v493.json
+      - {project_root}/results/experiment_5420_pbit_hardware_transfer_preflight_v493.json
+      - {project_root}/results/experiment_5421_evidence_reliance_csl_v493.json
+      - {project_root}/results/experiment_5422_csl_promotion_reliance_scale_v493.json
+      - {project_root}/results/experiment_5423_arc_coex_landmark_levelup_v493.json
+      - {project_root}/results/experiment_5424_hardware_comparable_timing_receipts_v493.json
+      - {project_root}/results/experiment_5425_kan_measurement_access_certificate_v493.json
+
+      TASK:
+      Emit a PRD gap and failure-taxonomy evidence table for .493 using only actual artifact fields that exist at execution time.
+
+      CONCRETE STEPS:
+      1. Read all available .493 artifacts listed above. If an upstream artifact is absent, record it as missing rather than fabricating values.
+      2. Map evidence to PRD goals and research-program priorities: structured verification, continuous self-learning, solver guidance, ARC live progress, hardware, and certificates.
+      3. Classify each lane as closed, partial, blocked, or missing. Include artifact paths and exact field names supporting each classification.
+      4. Apply a failure taxonomy for tool-use, planning, reasoning, measurement-access, calibration, and live-environment gaps where applicable.
+      5. Do not update research-roadmap.yaml or scripts/research_conductor.py.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - upstream_artifacts_read: list  # principle: provenance
+         - upstream_artifacts_missing: list  # principle: no fabricated evidence
+         - closed_lanes: list  # principle: PRD progress
+         - partial_lanes: list  # principle: bounded evidence
+         - blocked_lanes: list  # principle: honest gaps
+         - missing_lanes: list  # principle: absent artifact handling
+         - failure_taxonomy_counts: dict  # principle: tool-use/planning/reasoning diagnosis
+         - prd_gap_table_ready: bool  # principle: capstone input
+         - inference_substrate: aggregation_from_upstream_artifacts  # principle: no hidden live model inference
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5427-capstone-v493
+    milestone: "2026.07.493"
+    title: "Milestone .493 capstone and next-roadmap recommendations"
+    priority: critical
+    track: synthesis
+    deliverable: results/experiment_5427_capstone_v493.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    estimated_wall_time_min: 55
+    prior_failures:
+      - experiment_id: exp5414-capstone-v492
+        verdict: "complete: .492 capstone emitted a truthful evidence table and next recommendations from actual artifacts"
+        addressed_by: "This capstone closes the newer .493 artifact set and must not reuse .492 conclusions without checking .493 receipts."
+        retire_if_same_verdict: true
+      - experiment_id: exp5426-prd-gap-agent-failure-table-v493
+        verdict: "planned: .493 PRD gap and failure table will be this capstone's immediate upstream synthesis artifact"
+        addressed_by: "This capstone depends on the newer table and writes the terminal milestone truth table rather than duplicating the table task."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the final task for milestone 2026.07.493. Emit a capstone truth table from actual artifacts only. Do not plan the next milestone in detail; provide recommendations that a future planning agent can use.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/_bmad/prd.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/results/experiment_5415_transition_v493.json
+      - {project_root}/results/experiment_5416_source_delta_v493.json
+      - {project_root}/results/experiment_5417_risk_calibrated_sota_structured_panel_v493.json
+      - {project_root}/results/experiment_5418_predictive_prefix_action_safety_v493.json
+      - {project_root}/results/experiment_5419_active_constraint_lns_scale_v493.json
+      - {project_root}/results/experiment_5420_pbit_hardware_transfer_preflight_v493.json
+      - {project_root}/results/experiment_5421_evidence_reliance_csl_v493.json
+      - {project_root}/results/experiment_5422_csl_promotion_reliance_scale_v493.json
+      - {project_root}/results/experiment_5423_arc_coex_landmark_levelup_v493.json
+      - {project_root}/results/experiment_5424_hardware_comparable_timing_receipts_v493.json
+      - {project_root}/results/experiment_5425_kan_measurement_access_certificate_v493.json
+      - {project_root}/results/experiment_5426_prd_gap_agent_failure_table_v493.json
+
+      TASK:
+      Emit results/experiment_5427_capstone_v493.json with a truthful terminal summary of .493, including headline-ready lanes, bounded/null lanes, blocked lanes, and concrete next recommendations.
+
+      CONCRETE STEPS:
+      1. Read the listed files and use actual artifacts as the source of truth. Missing artifacts must be recorded as missing.
+      2. Determine whether each .493 hypothesis is headline-ready, bounded, honest-null, blocked, or missing: risk-calibrated structured verification, predictive prefix/action safety, active-constraint LNS scale, p-bit hardware-transfer preflight, evidence-reliance CSL, gated CSL promotion, ARC level-up, comparable hardware timing, and KAN measurement-access certificates.
+      3. Record whether the ARC north-star metric grew, whether hardware speedup remains unclaimed, whether token/internal lanes remain closed, and whether local SOTA GGUF receipts are valid.
+      4. Write next-roadmap recommendations only from evidence: keep ARC slot if no bank, move p-bit to hardware only if comparable timing exists, expand CSL if reliance is stable, and keep token/internal lanes closed unless authenticated backend receipts exist.
+      5. Confirm research-roadmap.yaml and scripts/research_conductor.py were not modified.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.493  # principle: conductor route key
+         - upstream_artifacts_read: list  # principle: provenance
+         - upstream_artifacts_missing: list  # principle: no fabricated evidence
+         - headline_ready_lanes: list  # principle: positive evidence boundary
+         - bounded_lanes: list  # principle: partial evidence boundary
+         - honest_null_lanes: list  # principle: null-result honesty
+         - blocked_lanes: list  # principle: precondition honesty
+         - arc_new_level_banked: bool  # principle: ARC north-star metric
+         - hardware_speedup_claim: false  # principle: no unsupported acceleration
+         - future_token_signal_allowed: false  # principle: token/internal lane closure
+         - local_sota_gguf_receipts_valid: bool  # principle: SOTA model provenance
+         - research_roadmap_yaml_unchanged: bool  # principle: user prohibition
+         - conductor_unchanged: bool  # principle: user prohibition
+         - next_recommendations: list  # principle: evidence-based planning handoff
+         - inference_substrate: aggregation_from_upstream_artifacts  # principle: no hidden live model inference
+         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
