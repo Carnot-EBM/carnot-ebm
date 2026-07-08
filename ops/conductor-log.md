@@ -10540,3 +10540,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 10:17 UTC | Hardware repeatability restoration across availabl | OK | 89 passed, 1 warning in 12.13s |
 | 2026-07-08 10:29 UTC | KAN active-constraint counterexample certificate e | OK | 88 passed, 1 warning in 11.11s |
 | 2026-07-08 10:46 UTC | PRD evidence table and gap analysis for .492 | OK | 88 passed, 1 warning in 11.89s |
+| 2026-07-08 11:00 UTC | Capstone truth table and next-roadmap recommendati | OK | 88 passed, 1 warning in 10.78s |
