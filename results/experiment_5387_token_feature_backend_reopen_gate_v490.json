@@ -1,0 +1,228 @@
+{
+  "attention_available": {
+    "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+    "principle": "backend availability boolean with evidence path.",
+    "value": false
+  },
+  "backend_feature_matrix": {
+    "attention_available": {
+      "available": false,
+      "evidence_field": "attention",
+      "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "row_count": 0
+    },
+    "hidden_states_available": {
+      "available": false,
+      "evidence_field": "hidden_states",
+      "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "hidden_state_proxy_is_not_counted": false,
+      "row_count": 0
+    },
+    "intermediate_depth_exits_available": {
+      "available": false,
+      "evidence_field": "intermediate_depth_exits",
+      "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "row_count": 0
+    },
+    "logits_available": {
+      "available": false,
+      "evidence_field": "logits",
+      "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "row_count": 0
+    }
+  },
+  "backend_reopen_allowed": {
+    "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+    "principle": "true only if a backend exposes clean feature receipts.",
+    "value": false
+  },
+  "benchmark_execution": {
+    "new_live_signal_benchmark_run": false,
+    "reason": "feature availability gate only"
+  },
+  "clean_feature_row_provenance": {
+    "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+    "principle": "true only if rows can be traced to live runtime outputs.",
+    "value": false
+  },
+  "experiment": 5387,
+  "experiment_id": "experiment_5387_token_feature_backend_reopen_gate_v490",
+  "field_provenance": {
+    "attention_available": {
+      "principle": "backend availability boolean with evidence path.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "backend_reopen_allowed": {
+      "principle": "true only if a backend exposes clean feature receipts.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "clean_feature_row_provenance": {
+      "principle": "true only if rows can be traced to live runtime outputs.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "forbidden_claims": {
+      "principle": "list of claims that remain disallowed.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "future_signal_allowed": {
+      "principle": "true only if logits, hidden states, attention, or depth exits are available with provenance.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "hidden_states_available": {
+      "principle": "backend availability boolean with evidence path.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "honest_verdict": {
+      "principle": "one-line gate result.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "intermediate_depth_exits_available": {
+      "principle": "backend availability boolean with evidence path.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "logits_available": {
+      "principle": "backend availability boolean with evidence path.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "no_live_signal_claim": {
+      "principle": "must be true.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "retired_scope_reopened": {
+      "principle": "must be false unless a clean backend feature receipt exists.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    },
+    "status": {
+      "principle": "complete gate check or honest_blocked if required files are missing.",
+      "satisfied_by": "wrapped field value and evidence_path"
+    }
+  },
+  "forbidden_claims": {
+    "principle": "list of claims that remain disallowed.",
+    "value": [
+      "text-only energy",
+      "incomplete token rows",
+      "arithmetic carry signal",
+      "external generated-text scoring",
+      "DEX-style depth claims without depth exits"
+    ]
+  },
+  "future_signal_allowed": {
+    "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+    "principle": "true only if logits, hidden states, attention, or depth exits are available with provenance.",
+    "value": false
+  },
+  "hidden_states_available": {
+    "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+    "principle": "backend availability boolean with evidence path.",
+    "value": false
+  },
+  "honest_verdict": {
+    "principle": "one-line gate result.",
+    "value": "complete: backend gate closed; no logits, hidden states, attention, or depth exits with clean provenance"
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "intermediate_depth_exits_available": {
+    "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+    "principle": "backend availability boolean with evidence path.",
+    "value": false
+  },
+  "logits_available": {
+    "evidence_path": "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+    "principle": "backend availability boolean with evidence path.",
+    "value": false
+  },
+  "milestone": "2026.07.490",
+  "minimum_next_experiment": {
+    "name": null,
+    "required_before_signal_claim": [
+      "backend receipt exposing logits, hidden states, attention, or intermediate-depth exits",
+      "clean row provenance from live runtime outputs",
+      "feature-complete positive and negative controls"
+    ],
+    "signal_quality_claim_allowed": false
+  },
+  "no_live_signal_claim": {
+    "principle": "must be true.",
+    "value": true
+  },
+  "no_signal_quality_claim": true,
+  "reproducibility_checksum": "4474217a3f09b84e",
+  "retired_scope_reopened": {
+    "evidence_path": "ops/exclusion_manifest.yaml",
+    "principle": "must be false unless a clean backend feature receipt exists.",
+    "value": false
+  },
+  "run_date": "20260708",
+  "schema": "carnot.experiment_5387.token_feature_backend_reopen_gate.v490",
+  "source_evidence": {
+    "canonical_exp5372_path": "results/experiment_5372_token_feature_precondition_gate_v489.json",
+    "canonical_exp5372_path_present": true,
+    "helper_inspection": {
+      "attention_audit_code_present": true,
+      "helper_rows": [
+        {
+          "mentions_attention": true,
+          "mentions_depth_exit": false,
+          "mentions_hidden": true,
+          "mentions_logits": true,
+          "path": "python/carnot/experiment_5331_internal_energy_receipt_harness_v486.py",
+          "present": true
+        },
+        {
+          "mentions_attention": true,
+          "mentions_depth_exit": false,
+          "mentions_hidden": true,
+          "mentions_logits": true,
+          "path": "python/carnot/experiment_5353_tokenprob_feature_audit_corrigendum_v488.py",
+          "present": true
+        }
+      ],
+      "hidden_audit_code_present": true,
+      "intermediate_depth_exit_helper_present": false,
+      "logit_audit_code_present": true
+    },
+    "requested_exp5372_path": "results/experiment_5372_token_internal_feature_precondition_gate_v489.json",
+    "requested_exp5372_path_present": false,
+    "semantic_sources_loaded": [
+      "results/experiment_5331_internal_energy_receipt_harness_v486.json",
+      "results/experiment_5331_internal_energy_receipt_schema_v486.json",
+      "results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json",
+      "results/experiment_5354_arithmetic_carry_token_energy_v488.json",
+      "results/experiment_5372_token_feature_precondition_gate_v489.json",
+      "ops/exclusion_manifest.yaml"
+    ]
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5387",
+    "SCENARIO-VERIFY-5387"
+  ],
+  "status": {
+    "principle": "complete gate check or honest_blocked if required files are missing.",
+    "value": "complete"
+  },
+  "tests_run": [
+    {
+      "command": "verification pending at artifact generation",
+      "outcome": "pending_external_test_run"
+    }
+  ],
+  "token_row_summary": {
+    "carry_feature_complete_rate": 0.5625,
+    "carry_missing_features": [
+      "no_carry_12_23:perturbed_target_logprob",
+      "no_carry_104_205:perturbed_target_logprob",
+      "no_carry_321_456:perturbed_target_logprob",
+      "no_carry_2304_1052:perturbed_target_logprob",
+      "single_carry_17_25:perturbed_target_logprob",
+      "single_carry_108_207:perturbed_target_logprob",
+      "multi_carry_999_1:perturbed_target_logprob",
+      "correct_vs_perturbed_margin_nonpositive"
+    ],
+    "carry_token_energy_signal_ready": false,
+    "tokenprob_feature_rows_ready": true,
+    "tokenprob_row_count": 3,
+    "tokenprob_rows_source": "backend_completion_probabilities"
+  }
+}
