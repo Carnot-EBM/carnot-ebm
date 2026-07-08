@@ -1,0 +1,372 @@
+{
+  "blocked_lanes": [
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live_agent_path_exercised_no_new_banked_level",
+      "classification": "honest_null",
+      "lane": "exp5410_arc_no_bank",
+      "source_artifacts": [
+        "results/experiment_5410_arc_live_trajectory_frontier_levelup_v492.json"
+      ],
+      "source_lane": "arc_live_levelup",
+      "terminal_evidence": {
+        "arc_new_level_banked": false,
+        "attempt_count": 35,
+        "frontier_expansion_count": 17,
+        "offline_reproduced": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "status": "honest_null"
+      },
+      "terminal_state": "honest_null_no_new_level_banked"
+    },
+    {
+      "claim_boundary": "repeatability_receipt_not_speedup_or_multi_board_ready",
+      "classification": "partial",
+      "lane": "kv260_gatemate_availability_limits",
+      "source_artifacts": [
+        "results/experiment_5411_hardware_repeatability_restoration_v492.json"
+      ],
+      "source_lane": "hardware_repeatability",
+      "terminal_evidence": {
+        "gatemate_reachable": false,
+        "hardware_speedup_claim": false,
+        "kv260_ssh_reachable": false,
+        "polarfire_reachable": true,
+        "polarfire_repeat_count": 3,
+        "repeated_same_workload_ready": true
+      },
+      "terminal_state": "blocked_board_availability_limits"
+    },
+    {
+      "blocked_reason": "no_logits_hidden_states_attention_or_intermediate_exit_receipt",
+      "claim_boundary": "closed_without_backend_feature_receipt",
+      "classification": "blocked",
+      "lane": "token_internal_feature_lane_closed",
+      "source_artifacts": [
+        "results/experiment_5402_transition_v492.json",
+        "results/experiment_5413_evidence_table_prd_gap_analysis_v492.json"
+      ],
+      "source_lane": "token_internal_lane",
+      "terminal_evidence": {
+        "backend_receipt_present": false,
+        "future_token_signal_allowed": false
+      },
+      "terminal_state": "blocked_no_backend_feature_receipt"
+    }
+  ],
+  "closed_lanes": [
+    {
+      "claim_boundary": "row_level_formal_encoding_safety_only",
+      "classification": "headline_ready",
+      "lane": "formal_encoding_corrigendum",
+      "source_artifacts": [
+        "results/experiment_5404_formal_encoding_corrigendum_v492.json"
+      ],
+      "source_lane": "formal_corrigendum",
+      "terminal_evidence": {
+        "deterministic_policy_authority": true,
+        "false_negative_rate": 0.0,
+        "false_positive_rate": 0.0,
+        "fixture_count": 18,
+        "forbidden_leak_rate": 0.0,
+        "formal_encoding_corrigendum_clean": true,
+        "gpu_offload_verified": true
+      },
+      "terminal_state": "headline_ready"
+    },
+    {
+      "claim_boundary": "structured_fixture_panel_not_general_sota_quality",
+      "classification": "headline_ready",
+      "lane": "structured_safety_action_panel",
+      "source_artifacts": [
+        "results/experiment_5405_structured_safety_action_panel_v492.json"
+      ],
+      "source_lane": "structured_safety_action_scaleup",
+      "terminal_evidence": {
+        "constrained_validity": 1.0,
+        "fixture_count": 42,
+        "gpu_offload_verified": true,
+        "structured_safety_action_panel_ready": true,
+        "tool_action_reachability": 1.0,
+        "unconstrained_validity": 0.285714,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "terminal_state": "headline_ready"
+    },
+    {
+      "claim_boundary": "controller_routing_no_weight_mutation",
+      "classification": "headline_ready",
+      "lane": "resource_accounted_csl",
+      "source_artifacts": [
+        "results/experiment_5408_resource_accounted_csl_controller_v492.json"
+      ],
+      "source_lane": "resource_accounted_csl",
+      "terminal_evidence": {
+        "decision_count": 36,
+        "no_weight_mutation": true,
+        "quality_delta_vs_baseline": 0.0,
+        "resource_accounted_csl_ready": true,
+        "session_count": 12,
+        "verifier_cost_delta_vs_baseline": 22.2,
+        "wall_time_delta_vs_baseline": 3240.0
+      },
+      "terminal_state": "headline_ready"
+    },
+    {
+      "claim_boundary": "uncertainty_gate_no_ungated_memory_promotion",
+      "classification": "headline_ready",
+      "lane": "uncertainty_gated_promotion",
+      "source_artifacts": [
+        "results/experiment_5409_uncertainty_gated_promotion_v492.json"
+      ],
+      "source_lane": "uncertainty_gated_promotion",
+      "terminal_evidence": {
+        "accepted_promotion_count": 3,
+        "no_weight_mutation": true,
+        "promotion_candidate_count": 9,
+        "rejected_retained_count": 6,
+        "rollback_success_rate": 1.0,
+        "uncertainty_gated_promotion_ready": true
+      },
+      "terminal_state": "headline_ready"
+    }
+  ],
+  "conductor_unchanged": true,
+  "experiment": "experiment_5415_transition_v493",
+  "experiment_id": "exp5415-transition-v493",
+  "failed_preconditions": [],
+  "field_principles": {
+    "blocked_lanes": "no unsupported claims; lists .492 lanes still honest-null, unavailable, or backend-closed.",
+    "closed_lanes": "positive evidence boundary; lists only .492 lanes classified as headline-ready by the capstone.",
+    "conductor_unchanged": "user prohibition; true only when scripts/research_conductor.py has no git-status modification.",
+    "honest_verdict": "terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "no hidden live model inference; must equal aggregation_from_upstream_artifacts.",
+    "milestone": "conductor route key; must equal 2026.07.493.",
+    "next_task_range": "activation sanity; must equal exp5415-exp5427.",
+    "partial_lanes": "bounded evidence boundary; lists useful but claim-limited .492 lanes without promotion.",
+    "previous_milestone": "traceability; must equal 2026.07.492.",
+    "previous_task_range": "closed execution boundary; must equal exp5402-exp5414.",
+    "prior_capstone_path": "provenance; names the exact Exp5414 capstone artifact used as the source of truth.",
+    "roadmap_yaml_unchanged": "user prohibition; true only when research-roadmap.yaml has no git-status modification."
+  },
+  "honest_verdict": "complete: archived .492 terminal evidence into .493 transition receipt; closed lanes are formal encoding, structured safety/action, resource-CSL, and uncertainty-gated promotion; partial lanes are active constraints, p-bit/QUBO CPU stress, hardware repeatability without speedup, and bounded KAN certificates; blocked lanes are Exp5410 ARC no-bank, KV260/GateMate availability, and token/internal features; next_task_range=exp5415-exp5427.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.493",
+  "next_task_range": "exp5415-exp5427",
+  "partial_lanes": [
+    {
+      "claim_boundary": "advisory_hints_solver_authority_preserved",
+      "classification": "bounded_ready",
+      "lane": "active_constraint_guidance",
+      "source_artifacts": [
+        "results/experiment_5406_active_constraint_warmstart_guidance_v492.json"
+      ],
+      "source_lane": "active_constraint_guidance",
+      "terminal_evidence": {
+        "active_constraint_warmstart_ready": true,
+        "adversarial_hint_rejection_rate": 1.0,
+        "solver_conflict_delta": 21,
+        "solver_iteration_delta": 21,
+        "stale_hint_rejection_rate": 1.0,
+        "unsafe_false_accept_rate": 0.0
+      },
+      "terminal_state": "bounded_solver_guidance"
+    },
+    {
+      "claim_boundary": "cpu_only_no_hardware_speedup",
+      "classification": "bounded_ready",
+      "lane": "pbit_qubo_cpu_stress",
+      "source_artifacts": [
+        "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json"
+      ],
+      "source_lane": "pbit_qubo_stress",
+      "terminal_evidence": {
+        "exact_enumeration_agreement_rate": 1.0,
+        "hardware_speedup_claim": false,
+        "pbit_acceptance_rate": 0.5,
+        "pbit_qubo_stress_ready": true,
+        "simulation_only": true,
+        "validity_rate": 1.0
+      },
+      "terminal_state": "cpu_only_stress_no_speedup"
+    },
+    {
+      "claim_boundary": "repeatability_receipt_not_speedup_or_multi_board_ready",
+      "classification": "partial",
+      "lane": "hardware_repeatability_without_speedup",
+      "source_artifacts": [
+        "results/experiment_5411_hardware_repeatability_restoration_v492.json"
+      ],
+      "source_lane": "hardware_repeatability",
+      "terminal_evidence": {
+        "gatemate_reachable": false,
+        "hardware_speedup_claim": false,
+        "kv260_ssh_reachable": false,
+        "polarfire_reachable": true,
+        "polarfire_repeat_count": 3,
+        "repeated_same_workload_ready": true
+      },
+      "terminal_state": "repeatability_without_speedup"
+    },
+    {
+      "claim_boundary": "bounded_certificate_no_broad_kan_verification",
+      "classification": "bounded_ready",
+      "lane": "bounded_kan_certificates",
+      "source_artifacts": [
+        "results/experiment_5412_kan_active_constraint_certificate_v492.json"
+      ],
+      "source_lane": "kan_active_constraint_certificate",
+      "terminal_evidence": {
+        "broad_kan_verification_claim": false,
+        "counterexample_region_count": 8,
+        "false_property_count": 8,
+        "false_property_rejection_rate": 1.0,
+        "kan_active_constraint_certificate_ready": true,
+        "true_property_count": 3
+      },
+      "terminal_state": "bounded_certificate_no_broad_kan_verification"
+    }
+  ],
+  "preconditions_checked": {
+    "capstone_loadable": true,
+    "capstone_milestone": "2026.07.492",
+    "capstone_present": true,
+    "conductor_unchanged": true,
+    "expected_next_task_range": "exp5415-exp5427",
+    "expected_previous_task_range": "exp5402-exp5414",
+    "roadmap_doc_names_milestone": true,
+    "roadmap_doc_present": true,
+    "roadmap_doc_task_range": "exp5415-exp5427",
+    "roadmap_loadable": true,
+    "roadmap_milestone": "2026.07.493",
+    "roadmap_present": true,
+    "roadmap_task_count": 13,
+    "roadmap_yaml_unchanged": true
+  },
+  "previous_milestone": "2026.07.492",
+  "previous_task_range": "exp5402-exp5414",
+  "prior_capstone_path": "results/experiment_5414_capstone_v492.json",
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:df14ad0798b753e2488d79ce6753375caa2e838844f4bdc26f64018ad7e1e4fd"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5415,
+  "reproducibility_checksum": "sha256:8c35d4d3b325ac5070692a21d435700608160e171c8e1313e07b99a991406a7b",
+  "result_path": "results/experiment_5415_transition_v493.json",
+  "roadmap_doc_task_range": "exp5415-exp5427",
+  "roadmap_task_ids": [
+    "exp5415-transition-v493",
+    "exp5416-source-delta-v493",
+    "exp5417-risk-calibrated-sota-structured-panel-v493",
+    "exp5418-predictive-prefix-action-safety-v493",
+    "exp5419-active-constraint-lns-scale-v493",
+    "exp5420-pbit-hardware-transfer-preflight-v493",
+    "exp5421-evidence-reliance-csl-v493",
+    "exp5422-csl-promotion-reliance-scale-v493",
+    "exp5423-arc-coex-landmark-levelup-v493",
+    "exp5424-hardware-comparable-timing-receipts-v493",
+    "exp5425-kan-measurement-access-certificate-v493",
+    "exp5426-prd-gap-agent-failure-table-v493",
+    "exp5427-capstone-v493"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5415.transition_v493.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:df14ad0798b753e2488d79ce6753375caa2e838844f4bdc26f64018ad7e1e4fd"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:2eaa912244f3db990502840fe613eb852a1129a3da6d9cd013958f5e9d9948b3"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5414_capstone_v492.json",
+      "read_only": true,
+      "sha256": "sha256:bdf3ccae262f7f3e4d49cead60181365fd55c45e589ba5b15caf5690f9f621f6"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:550fb09ec1dd20f779a335ba51e308ea9308421e3fcbecdd53b7d5d51c6ead1a"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:dd48f38885d51c5e5814f0280ff02147650a9bdf9c6c0e72e5099d0a012142dd"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:83eb6d9431b75f7feb3b009e311a961632f73c1a25096458c81dd88190d02431"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5415",
+    "SCENARIO-REPORT-5415",
+    "SCENARIO-REPORT-5415-BLOCKED-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5415_transition_v493.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5415_transition_v493.py -m pytest tests/python/test_experiment_5415_transition_v493.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5415_transition_v493.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}
