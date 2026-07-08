@@ -10532,3 +10532,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-08 08:19 UTC | Execution-time 2025-2026 source delta for .492 | OK | 117 passed, 1 warning in 7.79s |
 | 2026-07-08 08:38 UTC | Formal-encoding safety fixture tautology corrigend | OK | 112 passed, 1 warning in 8.04s |
 | 2026-07-08 08:53 UTC | Gated scaled structured safety/action panel after  | OK | 105 passed, 1 warning in 8.12s |
+| 2026-07-08 09:05 UTC | Active-constraint warm-start guidance with solver  | OK | 89 passed, 1 warning in 8.35s |
