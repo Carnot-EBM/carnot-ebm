@@ -1179,6 +1179,60 @@ Required field principles:
 - `inference_substrate`: principle "must be offline_arcade_live_agent_runtime_self_discovery_no_llm."
 - `honest_verdict`: principle "terminal status starts with complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5423: CoEx Landmark Live Self-Discovery Level-Up Attempt
+
+Experiment 5423 SHALL write
+`results/experiment_5423_arc_coex_landmark_levelup_v493.json` after a
+registry-prechecked bounded ARC live-agent level-up attempt. The workflow SHALL
+prefer `lf52` L3 when the registry records fewer than three reproduced `lf52`
+levels; otherwise it SHALL choose the nearest eligible unbanked frontier from
+`ops/arc_solve_registry.yaml` or emit a blocked duplicate-solve artifact. The
+credited mechanism SHALL run through the live ARC agent runtime by feeding a
+CoEx-style persistent frontier generator into the `E3AgentPolicy` action-prior
+and QD sequence hooks. The generator SHALL learn only from the agent's own
+runtime transitions, persist frontier states across resets, decompose observed
+progress into hierarchical landmarks, cluster action histories, and emit
+measurement-access receipts for the observations used to promote any prefix.
+It SHALL NOT inspect hidden game source, run offline ground-truth BFS as the
+credited solve path, or create a per-game adapter/calibration solver as the
+headline path.
+
+The result artifact SHALL include `registry_precheck`, `target_game`,
+`target_level`, `duplicate_solve_avoided`, `solve_provenance`,
+`offline_reproduced`, `reproduced_levels`, `arc_new_level_banked`,
+`attempt_count`, `frontier_expansion_count`, `landmark_count`,
+`action_sequence_receipts`, `no_offline_bfs`, `no_per_game_adapter`,
+`arc_levelup_lint_passed`, `inference_substrate`, and `honest_verdict`. A
+credited level-up SHALL require `solve_provenance=live_agent_self_discovery`,
+`inference_substrate=live_arc_agent_runtime`, `offline_reproduced=true`,
+`reproduced_levels>=1`, `arc_new_level_banked=true`,
+`duplicate_solve_avoided=true`, `no_offline_bfs=true`,
+`no_per_game_adapter=true`, at least one frontier expansion, at least one
+landmark or explicit no-landmark receipt, and at least one replayable action
+sequence receipt. Otherwise the artifact SHALL report `honest_null:` with
+bounded live-attempt evidence or `blocked:` when the duplicate/precondition gate
+prevents a valid attempt.
+
+Required field principles:
+
+- `registry_precheck`: principle "bare bool proving duplicate-solve avoidance ran before any live attempt."
+- `target_game`: principle "selected game id with registry provenance."
+- `target_level`: principle "selected target level label with registry provenance."
+- `duplicate_solve_avoided`: principle "true only when the target level was not already banked."
+- `solve_provenance`: principle "must be live_agent_self_discovery for credited progress."
+- `offline_reproduced`: principle "true only after the live-discovered sequence passes the offline reproduction gate."
+- `reproduced_levels`: principle "new reproduced level count; complete requires at least one."
+- `arc_new_level_banked`: principle "north-star metric flag for a newly banked level."
+- `attempt_count`: principle "bounded live-agent action count."
+- `frontier_expansion_count`: principle "CoEx persistent frontier prefixes emitted by the live mechanism."
+- `landmark_count`: principle "hierarchical landmark count discovered from runtime observations."
+- `action_sequence_receipts`: principle "replayable live action sequences and measurement receipts used for reproduction."
+- `no_offline_bfs`: principle "must be true; forbidden offline ground-truth BFS was not used."
+- `no_per_game_adapter`: principle "must be true; no hand per-game adapter/calibration solver was used."
+- `arc_levelup_lint_passed`: principle "roadmap guarantee lint result recorded when practical."
+- `inference_substrate`: principle "must be live_arc_agent_runtime."
+- `honest_verdict`: principle "terminal status starts with complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1590,3 +1644,25 @@ When the same generator is asked to promote that dynamic into a prefix
 Then the uncertainty gate rejects it, records an uncertainty rejection, and
 keeps `offline_reproduced=false` unless a live self-discovered solution later
 passes the reproduction gate.
+
+### SCENARIO-ARC-FCP-5423: CoEx Landmarks Persist Live Runtime Frontier Evidence
+
+Given the live agent observes repeated frame-changing actions from its own
+attempts
+When the CoEx landmark frontier is asked for a multi-action prefix
+Then it promotes only live-observed action clusters, persists the prefix across
+resets, records a frontier transition, emits a measurement-access receipt, and
+reports the discovered landmark count.
+
+Given `lf52` L3 is not already banked in the registry
+When experiment 5423 performs its registry precheck
+Then it selects `target_game=lf52`, `target_level=L3`, and
+`duplicate_solve_avoided=true` before running any bounded live attempt.
+
+Given the bounded live attempt does not reproduce a new level
+When the experiment writes its artifact
+Then `offline_reproduced=false`, `reproduced_levels=0`,
+`arc_new_level_banked=false`, and `honest_verdict` starts with
+`honest_null:` while preserving attempt counts, reset counts, frontier
+transitions, landmarks, runtime observations, action-sequence receipts,
+`no_offline_bfs=true`, and `no_per_game_adapter=true`.
