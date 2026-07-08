@@ -19207,3 +19207,104 @@ field principle is present.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5395 | Planned (`python/carnot/experiment_5395_influence_share_verifier_budget_router_v491.py`, `results/experiment_5395_influence_share_verifier_budget_router_v491.json`) | Planned (`tests/python/test_experiment_5395_influence_share_verifier_budget_router_v491.py`) |
+
+---
+
+## REQ-LEARN-5396: Raw-Episode Memory Guard and Forged-Reasoning Deflection v491
+
+Experiment 5396 SHALL harden the continuous self-learning memory guard by
+storing raw episodes as first-class evidence before any summary or reflection
+can become reusable controller memory. The guard SHALL define explicit
+`raw_episode`, `consolidated_memory`, `trust_label`, `provenance_hash`, and
+`rollback_pointer` records for the self-learning workflow. Consolidated memory
+candidates SHALL be gated by deterministic row-level evidence and SHALL NOT be
+accepted, shared, trusted, or routed from model-generated rationales alone.
+
+The guard SHALL include positive and negative controls for stale memory, forged
+reasoning history, self-referential amplification, high-cost low-value memory,
+and benign useful memory. Forged or stale reasoning entries SHALL be rejected
+before they can influence downstream verifier routing. Rejection MUST preserve
+the raw episode, provenance hash, trust label, and rollback pointer so auditors
+can reconstruct why the candidate was blocked. Benign useful memory SHALL remain
+eligible when the raw episode provenance is valid, stale and forged-reasoning
+risks are low, value exceeds cost and harm, and no model weights mutate.
+
+The result artifact SHALL be
+`results/experiment_5396_memory_guard_raw_episode_retention_v491.json` and SHALL
+include `status`, `milestone`, `raw_episode_count`,
+`consolidated_memory_count`, `rejected_memory_count`,
+`forged_reasoning_control_count`, `forged_reasoning_deflection_rate`,
+`stale_memory_deflection_rate`, `benign_memory_accept_rate`,
+`provenance_hash_valid_rate`, `rollback_success_rate`,
+`no_weight_mutation`, `raw_episode_guard_ready`, and `honest_verdict`. The
+artifact SHALL also include field principles documenting those required fields.
+
+The required field principles SHALL be:
+
+- `status`: Complete if the guard and controls ran.
+- `milestone`: Must equal 2026.07.491.
+- `raw_episode_count`: Number of raw episodes retained.
+- `consolidated_memory_count`: Number of accepted consolidated memories.
+- `rejected_memory_count`: Number of rejected memory candidates.
+- `forged_reasoning_control_count`: Number of forged-reasoning controls.
+- `forged_reasoning_deflection_rate`: Rejection rate for forged reasoning controls.
+- `stale_memory_deflection_rate`: Rejection rate for stale controls.
+- `benign_memory_accept_rate`: Accept rate for benign useful controls.
+- `provenance_hash_valid_rate`: Rate of memories linked to raw episodes.
+- `rollback_success_rate`: Rollback success rate.
+- `no_weight_mutation`: Must be true.
+- `raw_episode_guard_ready`: True only if forged/stale controls are deflected and benign controls are preserved.
+- `honest_verdict`: One-line summary starting with complete: or blocked:.
+
+### REQ-LEARN-5396 Sub-requirements
+
+- REQ-LEARN-5396-1: The workflow SHALL preserve raw episodes as auditable
+  first-class records before deriving any consolidated memory.
+- REQ-LEARN-5396-2: Every consolidated memory candidate SHALL include a
+  trust-label record, provenance hash linked to one or more raw episodes, and a
+  rollback pointer.
+- REQ-LEARN-5396-3: KEEP, SHARE, and TRUST decisions SHALL be computed from
+  row-level evidence fields such as stale risk, forged-reasoning risk,
+  self-reference count, value score, byte cost, provenance validity, and
+  rollback status; model-generated rationales SHALL be non-authoritative.
+- REQ-LEARN-5396-4: Stale memory, forged reasoning history,
+  self-referential amplification, and high-cost low-value controls SHALL be
+  rejected or quarantined while retaining raw episodes for audit.
+- REQ-LEARN-5396-5: Downstream verifier routing SHALL receive only accepted
+  consolidated memories, and rejected memories SHALL have zero routing
+  influence.
+- REQ-LEARN-5396-6: `raw_episode_guard_ready` SHALL be true only when the guard
+  runs, provenance hashes validate, forged and stale controls are fully
+  deflected, benign useful controls are accepted, rollback succeeds, rejected
+  memories cannot affect routing, tests are recorded, and no model weights
+  mutate.
+
+### SCENARIO-LEARN-5396-RAW-RETENTION: Rejected Memory Keeps Raw Evidence
+
+**Given** stale, forged-reasoning, self-referential, and high-cost controls
+**When** the memory guard evaluates consolidated memory candidates
+**Then** those candidates are rejected or quarantined
+**And** their raw episodes, provenance hashes, trust labels, and rollback
+pointers remain auditable.
+
+### SCENARIO-LEARN-5396-ROW-SCORES: Rationales Cannot Drive Decisions
+
+**Given** a candidate whose model-generated rationale asks to be trusted
+**When** row-level stale, forged-reasoning, self-reference, value, cost,
+provenance, and rollback evidence contradict the rationale
+**Then** KEEP, SHARE, and TRUST decisions follow the row evidence
+**And** changing only the rationale does not change the decision.
+
+### SCENARIO-LEARN-5396-ROUTING: Rejected Memory Has Zero Routing Influence
+
+**Given** accepted and rejected consolidated memories
+**When** downstream verifier routing inputs are built
+**Then** only accepted TRUSTed memories are exposed to routing
+**And** every rejected memory is absent from routing inputs while its raw
+episode remains in the audit ledger.
+
+## Implementation Status (Exp 5396)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5396 | Implemented (`python/carnot/experiment_5396_memory_guard_raw_episode_retention_v491.py`, `results/experiment_5396_memory_guard_raw_episode_retention_v491.json`) | Implemented (`tests/python/test_experiment_5396_memory_guard_raw_episode_retention_v491.py`) |
