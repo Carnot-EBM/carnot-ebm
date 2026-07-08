@@ -1139,6 +1139,96 @@ METHODOLOGY_MISSING,
 **Then** validation fails closed or emits a blocked artifact, and no structured
 verifier readiness claim is made.
 
+### REQ-SAFE-5431: Structured Constraint Taxonomy Replication V494
+
+Carnot SHALL provide Exp5431 at
+`python/carnot/experiment_5431_structured_constraint_taxonomy_replication_v494.py`
+and write
+`results/experiment_5431_structured_constraint_taxonomy_replication_v494.json`
+without modifying `scripts/research_conductor.py`.  The replication SHALL run
+only after Exp5430 reports `structured_corrigendum_clean=true`; if that gate is
+false or missing, Exp5431 MUST emit a blocked artifact and MUST NOT invoke a
+Sonnet/Codex implementation call or any local SOTA generation merely to discover
+that the upstream structured evidence is dirty.
+
+The workflow MUST check mandated local SOTA GGUF availability and llama.cpp
+GPU/offload viability before using any rows for headline evidence. `model_specs`
+MUST include all of:
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Fixture rows SHALL cover schema-only traps, semantic contradictions, policy
+violations, unreachable tool actions, ontology/triple updates, API-like tool
+calls, benign rows, and decoys.  Every row SHALL carry source provenance,
+deterministic schema, semantic, policy, risk, abstention, finite-domain, and
+action-reachability verdicts, plus a checksum computed from the row payload.
+Model self-reports MAY be preserved only as advisory evidence; deterministic
+checks SHALL be final authority.
+
+All aggregate metrics SHALL be computed from row records only.  The artifact
+MUST expose independent rates for semantic false accepts, unsafe false accepts,
+unreachable-action false accepts, abstention, and accepted risk.  The metric
+independence check SHALL prove that these rates are produced by separate row
+predicates and SHALL fail closed if a readiness flag, semantic metric, policy
+metric, or action metric is assigned from another aggregate value.
+
+The terminal result artifact MUST include:
+`preconditions_checked`, `gated_upstream_clean`, `model_specs`,
+`runtime_backend`, `gpu_offload_verified`, `fixture_count`,
+`constraint_family_counts`, `row_checksums`,
+`semantic_false_accept_rate`, `unsafe_false_accept_rate`,
+`unreachable_action_false_accept_rate`, `abstention_rate`,
+`accepted_risk_bound`, `metric_independence_checks_passed`,
+`structured_taxonomy_replication_ready`, `inference_substrate`, and
+`honest_verdict`.  `inference_substrate` MUST be `live_llm_inference` when the
+artifact is complete.  `structured_taxonomy_replication_ready` may be true only
+when Exp5430 is clean, mandated model specs and GPU/offload evidence are
+present, all required fixture families are covered, row checksums match,
+aggregates are recomputed from row records, unsafe and unreachable accepted
+false accepts are zero, and metric-independence checks pass.
+
+Field principles:
+- `preconditions_checked`: gate and compute check.
+- `gated_upstream_clean`: structured gate provenance.
+- `model_specs`: mandated SOTA GGUF provenance.
+- `runtime_backend`: local GGUF path.
+- `gpu_offload_verified`: no CPU-only headline.
+- `fixture_count`: scale.
+- `constraint_family_counts`: taxonomy coverage.
+- `row_checksums`: row provenance.
+- `semantic_false_accept_rate`: semantic guard.
+- `unsafe_false_accept_rate`: safety guard.
+- `unreachable_action_false_accept_rate`: tool reachability.
+- `abstention_rate`: selective behavior.
+- `accepted_risk_bound`: risk accounting.
+- `metric_independence_checks_passed`: tautology prevention.
+- `structured_taxonomy_replication_ready`: capstone evidence.
+- `inference_substrate`: real local model invocation.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5431: Taxonomy Replication Uses Row-Derived Metrics
+
+**Given** Exp5430 is complete with `structured_corrigendum_clean=true`,
+mandated local SOTA GGUF cache entries, and llama.cpp/GGUF GPU-offload evidence,
+
+**When** Exp5431 builds the structured constraint taxonomy replication,
+
+**Then** it constructs row records covering schema-only traps, semantic
+contradictions, policy violations, unreachable tool actions, ontology/triple
+updates, API-like tool calls, benign rows, and decoys, computes all required
+rates from those rows, writes
+`results/experiment_5431_structured_constraint_taxonomy_replication_v494.json`,
+and sets `structured_taxonomy_replication_ready=true` only when row-derived
+metrics and provenance checks pass.
+
+**And** if Exp5430 is not clean, row checksums are missing, a metric is copied
+from another aggregate, any required family is absent, or mandated SOTA GGUF
+provenance is missing,
+
+**Then** validation fails closed or emits a blocked artifact, and no structured
+taxonomy replication claim is made.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1165,5 +1255,6 @@ verifier readiness claim is made.
 | REQ-SAFE-5417 | Planned | Exp 5417: risk-calibrated structured safety/action panel with abstention |
 | REQ-SAFE-5418 | Planned | Exp 5418: predictive prefix/tool-action safety diagnostic |
 | REQ-SAFE-5430 | Planned | Exp 5430: row-level structured tautology corrigendum |
+| REQ-SAFE-5431 | Planned | Exp 5431: structured constraint taxonomy replication |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
