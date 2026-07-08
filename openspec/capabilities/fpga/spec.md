@@ -16227,6 +16227,93 @@ no-speedup status.
 
 ---
 
+### REQ-HW-5386
+
+**Title:** Hardware-continuity v490 MUST hash-chain safe board receipts without speedup claims
+
+**Description:**
+Experiment 5386 MUST produce
+`results/experiment_5386_hardware_hashchain_receipts_v490.json` as a v490
+hash-chained receipt for the active hardware board lanes. The artifact MUST
+record KV260, PolarFire, and GateMate status using only safe reachable paths,
+MUST chain each safe action over command, input hash, output hash, timestamp,
+board identity, exit status, and the prior chain hash, and MUST NOT claim
+sampler acceleration or hardware speedup.
+
+KV260 MUST be checked only with the non-destructive SSH reachability command
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. If KV260 is reachable,
+board-local receipt evidence may be recorded only from bounded non-destructive
+commands over SSH. KV260 evidence MUST NOT use host `/dev/mmcblk*`, `/dev/disk`,
+removable storage, or SD-card paths.
+
+PolarFire MUST reuse the authenticated reachable workload path when SSH is
+available. The PolarFire workload receipt MUST include command, input, and
+output hashes and become part of `workload_hash_chain` only when the receipt
+validates.
+
+GateMate MUST record DirtyJTAG USB, toolchain, and physical/JTAG path status.
+It may run only safe detect or workload steps when the physical path is present.
+The artifact MUST preserve `no_destructive_flash=true` and MUST NOT flash,
+program, or perform destructive writes.
+
+The artifact MUST include fields `status`,
+`hardware_hash_chained_receipt_ready`, `hardware_speedup_claim`,
+`boards_checked`, `kv260_status`, `polar_fire_status`, `gatemate_status`,
+`workload_hash_chain`, `commands_run`, `no_host_mmcblk_kv260_evidence`,
+`no_destructive_flash`, `repeatability_evidence_present`,
+`receipt_contract_version`, and `honest_verdict`. `status` MUST be `complete`
+with per-board statuses when at least one safe board interaction was recorded,
+or `honest_blocked` when no safe board interaction is possible.
+`hardware_hash_chained_receipt_ready` MUST be true only if at least one safe
+board workload has a valid hash chain and blocked boards are honestly
+represented. `hardware_speedup_claim` MUST be false unless repeatable board
+timing evidence exists.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5386_hardware_hashchain_receipts_v490 --date 20260708`
+  writes `results/experiment_5386_hardware_hashchain_receipts_v490.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5386` and
+  `SCENARIO-HW-5386`, `random_seed=5386`, and a stable
+  `reproducibility_checksum`.
+- `boards_checked` includes `KV260`, `PolarFire`, and `GateMate`.
+- `workload_hash_chain` is an ordered list whose records verify against the
+  previous hash and include command, input, and output hashes, timestamp, board
+  identity, and exit-status evidence.
+- `hardware_speedup_claim=false`,
+  `no_host_mmcblk_kv260_evidence=true`, `no_destructive_flash=true`, and
+  `repeatability_evidence_present=false` unless authenticated repeat timing
+  evidence is present.
+
+**Implementation status:** Planned (Exp 5386)
+
+---
+
+### SCENARIO-HW-5386
+
+**Scenario:** Exp 5386 writes v490 hash-chained hardware receipts without speedup claims.
+
+**Given:** Exp 5374 recorded KV260 SSH status, a PolarFire authenticated
+workload receipt when reachable, GateMate physical/JTAG status, and no speedup
+claim.
+**When:** Experiment 5386 attempts the exact KV260 BatchMode SSH reachability
+command, checks PolarFire authenticated SSH and runs the established tiny
+board-local hash workload only when reachable, checks GateMate only through
+current safe toolchain/detect paths when the physical/JTAG path is available,
+and constructs an ordered hash chain over safe board actions.
+**Then:** It writes
+`results/experiment_5386_hardware_hashchain_receipts_v490.json` with the
+required fields, KV260 SSH-only evidence, PolarFire command/input/output hashes
+when the workload validates, GateMate DirtyJTAG/toolchain/physical status,
+`hardware_hash_chained_receipt_ready=true` only for a valid workload chain,
+`hardware_speedup_claim=false`, `no_host_mmcblk_kv260_evidence=true`,
+`no_destructive_flash=true`, `repeatability_evidence_present=false` unless
+authenticated repeat timing exists, and a one-line verdict that states receipt
+discipline rather than speedup.
+
+**Implementation status:** Planned (Exp 5386)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
