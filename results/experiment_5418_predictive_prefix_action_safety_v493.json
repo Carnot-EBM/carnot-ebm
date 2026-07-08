@@ -2059,5 +2059,23 @@
   "tests_run": [
     "tests/python/test_experiment_5418_predictive_prefix_action_safety_v493.py"
   ],
-  "unreachable_tool_action_delta": 0.47619
+  "unreachable_tool_action_delta": 0.47619,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "final_only_unreachable_tool_action_rate=0.47619 and unreachable_tool_action_delta=0.47619 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "false_reject_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
