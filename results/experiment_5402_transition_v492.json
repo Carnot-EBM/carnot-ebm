@@ -1,0 +1,320 @@
+{
+  "closed_lanes": [
+    {
+      "claim_boundary": "bounded_deterministic_fixture_panel",
+      "classification": "headline_ready",
+      "headline_ready": true,
+      "lane": "structured_scaleup",
+      "source_artifact": "results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json",
+      "source_lane": "structured_constraint_tax_scaleup",
+      "terminal_evidence": {
+        "constrained_semantic_validity_rate": 1.0,
+        "fixture_count": 24,
+        "unsafe_false_accept_count": 0,
+        "wrong_valid_reduction": 20
+      }
+    },
+    {
+      "claim_boundary": "row_level_solver_authority_only",
+      "classification": "headline_ready",
+      "headline_ready": true,
+      "lane": "overwrite_corrigendum",
+      "source_artifact": "results/experiment_5393_overwrite_guidance_tautology_corrigendum_v491.json",
+      "source_lane": "overwrite_guidance_corrigendum",
+      "terminal_evidence": {
+        "row_count": 98,
+        "row_level_evidence_clean": true,
+        "tautology_checks_passed": true,
+        "unsafe_false_accept_count": 0
+      }
+    },
+    {
+      "claim_boundary": "cpu_only_no_hardware_speedup",
+      "classification": "bounded_ready",
+      "headline_ready": true,
+      "lane": "pbit_cpu_ablation",
+      "source_artifact": "results/experiment_5394_gated_overwrite_pbit_ablation_v491.json",
+      "source_lane": "pbit_boundary_ablation",
+      "terminal_evidence": {
+        "fixture_count": 4,
+        "hardware_speedup_claim": false,
+        "simulation_only": true,
+        "unsafe_false_accepts": 0
+      }
+    },
+    {
+      "claim_boundary": "controller_routing_no_weight_mutation",
+      "classification": "headline_ready",
+      "headline_ready": true,
+      "lane": "continuous_self_learning_router",
+      "source_artifact": "results/experiment_5395_influence_share_verifier_budget_router_v491.json",
+      "source_lane": "continuous_self_learning_router",
+      "terminal_evidence": {
+        "no_weight_mutation": true,
+        "quality_delta_vs_baseline": 0.0,
+        "routed_decision_count": 36,
+        "trace_count": 12,
+        "verifier_cost_delta_vs_baseline": 22.2
+      }
+    },
+    {
+      "claim_boundary": "raw_episode_retention_no_rationale_authority",
+      "classification": "headline_ready",
+      "headline_ready": true,
+      "lane": "memory_guard",
+      "source_artifact": "results/experiment_5396_memory_guard_raw_episode_retention_v491.json",
+      "source_lane": "raw_episode_memory_guard",
+      "terminal_evidence": {
+        "accepted_memory_count": 3,
+        "forged_reasoning_deflection_rate": 1.0,
+        "no_weight_mutation": true,
+        "raw_episode_count": 7,
+        "rejected_memory_count": 4
+      }
+    },
+    {
+      "claim_boundary": "bounded_certificate_no_broad_kan_verification",
+      "classification": "headline_ready",
+      "headline_ready": true,
+      "lane": "bounded_kan_certificate",
+      "source_artifact": "results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json",
+      "source_lane": "kan_dynamic_certificate",
+      "terminal_evidence": {
+        "broad_kan_verification_claim": false,
+        "counterexample_region_count": 4,
+        "false_property_rejection_rate": 1.0,
+        "sample_count": 36,
+        "true_property_preservation_rate": 1.0
+      }
+    }
+  ],
+  "conductor_unchanged": true,
+  "experiment": "experiment_5402_transition_v492",
+  "experiment_id": "exp5402-transition-v492",
+  "failed_preconditions": [],
+  "field_principles": {
+    "closed_lanes": "positive evidence boundary; lists only .491 lanes backed by clean or bounded upstream artifacts.",
+    "conductor_unchanged": "user prohibition; true only when scripts/research_conductor.py has no git-status modification.",
+    "honest_verdict": "terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "no hidden live model inference; must equal aggregation_from_upstream_artifacts.",
+    "milestone": "conductor route key; must equal 2026.07.492.",
+    "next_task_range": "activation sanity; must equal exp5402-exp5414.",
+    "open_lanes": "no unsupported claims; lists .491 lanes still blocked, honest-null, or closed.",
+    "previous_milestone": "traceability; must equal 2026.07.491.",
+    "prior_capstone_path": "provenance; names the exact Exp5401 capstone artifact used as the source of truth.",
+    "roadmap_yaml_unchanged": "user prohibition; true only when research-roadmap.yaml has no git-status modification."
+  },
+  "honest_verdict": "complete: archived .491 terminal evidence into .492 transition receipt; closed lanes are structured scale-up, overwrite corrigendum, p-bit CPU ablation, CSL router, memory guard, and bounded KAN certificate; open lanes are Exp5392 tautology flag, Exp5397 ARC no-bank, Exp5398 repeatability absent, and token/internal lane closed; next_task_range=exp5402-exp5414.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.492",
+  "next_task_range": "exp5402-exp5414",
+  "open_lanes": [
+    {
+      "blocked_reason": "flagged_adversarial_tautology",
+      "claim_boundary": "safe_fixture_not_clean_headline_while_flagged",
+      "lane": "formal_encoding_tautology_flag",
+      "source_artifact": "results/experiment_5392_formal_encoding_safety_fixture_v491.json",
+      "source_lane": "formal_encoding_safety_fixture",
+      "state": "blocked_flagged_adversarial_critical_tautology",
+      "terminal_evidence": {
+        "corrigendum_pending_count": 2,
+        "flagged_adversarial": true,
+        "forbidden_detail_leak_count": 0,
+        "upstream_ready": true
+      }
+    },
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live_path_reached_no_new_banked_level",
+      "lane": "arc_no_bank",
+      "source_artifact": "results/experiment_5397_arc_blob_salience_live_path_v491.json",
+      "source_lane": "arc_level_up",
+      "state": "honest_null_no_bank",
+      "terminal_evidence": {
+        "failure_mode": "bounded_budget_no_levelup",
+        "new_level_banked": false,
+        "offline_bfs_used": false,
+        "registry_total_after": 69,
+        "registry_total_before": 69,
+        "solve_provenance": "live_agent_self_discovery"
+      }
+    },
+    {
+      "blocked_reason": "no_repeated_board_local_timing",
+      "claim_boundary": "hash_graph_receipt_no_board_local_repeatability",
+      "lane": "hardware_repeatability_absent",
+      "source_artifact": [
+        "results/experiment_5398_hardware_evidence_graph_repeatability_v491.json",
+        "results/experiment_5398_hardware_evidence_graph_repeatability_v491.graph.json"
+      ],
+      "source_lane": "hardware_repeatability",
+      "state": "blocked_no_board_local_repeats",
+      "terminal_evidence": {
+        "destructive_action_taken": false,
+        "hardware_speedup_claim": false,
+        "offline_verifier_passed": true,
+        "polar_fire_repeat_count": 0,
+        "repeatability_evidence_present": false
+      }
+    },
+    {
+      "lane": "token_internal_lane_closed",
+      "next_gate": "backend artifact with logits, hidden states, attention, or intermediate exits",
+      "source_artifact": "results/experiment_5389_transition_v491.json",
+      "source_lane": "future_token_internal_signal",
+      "state": "retired_until_backend_feature_artifact",
+      "terminal_evidence": {
+        "future_token_signal_allowed": false,
+        "required_backend_features": [
+          "logits",
+          "hidden_states",
+          "attention",
+          "intermediate_exits"
+        ]
+      }
+    }
+  ],
+  "preconditions_checked": {
+    "capstone_loadable": true,
+    "capstone_milestone": "2026.07.491",
+    "capstone_present": true,
+    "conductor_unchanged": true,
+    "expected_task_range": "exp5402-exp5414",
+    "roadmap_doc_names_milestone": true,
+    "roadmap_doc_present": true,
+    "roadmap_doc_task_range": "exp5402-exp5414",
+    "roadmap_loadable": true,
+    "roadmap_milestone": "2026.07.492",
+    "roadmap_present": true,
+    "roadmap_task_count": 13,
+    "roadmap_yaml_unchanged": true
+  },
+  "previous_milestone": "2026.07.491",
+  "prior_capstone_path": "results/experiment_5401_capstone_v491.json",
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:573d779261942e7746ddb224486fd3d28c3b0baf4f59710a4c082062287e6664"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+    }
+  ],
+  "random_seed": 5402,
+  "reproducibility_checksum": "sha256:725f99e2c0dfb481e948aa70327a67e6d973ad28127c0f8506755658f7e067b3",
+  "result_path": "results/experiment_5402_transition_v492.json",
+  "roadmap_doc_task_range": "exp5402-exp5414",
+  "roadmap_task_ids": [
+    "exp5402-transition-v492",
+    "exp5403-source-delta-v492",
+    "exp5404-formal-encoding-tautology-corrigendum-v492",
+    "exp5405-scaled-structured-safety-action-panel-v492",
+    "exp5406-active-constraint-warmstart-guidance-v492",
+    "exp5407-gated-pbit-qubo-active-constraint-stress-v492",
+    "exp5408-resource-accounted-csl-controller-v492",
+    "exp5409-uncertainty-gated-memory-worldmodel-promotion-v492",
+    "exp5410-arc-live-trajectory-frontier-levelup-v492",
+    "exp5411-hardware-repeatability-restoration-v492",
+    "exp5412-kan-active-constraint-counterexample-certificate-v492",
+    "exp5413-evidence-table-prd-gap-analysis-v492",
+    "exp5414-capstone-v492"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5402.transition_v492.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:3f0b49b310cd2e507887754c891ab2ae9758b3ee7e6fd0b79b9928a85f5d9ca2"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:573d779261942e7746ddb224486fd3d28c3b0baf4f59710a4c082062287e6664"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:10c345b6f3dcc79d4c6c251a3b59aaba5d76cf99ae85be77e2775841225c495d"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5401_capstone_v491.json",
+      "read_only": true,
+      "sha256": "sha256:c47a8d299aefb256d726146f654ec6304d7fe59232814f809e923941e6e19d6c"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:f52ee8d3372156871ec21cc1dca25e6d8d5a0944aab984814ae39957503da71e"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:9e77b30c71cf494acdf311f650eaa2413ac65c9330c9bdd04d1e8d6071a771b3"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:013ecbfe14901995cca5ef05ed50495427c478179156a04c29740b9a38cc74eb"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5402",
+    "SCENARIO-REPORT-5402",
+    "SCENARIO-REPORT-5402-BLOCKED-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5402_transition_v492.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5402_transition_v492.py -m pytest tests/python/test_experiment_5402_transition_v492.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5402_transition_v492.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py tests/python/test_experiment_5402_transition_v492.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}
