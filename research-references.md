@@ -28302,3 +28302,21 @@ materially sharpen the next roadmap.
   `offline_reproduced=true` before changing the registry count.
 
 <!-- V494-PLANNER-REFRESH-2026-07-08-END -->
+
+
+### V494 Execution Refresh - 20260708
+
+Execution-time sweep after the `.494` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V489/V490/V491/V492/V493/V494 duplicate history, and the exclusion manifest. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **NeuroSCA: Neuro-Symbolic Constraint Abstraction for Smart Contract Hybrid Fuzzing** (https://arxiv.org/abs/2603.01272): For Exp5432 and later structured-verifier fixtures, add a core-constraint abstraction pass with a missed-constraint reinsertion ledger: the abstracted constraint set may speed the solver, but concrete execution or exact solver checks must reintroduce any omitted constraints before a row is accepted.
+- **Sampling for Quality: Training-Free Reward-Guided LLM Decoding via Sequential Monte Carlo** (https://arxiv.org/abs/2604.16453): For any V494 structured-generation or future energy-guided decoding rerun, add a prefix-only SMC control that uses deterministic verifier reward potentials, records reward-evaluation budget per accepted token, and keeps model weights frozen rather than reopening GRPO or broad fine-tuning.
+- **LLMs versus the Halting Problem: Characterizing Program Termination Reasoning** (https://arxiv.org/abs/2601.18987): For Exp5430/Exp5431 structured corrigenda and future code-verification fixtures, separate semantic verdict accuracy from witness construction: termination or non-termination claims should carry divergence-precondition constraints, witness/proof fields, and deterministic verifier outcomes.
+
+### Execution impact
+- **Plan impact:** No active `.494` roadmap edit is required. The deltas sharpen Exp5430/Exp5431 structured witness and reward-budget receipts, Exp5432 ontology/constraint-memory abstraction checks, and later energy-guided decoding controls without expanding scope.
+- **Duplicates suppressed:** V494 planner sources, A-MEM, CoVe, When Continual Learning Moves to Memory, Energy-Guided Decoding for Object Hallucination, p-bit Dual BRAM, Neuro-Symbolic Compliance, LoopUS, EBT, ARM-EBM, NRGPT, and V492/V493 execution deltas were already covered and are not re-added.
+- **Retired scope:** No retired scope was reopened. External generated-text/logprob scorers, broad GRPO/fine-tuning or LoRA reruns, token/internal feature claims without backend receipts, non-local TSU/Kona/Aleph execution claims, duplicate ARC lanes, and hardware speedup claims without matched board timing remain closed.
+- **Watch-only/excluded:** Extropic TSU/XTR-0 writing, Logical Intelligence Aleph/Kona pages, OpenReview EBT/NRGPT/action-head surfaces, and VLM hidden-state hallucination methods were checked but not promoted as executable `.494` dependencies.
+
+<!-- V494-EXECUTION-REFRESH-20260708-END -->
