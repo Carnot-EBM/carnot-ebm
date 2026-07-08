@@ -10588,3 +10588,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-08 23:05 UTC | Gated CSL memory-failure and negative-transfer str | OK | 92 passed, 1 warning in 13.73s |
 | 2026-07-08 23:19 UTC | Active-constraint p-bit assumption bridge with res | OK | 89 passed, 1 warning in 12.09s |
 | 2026-07-08 23:36 UTC | Gated hardware timing receipts for p-bit sparsity  | OK | 88 passed, 1 warning in 11.49s |
+| 2026-07-08 23:50 UTC | ARC live-path measurement-access predicate inducti | OK | 86 passed, 1 warning in 11.83s |
