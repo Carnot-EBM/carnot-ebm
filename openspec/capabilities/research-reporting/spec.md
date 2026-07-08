@@ -37227,6 +37227,83 @@ modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 |---|---|---|
 | REQ-REPORT-5389 | Implemented (`python/carnot/experiment_5389_transition_v491.py`, `results/experiment_5389_transition_v491.json`) | Implemented (`tests/python/test_experiment_5389_transition_v491.py`) |
 
+### REQ-REPORT-5402: Archive .491 Truth And Emit .492 Transition Receipt
+
+The Exp 5402 workflow SHALL write
+`results/experiment_5402_transition_v492.json` without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL read
+`AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`results/experiment_5401_capstone_v491.json`, `ops/status.md`,
+`ops/changelog.md`, and `ops/conductor-log.md`.
+
+The workflow SHALL use `results/experiment_5401_capstone_v491.json` as the
+prior-milestone source of truth. It SHALL record the CalVer transition from
+`2026.07.491` to `2026.07.492`, the next task range `exp5402-exp5414`, and the
+ordered `.492` task ids from the active roadmap. It SHALL summarize the `.491`
+closed lanes as structured constraint scale-up, overwrite-guidance
+corrigendum, CPU-only p-bit ablation, continuous self-learning router, raw
+episode memory guard, and bounded KAN dynamic certificate. It SHALL summarize
+the `.491` open or blocked lanes as Exp5392 formal-encoding `CRITICAL TAUTOLOGY`,
+Exp5397 ARC no-bank, Exp5398 hardware repeatability absent, and the
+token/internal-feature lane closed. It SHALL not convert any open lane into a
+new success claim.
+
+The artifact SHALL include required principle-annotated fields `milestone`,
+`previous_milestone`, `prior_capstone_path`, `closed_lanes`, `open_lanes`,
+`next_task_range`, `inference_substrate`, `roadmap_yaml_unchanged`,
+`conductor_unchanged`, and `honest_verdict`. It SHOULD also include `status`,
+`schema`, `experiment`, `experiment_id`, `spec_refs`, `run_date`,
+`field_principles`, `roadmap_task_ids`, `source_artifacts`,
+`protected_file_checks`, `preconditions_checked`, `tests_run`, and
+`reproducibility_checksum` so the transition receipt remains auditable without
+rerunning the prior milestone.
+
+Required field principles:
+
+- `milestone`: principle "conductor route key; must equal 2026.07.492."
+- `previous_milestone`: principle "traceability; must equal 2026.07.491."
+- `prior_capstone_path`: principle "provenance; names the exact Exp5401 capstone artifact used as the source of truth."
+- `closed_lanes`: principle "positive evidence boundary; lists only .491 lanes backed by clean or bounded upstream artifacts."
+- `open_lanes`: principle "no unsupported claims; lists .491 lanes still blocked, honest-null, or closed."
+- `next_task_range`: principle "activation sanity; must equal exp5402-exp5414."
+- `inference_substrate`: principle "no hidden live model inference; must equal aggregation_from_upstream_artifacts."
+- `roadmap_yaml_unchanged`: principle "user prohibition; true only when research-roadmap.yaml has no git-status modification."
+- `conductor_unchanged`: principle "user prohibition; true only when scripts/research_conductor.py has no git-status modification."
+- `honest_verdict`: principle "terminal status; starts with complete: or blocked:."
+
+#### SCENARIO-REPORT-5402: Active .492 Emits Complete Transition Receipt
+
+**Given** `results/experiment_5401_capstone_v491.json` is loadable and terminal
+**And** `research-roadmap.yaml` names `2026.07.492` with ordered tasks
+Exp5402 through Exp5414
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
+`2026.07.492` and task range `Exp 5402-5414`
+**And** git status reports no changes to `research-roadmap.yaml` or
+`scripts/research_conductor.py`
+**When** the Exp 5402 workflow runs
+**Then** it writes a complete `results/experiment_5402_transition_v492.json`
+with the required fields, copies the .491 closed and open lane boundaries from
+Exp5401, records `next_task_range=exp5402-exp5414`, records
+`inference_substrate=aggregation_from_upstream_artifacts`, and keeps
+`roadmap_yaml_unchanged=true` and `conductor_unchanged=true`.
+
+#### SCENARIO-REPORT-5402-BLOCKED-INPUT: Missing Or Dirty Inputs Fail Closed
+
+**Given** the `.491` capstone is missing or non-terminal, the `.492` roadmap
+document is absent or mismatched, the active roadmap does not carry ordered
+Exp5402-5414 tasks, or either protected file is dirty at execution time
+**When** the Exp 5402 workflow runs
+**Then** it emits a terminal `blocked:` verdict, preserves the observed failed
+preconditions, keeps the protected-file booleans tied to actual git status, and
+does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5402)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5402 | Planned (`python/carnot/experiment_5402_transition_v492.py`, `results/experiment_5402_transition_v492.json`) | Planned (`tests/python/test_experiment_5402_transition_v492.py`) |
+
 ### REQ-REPORT-5400: V491 PRD-Aligned Evidence Table And Gap Analysis
 
 The Exp5400 workflow SHALL aggregate the available `.491` upstream artifacts
