@@ -1,0 +1,1804 @@
+{
+  "abstained_memories": [
+    {
+      "access_control_valid": false,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 820,
+          "quality_score": 0.88,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "governed_memory": {
+          "context_cost": 700,
+          "quality_score": 0.88,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "no_memory": {
+          "context_cost": 280,
+          "quality_score": 0.79,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "ungated_memory": {
+          "context_cost": 240,
+          "quality_score": 0.76,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:hole_spacing_32mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:drill_mounts"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "vendor-only observation lacks access grant",
+      "gate_results": {
+        "access_control": false,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-c3-access-denied-vendor-rule",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "access_control_denied"
+        ],
+        "status": "abstained"
+      },
+      "promotion_level": "rule",
+      "promotion_status": "abstained",
+      "raw_trace_id": "raw-trace5446-c3-access-denied-vendor-rule",
+      "raw_trace_receipt": {
+        "checksum": "sha256:2dfd9ff9e4580d81e7a359bfe1e435db7ed70afd04eab239b37413edfcd1f12f",
+        "raw_trace_id": "raw-trace5446-c3-access-denied-vendor-rule",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "vendor-private-fastener-rule",
+      "temporal_decay_valid": true,
+      "trace_family": "access_denied",
+      "trace_id": "trace5446-c3-access-denied-vendor-rule",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:drill_mounts"
+      ]
+    }
+  ],
+  "context_efficiency_delta": 0.393541,
+  "continuous_self_learning_task": true,
+  "control_metrics": {
+    "always_full_context": {
+      "context_cost": 8360,
+      "quality_score": 0.94,
+      "unsafe_false_accepts": 0,
+      "verifier_cost": 40
+    },
+    "governed_memory": {
+      "context_cost": 5070,
+      "quality_score": 0.94,
+      "unsafe_false_accepts": 0,
+      "verifier_cost": 28
+    },
+    "no_memory": {
+      "context_cost": 2920,
+      "quality_score": 0.824444,
+      "unsafe_false_accepts": 0,
+      "verifier_cost": 40
+    },
+    "ungated_memory": {
+      "context_cost": 3010,
+      "quality_score": 0.832222,
+      "unsafe_false_accepts": 3,
+      "verifier_cost": 11
+    }
+  },
+  "control_trace_id_sets": {
+    "always_full_context": [
+      "trace5446-a1-repeat-bracket-case",
+      "trace5446-a2-repeat-pocket-skill",
+      "trace5446-b1-shift-drill-rule",
+      "trace5446-b2-shift-fixture-case",
+      "trace5446-c1-stale-material-lot",
+      "trace5446-c2-unsupported-clearance",
+      "trace5446-c3-access-denied-vendor-rule",
+      "trace5446-c4-replay-failure-rule",
+      "trace5446-d1-rollback-ready-skill"
+    ],
+    "governed_memory": [
+      "trace5446-a1-repeat-bracket-case",
+      "trace5446-a2-repeat-pocket-skill",
+      "trace5446-b1-shift-drill-rule",
+      "trace5446-b2-shift-fixture-case",
+      "trace5446-c1-stale-material-lot",
+      "trace5446-c2-unsupported-clearance",
+      "trace5446-c3-access-denied-vendor-rule",
+      "trace5446-c4-replay-failure-rule",
+      "trace5446-d1-rollback-ready-skill"
+    ],
+    "no_memory": [
+      "trace5446-a1-repeat-bracket-case",
+      "trace5446-a2-repeat-pocket-skill",
+      "trace5446-b1-shift-drill-rule",
+      "trace5446-b2-shift-fixture-case",
+      "trace5446-c1-stale-material-lot",
+      "trace5446-c2-unsupported-clearance",
+      "trace5446-c3-access-denied-vendor-rule",
+      "trace5446-c4-replay-failure-rule",
+      "trace5446-d1-rollback-ready-skill"
+    ],
+    "ungated_memory": [
+      "trace5446-a1-repeat-bracket-case",
+      "trace5446-a2-repeat-pocket-skill",
+      "trace5446-b1-shift-drill-rule",
+      "trace5446-b2-shift-fixture-case",
+      "trace5446-c1-stale-material-lot",
+      "trace5446-c2-unsupported-clearance",
+      "trace5446-c3-access-denied-vendor-rule",
+      "trace5446-c4-replay-failure-rule",
+      "trace5446-d1-rollback-ready-skill"
+    ]
+  },
+  "evidence_support_edges": 29,
+  "execution_dependency_edges": 21,
+  "experiment": "experiment_5446_governed_memory_csl_online_v495",
+  "experiment_id": "exp5446-v495-governed-memory-csl-online",
+  "field_principles": {
+    "context_efficiency_delta": "Utility.",
+    "continuous_self_learning_task": "Research-program mandate.",
+    "evidence_support_edges": "Provenance.",
+    "execution_dependency_edges": "Action provenance.",
+    "governed_csl_loop_ready": "Downstream gate.",
+    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "Explicit learning substrate.",
+    "multi_session_trace_count": "Online setting.",
+    "no_weight_mutation": "No hidden fine-tuning.",
+    "promotion_level_counts": "Raw/case/skill/rule compression coverage.",
+    "quality_delta_vs_always_full": "No hidden forgetting.",
+    "replay_success_rate": "Reusable memory gate.",
+    "rollback_recovery_rate": "Reversibility.",
+    "temporal_decay_policy": "Stale-memory control.",
+    "unsafe_false_accepts": "Safety boundary.",
+    "verifier_cost_delta": "Resource accounting."
+  },
+  "governed_csl_loop_ready": true,
+  "honest_verdict": "complete: governed online memory promoted raw traces into case, skill, and rule sidecars only through replay, provenance, decay, access, rollback, and no-weight gates",
+  "inference_substrate": "deterministic_governed_memory_no_weight_update",
+  "methodology_note": "Exp5446 is a deterministic governed-memory replay over a finite multi-session workflow stream. Raw traces may influence future routing only after promotion to case, skill, or rule sidecars and only when replay, provenance, decay, access, rollback, and no-weight-mutation gates pass.",
+  "milestone": "2026.07.495",
+  "multi_session_trace_count": 9,
+  "negative_transfer_deflection_rate": 1.0,
+  "no_weight_mutation": true,
+  "post_rollback_decisions": [
+    {
+      "cited_memory_ids": [],
+      "decision_id": "post5446-full-verify-after-rollback",
+      "rolled_back_memory_ids": [
+        "mem-trace5446-a1-repeat-bracket-case",
+        "mem-trace5446-a2-repeat-pocket-skill",
+        "mem-trace5446-b1-shift-drill-rule",
+        "mem-trace5446-b2-shift-fixture-case",
+        "mem-trace5446-d1-rollback-ready-skill"
+      ],
+      "route": "deterministic_full_verify_after_rollback"
+    }
+  ],
+  "promoted_memories": [
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 1200,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "governed_memory": {
+          "context_cost": 540,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "no_memory": {
+          "context_cost": 420,
+          "quality_score": 0.82,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "ungated_memory": {
+          "context_cost": 500,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:sketch_hash_ok",
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm",
+        "evidence:toolout:hole_spacing_32mm",
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:load_sketch->step:set_stock",
+        "step:set_stock->step:pocket_cut",
+        "step:pocket_cut->step:drill_mounts",
+        "step:drill_mounts->step:measure_clearance",
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-a1-repeat-bracket-case",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "case",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-a1-repeat-bracket-case",
+      "raw_trace_receipt": {
+        "checksum": "sha256:124feea227c786fb82f20d7af02d6640c996fb128309f9ec6b5ee36224e8b07a",
+        "raw_trace_id": "raw-trace5446-a1-repeat-bracket-case",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 2,
+      "session_id": "session-a",
+      "task_id": "cad-bracket-clearance",
+      "temporal_decay_valid": true,
+      "trace_family": "repeated",
+      "trace_id": "trace5446-a1-repeat-bracket-case",
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 760,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "governed_memory": {
+          "context_cost": 300,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        },
+        "no_memory": {
+          "context_cost": 260,
+          "quality_score": 0.84,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "ungated_memory": {
+          "context_cost": 280,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:pocket_cut"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-a2-repeat-pocket-skill",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "skill",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-a2-repeat-pocket-skill",
+      "raw_trace_receipt": {
+        "checksum": "sha256:37b753082f9a658e3974de3cf1e16b1e9cf24942ece2b86e69e57766bfcdff3d",
+        "raw_trace_id": "raw-trace5446-a2-repeat-pocket-skill",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 3,
+      "session_id": "session-a",
+      "task_id": "cad-pocket-after-stock",
+      "temporal_decay_valid": true,
+      "trace_family": "repeated",
+      "trace_id": "trace5446-a2-repeat-pocket-skill",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:pocket_cut"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 900,
+          "quality_score": 0.96,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "governed_memory": {
+          "context_cost": 360,
+          "quality_score": 0.96,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        },
+        "no_memory": {
+          "context_cost": 320,
+          "quality_score": 0.86,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "ungated_memory": {
+          "context_cost": 330,
+          "quality_score": 0.96,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm",
+        "evidence:toolout:hole_spacing_32mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:pocket_cut",
+        "step:pocket_cut->step:drill_mounts"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-b1-shift-drill-rule",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "rule",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-b1-shift-drill-rule",
+      "raw_trace_receipt": {
+        "checksum": "sha256:da72e885db14bf7f5a42a724d0a73cf2101aebdd1f14a0e7bbfb233d5615e4eb",
+        "raw_trace_id": "raw-trace5446-b1-shift-drill-rule",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 4,
+      "session_id": "session-b",
+      "task_id": "cad-plate-drill-after-pocket",
+      "temporal_decay_valid": true,
+      "trace_family": "shifted",
+      "trace_id": "trace5446-b1-shift-drill-rule",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 980,
+          "quality_score": 0.95,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "governed_memory": {
+          "context_cost": 420,
+          "quality_score": 0.95,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        },
+        "no_memory": {
+          "context_cost": 350,
+          "quality_score": 0.83,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "ungated_memory": {
+          "context_cost": 390,
+          "quality_score": 0.95,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:sketch_hash_ok",
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:load_sketch->step:set_stock",
+        "step:set_stock->step:measure_clearance",
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-b2-shift-fixture-case",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "case",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-b2-shift-fixture-case",
+      "raw_trace_receipt": {
+        "checksum": "sha256:87ac315fbfd7af2af00bd600e9d1705ab09c61bbf9b72ab7efc82441f575b465",
+        "raw_trace_id": "raw-trace5446-b2-shift-fixture-case",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 2,
+      "session_id": "session-b",
+      "task_id": "cad-fixture-clearance-repeat",
+      "temporal_decay_valid": true,
+      "trace_family": "shifted",
+      "trace_id": "trace5446-b2-shift-fixture-case",
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 740,
+          "quality_score": 0.97,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "governed_memory": {
+          "context_cost": 310,
+          "quality_score": 0.97,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        },
+        "no_memory": {
+          "context_cost": 250,
+          "quality_score": 0.85,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "ungated_memory": {
+          "context_cost": 270,
+          "quality_score": 0.97,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-d1-rollback-ready-skill",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "skill",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-d1-rollback-ready-skill",
+      "raw_trace_receipt": {
+        "checksum": "sha256:b94aaedc981c14c1a050944dcef5a2a85c4efba2405989d44b6dd28730ea0483",
+        "raw_trace_id": "raw-trace5446-d1-rollback-ready-skill",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 3,
+      "session_id": "session-d",
+      "task_id": "cad-finish-after-clearance",
+      "temporal_decay_valid": true,
+      "trace_family": "rollback_required",
+      "trace_id": "trace5446-d1-rollback-ready-skill",
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    }
+  ],
+  "promotion_level_counts": {
+    "case": 2,
+    "raw_trace": 9,
+    "rule": 1,
+    "skill": 2
+  },
+  "quality_delta_vs_always_full": 0.0,
+  "random_seed": 5446,
+  "readiness_checks": {
+    "all_passed": true,
+    "checks": {
+      "context_efficiency_positive": true,
+      "continuous_self_learning_task": true,
+      "families_covered": true,
+      "inactive_rows_cannot_route": true,
+      "negative_transfer_deflected": true,
+      "no_weight_mutation": true,
+      "promoted_gates_pass": true,
+      "promotion_levels_covered": true,
+      "quality_preserved": true,
+      "replay_success_complete": true,
+      "rollback_recovered": true,
+      "tests_recorded": true,
+      "unsafe_false_accepts_zero": true,
+      "verifier_cost_non_increasing": true
+    },
+    "failed_checks": []
+  },
+  "rejected_memories": [
+    {
+      "access_control_valid": true,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 1220,
+          "quality_score": 0.91,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "governed_memory": {
+          "context_cost": 900,
+          "quality_score": 0.91,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "no_memory": {
+          "context_cost": 430,
+          "quality_score": 0.82,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "ungated_memory": {
+          "context_cost": 480,
+          "quality_score": 0.64,
+          "unsafe_false_accept": true,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:sketch_hash_ok",
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm",
+        "evidence:toolout:hole_spacing_32mm",
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:load_sketch->step:set_stock",
+        "step:set_stock->step:pocket_cut",
+        "step:pocket_cut->step:drill_mounts",
+        "step:drill_mounts->step:measure_clearance",
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "stale material-lot observation expired before session-c",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": false
+      },
+      "governed_negative_transfer_deflected": true,
+      "memory_id": "mem-trace5446-c1-stale-material-lot",
+      "negative_transfer_candidate": true,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "temporal_decay_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_level": "case",
+      "promotion_status": "rejected",
+      "raw_trace_id": "raw-trace5446-c1-stale-material-lot",
+      "raw_trace_receipt": {
+        "checksum": "sha256:5394865625567f1322801af9c8cceecf6282844a929933f90bc7880ddcbc68a4",
+        "raw_trace_id": "raw-trace5446-c1-stale-material-lot",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "cad-bracket-new-lot",
+      "temporal_decay_valid": false,
+      "trace_family": "stale",
+      "trace_id": "trace5446-c1-stale-material-lot",
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 860,
+          "quality_score": 0.9,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "governed_memory": {
+          "context_cost": 760,
+          "quality_score": 0.9,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "no_memory": {
+          "context_cost": 300,
+          "quality_score": 0.8,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "ungated_memory": {
+          "context_cost": 260,
+          "quality_score": 0.6,
+          "unsafe_false_accept": true,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": false,
+      "execution_dependency_edges": [
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "one receipt cannot support the procedural skill",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": false,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": true,
+      "memory_id": "mem-trace5446-c2-unsupported-clearance",
+      "negative_transfer_candidate": true,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "evidence_support_missing"
+        ],
+        "status": "rejected"
+      },
+      "promotion_level": "skill",
+      "promotion_status": "rejected",
+      "raw_trace_id": "raw-trace5446-c2-unsupported-clearance",
+      "raw_trace_receipt": {
+        "checksum": "sha256:add562f386ab9fb339a2fd80b0d162e283c6cfb8734eddd59bfc80eec1b6c71a",
+        "raw_trace_id": "raw-trace5446-c2-unsupported-clearance",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "cad-forged-clearance-receipt",
+      "temporal_decay_valid": true,
+      "trace_family": "unsupported",
+      "trace_id": "trace5446-c2-unsupported-clearance",
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 880,
+          "quality_score": 0.89,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "governed_memory": {
+          "context_cost": 780,
+          "quality_score": 0.89,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "no_memory": {
+          "context_cost": 310,
+          "quality_score": 0.81,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "ungated_memory": {
+          "context_cost": 260,
+          "quality_score": 0.61,
+          "unsafe_false_accept": true,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:hole_spacing_32mm",
+        "evidence:toolout:pocket_depth_3mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:drill_mounts",
+        "step:drill_mounts->step:pocket_cut"
+      ],
+      "execution_dependency_valid": false,
+      "failure_note": "replay detects the impossible drill-before-pocket order",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": false,
+        "no_weight_mutation": true,
+        "replay_success": false,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": true,
+      "memory_id": "mem-trace5446-c4-replay-failure-rule",
+      "negative_transfer_candidate": true,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "execution_dependency_missing",
+          "replay_success_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_level": "rule",
+      "promotion_status": "rejected",
+      "raw_trace_id": "raw-trace5446-c4-replay-failure-rule",
+      "raw_trace_receipt": {
+        "checksum": "sha256:84d50c55580b4897dd42a0b757b8bce0fecf649c82c5c63d90707016c91b1076",
+        "raw_trace_id": "raw-trace5446-c4-replay-failure-rule",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": false,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "cad-drill-before-pocket-trap",
+      "temporal_decay_valid": true,
+      "trace_family": "replay_failure",
+      "trace_id": "trace5446-c4-replay-failure-rule",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:drill_mounts",
+        "step:pocket_cut"
+      ]
+    }
+  ],
+  "replay_success_rate": 1.0,
+  "reproducibility_checksum": "sha256:6990668c0469eb3fb5b96e007c1bf8139aea4c7497ed968f9ed2909f1b77103c",
+  "research_conductor_modified": false,
+  "rollback_audit": {
+    "prior_case_sidecar_restored": true,
+    "prior_rule_sidecar_restored": true,
+    "prior_skill_sidecar_restored": true,
+    "removed_from_case_sidecar": [
+      "mem-trace5446-a1-repeat-bracket-case",
+      "mem-trace5446-b2-shift-fixture-case"
+    ],
+    "removed_from_rule_sidecar": [
+      "mem-trace5446-b1-shift-drill-rule"
+    ],
+    "removed_from_skill_sidecar": [
+      "mem-trace5446-a2-repeat-pocket-skill",
+      "mem-trace5446-d1-rollback-ready-skill"
+    ],
+    "retained_audit_record_after_rollback": true,
+    "rollback_success": true,
+    "rolled_back_memory_ids": [
+      "mem-trace5446-a1-repeat-bracket-case",
+      "mem-trace5446-a2-repeat-pocket-skill",
+      "mem-trace5446-b1-shift-drill-rule",
+      "mem-trace5446-b2-shift-fixture-case",
+      "mem-trace5446-d1-rollback-ready-skill"
+    ]
+  },
+  "rollback_recovery_rate": 1.0,
+  "routing_report": {
+    "active_case_memory_ids": [
+      "mem-trace5446-a1-repeat-bracket-case",
+      "mem-trace5446-b2-shift-fixture-case"
+    ],
+    "active_rule_memory_ids": [
+      "mem-trace5446-b1-shift-drill-rule"
+    ],
+    "active_skill_memory_ids": [
+      "mem-trace5446-a2-repeat-pocket-skill",
+      "mem-trace5446-d1-rollback-ready-skill"
+    ],
+    "inactive_memory_ids": [
+      "mem-trace5446-c1-stale-material-lot",
+      "mem-trace5446-c2-unsupported-clearance",
+      "mem-trace5446-c3-access-denied-vendor-rule",
+      "mem-trace5446-c4-replay-failure-rule"
+    ],
+    "routing_effect_records": [
+      {
+        "memory_id": "mem-trace5446-a1-repeat-bracket-case",
+        "promotion_level": "case",
+        "routing_influence": 2
+      },
+      {
+        "memory_id": "mem-trace5446-a2-repeat-pocket-skill",
+        "promotion_level": "skill",
+        "routing_influence": 3
+      },
+      {
+        "memory_id": "mem-trace5446-b1-shift-drill-rule",
+        "promotion_level": "rule",
+        "routing_influence": 4
+      },
+      {
+        "memory_id": "mem-trace5446-b2-shift-fixture-case",
+        "promotion_level": "case",
+        "routing_influence": 2
+      },
+      {
+        "memory_id": "mem-trace5446-d1-rollback-ready-skill",
+        "promotion_level": "skill",
+        "routing_influence": 3
+      }
+    ]
+  },
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5446.governed_memory_csl_online.v495",
+  "source_artifacts": [
+    "results/experiment_5435_verified_workflow_memory_csl_v494.json",
+    "results/experiment_5436_csl_memory_transfer_stress_v494.json"
+  ],
+  "source_file_checksums": {
+    "exp5435_module": "sha256:eb5c265f57495de1924b995bb201da4e3af189a6f27e5f2af9eecedf820e6f7f",
+    "exp5436_module": "sha256:66205f398edba71af79cc186161b857366de50f50a2d434f6eb384ce52529f70",
+    "module": "sha256:ed1d3cf8932eaebf5e1e799062c8f0aa943ba0ae12143271403a22609b38324a",
+    "spec": "sha256:ad18fc487694d4afe30e7897347492a875bbc1aa0f2ad159a4729622905648c1"
+  },
+  "source_files": {
+    "exp5435_module": "python/carnot/experiment_5435_verified_workflow_memory_csl_v494.py",
+    "exp5436_module": "python/carnot/experiment_5436_csl_memory_transfer_stress_v494.py",
+    "module": "python/carnot/experiment_5446_governed_memory_csl_online_v495.py",
+    "spec": "openspec/capabilities/self-learning/spec.md"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5446",
+    "SCENARIO-LEARN-5446-GATES",
+    "SCENARIO-LEARN-5446-CONTROLS",
+    "SCENARIO-LEARN-5446-ROLLBACK",
+    "SCENARIO-LEARN-5446-NO-WEIGHT-MUTATION"
+  ],
+  "status": "complete",
+  "temporal_decay_policy": "session_order_half_life_2_stale_after_2_sessions",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5446_governed_memory_csl_online_v495.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5446_governed_memory_csl_online_v495.py -m pytest tests/python/test_experiment_5446_governed_memory_csl_online_v495.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "trace_family_counts": {
+    "access_denied": 1,
+    "repeated": 2,
+    "replay_failure": 1,
+    "rollback_required": 1,
+    "shifted": 2,
+    "stale": 1,
+    "unsupported": 1
+  },
+  "trace_rows": [
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 1200,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "governed_memory": {
+          "context_cost": 540,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "no_memory": {
+          "context_cost": 420,
+          "quality_score": 0.82,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "ungated_memory": {
+          "context_cost": 500,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:sketch_hash_ok",
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm",
+        "evidence:toolout:hole_spacing_32mm",
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:load_sketch->step:set_stock",
+        "step:set_stock->step:pocket_cut",
+        "step:pocket_cut->step:drill_mounts",
+        "step:drill_mounts->step:measure_clearance",
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-a1-repeat-bracket-case",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "case",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-a1-repeat-bracket-case",
+      "raw_trace_receipt": {
+        "checksum": "sha256:124feea227c786fb82f20d7af02d6640c996fb128309f9ec6b5ee36224e8b07a",
+        "raw_trace_id": "raw-trace5446-a1-repeat-bracket-case",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 2,
+      "session_id": "session-a",
+      "task_id": "cad-bracket-clearance",
+      "temporal_decay_valid": true,
+      "trace_family": "repeated",
+      "trace_id": "trace5446-a1-repeat-bracket-case",
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 760,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "governed_memory": {
+          "context_cost": 300,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        },
+        "no_memory": {
+          "context_cost": 260,
+          "quality_score": 0.84,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "ungated_memory": {
+          "context_cost": 280,
+          "quality_score": 1.0,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:pocket_cut"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-a2-repeat-pocket-skill",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "skill",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-a2-repeat-pocket-skill",
+      "raw_trace_receipt": {
+        "checksum": "sha256:37b753082f9a658e3974de3cf1e16b1e9cf24942ece2b86e69e57766bfcdff3d",
+        "raw_trace_id": "raw-trace5446-a2-repeat-pocket-skill",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 3,
+      "session_id": "session-a",
+      "task_id": "cad-pocket-after-stock",
+      "temporal_decay_valid": true,
+      "trace_family": "repeated",
+      "trace_id": "trace5446-a2-repeat-pocket-skill",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:pocket_cut"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 900,
+          "quality_score": 0.96,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "governed_memory": {
+          "context_cost": 360,
+          "quality_score": 0.96,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        },
+        "no_memory": {
+          "context_cost": 320,
+          "quality_score": 0.86,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "ungated_memory": {
+          "context_cost": 330,
+          "quality_score": 0.96,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm",
+        "evidence:toolout:hole_spacing_32mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:pocket_cut",
+        "step:pocket_cut->step:drill_mounts"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-b1-shift-drill-rule",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "rule",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-b1-shift-drill-rule",
+      "raw_trace_receipt": {
+        "checksum": "sha256:da72e885db14bf7f5a42a724d0a73cf2101aebdd1f14a0e7bbfb233d5615e4eb",
+        "raw_trace_id": "raw-trace5446-b1-shift-drill-rule",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 4,
+      "session_id": "session-b",
+      "task_id": "cad-plate-drill-after-pocket",
+      "temporal_decay_valid": true,
+      "trace_family": "shifted",
+      "trace_id": "trace5446-b1-shift-drill-rule",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 980,
+          "quality_score": 0.95,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "governed_memory": {
+          "context_cost": 420,
+          "quality_score": 0.95,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        },
+        "no_memory": {
+          "context_cost": 350,
+          "quality_score": 0.83,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "ungated_memory": {
+          "context_cost": 390,
+          "quality_score": 0.95,
+          "unsafe_false_accept": false,
+          "verifier_cost": 2
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:sketch_hash_ok",
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:load_sketch->step:set_stock",
+        "step:set_stock->step:measure_clearance",
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-b2-shift-fixture-case",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "case",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-b2-shift-fixture-case",
+      "raw_trace_receipt": {
+        "checksum": "sha256:87ac315fbfd7af2af00bd600e9d1705ab09c61bbf9b72ab7efc82441f575b465",
+        "raw_trace_id": "raw-trace5446-b2-shift-fixture-case",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 2,
+      "session_id": "session-b",
+      "task_id": "cad-fixture-clearance-repeat",
+      "temporal_decay_valid": true,
+      "trace_family": "shifted",
+      "trace_id": "trace5446-b2-shift-fixture-case",
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 1220,
+          "quality_score": 0.91,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "governed_memory": {
+          "context_cost": 900,
+          "quality_score": 0.91,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "no_memory": {
+          "context_cost": 430,
+          "quality_score": 0.82,
+          "unsafe_false_accept": false,
+          "verifier_cost": 6
+        },
+        "ungated_memory": {
+          "context_cost": 480,
+          "quality_score": 0.64,
+          "unsafe_false_accept": true,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:sketch_hash_ok",
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:pocket_depth_3mm",
+        "evidence:toolout:hole_spacing_32mm",
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:load_sketch->step:set_stock",
+        "step:set_stock->step:pocket_cut",
+        "step:pocket_cut->step:drill_mounts",
+        "step:drill_mounts->step:measure_clearance",
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "stale material-lot observation expired before session-c",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": false
+      },
+      "governed_negative_transfer_deflected": true,
+      "memory_id": "mem-trace5446-c1-stale-material-lot",
+      "negative_transfer_candidate": true,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "temporal_decay_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_level": "case",
+      "promotion_status": "rejected",
+      "raw_trace_id": "raw-trace5446-c1-stale-material-lot",
+      "raw_trace_receipt": {
+        "checksum": "sha256:5394865625567f1322801af9c8cceecf6282844a929933f90bc7880ddcbc68a4",
+        "raw_trace_id": "raw-trace5446-c1-stale-material-lot",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "cad-bracket-new-lot",
+      "temporal_decay_valid": false,
+      "trace_family": "stale",
+      "trace_id": "trace5446-c1-stale-material-lot",
+      "workflow_steps": [
+        "step:load_sketch",
+        "step:set_stock",
+        "step:pocket_cut",
+        "step:drill_mounts",
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 860,
+          "quality_score": 0.9,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "governed_memory": {
+          "context_cost": 760,
+          "quality_score": 0.9,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "no_memory": {
+          "context_cost": 300,
+          "quality_score": 0.8,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "ungated_memory": {
+          "context_cost": 260,
+          "quality_score": 0.6,
+          "unsafe_false_accept": true,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": false,
+      "execution_dependency_edges": [
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "one receipt cannot support the procedural skill",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": false,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": true,
+      "memory_id": "mem-trace5446-c2-unsupported-clearance",
+      "negative_transfer_candidate": true,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "evidence_support_missing"
+        ],
+        "status": "rejected"
+      },
+      "promotion_level": "skill",
+      "promotion_status": "rejected",
+      "raw_trace_id": "raw-trace5446-c2-unsupported-clearance",
+      "raw_trace_receipt": {
+        "checksum": "sha256:add562f386ab9fb339a2fd80b0d162e283c6cfb8734eddd59bfc80eec1b6c71a",
+        "raw_trace_id": "raw-trace5446-c2-unsupported-clearance",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "cad-forged-clearance-receipt",
+      "temporal_decay_valid": true,
+      "trace_family": "unsupported",
+      "trace_id": "trace5446-c2-unsupported-clearance",
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    },
+    {
+      "access_control_valid": false,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 820,
+          "quality_score": 0.88,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "governed_memory": {
+          "context_cost": 700,
+          "quality_score": 0.88,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "no_memory": {
+          "context_cost": 280,
+          "quality_score": 0.79,
+          "unsafe_false_accept": false,
+          "verifier_cost": 4
+        },
+        "ungated_memory": {
+          "context_cost": 240,
+          "quality_score": 0.76,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:hole_spacing_32mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:drill_mounts"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "vendor-only observation lacks access grant",
+      "gate_results": {
+        "access_control": false,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-c3-access-denied-vendor-rule",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "access_control_denied"
+        ],
+        "status": "abstained"
+      },
+      "promotion_level": "rule",
+      "promotion_status": "abstained",
+      "raw_trace_id": "raw-trace5446-c3-access-denied-vendor-rule",
+      "raw_trace_receipt": {
+        "checksum": "sha256:2dfd9ff9e4580d81e7a359bfe1e435db7ed70afd04eab239b37413edfcd1f12f",
+        "raw_trace_id": "raw-trace5446-c3-access-denied-vendor-rule",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "vendor-private-fastener-rule",
+      "temporal_decay_valid": true,
+      "trace_family": "access_denied",
+      "trace_id": "trace5446-c3-access-denied-vendor-rule",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:drill_mounts"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": false,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 880,
+          "quality_score": 0.89,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "governed_memory": {
+          "context_cost": 780,
+          "quality_score": 0.89,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "no_memory": {
+          "context_cost": 310,
+          "quality_score": 0.81,
+          "unsafe_false_accept": false,
+          "verifier_cost": 5
+        },
+        "ungated_memory": {
+          "context_cost": 260,
+          "quality_score": 0.61,
+          "unsafe_false_accept": true,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:stock_6061",
+        "evidence:toolout:hole_spacing_32mm",
+        "evidence:toolout:pocket_depth_3mm"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:set_stock->step:drill_mounts",
+        "step:drill_mounts->step:pocket_cut"
+      ],
+      "execution_dependency_valid": false,
+      "failure_note": "replay detects the impossible drill-before-pocket order",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": false,
+        "no_weight_mutation": true,
+        "replay_success": false,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": true,
+      "memory_id": "mem-trace5446-c4-replay-failure-rule",
+      "negative_transfer_candidate": true,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "execution_dependency_missing",
+          "replay_success_failed"
+        ],
+        "status": "rejected"
+      },
+      "promotion_level": "rule",
+      "promotion_status": "rejected",
+      "raw_trace_id": "raw-trace5446-c4-replay-failure-rule",
+      "raw_trace_receipt": {
+        "checksum": "sha256:84d50c55580b4897dd42a0b757b8bce0fecf649c82c5c63d90707016c91b1076",
+        "raw_trace_id": "raw-trace5446-c4-replay-failure-rule",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": false,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 0,
+      "session_id": "session-c",
+      "task_id": "cad-drill-before-pocket-trap",
+      "temporal_decay_valid": true,
+      "trace_family": "replay_failure",
+      "trace_id": "trace5446-c4-replay-failure-rule",
+      "workflow_steps": [
+        "step:set_stock",
+        "step:drill_mounts",
+        "step:pocket_cut"
+      ]
+    },
+    {
+      "access_control_valid": true,
+      "active_for_routing": true,
+      "audit_retained": true,
+      "control_outcomes": {
+        "always_full_context": {
+          "context_cost": 740,
+          "quality_score": 0.97,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "governed_memory": {
+          "context_cost": 310,
+          "quality_score": 0.97,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        },
+        "no_memory": {
+          "context_cost": 250,
+          "quality_score": 0.85,
+          "unsafe_false_accept": false,
+          "verifier_cost": 3
+        },
+        "ungated_memory": {
+          "context_cost": 270,
+          "quality_score": 0.97,
+          "unsafe_false_accept": false,
+          "verifier_cost": 1
+        }
+      },
+      "evidence_support_edges": [
+        "evidence:toolout:clearance_pass",
+        "evidence:toolout:surface_finish_pass"
+      ],
+      "evidence_support_valid": true,
+      "execution_dependency_edges": [
+        "step:measure_clearance->step:finish_pass"
+      ],
+      "execution_dependency_valid": true,
+      "failure_note": "",
+      "gate_results": {
+        "access_control": true,
+        "evidence_support": true,
+        "execution_dependency": true,
+        "no_weight_mutation": true,
+        "replay_success": true,
+        "rollback_pointer": true,
+        "temporal_decay": true
+      },
+      "governed_negative_transfer_deflected": false,
+      "memory_id": "mem-trace5446-d1-rollback-ready-skill",
+      "negative_transfer_candidate": false,
+      "no_weight_mutation_proof": true,
+      "promotion_decision": {
+        "reasons": [
+          "all_governance_gates_passed"
+        ],
+        "status": "promoted"
+      },
+      "promotion_level": "skill",
+      "promotion_status": "promoted",
+      "raw_trace_id": "raw-trace5446-d1-rollback-ready-skill",
+      "raw_trace_receipt": {
+        "checksum": "sha256:b94aaedc981c14c1a050944dcef5a2a85c4efba2405989d44b6dd28730ea0483",
+        "raw_trace_id": "raw-trace5446-d1-rollback-ready-skill",
+        "retention_reason": "governed-online-memory-audit"
+      },
+      "replay_success": true,
+      "rollback_pointer": "rollback:governed-memory-sidecar",
+      "routing_influence": 3,
+      "session_id": "session-d",
+      "task_id": "cad-finish-after-clearance",
+      "temporal_decay_valid": true,
+      "trace_family": "rollback_required",
+      "trace_id": "trace5446-d1-rollback-ready-skill",
+      "workflow_steps": [
+        "step:measure_clearance",
+        "step:finish_pass"
+      ]
+    }
+  ],
+  "unsafe_false_accepts": 0,
+  "verifier_cost_delta": 0.3,
+  "weight_mutation_receipt": {
+    "adapter_weights_loaded": false,
+    "adapter_weights_written": false,
+    "learned_state_scope": "governed_trace_case_skill_rule_sidecars_only",
+    "model_weights_loaded": false,
+    "model_weights_written": false,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true
+  }
+}
