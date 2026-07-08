@@ -16404,6 +16404,93 @@ with `complete:` or `blocked:`.
 
 ---
 
+### REQ-HW-5411
+
+**Title:** Hardware repeatability restoration receipt MUST preserve safe board gates and same-workload repeats only where reachable
+
+**Description:**
+Experiment 5411 MUST produce
+`results/experiment_5411_hardware_repeatability_restoration_v492.json` as a
+safe hardware-smoke receipt for KV260, PolarFire, and GateMate status. The
+receipt restores repeated same-workload evidence only where a board is
+reachable through a known safe workload path; it MUST NOT convert continuity
+or reachability evidence into a speedup claim.
+
+KV260 MUST be checked only with the exact non-destructive SSH reachability
+precondition `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. The
+experiment MUST NOT probe host SD-card, `/dev/mmcblk*`, `/dev/disk`, or other
+host removable-storage paths for KV260 evidence. If KV260 is unreachable, the
+receipt MUST record the exact precondition failure and leave repeatability
+unsupported for KV260.
+
+PolarFire MUST run the established safe board-local deterministic hash
+workload at least three times when authenticated SSH is reachable. The receipt
+MUST record the repeat count, per-repeat output hashes, per-repeat timing,
+board identity from the authenticated status command, command paths,
+timestamps, and stdout/stderr hashes. Repeated same-workload readiness may be
+true only when at least three valid PolarFire repeats agree on the expected
+input and output hashes.
+
+GateMate MUST use non-destructive diagnostics only. It may run DirtyJTAG
+`openFPGALoader -c dirtyJtag --detect` when the local tool and USB preconditions
+are available, but it MUST NOT flash, program, or write a bitstream. If GateMate
+is unreachable or the tool/USB precondition fails, the receipt MUST record the
+exact precondition failure and MUST NOT synthesize workload repeatability.
+
+The artifact MUST include raw top-level fields `preconditions_checked`,
+`kv260_ssh_reachable`, `kv260_host_sd_probe_used`,
+`polarfire_reachable`, `polarfire_repeat_count`,
+`polarfire_repeat_hashes`, `gatemate_reachable`,
+`gatemate_destructive_probe_used`, `repeated_same_workload_ready`,
+`hardware_speedup_claim`, `inference_substrate`, and `honest_verdict`.
+`hardware_speedup_claim` MUST remain false unless authenticated repeated board
+timing and a valid same-workload baseline both exist; Exp 5411 does not include
+that baseline and therefore MUST keep it false.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5411_hardware_repeatability_restoration_v492 --date 20260708`
+  writes `results/experiment_5411_hardware_repeatability_restoration_v492.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-5411` and
+  `SCENARIO-HW-5411`, `random_seed=5411`, `milestone="2026.07.492"`, and a
+  stable `reproducibility_checksum`.
+- `preconditions_checked=true`, `kv260_host_sd_probe_used=false`,
+  `gatemate_destructive_probe_used=false`, `hardware_speedup_claim=false`, and
+  `inference_substrate="hardware_smoke"` in every valid artifact.
+- KV260 command receipts include only
+  `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` for KV260 and contain
+  no host storage paths.
+- PolarFire repeatability is ready only when at least three safe board-local
+  repeats validate and all output hashes agree with the expected workload hash.
+- GateMate status is derived only from local tool/USB preconditions and
+  non-destructive DirtyJTAG detect output.
+
+**Implementation status:** Planned (Exp 5411)
+
+---
+
+### SCENARIO-HW-5411
+
+**Scenario:** Exp 5411 writes v492 hardware repeatability restoration receipts without unsupported speedup claims.
+
+**Given:** Exp 5398 recorded no unsupported speedup claim and classified
+repeatability separately from reachability.
+**When:** Experiment 5411 checks KV260 with the exact SSH-only precondition,
+runs the safe PolarFire workload three times only when PolarFire SSH is
+reachable, checks GateMate with non-destructive diagnostics only when local
+tool and USB preconditions allow it, and records command paths, timestamps,
+hashes, board identities, and precondition failures.
+**Then:** It writes
+`results/experiment_5411_hardware_repeatability_restoration_v492.json` with the
+required raw top-level fields, `repeated_same_workload_ready=true` only for
+validated same-workload repeats, `hardware_speedup_claim=false`,
+`kv260_host_sd_probe_used=false`, `gatemate_destructive_probe_used=false`,
+`inference_substrate="hardware_smoke"`, and an `honest_verdict` beginning with
+`complete:` or `blocked:`.
+
+**Implementation status:** Planned (Exp 5411)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
