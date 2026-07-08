@@ -27877,6 +27877,94 @@ keeps `no_quality_claim=true`, and does not modify
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
 
+### REQ-VERIFY-5380: Constraint-Tax Tool/Action Reachability Panel V490
+
+The repository SHALL provide Exp 5380 at
+`python/carnot/experiment_5380_constraint_tax_tool_action_panel_v3_v490.py`
+and write
+`results/experiment_5380_constraint_tax_tool_action_panel_v3_v490.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL run only
+after Exp 5379 reports `structured_protocol_clean=true`; if that upstream gate
+is absent or false, Exp 5380 SHALL write a blocked artifact and SHALL NOT report
+constraint-tax readiness.
+
+Exp 5380 SHALL measure paired unconstrained-vs-constrained fixtures for
+tool/action reachability and deterministic state validity, not merely JSON
+syntax. Each fixture SHALL log the initial state, the expected final state, the
+tool-call trace, the verifier predicate, and response-text fallback evidence
+separately. Semantic success SHALL require the deterministic state verifier and
+the required tool/action sequence to pass; schema-valid but semantically wrong
+outputs SHALL be counted as wrong-valid outputs. Response-text fallback SHALL
+be recorded but SHALL NOT be accepted as deterministic state evidence.
+
+The artifact SHALL include top-level fields `status`,
+`upstream_structured_protocol_clean`, `constraint_tax_panel_ready`,
+`MODEL_SPECS`, `selected_model_spec`, `inference_substrate`, `fixture_count`,
+`constrained_schema_validity_rate`, `unconstrained_schema_validity_rate`,
+`constrained_semantic_success_rate`, `unconstrained_semantic_success_rate`,
+`wrong_valid_count`, `deterministic_state_evidence_count`,
+`tool_action_reachability_rate`, `latency_or_token_overhead`,
+`unsafe_false_accepts`, and `honest_verdict`, with field provenance explaining
+each required field's principle. `status` SHALL be `complete` only when the
+Exp 5379 clean gate is true and the paired panel ran. `constraint_tax_panel_ready`
+SHALL be true only when deterministic state/tool-call evidence exists for the
+fixtures and `unsafe_false_accepts=0`.
+
+For any live LLM panel run, `MODEL_SPECS` SHALL include all mandated local GGUF
+model ids:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Live calls SHALL use llama.cpp/GGUF-compatible
+loading only and SHALL NOT use `AutoTokenizer`, `AutoModel`, or direct
+transformers loading on any `-GGUF` repository. If Exp 5380 uses deterministic
+fixture replay with no new live LLM calls, `inference_substrate` SHALL state the
+explicit no-live-LLM explanation and `MODEL_SPECS` SHALL still preserve the
+mandated model receipts copied from Exp 5379.
+
+Required field principles:
+
+- `status`: principle "complete only if the upstream clean structured gate is true and the panel ran."
+- `upstream_structured_protocol_clean`: principle "copied from Exp5379."
+- `constraint_tax_panel_ready`: principle "true only if deterministic state/tool-call evidence exists and unsafe_false_accepts=0."
+- `MODEL_SPECS`: principle "list containing all mandated local GGUF model specs considered for live LLM panel results."
+- `selected_model_spec`: principle "exact model spec used if live LLM calls ran."
+- `inference_substrate`: principle "concrete runtime path or explicit no-live-LLM explanation."
+- `fixture_count`: principle "number of paired fixtures."
+- `constrained_schema_validity_rate`: principle "schema-valid fraction under constraints."
+- `unconstrained_schema_validity_rate`: principle "schema-valid fraction without constraints."
+- `constrained_semantic_success_rate`: principle "semantic success fraction under constraints."
+- `unconstrained_semantic_success_rate`: principle "semantic success fraction without constraints."
+- `wrong_valid_count`: principle "schema-valid but semantically wrong outputs."
+- `deterministic_state_evidence_count`: principle "fixtures with initial state, final state, and verifier predicate evidence."
+- `tool_action_reachability_rate`: principle "fraction of required tool/action sequences reached."
+- `latency_or_token_overhead`: principle "measured constraint overhead."
+- `unsafe_false_accepts`: principle "count of invalid/unsafe outputs accepted as valid."
+- `honest_verdict`: principle "one-line result or block reason."
+
+### SCENARIO-VERIFY-5380: Clean Structured Gate Enables State-Evidence Constraint Tax
+
+Given Exp 5379 reports `structured_protocol_clean=true` and includes the
+mandated SOTA GGUF `MODEL_SPECS`, when Exp 5380 runs, then it executes paired
+unconstrained-vs-constrained fixtures, records deterministic initial/final
+state evidence, tool-call traces, verifier predicates, response-text fallback,
+schema validity, semantic correctness, wrong-valid outputs, tool/action
+reachability, latency/token overhead, and unsafe false accepts, writes
+`results/experiment_5380_constraint_tax_tool_action_panel_v3_v490.json`, and
+sets `constraint_tax_panel_ready=true` only if deterministic evidence exists
+and `unsafe_false_accepts=0`.
+
+If Exp 5379 is missing, malformed, or reports `structured_protocol_clean=false`,
+then Exp 5380 writes the same result path with `status=blocked`,
+`upstream_structured_protocol_clean=false`,
+`constraint_tax_panel_ready=false`, zero paired fixtures, an explicit
+`honest_verdict` block reason, and no constraint-tax readiness claim.
+
+## Implementation Status (REQ-VERIFY-5380)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5380 | Planned (`python/carnot/experiment_5380_constraint_tax_tool_action_panel_v3_v490.py`, `results/experiment_5380_constraint_tax_tool_action_panel_v3_v490.json`) | Planned (`tests/python/test_experiment_5380_constraint_tax_tool_action_panel_v3_v490.py`) |
+
 ### REQ-VERIFY-5379: Live Structured Clean Gate Rerun V490
 
 The repository SHALL provide Exp 5379 at
