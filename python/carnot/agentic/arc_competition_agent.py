@@ -1186,6 +1186,21 @@ class StepwiseExplorer:
                     )
                 except Exception:
                     pass
+            action_prior = getattr(self, "action_prior", None)
+            if (
+                action_prior is not None
+                and hasattr(action_prior, "observe_transition")
+                and o.get("previous_frame") is not None
+            ):
+                try:
+                    action_prior.observe_transition(
+                        o.get("previous_frame") or o.get("grid"),
+                        int(o["action"]),
+                        o.get("data"),
+                        latest,
+                    )
+                except Exception:
+                    pass
             if level_increased:
                 fcs = getattr(self, "frame_change_scorer", None)
                 if fcs is not None and hasattr(fcs, "reset"):
@@ -1194,6 +1209,17 @@ class StepwiseExplorer:
                     except TypeError:
                         try:
                             fcs.reset()
+                        except Exception:
+                            pass
+                    except Exception:
+                        pass
+                action_prior = getattr(self, "action_prior", None)
+                if action_prior is not None and hasattr(action_prior, "reset"):
+                    try:
+                        action_prior.reset(level=int(lvl), reset_to_prior=True)
+                    except TypeError:
+                        try:
+                            action_prior.reset()
                         except Exception:
                             pass
                     except Exception:

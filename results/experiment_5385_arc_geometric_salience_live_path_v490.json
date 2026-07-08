@@ -1,0 +1,206 @@
+{
+  "attempt": {
+    "actions_taken": 35,
+    "attempted_level": 3,
+    "failure_mode": "bounded_budget_no_levelup",
+    "geometric_prior_diagnostics": {
+      "base_prior": {
+        "large_flat_deprioritization": true,
+        "max_component_fraction": 0.45,
+        "salient_colors": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "source": "single_color_connected_component_tiers",
+        "status_bar_color": 16,
+        "status_bar_deprioritization": true
+      },
+      "geodesic_anchor_count": 0,
+      "geodesic_weight": 250.0,
+      "hyperbolic_or_geodesic_ranking_enabled": true,
+      "hyperbolic_weight": 25.0,
+      "source": "geometric_geodesic_blob_salience",
+      "transition_anchors": []
+    },
+    "max_level_reached": 2,
+    "new_level_banked": false,
+    "no_outer_loop_re": true,
+    "offline_ground_truth_bfs_used": false,
+    "offline_reproduced": false,
+    "offline_source_reading_used": false,
+    "per_game_adapter_used": false,
+    "reproduced_levels": 2,
+    "reproduction_gate": {
+      "claimed_level": 0,
+      "game": "re86",
+      "mode": "offline_reproduction_gate_no_new_level_claim",
+      "reached_level": 0,
+      "reproduced": false
+    },
+    "root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "runtime_self_discovery": true,
+    "self_discovery_lever": "geometric_salience_action_prior",
+    "solution_labels": [],
+    "target_game": "re86",
+    "target_level_before": 2
+  },
+  "attempted_level": 3,
+  "duration_s": 1.3361478629522026,
+  "experiment": "experiment_5385_arc_geometric_salience_live_path_v490",
+  "experiment_id": 5385,
+  "failure_mode": "bounded_budget_no_levelup",
+  "field_principles": {
+    "attempted_level": {
+      "principle": "target level attempted."
+    },
+    "failure_mode": {
+      "principle": "if no bank, concrete live-path blocker."
+    },
+    "geometric_salience_live_reachable": {
+      "principle": "true only if the live agent can use the salience signal without outer-loop help."
+    },
+    "honest_verdict": {
+      "principle": "one-line ARC outcome."
+    },
+    "hyperbolic_or_geodesic_ranking_enabled": {
+      "principle": "whether the GeoWorld-inspired ranking was active."
+    },
+    "live_attempt_count": {
+      "principle": "number of live attempts."
+    },
+    "new_level_banked": {
+      "principle": "true only if the live agent self-discovered a new reproducible level."
+    },
+    "no_duplicate_solve": {
+      "principle": "must be true for credited deliverables."
+    },
+    "no_outer_loop_re": {
+      "principle": "must be true."
+    },
+    "no_per_game_adapter": {
+      "principle": "must be true."
+    },
+    "offline_reproduced": {
+      "principle": "true only if a live-agent-discovered solve was replayed/reproduced for banking; must not mean offline BFS or outer-loop reverse engineering."
+    },
+    "registry_precheck_done": {
+      "principle": "must be true."
+    },
+    "reproduced_levels": {
+      "principle": "level count after this task; for a credited first-contact solve this must satisfy reproduced_levels>=1, and for a deeper solve it must be at least target_level_before+1."
+    },
+    "solve_provenance": {
+      "principle": "must equal live_agent_self_discovery for any credited solve."
+    },
+    "status": {
+      "principle": "complete, honest_null, or duplicate_blocked with evidence."
+    },
+    "target_game": {
+      "principle": "selected game id."
+    },
+    "target_level_before": {
+      "principle": "reproduced level count before this task."
+    }
+  },
+  "geometric_salience_live_reachable": true,
+  "honest_verdict": "no-bank: re86 L3 bounded_budget_no_levelup",
+  "hyperbolic_or_geodesic_ranking_enabled": true,
+  "live_attempt_count": 1,
+  "live_diagnostics": {
+    "action_prior_source": "geometric_geodesic_blob_salience",
+    "geometric_salience_live_reachable": true,
+    "hyperbolic_or_geodesic_ranking_enabled": true
+  },
+  "milestone": "2026.07.490",
+  "new_level_banked": false,
+  "no_duplicate_solve": true,
+  "no_outer_loop_re": true,
+  "no_per_game_adapter": true,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "no_outer_loop_re": true,
+    "no_per_game_adapter": true,
+    "offline_arcade_available": true,
+    "registry_present": true,
+    "spec_has_req_5385": true
+  },
+  "rank_measurement": {
+    "after_rank": 0,
+    "before_rank": 1,
+    "geometric_first_source": "near_changed_button",
+    "geometric_rank_delta": 1,
+    "legacy_first_source": "far_equal_button",
+    "prior_diagnostics": {
+      "base_prior": {
+        "large_flat_deprioritization": true,
+        "max_component_fraction": 0.45,
+        "salient_colors": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "source": "single_color_connected_component_tiers",
+        "status_bar_color": 16,
+        "status_bar_deprioritization": true
+      },
+      "geodesic_anchor_count": 1,
+      "geodesic_weight": 500.0,
+      "hyperbolic_or_geodesic_ranking_enabled": true,
+      "hyperbolic_weight": 25.0,
+      "source": "geometric_geodesic_blob_salience",
+      "transition_anchors": [
+        [
+          14.5,
+          14.5
+        ]
+      ]
+    }
+  },
+  "registry_precheck_done": true,
+  "registry_total_after": 69,
+  "registry_total_before": 69,
+  "reproduced_levels": 2,
+  "result_path": "results/experiment_5385_arc_geometric_salience_live_path_v490.json",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5385",
+    "SCENARIO-ARC-FCP-5385"
+  ],
+  "status": "honest_null",
+  "target_game": "re86",
+  "target_level_before": 2,
+  "target_selection": {
+    "attempted_level": 3,
+    "no_duplicate_solve": true,
+    "registry_precheck_done": true,
+    "selection_reason": "preferred_re86_l3_not_banked",
+    "status": "selected",
+    "target_game": "re86",
+    "target_level_before": 2
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5385_arc_geometric_salience_live_path_v490.py -q --no-cov",
+    ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    ".venv/bin/pytest tests/python/test_experiment_5385_arc_geometric_salience_live_path_v490.py -q -o addopts= --cov=python/carnot/agentic/arc_geometric_salience.py --cov=python/carnot/experiment_5385_arc_geometric_salience_live_path_v490.py --cov-report=term-missing --cov-fail-under=100",
+    ".venv/bin/ruff check python/carnot/agentic/arc_geometric_salience.py python/carnot/agentic/arc_competition_agent.py python/carnot/experiment_5385_arc_geometric_salience_live_path_v490.py tests/python/test_experiment_5385_arc_geometric_salience_live_path_v490.py",
+    ".venv/bin/ruff format --check python/carnot/agentic/arc_geometric_salience.py python/carnot/agentic/arc_competition_agent.py python/carnot/experiment_5385_arc_geometric_salience_live_path_v490.py tests/python/test_experiment_5385_arc_geometric_salience_live_path_v490.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
