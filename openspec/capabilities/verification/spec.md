@@ -28939,6 +28939,101 @@ details, and no learned or forced-hint acceptance claim.
 |---|---|---|
 | REQ-VERIFY-5383 | Planned (`python/carnot/experiment_5383_overwrite_guidance_scale_validity_v490.py`, `results/experiment_5383_overwrite_guidance_scale_validity_v490.json`) | Planned (`tests/python/test_experiment_5383_overwrite_guidance_scale_validity_v490.py`) |
 
+### REQ-VERIFY-5384: CPU p-bit Boundary/Overwrite Joint Diagnostic V490
+
+The repository SHALL provide Exp 5384 at
+`python/carnot/experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.py`
+and write
+`results/experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, board timing path, or modifying
+`scripts/research_conductor.py`. Exp 5384 SHALL reuse the Exp 5359 CPU p-bit
+schedule fixtures, the Exp 5371 p-bit boundary-exchange schedule, and the Exp
+5383 overwrite-guidance scale-validity fixtures where possible. The diagnostic
+SHALL restrict joint scoring to fixture ids shared by the p-bit boundary rows
+and overwrite-guidance rows, and SHALL report that shared fixture count rather
+than silently mixing unrelated QSTR-only or repair-only cases into the joint
+score.
+
+The diagnostic SHALL compare monolithic p-bit, boundary-exchange, and
+overwrite-guided variants over the tested communication-to-update ratios
+(`eta_values`). Monolithic p-bit rows SHALL establish the CPU sampler baseline
+for conflicts and convergence steps. Boundary-exchange rows SHALL record
+deltas versus that monolithic baseline at each eta. Overwrite-guided rows SHALL
+pair the shared boundary rows with overwrite-capable solver guidance and SHALL
+record solver-authoritative projection validity, fallback completeness,
+overwrite status, and unsafe false accepts. Boundary exchange MAY explain
+conflict or convergence changes, and overwrite guidance MAY preserve validity
+by completing, rejecting, overwriting, or falling back from hints, but neither
+path may certify an invalid output or claim hardware speedup.
+
+The runner SHALL record conflicts, convergence steps, validity, fallback
+completeness, false accepts, eta summaries, source readiness, and per-shared
+fixture rows. `status` SHALL be `complete` only if the CPU diagnostic ran;
+otherwise it SHALL be `honest_blocked` with precise blocker details.
+`pbit_boundary_overwrite_ready` SHALL be true only when the shared results are
+interpretable, overwrite-capable rows preserve post-projection validity and
+fallback completeness, unsafe false accepts are zero, tests are recorded, and
+the run remains CPU simulation-only. The artifact SHALL set
+`simulation_only=true` and `hardware_speedup_claim=false` regardless of CPU
+improvements.
+
+The artifact SHALL include `status`, `pbit_boundary_overwrite_ready`,
+`simulation_only`, `hardware_speedup_claim`, `fixture_count`, `eta_values`,
+`eta_threshold_estimate`, `solver_overwrite_enabled`,
+`conflict_delta_vs_monolithic`, `convergence_delta_vs_monolithic`,
+`post_projection_validity_rate`, `fallback_completeness_rate`,
+`unsafe_false_accepts`, and `honest_verdict`. `honest_verdict` SHALL start with
+`complete:` or `blocked_` and SHALL state whether the CPU joint diagnostic found
+an interpretable relationship between boundary exchange and overwrite-capable
+solver guidance.
+
+Required field principles:
+
+- `status`: principle "complete only if the CPU diagnostic ran or honest_blocked if prerequisites are missing."
+- `pbit_boundary_overwrite_ready`: principle "true only if results are interpretable and unsafe_false_accepts=0."
+- `simulation_only`: principle "must be true."
+- `hardware_speedup_claim`: principle "must be false."
+- `fixture_count`: principle "number of shared fixtures."
+- `eta_values`: principle "list of boundary-exchange ratios tested."
+- `eta_threshold_estimate`: principle "estimated threshold where boundary exchange approaches monolithic behavior."
+- `solver_overwrite_enabled`: principle "whether overwrite guidance was enabled in the joint condition."
+- `conflict_delta_vs_monolithic`: principle "conflict count difference vs monolithic p-bit run."
+- `convergence_delta_vs_monolithic`: principle "convergence step difference vs monolithic p-bit run."
+- `post_projection_validity_rate`: principle "fraction valid after solver projection."
+- `fallback_completeness_rate`: principle "fraction safely completed by fallback."
+- `unsafe_false_accepts`: principle "count of invalid outputs accepted as valid."
+- `honest_verdict`: principle "one-line result or block reason."
+
+### SCENARIO-VERIFY-5384: Boundary Exchange Is Joined With Overwrite Guidance On Shared Fixtures
+
+Given the checked-in Exp 5371 boundary-exchange artifact and Exp 5383
+overwrite-guidance artifact,
+When Exp 5384 intersects their fixture ids and evaluates monolithic,
+boundary-exchange, and overwrite-guided joint rows over every tested eta,
+Then every shared fixture records p-bit conflicts and convergence steps versus
+the monolithic baseline, overwrite-capable projection validity, fallback
+completeness, unsafe false-accept status, `simulation_only=true`, and
+`hardware_speedup_claim=false`; the terminal artifact records `eta_values`, an
+eta threshold estimate, conflict and convergence deltas versus monolithic,
+post-projection validity, fallback completeness, `unsafe_false_accepts=0`, and
+`pbit_boundary_overwrite_ready=true` only when tests are recorded and the joint
+rows are interpretable.
+
+If either source artifact is missing or not ready, no fixture ids are shared,
+required eta ratios are absent, overwrite-capable rows are missing, fallback
+completeness drops below 1.0, post-projection validity is incomplete, an
+invalid output is accepted as valid, tests are not recorded, a non-CPU substrate
+is used, or a hardware speedup claim is made, then the same runner writes an
+`honest_blocked` artifact with `pbit_boundary_overwrite_ready=false`, blocker
+details, and no hardware-speedup claim.
+
+## Implementation Status (REQ-VERIFY-5384)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5384 | Planned (`python/carnot/experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.py`, `results/experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.json`) | Planned (`tests/python/test_experiment_5384_pbit_boundary_overwrite_joint_diagnostic_v490.py`) |
+
 ### REQ-VERIFY-5371: CPU p-bit Boundary-Exchange Schedule Diagnostic V489
 
 The repository SHALL provide Exp 5371 at
