@@ -1,0 +1,1904 @@
+{
+  "constraint_family_counts": {
+    "api_call_witness": 1,
+    "arithmetic_finite_domain": 1,
+    "benign": 1,
+    "ontology_triple_update": 1,
+    "schema_only_trap": 2,
+    "semantic_contradiction": 1,
+    "unreachable_tool_action": 1
+  },
+  "exact_final_authority": true,
+  "experiment_id": "experiment_5443_verifier_potential_prefix_fixture_v495",
+  "field_principles": {
+    "constraint_family_counts": "taxonomy coverage.",
+    "exact_final_authority": "no learned-score certificate.",
+    "fixture_count": "fixture coverage.",
+    "honest_verdict": "terminal status; start with \"complete:\" or \"blocked:\".",
+    "inference_substrate": "no hidden live model inference.",
+    "metric_independence_checks_passed": "tautology prevention.",
+    "prefix_final_disagreement_cases": "detects misleading partial scores.",
+    "prefix_potential_functions": "reproducible scoring definition.",
+    "reproducibility_checksum": "artifact reproducibility.",
+    "reward_evaluation_budget": "generation guidance cost accounting.",
+    "row_provenance_checksum": "row-level reproducibility.",
+    "verifier_potential_fixture_ready": "downstream gate."
+  },
+  "fixture_checksums": [
+    "bcb19ae574e3ec99e976d8ee44f014492ff1bc954048d55832a0b4da04c4e56d",
+    "b13584fe3ee18fe751eedb4d4c75ac6004634cacfc113bf30640be2eed2f514a",
+    "e3ce42a0151868ba6f8c02531e5c7f61404bbbfddd8ea51185342d600c9a843b",
+    "fa843ec28310a5a0425707d2a9091e30da6f5b6a58cffb3f2928567d1214815b",
+    "ff4d5e5a3afb6fa2691ade3d9d1441cc75a5ad6e274091b0be6cb036f64d83ae",
+    "b04f5ae33848af601755fdc96e8569c01e0ec7c13698d830ca439ddd95a672fc",
+    "635f5e28845a2ba3e02d92cad3f7aac15779b47d7553173330688c35e6afcc90",
+    "9cb991ac646541764246203d55d04afdcb2a2d29848677e2576f2c326d5f1d7e"
+  ],
+  "fixture_count": 8,
+  "fixture_rows": [
+    {
+      "accepted_by_final_authority": false,
+      "allowed_keys": [
+        "kind",
+        "payload"
+      ],
+      "constraint_family": "schema_only_trap",
+      "exact_final_verdict": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "schema_exact_failed"
+        ],
+        "overrides_prefix_potential": true,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "schema_only_trap_exact"
+        ]
+      },
+      "final_output": {
+        "admin_override": true,
+        "kind": "claim",
+        "payload": {
+          "answer": "yes"
+        }
+      },
+      "fixture_checksum": "bcb19ae574e3ec99e976d8ee44f014492ff1bc954048d55832a0b4da04c4e56d",
+      "fixture_id": "schema_extra_admin_override",
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-001:empty",
+          "reward_evaluation_cost_units": 11
+        },
+        {
+          "accepted_by_potential": true,
+          "accepted_functions": [
+            "schema_key_coverage"
+          ],
+          "fields": {
+            "kind": "claim",
+            "payload": {
+              "answer": "yes"
+            }
+          },
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "accept",
+              "evidence": {
+                "present_required_keys": [
+                  "kind",
+                  "payload"
+                ]
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 1.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-001:required-keys",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "kind",
+        "payload"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "schema_extra_admin_override",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-001",
+        "total_cost_units": 27
+      },
+      "row_checksum": "8ee1deb70433ad1f91652821bca50fdf5e54955f7e5c77c7c89d371a141cb655",
+      "row_id": "5443-001"
+    },
+    {
+      "accepted_by_final_authority": false,
+      "allowed_keys": [
+        "kind",
+        "payload"
+      ],
+      "constraint_family": "schema_only_trap",
+      "exact_final_verdict": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "schema_exact_failed"
+        ],
+        "overrides_prefix_potential": false,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "schema_only_trap_exact"
+        ]
+      },
+      "final_output": {
+        "kind": "claim"
+      },
+      "fixture_checksum": "b13584fe3ee18fe751eedb4d4c75ac6004634cacfc113bf30640be2eed2f514a",
+      "fixture_id": "schema_missing_payload",
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-002:empty",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "kind",
+        "payload"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 0,
+        "accepted_prefix_count": 0,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "schema_missing_payload",
+        "potential_evaluations": 6,
+        "prefix_cost_units": 11,
+        "prefix_count": 1,
+        "row_id": "5443-002",
+        "total_cost_units": 16
+      },
+      "row_checksum": "be24361a212ea4d8f64ccdd7d1d2962eac697f7325b07e6ab95d36e6b7d1a584",
+      "row_id": "5443-002"
+    },
+    {
+      "accepted_by_final_authority": false,
+      "allowed_keys": [
+        "subject",
+        "relation",
+        "object",
+        "negated_object"
+      ],
+      "constraint_family": "semantic_contradiction",
+      "exact_final_verdict": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "semantic_contradiction_detected"
+        ],
+        "overrides_prefix_potential": true,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "semantic_contradiction_exact"
+        ]
+      },
+      "final_output": {
+        "negated_object": "open",
+        "object": "open",
+        "relation": "state",
+        "subject": "door-17"
+      },
+      "fixture_checksum": "e3ce42a0151868ba6f8c02531e5c7f61404bbbfddd8ea51185342d600c9a843b",
+      "fixture_id": "semantic_open_and_not_open",
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-003:empty",
+          "reward_evaluation_cost_units": 11
+        },
+        {
+          "accepted_by_potential": true,
+          "accepted_functions": [
+            "schema_key_coverage"
+          ],
+          "fields": {
+            "object": "open",
+            "relation": "state",
+            "subject": "door-17"
+          },
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "accept",
+              "evidence": {
+                "present_required_keys": [
+                  "subject",
+                  "relation",
+                  "object"
+                ]
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 1.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-003:visible-claim",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "subject",
+        "relation",
+        "object"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "semantic_open_and_not_open",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-003",
+        "total_cost_units": 27
+      },
+      "row_checksum": "d32303d909be8cb4d87ddd3daedfe5159fa794651973b937344603e5ab110cb2",
+      "row_id": "5443-003"
+    },
+    {
+      "accepted_by_final_authority": false,
+      "action_constraints": {
+        "allowed_tools": [
+          "cancel_order",
+          "ship_order",
+          "lookup_inventory"
+        ],
+        "reachable_states": [
+          "paid"
+        ]
+      },
+      "allowed_keys": [
+        "tool",
+        "order_state",
+        "lock_active"
+      ],
+      "constraint_family": "unreachable_tool_action",
+      "exact_final_verdict": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "lock_blocks_tool_action"
+        ],
+        "overrides_prefix_potential": true,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "unreachable_tool_action_exact"
+        ]
+      },
+      "final_output": {
+        "lock_active": true,
+        "order_state": "paid",
+        "tool": "cancel_order"
+      },
+      "fixture_checksum": "fa843ec28310a5a0425707d2a9091e30da6f5b6a58cffb3f2928567d1214815b",
+      "fixture_id": "unreachable_cancel_locked_order",
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-004:empty",
+          "reward_evaluation_cost_units": 11
+        },
+        {
+          "accepted_by_potential": true,
+          "accepted_functions": [
+            "schema_key_coverage",
+            "action_allowlist_potential"
+          ],
+          "fields": {
+            "tool": "cancel_order"
+          },
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "accept",
+              "evidence": {
+                "present_required_keys": [
+                  "tool"
+                ]
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 1.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "accept",
+              "evidence": {
+                "tool_allowed": true,
+                "tool_visible": true
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.6
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-004:tool-name",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "tool"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "unreachable_cancel_locked_order",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-004",
+        "total_cost_units": 27
+      },
+      "row_checksum": "4701b53f1f6ae5d5d56e82bdf3e5e207120d3deda3f3b14d0104fe5a0ddd7c29",
+      "row_id": "5443-004"
+    },
+    {
+      "accepted_by_final_authority": false,
+      "allowed_keys": [
+        "x",
+        "y",
+        "sum"
+      ],
+      "constraint_family": "arithmetic_finite_domain",
+      "domain_fields": [
+        "x",
+        "y",
+        "sum"
+      ],
+      "exact_final_verdict": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "arithmetic_relation_failed"
+        ],
+        "overrides_prefix_potential": true,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "arithmetic_finite_domain_exact"
+        ]
+      },
+      "final_output": {
+        "sum": 6,
+        "x": 2,
+        "y": 3
+      },
+      "finite_domain": {
+        "max": 9,
+        "min": 0
+      },
+      "fixture_checksum": "ff4d5e5a3afb6fa2691ade3d9d1441cc75a5ad6e274091b0be6cb036f64d83ae",
+      "fixture_id": "arithmetic_wrong_sum",
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-005:empty",
+          "reward_evaluation_cost_units": 11
+        },
+        {
+          "accepted_by_potential": true,
+          "accepted_functions": [
+            "schema_key_coverage"
+          ],
+          "fields": {
+            "x": 2,
+            "y": 3
+          },
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "accept",
+              "evidence": {
+                "present_required_keys": [
+                  "x",
+                  "y"
+                ]
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 1.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": [
+                  "x",
+                  "y"
+                ],
+                "in_domain": true
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.7
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-005:operands",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "x",
+        "y"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "arithmetic_wrong_sum",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-005",
+        "total_cost_units": 27
+      },
+      "row_checksum": "64339c9e68b881063509b937c21922a0cb96fe4eeaadd9a4f4802a3d75c4eb79",
+      "row_id": "5443-005"
+    },
+    {
+      "accepted_by_final_authority": false,
+      "allowed_keys": [
+        "subject",
+        "predicate",
+        "object",
+        "also_parent"
+      ],
+      "constraint_family": "ontology_triple_update",
+      "exact_final_verdict": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "ontology_cycle_detected"
+        ],
+        "overrides_prefix_potential": true,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "ontology_triple_update_exact"
+        ]
+      },
+      "final_output": {
+        "also_parent": "bolt-7",
+        "object": "assembly-1",
+        "predicate": "part_of",
+        "subject": "bolt-7"
+      },
+      "fixture_checksum": "b04f5ae33848af601755fdc96e8569c01e0ec7c13698d830ca439ddd95a672fc",
+      "fixture_id": "ontology_cycle_update",
+      "ontology": {
+        "object_type": "assembly",
+        "predicate": "part_of",
+        "type_map": {
+          "assembly-1": "assembly",
+          "bolt-7": "part"
+        }
+      },
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-006:empty",
+          "reward_evaluation_cost_units": 11
+        },
+        {
+          "accepted_by_potential": true,
+          "accepted_functions": [
+            "schema_key_coverage",
+            "ontology_shape_potential"
+          ],
+          "fields": {
+            "object": "assembly-1",
+            "predicate": "part_of",
+            "subject": "bolt-7"
+          },
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "accept",
+              "evidence": {
+                "present_required_keys": [
+                  "subject",
+                  "predicate",
+                  "object"
+                ]
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 1.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "accept",
+              "evidence": {
+                "shape_ok": true,
+                "triple_visible": true
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.7
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-006:triple",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "subject",
+        "predicate",
+        "object"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "ontology_cycle_update",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-006",
+        "total_cost_units": 27
+      },
+      "row_checksum": "81e2c25655a332c3f347cd415938591e4ed9653b0cacfc0741b56385f361c6f0",
+      "row_id": "5443-006"
+    },
+    {
+      "accepted_by_final_authority": false,
+      "allowed_keys": [
+        "method",
+        "path",
+        "witness"
+      ],
+      "api": {
+        "allowed_calls": [
+          [
+            "POST",
+            "/orders/42/refund"
+          ]
+        ],
+        "expected_signature": "sig:refund:42:approved"
+      },
+      "constraint_family": "api_call_witness",
+      "exact_final_verdict": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "api_witness_signature_failed"
+        ],
+        "overrides_prefix_potential": true,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "api_call_witness_exact"
+        ]
+      },
+      "final_output": {
+        "method": "POST",
+        "path": "/orders/42/refund",
+        "witness": {
+          "nonce_reused": true,
+          "signature": "sig:refund:42:forged"
+        }
+      },
+      "fixture_checksum": "635f5e28845a2ba3e02d92cad3f7aac15779b47d7553173330688c35e6afcc90",
+      "fixture_id": "api_refund_bad_witness",
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-007:empty",
+          "reward_evaluation_cost_units": 11
+        },
+        {
+          "accepted_by_potential": true,
+          "accepted_functions": [
+            "schema_key_coverage",
+            "api_shape_potential"
+          ],
+          "fields": {
+            "method": "POST",
+            "path": "/orders/42/refund"
+          },
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "accept",
+              "evidence": {
+                "present_required_keys": [
+                  "method",
+                  "path"
+                ]
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 1.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "accept",
+              "evidence": {
+                "call_allowed": true,
+                "method_path_visible": true
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.7
+            }
+          ],
+          "prefix_id": "5443-007:method-path",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "method",
+        "path"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "api_refund_bad_witness",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-007",
+        "total_cost_units": 27
+      },
+      "row_checksum": "03377f829a8c881a49bb4f0bb8ab727ac2e1178f1bb8eb45c408c35d9495d1be",
+      "row_id": "5443-007"
+    },
+    {
+      "accepted_by_final_authority": true,
+      "allowed_keys": [
+        "claim_key",
+        "claim_value",
+        "evidence"
+      ],
+      "constraint_family": "benign",
+      "exact_final_verdict": {
+        "accepted": true,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [],
+        "overrides_prefix_potential": false,
+        "verified": true,
+        "verifiers_run": [
+          "schema_exact",
+          "benign_exact"
+        ]
+      },
+      "final_output": {
+        "claim_key": "bolt_count",
+        "claim_value": 4,
+        "evidence": {
+          "bolt_count": 4
+        }
+      },
+      "fixture_checksum": "9cb991ac646541764246203d55d04afdcb2a2d29848677e2576f2c326d5f1d7e",
+      "fixture_id": "benign_inventory_claim",
+      "prefixes": [
+        {
+          "accepted_by_potential": false,
+          "accepted_functions": [],
+          "fields": {},
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "abstain",
+              "evidence": {
+                "present_required_keys": []
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-008:empty",
+          "reward_evaluation_cost_units": 11
+        },
+        {
+          "accepted_by_potential": true,
+          "accepted_functions": [
+            "schema_key_coverage"
+          ],
+          "fields": {
+            "claim_key": "bolt_count",
+            "claim_value": 4
+          },
+          "potential_evaluations": [
+            {
+              "cost_units": 1,
+              "decision": "accept",
+              "evidence": {
+                "present_required_keys": [
+                  "claim_key",
+                  "claim_value"
+                ]
+              },
+              "function_id": "schema_key_coverage",
+              "monotone": true,
+              "score": 1.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "visible_pair": false
+              },
+              "function_id": "semantic_pair_consistency",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "tool_visible": false
+              },
+              "function_id": "action_allowlist_potential",
+              "monotone": true,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "domain_fields_visible": []
+              },
+              "function_id": "finite_domain_bounds",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "triple_visible": false
+              },
+              "function_id": "ontology_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            },
+            {
+              "cost_units": 2,
+              "decision": "abstain",
+              "evidence": {
+                "method_path_visible": false
+              },
+              "function_id": "api_shape_potential",
+              "monotone": false,
+              "score": 0.0
+            }
+          ],
+          "prefix_id": "5443-008:claim",
+          "reward_evaluation_cost_units": 11
+        }
+      ],
+      "required_keys": [
+        "claim_key",
+        "claim_value"
+      ],
+      "reward_evaluation_budget": {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "benign_inventory_claim",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-008",
+        "total_cost_units": 27
+      },
+      "row_checksum": "c884d0338faa2d9c9b1520d95ae1b6a32161268d292a6f4ea0c9a6f8222ffcf7",
+      "row_id": "5443-008"
+    }
+  ],
+  "honest_verdict": "complete: deterministic verifier-potential prefix fixture ready",
+  "inference_substrate": "deterministic_verifier_fixture_no_llm",
+  "metric_details": {
+    "constraint_family_counts": {
+      "api_call_witness": 1,
+      "arithmetic_finite_domain": 1,
+      "benign": 1,
+      "ontology_triple_update": 1,
+      "schema_only_trap": 2,
+      "semantic_contradiction": 1,
+      "unreachable_tool_action": 1
+    },
+    "exact_final_rows": 8,
+    "final_rejected_row_ids": [
+      "5443-001",
+      "5443-002",
+      "5443-003",
+      "5443-004",
+      "5443-005",
+      "5443-006",
+      "5443-007"
+    ],
+    "fixture_checksums_match": true,
+    "fixture_count": 8,
+    "metric_independence_checks_passed": true,
+    "predicate_support": {
+      "constraint_family_counts": "group rows by constraint_family",
+      "final_rejected": "exact_final_verdict.accepted is false",
+      "fixture_count": "count every scored fixture row",
+      "prefix_final_disagreement": "exact_final_verdict.accepted is false and any prefix accepted_by_potential",
+      "reward_budget": "sum deterministic potential and exact-final evaluation costs"
+    },
+    "prefix_final_disagreement_cases": 6,
+    "prefix_final_disagreement_row_ids": [
+      "5443-001",
+      "5443-003",
+      "5443-004",
+      "5443-005",
+      "5443-006",
+      "5443-007"
+    ],
+    "row_checksums_match": true
+  },
+  "metric_independence_checks_passed": true,
+  "milestone": "2026.07.495",
+  "prefix_final_disagreement_cases": 6,
+  "prefix_potential_functions": [
+    {
+      "cost_units": 1,
+      "decision_semantics": "accept means prefix guidance only, never final safety.",
+      "function_id": "schema_key_coverage",
+      "monotone": true,
+      "monotone_scope": "required-key coverage over additive prefixes only.",
+      "score_definition": "score is present required top-level keys divided by required keys; accept only when all required keys are present",
+      "unknown_prefix_policy": "abstain with neutral score 0.0 when no required key is present."
+    },
+    {
+      "cost_units": 2,
+      "decision_semantics": "accept means the visible pair is consistent only.",
+      "function_id": "semantic_pair_consistency",
+      "monotone": false,
+      "monotone_scope": "later fields can introduce a contradiction.",
+      "score_definition": "accept when object and negated_object are both present and different; reject when both are present and equal",
+      "unknown_prefix_policy": "abstain with neutral score 0.0 until both semantic fields exist."
+    },
+    {
+      "cost_units": 2,
+      "decision_semantics": "accept does not prove state reachability.",
+      "function_id": "action_allowlist_potential",
+      "monotone": true,
+      "monotone_scope": "tool-name membership is stable once the tool field is emitted.",
+      "score_definition": "accept when the visible tool name is in the deterministic allowlist.",
+      "unknown_prefix_policy": "abstain with neutral score 0.0 when tool is absent."
+    },
+    {
+      "cost_units": 2,
+      "decision_semantics": "accept does not prove cross-field arithmetic relations.",
+      "function_id": "finite_domain_bounds",
+      "monotone": false,
+      "monotone_scope": "later numeric fields can violate the finite-domain relation.",
+      "score_definition": "accept when all declared finite-domain fields visible so far are integers inside their row-specific bounds",
+      "unknown_prefix_policy": "abstain with neutral score 0.0 when no domain field is visible."
+    },
+    {
+      "cost_units": 2,
+      "decision_semantics": "accept does not prove acyclic ontology update closure.",
+      "function_id": "ontology_shape_potential",
+      "monotone": false,
+      "monotone_scope": "later updates can create a cycle or type conflict.",
+      "score_definition": "accept when subject, predicate, and object are visible and match the row ontology type signature",
+      "unknown_prefix_policy": "abstain with neutral score 0.0 until triple fields exist."
+    },
+    {
+      "cost_units": 2,
+      "decision_semantics": "accept does not prove witness signature validity.",
+      "function_id": "api_shape_potential",
+      "monotone": false,
+      "monotone_scope": "later witness fields can invalidate the call.",
+      "score_definition": "accept when method and path match an allowed deterministic API call.",
+      "unknown_prefix_policy": "abstain with neutral score 0.0 until method and path exist."
+    }
+  ],
+  "random_seed": 5443,
+  "reproducibility_checksum": "04e86d8bdf5ceb70c791c2e5dbd0b617eb5996dd240858142f63b2ee21ee49ba",
+  "research_conductor_modified": false,
+  "reward_evaluation_budget": {
+    "accepted_prefix_count": 7,
+    "cost_unit": "one deterministic verifier-potential or exact-final check invocation",
+    "exact_final_verifier_cost_units": 5,
+    "per_accepted_prefix": [
+      {
+        "accepted_functions": [
+          "schema_key_coverage"
+        ],
+        "cost_units": 11,
+        "fixture_id": "schema_extra_admin_override",
+        "prefix_id": "5443-001:required-keys",
+        "row_id": "5443-001"
+      },
+      {
+        "accepted_functions": [
+          "schema_key_coverage"
+        ],
+        "cost_units": 11,
+        "fixture_id": "semantic_open_and_not_open",
+        "prefix_id": "5443-003:visible-claim",
+        "row_id": "5443-003"
+      },
+      {
+        "accepted_functions": [
+          "schema_key_coverage",
+          "action_allowlist_potential"
+        ],
+        "cost_units": 11,
+        "fixture_id": "unreachable_cancel_locked_order",
+        "prefix_id": "5443-004:tool-name",
+        "row_id": "5443-004"
+      },
+      {
+        "accepted_functions": [
+          "schema_key_coverage"
+        ],
+        "cost_units": 11,
+        "fixture_id": "arithmetic_wrong_sum",
+        "prefix_id": "5443-005:operands",
+        "row_id": "5443-005"
+      },
+      {
+        "accepted_functions": [
+          "schema_key_coverage",
+          "ontology_shape_potential"
+        ],
+        "cost_units": 11,
+        "fixture_id": "ontology_cycle_update",
+        "prefix_id": "5443-006:triple",
+        "row_id": "5443-006"
+      },
+      {
+        "accepted_functions": [
+          "schema_key_coverage",
+          "api_shape_potential"
+        ],
+        "cost_units": 11,
+        "fixture_id": "api_refund_bad_witness",
+        "prefix_id": "5443-007:method-path",
+        "row_id": "5443-007"
+      },
+      {
+        "accepted_functions": [
+          "schema_key_coverage"
+        ],
+        "cost_units": 11,
+        "fixture_id": "benign_inventory_claim",
+        "prefix_id": "5443-008:claim",
+        "row_id": "5443-008"
+      }
+    ],
+    "per_row": [
+      {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "schema_extra_admin_override",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-001",
+        "total_cost_units": 27
+      },
+      {
+        "accepted_prefix_cost_units": 0,
+        "accepted_prefix_count": 0,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "schema_missing_payload",
+        "potential_evaluations": 6,
+        "prefix_cost_units": 11,
+        "prefix_count": 1,
+        "row_id": "5443-002",
+        "total_cost_units": 16
+      },
+      {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "semantic_open_and_not_open",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-003",
+        "total_cost_units": 27
+      },
+      {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "unreachable_cancel_locked_order",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-004",
+        "total_cost_units": 27
+      },
+      {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "arithmetic_wrong_sum",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-005",
+        "total_cost_units": 27
+      },
+      {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "ontology_cycle_update",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-006",
+        "total_cost_units": 27
+      },
+      {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "api_refund_bad_witness",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-007",
+        "total_cost_units": 27
+      },
+      {
+        "accepted_prefix_cost_units": 11,
+        "accepted_prefix_count": 1,
+        "final_verifier_cost_units": 5,
+        "final_verifier_evaluations": 1,
+        "fixture_id": "benign_inventory_claim",
+        "potential_evaluations": 12,
+        "prefix_cost_units": 22,
+        "prefix_count": 2,
+        "row_id": "5443-008",
+        "total_cost_units": 27
+      }
+    ],
+    "potential_function_cost_units": {
+      "action_allowlist_potential": 2,
+      "api_shape_potential": 2,
+      "finite_domain_bounds": 2,
+      "ontology_shape_potential": 2,
+      "schema_key_coverage": 1,
+      "semantic_pair_consistency": 2
+    },
+    "total_cost_units": 205,
+    "total_final_verifications": 8,
+    "total_potential_evaluations": 90
+  },
+  "row_checksums": [
+    "8ee1deb70433ad1f91652821bca50fdf5e54955f7e5c77c7c89d371a141cb655",
+    "be24361a212ea4d8f64ccdd7d1d2962eac697f7325b07e6ab95d36e6b7d1a584",
+    "d32303d909be8cb4d87ddd3daedfe5159fa794651973b937344603e5ab110cb2",
+    "4701b53f1f6ae5d5d56e82bdf3e5e207120d3deda3f3b14d0104fe5a0ddd7c29",
+    "64339c9e68b881063509b937c21922a0cb96fe4eeaadd9a4f4802a3d75c4eb79",
+    "81e2c25655a332c3f347cd415938591e4ed9653b0cacfc0741b56385f361c6f0",
+    "03377f829a8c881a49bb4f0bb8ab727ac2e1178f1bb8eb45c408c35d9495d1be",
+    "c884d0338faa2d9c9b1520d95ae1b6a32161268d292a6f4ea0c9a6f8222ffcf7"
+  ],
+  "row_provenance_checksum": "427cc11c651ca4e8ebb5a7688cf1e34b7f59afa2d89e109847798cdd43867b14",
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5443.verifier_potential_prefix_fixture.v495",
+  "spec_refs": [
+    "REQ-SAFE-5443",
+    "SCENARIO-SAFE-5443"
+  ],
+  "status": "complete",
+  "task_id": "exp5443-v495-verifier-potential-prefix-fixture",
+  "tests_run": [
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5443_verifier_potential_prefix_fixture_v495.py tests/python/test_experiment_5443_verifier_potential_prefix_fixture_v495.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_5443_verifier_potential_prefix_fixture_v495.py tests/python/test_experiment_5443_verifier_potential_prefix_fixture_v495.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5443_verifier_potential_prefix_fixture_v495.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5443_verifier_potential_prefix_fixture_v495.py -q -o addopts= && .venv/bin/coverage report --fail-under=100 --show-missing python/carnot/experiment_5443_verifier_potential_prefix_fixture_v495.py",
+      "outcome": "passed"
+    }
+  ],
+  "verifier_potential_fixture_ready": true
+}

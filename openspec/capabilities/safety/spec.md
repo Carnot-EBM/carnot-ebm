@@ -1229,6 +1229,84 @@ provenance is missing,
 **Then** validation fails closed or emits a blocked artifact, and no structured
 taxonomy replication claim is made.
 
+### REQ-SAFE-5443: Verifier-Potential Prefix Fixture V495
+
+Carnot SHALL provide Exp5443 at
+`python/carnot/experiment_5443_verifier_potential_prefix_fixture_v495.py`
+and write
+`results/experiment_5443_verifier_potential_prefix_fixture_v495.json`
+without modifying `scripts/research_conductor.py` and without invoking a live
+LLM.  The fixture SHALL prepare deterministic verifier potentials for the
+gated SOTA decoding pilot by scoring partial structured outputs while exact
+final verifiers remain the only completion authority.
+
+Fixture rows SHALL cover schema-only traps, semantic contradictions,
+unreachable tool actions, arithmetic/finite-domain constraints,
+ontology/triple updates, API-call witnesses, and benign rows.  Every row SHALL
+carry prefix records, deterministic potential evaluations, an exact final
+verdict, reward-evaluation cost accounting, a fixture checksum, and a row
+checksum.  Prefix potential functions SHALL explicitly declare their scoring
+definition, cost units, abstain/neutral behavior for unknown prefixes, and
+whether monotonicity is justified; a function SHALL mark a prefix safe only
+when its own deterministic evidence is present, never because unknown fields
+are absent.
+
+The exact final verifiers SHALL run for every completed row.  At least one
+fixture SHALL preserve a prefix that received an accepted or positive
+intermediate potential while the completed row is rejected by exact final
+verification, proving that intermediate potential is generation guidance rather
+than a certificate.  All aggregate metrics SHALL be recomputed from row records
+with independent predicates; copied aggregate values or readiness flags SHALL
+fail validation.
+
+The terminal result artifact MUST include:
+`fixture_count`, `constraint_family_counts`, `prefix_potential_functions`,
+`exact_final_authority`, `prefix_final_disagreement_cases`,
+`reward_evaluation_budget`, `row_provenance_checksum`,
+`reproducibility_checksum`, `metric_independence_checks_passed`,
+`verifier_potential_fixture_ready`, `inference_substrate`, and
+`honest_verdict`.  `inference_substrate` MUST be
+`deterministic_verifier_fixture_no_llm`, and `honest_verdict` MUST start with
+`complete:` or `blocked:`.
+
+Field principles:
+- `fixture_count`: fixture coverage.
+- `constraint_family_counts`: taxonomy coverage.
+- `prefix_potential_functions`: reproducible scoring definition.
+- `exact_final_authority`: no learned-score certificate.
+- `prefix_final_disagreement_cases`: detects misleading partial scores.
+- `reward_evaluation_budget`: generation guidance cost accounting.
+- `row_provenance_checksum`: row-level reproducibility.
+- `reproducibility_checksum`: artifact reproducibility.
+- `metric_independence_checks_passed`: tautology prevention.
+- `verifier_potential_fixture_ready`: downstream gate.
+- `inference_substrate`: no hidden live model inference.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5443: Prefix Potentials Guide But Final Verifiers Decide
+
+**Given** the deterministic V495 verifier-potential fixture is built without
+live model inference,
+
+**When** Exp5443 scores partial structured-output prefixes and then runs exact
+final verifiers on every completed row,
+
+**Then** it writes
+`results/experiment_5443_verifier_potential_prefix_fixture_v495.json`, covers
+the required constraint families, records potential-function definitions,
+records reward-evaluation budget per row and per accepted prefix, records row
+and fixture checksums, sets `exact_final_authority=true`, and sets
+`verifier_potential_fixture_ready=true` only when metric-independence and
+checksum validation pass.
+
+**And** if unknown prefixes are marked safe, if a non-monotone potential is
+declared monotone, if exact final verifier outputs are missing or overridden by
+prefix potential, if prefix/final disagreement cases are copied from another
+aggregate, or if cost accounting no longer matches row records,
+
+**Then** validation fails closed and no downstream verifier-potential fixture
+readiness claim is made.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1256,5 +1334,6 @@ taxonomy replication claim is made.
 | REQ-SAFE-5418 | Planned | Exp 5418: predictive prefix/tool-action safety diagnostic |
 | REQ-SAFE-5430 | Planned | Exp 5430: row-level structured tautology corrigendum |
 | REQ-SAFE-5431 | Planned | Exp 5431: structured constraint taxonomy replication |
+| REQ-SAFE-5443 | Planned | Exp 5443: deterministic verifier-potential prefix fixture |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
