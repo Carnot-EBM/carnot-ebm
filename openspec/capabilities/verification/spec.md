@@ -27877,6 +27877,100 @@ keeps `no_quality_claim=true`, and does not modify
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
 
+### REQ-VERIFY-5391: Constraint-Tax Scale-Up Fixtures V491
+
+The repository SHALL provide Exp 5391 at
+`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`
+and write
+`results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL build on
+the clean Exp 5379/5380 structured and constraint-tax receipts, but SHALL scale
+the deterministic panel to at least 24 fixtures spanning schema validity,
+budget arithmetic, temporal ordering, tool/action reachability, contradiction repair,
+and wrong-valid traps.
+
+Before reporting a complete result, Exp 5391 SHALL confirm that one or more
+mandated local SOTA GGUF models are cached and that GPU/offload evidence is
+available through the llama.cpp/GGUF path. The artifact `model_specs` SHALL
+include all mandated local GGUF ids:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, plus explicit fields describing which
+model rows were cached, selected for the scale-up precondition, and actually
+ran in the current deterministic panel or in the upstream live structured
+receipt. The workflow SHALL use `cached_sota_pair()`-style cache resolution
+where applicable and SHALL NOT use CPU-only legacy models as headline evidence.
+If CUDA/GPU visibility, llama.cpp GPU-offload support, or all mandated local
+GGUF cache entries are unavailable, Exp 5391 SHALL write a blocked artifact
+instead of a complete result.
+
+For each fixture, Exp 5391 SHALL record constrained and unconstrained raw
+outputs, parse validity, schema validity, semantic validity, deterministic
+final-state validity, wrong-valid status, latency, token count, initial state,
+expected final state, required action sequence, observed action sequence, and
+validator evidence. Semantic validity SHALL be computed by deterministic
+validators or solvers over parsed structured output and replayed state/action
+traces; generated text SHALL NOT be accepted as a verifier. Schema-valid but
+semantically wrong outputs SHALL be counted as wrong-valid outputs.
+
+The artifact SHALL include top-level fields `status`, `milestone`,
+`model_specs`, `gpu_offload_receipt`, `fixture_count`,
+`constrained_semantic_validity_rate`,
+`unconstrained_semantic_validity_rate`, `wrong_valid_count_constrained`,
+`wrong_valid_count_unconstrained`, `unsafe_false_accept_count`,
+`tool_action_reachability_rate`,
+`latency_ratio_constrained_vs_unconstrained`,
+`token_ratio_constrained_vs_unconstrained`, `constraint_tax_scaleup_ready`,
+and `honest_verdict`, with field principles explaining each required field.
+It SHALL also compute constraint-tax deltas for semantic-validity gain,
+wrong-valid reduction, unsafe-false-accept reduction, latency ratio, and token
+ratio. `constraint_tax_scaleup_ready` SHALL be true only if constrained
+generation improves deterministic semantic validity over unconstrained
+generation and `unsafe_false_accept_count=0`.
+
+Required field principles:
+
+- `status`: principle "complete if the scale-up ran or blocked if preconditions failed."
+- `milestone`: principle "must equal 2026.07.491."
+- `model_specs`: principle "include the mandated SOTA GGUF model names and which model(s) actually ran."
+- `gpu_offload_receipt`: principle "command, backend, offload layers, and proof this was not CPU-only headline evidence."
+- `fixture_count`: principle "total deterministic fixtures, target >=24."
+- `constrained_semantic_validity_rate`: principle "deterministic semantic pass rate."
+- `unconstrained_semantic_validity_rate`: principle "deterministic semantic pass rate."
+- `wrong_valid_count_constrained`: principle "wrong-valid accepts under constrained generation."
+- `wrong_valid_count_unconstrained`: principle "wrong-valid accepts under unconstrained generation."
+- `unsafe_false_accept_count`: principle "count across all constrained checks."
+- `tool_action_reachability_rate`: principle "deterministic reachability pass rate."
+- `latency_ratio_constrained_vs_unconstrained`: principle "measured overhead ratio."
+- `token_ratio_constrained_vs_unconstrained`: principle "measured token overhead ratio."
+- `constraint_tax_scaleup_ready`: principle "true only if constrained generation improves deterministic validity without unsafe false accepts."
+- `honest_verdict`: principle "one-line summary starting with complete: or blocked:."
+
+### SCENARIO-VERIFY-5391: Scaled Deterministic Constraint Tax With Local SOTA Preconditions
+
+Given Exp 5379 and Exp 5380 report clean structured and constraint-tax readiness,
+and given at least one mandated local SOTA GGUF cache entry plus non-retired
+GPU/offload evidence are available, when Exp 5391 runs, then it evaluates at
+least 24 deterministic paired fixtures, records the parse/schema/semantic/
+final-state/wrong-valid/latency/token fields for constrained and unconstrained
+outputs, computes constraint-tax deltas from deterministic validators, writes
+`results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`, and sets
+`constraint_tax_scaleup_ready=true` only when constrained semantic validity
+improves over unconstrained semantic validity with zero constrained unsafe
+false accepts.
+
+If the upstream clean gates are missing or false, if no mandated local SOTA GGUF
+is cached, or if GPU/offload support is unavailable, then Exp 5391 writes the
+same result path with `status=blocked`, records the failed precondition in
+`gpu_offload_receipt`, keeps `constraint_tax_scaleup_ready=false`, and does not
+claim CPU-only legacy model evidence.
+
+## Implementation Status (REQ-VERIFY-5391)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5391 | Planned (`python/carnot/experiment_5391_constraint_tax_scaleup_fixtures_v491.py`, `results/experiment_5391_constraint_tax_scaleup_fixtures_v491.json`) | Planned (`tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py`) |
+
 ### REQ-VERIFY-5380: Constraint-Tax Tool/Action Reachability Panel V490
 
 The repository SHALL provide Exp 5380 at

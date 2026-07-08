@@ -1,0 +1,4590 @@
+{
+  "aggregate_parse_schema_rates": {
+    "constrained_parse_validity_rate": 1.0,
+    "constrained_schema_validity_rate": 1.0,
+    "unconstrained_parse_validity_rate": 0.9583333333333334,
+    "unconstrained_schema_validity_rate": 0.8333333333333334
+  },
+  "blocked_preconditions": [],
+  "constrained_semantic_validity_rate": 1.0,
+  "constraint_tax_deltas": {
+    "latency_ratio": 1.966667,
+    "semantic_validity_delta": 1.0,
+    "token_ratio": 2.483871,
+    "unsafe_false_accept_reduction": 20,
+    "wrong_valid_reduction": 20
+  },
+  "constraint_tax_scaleup_ready": true,
+  "deterministic_validator_final_authority": true,
+  "experiment_id": "experiment_5391_constraint_tax_scaleup_fixtures_v491",
+  "field_principles": {
+    "constrained_semantic_validity_rate": "deterministic semantic pass rate.",
+    "constraint_tax_scaleup_ready": "true only if constrained generation improves deterministic validity without unsafe false accepts.",
+    "fixture_count": "total deterministic fixtures, target >=24.",
+    "gpu_offload_receipt": "command, backend, offload layers, and proof this was not CPU-only headline evidence.",
+    "honest_verdict": "one-line summary starting with complete: or blocked:.",
+    "latency_ratio_constrained_vs_unconstrained": "measured overhead ratio.",
+    "milestone": "must equal 2026.07.491.",
+    "model_specs": "include the mandated SOTA GGUF model names and which model(s) actually ran.",
+    "status": "complete if the scale-up ran or blocked if preconditions failed.",
+    "token_ratio_constrained_vs_unconstrained": "measured token overhead ratio.",
+    "tool_action_reachability_rate": "deterministic reachability pass rate.",
+    "unconstrained_semantic_validity_rate": "deterministic semantic pass rate.",
+    "unsafe_false_accept_count": "count across all constrained checks.",
+    "wrong_valid_count_constrained": "wrong-valid accepts under constrained generation.",
+    "wrong_valid_count_unconstrained": "wrong-valid accepts under unconstrained generation."
+  },
+  "fixture_count": 24,
+  "fixture_results": [
+    {
+      "category": "schema_validity",
+      "constrained": {
+        "declared_final_state": {
+          "inventory": {
+            "cart": {
+              "bolt": 1
+            },
+            "shelf": {
+              "bolt": 1
+            }
+          }
+        },
+        "executed_final_state": {
+          "inventory": {
+            "cart": {
+              "bolt": 1
+            },
+            "shelf": {
+              "bolt": 1
+            }
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.32,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "from": "shelf",
+              "item": "bolt",
+              "qty": 1,
+              "to": "cart"
+            },
+            "tool": "inventory.move"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "from": "shelf",
+                "item": "bolt",
+                "qty": 1,
+                "to": "cart"
+              },
+              "tool": "inventory.move"
+            }
+          ],
+          "answer": "schema_inventory_bolt satisfied by deterministic action replay.",
+          "final_state": {
+            "inventory": {
+              "cart": {
+                "bolt": 1
+              },
+              "shelf": {
+                "bolt": 1
+              }
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"from\": \"shelf\", \"item\": \"bolt\", \"qty\": 1, \"to\": \"cart\"}, \"tool\": \"inventory.move\"}], \"answer\": \"schema_inventory_bolt satisfied by deterministic action replay.\", \"final_state\": {\"inventory\": {\"cart\": {\"bolt\": 1}, \"shelf\": {\"bolt\": 1}}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 42,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "parse_json",
+        "schema_fields",
+        "state_replay"
+      ],
+      "expected_final_state": {
+        "inventory": {
+          "cart": {
+            "bolt": 1
+          },
+          "shelf": {
+            "bolt": 1
+          }
+        }
+      },
+      "fixture_id": "schema_inventory_bolt",
+      "initial_state": {
+        "inventory": {
+          "cart": {},
+          "shelf": {
+            "bolt": 2
+          }
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "from": "shelf",
+            "item": "bolt",
+            "qty": 1,
+            "to": "cart"
+          },
+          "tool": "inventory.move"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": null,
+        "executed_final_state": null,
+        "final_state_valid": false,
+        "latency_s": 0.17,
+        "observed_action_sequence": [],
+        "parse_valid": false,
+        "parsed_output": null,
+        "raw_output": "Moved it successfully.",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": false,
+        "semantic_valid": false,
+        "token_count": 12,
+        "tool_action_reached": false,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "schema_validity",
+      "constrained": {
+        "declared_final_state": {
+          "inventory": {
+            "bin": {
+              "nut": 3
+            },
+            "kit": {
+              "nut": 2
+            }
+          }
+        },
+        "executed_final_state": {
+          "inventory": {
+            "bin": {
+              "nut": 3
+            },
+            "kit": {
+              "nut": 2
+            }
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.33,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "from": "bin",
+              "item": "nut",
+              "qty": 2,
+              "to": "kit"
+            },
+            "tool": "inventory.move"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "from": "bin",
+                "item": "nut",
+                "qty": 2,
+                "to": "kit"
+              },
+              "tool": "inventory.move"
+            }
+          ],
+          "answer": "schema_inventory_nut satisfied by deterministic action replay.",
+          "final_state": {
+            "inventory": {
+              "bin": {
+                "nut": 3
+              },
+              "kit": {
+                "nut": 2
+              }
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"from\": \"bin\", \"item\": \"nut\", \"qty\": 2, \"to\": \"kit\"}, \"tool\": \"inventory.move\"}], \"answer\": \"schema_inventory_nut satisfied by deterministic action replay.\", \"final_state\": {\"inventory\": {\"bin\": {\"nut\": 3}, \"kit\": {\"nut\": 2}}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 43,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "parse_json",
+        "schema_fields",
+        "state_replay"
+      ],
+      "expected_final_state": {
+        "inventory": {
+          "bin": {
+            "nut": 3
+          },
+          "kit": {
+            "nut": 2
+          }
+        }
+      },
+      "fixture_id": "schema_inventory_nut",
+      "initial_state": {
+        "inventory": {
+          "bin": {
+            "nut": 5
+          },
+          "kit": {}
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "from": "bin",
+            "item": "nut",
+            "qty": 2,
+            "to": "kit"
+          },
+          "tool": "inventory.move"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": null,
+        "executed_final_state": null,
+        "final_state_valid": false,
+        "latency_s": 0.18000000000000002,
+        "observed_action_sequence": [],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [],
+          "answer": "missing final state"
+        },
+        "raw_output": "{\"actions\": [], \"answer\": \"missing final state\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": false,
+        "semantic_valid": false,
+        "token_count": 13,
+        "tool_action_reached": false,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "schema_validity",
+      "constrained": {
+        "declared_final_state": {
+          "inventory": {
+            "box": {
+              "washer": 3
+            },
+            "tray": {
+              "washer": 1
+            }
+          }
+        },
+        "executed_final_state": {
+          "inventory": {
+            "box": {
+              "washer": 3
+            },
+            "tray": {
+              "washer": 1
+            }
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.34,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "from": "tray",
+              "item": "washer",
+              "qty": 3,
+              "to": "box"
+            },
+            "tool": "inventory.move"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "from": "tray",
+                "item": "washer",
+                "qty": 3,
+                "to": "box"
+              },
+              "tool": "inventory.move"
+            }
+          ],
+          "answer": "schema_inventory_washer satisfied by deterministic action replay.",
+          "final_state": {
+            "inventory": {
+              "box": {
+                "washer": 3
+              },
+              "tray": {
+                "washer": 1
+              }
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"from\": \"tray\", \"item\": \"washer\", \"qty\": 3, \"to\": \"box\"}, \"tool\": \"inventory.move\"}], \"answer\": \"schema_inventory_washer satisfied by deterministic action replay.\", \"final_state\": {\"inventory\": {\"box\": {\"washer\": 3}, \"tray\": {\"washer\": 1}}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 44,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "parse_json",
+        "schema_fields",
+        "state_replay"
+      ],
+      "expected_final_state": {
+        "inventory": {
+          "box": {
+            "washer": 3
+          },
+          "tray": {
+            "washer": 1
+          }
+        }
+      },
+      "fixture_id": "schema_inventory_washer",
+      "initial_state": {
+        "inventory": {
+          "box": {},
+          "tray": {
+            "washer": 4
+          }
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "from": "tray",
+            "item": "washer",
+            "qty": 3,
+            "to": "box"
+          },
+          "tool": "inventory.move"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": null,
+        "executed_final_state": null,
+        "final_state_valid": false,
+        "latency_s": 0.19,
+        "observed_action_sequence": [],
+        "parse_valid": true,
+        "parsed_output": {
+          "answer": "missing actions",
+          "final_state": {}
+        },
+        "raw_output": "{\"final_state\": {}, \"answer\": \"missing actions\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": false,
+        "semantic_valid": false,
+        "token_count": 14,
+        "tool_action_reached": false,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "schema_validity",
+      "constrained": {
+        "declared_final_state": {
+          "inventory": {
+            "bag": {
+              "clip": 4
+            },
+            "drawer": {
+              "clip": 3
+            }
+          }
+        },
+        "executed_final_state": {
+          "inventory": {
+            "bag": {
+              "clip": 4
+            },
+            "drawer": {
+              "clip": 3
+            }
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.35,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "from": "drawer",
+              "item": "clip",
+              "qty": 4,
+              "to": "bag"
+            },
+            "tool": "inventory.move"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "from": "drawer",
+                "item": "clip",
+                "qty": 4,
+                "to": "bag"
+              },
+              "tool": "inventory.move"
+            }
+          ],
+          "answer": "schema_inventory_clip satisfied by deterministic action replay.",
+          "final_state": {
+            "inventory": {
+              "bag": {
+                "clip": 4
+              },
+              "drawer": {
+                "clip": 3
+              }
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"from\": \"drawer\", \"item\": \"clip\", \"qty\": 4, \"to\": \"bag\"}, \"tool\": \"inventory.move\"}], \"answer\": \"schema_inventory_clip satisfied by deterministic action replay.\", \"final_state\": {\"inventory\": {\"bag\": {\"clip\": 4}, \"drawer\": {\"clip\": 3}}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 45,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "parse_json",
+        "schema_fields",
+        "state_replay"
+      ],
+      "expected_final_state": {
+        "inventory": {
+          "bag": {
+            "clip": 4
+          },
+          "drawer": {
+            "clip": 3
+          }
+        }
+      },
+      "fixture_id": "schema_inventory_clip",
+      "initial_state": {
+        "inventory": {
+          "bag": {},
+          "drawer": {
+            "clip": 7
+          }
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "from": "drawer",
+            "item": "clip",
+            "qty": 4,
+            "to": "bag"
+          },
+          "tool": "inventory.move"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": null,
+        "executed_final_state": null,
+        "final_state_valid": false,
+        "latency_s": 0.2,
+        "observed_action_sequence": [],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": "not-a-list",
+          "answer": "bad",
+          "final_state": {},
+          "validator_id": "x"
+        },
+        "raw_output": "{\"actions\": \"not-a-list\", \"final_state\": {}, \"validator_id\": \"x\", \"answer\": \"bad\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": false,
+        "semantic_valid": false,
+        "token_count": 15,
+        "tool_action_reached": false,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "budget_arithmetic",
+      "constrained": {
+        "declared_final_state": {
+          "allocations": {
+            "compute": 50,
+            "sensors": 35
+          },
+          "remaining_budget": 35
+        },
+        "executed_final_state": {
+          "allocations": {
+            "compute": 50,
+            "sensors": 35
+          },
+          "remaining_budget": 35
+        },
+        "final_state_valid": true,
+        "latency_s": 0.39,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 35,
+              "bucket": "sensors"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 50,
+              "bucket": "compute"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 35,
+                "bucket": "sensors"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 50,
+                "bucket": "compute"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "budget_sensor_split satisfied by deterministic action replay.",
+          "final_state": {
+            "allocations": {
+              "compute": 50,
+              "sensors": 35
+            },
+            "remaining_budget": 35
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 35, \"bucket\": \"sensors\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 50, \"bucket\": \"compute\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"budget_sensor_split satisfied by deterministic action replay.\", \"final_state\": {\"allocations\": {\"compute\": 50, \"sensors\": 35}, \"remaining_budget\": 35}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 52,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "budget_nonnegative",
+        "allocation_sum_exact"
+      ],
+      "expected_final_state": {
+        "allocations": {
+          "compute": 50,
+          "sensors": 35
+        },
+        "remaining_budget": 35
+      },
+      "fixture_id": "budget_sensor_split",
+      "initial_state": {
+        "allocations": {},
+        "remaining_budget": 120
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "amount": 35,
+            "bucket": "sensors"
+          },
+          "tool": "budget.allocate"
+        },
+        {
+          "args": {
+            "amount": 50,
+            "bucket": "compute"
+          },
+          "tool": "budget.allocate"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "allocations": {
+            "compute": 51,
+            "sensors": 35
+          },
+          "remaining_budget": 34
+        },
+        "executed_final_state": {
+          "allocations": {
+            "compute": 50,
+            "sensors": 35
+          },
+          "remaining_budget": 35
+        },
+        "final_state_valid": false,
+        "latency_s": 0.19,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 35,
+              "bucket": "sensors"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 50,
+              "bucket": "compute"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 35,
+                "bucket": "sensors"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 50,
+                "bucket": "compute"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "allocations": {
+              "compute": 51,
+              "sensors": 35
+            },
+            "remaining_budget": 34
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 35, \"bucket\": \"sensors\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 50, \"bucket\": \"compute\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"allocations\": {\"compute\": 51, \"sensors\": 35}, \"remaining_budget\": 34}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 21,
+        "tool_action_reached": true,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "budget_arithmetic",
+      "constrained": {
+        "declared_final_state": {
+          "allocations": {
+            "lodging": 30,
+            "travel": 40
+          },
+          "remaining_budget": 20
+        },
+        "executed_final_state": {
+          "allocations": {
+            "lodging": 30,
+            "travel": 40
+          },
+          "remaining_budget": 20
+        },
+        "final_state_valid": true,
+        "latency_s": 0.4,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 40,
+              "bucket": "travel"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 30,
+              "bucket": "lodging"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 40,
+                "bucket": "travel"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 30,
+                "bucket": "lodging"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "budget_field_trip satisfied by deterministic action replay.",
+          "final_state": {
+            "allocations": {
+              "lodging": 30,
+              "travel": 40
+            },
+            "remaining_budget": 20
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 40, \"bucket\": \"travel\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 30, \"bucket\": \"lodging\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"budget_field_trip satisfied by deterministic action replay.\", \"final_state\": {\"allocations\": {\"lodging\": 30, \"travel\": 40}, \"remaining_budget\": 20}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 53,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "budget_nonnegative",
+        "allocation_sum_exact"
+      ],
+      "expected_final_state": {
+        "allocations": {
+          "lodging": 30,
+          "travel": 40
+        },
+        "remaining_budget": 20
+      },
+      "fixture_id": "budget_field_trip",
+      "initial_state": {
+        "allocations": {},
+        "remaining_budget": 90
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "amount": 40,
+            "bucket": "travel"
+          },
+          "tool": "budget.allocate"
+        },
+        {
+          "args": {
+            "amount": 30,
+            "bucket": "lodging"
+          },
+          "tool": "budget.allocate"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "allocations": {
+            "lodging": 31,
+            "travel": 40
+          },
+          "remaining_budget": 19
+        },
+        "executed_final_state": {
+          "allocations": {
+            "lodging": 30,
+            "travel": 40
+          },
+          "remaining_budget": 20
+        },
+        "final_state_valid": false,
+        "latency_s": 0.2,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 40,
+              "bucket": "travel"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 30,
+              "bucket": "lodging"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 40,
+                "bucket": "travel"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 30,
+                "bucket": "lodging"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "allocations": {
+              "lodging": 31,
+              "travel": 40
+            },
+            "remaining_budget": 19
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 40, \"bucket\": \"travel\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 30, \"bucket\": \"lodging\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"allocations\": {\"lodging\": 31, \"travel\": 40}, \"remaining_budget\": 19}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 22,
+        "tool_action_reached": true,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "budget_arithmetic",
+      "constrained": {
+        "declared_final_state": {
+          "allocations": {
+            "chemicals": 25,
+            "glassware": 20
+          },
+          "remaining_budget": 30
+        },
+        "executed_final_state": {
+          "allocations": {
+            "chemicals": 25,
+            "glassware": 20
+          },
+          "remaining_budget": 30
+        },
+        "final_state_valid": true,
+        "latency_s": 0.41000000000000003,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 25,
+              "bucket": "chemicals"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 20,
+              "bucket": "glassware"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 25,
+                "bucket": "chemicals"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 20,
+                "bucket": "glassware"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "budget_lab_supplies satisfied by deterministic action replay.",
+          "final_state": {
+            "allocations": {
+              "chemicals": 25,
+              "glassware": 20
+            },
+            "remaining_budget": 30
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 25, \"bucket\": \"chemicals\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 20, \"bucket\": \"glassware\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"budget_lab_supplies satisfied by deterministic action replay.\", \"final_state\": {\"allocations\": {\"chemicals\": 25, \"glassware\": 20}, \"remaining_budget\": 30}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 54,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "budget_nonnegative",
+        "allocation_sum_exact"
+      ],
+      "expected_final_state": {
+        "allocations": {
+          "chemicals": 25,
+          "glassware": 20
+        },
+        "remaining_budget": 30
+      },
+      "fixture_id": "budget_lab_supplies",
+      "initial_state": {
+        "allocations": {},
+        "remaining_budget": 75
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "amount": 25,
+            "bucket": "chemicals"
+          },
+          "tool": "budget.allocate"
+        },
+        {
+          "args": {
+            "amount": 20,
+            "bucket": "glassware"
+          },
+          "tool": "budget.allocate"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "allocations": {
+            "chemicals": 25,
+            "glassware": 21
+          },
+          "remaining_budget": 29
+        },
+        "executed_final_state": {
+          "allocations": {
+            "chemicals": 25,
+            "glassware": 20
+          },
+          "remaining_budget": 30
+        },
+        "final_state_valid": false,
+        "latency_s": 0.21,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 25,
+              "bucket": "chemicals"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 20,
+              "bucket": "glassware"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 25,
+                "bucket": "chemicals"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 20,
+                "bucket": "glassware"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "allocations": {
+              "chemicals": 25,
+              "glassware": 21
+            },
+            "remaining_budget": 29
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 25, \"bucket\": \"chemicals\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 20, \"bucket\": \"glassware\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"allocations\": {\"chemicals\": 25, \"glassware\": 21}, \"remaining_budget\": 29}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 23,
+        "tool_action_reached": true,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "budget_arithmetic",
+      "constrained": {
+        "declared_final_state": {
+          "allocations": {
+            "monitoring": 60,
+            "oncall": 80
+          },
+          "remaining_budget": 60
+        },
+        "executed_final_state": {
+          "allocations": {
+            "monitoring": 60,
+            "oncall": 80
+          },
+          "remaining_budget": 60
+        },
+        "final_state_valid": true,
+        "latency_s": 0.42000000000000004,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 80,
+              "bucket": "oncall"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 60,
+              "bucket": "monitoring"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 80,
+                "bucket": "oncall"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 60,
+                "bucket": "monitoring"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "budget_ops_window satisfied by deterministic action replay.",
+          "final_state": {
+            "allocations": {
+              "monitoring": 60,
+              "oncall": 80
+            },
+            "remaining_budget": 60
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 80, \"bucket\": \"oncall\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 60, \"bucket\": \"monitoring\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"budget_ops_window satisfied by deterministic action replay.\", \"final_state\": {\"allocations\": {\"monitoring\": 60, \"oncall\": 80}, \"remaining_budget\": 60}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 55,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "budget_nonnegative",
+        "allocation_sum_exact"
+      ],
+      "expected_final_state": {
+        "allocations": {
+          "monitoring": 60,
+          "oncall": 80
+        },
+        "remaining_budget": 60
+      },
+      "fixture_id": "budget_ops_window",
+      "initial_state": {
+        "allocations": {},
+        "remaining_budget": 200
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "amount": 80,
+            "bucket": "oncall"
+          },
+          "tool": "budget.allocate"
+        },
+        {
+          "args": {
+            "amount": 60,
+            "bucket": "monitoring"
+          },
+          "tool": "budget.allocate"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "allocations": {
+            "monitoring": 61,
+            "oncall": 80
+          },
+          "remaining_budget": 59
+        },
+        "executed_final_state": {
+          "allocations": {
+            "monitoring": 60,
+            "oncall": 80
+          },
+          "remaining_budget": 60
+        },
+        "final_state_valid": false,
+        "latency_s": 0.22,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "amount": 80,
+              "bucket": "oncall"
+            },
+            "tool": "budget.allocate"
+          },
+          {
+            "args": {
+              "amount": 60,
+              "bucket": "monitoring"
+            },
+            "tool": "budget.allocate"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "amount": 80,
+                "bucket": "oncall"
+              },
+              "tool": "budget.allocate"
+            },
+            {
+              "args": {
+                "amount": 60,
+                "bucket": "monitoring"
+              },
+              "tool": "budget.allocate"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "allocations": {
+              "monitoring": 61,
+              "oncall": 80
+            },
+            "remaining_budget": 59
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"amount\": 80, \"bucket\": \"oncall\"}, \"tool\": \"budget.allocate\"}, {\"args\": {\"amount\": 60, \"bucket\": \"monitoring\"}, \"tool\": \"budget.allocate\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"allocations\": {\"monitoring\": 61, \"oncall\": 80}, \"remaining_budget\": 59}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 24,
+        "tool_action_reached": true,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "temporal_ordering",
+      "constrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 2,
+              "event": "backup",
+              "start": 1
+            },
+            {
+              "end": 4,
+              "event": "migrate",
+              "start": 2
+            },
+            {
+              "end": 5,
+              "event": "verify",
+              "start": 4
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 2,
+              "event": "backup",
+              "start": 1
+            },
+            {
+              "end": 4,
+              "event": "migrate",
+              "start": 2
+            },
+            {
+              "end": 5,
+              "event": "verify",
+              "start": 4
+            }
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.42,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 2,
+              "event": "backup",
+              "start": 1
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 4,
+              "event": "migrate",
+              "start": 2
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 5,
+              "event": "verify",
+              "start": 4
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 2,
+                "event": "backup",
+                "start": 1
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 4,
+                "event": "migrate",
+                "start": 2
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 5,
+                "event": "verify",
+                "start": 4
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "temporal_deploy satisfied by deterministic action replay.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 2,
+                "event": "backup",
+                "start": 1
+              },
+              {
+                "end": 4,
+                "event": "migrate",
+                "start": 2
+              },
+              {
+                "end": 5,
+                "event": "verify",
+                "start": 4
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 2, \"event\": \"backup\", \"start\": 1}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 4, \"event\": \"migrate\", \"start\": 2}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 5, \"event\": \"verify\", \"start\": 4}, \"tool\": \"schedule.add\"}], \"answer\": \"temporal_deploy satisfied by deterministic action replay.\", \"final_state\": {\"schedule\": [{\"end\": 2, \"event\": \"backup\", \"start\": 1}, {\"end\": 4, \"event\": \"migrate\", \"start\": 2}, {\"end\": 5, \"event\": \"verify\", \"start\": 4}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 58,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "precedence_order",
+        "non_overlapping_windows"
+      ],
+      "expected_final_state": {
+        "schedule": [
+          {
+            "end": 2,
+            "event": "backup",
+            "start": 1
+          },
+          {
+            "end": 4,
+            "event": "migrate",
+            "start": 2
+          },
+          {
+            "end": 5,
+            "event": "verify",
+            "start": 4
+          }
+        ]
+      },
+      "fixture_id": "temporal_deploy",
+      "initial_state": {
+        "schedule": []
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "end": 2,
+            "event": "backup",
+            "start": 1
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 4,
+            "event": "migrate",
+            "start": 2
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 5,
+            "event": "verify",
+            "start": 4
+          },
+          "tool": "schedule.add"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 4,
+              "event": "migrate",
+              "start": 2
+            },
+            {
+              "end": 2,
+              "event": "backup",
+              "start": 1
+            },
+            {
+              "end": 5,
+              "event": "verify",
+              "start": 4
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 4,
+              "event": "migrate",
+              "start": 2
+            },
+            {
+              "end": 2,
+              "event": "backup",
+              "start": 1
+            },
+            {
+              "end": 5,
+              "event": "verify",
+              "start": 4
+            }
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.2,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 4,
+              "event": "migrate",
+              "start": 2
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 2,
+              "event": "backup",
+              "start": 1
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 5,
+              "event": "verify",
+              "start": 4
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 4,
+                "event": "migrate",
+                "start": 2
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 2,
+                "event": "backup",
+                "start": 1
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 5,
+                "event": "verify",
+                "start": 4
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 4,
+                "event": "migrate",
+                "start": 2
+              },
+              {
+                "end": 2,
+                "event": "backup",
+                "start": 1
+              },
+              {
+                "end": 5,
+                "event": "verify",
+                "start": 4
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 4, \"event\": \"migrate\", \"start\": 2}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 2, \"event\": \"backup\", \"start\": 1}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 5, \"event\": \"verify\", \"start\": 4}, \"tool\": \"schedule.add\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"schedule\": [{\"end\": 4, \"event\": \"migrate\", \"start\": 2}, {\"end\": 2, \"event\": \"backup\", \"start\": 1}, {\"end\": 5, \"event\": \"verify\", \"start\": 4}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 24,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "temporal_ordering",
+      "constrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 9,
+              "event": "sterilize",
+              "start": 8
+            },
+            {
+              "end": 11,
+              "event": "sample",
+              "start": 9
+            },
+            {
+              "end": 12,
+              "event": "label",
+              "start": 11
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 9,
+              "event": "sterilize",
+              "start": 8
+            },
+            {
+              "end": 11,
+              "event": "sample",
+              "start": 9
+            },
+            {
+              "end": 12,
+              "event": "label",
+              "start": 11
+            }
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.43,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 9,
+              "event": "sterilize",
+              "start": 8
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 11,
+              "event": "sample",
+              "start": 9
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 12,
+              "event": "label",
+              "start": 11
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 9,
+                "event": "sterilize",
+                "start": 8
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 11,
+                "event": "sample",
+                "start": 9
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 12,
+                "event": "label",
+                "start": 11
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "temporal_lab satisfied by deterministic action replay.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 9,
+                "event": "sterilize",
+                "start": 8
+              },
+              {
+                "end": 11,
+                "event": "sample",
+                "start": 9
+              },
+              {
+                "end": 12,
+                "event": "label",
+                "start": 11
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 9, \"event\": \"sterilize\", \"start\": 8}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 11, \"event\": \"sample\", \"start\": 9}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 12, \"event\": \"label\", \"start\": 11}, \"tool\": \"schedule.add\"}], \"answer\": \"temporal_lab satisfied by deterministic action replay.\", \"final_state\": {\"schedule\": [{\"end\": 9, \"event\": \"sterilize\", \"start\": 8}, {\"end\": 11, \"event\": \"sample\", \"start\": 9}, {\"end\": 12, \"event\": \"label\", \"start\": 11}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 59,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "precedence_order",
+        "non_overlapping_windows"
+      ],
+      "expected_final_state": {
+        "schedule": [
+          {
+            "end": 9,
+            "event": "sterilize",
+            "start": 8
+          },
+          {
+            "end": 11,
+            "event": "sample",
+            "start": 9
+          },
+          {
+            "end": 12,
+            "event": "label",
+            "start": 11
+          }
+        ]
+      },
+      "fixture_id": "temporal_lab",
+      "initial_state": {
+        "schedule": []
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "end": 9,
+            "event": "sterilize",
+            "start": 8
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 11,
+            "event": "sample",
+            "start": 9
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 12,
+            "event": "label",
+            "start": 11
+          },
+          "tool": "schedule.add"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 11,
+              "event": "sample",
+              "start": 9
+            },
+            {
+              "end": 9,
+              "event": "sterilize",
+              "start": 8
+            },
+            {
+              "end": 12,
+              "event": "label",
+              "start": 11
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 11,
+              "event": "sample",
+              "start": 9
+            },
+            {
+              "end": 9,
+              "event": "sterilize",
+              "start": 8
+            },
+            {
+              "end": 12,
+              "event": "label",
+              "start": 11
+            }
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.21000000000000002,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 11,
+              "event": "sample",
+              "start": 9
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 9,
+              "event": "sterilize",
+              "start": 8
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 12,
+              "event": "label",
+              "start": 11
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 11,
+                "event": "sample",
+                "start": 9
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 9,
+                "event": "sterilize",
+                "start": 8
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 12,
+                "event": "label",
+                "start": 11
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 11,
+                "event": "sample",
+                "start": 9
+              },
+              {
+                "end": 9,
+                "event": "sterilize",
+                "start": 8
+              },
+              {
+                "end": 12,
+                "event": "label",
+                "start": 11
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 11, \"event\": \"sample\", \"start\": 9}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 9, \"event\": \"sterilize\", \"start\": 8}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 12, \"event\": \"label\", \"start\": 11}, \"tool\": \"schedule.add\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"schedule\": [{\"end\": 11, \"event\": \"sample\", \"start\": 9}, {\"end\": 9, \"event\": \"sterilize\", \"start\": 8}, {\"end\": 12, \"event\": \"label\", \"start\": 11}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 25,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "temporal_ordering",
+      "constrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 6,
+              "event": "draft",
+              "start": 3
+            },
+            {
+              "end": 7,
+              "event": "review",
+              "start": 6
+            },
+            {
+              "end": 8,
+              "event": "publish",
+              "start": 7
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 6,
+              "event": "draft",
+              "start": 3
+            },
+            {
+              "end": 7,
+              "event": "review",
+              "start": 6
+            },
+            {
+              "end": 8,
+              "event": "publish",
+              "start": 7
+            }
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.44,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 6,
+              "event": "draft",
+              "start": 3
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 7,
+              "event": "review",
+              "start": 6
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 8,
+              "event": "publish",
+              "start": 7
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 6,
+                "event": "draft",
+                "start": 3
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 7,
+                "event": "review",
+                "start": 6
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 8,
+                "event": "publish",
+                "start": 7
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "temporal_review satisfied by deterministic action replay.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 6,
+                "event": "draft",
+                "start": 3
+              },
+              {
+                "end": 7,
+                "event": "review",
+                "start": 6
+              },
+              {
+                "end": 8,
+                "event": "publish",
+                "start": 7
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 6, \"event\": \"draft\", \"start\": 3}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 7, \"event\": \"review\", \"start\": 6}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 8, \"event\": \"publish\", \"start\": 7}, \"tool\": \"schedule.add\"}], \"answer\": \"temporal_review satisfied by deterministic action replay.\", \"final_state\": {\"schedule\": [{\"end\": 6, \"event\": \"draft\", \"start\": 3}, {\"end\": 7, \"event\": \"review\", \"start\": 6}, {\"end\": 8, \"event\": \"publish\", \"start\": 7}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 60,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "precedence_order",
+        "non_overlapping_windows"
+      ],
+      "expected_final_state": {
+        "schedule": [
+          {
+            "end": 6,
+            "event": "draft",
+            "start": 3
+          },
+          {
+            "end": 7,
+            "event": "review",
+            "start": 6
+          },
+          {
+            "end": 8,
+            "event": "publish",
+            "start": 7
+          }
+        ]
+      },
+      "fixture_id": "temporal_review",
+      "initial_state": {
+        "schedule": []
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "end": 6,
+            "event": "draft",
+            "start": 3
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 7,
+            "event": "review",
+            "start": 6
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 8,
+            "event": "publish",
+            "start": 7
+          },
+          "tool": "schedule.add"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 7,
+              "event": "review",
+              "start": 6
+            },
+            {
+              "end": 6,
+              "event": "draft",
+              "start": 3
+            },
+            {
+              "end": 8,
+              "event": "publish",
+              "start": 7
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 7,
+              "event": "review",
+              "start": 6
+            },
+            {
+              "end": 6,
+              "event": "draft",
+              "start": 3
+            },
+            {
+              "end": 8,
+              "event": "publish",
+              "start": 7
+            }
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.22,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 7,
+              "event": "review",
+              "start": 6
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 6,
+              "event": "draft",
+              "start": 3
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 8,
+              "event": "publish",
+              "start": 7
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 7,
+                "event": "review",
+                "start": 6
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 6,
+                "event": "draft",
+                "start": 3
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 8,
+                "event": "publish",
+                "start": 7
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 7,
+                "event": "review",
+                "start": 6
+              },
+              {
+                "end": 6,
+                "event": "draft",
+                "start": 3
+              },
+              {
+                "end": 8,
+                "event": "publish",
+                "start": 7
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 7, \"event\": \"review\", \"start\": 6}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 6, \"event\": \"draft\", \"start\": 3}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 8, \"event\": \"publish\", \"start\": 7}, \"tool\": \"schedule.add\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"schedule\": [{\"end\": 7, \"event\": \"review\", \"start\": 6}, {\"end\": 6, \"event\": \"draft\", \"start\": 3}, {\"end\": 8, \"event\": \"publish\", \"start\": 7}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 26,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "temporal_ordering",
+      "constrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 11,
+              "event": "diagnose",
+              "start": 10
+            },
+            {
+              "end": 13,
+              "event": "replace",
+              "start": 11
+            },
+            {
+              "end": 14,
+              "event": "test",
+              "start": 13
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 11,
+              "event": "diagnose",
+              "start": 10
+            },
+            {
+              "end": 13,
+              "event": "replace",
+              "start": 11
+            },
+            {
+              "end": 14,
+              "event": "test",
+              "start": 13
+            }
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.44999999999999996,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 11,
+              "event": "diagnose",
+              "start": 10
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 13,
+              "event": "replace",
+              "start": 11
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 14,
+              "event": "test",
+              "start": 13
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 11,
+                "event": "diagnose",
+                "start": 10
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 13,
+                "event": "replace",
+                "start": 11
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 14,
+                "event": "test",
+                "start": 13
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "temporal_repair satisfied by deterministic action replay.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 11,
+                "event": "diagnose",
+                "start": 10
+              },
+              {
+                "end": 13,
+                "event": "replace",
+                "start": 11
+              },
+              {
+                "end": 14,
+                "event": "test",
+                "start": 13
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 11, \"event\": \"diagnose\", \"start\": 10}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 13, \"event\": \"replace\", \"start\": 11}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 14, \"event\": \"test\", \"start\": 13}, \"tool\": \"schedule.add\"}], \"answer\": \"temporal_repair satisfied by deterministic action replay.\", \"final_state\": {\"schedule\": [{\"end\": 11, \"event\": \"diagnose\", \"start\": 10}, {\"end\": 13, \"event\": \"replace\", \"start\": 11}, {\"end\": 14, \"event\": \"test\", \"start\": 13}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 61,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "precedence_order",
+        "non_overlapping_windows"
+      ],
+      "expected_final_state": {
+        "schedule": [
+          {
+            "end": 11,
+            "event": "diagnose",
+            "start": 10
+          },
+          {
+            "end": 13,
+            "event": "replace",
+            "start": 11
+          },
+          {
+            "end": 14,
+            "event": "test",
+            "start": 13
+          }
+        ]
+      },
+      "fixture_id": "temporal_repair",
+      "initial_state": {
+        "schedule": []
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "end": 11,
+            "event": "diagnose",
+            "start": 10
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 13,
+            "event": "replace",
+            "start": 11
+          },
+          "tool": "schedule.add"
+        },
+        {
+          "args": {
+            "end": 14,
+            "event": "test",
+            "start": 13
+          },
+          "tool": "schedule.add"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "schedule": [
+            {
+              "end": 13,
+              "event": "replace",
+              "start": 11
+            },
+            {
+              "end": 11,
+              "event": "diagnose",
+              "start": 10
+            },
+            {
+              "end": 14,
+              "event": "test",
+              "start": 13
+            }
+          ]
+        },
+        "executed_final_state": {
+          "schedule": [
+            {
+              "end": 13,
+              "event": "replace",
+              "start": 11
+            },
+            {
+              "end": 11,
+              "event": "diagnose",
+              "start": 10
+            },
+            {
+              "end": 14,
+              "event": "test",
+              "start": 13
+            }
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.23,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "end": 13,
+              "event": "replace",
+              "start": 11
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 11,
+              "event": "diagnose",
+              "start": 10
+            },
+            "tool": "schedule.add"
+          },
+          {
+            "args": {
+              "end": 14,
+              "event": "test",
+              "start": 13
+            },
+            "tool": "schedule.add"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "end": 13,
+                "event": "replace",
+                "start": 11
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 11,
+                "event": "diagnose",
+                "start": 10
+              },
+              "tool": "schedule.add"
+            },
+            {
+              "args": {
+                "end": 14,
+                "event": "test",
+                "start": 13
+              },
+              "tool": "schedule.add"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "schedule": [
+              {
+                "end": 13,
+                "event": "replace",
+                "start": 11
+              },
+              {
+                "end": 11,
+                "event": "diagnose",
+                "start": 10
+              },
+              {
+                "end": 14,
+                "event": "test",
+                "start": 13
+              }
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"end\": 13, \"event\": \"replace\", \"start\": 11}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 11, \"event\": \"diagnose\", \"start\": 10}, \"tool\": \"schedule.add\"}, {\"args\": {\"end\": 14, \"event\": \"test\", \"start\": 13}, \"tool\": \"schedule.add\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"schedule\": [{\"end\": 13, \"event\": \"replace\", \"start\": 11}, {\"end\": 11, \"event\": \"diagnose\", \"start\": 10}, {\"end\": 14, \"event\": \"test\", \"start\": 13}]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 27,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "tool_action_reachability",
+      "constrained": {
+        "declared_final_state": {
+          "completed": [
+            "job-2"
+          ],
+          "queued": [
+            "job-1"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [
+            "job-2"
+          ],
+          "queued": [
+            "job-1"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.34,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "task": "job-2"
+            },
+            "tool": "task.complete"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "task": "job-2"
+              },
+              "tool": "task.complete"
+            }
+          ],
+          "answer": "tool_job_cancel satisfied by deterministic action replay.",
+          "final_state": {
+            "completed": [
+              "job-2"
+            ],
+            "queued": [
+              "job-1"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"task\": \"job-2\"}, \"tool\": \"task.complete\"}], \"answer\": \"tool_job_cancel satisfied by deterministic action replay.\", \"final_state\": {\"completed\": [\"job-2\"], \"queued\": [\"job-1\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 39,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "required_tool_called",
+        "queue_state_updated"
+      ],
+      "expected_final_state": {
+        "completed": [
+          "job-2"
+        ],
+        "queued": [
+          "job-1"
+        ]
+      },
+      "fixture_id": "tool_job_cancel",
+      "initial_state": {
+        "completed": [],
+        "queued": [
+          "job-1",
+          "job-2"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "task": "job-2"
+          },
+          "tool": "task.complete"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "completed": [
+            "job-2"
+          ],
+          "queued": [
+            "job-1"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [],
+          "queued": [
+            "job-1",
+            "job-2"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.16,
+        "observed_action_sequence": [],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "completed": [
+              "job-2"
+            ],
+            "queued": [
+              "job-1"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"completed\": [\"job-2\"], \"queued\": [\"job-1\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 14,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "tool_action_reachability",
+      "constrained": {
+        "declared_final_state": {
+          "completed": [
+            "ticket-9"
+          ],
+          "queued": [
+            "ticket-4"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [
+            "ticket-9"
+          ],
+          "queued": [
+            "ticket-4"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.35000000000000003,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "task": "ticket-9"
+            },
+            "tool": "task.complete"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "task": "ticket-9"
+              },
+              "tool": "task.complete"
+            }
+          ],
+          "answer": "tool_ticket_close satisfied by deterministic action replay.",
+          "final_state": {
+            "completed": [
+              "ticket-9"
+            ],
+            "queued": [
+              "ticket-4"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"task\": \"ticket-9\"}, \"tool\": \"task.complete\"}], \"answer\": \"tool_ticket_close satisfied by deterministic action replay.\", \"final_state\": {\"completed\": [\"ticket-9\"], \"queued\": [\"ticket-4\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 40,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "required_tool_called",
+        "queue_state_updated"
+      ],
+      "expected_final_state": {
+        "completed": [
+          "ticket-9"
+        ],
+        "queued": [
+          "ticket-4"
+        ]
+      },
+      "fixture_id": "tool_ticket_close",
+      "initial_state": {
+        "completed": [],
+        "queued": [
+          "ticket-4",
+          "ticket-9"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "task": "ticket-9"
+          },
+          "tool": "task.complete"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "completed": [
+            "ticket-9"
+          ],
+          "queued": [
+            "ticket-4"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [],
+          "queued": [
+            "ticket-4",
+            "ticket-9"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.17,
+        "observed_action_sequence": [],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "completed": [
+              "ticket-9"
+            ],
+            "queued": [
+              "ticket-4"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"completed\": [\"ticket-9\"], \"queued\": [\"ticket-4\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 15,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "tool_action_reachability",
+      "constrained": {
+        "declared_final_state": {
+          "completed": [
+            "alert-b"
+          ],
+          "queued": [
+            "alert-a"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [
+            "alert-b"
+          ],
+          "queued": [
+            "alert-a"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.36000000000000004,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "task": "alert-b"
+            },
+            "tool": "task.complete"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "task": "alert-b"
+              },
+              "tool": "task.complete"
+            }
+          ],
+          "answer": "tool_alert_ack satisfied by deterministic action replay.",
+          "final_state": {
+            "completed": [
+              "alert-b"
+            ],
+            "queued": [
+              "alert-a"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"task\": \"alert-b\"}, \"tool\": \"task.complete\"}], \"answer\": \"tool_alert_ack satisfied by deterministic action replay.\", \"final_state\": {\"completed\": [\"alert-b\"], \"queued\": [\"alert-a\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 41,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "required_tool_called",
+        "queue_state_updated"
+      ],
+      "expected_final_state": {
+        "completed": [
+          "alert-b"
+        ],
+        "queued": [
+          "alert-a"
+        ]
+      },
+      "fixture_id": "tool_alert_ack",
+      "initial_state": {
+        "completed": [],
+        "queued": [
+          "alert-a",
+          "alert-b"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "task": "alert-b"
+          },
+          "tool": "task.complete"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "completed": [
+            "alert-b"
+          ],
+          "queued": [
+            "alert-a"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [],
+          "queued": [
+            "alert-a",
+            "alert-b"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.18,
+        "observed_action_sequence": [],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "completed": [
+              "alert-b"
+            ],
+            "queued": [
+              "alert-a"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"completed\": [\"alert-b\"], \"queued\": [\"alert-a\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 16,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "tool_action_reachability",
+      "constrained": {
+        "declared_final_state": {
+          "completed": [
+            "task-y"
+          ],
+          "queued": [
+            "task-x"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [
+            "task-y"
+          ],
+          "queued": [
+            "task-x"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.37,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "task": "task-y"
+            },
+            "tool": "task.complete"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "task": "task-y"
+              },
+              "tool": "task.complete"
+            }
+          ],
+          "answer": "tool_queue_remove satisfied by deterministic action replay.",
+          "final_state": {
+            "completed": [
+              "task-y"
+            ],
+            "queued": [
+              "task-x"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"task\": \"task-y\"}, \"tool\": \"task.complete\"}], \"answer\": \"tool_queue_remove satisfied by deterministic action replay.\", \"final_state\": {\"completed\": [\"task-y\"], \"queued\": [\"task-x\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 42,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "required_tool_called",
+        "queue_state_updated"
+      ],
+      "expected_final_state": {
+        "completed": [
+          "task-y"
+        ],
+        "queued": [
+          "task-x"
+        ]
+      },
+      "fixture_id": "tool_queue_remove",
+      "initial_state": {
+        "completed": [],
+        "queued": [
+          "task-x",
+          "task-y"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "task": "task-y"
+          },
+          "tool": "task.complete"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "completed": [
+            "task-y"
+          ],
+          "queued": [
+            "task-x"
+          ]
+        },
+        "executed_final_state": {
+          "completed": [],
+          "queued": [
+            "task-x",
+            "task-y"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.19,
+        "observed_action_sequence": [],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "completed": [
+              "task-y"
+            ],
+            "queued": [
+              "task-x"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"completed\": [\"task-y\"], \"queued\": [\"task-x\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 17,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "contradiction_repair",
+      "constrained": {
+        "declared_final_state": {
+          "contradictions": [],
+          "facts": [
+            "region=us"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [],
+          "facts": [
+            "region=us"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.43,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "region=eu"
+            },
+            "tool": "repair.remove"
+          },
+          {
+            "args": {
+              "path": [
+                "contradictions"
+              ],
+              "value": []
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "region=eu"
+              },
+              "tool": "repair.remove"
+            },
+            {
+              "args": {
+                "path": [
+                  "contradictions"
+                ],
+                "value": []
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "repair_region satisfied by deterministic action replay.",
+          "final_state": {
+            "contradictions": [],
+            "facts": [
+              "region=us"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"region=eu\"}, \"tool\": \"repair.remove\"}, {\"args\": {\"path\": [\"contradictions\"], \"value\": []}, \"tool\": \"repair.set\"}], \"answer\": \"repair_region satisfied by deterministic action replay.\", \"final_state\": {\"contradictions\": [], \"facts\": [\"region=us\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 61,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "single_consistent_fact",
+        "contradiction_list_empty"
+      ],
+      "expected_final_state": {
+        "contradictions": [],
+        "facts": [
+          "region=us"
+        ]
+      },
+      "fixture_id": "repair_region",
+      "initial_state": {
+        "contradictions": [
+          [
+            "region=us",
+            "region=eu"
+          ]
+        ],
+        "facts": [
+          "region=us",
+          "region=eu"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "facts"
+            ],
+            "value": "region=eu"
+          },
+          "tool": "repair.remove"
+        },
+        {
+          "args": {
+            "path": [
+              "contradictions"
+            ],
+            "value": []
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "contradictions": [
+            [
+              "region=us",
+              "region=eu"
+            ]
+          ],
+          "facts": [
+            "region=us",
+            "region=eu"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [
+            [
+              "region=us",
+              "region=eu"
+            ]
+          ],
+          "facts": [
+            "region=us"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.21,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "region=eu"
+            },
+            "tool": "repair.remove"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "region=eu"
+              },
+              "tool": "repair.remove"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "contradictions": [
+              [
+                "region=us",
+                "region=eu"
+              ]
+            ],
+            "facts": [
+              "region=us",
+              "region=eu"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"region=eu\"}, \"tool\": \"repair.remove\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"contradictions\": [[\"region=us\", \"region=eu\"]], \"facts\": [\"region=us\", \"region=eu\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 26,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "contradiction_repair",
+      "constrained": {
+        "declared_final_state": {
+          "contradictions": [],
+          "facts": [
+            "mode=eval"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [],
+          "facts": [
+            "mode=eval"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.44,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "mode=train"
+            },
+            "tool": "repair.remove"
+          },
+          {
+            "args": {
+              "path": [
+                "contradictions"
+              ],
+              "value": []
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "mode=train"
+              },
+              "tool": "repair.remove"
+            },
+            {
+              "args": {
+                "path": [
+                  "contradictions"
+                ],
+                "value": []
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "repair_mode satisfied by deterministic action replay.",
+          "final_state": {
+            "contradictions": [],
+            "facts": [
+              "mode=eval"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"mode=train\"}, \"tool\": \"repair.remove\"}, {\"args\": {\"path\": [\"contradictions\"], \"value\": []}, \"tool\": \"repair.set\"}], \"answer\": \"repair_mode satisfied by deterministic action replay.\", \"final_state\": {\"contradictions\": [], \"facts\": [\"mode=eval\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 62,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "single_consistent_fact",
+        "contradiction_list_empty"
+      ],
+      "expected_final_state": {
+        "contradictions": [],
+        "facts": [
+          "mode=eval"
+        ]
+      },
+      "fixture_id": "repair_mode",
+      "initial_state": {
+        "contradictions": [
+          [
+            "mode=train",
+            "mode=eval"
+          ]
+        ],
+        "facts": [
+          "mode=train",
+          "mode=eval"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "facts"
+            ],
+            "value": "mode=train"
+          },
+          "tool": "repair.remove"
+        },
+        {
+          "args": {
+            "path": [
+              "contradictions"
+            ],
+            "value": []
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "contradictions": [
+            [
+              "mode=train",
+              "mode=eval"
+            ]
+          ],
+          "facts": [
+            "mode=train",
+            "mode=eval"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [
+            [
+              "mode=train",
+              "mode=eval"
+            ]
+          ],
+          "facts": [
+            "mode=eval"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.22,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "mode=train"
+            },
+            "tool": "repair.remove"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "mode=train"
+              },
+              "tool": "repair.remove"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "contradictions": [
+              [
+                "mode=train",
+                "mode=eval"
+              ]
+            ],
+            "facts": [
+              "mode=train",
+              "mode=eval"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"mode=train\"}, \"tool\": \"repair.remove\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"contradictions\": [[\"mode=train\", \"mode=eval\"]], \"facts\": [\"mode=train\", \"mode=eval\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 27,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "contradiction_repair",
+      "constrained": {
+        "declared_final_state": {
+          "contradictions": [],
+          "facts": [
+            "owner=a"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [],
+          "facts": [
+            "owner=a"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.45,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "owner=b"
+            },
+            "tool": "repair.remove"
+          },
+          {
+            "args": {
+              "path": [
+                "contradictions"
+              ],
+              "value": []
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "owner=b"
+              },
+              "tool": "repair.remove"
+            },
+            {
+              "args": {
+                "path": [
+                  "contradictions"
+                ],
+                "value": []
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "repair_owner satisfied by deterministic action replay.",
+          "final_state": {
+            "contradictions": [],
+            "facts": [
+              "owner=a"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"owner=b\"}, \"tool\": \"repair.remove\"}, {\"args\": {\"path\": [\"contradictions\"], \"value\": []}, \"tool\": \"repair.set\"}], \"answer\": \"repair_owner satisfied by deterministic action replay.\", \"final_state\": {\"contradictions\": [], \"facts\": [\"owner=a\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 63,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "single_consistent_fact",
+        "contradiction_list_empty"
+      ],
+      "expected_final_state": {
+        "contradictions": [],
+        "facts": [
+          "owner=a"
+        ]
+      },
+      "fixture_id": "repair_owner",
+      "initial_state": {
+        "contradictions": [
+          [
+            "owner=a",
+            "owner=b"
+          ]
+        ],
+        "facts": [
+          "owner=a",
+          "owner=b"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "facts"
+            ],
+            "value": "owner=b"
+          },
+          "tool": "repair.remove"
+        },
+        {
+          "args": {
+            "path": [
+              "contradictions"
+            ],
+            "value": []
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "contradictions": [
+            [
+              "owner=a",
+              "owner=b"
+            ]
+          ],
+          "facts": [
+            "owner=a",
+            "owner=b"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [
+            [
+              "owner=a",
+              "owner=b"
+            ]
+          ],
+          "facts": [
+            "owner=a"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.22999999999999998,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "owner=b"
+            },
+            "tool": "repair.remove"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "owner=b"
+              },
+              "tool": "repair.remove"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "contradictions": [
+              [
+                "owner=a",
+                "owner=b"
+              ]
+            ],
+            "facts": [
+              "owner=a",
+              "owner=b"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"owner=b\"}, \"tool\": \"repair.remove\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"contradictions\": [[\"owner=a\", \"owner=b\"]], \"facts\": [\"owner=a\", \"owner=b\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 28,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "contradiction_repair",
+      "constrained": {
+        "declared_final_state": {
+          "contradictions": [],
+          "facts": [
+            "priority=high"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [],
+          "facts": [
+            "priority=high"
+          ]
+        },
+        "final_state_valid": true,
+        "latency_s": 0.45999999999999996,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "priority=low"
+            },
+            "tool": "repair.remove"
+          },
+          {
+            "args": {
+              "path": [
+                "contradictions"
+              ],
+              "value": []
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "priority=low"
+              },
+              "tool": "repair.remove"
+            },
+            {
+              "args": {
+                "path": [
+                  "contradictions"
+                ],
+                "value": []
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "repair_priority satisfied by deterministic action replay.",
+          "final_state": {
+            "contradictions": [],
+            "facts": [
+              "priority=high"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"priority=low\"}, \"tool\": \"repair.remove\"}, {\"args\": {\"path\": [\"contradictions\"], \"value\": []}, \"tool\": \"repair.set\"}], \"answer\": \"repair_priority satisfied by deterministic action replay.\", \"final_state\": {\"contradictions\": [], \"facts\": [\"priority=high\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 64,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "single_consistent_fact",
+        "contradiction_list_empty"
+      ],
+      "expected_final_state": {
+        "contradictions": [],
+        "facts": [
+          "priority=high"
+        ]
+      },
+      "fixture_id": "repair_priority",
+      "initial_state": {
+        "contradictions": [
+          [
+            "priority=low",
+            "priority=high"
+          ]
+        ],
+        "facts": [
+          "priority=low",
+          "priority=high"
+        ]
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "facts"
+            ],
+            "value": "priority=low"
+          },
+          "tool": "repair.remove"
+        },
+        {
+          "args": {
+            "path": [
+              "contradictions"
+            ],
+            "value": []
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "contradictions": [
+            [
+              "priority=low",
+              "priority=high"
+            ]
+          ],
+          "facts": [
+            "priority=low",
+            "priority=high"
+          ]
+        },
+        "executed_final_state": {
+          "contradictions": [
+            [
+              "priority=low",
+              "priority=high"
+            ]
+          ],
+          "facts": [
+            "priority=high"
+          ]
+        },
+        "final_state_valid": false,
+        "latency_s": 0.24,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "facts"
+              ],
+              "value": "priority=low"
+            },
+            "tool": "repair.remove"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "facts"
+                ],
+                "value": "priority=low"
+              },
+              "tool": "repair.remove"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "contradictions": [
+              [
+                "priority=low",
+                "priority=high"
+              ]
+            ],
+            "facts": [
+              "priority=low",
+              "priority=high"
+            ]
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"facts\"], \"value\": \"priority=low\"}, \"tool\": \"repair.remove\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"contradictions\": [[\"priority=low\", \"priority=high\"]], \"facts\": [\"priority=low\", \"priority=high\"]}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 29,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "wrong_valid_trap",
+      "constrained": {
+        "declared_final_state": {
+          "policy": {
+            "access_scope": "readonly"
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "access_scope": "readonly"
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.37,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "access_scope"
+              ],
+              "value": "readonly"
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "access_scope"
+                ],
+                "value": "readonly"
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "trap_access_scope satisfied by deterministic action replay.",
+          "final_state": {
+            "policy": {
+              "access_scope": "readonly"
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"access_scope\"], \"value\": \"readonly\"}, \"tool\": \"repair.set\"}], \"answer\": \"trap_access_scope satisfied by deterministic action replay.\", \"final_state\": {\"policy\": {\"access_scope\": \"readonly\"}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 47,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "schema_valid_is_not_enough",
+        "policy_value_exact"
+      ],
+      "expected_final_state": {
+        "policy": {
+          "access_scope": "readonly"
+        }
+      },
+      "fixture_id": "trap_access_scope",
+      "initial_state": {
+        "policy": {
+          "access_scope": null
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "policy",
+              "access_scope"
+            ],
+            "value": "readonly"
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "policy": {
+            "access_scope": "admin"
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "access_scope": "admin"
+          }
+        },
+        "final_state_valid": false,
+        "latency_s": 0.18,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "access_scope"
+              ],
+              "value": "admin"
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "access_scope"
+                ],
+                "value": "admin"
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "policy": {
+              "access_scope": "admin"
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"access_scope\"], \"value\": \"admin\"}, \"tool\": \"repair.set\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"policy\": {\"access_scope\": \"admin\"}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 18,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "wrong_valid_trap",
+      "constrained": {
+        "declared_final_state": {
+          "policy": {
+            "transfer_limit": 500
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "transfer_limit": 500
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.38,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "transfer_limit"
+              ],
+              "value": 500
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "transfer_limit"
+                ],
+                "value": 500
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "trap_transfer_limit satisfied by deterministic action replay.",
+          "final_state": {
+            "policy": {
+              "transfer_limit": 500
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"transfer_limit\"], \"value\": 500}, \"tool\": \"repair.set\"}], \"answer\": \"trap_transfer_limit satisfied by deterministic action replay.\", \"final_state\": {\"policy\": {\"transfer_limit\": 500}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 48,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "schema_valid_is_not_enough",
+        "policy_value_exact"
+      ],
+      "expected_final_state": {
+        "policy": {
+          "transfer_limit": 500
+        }
+      },
+      "fixture_id": "trap_transfer_limit",
+      "initial_state": {
+        "policy": {
+          "transfer_limit": null
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "policy",
+              "transfer_limit"
+            ],
+            "value": 500
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "policy": {
+            "transfer_limit": 5000
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "transfer_limit": 5000
+          }
+        },
+        "final_state_valid": false,
+        "latency_s": 0.19,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "transfer_limit"
+              ],
+              "value": 5000
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "transfer_limit"
+                ],
+                "value": 5000
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "policy": {
+              "transfer_limit": 5000
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"transfer_limit\"], \"value\": 5000}, \"tool\": \"repair.set\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"policy\": {\"transfer_limit\": 5000}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 19,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "wrong_valid_trap",
+      "constrained": {
+        "declared_final_state": {
+          "policy": {
+            "region_lock": "east"
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "region_lock": "east"
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.39,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "region_lock"
+              ],
+              "value": "east"
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "region_lock"
+                ],
+                "value": "east"
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "trap_region_lock satisfied by deterministic action replay.",
+          "final_state": {
+            "policy": {
+              "region_lock": "east"
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"region_lock\"], \"value\": \"east\"}, \"tool\": \"repair.set\"}], \"answer\": \"trap_region_lock satisfied by deterministic action replay.\", \"final_state\": {\"policy\": {\"region_lock\": \"east\"}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 49,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "schema_valid_is_not_enough",
+        "policy_value_exact"
+      ],
+      "expected_final_state": {
+        "policy": {
+          "region_lock": "east"
+        }
+      },
+      "fixture_id": "trap_region_lock",
+      "initial_state": {
+        "policy": {
+          "region_lock": null
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "policy",
+              "region_lock"
+            ],
+            "value": "east"
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "policy": {
+            "region_lock": "west"
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "region_lock": "west"
+          }
+        },
+        "final_state_valid": false,
+        "latency_s": 0.19999999999999998,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "region_lock"
+              ],
+              "value": "west"
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "region_lock"
+                ],
+                "value": "west"
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "policy": {
+              "region_lock": "west"
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"region_lock\"], \"value\": \"west\"}, \"tool\": \"repair.set\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"policy\": {\"region_lock\": \"west\"}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 20,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    },
+    {
+      "category": "wrong_valid_trap",
+      "constrained": {
+        "declared_final_state": {
+          "policy": {
+            "retention_days": 30
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "retention_days": 30
+          }
+        },
+        "final_state_valid": true,
+        "latency_s": 0.4,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "retention_days"
+              ],
+              "value": 30
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "retention_days"
+                ],
+                "value": 30
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "trap_retention_days satisfied by deterministic action replay.",
+          "final_state": {
+            "policy": {
+              "retention_days": 30
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"retention_days\"], \"value\": 30}, \"tool\": \"repair.set\"}], \"answer\": \"trap_retention_days satisfied by deterministic action replay.\", \"final_state\": {\"policy\": {\"retention_days\": 30}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": true,
+        "token_count": 50,
+        "tool_action_reached": true,
+        "unsafe_false_accept": false,
+        "wrong_valid": false
+      },
+      "constraints": [
+        "schema_valid_is_not_enough",
+        "policy_value_exact"
+      ],
+      "expected_final_state": {
+        "policy": {
+          "retention_days": 30
+        }
+      },
+      "fixture_id": "trap_retention_days",
+      "initial_state": {
+        "policy": {
+          "retention_days": null
+        }
+      },
+      "required_action_sequence": [
+        {
+          "args": {
+            "path": [
+              "policy",
+              "retention_days"
+            ],
+            "value": 30
+          },
+          "tool": "repair.set"
+        }
+      ],
+      "unconstrained": {
+        "declared_final_state": {
+          "policy": {
+            "retention_days": 365
+          }
+        },
+        "executed_final_state": {
+          "policy": {
+            "retention_days": 365
+          }
+        },
+        "final_state_valid": false,
+        "latency_s": 0.21,
+        "observed_action_sequence": [
+          {
+            "args": {
+              "path": [
+                "policy",
+                "retention_days"
+              ],
+              "value": 365
+            },
+            "tool": "repair.set"
+          }
+        ],
+        "parse_valid": true,
+        "parsed_output": {
+          "actions": [
+            {
+              "args": {
+                "path": [
+                  "policy",
+                  "retention_days"
+                ],
+                "value": 365
+              },
+              "tool": "repair.set"
+            }
+          ],
+          "answer": "Looks valid, but the deterministic replay will decide.",
+          "final_state": {
+            "policy": {
+              "retention_days": 365
+            }
+          },
+          "validator_id": "deterministic_state_replay_v1"
+        },
+        "raw_output": "{\"actions\": [{\"args\": {\"path\": [\"policy\", \"retention_days\"], \"value\": 365}, \"tool\": \"repair.set\"}], \"answer\": \"Looks valid, but the deterministic replay will decide.\", \"final_state\": {\"policy\": {\"retention_days\": 365}}, \"validator_id\": \"deterministic_state_replay_v1\"}",
+        "response_text_accepted_as_verifier": false,
+        "schema_valid": true,
+        "semantic_valid": false,
+        "token_count": 21,
+        "tool_action_reached": false,
+        "unsafe_false_accept": true,
+        "wrong_valid": true
+      },
+      "validator_evidence": {
+        "deterministic_validator": true,
+        "generated_text_used": false,
+        "validator_id": "deterministic_state_replay_v1"
+      }
+    }
+  ],
+  "generated_text_accepted_as_verifier": false,
+  "generation_substrate": "deterministic_fixture_outputs_with_local_sota_cache_and_gpu_offload_preconditions",
+  "gpu_offload_receipt": {
+    "backend": "llama.cpp/llama-cpp-python",
+    "blocked_preconditions": [],
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+      "--format=csv,noheader,nounits"
+    ],
+    "cuda_available": true,
+    "gguf_loader_family": "llama.cpp/llama-cpp-python",
+    "gguf_runtime_available": true,
+    "gpu_visible": true,
+    "llama_cpp": {
+      "gpu_offload_support_error": null,
+      "gpu_offload_supported": true,
+      "import_ok": true,
+      "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "version": "0.3.33"
+    },
+    "llama_cpp_gpu_offload_supported": true,
+    "non_retired_gpu_or_offload_path": true,
+    "nvidia_smi": {
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+        "--format=csv,noheader,nounits"
+      ],
+      "duration_s": 0.037441,
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n"
+    },
+    "offload_evidence": true,
+    "offload_layers": -1,
+    "proof_not_cpu_only_headline_evidence": true,
+    "raw_nvidia_smi": {
+      "command": [
+        "nvidia-smi"
+      ],
+      "duration_s": 0.089715,
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Wed Jul  8 00:18:17 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   46C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   48C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n"
+    }
+  },
+  "honest_verdict": "complete: constrained deterministic fixture validity improved over unconstrained with zero constrained unsafe false accepts.",
+  "latency_ratio_constrained_vs_unconstrained": 1.966667,
+  "milestone": "2026.07.491",
+  "model_specs": [
+    {
+      "actual_run_note": "deterministic Exp5391 panel ran no new LLM prompts; upstream true means the model is the Exp5379 live local-SOTA structured receipt model.",
+      "autotokenizer_used": false,
+      "gguf_loader_family": "llama.cpp",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "ran_in_exp5391": false,
+      "ran_in_upstream_live_structured_receipt": false,
+      "role": "flagship_moe",
+      "selected_for_exp5391_precondition": true,
+      "status": "local_gguf_resolved"
+    },
+    {
+      "actual_run_note": "deterministic Exp5391 panel ran no new LLM prompts; upstream true means the model is the Exp5379 live local-SOTA structured receipt model.",
+      "autotokenizer_used": false,
+      "gguf_loader_family": "llama.cpp",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "gemma-4-31B-it",
+      "quantization": "Q4_K_M",
+      "ran_in_exp5391": false,
+      "ran_in_upstream_live_structured_receipt": true,
+      "role": "flagship_dense",
+      "selected_for_exp5391_precondition": false,
+      "status": "local_gguf_resolved"
+    },
+    {
+      "actual_run_note": "deterministic Exp5391 panel ran no new LLM prompts; upstream true means the model is the Exp5379 live local-SOTA structured receipt model.",
+      "autotokenizer_used": false,
+      "gguf_loader_family": "llama.cpp",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "gemma-4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "ran_in_exp5391": false,
+      "ran_in_upstream_live_structured_receipt": false,
+      "role": "middle_moe",
+      "selected_for_exp5391_precondition": true,
+      "status": "local_gguf_resolved"
+    }
+  ],
+  "no_cpu_only_legacy_headline_evidence": true,
+  "ops_docs_modified": false,
+  "random_seed": 5391,
+  "research_conductor_modified": false,
+  "schema": "carnot.experiment_5391_constraint_tax_scaleup_fixtures.v491",
+  "spec_refs": [
+    "REQ-VERIFY-5391",
+    "SCENARIO-VERIFY-5391"
+  ],
+  "status": "complete",
+  "task_id": "exp5391-v491-constraint-tax-scaleup-fixtures",
+  "tests_run": [
+    "tests/python/test_experiment_5391_constraint_tax_scaleup_fixtures_v491.py"
+  ],
+  "token_ratio_constrained_vs_unconstrained": 2.483871,
+  "tool_action_reachability_rate": 1.0,
+  "traceability_modified": false,
+  "unconstrained_semantic_validity_rate": 0.0,
+  "unsafe_false_accept_count": 0,
+  "upstream_gates": {
+    "exp5379_experiment_id": "experiment_5379_live_structured_clean_gate_rerun_v490",
+    "exp5379_structured_protocol_clean": true,
+    "exp5380_constraint_tax_panel_ready": true,
+    "exp5380_experiment_id": "experiment_5380_constraint_tax_tool_action_panel_v3_v490"
+  },
+  "wrong_valid_count_constrained": 0,
+  "wrong_valid_count_unconstrained": 20
+}
