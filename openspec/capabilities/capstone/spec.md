@@ -1674,3 +1674,84 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5401 | Planned (`python/carnot/experiment_5401_capstone_v491.py`, `results/experiment_5401_capstone_v491.json`) | Planned (`tests/python/test_experiment_5401_capstone_v491.py`) |
+
+- REQ-CAPSTONE-5414: The `.492` milestone-close capstone aggregator
+  `exp5414-v492-capstone` in
+  `python/carnot/experiment_5414_capstone_v492.py` SHALL write
+  `results/experiment_5414_capstone_v492.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every available
+  `.492` upstream result artifact from Exp5402 through Exp5413, the Exp5413 PRD
+  gap-table sidecar when present, and the conductor status/log context. It SHALL
+  synthesize a truth table for formal corrigendum, structured safety/action
+  scale-up, active-constraint guidance, p-bit/QUBO stress, resource-accounted
+  CSL, uncertainty-gated promotion, ARC live level-up, hardware repeatability,
+  KAN certificate, local SOTA inference, and token/internal lane status without
+  promoting skipped gated tasks, blocked tasks, honest-null tasks, adversarially
+  flagged rows, CPU-only diagnostics, partial hardware receipts, or no-speedup
+  evidence into stronger claims. The natural next milestone recommendation SHALL
+  be derived only from the actual landed artifacts and their blockers.
+- SCENARIO-CAPSTONE-5414: The artifact
+  `results/experiment_5414_capstone_v492.json` must emit top-level fields
+  `milestone`, `artifacts_read`, `formal_encoding_corrigendum_clean`,
+  `structured_safety_action_panel_ready`, `active_constraint_warmstart_ready`,
+  `pbit_qubo_stress_ready`, `resource_accounted_csl_ready`,
+  `uncertainty_gated_promotion_ready`, `arc_new_level_banked`,
+  `hardware_repeatability_ready`, `hardware_speedup_claim`,
+  `kan_active_constraint_certificate_ready`, `future_token_signal_allowed`,
+  `headline_ready_lanes`, `next_recommendations`, `inference_substrate`, and
+  `honest_verdict`. The default `.492` aggregation must report Exp5404 and
+  Exp5405 as clean local SOTA structured evidence, Exp5406 as bounded advisory
+  solver-guidance evidence, Exp5407 as CPU-only p-bit/QUBO boundary evidence
+  with no hardware speedup claim, Exp5408 and Exp5409 as FR-11 controller and
+  uncertainty-gated promotion evidence with no weight mutation, Exp5410 as an
+  honest no-bank ARC result, Exp5411 as restored same-workload PolarFire
+  repeatability while KV260 and GateMate remain blocked and no speedup is
+  claimed, Exp5412 as bounded KAN active-constraint certificate evidence, and
+  Exp5413 as the PRD gap synthesis with ARC, hardware speedup, and token/internal
+  backend claims kept non-headline.
+  Exact terminal labels for downstream tests: Exp5410 as an honest no-bank ARC result; Exp5411 as restored same-workload PolarFire repeatability.
+- SCENARIO-CAPSTONE-5414-MISSING-OR-BLOCKED-INPUT: If any expected upstream
+  Exp5402 through Exp5413 artifact is absent or unreadable, the workflow must
+  still write `results/experiment_5414_capstone_v492.json` with
+  `honest_verdict` starting with `blocked:`, list the absent or malformed path
+  in `missing_artifacts` or `artifact_read_errors`, and set affected readiness
+  fields false rather than inferring success from roadmap prose, status text, or
+  the PRD sidecar. If an upstream artifact is present but carries
+  `flagged_adversarial=true`, an honest-null status, a failed gate, or a blocked
+  claim boundary, the workflow must keep that lane out of `headline_ready_lanes`
+  and record it in the truth table as a first-class outcome.
+- SCENARIO-CAPSTONE-5414-FIELD-PRINCIPLES: The required field principles are:
+  `milestone` = "terminal route key; must equal 2026.07.492.",
+  `artifacts_read` = "provenance; ordered list of upstream artifacts and
+  conductor status inputs actually read.", `formal_encoding_corrigendum_clean`
+  = "repaired safety evidence; copied from clean Exp5404 only.",
+  `structured_safety_action_panel_ready` = "local SOTA constraint evidence;
+  copied from clean Exp5405 only.", `active_constraint_warmstart_ready` =
+  "solver-guidance evidence; copied from Exp5406 but treated as advisory.",
+  `pbit_qubo_stress_ready` = "p-bit boundary evidence; true only for CPU-only
+  exact-enumeration-matched stress evidence.", `resource_accounted_csl_ready` =
+  "FR-11 evidence; copied from Exp5408 only with no weight mutation.",
+  `uncertainty_gated_promotion_ready` = "durable learning guard; copied from
+  Exp5409 only with rejected fragments retained inactive.",
+  `arc_new_level_banked` = "ARC standing floor; must remain false for the
+  Exp5410 honest-null no-bank run.", `hardware_repeatability_ready` =
+  "hardware evidence boundary; true only for repeated same-workload evidence and
+  not a speedup claim.", `hardware_speedup_claim` = "must remain false without
+  comparable authenticated timing speedup.", `kan_active_constraint_certificate_ready`
+  = "bounded certificate evidence; copied from Exp5412 without broad KAN
+  verification.", `future_token_signal_allowed` = "closed token/internal lane
+  unless a backend receipt exists.", `headline_ready_lanes` = "external claim
+  boundary; only lanes with closed row-level evidence and no stronger blocked
+  claim are listed.", `next_recommendations` = "next milestone seed; derived
+  from actual artifact blockers and clean lanes.", `inference_substrate` =
+  "synthesis only; must equal aggregation_from_upstream_artifacts.", and
+  `honest_verdict` = "terminal status; starts with complete: or blocked: and
+  summarizes what actually happened."
+
+## Implementation Status (REQ-CAPSTONE-5414)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5414 | Planned (`python/carnot/experiment_5414_capstone_v492.py`, `results/experiment_5414_capstone_v492.json`) | Planned (`tests/python/test_experiment_5414_capstone_v492.py`) |
