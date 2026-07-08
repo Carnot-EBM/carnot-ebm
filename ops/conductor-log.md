@@ -10581,3 +10581,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-08 21:10 UTC | Milestone 2026.07.495 activated | OK | 13 tasks queued |
 | 2026-07-08 21:23 UTC | Transition .494 outcomes into .495 execution conte | OK | 87 passed, 1 warning in 12.73s |
 | 2026-07-08 21:39 UTC | Execution-time 2025-2026 source delta for .495 | OK | 121 passed, 1 warning in 10.34s |
+| 2026-07-08 21:59 UTC | Verifier-potential prefix fixture with exact final | OK | 88 passed, 1 warning in 11.33s |
