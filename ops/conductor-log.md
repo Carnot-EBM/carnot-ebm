@@ -10558,3 +10558,4 @@ I’m going to append a small |
 | 2026-07-08 14:53 UTC | Hardware comparable CPU and board timing receipts | OK | 87 passed, 1 warning in 11.08s |
 | 2026-07-08 15:07 UTC | KAN measurement-access certificate for active-cons | OK | 89 passed, 1 warning in 11.75s |
 | 2026-07-08 15:21 UTC | PRD gap table with tool-use planning and reasoning | OK | 88 passed, 1 warning in 10.69s |
+| 2026-07-08 15:34 UTC | Milestone .493 capstone and next-roadmap recommend | OK | 88 passed, 1 warning in 9.18s |
