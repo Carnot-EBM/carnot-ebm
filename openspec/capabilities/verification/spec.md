@@ -28687,6 +28687,86 @@ evidence into a headline claim.
 |---|---|---|
 | REQ-VERIFY-5500 | Planned (`python/carnot/experiment_5500_sota_concept_claim_panel_v499.py`, `results/experiment_5500_sota_concept_claim_panel_v499.json`) | Planned (`tests/python/test_experiment_5500_sota_concept_claim_panel_v499.py`) |
 
+### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
+
+The repository SHALL provide Exp 5501 at
+`python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py`
+and write
+`results/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.json`
+plus a helper-contract fixture at
+`results/helper_contract_hierarchical_claim_fixture_5501/fixture.json`
+without modifying `scripts/research_conductor.py`, without live LLM
+generation, without guided decoding, and without token steering. The workflow
+SHALL consume the Exp 5499 typed claim-state fixture and use its exact
+hard/soft validators as the final authority for all executable helper claims.
+
+The fixture SHALL define a small set of natural-language helper contracts.
+Every helper contract SHALL include typed claim spans with exact character
+offsets, local expected labels, evidence references into Exp 5499 instances,
+and a rolled-up expected helper verdict. A helper contract SHALL count as
+accepted only when every local claim compiles to an executable predicate or
+exact test and the predicates return supported local labels. Claims that lack
+typed evidence SHALL compile to an explicit unsupported label, not to a guessed
+predicate. The fixture SHALL include negative controls for a baseless helper
+claim, a contradicted helper claim, and an overbroad soft-preference claim.
+
+The executable predicates SHALL verify local claim labels and rolled-up helper
+verdicts against the Exp 5499 cached candidate assignments and independent
+reference solver. They SHALL measure local claim label accuracy, rolled-up
+verdict accuracy, useful repair rate for helper text that proposes exact
+repairs, false accept rate, and the number of helper contracts refused because
+they lack executable support. Soft preferences SHALL remain advisory: an
+overbroad helper that treats a soft preference as sufficient for acceptance
+SHALL be rejected even when the soft preference itself is present.
+
+The artifact SHALL include at minimum these top-level fields:
+`helper_contract_fixture_path`, `executable_predicate_paths`, `test_paths`,
+`num_helper_contracts`, `unsupported_contract_count`,
+`local_claim_label_accuracy`, `rolled_up_verdict_accuracy`,
+`useful_repair_rate`, `false_accept_rate`,
+`helper_contract_fixture_ready`, `inference_substrate`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`verifier_ensemble_against_cached_candidates`. `honest_verdict` SHALL start
+with `complete:` or `blocked:` and SHALL NOT present unsupported helper text as
+authority.
+
+Required field principles:
+
+- `helper_contract_fixture_path`: principle "points to the checked helper-contract fixture rather than relying on prose in the result artifact."
+- `executable_predicate_paths`: principle "lists the exact predicate entry points that make helper text auditable."
+- `test_paths`: principle "identifies the tests that assert the REQ/SCENARIO contract."
+- `num_helper_contracts`: principle "bounds the fixture size and prevents silent row loss."
+- `unsupported_contract_count`: principle "counts helper text refused because it lacked executable support."
+- `local_claim_label_accuracy`: principle "measures local span labels against exact predicates before rolling up."
+- `rolled_up_verdict_accuracy`: principle "measures RT4CHART-style local-to-global verdict agreement."
+- `useful_repair_rate`: principle "counts only repair suggestions that become exact-reference agreements."
+- `false_accept_rate`: principle "guards against unsupported, contradicted, or overbroad helper text being accepted."
+- `helper_contract_fixture_ready`: principle "downstream gate for the hierarchical helper-contract fixture."
+- `inference_substrate`: principle "declares verifier-scoring against cached candidates rather than live model inference."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked: and do not launder unsupported text."
+
+### SCENARIO-VERIFY-5501: Helper Contracts Roll Up From Executable Local Claims
+
+Given the Exp 5499 typed claim-state fixture is present and validates under
+its own schema, when Exp 5501 builds helper contracts, then every supported
+local claim span compiles to an exact predicate over Exp 5499 assignments,
+hard constraints, soft preferences, or reference repairs; every unsupported
+span records an explicit unsupported label; and each helper verdict is rolled
+up only from those local labels.
+
+If a helper claim has no typed evidence, contradicts the hard/soft exact
+validators, or treats a soft preference as sufficient for acceptance across
+hard-constraint failures, then Exp 5501 SHALL refuse or reject that helper,
+keep false accepts at zero, report the local failing label, and write the
+required artifact fields with
+`inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+## Implementation Status (REQ-VERIFY-5501)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5501 | Implemented (`python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py`, `results/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.json`) | Implemented (`tests/python/test_experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
