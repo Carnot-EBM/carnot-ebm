@@ -38922,3 +38922,91 @@ records the current command result in `commands_run`, keeps
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5497 | Planned (`python/carnot/experiment_5497_pretest_cascade_diagnostic_v499.py`, `results/experiment_5497_pretest_cascade_diagnostic_v499.json`) | Planned (`tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py`) |
+
+### REQ-REPORT-5498: Execute V499 Source Delta After Pretest Gate
+
+The Exp5498 workflow SHALL write
+`results/experiment_5498_source_delta_v499.json` after reading
+`results/experiment_5497_pretest_cascade_diagnostic_v499.json`,
+`research-references.md`, `research-program.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, `AGENTS.md`, `CLAUDE.md`, and `CODEX.md`.
+It SHALL NOT modify `scripts/research_conductor.py`, SHALL NOT modify
+`ops/changelog.md`, SHALL NOT modify `ops/status.md`, and SHALL NOT modify
+`_bmad/traceability.md`.
+
+The workflow SHALL perform an execution-time source-delta check against the
+same-day `V499 Planner Refresh - 2026-07-09` block. It SHALL check arXiv for
+2025-2026 work on EBMs for verification and reasoning, neural constraint
+satisfaction, Ising applications, hallucination mitigation, KANs,
+energy-guided or constrained decoding, hardware-accelerated sampling, and
+continual or online learning. It SHALL also check OpenReview, Extropic writing,
+Semantic Scholar-style routes for EBT `2507.02092` and ARM-EBM `2512.15605`,
+HuggingFace Papers, GitHub, Logical Intelligence public pages, local duplicate
+history, and `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL append a short `V499 Execution Refresh - 20260709` block to
+`research-references.md` only when at least one non-duplicate source adds a
+concrete Carnot-local hook that the V499 planner block and local source-delta
+history do not already cover. If no such source exists, it SHALL leave
+`research-references.md` unchanged and explain the no-op in the JSON artifact.
+It SHALL explicitly classify surfaced closed-scope items as watch-only or
+excluded and SHALL keep `closed_scopes_reopened=false`.
+
+The artifact SHALL include required fields `sources_checked`,
+`new_references_added`, `duplicates_suppressed`, `closed_scopes_reopened`,
+`research_references_updated`, `prior_refresh_marker_found`,
+`pretest_gate_artifact`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `sources_checked`: principle "Records each primary, secondary, local-dedupe, and gate source so the freshness check can be audited without rerunning web search."
+- `new_references_added`: principle "Lists only non-duplicate actionable findings that earned a research-references append."
+- `duplicates_suppressed`: principle "Prevents churn from re-adding V499 planner sources or earlier V49x execution-refresh sources."
+- `closed_scopes_reopened`: principle "Bare false boolean proving excluded, proprietary, non-local, or retired lanes stayed closed."
+- `research_references_updated`: principle "Bare boolean distinguishing a real append from a no-op freshness receipt."
+- `prior_refresh_marker_found`: principle "Ensures the execution refresh dedupes against the actual V499 planner block before appending."
+- `pretest_gate_artifact`: principle "Binds the source-delta run to Exp5497 because this task is gated on the repaired pretest cascade."
+- `inference_substrate`: principle "Must be aggregation_from_upstream_artifacts because the receipt aggregates sources and local artifacts without running model, solver, or hardware inference."
+- `honest_verdict`: principle "One-line terminal summary starting with complete: or blocked: that states whether references changed."
+
+#### SCENARIO-REPORT-5498-APPEND-DELTAS: Non-Duplicate Source Appends Execution Refresh
+
+**Given** the Exp5497 pretest artifact exists and records
+`pretest_cascade_resolved=true`
+**And** `research-references.md` contains the V499 planner refresh marker
+**And** the execution-time sweep finds a source absent from the V499 planner
+block and local duplicate history with a concrete Carnot-local hook
+**When** the Exp5498 workflow runs
+**Then** it writes `results/experiment_5498_source_delta_v499.json`, appends
+one `V499 Execution Refresh - 20260709` block to `research-references.md`,
+records the source in `new_references_added`, records duplicate and watch-only
+items separately, sets `research_references_updated=true`, sets
+`prior_refresh_marker_found=true`, sets `closed_scopes_reopened=false`, and
+declares `inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-5498-NO-NEW-DELTA: Duplicate-Only Sweep Leaves References Unchanged
+
+**Given** the Exp5497 pretest artifact is resolved
+**And** the V499 planner refresh marker is present
+**And** every surfaced source is already covered, watch-only, or excluded
+**When** the Exp5498 workflow runs
+**Then** it writes the JSON receipt, records `new_references_added=[]`,
+records `research_references_updated=false`, keeps
+`closed_scopes_reopened=false`, and does not append a V499 execution-refresh
+section.
+
+#### SCENARIO-REPORT-5498-BLOCKED-GATE-OR-MARKER: Missing Gate Or Planner Marker Fails Closed
+
+**Given** the Exp5497 pretest artifact is missing, unresolved, or mismatched
+**Or** `research-references.md` lacks the V499 planner refresh marker
+**When** the Exp5498 workflow runs
+**Then** it writes a terminal blocked artifact, records the observed gate and
+marker booleans, keeps `research_references_updated=false`, keeps
+`new_references_added=[]`, and does not modify `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5498)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5498 | Implemented (`python/carnot/experiment_5498_source_delta_v499.py`, `results/experiment_5498_source_delta_v499.json`) | Implemented (`tests/python/test_experiment_5498_source_delta_v499.py`) |
