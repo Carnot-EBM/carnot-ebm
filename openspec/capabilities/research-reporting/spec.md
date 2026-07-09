@@ -39010,3 +39010,93 @@ marker booleans, keeps `research_references_updated=false`, keeps
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5498 | Implemented (`python/carnot/experiment_5498_source_delta_v499.py`, `results/experiment_5498_source_delta_v499.json`) | Implemented (`tests/python/test_experiment_5498_source_delta_v499.py`) |
+
+### REQ-REPORT-5509: V499 Capstone Actual-Artifact Synthesis
+
+The Exp5509 workflow SHALL write
+`results/experiment_5509_capstone_v499.json` from repository artifacts only.
+It SHALL read `CLAUDE.md`, `CODEX.md`, `research-program.md`,
+`_bmad/prd.md`, `_bmad/architecture.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap-next.yaml` when present, `ops/conductor-log.md`,
+`ops/status.md`, `ops/changelog.md`, and every available result artifact for
+Exp5496 through Exp5508. Missing expected artifacts SHALL be listed
+explicitly instead of inferred from roadmap prose, status text, or planned
+tasks. The workflow SHALL also include any additional sidecar Exp5496 through
+Exp5508 result artifact found in `results/` as provenance, without treating a
+sidecar as a required primary task artifact.
+
+The workflow SHALL decide whether Exp5497 resolved the `.498` pretest cascade
+from the Exp5497 artifact fields, and SHALL report downstream gate discipline
+from actual blocked, skipped, or completed artifacts. It SHALL summarize
+hard/soft verification evidence from Exp5499, Exp5500, Exp5501, and Exp5505;
+CSL evidence from Exp5502, Exp5503, and Exp5504; hardware truth from Exp5506;
+and ARC truth from Exp5507 and Exp5508. It SHALL keep any flagged,
+gate-blocked, or methodology-limited evidence out of headline-ready claims,
+SHALL keep guided decoding quarantined unless an artifact explicitly lifts the
+quarantine, SHALL keep `hardware_speedup_claim=false` without authenticated
+matched timing, and SHALL compute `arc_registry_delta` from artifact-reported
+registry before/after counts rather than from roadmap intent.
+
+The artifact SHALL include required fields `milestone`, `artifacts_expected`,
+`artifacts_found`, `artifacts_missing`, `pretest_cascade_resolved`,
+`hard_soft_core_verdict`, `csl_verdict`, `hardware_verdict`, `arc_verdict`,
+`arc_registry_delta`, `hardware_speedup_claim`,
+`guided_decoding_quarantine_status`, `prd_gap_table`,
+`next_recommendations`, `roadmap_yaml_unchanged`, `conductor_unchanged`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include a failure
+taxonomy, lane scorecard, source context, sidecar artifacts found, protected
+file checks, tests run, spec refs, and a reproducibility checksum so the
+capstone can be audited without rerunning experiments.
+
+Required field principles:
+
+- `milestone`: principle "Route key for the `.499` capstone; must equal `2026.07.499`."
+- `artifacts_expected`: principle "Ordered primary Exp5496 through Exp5508 artifact paths required by the roadmap task."
+- `artifacts_found`: principle "Primary expected artifacts actually read as JSON evidence."
+- `artifacts_missing`: principle "Primary expected artifacts absent or unreadable; missing never counts as success."
+- `pretest_cascade_resolved`: principle "Bare boolean imported from Exp5497, with full-suite caveats preserved in supporting fields."
+- `hard_soft_core_verdict`: principle "One-line evidence boundary for Exp5499, Exp5500, Exp5501, and Exp5505."
+- `csl_verdict`: principle "One-line evidence boundary for Exp5502, Exp5503, and Exp5504, including Exp5474-style headline blockage."
+- `hardware_verdict`: principle "One-line board-status and receipt boundary from Exp5506."
+- `arc_verdict`: principle "One-line registry/provenance/methodology boundary from Exp5507 and Exp5508."
+- `arc_registry_delta`: principle "Bare integer from registry_after_levels minus registry_before_levels, or the artifact delta when present."
+- `hardware_speedup_claim`: principle "Bare false unless authenticated matched board timing exists."
+- `guided_decoding_quarantine_status`: principle "Explicit quarantine boundary; no token steering or guided decoding may be promoted without a lifting artifact."
+- `prd_gap_table`: principle "PRD requirement gaps grounded in actual upstream artifact fields."
+- `next_recommendations`: principle "Next experiments or retirements grounded in observed evidence, not planned tasks."
+- `roadmap_yaml_unchanged`: principle "Protected-file check for `research-roadmap.yaml`."
+- `conductor_unchanged`: principle "Protected-file check for `scripts/research_conductor.py`."
+- `inference_substrate`: principle "Must equal `aggregation_from_upstream_artifacts` because Exp5509 is a synthesis only."
+- `honest_verdict`: principle "Terminal summary starting with `complete:` or `blocked:` that names the milestone evidence boundary."
+
+#### SCENARIO-REPORT-5509: V499 Capstone Uses Actual Upstream Artifacts
+
+**Given** the primary Exp5496 through Exp5508 result artifacts are readable
+**And** optional Exp5503 sidecar artifacts are present
+**When** the Exp5509 capstone workflow runs
+**Then** it writes `results/experiment_5509_capstone_v499.json`, records all
+expected, found, missing, and sidecar artifacts, sets
+`pretest_cascade_resolved` from Exp5497, reports a bounded hard/soft verdict
+when exact fixtures are clean but the SOTA panel abstains, reports a blocked
+CSL headline verdict when Exp5504 gate-check fails, records Exp5506 board
+truth with `hardware_speedup_claim=false`, records Exp5508
+`arc_registry_delta=0`, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and leaves
+`research-roadmap.yaml` and `scripts/research_conductor.py` unchanged.
+
+#### SCENARIO-REPORT-5509-MISSING-INPUT: Missing Inputs Stay Non-Success
+
+**Given** one or more primary Exp5496 through Exp5508 artifacts are missing or
+unreadable
+**When** the Exp5509 capstone workflow runs
+**Then** it still writes the capstone artifact, lists the affected paths in
+`artifacts_missing`, keeps the affected lane out of headline-ready verdicts,
+and starts `honest_verdict` with `blocked:` when missing inputs make the
+aggregation incomplete.
+
+## Implementation Status (REQ-REPORT-5509)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5509 | Implemented (`python/carnot/experiment_5509_capstone_v499.py`, `results/experiment_5509_capstone_v499.json`) | Implemented (`tests/python/test_experiment_5509_capstone_v499.py`) |
