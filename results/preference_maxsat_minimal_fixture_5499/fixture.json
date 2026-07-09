@@ -1,0 +1,286 @@
+{
+  "fixture_id": "preference_maxsat_minimal_typed_claim_state_5499",
+  "guided_decoding_used": false,
+  "instances": [
+    {
+      "candidates": [
+        {
+          "accept": true,
+          "assignment": {
+            "scope": "bounded",
+            "source_quality": "primary",
+            "support": "entailed"
+          },
+          "candidate_id": "support_exact_optimum"
+        },
+        {
+          "accept": false,
+          "assignment": {
+            "scope": "bounded",
+            "source_quality": "primary",
+            "support": "unsupported"
+          },
+          "candidate_id": "support_hard_violation"
+        },
+        {
+          "accept": false,
+          "assignment": {
+            "scope": "bounded",
+            "source_quality": "secondary",
+            "support": "entailed"
+          },
+          "candidate_id": "support_soft_suboptimal"
+        }
+      ],
+      "expected_status": "optimal",
+      "hard_constraints": [
+        {
+          "id": "HC_SUPPORT_ENTAILED",
+          "literals": [
+            {
+              "equals": "entailed",
+              "variable": "support"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_SCOPE_BOUNDED",
+          "literals": [
+            {
+              "equals": "bounded",
+              "variable": "scope"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "instance_id": "claim_support_preference",
+      "soft_preferences": [
+        {
+          "id": "SP_PRIMARY_SOURCE",
+          "type": "value_reward",
+          "value": "primary",
+          "variable": "source_quality",
+          "weight": 7
+        },
+        {
+          "id": "SP_ENTAILED_SUPPORT",
+          "type": "value_reward",
+          "value": "entailed",
+          "variable": "support",
+          "weight": 3
+        },
+        {
+          "id": "SP_BOUNDED_SCOPE",
+          "type": "value_reward",
+          "value": "bounded",
+          "variable": "scope",
+          "weight": 1
+        }
+      ],
+      "typed_claims": [
+        {
+          "claim_type": "evidence_support",
+          "domain": [
+            "unsupported",
+            "entailed"
+          ],
+          "name": "support"
+        },
+        {
+          "claim_type": "provenance_quality",
+          "domain": [
+            "secondary",
+            "primary"
+          ],
+          "name": "source_quality"
+        },
+        {
+          "claim_type": "claim_scope",
+          "domain": [
+            "overbroad",
+            "bounded"
+          ],
+          "name": "scope"
+        }
+      ]
+    },
+    {
+      "candidates": [
+        {
+          "accept": true,
+          "assignment": {
+            "action": "accept",
+            "citation": "present",
+            "safety": "safe"
+          },
+          "candidate_id": "safety_exact_optimum"
+        },
+        {
+          "accept": false,
+          "assignment": {
+            "action": "accept",
+            "citation": "present",
+            "safety": "unsafe"
+          },
+          "candidate_id": "safety_hard_violation_high_soft"
+        },
+        {
+          "accept": false,
+          "assignment": {
+            "action": "reject",
+            "citation": "present",
+            "safety": "safe"
+          },
+          "candidate_id": "safety_soft_suboptimal"
+        }
+      ],
+      "expected_status": "optimal",
+      "hard_constraints": [
+        {
+          "id": "HC_SAFETY_SAFE",
+          "literals": [
+            {
+              "equals": "safe",
+              "variable": "safety"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_CITATION_PRESENT",
+          "literals": [
+            {
+              "equals": "present",
+              "variable": "citation"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "instance_id": "claim_safety_conflict",
+      "soft_preferences": [
+        {
+          "id": "SP_ACCEPT_WHEN_SAFE",
+          "type": "value_reward",
+          "value": "accept",
+          "variable": "action",
+          "weight": 5
+        },
+        {
+          "id": "SP_SAFE_LABEL",
+          "type": "value_reward",
+          "value": "safe",
+          "variable": "safety",
+          "weight": 4
+        },
+        {
+          "id": "SP_CITATION_PRESENT",
+          "type": "value_reward",
+          "value": "present",
+          "variable": "citation",
+          "weight": 3
+        }
+      ],
+      "typed_claims": [
+        {
+          "claim_type": "safety_label",
+          "domain": [
+            "unsafe",
+            "safe"
+          ],
+          "name": "safety"
+        },
+        {
+          "claim_type": "citation_state",
+          "domain": [
+            "missing",
+            "present"
+          ],
+          "name": "citation"
+        },
+        {
+          "claim_type": "validator_action",
+          "domain": [
+            "reject",
+            "accept"
+          ],
+          "name": "action"
+        }
+      ]
+    },
+    {
+      "candidates": [
+        {
+          "accept": false,
+          "assignment": {
+            "evidence": "present",
+            "verdict": "accept"
+          },
+          "candidate_id": "infeasible_false_accept_probe"
+        }
+      ],
+      "expected_status": "infeasible",
+      "hard_constraints": [
+        {
+          "id": "HC_VERDICT_ACCEPT",
+          "literals": [
+            {
+              "equals": "accept",
+              "variable": "verdict"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_VERDICT_REJECT",
+          "literals": [
+            {
+              "equals": "reject",
+              "variable": "verdict"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "instance_id": "claim_infeasible_negative_control",
+      "soft_preferences": [
+        {
+          "id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+          "type": "value_reward",
+          "value": "accept",
+          "variable": "verdict",
+          "weight": 10
+        },
+        {
+          "id": "SP_EVIDENCE_PRESENT",
+          "type": "value_reward",
+          "value": "present",
+          "variable": "evidence",
+          "weight": 2
+        }
+      ],
+      "typed_claims": [
+        {
+          "claim_type": "validator_verdict",
+          "domain": [
+            "reject",
+            "accept"
+          ],
+          "name": "verdict"
+        },
+        {
+          "claim_type": "evidence_state",
+          "domain": [
+            "absent",
+            "present"
+          ],
+          "name": "evidence"
+        }
+      ]
+    }
+  ],
+  "schema": "carnot.fixture.preference_maxsat_minimal_typed_claim_state.v1",
+  "token_steering_used": false
+}

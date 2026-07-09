@@ -28548,6 +28548,73 @@ with `subproblem_descriptor_ready=false`, precise blocker details, and an
 |---|---|---|
 | REQ-VERIFY-5491 | Planned (`python/carnot/experiment_5491_active_constraint_subproblem_descriptor_v498.py`, `results/experiment_5491_active_constraint_subproblem_descriptor_v498.json`) | Planned (`tests/python/test_experiment_5491_active_constraint_subproblem_descriptor_v498.py`) |
 
+### REQ-VERIFY-5499: Preference-MaxSAT Minimal Typed Claim-State Fixture V499
+
+The repository SHALL provide Exp 5499 at
+`python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py` and
+write `results/experiment_5499_preference_maxsat_minimal_fixture_v499.json`
+without modifying `scripts/research_conductor.py`, without guided decoding,
+without token steering, without live LLM generation, and without any hardware
+claim. The fixture SHALL be deterministic, CPU-local, and small enough for an
+independent exact enumerator to exhaust every typed claim-state assignment.
+
+The fixture SHALL include typed claims with finite domains, hard constraints,
+soft preferences with numeric weights, cached candidate assignments, and at
+least one negative-control instance whose hard constraints are infeasible. Hard
+constraint satisfaction SHALL be the first gate. Soft preferences SHALL only
+rank assignments that pass every hard constraint. A candidate SHALL NOT be
+accepted when any hard constraint fails, even if it scores well on soft
+preferences. The fixture JSON SHALL be written to
+`results/preference_maxsat_minimal_fixture_5499/fixture.json`. The independent
+reference solver SHALL enumerate the Cartesian product of the typed domains,
+compute all hard-feasible states, choose the maximum soft-preference score with
+deterministic tie-breaking, and return infeasible for the negative control.
+
+The final validators SHALL measure hard-constraint pass rate, soft preference
+optimality, independent reference agreement, and false-accept rate over the
+cached candidate rows. `preference_maxsat_fixture_ready` SHALL be true only when
+the fixture exists, the reference solver exists, every feasible instance has a
+hard-feasible soft-optimal accepted candidate, every feasible accepted candidate
+agrees with the independent reference optimum, every infeasible hard-constraint
+negative control is rejected, and false accepts are zero.
+
+The artifact SHALL include at minimum these top-level fields:
+`fixture_path`, `reference_solver_path`, `test_paths`, `num_instances`,
+`hard_constraint_pass_rate`, `preference_optimality_rate`,
+`independent_reference_agreement_rate`, `false_accept_rate`,
+`preference_maxsat_fixture_ready`, `guided_decoding_used`,
+`inference_substrate`, and `honest_verdict`. `guided_decoding_used` SHALL be
+false. `inference_substrate` SHALL equal
+`verifier_ensemble_against_cached_candidates`. `honest_verdict` SHALL start
+with `complete:` or `blocked:`.
+
+### SCENARIO-VERIFY-5499: Exact Preference-MaxSAT Validators Are Final Authority
+
+Given the deterministic Exp 5499 typed claim-state fixture, when the runner
+loads the fixture and evaluates each cached candidate against the independent
+exact enumerator, then feasible instances are accepted only when hard
+constraints pass and the soft score equals the enumerated optimum, the
+infeasible hard-constraint negative control is rejected, reference agreement is
+computed from exact solutions rather than candidate metadata, and the terminal
+artifact writes all required fields with `guided_decoding_used=false` and
+`inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+If any fixture row is missing typed domains, hard constraints, soft
+preferences, candidate assignments, or a hard-infeasible negative control; if a
+candidate is accepted despite violating a hard constraint; if a feasible
+candidate is accepted below the reference soft optimum; if reference agreement
+is below 1.0; if false accepts are nonzero; if guided decoding or token
+steering is reported; or if `scripts/research_conductor.py` is modified, then
+Exp 5499 SHALL write the same result path with
+`preference_maxsat_fixture_ready=false`, exact blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5499)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5499 | Implemented (`python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py`, `results/experiment_5499_preference_maxsat_minimal_fixture_v499.json`) | Implemented (`tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
