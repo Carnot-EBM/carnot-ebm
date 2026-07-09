@@ -28231,6 +28231,95 @@ with `minimal_core_pbit_bridge_ready=false`, precise blocker details, and an
 |---|---|---|
 | REQ-VERIFY-5462 | Planned (`python/carnot/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py`, `results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json`) | Planned (`tests/python/test_experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py`) |
 
+### REQ-VERIFY-5463: Gated Hardware Boundary-Exchange Receipts V496
+
+The repository SHALL provide Exp 5463 at
+`python/carnot/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.py`
+and write
+`results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json`
+without invoking a live LLM, generated-text judge, destructive board command,
+host KV260 `/dev/mmcblk*` precondition, hardware speedup claim, or modifying
+`scripts/research_conductor.py`. Exp 5463 SHALL run only when the checked-in
+Exp5462 artifact has `minimal_core_pbit_bridge_ready=true`. If the upstream
+gate is missing or false, Exp 5463 SHALL fail closed before board workload
+execution and preserve the precondition state in the terminal artifact.
+
+The runner SHALL extract the exact Exp5462 workload hash, fixture subset,
+assumption sources, seeds, and expected result hashes from the Exp5462 p-bit /
+p-dit bridge. It SHALL repeat the same deterministic workload on CPU and record
+the CPU result hash, repeat count, timing distribution, and timing variance.
+It SHALL probe KV260 only through SSH-safe commands with a short timeout and
+SHALL NOT inspect or require any host `/dev/mmcblk*` path. It SHALL also probe
+PolarFire through SSH-safe commands with a short timeout. For every reachable
+board, the runner SHALL execute the same workload or closest self-contained
+board-local replay, record the command receipt, board identity, workload hash,
+result hash, repeat count, timing distribution, and timing variance. If no
+board is reachable, the artifact SHALL include `blocked_board_unreachable`
+while retaining CPU receipts.
+
+The runner SHALL compare CPU and board result hashes before any timing
+comparison. Hardware timing ratios MAY be reported only as matched receipt
+facts after the hashes match, and `hardware_speedup_claim` SHALL remain false.
+The artifact SHALL also record `boundary_exchange_ratio_summary` derived from
+simulated or board-supported partitioned sampling metadata, including repeat
+counts, eta values, timing-ratio availability, and whether the source is
+simulation-only or board-supported.
+
+The artifact SHALL include top-level fields `preconditions_checked`,
+`gated_upstream_ready`, `workload_hash`, `cpu_result_hash`,
+`board_result_hashes`, `board_reachability`, `kv260_ssh_only_checked`,
+`boundary_exchange_ratio_summary`, `timing_repeat_counts`, `timing_summary`,
+`hashes_match_before_timing_compare`, `hardware_speedup_claim`,
+`hardware_receipts_ready`, `inference_substrate`, and `honest_verdict`, with
+field principles explaining each required field. `inference_substrate` SHALL
+equal `cpu_and_reachable_board_timing_receipts`. `hardware_speedup_claim` SHALL
+be false. `honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `preconditions_checked`: principle "hardware task must fail fast"
+- `gated_upstream_ready`: principle "Exp5462 bridge gate provenance"
+- `workload_hash`: principle "matched p-bit/p-dit workload"
+- `cpu_result_hash`: principle "CPU correctness before timing"
+- `board_result_hashes`: principle "board correctness before timing"
+- `board_reachability`: principle "SSH-safe hardware provenance"
+- `kv260_ssh_only_checked`: principle "no host SD-card anti-pattern"
+- `boundary_exchange_ratio_summary`: principle "partitioned sampling metadata"
+- `timing_repeat_counts`: principle "variance support"
+- `timing_summary`: principle "measured timing distributions"
+- `hashes_match_before_timing_compare`: principle "no false timing comparison"
+- `hardware_speedup_claim`: principle "bounded claim"
+- `hardware_receipts_ready`: principle "receipt readiness"
+- `inference_substrate`: principle "explicit hardware substrate"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+### SCENARIO-VERIFY-5463: Exp5462 Workload Receipts Compare Hashes Before Timing
+
+Given the checked-in Exp5462 artifact has `minimal_core_pbit_bridge_ready=true`,
+when Exp5463 builds the p-bit/p-dit workload receipt, then it records the exact
+Exp5462 fixture subset, assumption sources, seeds, workload hash, expected
+result hashes, repeated CPU timing distribution, boundary-exchange ratio
+summary, and SSH-safe board reachability. If KV260 or PolarFire is reachable,
+the same workload or closest board-local equivalent is repeated on that board,
+and the board result hash must match the CPU result hash before timing ratios
+or timing comparisons are marked ready.
+
+If Exp5462 is not ready, if CPU repeats do not produce a stable result hash, if
+KV260 probing uses a host block-device precondition, if a destructive board
+command is recorded, if no board is reachable, if board hashes differ from CPU,
+if boundary-exchange ratio metadata is absent, if
+`inference_substrate` differs from `cpu_and_reachable_board_timing_receipts`,
+or if `hardware_speedup_claim` is true, then Exp5463 SHALL write
+`results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json`
+with precise blockers, no hardware speedup claim, and an `honest_verdict`
+starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5463)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5463 | Implemented (`python/carnot/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.py`, `results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json`) | Implemented (`tests/python/test_experiment_5463_gated_hardware_boundary_exchange_receipts_v496.py`) |
+
 ### REQ-VERIFY-5433: Active-Constraint Diversity LNS Diagnostic V494
 
 The repository SHALL provide Exp 5433 at
