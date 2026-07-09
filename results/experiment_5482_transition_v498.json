@@ -1,0 +1,570 @@
+{
+  "blocked_lanes": [
+    {
+      "claim_boundary": "Guided decoding remains quarantined; no .497 artifact lifts it or uses it.",
+      "classification": "blocked",
+      "evidence": {
+        "guard_quarantine_lifted": false,
+        "prior_quarantine_carried_by_exp5468": {
+          "blocked_lanes": [
+            {
+              "authority_gate": "metric independence plus exact final authority; live SOTA rerun still must be clean",
+              "claim_boundary": "No guided-decoding headline; the clean posthoc corrigendum did not make the fresh live rerun clean.",
+              "classification": "blocked",
+              "headline_blockers": [
+                "flagged_adversarial",
+                "tautology",
+                "readiness_false",
+                "lcd_bias_failed"
+              ],
+              "lane": "guided_decoding",
+              "source_artifacts": [
+                "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
+                "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+                "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
+                "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
+                "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl"
+              ],
+              "terminal_evidence": {
+                "exp5456": {
+                  "guided_decoding_corrigendum_clean": true,
+                  "honest_verdict": "complete: guided-decoding corrigendum clean; Exp5444 headline readiness blocked",
+                  "invalid_tautological_fields": [
+                    "abstention_rate",
+                    "action_unreachability_rate",
+                    "guided_validity_delta_vs_unconstrained",
+                    "semantic_false_accept_rate"
+                  ],
+                  "prior_flagged_adversarial": true
+                },
+                "exp5456_graph": {},
+                "exp5457": {
+                  "corrigendum_pending": [
+                    {
+                      "detail": "accepted_validity_rate=0.6666666666666666 and guided_validity_delta_vs_unconstrained=0.6666666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+                      "kind": "TAUTOLOGY",
+                      "severity": "critical"
+                    }
+                  ],
+                  "exact_final_authority": true,
+                  "flagged_adversarial": true,
+                  "gpu_offload_verified": true,
+                  "lcd_bias_check_passed": false,
+                  "metric_independence_checks_passed": true,
+                  "runtime_backend": "llama_cpp_python_cuda_gguf",
+                  "verifier_guided_decoding_ready": false
+                }
+              }
+            }
+          ]
+        },
+        "rewrite_quarantine_lifted": false,
+        "sota_guided_decoding_used": false
+      },
+      "lane": "guided_decoding",
+      "source_artifacts": [
+        "results/experiment_5468_transition_v497.json",
+        "results/experiment_5470_rewrite_state_semantic_fixture_v497.json",
+        "results/experiment_5471_guard_composition_scale_v497.json",
+        "results/experiment_5472_sota_evidence_telemetry_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "kv260 had no credited workload receipt in .497.",
+      "classification": "blocked",
+      "evidence": {
+        "blocked_reason": "blocked_kv260_ssh",
+        "board_identity": "kv260",
+        "reachable": false,
+        "status_exit_code": 124,
+        "workload_execution_attempted": false
+      },
+      "lane": "kv260_board",
+      "source_artifacts": [
+        "results/experiment_5478_hardware_receipts_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "gatemate had no credited workload receipt in .497.",
+      "classification": "blocked",
+      "evidence": {
+        "blocked_reason": "diagnostic_only_no_exp5477_workload_receipt",
+        "board_identity": "gatemate",
+        "diagnostic_only": true,
+        "reachable": false,
+        "workload_execution_attempted": false
+      },
+      "lane": "gatemate_board",
+      "source_artifacts": [
+        "results/experiment_5478_hardware_receipts_v497.json"
+      ]
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "claim_boundary": "Bounded GGUF/GPU-offload runtime receipt; exact validators remain final authority.",
+      "classification": "bounded",
+      "evidence": {
+        "exact_validator_accuracy": 0.5,
+        "gpu_offload_receipt_count": 1,
+        "guided_decoding_used": false,
+        "headline_models_run": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "sota_evidence_telemetry_ready": true
+      },
+      "lane": "local_sota_runtime",
+      "source_artifacts": [
+        "results/experiment_5472_sota_evidence_telemetry_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "Bounded solver-advisory lane; exact fallback remains final authority.",
+      "classification": "bounded",
+      "evidence": {
+        "advisory_improvement_delta": 2.518519,
+        "boundary_exchange_ready": true,
+        "exact_fallback_completeness_rate": 1.0,
+        "hardware_speedup_claim": false,
+        "unsafe_false_accept_count": 0
+      },
+      "lane": "pdit_lns_boundary_exchange",
+      "source_artifacts": [
+        "results/experiment_5477_pdit_lns_boundary_exchange_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "Receipt-only hardware evidence; no speedup claim and KV260 remains blocked if unreachable.",
+      "classification": "bounded",
+      "evidence": {
+        "hardware_receipts_ready": true,
+        "hardware_speedup_claim": false,
+        "reachable_boards": [
+          "polarfire"
+        ],
+        "result_hash_match_rate": 1.0,
+        "unreachable_boards": [
+          {
+            "blocked_reason": "blocked_kv260_ssh",
+            "board_identity": "kv260",
+            "reachable": false,
+            "status_exit_code": 124,
+            "workload_execution_attempted": false
+          },
+          {
+            "blocked_reason": "diagnostic_only_no_exp5477_workload_receipt",
+            "board_identity": "gatemate",
+            "diagnostic_only": true,
+            "reachable": false,
+            "workload_execution_attempted": false
+          }
+        ]
+      },
+      "lane": "hardware_receipts",
+      "source_artifacts": [
+        "results/experiment_5478_hardware_receipts_v497.json"
+      ]
+    }
+  ],
+  "clean_lanes": [
+    {
+      "claim_boundary": "Deterministic rewrite-state guard evidence from Exp5470.",
+      "classification": "headline_ready",
+      "evidence": {
+        "exact_validator_agreement": 1.0,
+        "rewrite_state_fixture_ready": true
+      },
+      "lane": "rewrite_state_guards",
+      "source_artifacts": [
+        "results/experiment_5470_rewrite_state_semantic_fixture_v497.json",
+        "results/experiment_5471_guard_composition_scale_v497.json",
+        "results/experiment_5476_helper_lemma_core_witness_repair_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "Guard composition remains exact-validator bounded.",
+      "classification": "headline_ready",
+      "evidence": {
+        "false_accept_rate": 0.0,
+        "guard_composition_ready": true
+      },
+      "lane": "guard_composition",
+      "source_artifacts": [
+        "results/experiment_5470_rewrite_state_semantic_fixture_v497.json",
+        "results/experiment_5471_guard_composition_scale_v497.json",
+        "results/experiment_5476_helper_lemma_core_witness_repair_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "Local SOTA telemetry is bounded runtime evidence; exact validators remain authority.",
+      "classification": "bounded",
+      "evidence": {
+        "exact_validator_accuracy": 0.5,
+        "gpu_offload_receipt_count": 1,
+        "guided_decoding_used": false,
+        "sota_evidence_telemetry_ready": true
+      },
+      "lane": "sota_evidence_telemetry",
+      "source_artifacts": [
+        "results/experiment_5472_sota_evidence_telemetry_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "KAN assurance applies to governed frozen-policy CSL only.",
+      "classification": "headline_ready",
+      "evidence": {
+        "csl_kan_surrogate_ready": true,
+        "model_weight_mutation": [
+          false,
+          false,
+          false
+        ]
+      },
+      "lane": "kan_assurance",
+      "source_artifacts": [
+        "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
+        "results/experiment_5474_sota_csl_scale_v497.json",
+        "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "Behavioral memory evidence is frozen-policy routing evidence.",
+      "classification": "headline_ready",
+      "evidence": {
+        "csl_behavioral_memory_ready": true,
+        "model_weight_mutation": [
+          false,
+          false,
+          false
+        ]
+      },
+      "lane": "behavioral_memory",
+      "source_artifacts": [
+        "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
+        "results/experiment_5474_sota_csl_scale_v497.json",
+        "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "Helper repair is credited only after exact rechecks.",
+      "classification": "headline_ready",
+      "evidence": {
+        "helper_false_accept_count": 0,
+        "helper_lemma_repair_ready": true
+      },
+      "lane": "helper_repair",
+      "source_artifacts": [
+        "results/experiment_5470_rewrite_state_semantic_fixture_v497.json",
+        "results/experiment_5471_guard_composition_scale_v497.json",
+        "results/experiment_5476_helper_lemma_core_witness_repair_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "p-bit/p-dit exchange is solver-advisory; exact fallback remains final.",
+      "classification": "bounded",
+      "evidence": {
+        "boundary_exchange_ready": true,
+        "exact_fallback_completeness_rate": 1.0,
+        "hardware_speedup_claim": false,
+        "unsafe_false_accept_count": 0
+      },
+      "lane": "pbit_pdit_boundary_exchange",
+      "source_artifacts": [
+        "results/experiment_5477_pdit_lns_boundary_exchange_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "Hardware receipts are hash-matched receipt evidence, not speedup evidence.",
+      "classification": "bounded",
+      "evidence": {
+        "hardware_receipts_ready": true,
+        "hardware_speedup_claim": false,
+        "reachable_boards": [
+          "polarfire"
+        ],
+        "result_hash_match_rate": 1.0,
+        "unreachable_boards": [
+          {
+            "blocked_reason": "blocked_kv260_ssh",
+            "board_identity": "kv260",
+            "reachable": false,
+            "status_exit_code": 124,
+            "workload_execution_attempted": false
+          },
+          {
+            "blocked_reason": "diagnostic_only_no_exp5477_workload_receipt",
+            "board_identity": "gatemate",
+            "diagnostic_only": true,
+            "reachable": false,
+            "workload_execution_attempted": false
+          }
+        ]
+      },
+      "lane": "hardware_receipts",
+      "source_artifacts": [
+        "results/experiment_5478_hardware_receipts_v497.json"
+      ]
+    }
+  ],
+  "conductor_unchanged": true,
+  "exp5474_tautology_flag_recorded": true,
+  "experiment": "experiment_5482_transition_v498",
+  "experiment_id": "exp5482-transition-v498",
+  "failed_preconditions": [],
+  "field_principles": {
+    "blocked_lanes": "quarantined or unreachable lanes that must not be promoted.",
+    "bounded_lanes": "useful evidence that remains claim-limited in the .497 capstone.",
+    "clean_lanes": "prior lanes that can be carried forward with their stated boundaries.",
+    "conductor_unchanged": "protected-file check for scripts/research_conductor.py.",
+    "exp5474_tautology_flag_recorded": "bare boolean proving the CSL scale tautology caveat was seen.",
+    "flagged_lanes": "adversarially flagged evidence that must be repaired before headline use.",
+    "honest_null_lanes": "executed lanes that produced no positive bankable result.",
+    "honest_verdict": "terminal summary starting with complete: or blocked:.",
+    "inference_substrate": "aggregation only; no hidden live inference or hardware run.",
+    "milestone": "route key for the new .498 transition receipt.",
+    "next_task_range": "planned .498 conductor range.",
+    "previous_milestone": "source milestone whose terminal facts are being archived.",
+    "previous_task_range": "closed .497 conductor range.",
+    "prior_capstone_path": "exact .497 capstone artifact used as the main source of truth.",
+    "roadmap_yaml_unchanged": "protected-file check for research-roadmap.yaml."
+  },
+  "flagged_lanes": [
+    {
+      "claim_boundary": "Exp5474 reported CSL scale readiness but is adversarially flagged TAUTOLOGY.",
+      "classification": "flagged",
+      "evidence": {
+        "artifact_reported_csl_scale_ready": true,
+        "delta_vs_naive_icl": 0.5,
+        "delta_vs_no_memory": 0.75,
+        "detail": "delta_vs_naive_icl=0.5 and naive_icl_score=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "exact_validator_pass_rate": 1.0,
+        "flag_kind": "TAUTOLOGY",
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: local SOTA GGUF CSL scale-up used KAN assurance with frozen weights",
+        "severity": "critical"
+      },
+      "lane": "exp5474_sota_csl_scale_tautology",
+      "source_artifacts": [
+        "results/experiment_5474_sota_csl_scale_v497.json"
+      ]
+    }
+  ],
+  "honest_null_lanes": [
+    {
+      "claim_boundary": "ARC sb26 L3 no-bank; no registry delta or offline reproduction.",
+      "classification": "honest_null",
+      "evidence": {
+        "action_count": 47,
+        "explored_state_count": 9,
+        "failure_mode": "bounded_budget_no_target_level_reproduction",
+        "game": "sb26",
+        "new_level_banked": false,
+        "offline_reproduced": false,
+        "reproduced_levels_after": 2,
+        "reproduced_levels_before": 2,
+        "target_level": 3
+      },
+      "lane": "arc_sb26_l3_no_bank",
+      "source_artifacts": [
+        "results/experiment_5479_arc_target_rotation_precheck_v497.json",
+        "results/experiment_5480_arc_live_salience_levelup_v497.json"
+      ]
+    },
+    {
+      "claim_boundary": "No hardware speedup claim is supported by .497 receipts.",
+      "classification": "honest_null",
+      "evidence": {
+        "hardware_speedup_claim": false,
+        "reachable_boards": [
+          "polarfire"
+        ],
+        "unreachable_boards": [
+          {
+            "blocked_reason": "blocked_kv260_ssh",
+            "board_identity": "kv260",
+            "reachable": false,
+            "status_exit_code": 124,
+            "workload_execution_attempted": false
+          },
+          {
+            "blocked_reason": "diagnostic_only_no_exp5477_workload_receipt",
+            "board_identity": "gatemate",
+            "diagnostic_only": true,
+            "reachable": false,
+            "workload_execution_attempted": false
+          }
+        ]
+      },
+      "lane": "hardware_speedup_claim",
+      "source_artifacts": [
+        "results/experiment_5478_hardware_receipts_v497.json"
+      ]
+    }
+  ],
+  "honest_verdict": "complete: archived .497 terminal evidence into .498 transition receipt; clean lanes include rewrite-state guards, guard composition, SOTA evidence telemetry, KAN assurance, behavioral memory, helper repair, p-bit/p-dit boundary exchange, and hardware receipts; Exp5474 critical TAUTOLOGY flag recorded; guided decoding remains quarantined; ARC sb26 L3 no-bank and hardware_speedup_claim=false; next_task_range=exp5482-exp5495.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.498",
+  "next_task_range": "exp5482-exp5495",
+  "preconditions_checked": {
+    "capstone_loadable": true,
+    "capstone_milestone": "2026.07.497",
+    "capstone_present": true,
+    "conductor_unchanged": true,
+    "exp5474_csl_scale_ready": true,
+    "exp5474_loadable": true,
+    "exp5474_present": true,
+    "exp5474_tautology_flag_recorded": true,
+    "exp5480_game": "sb26",
+    "exp5480_loadable": true,
+    "exp5480_new_level_banked": false,
+    "exp5480_present": true,
+    "exp5480_target_level": 3,
+    "roadmap_doc_task_range": "exp5482-exp5495",
+    "roadmap_milestone": "2026.07.498",
+    "roadmap_next_present": false,
+    "roadmap_task_ids_match": true,
+    "roadmap_yaml_unchanged": true
+  },
+  "previous_milestone": "2026.07.497",
+  "previous_task_range": "exp5468-exp5481",
+  "prior_capstone_path": "results/experiment_5481_capstone_v497.json",
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:9d22edcb539cb81db1df8755769388424a85c0f52b19f9a615d945c5130b7e1e"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5482,
+  "reproducibility_checksum": "sha256:81e38bdf9008369040eb33d9d3d8ba102113729b41c320127af924d9592ffbd5",
+  "result_path": "results/experiment_5482_transition_v498.json",
+  "roadmap_doc_task_range": "exp5482-exp5495",
+  "roadmap_task_ids": [
+    "exp5482-transition-v498",
+    "exp5483-source-delta-v498",
+    "exp5484-csl-tautology-corrigendum-v498",
+    "exp5485-preference-maxsat-claim-fixture-v498",
+    "exp5486-gated-sota-concept-evidence-panel-v498",
+    "exp5487-helper-contract-nl-spec-repair-v498",
+    "exp5488-csl-latent-exploration-replay-v498",
+    "exp5489-gated-sota-csl-independent-metrics-v498",
+    "exp5490-csl-kan-fixed-point-update-ledger-v498",
+    "exp5491-active-constraint-subproblem-descriptor-v498",
+    "exp5492-gated-hardware-receipts-v498",
+    "exp5493-arc-trajectory-target-precheck-v498",
+    "exp5494-gated-arc-live-trajectory-levelup-v498",
+    "exp5495-capstone-v498"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5482.transition_v498.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:9d22edcb539cb81db1df8755769388424a85c0f52b19f9a615d945c5130b7e1e"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:bd4b3e1e5f66c1ac1a8101689f668d08e7b99cfcf4638e1bd396d67f8144c918"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:b85bd966aca37c3f445c36379690ff38bd200d4d0966628cbe01bfef82e79bd1"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:e6eed32197cb1ad5af3a4ab7164830da5f0cc5656b473dc6f21598734a49edc6"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:d00c392bf1942177218de46e26fa30e4dc5004749f8bc8b55b3d0e894a8e9e41"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5481_capstone_v497.json",
+      "read_only": true,
+      "sha256": "sha256:e28cc769af33ea244b06ca152e7da94c716950ede4adb4416978eec6426cf9f8"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5474_sota_csl_scale_v497.json",
+      "read_only": true,
+      "sha256": "sha256:1aabd00e661d836e36d588d81510a573a61f19e0528412358fb0d8c8312717af"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5480_arc_live_salience_levelup_v497.json",
+      "read_only": true,
+      "sha256": "sha256:17fe4c11bb5bcaa7ceebf4a31cdeed387e074861e90a11b6ad3d92277239323d"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5482",
+    "SCENARIO-REPORT-5482",
+    "SCENARIO-REPORT-5482-BLOCKED-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5482_transition_v498.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5482_transition_v498.py -m pytest tests/python/test_experiment_5482_transition_v498.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5482_transition_v498.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": "ops/e2e-test-plan.md review: Exp5482 is aggregation-only; no fresh training, PyO3 round trip, ARC live action, or hardware workload applies",
+      "outcome": "not_applicable"
+    }
+  ]
+}

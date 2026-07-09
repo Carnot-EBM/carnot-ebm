@@ -10628,3 +10628,22 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 11:27 UTC | Milestone .497 capstone, PRD gap table, and next-r | OK | cache hit: 87 passed, 1 warning in 13.34s |
 | 2026-07-09 12:26 UTC | Plan milestone 2026.07.498 | OK | 14 tasks proposed |
 | 2026-07-09 12:28 UTC | Milestone 2026.07.498 activated | OK | 14 tasks queued |
+| 2026-07-09 13:22 UTC | Transition .497 outcomes into .498 execution conte | FAIL | Post-tests failed: tests_run=[{"command": "unit 5482", "outcome": "passed"}], |
+| 2026-07-09 13:24 UTC | Transition .497 outcomes into .498 execution conte | OK | Deliverable already exists in repo |
+| 2026-07-09 13:24 UTC | Execution-time 2025-2026 source delta for .498 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 13.09s |
+| 2026-07-09 13:27 UTC | Execution-time 2025-2026 source delta for .498 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 9.51s |
+| 2026-07-09 13:29 UTC | Execution-time 2025-2026 source delta for .498 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 9.02s |
+| 2026-07-09 13:32 UTC | CSL tautology corrigendum and metric-independence  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.87s |
+| 2026-07-09 13:34 UTC | CSL tautology corrigendum and metric-independence  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.78s |
+| 2026-07-09 13:36 UTC | CSL tautology corrigendum and metric-independence  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.27s |
+| 2026-07-09 13:38 UTC | Preference-MaxSAT typed claim-state fixture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.26s |
+| 2026-07-09 13:41 UTC | Preference-MaxSAT typed claim-state fixture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.71s |
+| 2026-07-09 13:43 UTC | Preference-MaxSAT typed claim-state fixture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.55s |
+| 2026-07-09 13:45 UTC | Gated local SOTA concept evidence telemetry panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |
+| 2026-07-09 13:45 UTC | Natural-language helper-contract repair for determ | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.94s |
+| 2026-07-09 13:47 UTC | Gated local SOTA concept evidence telemetry panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |
+| 2026-07-09 13:48 UTC | Natural-language helper-contract repair for determ | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.73s |
+| 2026-07-09 13:50 UTC | Gated local SOTA concept evidence telemetry panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |
+| 2026-07-09 13:50 UTC | Natural-language helper-contract repair for determ | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.95s |
+| 2026-07-09 13:52 UTC | Gated CSL latent exploration replay with independe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |
+| 2026-07-09 13:52 UTC | Gated local SOTA CSL scale-up with independent met | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |
