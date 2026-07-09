@@ -10614,3 +10614,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 07:10 UTC | Execution-time 2025-2026 source delta for .497 | OK | 121 passed, 1 warning in 8.24s |
 | 2026-07-09 07:26 UTC | Rewrite-state and semantic-constraint fixture for  | OK | 87 passed, 1 warning in 11.52s |
 | 2026-07-09 07:40 UTC | Gated deterministic guard-composition scale-up aft | OK | 89 passed, 1 warning in 10.37s |
+| 2026-07-09 07:57 UTC | Gated local SOTA evidence telemetry panel after Ex | OK | 88 passed, 1 warning in 8.39s |
