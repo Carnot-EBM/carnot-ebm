@@ -1,0 +1,2175 @@
+{
+  "agent_failure_table": [
+    {
+      "affected_lanes": [],
+      "artifact_paths": [
+        "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json"
+      ],
+      "classification": "closed",
+      "evidence_citation": "Exp5444 precondition_details.blocked_preconditions records whether generation was blocked before run.",
+      "observed": false,
+      "pattern": "precondition block"
+    },
+    {
+      "affected_lanes": [],
+      "artifact_paths": [
+        "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+        "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "classification": "closed",
+      "evidence_citation": "Recorded gated-upstream fields are ready when present; no active gate block is inferred from roadmap text.",
+      "observed": false,
+      "pattern": "gate block"
+    },
+    {
+      "affected_lanes": [
+        "arc_live_progress"
+      ],
+      "artifact_paths": [
+        "results/experiment_5450_arc_measurement_access_live_levelup_v495.json"
+      ],
+      "classification": "honest_null",
+      "evidence_citation": "Exp5450 arc_new_level_banked=false and residual_wall=bounded_budget_no_levelup.",
+      "observed": true,
+      "pattern": "no-bank"
+    },
+    {
+      "affected_lanes": [
+        "hardware_timing_receipts",
+        "token_internal_feature_access",
+        "hardware_speedup_claim"
+      ],
+      "artifact_paths": [
+        "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "classification": "partial",
+      "evidence_citation": "Exp5449 has unreachable KV260/GateMate receipts and Exp5451 rejects missing-evidence token/internal claims.",
+      "observed": true,
+      "pattern": "measurement unavailable"
+    },
+    {
+      "affected_lanes": [
+        "local_sota_decoding_pilot"
+      ],
+      "artifact_paths": [
+        "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json"
+      ],
+      "classification": "partial",
+      "evidence_citation": "Exp5444 flagged_adversarial/corrigendum_pending records tautology risk.",
+      "observed": true,
+      "pattern": "tautology risk"
+    },
+    {
+      "affected_lanes": [
+        "kan_measurement_certificate",
+        "token_internal_feature_access",
+        "hardware_speedup_claim"
+      ],
+      "artifact_paths": [
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "classification": "blocked",
+      "evidence_citation": "Exp5451 claim_records reject unsupported hardware, token/internal, and broad KAN claims.",
+      "observed": true,
+      "pattern": "unsupported claim"
+    },
+    {
+      "affected_lanes": [],
+      "artifact_paths": [
+        "results/experiment_5441_transition_v495.json",
+        "results/experiment_5442_source_delta_v495.json",
+        "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+        "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+        "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+        "results/experiment_5446_governed_memory_csl_online_v495.json",
+        "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+        "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+        "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+        "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "classification": "closed",
+      "evidence_citation": "No Exp5441-Exp5451 artifact reports status=failed or a failed: honest_verdict.",
+      "observed": false,
+      "pattern": "implementation failure"
+    }
+  ],
+  "artifacts_expected": [
+    "results/experiment_5441_transition_v495.json",
+    "results/experiment_5442_source_delta_v495.json",
+    "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+    "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+    "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+    "results/experiment_5446_governed_memory_csl_online_v495.json",
+    "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+    "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+    "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+    "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+    "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+  ],
+  "artifacts_found": [
+    "results/experiment_5441_transition_v495.json",
+    "results/experiment_5442_source_delta_v495.json",
+    "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+    "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+    "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+    "results/experiment_5446_governed_memory_csl_online_v495.json",
+    "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+    "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+    "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+    "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+    "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+  ],
+  "artifacts_missing": [],
+  "blocked_count": 1,
+  "closed_count": 6,
+  "experiment_id": 5452,
+  "field_principles": {
+    "agent_failure_table": "operational learning",
+    "artifacts_expected": "completeness basis",
+    "artifacts_found": "evidence basis",
+    "blocked_count": "blocker accounting",
+    "closed_count": "PRD progress",
+    "honest_null_count": "null-result honesty",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "no hidden live model inference",
+    "milestone": "route key",
+    "missing_count": "no fabricated evidence",
+    "partial_count": "bounded progress",
+    "prd_gap_table": "traceability",
+    "unsupported_claims_detected": "claim discipline"
+  },
+  "honest_null_count": 2,
+  "honest_verdict": "complete: .495 PRD gap table read actual Exp5441-Exp5451 artifacts; closed=6, partial=4, blocked=1, honest_null=2, missing=0.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.495",
+  "missing_count": 0,
+  "partial_count": 4,
+  "prd_gap_table": [
+    {
+      "agent_failure_patterns": [],
+      "artifact_paths": [
+        "results/experiment_5441_transition_v495.json"
+      ],
+      "claim_boundary": "closed for route and prior-truth traceability only",
+      "classification": "closed",
+      "classification_reason": "v495_transition_receipt_complete",
+      "evidence_citation": "results/experiment_5441_transition_v495.json:honest_verdict=complete: archived .494 terminal evidence into .495 transition receipt; closed lanes are stru...; results/experiment_5441_transition_v495.json:closed_lanes=[{\"claim_boundary\": \"clean row-level corrigendum; this unlocks structured verification but is...; results/experiment_5441_transition_v495.json:partial_lanes=[{\"claim_boundary\": \"bounded solver-guidance evidence; LNS hints are advisory and solver auth...",
+      "lane": "transition_traceability",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Use as route context; do not treat prior bounded lanes as new wins.",
+      "prd_goals": [
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: archived .494 terminal evidence into .495 transition receipt; closed lanes are structured corrigendum, structured taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress; partial lanes are active-constraint diversity LNS, p-bit/PolarFire timing, and KAN ontology certificates; blocked lane is token/internal features; honest-null lanes are cn04 L4 ARC no-bank and no hardware speedup; next_task_range=exp5441-exp5453."
+        },
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "closed_lanes",
+          "present": true,
+          "value": [
+            {
+              "claim_boundary": "clean row-level corrigendum; this unlocks structured verification but is not itself a broad SOTA claim",
+              "classification": "headline_ready",
+              "lane": "structured_corrigendum",
+              "source_artifacts": [
+                "results/experiment_5430_structured_tautology_corrigendum_v494.json"
+              ],
+              "terminal_evidence": {
+                "adversarial_verify_clean": true,
+                "gpu_offload_verified": true,
+                "honest_verdict": "complete: structured tautology corrigendum clean with row checksums",
+                "prefix_metric_independence_check": true,
+                "risk_metric_independence_check": true,
+                "row_count_recomputed": 84,
+                "structured_corrigendum_clean": true,
+                "unreachable_delta_recomputed": true
+              }
+            },
+            {
+              "claim_boundary": "local structured taxonomy replication with independent metrics and bounded risk; not a broad quality claim",
+              "classification": "headline_ready",
+              "lane": "structured_taxonomy_replication",
+              "source_artifacts": [
+                "results/experiment_5431_structured_constraint_taxonomy_replication_v494.json"
+              ],
+              "terminal_evidence": {
+                "abstention_rate": 0.619048,
+                "accepted_risk_bound": 0.25884,
+                "accepted_risk_bound_threshold": 0.35,
+                "fixture_count": 42,
+                "gated_upstream_clean": true,
+                "gpu_offload_verified": true,
+                "honest_verdict": "complete: structured constraint taxonomy replication ready",
+                "metric_independence_checks_passed": true,
+                "semantic_false_accept_rate": 0.0,
+                "structured_taxonomy_replication_ready": true,
+                "unreachable_action_false_accept_rate": 0.0,
+                "unsafe_false_accept_rate": 0.0
+              }
+            },
+            {
+              "claim_boundary": "deterministic ontology-memory fixture with solver authority preserved",
+              "classification": "headline_ready",
+              "lane": "ontology_softlogic_memory",
+              "source_artifacts": [
+                "results/experiment_5432_ontology_softlogic_constraint_memory_v494.json"
+              ],
+              "terminal_evidence": {
+                "deterministic_solver_authority": true,
+                "false_triple_rejection_rate": 1.0,
+                "honest_verdict": "complete: ontology constraint memory fixture verified deterministically",
+                "ontology_constraint_memory_ready": true,
+                "ontology_fixture_count": 12,
+                "soft_logic_overrode_solver": false,
+                "soft_logic_residuals_recorded": true,
+                "triple_count": 51,
+                "unsupported_update_abstention_rate": 1.0,
+                "valid_update_preservation_rate": 1.0
+              }
+            },
+            {
+              "claim_boundary": "controller-level workflow memory with verification-before-store, rollback, and no weight mutation",
+              "classification": "headline_ready",
+              "lane": "verified_workflow_memory_csl",
+              "source_artifacts": [
+                "results/experiment_5435_verified_workflow_memory_csl_v494.json"
+              ],
+              "terminal_evidence": {
+                "case_memory_count": 2,
+                "honest_verdict": "complete: verified workflow memory promoted only validated case and skill sidecars, deflected retrieval traps, retained raw episodes, verified rollback, and did not mutate weights",
+                "no_weight_mutation": true,
+                "ontology_kernel_validation_rate": 1.0,
+                "quality_preserved": true,
+                "raw_episodes_retained": true,
+                "reliance_drift_metric": 0.12,
+                "retrieval_trap_deflection_rate": 1.0,
+                "rollback_verified": true,
+                "skill_memory_count": 2,
+                "verified_workflow_memory_ready": true,
+                "verify_before_store_pass_rate": 0.5,
+                "workflow_episode_count": 8
+              }
+            },
+            {
+              "claim_boundary": "workflow-memory transfer stress with in-domain lift, shift deflection, rollback, and no weight mutation",
+              "classification": "headline_ready",
+              "lane": "csl_memory_transfer_stress",
+              "source_artifacts": [
+                "results/experiment_5436_csl_memory_transfer_stress_v494.json"
+              ],
+              "terminal_evidence": {
+                "csl_transfer_stress_ready": true,
+                "honest_verdict": "complete: verified workflow memory transferred in-domain, deflected negative transfer under shift, verified rollback, and did not mutate model or adapter weights",
+                "in_domain_quality_delta": 0.08,
+                "negative_transfer_deflection_rate": 1.0,
+                "no_weight_mutation": true,
+                "out_of_domain_quality_delta": 0.0,
+                "promoted_transfer_count": 4,
+                "quarantined_transfer_count": 3,
+                "reliance_drift_metric": 0.74,
+                "rollback_verified": true,
+                "transfer_fixture_count": 9
+              }
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "partial_lanes",
+          "present": true,
+          "value": [
+            {
+              "claim_boundary": "bounded solver-guidance evidence; LNS hints are advisory and solver authority is final",
+              "classification": "bounded",
+              "lane": "active_constraint_diversity_lns",
+              "source_artifacts": [
+                "results/experiment_5433_active_constraint_diversity_lns_v494.json"
+              ],
+              "terminal_evidence": {
+                "accepted_hint_count": 4,
+                "active_constraint_diversity_ready": true,
+                "claim_limits": [
+                  "deterministic CPU-local diversity diagnostic",
+                  "LNS, active-constraint, active-tail, frozen-variable, and conflict-front hints are advisory",
+                  "solver recomputes every hint before accept, reject, or overwrite decisions",
+                  "stale and adversarial hint rows cannot determine final validity",
+                  "no LLM, generated text judge, hardware sampler, or speedup claim"
+                ],
+                "conflict_front_precision": 0.666667,
+                "fixture_count": 4,
+                "honest_verdict": "complete: active-constraint LNS hints covered 4 families, reduced solver work by 138, and preserved solver authority",
+                "overwritten_hint_count": 4,
+                "rejected_hint_count": 4,
+                "solver_validity_preserved": true,
+                "subproblem_family_count": 4,
+                "work_delta": 138
+              }
+            },
+            {
+              "claim_boundary": "matched CPU and PolarFire timing variance receipts only; no acceleration claim",
+              "classification": "bounded",
+              "lane": "pbit_polarfire_timing_variance",
+              "source_artifacts": [
+                "results/experiment_5434_pbit_polarfire_timing_variance_v494.json"
+              ],
+              "terminal_evidence": {
+                "board_repeat_count": 10,
+                "board_timing_variance": 1.45851e-07,
+                "claim_refusal": "No hardware speedup is claimed; slower board timing is a valid outcome and this artifact only records matched variance receipts.",
+                "cpu_repeat_count": 10,
+                "cpu_timing_variance": 3.75e-09,
+                "gatemate_diagnostic_checked": true,
+                "hardware_speedup_claim": false,
+                "honest_verdict": "complete: gated CPU and PolarFire timing variance receipts are hash-matched; hardware_speedup_claim=false",
+                "kv260_ssh_checked": true,
+                "measurement_access_complete": true,
+                "polarfire_reachable": true,
+                "same_result_hash_match": true,
+                "same_workload_hash_match": true,
+                "timing_variance_receipts_ready": true
+              }
+            },
+            {
+              "claim_boundary": "bounded KAN ontology/workflow-memory measurement certificate; no broad KAN verification claim",
+              "classification": "bounded",
+              "lane": "kan_ontology_certificates",
+              "source_artifacts": [
+                "results/experiment_5438_kan_ontology_measurement_certificate_v494.json"
+              ],
+              "terminal_evidence": {
+                "broad_kan_verification_claim": false,
+                "certificate_count": 16,
+                "claim_limits": [
+                  "bounded ontology/workflow-memory measurement-access fixture only",
+                  "observable false properties are rejected only when Exp5432 measured rows contradict them",
+                  "graph, kernel, board, token, and internal claims require evidence absent here",
+                  "missing evidence is classified as unsupported, not as a negative broad proof",
+                  "no broad KAN verification claim",
+                  "no trained-network soundness claim",
+                  "no hardware execution or hardware speedup claim",
+                  "no live LLM inference claim"
+                ],
+                "false_property_rejection_rate": 1.0,
+                "honest_verdict": "complete: bounded ontology/workflow-memory KAN certificate rejected observable false ontology and retrieval claims and unsupported graph/kernel/board/token/internal claims while preserving true measured properties with no broad KAN verification claim",
+                "kan_ontology_certificate_ready": true,
+                "missing_evidence_detected": true,
+                "ontology_property_count": 9,
+                "true_property_preservation_rate": 1.0,
+                "workflow_memory_property_count": 7
+              }
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "blocked_lanes",
+          "present": true,
+          "value": [
+            {
+              "blocked_reason": "no_authenticated_backend_receipt",
+              "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+              "classification": "blocked",
+              "lane": "token_internal_feature_lane_closed",
+              "source_artifacts": [
+                "results/experiment_5428_transition_v494.json",
+                "results/experiment_5438_kan_ontology_measurement_certificate_v494.json",
+                "results/experiment_5439_prd_gap_agent_failure_table_v494.json"
+              ],
+              "terminal_evidence": {
+                "backend_receipt_present": false,
+                "future_token_signal_allowed": false
+              }
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "honest_null_lanes",
+          "present": true,
+          "value": [
+            {
+              "blocked_reason": "bounded_budget_no_levelup",
+              "claim_boundary": "live ARC path ran through the reproduction gate; no new level was banked",
+              "classification": "honest_null",
+              "lane": "arc_live_reinduction_levelup",
+              "source_artifacts": [
+                "results/experiment_5437_arc_live_reinduction_levelup_v494.json"
+              ],
+              "terminal_evidence": {
+                "arc_levelup_lint_passed": true,
+                "arc_new_level_banked": false,
+                "attempt_count": 51,
+                "failure_mode": "bounded_budget_no_levelup",
+                "frontier_expansion_count": 22,
+                "honest_verdict": "honest_null: cn04 L4 bounded_budget_no_levelup",
+                "newly_reached_levels": [],
+                "offline_reproduced": false,
+                "registry_total_after": 69,
+                "registry_total_before": 69,
+                "reproduced_levels": 0,
+                "solve_provenance": "live_agent_self_discovery",
+                "status": "honest_null",
+                "target_game": "cn04",
+                "target_level": "L4"
+              }
+            },
+            {
+              "blocked_reason": "no_board_local_speedup_observed",
+              "claim_boundary": "timing receipts exist, but no matched board acceleration claim is supported",
+              "classification": "honest_null",
+              "lane": "hardware_speedup_claim",
+              "source_artifacts": [
+                "results/experiment_5434_pbit_polarfire_timing_variance_v494.json",
+                "results/experiment_5439_prd_gap_agent_failure_table_v494.json",
+                "results/experiment_5440_capstone_v494.json"
+              ],
+              "terminal_evidence": {
+                "hardware_speedup_claim": false
+              }
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "next_task_range",
+          "present": true,
+          "value": "exp5441-exp5453"
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: archived .494 terminal evidence into .495 transition receipt; closed lanes are structured corrigendum, structured taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress; partial lanes are active-constraint diversity LNS, p-bit/PolarFire timing, and KAN ontology certificates; blocked lane is token/internal features; honest-null lanes are cn04 L4 ARC no-bank and no hardware speedup; next_task_range=exp5441-exp5453."
+      ]
+    },
+    {
+      "agent_failure_patterns": [],
+      "artifact_paths": [
+        "results/experiment_5442_source_delta_v495.json"
+      ],
+      "claim_boundary": "closed for literature/source refresh; not implementation success by itself",
+      "classification": "closed",
+      "classification_reason": "execution_time_source_delta_closed",
+      "evidence_citation": "results/experiment_5442_source_delta_v495.json:honest_verdict=complete: 3 new actionable V495 execution-time source deltas appended; retired scopes remaine...; results/experiment_5442_source_delta_v495.json:sources_checked=[\"arxiv\", \"openreview\", \"huggingface_papers\", \"semantic_scholar\", \"github\", \"extropic_writing...; results/experiment_5442_source_delta_v495.json:new_actionable_findings_count=3",
+      "lane": "source_delta_traceability",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Carry forward the actionable hooks only where downstream artifacts used them.",
+      "prd_goals": [
+        "safety/traceability",
+        "verifiable reasoning"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5442_source_delta_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: 3 new actionable V495 execution-time source deltas appended; retired scopes remained closed."
+        },
+        {
+          "artifact_path": "results/experiment_5442_source_delta_v495.json",
+          "field_name": "sources_checked",
+          "present": true,
+          "value": [
+            "arxiv",
+            "openreview",
+            "huggingface_papers",
+            "semantic_scholar",
+            "github",
+            "extropic_writing",
+            "logical_intelligence",
+            "local_v489_v495_duplicate_history",
+            "ops_exclusion_manifest"
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5442_source_delta_v495.json",
+          "field_name": "new_actionable_findings_count",
+          "present": true,
+          "value": 3
+        },
+        {
+          "artifact_path": "results/experiment_5442_source_delta_v495.json",
+          "field_name": "new_references_added",
+          "present": true,
+          "value": [
+            {
+              "carnot_hook": "For Exp5445 code/API witness constraints, add an environment-free repo-evidence triage arm that gathers call-graph, import, reference, and surrounding-code evidence before execution. Keep deterministic tests, runtime checks, AST/KB witnesses, or exact solvers as final authority, and do not credit the paper's SFT/RL post-training claims.",
+              "source_type": "arXiv preprint surfaced via HuggingFace Papers",
+              "title": "Dockerless: Environment-Free Program Verifier for Coding Agents",
+              "url": "https://arxiv.org/abs/2606.28436"
+            },
+            {
+              "carnot_hook": "For Exp5448 p-bit/Potts work, add a CPU-only assignment-style multi-state fixture with p-dit variable counts, assignment-cost energy tables, exact QAP baseline checks, workload hashes, and solver-authority outcomes. Do not claim large-QAP performance, GPU parallelism, or hardware speedup without matched local receipts.",
+              "source_type": "arXiv preprint",
+              "title": "P-dit Probabilistic Ising Machine for Solving the Quadratic Assignment Problem",
+              "url": "https://arxiv.org/abs/2605.24408"
+            },
+            {
+              "carnot_hook": "For Exp5443 and Exp5445 formalization repair, replace generic solver-error prompting with minimal unsatisfiable core feedback. Record core constraint IDs, omitted-constraint hypotheses, repaired formalizations, and exact recheck results so solver feedback stays deterministic and auditable.",
+              "source_type": "OpenReview workshop paper metadata",
+              "title": "From Errors to Proofs: Minimal-Core-Guided Repair for Neuro-Symbolic Constraint Solving",
+              "url": "https://openreview.net/forum?id=ySI9HwU9K7"
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5442_source_delta_v495.json",
+          "field_name": "retired_scopes_reopened",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5442_source_delta_v495.json",
+          "field_name": "research_references_updated",
+          "present": true,
+          "value": true
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: 3 new actionable V495 execution-time source deltas appended; retired scopes remained closed."
+      ]
+    },
+    {
+      "agent_failure_patterns": [],
+      "artifact_paths": [
+        "results/experiment_5443_verifier_potential_prefix_fixture_v495.json"
+      ],
+      "claim_boundary": "closed for deterministic verifier-potential fixtures, not learned truth",
+      "classification": "closed",
+      "classification_reason": "deterministic_prefix_fixture_with_final_authority",
+      "evidence_citation": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json:honest_verdict=complete: deterministic verifier-potential prefix fixture ready; results/experiment_5443_verifier_potential_prefix_fixture_v495.json:verifier_potential_fixture_ready=true; results/experiment_5443_verifier_potential_prefix_fixture_v495.json:exact_final_authority=true",
+      "lane": "verifier_potential_reasoning",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Keep exact final verifier authority in later generation pilots.",
+      "prd_goals": [
+        "verifiable reasoning",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: deterministic verifier-potential prefix fixture ready"
+        },
+        {
+          "artifact_path": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+          "field_name": "verifier_potential_fixture_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+          "field_name": "exact_final_authority",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+          "field_name": "prefix_final_disagreement_cases",
+          "present": true,
+          "value": 6
+        },
+        {
+          "artifact_path": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+          "field_name": "metric_independence_checks_passed",
+          "present": true,
+          "value": true
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: deterministic verifier-potential prefix fixture ready"
+      ]
+    },
+    {
+      "agent_failure_patterns": [
+        "tautology risk"
+      ],
+      "artifact_paths": [
+        "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json"
+      ],
+      "claim_boundary": "partial because the pilot is local/GPU-backed but flagged and worse than grammar-only",
+      "classification": "partial",
+      "classification_reason": "bounded_local_sota_pilot_with_tautology_risk",
+      "evidence_citation": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json:honest_verdict=complete: local SOTA verifier-potential guided decoding pilot ready; results/experiment_5444_gated_sota_energy_guided_decoding_v495.json:verifier_guided_decoding_ready=true; results/experiment_5444_gated_sota_energy_guided_decoding_v495.json:flagged_adversarial=true",
+      "lane": "local_sota_decoding_pilot",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Repair the tautology flags before using this as structured-decoding progress.",
+      "prd_goals": [
+        "verifiable reasoning",
+        "model locality",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: local SOTA verifier-potential guided decoding pilot ready"
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "verifier_guided_decoding_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "flagged_adversarial",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "corrigendum_pending",
+          "present": true,
+          "value": [
+            {
+              "detail": "abstention_rate=0.25 and guided_validity_delta_vs_unconstrained=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+              "kind": "TAUTOLOGY",
+              "severity": "critical"
+            },
+            {
+              "detail": "action_unreachability_rate=0.08333333333333333 and semantic_false_accept_rate=0.08333333333333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+              "kind": "TAUTOLOGY",
+              "severity": "critical"
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "guided_validity_delta_vs_grammar_only",
+          "present": true,
+          "value": -0.5
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "guided_validity_delta_vs_unconstrained",
+          "present": true,
+          "value": 0.25
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "gpu_offload_verified",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "runtime_backend",
+          "present": true,
+          "value": "llama_cpp_python_cuda_gguf"
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "precondition_details",
+          "present": true,
+          "value": {
+            "all_passed": true,
+            "blocked_preconditions": [],
+            "cuda_visible": true,
+            "fixture_ready": true,
+            "gpu_offload_preflight": true,
+            "local_model_path_available": true,
+            "mandated_model_specs_present": true,
+            "runtime_backend": "llama_cpp_python_cuda_gguf"
+          }
+        },
+        {
+          "artifact_path": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "field_name": "model_specs",
+          "present": true,
+          "value": [
+            {
+              "file_receipt": {
+                "head_64k_sha256": "12f7d7d10e4b2e6590b60e308a2f9b4f6af15cf3bf4ce360a1bde29d8ce4c861",
+                "name": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+                "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+                "size_bytes": 22134528992,
+                "suffix": ".gguf"
+              },
+              "gpu_offload_verified": false,
+              "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "legacy_smoke_only": false,
+              "local_path_available": true,
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "n_gpu_layers": null,
+              "quantization": "Q4_K_M",
+              "ran_headline": false,
+              "role": "flagship_moe",
+              "runtime_backend": null
+            },
+            {
+              "file_receipt": {
+                "head_64k_sha256": "0acd108bc8baaf570e9d48dff88907696db0621fb60c66fe102cab310554e1a1",
+                "name": "gemma-4-31B-it-Q4_K_M.gguf",
+                "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+                "size_bytes": 18323731456,
+                "suffix": ".gguf"
+              },
+              "gpu_offload_verified": false,
+              "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+              "legacy_smoke_only": false,
+              "local_path_available": true,
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "n_gpu_layers": null,
+              "quantization": "Q4_K_M",
+              "ran_headline": false,
+              "role": "flagship_dense",
+              "runtime_backend": null
+            },
+            {
+              "file_receipt": {
+                "head_64k_sha256": "16d1d669dc3ba3ac16a01c6a60a61c1980650296db6c73eba76a18d9fb9a6e40",
+                "name": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+                "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+                "size_bytes": 16947539744,
+                "suffix": ".gguf"
+              },
+              "gpu_offload_verified": true,
+              "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+              "legacy_smoke_only": false,
+              "local_path_available": true,
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "n_gpu_layers": -1,
+              "quantization": "Q4_K_M",
+              "ran_headline": true,
+              "role": "middle_moe",
+              "runtime_backend": "llama_cpp_python_cuda_gguf"
+            }
+          ]
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: local SOTA verifier-potential guided decoding pilot ready"
+      ]
+    },
+    {
+      "agent_failure_patterns": [],
+      "artifact_paths": [
+        "results/experiment_5445_static_ast_kb_witness_constraints_v495.json"
+      ],
+      "claim_boundary": "closed for deterministic AST/KB witness rows",
+      "classification": "closed",
+      "classification_reason": "deterministic_code_api_witnesses_closed",
+      "evidence_citation": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json:honest_verdict=complete: deterministic AST/KB witness constraints ready; results/experiment_5445_static_ast_kb_witness_constraints_v495.json:ast_kb_witness_ready=true; results/experiment_5445_static_ast_kb_witness_constraints_v495.json:ast_parse_success_rate=1.0",
+      "lane": "ast_kb_witness_constraints",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Use as deterministic witness evidence, not as post-training quality evidence.",
+      "prd_goals": [
+        "verifiable reasoning",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: deterministic AST/KB witness constraints ready"
+        },
+        {
+          "artifact_path": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+          "field_name": "ast_kb_witness_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+          "field_name": "ast_parse_success_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+          "field_name": "valid_call_accept_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+          "field_name": "nonexistent_call_reject_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+          "field_name": "unsafe_false_accepts",
+          "present": true,
+          "value": 0
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: deterministic AST/KB witness constraints ready"
+      ]
+    },
+    {
+      "agent_failure_patterns": [],
+      "artifact_paths": [
+        "results/experiment_5446_governed_memory_csl_online_v495.json"
+      ],
+      "claim_boundary": "closed for sidecar memory promotion; no model-weight self-training claim",
+      "classification": "closed",
+      "classification_reason": "governed_memory_closed_without_weight_mutation",
+      "evidence_citation": "results/experiment_5446_governed_memory_csl_online_v495.json:honest_verdict=complete: governed online memory promoted raw traces into case, skill, and rule sidecars only...; results/experiment_5446_governed_memory_csl_online_v495.json:governed_csl_loop_ready=true; results/experiment_5446_governed_memory_csl_online_v495.json:replay_success_rate=1.0",
+      "lane": "governed_online_memory_csl",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Carry forward as governed memory evidence with the no-weight boundary intact.",
+      "prd_goals": [
+        "continuous self-learning",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: governed online memory promoted raw traces into case, skill, and rule sidecars only through replay, provenance, decay, access, rollback, and no-weight gates"
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "governed_csl_loop_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "replay_success_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "unsafe_false_accepts",
+          "present": true,
+          "value": 0
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "no_weight_mutation",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "rollback_recovery_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "negative_transfer_deflection_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "quality_delta_vs_always_full",
+          "present": true,
+          "value": 0.0
+        },
+        {
+          "artifact_path": "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "field_name": "context_efficiency_delta",
+          "present": true,
+          "value": 0.393541
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: governed online memory promoted raw traces into case, skill, and rule sidecars only through replay, provenance, decay, access, rollback, and no-weight gates"
+      ]
+    },
+    {
+      "agent_failure_patterns": [],
+      "artifact_paths": [
+        "results/experiment_5447_gated_csl_memory_failure_stress_v495.json"
+      ],
+      "claim_boundary": "closed for governed failure deflection and rollback",
+      "classification": "closed",
+      "classification_reason": "memory_failure_stress_closed",
+      "evidence_citation": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json:honest_verdict=complete: governed CSL memory stress attributed failures by operation, deflected stale poison...; results/experiment_5447_gated_csl_memory_failure_stress_v495.json:csl_memory_stress_ready=true; results/experiment_5447_gated_csl_memory_failure_stress_v495.json:gated_upstream_ready=true",
+      "lane": "csl_memory_failure_stress",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Keep failure attribution by operation in the capstone.",
+      "prd_goals": [
+        "continuous self-learning",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: governed CSL memory stress attributed failures by operation, deflected stale poisoned retrieval-collision and negative-transfer memories, verified rollback, and preserved the no-weight-mutation boundary"
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "csl_memory_stress_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "gated_upstream_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "unsafe_false_accepts",
+          "present": true,
+          "value": 0
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "no_weight_mutation",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "rollback_recovery_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "stale_memory_deflection_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "poisoned_memory_deflection_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "retrieval_collision_deflection_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "field_name": "negative_transfer_deflection_rate",
+          "present": true,
+          "value": 1.0
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: governed CSL memory stress attributed failures by operation, deflected stale poisoned retrieval-collision and negative-transfer memories, verified rollback, and preserved the no-weight-mutation boundary"
+      ]
+    },
+    {
+      "agent_failure_patterns": [],
+      "artifact_paths": [
+        "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json"
+      ],
+      "claim_boundary": "partial because p-bit assumptions are advisory and no hardware speedup is claimed",
+      "classification": "partial",
+      "classification_reason": "advisory_assumptions_with_solver_authority",
+      "evidence_citation": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json:honest_verdict=complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completene...; results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json:pbit_assumption_bridge_ready=true; results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json:solver_authoritative=true",
+      "lane": "pbit_assumption_bridge",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Treat as solver-authoritative bridge evidence only.",
+      "prd_goals": [
+        "hardware acceleration readiness",
+        "verifiable reasoning"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completeness was 1.0, density was restored, and no hardware speedup was claimed"
+        },
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "pbit_assumption_bridge_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "solver_authoritative",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "fallback_completeness_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "hardware_speedup_claim",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "claim_limits",
+          "present": true,
+          "value": [
+            "deterministic CPU-local solver fixture",
+            "active constraints and p-bit consensus samples are advisory assumptions",
+            "exact unrestricted solving rejects or overwrites unsafe assumptions",
+            "density restoration is accounting only, not a hardware timing result",
+            "no LLM, generated text judge, hardware sampler, or hardware speedup claim"
+          ]
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completeness was 1.0, density was restored, and no hardware speedup was claimed"
+      ]
+    },
+    {
+      "agent_failure_patterns": [
+        "measurement unavailable"
+      ],
+      "artifact_paths": [
+        "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json"
+      ],
+      "claim_boundary": "partial because timing receipts exist but KV260/GateMate were unavailable and no speedup is claimed",
+      "classification": "partial",
+      "classification_reason": "hash_matched_receipts_with_unavailable_boards_and_no_speedup",
+      "evidence_citation": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json:honest_verdict=complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timin...; results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json:hardware_receipts_ready=true; results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json:gated_upstream_ready=true",
+      "lane": "hardware_timing_receipts",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Report timing facts only; do not claim acceleration.",
+      "prd_goals": [
+        "hardware acceleration readiness",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false"
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "hardware_receipts_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "gated_upstream_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "hashes_match_before_timing_compare",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "hardware_speedup_claim",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "board_reachability",
+          "present": true,
+          "value": {
+            "gatemate": {
+              "blocked_reason": "blocked_gatemate_diagnostic_only",
+              "check_method": "non_destructive_dirtyjtag_detect",
+              "command": "openFPGALoader -c dirtyJtag --detect",
+              "diagnostic_only": true,
+              "identity": "gatemate",
+              "reachable": false,
+              "workload_execution_claim": false
+            },
+            "kv260": {
+              "blocked_reason": "blocked_kv260_ssh",
+              "check_method": "ssh_only",
+              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+              "identity": "kria",
+              "reachable": false,
+              "workload_execution_attempted": false
+            },
+            "polarfire": {
+              "blocked_reason": null,
+              "check_method": "ssh",
+              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+              "identity": "polarfire",
+              "reachable": true,
+              "workload_execution_attempted": true
+            }
+          }
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "timing_repeat_counts",
+          "present": true,
+          "value": {
+            "cpu": 10,
+            "gatemate": 0,
+            "kv260": 0,
+            "polarfire": 10
+          }
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "timing_summary",
+          "present": true,
+          "value": {
+            "cpu": {
+              "count": 10,
+              "max_s": 0.000518724,
+              "mean_s": 0.000493565,
+              "median_s": 0.000490726,
+              "min_s": 0.000485502,
+              "variance_s2": 8.6e-11
+            },
+            "gatemate": {
+              "count": 0,
+              "max_s": 0.0,
+              "mean_s": 0.0,
+              "median_s": 0.0,
+              "min_s": 0.0,
+              "variance_s2": 0.0
+            },
+            "kv260": {
+              "count": 0,
+              "max_s": 0.0,
+              "mean_s": 0.0,
+              "median_s": 0.0,
+              "min_s": 0.0,
+              "variance_s2": 0.0
+            },
+            "polarfire": {
+              "count": 10,
+              "max_s": 0.043717261,
+              "mean_s": 0.043055558,
+              "median_s": 0.042938257,
+              "min_s": 0.042711255,
+              "variance_s2": 1.15618e-07
+            }
+          }
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "timing_comparison",
+          "present": true,
+          "value": {
+            "boards_compared": [
+              "polarfire"
+            ],
+            "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
+            "comparison_performed": true,
+            "hardware_speedup_claim": false,
+            "hashes_match_before_timing_compare": true,
+            "ratios": {
+              "polarfire": 87.233815202
+            }
+          }
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false"
+      ]
+    },
+    {
+      "agent_failure_patterns": [
+        "no-bank"
+      ],
+      "artifact_paths": [
+        "results/experiment_5450_arc_measurement_access_live_levelup_v495.json"
+      ],
+      "claim_boundary": "honest null: live path ran but no reproduction-gated new ARC level was banked",
+      "classification": "honest_null",
+      "classification_reason": "bounded_budget_no_new_level_banked",
+      "evidence_citation": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json:honest_verdict=honest_null: ka59 L2 bounded_budget_no_levelup; results/experiment_5450_arc_measurement_access_live_levelup_v495.json:status=honest_null; results/experiment_5450_arc_measurement_access_live_levelup_v495.json:arc_new_level_banked=false",
+      "lane": "arc_live_progress",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Keep registry totals unchanged and preserve the residual wall.",
+      "prd_goals": [
+        "ARC progress",
+        "verifiable reasoning"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "honest_null: ka59 L2 bounded_budget_no_levelup"
+        },
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "status",
+          "present": true,
+          "value": "honest_null"
+        },
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "arc_new_level_banked",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "new_levels_banked",
+          "present": true,
+          "value": 0
+        },
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "new_level_reproduced",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "reproduction_gate",
+          "present": true,
+          "value": {
+            "claimed_level": 0,
+            "game": "ka59",
+            "mode": "offline_reproduction_gate_no_new_level_claim",
+            "reached_level": 0,
+            "reproduced": false
+          }
+        },
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "residual_wall",
+          "present": true,
+          "value": "bounded_budget_no_levelup"
+        },
+        {
+          "artifact_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "field_name": "live_attempt_count",
+          "present": true,
+          "value": 39
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "honest_null: ka59 L2 bounded_budget_no_levelup"
+      ]
+    },
+    {
+      "agent_failure_patterns": [
+        "unsupported claim"
+      ],
+      "artifact_paths": [
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "claim_boundary": "partial because the certificate is bounded and rejects broad KAN, hardware, and token/internal claims",
+      "classification": "partial",
+      "classification_reason": "bounded_measurement_access_certificate",
+      "evidence_citation": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json:honest_verdict=complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claim...; results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json:kan_certificate_ready=true; results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json:gated_upstreams_ready=true",
+      "lane": "kan_measurement_certificate",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Carry forward the measurement-access boundary and rejected unsupported claims.",
+      "prd_goals": [
+        "verifiable reasoning",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims"
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "kan_certificate_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "gated_upstreams_ready",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "claim_count",
+          "present": true,
+          "value": 15
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "true_measured_claim_preservation_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "false_property_rejection_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "unsupported_claim_rejection_rate",
+          "present": true,
+          "value": 1.0
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "hardware_speedup_claim_rejected",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "token_internal_claim_rejected",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "broad_kan_claim_made",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "claim_limits",
+          "present": true,
+          "value": [
+            "bounded Exp5443 verifier-potential and Exp5446 governed-memory artifact fields only",
+            "false verifier-potential claims are rejected only from measured Exp5443 fields",
+            "false governed-memory claims are rejected only from measured Exp5446 fields",
+            "hardware speedup claims require timing evidence absent from this certificate",
+            "token and hidden/internal-state claims require evidence absent from this certificate",
+            "no broad KAN verification, KAN soundness, trained-network soundness, or general LLM truth claim"
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "claim_records",
+          "present": true,
+          "value": [
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "true_exp5443_fixture_ready",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5443.verifier_potential_fixture_ready": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5443.verifier_potential_fixture_ready"
+              ],
+              "statement": "Exp5443 reports verifier_potential_fixture_ready=true."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "true_exp5443_exact_final_authority",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5443.exact_final_authority": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5443.exact_final_authority"
+              ],
+              "statement": "Exp5443 keeps exact final verifier authority."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "true_exp5443_prefix_final_disagreements_measured",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5443.prefix_final_disagreement_cases": 6
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5443.prefix_final_disagreement_cases"
+              ],
+              "statement": "Exp5443 measured prefix/final disagreement cases."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "true_exp5446_governed_loop_ready",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5446.governed_csl_loop_ready": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5446.governed_csl_loop_ready"
+              ],
+              "statement": "Exp5446 reports governed_csl_loop_ready=true."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "true_exp5446_no_weight_mutation",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5446.no_weight_mutation": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5446.no_weight_mutation"
+              ],
+              "statement": "Exp5446 reports no model-weight mutation."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "true_exp5446_zero_unsafe_false_accepts",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5446.unsafe_false_accepts": 0
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5446.unsafe_false_accepts"
+              ],
+              "statement": "Exp5446 governed memory has zero unsafe false accepts."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "false_exp5443_no_prefix_final_disagreements",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5443.prefix_final_disagreement_cases": 6
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.prefix_final_disagreement_cases"
+              ],
+              "statement": "Verifier potential never disagrees with final authority."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "false_exp5443_metric_independence_failed",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5443.metric_independence_checks_passed": true
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.metric_independence_checks_passed"
+              ],
+              "statement": "Exp5443 metric independence checks failed."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "false_exp5446_ungated_memory_safe",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5446.control_metrics.ungated_memory.unsafe_false_accepts": 3
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.control_metrics.ungated_memory.unsafe_false_accepts"
+              ],
+              "statement": "Ungated memory had zero unsafe false accepts."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "false_exp5446_all_memories_active_for_routing",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5446.abstained_memories": {
+                  "count": 1
+                },
+                "exp5446.rejected_memories": {
+                  "count": 3
+                }
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.rejected_memories",
+                "exp5446.abstained_memories"
+              ],
+              "statement": "Every memory record stayed active for future routing."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "false_exp5446_model_weights_mutated",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5446.no_weight_mutation": true
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.no_weight_mutation"
+              ],
+              "statement": "Governed online memory mutated model weights."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "hardware_speedup",
+              "claim_id": "unsupported_hardware_speedup_from_certificate",
+              "claim_kind": "unsupported",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5446.authenticated_hardware_speedup",
+                "exp5446.board_timing_receipt"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.authenticated_hardware_speedup",
+                "exp5446.board_timing_receipt"
+              ],
+              "statement": "The bounded certificate proves hardware speedup."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "token_internal",
+              "claim_id": "unsupported_token_level_access_from_certificate",
+              "claim_kind": "unsupported",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5443.token_ids",
+                "exp5443.token_logprobs"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.token_ids",
+                "exp5443.token_logprobs"
+              ],
+              "statement": "The bounded certificate proves token-level/logprob access."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "token_internal",
+              "claim_id": "unsupported_internal_state_access_from_certificate",
+              "claim_kind": "unsupported",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5446.hidden_state_tensor",
+                "exp5446.activation_checksum"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.hidden_state_tensor",
+                "exp5446.activation_checksum"
+              ],
+              "statement": "The bounded certificate proves hidden/internal-state access."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "kan_soundness",
+              "claim_id": "unsupported_broad_kan_soundness",
+              "claim_kind": "broad_soundness",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5443.general_kan_soundness_theorem",
+                "exp5446.general_llm_truth_certificate"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.general_kan_soundness_theorem",
+                "exp5446.general_llm_truth_certificate"
+              ],
+              "statement": "The bounded certificate proves KAN soundness or general LLM truth."
+            }
+          ]
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims"
+      ]
+    },
+    {
+      "agent_failure_patterns": [
+        "measurement unavailable",
+        "unsupported claim"
+      ],
+      "artifact_paths": [
+        "results/experiment_5441_transition_v495.json",
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "claim_boundary": "blocked because token logprob and hidden/internal activation access remains unsupported",
+      "classification": "blocked",
+      "classification_reason": "authenticated_token_internal_receipts_absent",
+      "evidence_citation": "results/experiment_5441_transition_v495.json:honest_verdict=complete: archived .494 terminal evidence into .495 transition receipt; closed lanes are stru...; results/experiment_5441_transition_v495.json:blocked_lanes=[{\"blocked_reason\": \"no_authenticated_backend_receipt\", \"claim_boundary\": \"closed without aut...; results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json:honest_verdict=complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claim...",
+      "lane": "token_internal_feature_access",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "Keep token/internal claims blocked until authenticated backend receipts exist.",
+      "prd_goals": [
+        "verifiable reasoning",
+        "safety/traceability"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: archived .494 terminal evidence into .495 transition receipt; closed lanes are structured corrigendum, structured taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress; partial lanes are active-constraint diversity LNS, p-bit/PolarFire timing, and KAN ontology certificates; blocked lane is token/internal features; honest-null lanes are cn04 L4 ARC no-bank and no hardware speedup; next_task_range=exp5441-exp5453."
+        },
+        {
+          "artifact_path": "results/experiment_5441_transition_v495.json",
+          "field_name": "blocked_lanes",
+          "present": true,
+          "value": [
+            {
+              "blocked_reason": "no_authenticated_backend_receipt",
+              "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+              "classification": "blocked",
+              "lane": "token_internal_feature_lane_closed",
+              "source_artifacts": [
+                "results/experiment_5428_transition_v494.json",
+                "results/experiment_5438_kan_ontology_measurement_certificate_v494.json",
+                "results/experiment_5439_prd_gap_agent_failure_table_v494.json"
+              ],
+              "terminal_evidence": {
+                "backend_receipt_present": false,
+                "future_token_signal_allowed": false
+              }
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims"
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "token_internal_claim_rejected",
+          "present": true,
+          "value": true
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "claim_records",
+          "present": true,
+          "value": [
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "true_exp5443_fixture_ready",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5443.verifier_potential_fixture_ready": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5443.verifier_potential_fixture_ready"
+              ],
+              "statement": "Exp5443 reports verifier_potential_fixture_ready=true."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "true_exp5443_exact_final_authority",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5443.exact_final_authority": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5443.exact_final_authority"
+              ],
+              "statement": "Exp5443 keeps exact final verifier authority."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "true_exp5443_prefix_final_disagreements_measured",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5443.prefix_final_disagreement_cases": 6
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5443.prefix_final_disagreement_cases"
+              ],
+              "statement": "Exp5443 measured prefix/final disagreement cases."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "true_exp5446_governed_loop_ready",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5446.governed_csl_loop_ready": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5446.governed_csl_loop_ready"
+              ],
+              "statement": "Exp5446 reports governed_csl_loop_ready=true."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "true_exp5446_no_weight_mutation",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5446.no_weight_mutation": true
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5446.no_weight_mutation"
+              ],
+              "statement": "Exp5446 reports no model-weight mutation."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "true_exp5446_zero_unsafe_false_accepts",
+              "claim_kind": "true_measured",
+              "claim_truth": true,
+              "classification": "measured_supported",
+              "measured_values": {
+                "exp5446.unsafe_false_accepts": 0
+              },
+              "missing_evidence": [],
+              "preserved": true,
+              "rejected": false,
+              "required_fields": [
+                "exp5446.unsafe_false_accepts"
+              ],
+              "statement": "Exp5446 governed memory has zero unsafe false accepts."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "false_exp5443_no_prefix_final_disagreements",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5443.prefix_final_disagreement_cases": 6
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.prefix_final_disagreement_cases"
+              ],
+              "statement": "Verifier potential never disagrees with final authority."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "verifier_potential",
+              "claim_id": "false_exp5443_metric_independence_failed",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5443.metric_independence_checks_passed": true
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.metric_independence_checks_passed"
+              ],
+              "statement": "Exp5443 metric independence checks failed."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "false_exp5446_ungated_memory_safe",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5446.control_metrics.ungated_memory.unsafe_false_accepts": 3
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.control_metrics.ungated_memory.unsafe_false_accepts"
+              ],
+              "statement": "Ungated memory had zero unsafe false accepts."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "false_exp5446_all_memories_active_for_routing",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5446.abstained_memories": {
+                  "count": 1
+                },
+                "exp5446.rejected_memories": {
+                  "count": 3
+                }
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.rejected_memories",
+                "exp5446.abstained_memories"
+              ],
+              "statement": "Every memory record stayed active for future routing."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "governed_memory",
+              "claim_id": "false_exp5446_model_weights_mutated",
+              "claim_kind": "false_property",
+              "claim_truth": false,
+              "classification": "measured_contradicted",
+              "measured_values": {
+                "exp5446.no_weight_mutation": true
+              },
+              "missing_evidence": [],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.no_weight_mutation"
+              ],
+              "statement": "Governed online memory mutated model weights."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "hardware_speedup",
+              "claim_id": "unsupported_hardware_speedup_from_certificate",
+              "claim_kind": "unsupported",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5446.authenticated_hardware_speedup",
+                "exp5446.board_timing_receipt"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.authenticated_hardware_speedup",
+                "exp5446.board_timing_receipt"
+              ],
+              "statement": "The bounded certificate proves hardware speedup."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "token_internal",
+              "claim_id": "unsupported_token_level_access_from_certificate",
+              "claim_kind": "unsupported",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5443.token_ids",
+                "exp5443.token_logprobs"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.token_ids",
+                "exp5443.token_logprobs"
+              ],
+              "statement": "The bounded certificate proves token-level/logprob access."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "token_internal",
+              "claim_id": "unsupported_internal_state_access_from_certificate",
+              "claim_kind": "unsupported",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5446.hidden_state_tensor",
+                "exp5446.activation_checksum"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5446.hidden_state_tensor",
+                "exp5446.activation_checksum"
+              ],
+              "statement": "The bounded certificate proves hidden/internal-state access."
+            },
+            {
+              "bounded_fixture_only": true,
+              "claim_domain": "kan_soundness",
+              "claim_id": "unsupported_broad_kan_soundness",
+              "claim_kind": "broad_soundness",
+              "claim_truth": false,
+              "classification": "missing_evidence_unsupported",
+              "measured_values": {},
+              "missing_evidence": [
+                "exp5443.general_kan_soundness_theorem",
+                "exp5446.general_llm_truth_certificate"
+              ],
+              "preserved": false,
+              "rejected": true,
+              "required_fields": [
+                "exp5443.general_kan_soundness_theorem",
+                "exp5446.general_llm_truth_certificate"
+              ],
+              "statement": "The bounded certificate proves KAN soundness or general LLM truth."
+            }
+          ]
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "claim_limits",
+          "present": true,
+          "value": [
+            "bounded Exp5443 verifier-potential and Exp5446 governed-memory artifact fields only",
+            "false verifier-potential claims are rejected only from measured Exp5443 fields",
+            "false governed-memory claims are rejected only from measured Exp5446 fields",
+            "hardware speedup claims require timing evidence absent from this certificate",
+            "token and hidden/internal-state claims require evidence absent from this certificate",
+            "no broad KAN verification, KAN soundness, trained-network soundness, or general LLM truth claim"
+          ]
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: archived .494 terminal evidence into .495 transition receipt; closed lanes are structured corrigendum, structured taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress; partial lanes are active-constraint diversity LNS, p-bit/PolarFire timing, and KAN ontology certificates; blocked lane is token/internal features; honest-null lanes are cn04 L4 ARC no-bank and no hardware speedup; next_task_range=exp5441-exp5453.",
+        "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims"
+      ]
+    },
+    {
+      "agent_failure_patterns": [
+        "measurement unavailable",
+        "unsupported claim"
+      ],
+      "artifact_paths": [
+        "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+        "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "claim_boundary": "honest null: hardware receipts/certificates explicitly do not support speedup",
+      "classification": "honest_null",
+      "classification_reason": "no_hardware_speedup_claim_supported",
+      "evidence_citation": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json:honest_verdict=complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completene...; results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json:hardware_speedup_claim=false; results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json:honest_verdict=complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timin...",
+      "lane": "hardware_speedup_claim",
+      "missing_artifacts": [],
+      "missing_supporting_fields": [],
+      "next_action": "State no-speedup plainly in the capstone.",
+      "prd_goals": [
+        "hardware acceleration readiness"
+      ],
+      "supporting_fields": [
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completeness was 1.0, density was restored, and no hardware speedup was claimed"
+        },
+        {
+          "artifact_path": "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "field_name": "hardware_speedup_claim",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false"
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "hardware_speedup_claim",
+          "present": true,
+          "value": false
+        },
+        {
+          "artifact_path": "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "field_name": "timing_comparison",
+          "present": true,
+          "value": {
+            "boards_compared": [
+              "polarfire"
+            ],
+            "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
+            "comparison_performed": true,
+            "hardware_speedup_claim": false,
+            "hashes_match_before_timing_compare": true,
+            "ratios": {
+              "polarfire": 87.233815202
+            }
+          }
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "honest_verdict",
+          "present": true,
+          "value": "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims"
+        },
+        {
+          "artifact_path": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+          "field_name": "hardware_speedup_claim_rejected",
+          "present": true,
+          "value": true
+        }
+      ],
+      "upstream_honest_verdicts": [
+        "complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completeness was 1.0, density was restored, and no hardware speedup was claimed",
+        "complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false",
+        "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims"
+      ]
+    }
+  ],
+  "prd_gap_table_ready": true,
+  "schema": "carnot.prd_gap_agent_failure_table.v495.exp5452",
+  "spec_refs": [
+    "REQ-HARNESS-015",
+    "SCENARIO-HARNESS-010",
+    "SCENARIO-HARNESS-011"
+  ],
+  "unsupported_claims_detected": [
+    {
+      "claim_id": "unsupported_hardware_speedup_from_certificate",
+      "claim_kind": "unsupported",
+      "classification": "missing_evidence_unsupported",
+      "missing_evidence": [
+        "exp5446.authenticated_hardware_speedup",
+        "exp5446.board_timing_receipt"
+      ],
+      "rejected": true,
+      "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+      "statement": "The bounded certificate proves hardware speedup."
+    },
+    {
+      "claim_id": "unsupported_token_level_access_from_certificate",
+      "claim_kind": "unsupported",
+      "classification": "missing_evidence_unsupported",
+      "missing_evidence": [
+        "exp5443.token_ids",
+        "exp5443.token_logprobs"
+      ],
+      "rejected": true,
+      "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+      "statement": "The bounded certificate proves token-level/logprob access."
+    },
+    {
+      "claim_id": "unsupported_internal_state_access_from_certificate",
+      "claim_kind": "unsupported",
+      "classification": "missing_evidence_unsupported",
+      "missing_evidence": [
+        "exp5446.hidden_state_tensor",
+        "exp5446.activation_checksum"
+      ],
+      "rejected": true,
+      "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+      "statement": "The bounded certificate proves hidden/internal-state access."
+    },
+    {
+      "claim_id": "unsupported_broad_kan_soundness",
+      "claim_kind": "broad_soundness",
+      "classification": "missing_evidence_unsupported",
+      "missing_evidence": [
+        "exp5443.general_kan_soundness_theorem",
+        "exp5446.general_llm_truth_certificate"
+      ],
+      "rejected": true,
+      "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+      "statement": "The bounded certificate proves KAN soundness or general LLM truth."
+    }
+  ]
+}

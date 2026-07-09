@@ -220,6 +220,20 @@ For Exp5439 specifically, the terminal artifact shall write
 `failure_taxonomy_counts`, `prd_gap_table_ready`, `inference_substrate`, and a
 terminal-prefixed `honest_verdict`.
 
+For Exp5452 specifically, the terminal artifact shall write
+`results/experiment_5452_prd_gap_agent_failure_table_v495.json` with the
+required fields `milestone`, `artifacts_expected`, `artifacts_found`,
+`closed_count`, `partial_count`, `blocked_count`, `honest_null_count`,
+`missing_count`, `prd_gap_table`, `agent_failure_table`,
+`unsupported_claims_detected`, `inference_substrate`, and `honest_verdict`.
+The helper shall read the Exp5441 through Exp5451 result artifacts, classify
+missing expected artifacts as `missing`, map every non-missing result to the PRD
+goal lanes for verifiable reasoning, continuous self-learning, hardware
+acceleration readiness, ARC progress, model locality, and safety/traceability,
+and preserve partial, blocked, honest-null, no-speedup, tautology-risk,
+measurement-unavailable, and unsupported-claim evidence without upgrading it
+from roadmap intent.
+
 ### REQ-HARNESS-SAMPLER-NO-SPECANN: Phase 3 SpecAnn Ban
 
 Phase 3 substrate sampler MUST NOT use Spectral Annealing (Deep Think
@@ -319,6 +333,23 @@ entries from existing artifacts
 **And** the terminal artifact declares
 `inference_substrate="aggregation_from_upstream_artifacts"`.
 
+### SCENARIO-HARNESS-011: V495 PRD Gap Table Preserves Bounded And Null Evidence
+
+**Given** the Exp5452 task names the expected Exp5441 through Exp5451 result
+artifacts
+**And** those artifacts report a mixture of complete, bounded, blocked, and
+honest-null evidence
+**When** the Exp5452 aggregation helper runs
+**Then** it writes `results/experiment_5452_prd_gap_agent_failure_table_v495.json`
+with the required artifact fields
+**And** every `prd_gap_table` row cites existing artifact paths and supporting
+fields
+**And** `agent_failure_table` records no-bank, measurement-unavailable,
+tautology-risk, unsupported-claim, precondition-block, gate-block, and
+implementation-failure pattern status
+**And** `unsupported_claims_detected` lists rejected unsupported claims instead
+of promoting them into PRD progress.
+
 ### SCENARIO-HARNESS-SAMPLER-1: Direct HUBO Evaluation At Production Scale
 
 **Given** a Phase 3 substrate sampler evaluates an unreduced HUBO energy
@@ -353,5 +384,5 @@ applies.
 | REQ-HARNESS-012 | Implemented (`scripts/meta_harness_conductor_search.py`) | Implemented |
 | REQ-HARNESS-013 | Implemented (`scripts/conductor_supervisor.py`) | Implemented (`results/experiment_1027_conductor_supervisor.json`) |
 | REQ-HARNESS-014 | Implemented (`scripts/audit_orphan_test_imports.py`) | Implemented (`tests/python/test_audit_orphan_test_imports.py`) |
-| REQ-HARNESS-015 | Implemented (`python/carnot/reporting/prd_gap_agent_failure_table_v494_5439.py`) | Implemented (`results/experiment_5439_prd_gap_agent_failure_table_v494.json`) |
+| REQ-HARNESS-015 | Implemented (`python/carnot/reporting/prd_gap_agent_failure_table_v494_5439.py`; planned `python/carnot/reporting/prd_gap_agent_failure_table_v495_5452.py`) | Implemented (`results/experiment_5439_prd_gap_agent_failure_table_v494.json`); planned (`results/experiment_5452_prd_gap_agent_failure_table_v495.json`) |
 | REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
