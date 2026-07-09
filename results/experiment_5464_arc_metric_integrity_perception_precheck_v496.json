@@ -1,0 +1,294 @@
+{
+  "arc_metric_integrity_ready": true,
+  "duplicate_solve_rejected": true,
+  "duration_s": 0.11364056775346398,
+  "experiment": "experiment_5464_arc_metric_integrity_perception_precheck_v496",
+  "experiment_id": 5464,
+  "field_principles": {
+    "arc_metric_integrity_ready": {
+      "principle": "true only when duplicate, provenance, null-coordinate, perception, and target-rotation gates are all clean."
+    },
+    "duplicate_solve_rejected": {
+      "principle": "bare bool: duplicate-depth solve claims fail closed and do not increment metrics."
+    },
+    "honest_verdict": {
+      "principle": "one-line verdict starting complete:, honest_null:, or blocked: with no level-solve claim."
+    },
+    "inference_substrate": {
+      "principle": "must equal live_path_precheck_no_solve_claim."
+    },
+    "null_coordinate_exploit_valid": {
+      "principle": "bare bool: true only if a banked reproduced level is validly explained by the null-coordinate exploit; metric-ready requires false."
+    },
+    "off_path_solve_rejected": {
+      "principle": "bare bool: source-derived, replay-only, or outer-loop provenance cannot receive live solve credit."
+    },
+    "perception_feature_receipts_path": {
+      "principle": "path to JSON receipts for connected components, color blobs, changed pixels, salience tiers, and action-effect observations."
+    },
+    "recent_no_bank_targets_avoided_or_justified": {
+      "principle": "auditable list of recent no-bank targets avoided or any explicit justification for including one."
+    },
+    "registry_precheck_performed": {
+      "principle": "bare bool proving registry/public-game precheck ran before Exp5465 target selection."
+    },
+    "reproduced_total_levels_before": {
+      "principle": "authoritative registry total before this no-solve precheck."
+    },
+    "target_shortlist": {
+      "principle": "Exp5465 candidates selected after avoiding already reached levels and recent duplicate no-bank lanes."
+    }
+  },
+  "honest_verdict": "complete: ARC live-path metric integrity and perception precheck ready for Exp5465; no solve claimed",
+  "inference_substrate": "live_path_precheck_no_solve_claim",
+  "metric_integrity_probe_receipts": {
+    "duplicate_probe": {
+      "accepted": false,
+      "duplicate_rejected": true,
+      "game": "r11l",
+      "off_path_rejected": false,
+      "registry_depth": 2,
+      "rejection_reasons": [
+        "duplicate_depth"
+      ],
+      "target_level": 2
+    },
+    "duplicate_solve_rejected": true,
+    "off_path_probe": {
+      "accepted": false,
+      "duplicate_rejected": false,
+      "game": "r11l",
+      "off_path_rejected": true,
+      "registry_depth": 2,
+      "rejection_reasons": [
+        "non_live_agent_provenance",
+        "source_or_ground_truth_path",
+        "replay_only_without_runtime_trace"
+      ],
+      "target_level": 3
+    },
+    "off_path_solve_rejected": true
+  },
+  "milestone": "2026.07.496",
+  "null_coordinate_audit": {
+    "checked_reproduced_loop_artifacts": 22,
+    "contaminated_artifacts": [],
+    "null_coordinate_exploit_valid": false
+  },
+  "null_coordinate_exploit_valid": false,
+  "off_path_solve_rejected": true,
+  "perception_feature_receipts_path": "results/experiment_5464_arc_perception_feature_receipts_v496.json",
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "no_registry_write": true,
+    "no_solve_claim": true,
+    "registry_present": true,
+    "spec_has_req_5464": true
+  },
+  "recent_no_bank_targets_avoided_or_justified": [
+    {
+      "decision": "avoided",
+      "justification": "recent bounded-budget no-bank lane; Exp5465 should avoid duplicate rerun unless a new mechanism is named.",
+      "target": "re86:L3"
+    },
+    {
+      "decision": "avoided",
+      "justification": "recent bounded-budget no-bank lane; Exp5465 should avoid duplicate rerun unless a new mechanism is named.",
+      "target": "lf52:L3"
+    },
+    {
+      "decision": "avoided",
+      "justification": "recent bounded-budget no-bank lane; Exp5465 should avoid duplicate rerun unless a new mechanism is named.",
+      "target": "cn04:L4"
+    },
+    {
+      "decision": "avoided",
+      "justification": "recent bounded-budget no-bank lane; Exp5465 should avoid duplicate rerun unless a new mechanism is named.",
+      "target": "ka59:L2"
+    }
+  ],
+  "registry_precheck": {
+    "games": [
+      {
+        "game": "ar25",
+        "levels_reproduced": 3,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "bp35",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "cd82",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "cn04",
+        "levels_reproduced": 3,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "dc22",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "ft09",
+        "levels_reproduced": 3,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "g50t",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "ka59",
+        "levels_reproduced": 1,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "lf52",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "lp85",
+        "levels_reproduced": 5,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "ls20",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "m0r0",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "r11l",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "re86",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "s5i5",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "sb26",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "sc25",
+        "levels_reproduced": 5,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "sk48",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "sp80",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "su15",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "tn36",
+        "levels_reproduced": 7,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "tr87",
+        "levels_reproduced": 6,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "tu93",
+        "levels_reproduced": 5,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "vc33",
+        "levels_reproduced": 2,
+        "reproducibility": "reproduced"
+      },
+      {
+        "game": "wa30",
+        "levels_reproduced": 1,
+        "reproducibility": "reproduced"
+      }
+    ],
+    "performed": true,
+    "public_games_checked": 25,
+    "reproduced_total_levels_before": 69
+  },
+  "registry_precheck_performed": true,
+  "reproduced_total_levels_before": 69,
+  "result_path": "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+  "schema": "carnot.experiment_5464_arc_metric_integrity_perception_precheck_v496.v1",
+  "spec_refs": [
+    "REQ-ARC-FCP-5464",
+    "SCENARIO-ARC-FCP-5464"
+  ],
+  "status": "complete",
+  "target_shortlist": [
+    {
+      "current_reproduced_levels": 2,
+      "game": "bp35",
+      "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+      "target": "bp35:L3",
+      "target_level": 3
+    },
+    {
+      "current_reproduced_levels": 2,
+      "game": "sb26",
+      "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+      "target": "sb26:L3",
+      "target_level": 3
+    },
+    {
+      "current_reproduced_levels": 2,
+      "game": "g50t",
+      "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+      "target": "g50t:L3",
+      "target_level": 3
+    },
+    {
+      "current_reproduced_levels": 2,
+      "game": "dc22",
+      "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+      "target": "dc22:L3",
+      "target_level": 3
+    },
+    {
+      "current_reproduced_levels": 2,
+      "game": "sp80",
+      "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+      "target": "sp80:L3",
+      "target_level": 3
+    }
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5464_arc_metric_integrity_perception_precheck_v496.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5464_arc_metric_integrity_perception_precheck_v496.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5464_arc_metric_integrity_perception_precheck_v496.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

@@ -1341,6 +1341,52 @@ Required field principles:
 - `inference_substrate`: principle "explicit runtime path."
 - `honest_verdict`: principle "terminal status; start with complete: or honest_null: or blocked:."
 
+### REQ-ARC-FCP-5464: ARC Metric-Integrity And Perception Precheck
+
+Experiment 5464 SHALL write
+`results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json`
+as a live-path precheck that does not claim a level solve. The workflow SHALL
+read `ops/arc_solve_registry.yaml`, current reproduced public-game levels, and
+recent ARC no-bank artifacts before selecting Exp5465 targets. It SHALL reject
+duplicate-depth solve credit, reject off-path or source-derived provenance,
+check whether one-step null-coordinate/no-coordinate trajectories contaminate
+banked reproduced levels, and emit a target shortlist that avoids already
+reached levels and recent duplicate no-bank lanes unless explicitly justified.
+
+The workflow SHALL also exercise live-agent reachable perception diagnostics
+for connected components, color blobs, changed pixels, salience tiers, and
+action-effect observations through the submitted
+`E3AgentPolicy`/`StepwiseExplorer` salience path. The perception receipts SHALL
+be written as JSON and referenced by the main artifact. This precheck SHALL
+not modify `ops/arc_solve_registry.yaml` and SHALL use
+`inference_substrate=live_path_precheck_no_solve_claim`.
+
+The result artifact SHALL include `registry_precheck_performed`,
+`reproduced_total_levels_before`, `duplicate_solve_rejected`,
+`off_path_solve_rejected`, `null_coordinate_exploit_valid`,
+`perception_feature_receipts_path`, `target_shortlist`,
+`recent_no_bank_targets_avoided_or_justified`,
+`arc_metric_integrity_ready`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL set
+`arc_metric_integrity_ready=true` only when the registry precheck ran,
+duplicate and off-path probe claims were rejected, no null-coordinate exploit
+is valid for the reproduced-level metric, the perception receipts file exists,
+and at least one shortlist target remains after recent no-bank avoidance.
+
+Required field principles:
+
+- `registry_precheck_performed`: principle "bare bool proving registry/public-game precheck ran before Exp5465 target selection."
+- `reproduced_total_levels_before`: principle "authoritative registry total before this no-solve precheck."
+- `duplicate_solve_rejected`: principle "bare bool: duplicate-depth solve claims fail closed and do not increment metrics."
+- `off_path_solve_rejected`: principle "bare bool: source-derived, replay-only, or outer-loop provenance cannot receive live solve credit."
+- `null_coordinate_exploit_valid`: principle "bare bool: true only if a banked reproduced level is validly explained by the null-coordinate exploit; metric-ready requires false."
+- `perception_feature_receipts_path`: principle "path to JSON receipts for connected components, color blobs, changed pixels, salience tiers, and action-effect observations."
+- `target_shortlist`: principle "Exp5465 candidates selected after avoiding already reached levels and recent duplicate no-bank lanes."
+- `recent_no_bank_targets_avoided_or_justified`: principle "auditable list of recent no-bank targets avoided or any explicit justification for including one."
+- `arc_metric_integrity_ready`: principle "true only when duplicate, provenance, null-coordinate, perception, and target-rotation gates are all clean."
+- `inference_substrate`: principle "must equal live_path_precheck_no_solve_claim."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked: with no level-solve claim."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1823,3 +1869,38 @@ Then `offline_reproduced=false`, `new_level_reproduced=false`,
 `new_levels_banked=0`, `arc_new_level_banked=false`, and `honest_verdict`
 starts with `honest_null:` while preserving the target rotation reason,
 frontier evidence, attempted predicates, and residual wall.
+
+### SCENARIO-ARC-FCP-5464: Metric Precheck Rejects Duplicate And Off-Path Credit
+
+Given the ARC registry records a reproduced depth for a public game
+When experiment 5464 audits a claimed solve whose target level is less than or
+equal to that depth
+Then the claim is rejected as duplicate, `duplicate_solve_rejected=true`, and
+the reproduced total is unchanged.
+
+Given a claimed solve uses `outer_loop_re`, source reading, offline
+ground-truth BFS, a replay-only artifact, or a hand per-game adapter as the
+credited path
+When experiment 5464 audits provenance
+Then the claim is rejected before solve credit, `off_path_solve_rejected=true`,
+and the artifact remains a no-solve precheck.
+
+Given reproduced loop artifacts and registry rows are available
+When experiment 5464 audits null-coordinate exploit validity
+Then one-step ACTION6 solves with null or missing click coordinates are treated
+as metric contamination, while normal multi-step or coordinate-bearing replays
+leave `null_coordinate_exploit_valid=false`.
+
+### SCENARIO-ARC-FCP-5464: Perception Receipts And Target Shortlist Are Live-Path Ready
+
+Given the live `E3AgentPolicy` can reach the connected-component salience prior
+When experiment 5464 runs perception diagnostics
+Then the receipts JSON contains connected component rows, color-blob rows,
+changed-pixel rows, salience-tier rows, and action-effect observation rows
+from live-path reachable code.
+
+Given recent no-bank targets include `re86` L3, `lf52` L3, `cn04` L4, and
+`ka59` L2
+When experiment 5464 builds the Exp5465 shortlist
+Then shortlisted targets avoid already reached levels and those recent no-bank
+lanes unless a row records an explicit justification.
