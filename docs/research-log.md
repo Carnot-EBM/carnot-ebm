@@ -5865,3 +5865,9 @@ The critical path for milestone .250:
 - theme: timing integrity mismatch blocks operational-efficiency accounting
 - key result: no data available this milestone; the timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also reporting changelog references for 2026.07.498, so compute-bound duration, GPU efficiency, and DualGPURunner questions remain unscored
 - acceptance: 0/0 criteria met -- no milestone-scoped timing rows were available to evaluate
+
+### Milestone 2026.07.499
+- exp_range: no data available this milestone
+- theme: timing assembly mismatch leaves operational efficiency unmeasured
+- key result: honest negative -- no data available this milestone; both authorized reconstruction paths found 0 experiment commits despite 2026.07.499 changelog references, so compute-bound duration, GPU-efficiency, and DualGPURunner findings are unsupported
+- acceptance: 0/0 criteria met -- no authoritative milestone-scoped timing rows exist for scoring

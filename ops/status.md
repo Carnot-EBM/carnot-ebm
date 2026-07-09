@@ -1,6 +1,27 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-09 (Milestone 2026.07.499 Planning Staged)
+**Last Updated:** 2026-07-09 (Milestone 2026.07.499 Operational Retro)
+
+## Session 2026-07-09 - Milestone 2026.07.499 Operational Retro
+
+Filled `results/operational_retro_2026_07_499.json` from the locked timing
+artifact values and appended the corresponding entries to `ops/changelog.md`
+and `docs/research-log.md`. The locked fields record 0 wall-time minutes, 0
+completed experiments, 0 compute-bound experiments, an empty
+slowest-experiments list, and `gpu_idle_on_compute_bound_tasks: null`.
+
+The operational finding is a timing integrity mismatch: live git-log and
+disk-mtime reconstruction found 0 experiment commits while `ops/changelog.md`
+contains `2026.07.499` references. The idle GPU monitor is not treated as a
+compute-bound bottleneck because no compute-bound timing rows exist, and no
+DualGPURunner miss is inferred.
+
+Validation for this documentation/results-only task: JSON parsing,
+locked-field assertions, protected-file diff check, touched-file
+`git diff --check`, and `scripts/operator_curated_docs_lint.py` invocation
+passed; the hook warning about a missing commit-message path was expected for a
+direct shell invocation. No E2E model-training or hardware check applies to
+this operational retrospective.
 
 ## Session 2026-07-09 - Milestone 2026.07.499 Planning Staged
 
