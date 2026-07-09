@@ -1,0 +1,1612 @@
+{
+  "assumption_source_counts": {
+    "active_constraint": 5,
+    "pbit_binary": 5,
+    "pdit_multistate": 5
+  },
+  "assumption_sources": [
+    "active_constraint",
+    "pbit_binary",
+    "pdit_multistate"
+  ],
+  "claim_limits": [
+    "deterministic CPU-local solver fixture",
+    "active constraints, p-bit samples, and p-dit samples are advisory only",
+    "minimal cores diagnose bad assumptions but do not certify final answers",
+    "exact unrestricted solving rejects or overwrites unsafe assumptions",
+    "no hardware timing-ratio receipt or hardware speedup claim"
+  ],
+  "constraint_family_counts": {
+    "assignment": 1,
+    "csp": 1,
+    "lns": 1,
+    "sat": 2
+  },
+  "density_before_after": {
+    "by_fixture": {
+      "assignment_pdit_tradeoff": {
+        "after": 0.333333,
+        "after_edges": 12,
+        "before": 1.0,
+        "before_edges": 36,
+        "constraint_family": "assignment",
+        "density_note": "Assignment/QAP-style p-dit categorical controls restore unary and pairwise terms.",
+        "possible_edges": 36
+      },
+      "csp_active_join_order": {
+        "after": 0.4,
+        "after_edges": 4,
+        "before": 1.0,
+        "before_edges": 10,
+        "constraint_family": "csp",
+        "density_note": "Exp5407 QUBO ordering terms are restored to direct precedence edges.",
+        "possible_edges": 10
+      },
+      "lns_valid_but_suboptimal": {
+        "after": 0.5,
+        "after_edges": 3,
+        "before": 1.0,
+        "before_edges": 6,
+        "constraint_family": "lns",
+        "density_note": "The LNS projection restores sparse direct constraints from a dense projection.",
+        "possible_edges": 6
+      },
+      "sat_consensus_accept": {
+        "after": 0.5,
+        "after_edges": 3,
+        "before": 1.0,
+        "before_edges": 6,
+        "constraint_family": "sat",
+        "density_note": "SAT clauses are lifted to dense pairwise terms before sparse restoration.",
+        "possible_edges": 6
+      },
+      "sat_false_basin_rescue": {
+        "after": 0.666667,
+        "after_edges": 2,
+        "before": 1.0,
+        "before_edges": 3,
+        "constraint_family": "sat",
+        "density_note": "Wrong binary p-bit consensus fixes a unit-clause variable and must be rescued.",
+        "possible_edges": 3
+      }
+    },
+    "mean_after": 0.48,
+    "mean_before": 1.0,
+    "mean_restored_sparsity_delta": 0.52
+  },
+  "experiment": 5462,
+  "experiment_id": "exp5462-active-constraint-minimal-core-pdit-bridge-v496",
+  "fallback_completeness_rate": 1.0,
+  "field_principles": {
+    "assumption_source_counts": "active vs p-bit vs p-dit provenance",
+    "constraint_family_counts": "SAT/CSP/LNS/assignment diversity",
+    "density_before_after": "restored-sparsity accounting",
+    "fallback_completeness_rate": "correctness rescue",
+    "fixture_count": "bounded coverage",
+    "hardware_speedup_claim": "no unsupported hardware claim",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "no hidden hardware inference",
+    "minimal_core_count": "bad-assumption diagnosis",
+    "minimal_core_pbit_bridge_ready": "downstream hardware gate",
+    "pdit_variable_count": "multi-state assignment coverage",
+    "rejected_assumption_count": "advisory boundary",
+    "solver_authoritative": "exact solver final authority",
+    "solver_work_delta": "utility measurement",
+    "unsafe_false_accepts": "correctness boundary"
+  },
+  "fixture_count": 5,
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: active, p-bit, and p-dit assumptions stayed advisory across 5 fixtures, minimal cores diagnosed bad assumptions, fallback completeness was 1.0, and no hardware speedup was claimed",
+  "inference_substrate": "deterministic_solver_pbit_pdit_fixture",
+  "milestone": "2026.07.496",
+  "minimal_core_count": 3,
+  "minimal_core_pbit_bridge_ready": true,
+  "mode_summaries": {
+    "active_constraint": {
+      "accepted_count": 5,
+      "fallback_count": 0,
+      "minimal_core_count": 0,
+      "overwritten_count": 0,
+      "rejected_count": 0,
+      "row_count": 5,
+      "solver_work_delta": 1051,
+      "unsafe_false_accepts": 0
+    },
+    "pbit_binary": {
+      "accepted_count": 3,
+      "fallback_count": 2,
+      "minimal_core_count": 2,
+      "overwritten_count": 1,
+      "rejected_count": 1,
+      "row_count": 5,
+      "solver_work_delta": 876,
+      "unsafe_false_accepts": 0
+    },
+    "pdit_multistate": {
+      "accepted_count": 4,
+      "fallback_count": 1,
+      "minimal_core_count": 1,
+      "overwritten_count": 1,
+      "rejected_count": 0,
+      "row_count": 5,
+      "solver_work_delta": 984,
+      "unsafe_false_accepts": 0
+    }
+  },
+  "overwritten_assumption_count": 2,
+  "pdit_variable_count": 14,
+  "random_seed": 5462,
+  "readiness_blockers": [],
+  "rejected_assumption_count": 1,
+  "reproducibility_checksum": "bd96551c16df6a6ce8df65004ba18da77c04ed39430bbfbc457a7b668899b3ea",
+  "research_conductor_modified": false,
+  "row_count": 15,
+  "row_records": [
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 4,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 36,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 48,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "x1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 20,
+        "iterations": 16,
+        "objective_value": 0,
+        "propagations": 68,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 104,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "baseline_solver_work": 104,
+      "baseline_status": "sat",
+      "conflicts": 4,
+      "constraint_family": "sat",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_consensus_accept",
+      "guided_solver_work": 48,
+      "hardware_speedup_claim": false,
+      "iterations": 8,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 36,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:consensus_accept",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 56
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 0,
+        "propagations": 20,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 21,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "assumption_source": "pbit_binary",
+      "assumptions": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "baseline_metrics": {
+        "conflicts": 20,
+        "iterations": 16,
+        "objective_value": 0,
+        "propagations": 68,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 104,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "baseline_solver_work": 104,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "sat",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_consensus_accept",
+      "guided_solver_work": 21,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 4,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 20,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:consensus_accept",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 83
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 0,
+        "propagations": 20,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 21,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "assumption_source": "pdit_multistate",
+      "assumptions": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "baseline_metrics": {
+        "conflicts": 20,
+        "iterations": 16,
+        "objective_value": 0,
+        "propagations": 68,
+        "solution": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "solver_work": 104,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "baseline_solver_work": 104,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "sat",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_consensus_accept",
+      "guided_solver_work": 21,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "pdit_sample_count": 4,
+      "pdit_state_codes": {
+        "false": 0,
+        "true": 2,
+        "unknown": 1
+      },
+      "propagations": 20,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:consensus_accept",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 83
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 1,
+        "iterations": 4,
+        "objective_value": 0,
+        "propagations": 15,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 20,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        false
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "x1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 8,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 27,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 43,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        false
+      ],
+      "baseline_solver_work": 43,
+      "baseline_status": "sat",
+      "conflicts": 1,
+      "constraint_family": "sat",
+      "density_after": 0.666667,
+      "density_after_edges": 2,
+      "density_before": 1.0,
+      "density_before_edges": 3,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_false_basin_rescue",
+      "guided_solver_work": 20,
+      "hardware_speedup_claim": false,
+      "iterations": 4,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 15,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:false_basin_rescue",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 23
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "unsat",
+      "assumption_decision": "rejected",
+      "assumption_metrics": {
+        "conflicts": 2,
+        "iterations": 1,
+        "objective_value": null,
+        "propagations": 12,
+        "solution": null,
+        "solver_work": 15,
+        "status": "unsat"
+      },
+      "assumption_solution": null,
+      "assumption_source": "pbit_binary",
+      "assumptions": [
+        "!x1",
+        "x2",
+        "!x3"
+      ],
+      "baseline_metrics": {
+        "conflicts": 8,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 27,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 43,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        false
+      ],
+      "baseline_solver_work": 43,
+      "baseline_status": "sat",
+      "conflicts": 2,
+      "constraint_family": "sat",
+      "density_after": 0.666667,
+      "density_after_edges": 2,
+      "density_before": 1.0,
+      "density_before_edges": 3,
+      "fallback_metrics": {
+        "conflicts": 8,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 27,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 43,
+        "status": "sat"
+      },
+      "fallback_used": true,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_false_basin_rescue",
+      "guided_solver_work": 58,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "minimal_core_assumptions": [
+        "!x1"
+      ],
+      "minimal_core_evidence": [
+        {
+          "assumption": "!x1",
+          "core_id": "core:sat_false_basin_rescue:not_x1",
+          "without_core_assumption_matches_exact": true
+        }
+      ],
+      "minimal_core_ids": [
+        "core:sat_false_basin_rescue:not_x1"
+      ],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 4,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 12,
+      "rejected_assumptions": 1,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:false_basin_rescue",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": -15
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 0,
+        "propagations": 12,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 13,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        true,
+        true,
+        false
+      ],
+      "assumption_source": "pdit_multistate",
+      "assumptions": [
+        "x1",
+        "x2",
+        "!x3"
+      ],
+      "baseline_metrics": {
+        "conflicts": 8,
+        "iterations": 8,
+        "objective_value": 0,
+        "propagations": 27,
+        "solution": [
+          true,
+          true,
+          false
+        ],
+        "solver_work": 43,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        true,
+        true,
+        false
+      ],
+      "baseline_solver_work": 43,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "sat",
+      "density_after": 0.666667,
+      "density_after_edges": 2,
+      "density_before": 1.0,
+      "density_before_edges": 3,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "final_status": "sat",
+      "fixture_id": "sat_false_basin_rescue",
+      "guided_solver_work": 13,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [
+        "x1",
+        "x2",
+        "x3"
+      ],
+      "pdit_sample_count": 4,
+      "pdit_state_codes": {
+        "false": 0,
+        "true": 2,
+        "unknown": 1
+      },
+      "propagations": 12,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "sat:false_basin_rescue",
+      "source_module": "local_sat_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 30
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 6,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 32,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 44,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "label@0",
+        "verify@1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 240,
+        "iterations": 120,
+        "objective_value": 0,
+        "propagations": 484,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 844,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "baseline_solver_work": 844,
+      "baseline_status": "sat",
+      "conflicts": 6,
+      "constraint_family": "csp",
+      "density_after": 0.4,
+      "density_after_edges": 4,
+      "density_before": 1.0,
+      "density_before_edges": 10,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "csp_active_join_order",
+      "guided_solver_work": 44,
+      "hardware_speedup_claim": false,
+      "iterations": 6,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 32,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "stress_synthetic_join_pack",
+      "source_module": "experiment_5407_pbit_qubo_active_constraint_stress_v492",
+      "unsafe_false_accept": false,
+      "work_delta": 800
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 6,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 32,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 44,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "assumption_source": "pbit_binary",
+      "assumptions": [
+        "label@0",
+        "verify@1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 240,
+        "iterations": 120,
+        "objective_value": 0,
+        "propagations": 484,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 844,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "baseline_solver_work": 844,
+      "baseline_status": "sat",
+      "conflicts": 6,
+      "constraint_family": "csp",
+      "density_after": 0.4,
+      "density_after_edges": 4,
+      "density_before": 1.0,
+      "density_before_edges": 10,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "csp_active_join_order",
+      "guided_solver_work": 44,
+      "hardware_speedup_claim": false,
+      "iterations": 6,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 4,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 32,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "stress_synthetic_join_pack",
+      "source_module": "experiment_5407_pbit_qubo_active_constraint_stress_v492",
+      "unsafe_false_accept": false,
+      "work_delta": 800
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 6,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 32,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 44,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "assumption_source": "pdit_multistate",
+      "assumptions": [
+        "label@0",
+        "verify@1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 240,
+        "iterations": 120,
+        "objective_value": 0,
+        "propagations": 484,
+        "solution": [
+          "label",
+          "verify",
+          "pick",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 844,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "baseline_solver_work": 844,
+      "baseline_status": "sat",
+      "conflicts": 6,
+      "constraint_family": "csp",
+      "density_after": 0.4,
+      "density_after_edges": 4,
+      "density_before": 1.0,
+      "density_before_edges": 10,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "label",
+        "verify",
+        "pick",
+        "pack",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "csp_active_join_order",
+      "guided_solver_work": 44,
+      "hardware_speedup_claim": false,
+      "iterations": 6,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [
+        "pos0",
+        "pos1"
+      ],
+      "pdit_sample_count": 4,
+      "pdit_state_codes": {
+        "label": 2,
+        "pack": 1,
+        "pick": 4,
+        "ship": 0,
+        "verify": 3
+      },
+      "propagations": 32,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "stress_synthetic_join_pack",
+      "source_module": "experiment_5407_pbit_qubo_active_constraint_stress_v492",
+      "unsafe_false_accept": false,
+      "work_delta": 800
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 1,
+        "iterations": 2,
+        "objective_value": 0,
+        "propagations": 12,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 15,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "invoice@0",
+        "verify@1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 36,
+        "iterations": 24,
+        "objective_value": 0,
+        "propagations": 75,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 135,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "baseline_solver_work": 135,
+      "baseline_status": "sat",
+      "conflicts": 1,
+      "constraint_family": "lns",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "lns_valid_but_suboptimal",
+      "guided_solver_work": 15,
+      "hardware_speedup_claim": false,
+      "iterations": 2,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 12,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "diverse_fork_join_fulfillment",
+      "source_module": "experiment_5433_active_constraint_diversity_lns_v494",
+      "unsafe_false_accept": false,
+      "work_delta": 120
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "overwritten",
+      "assumption_metrics": {
+        "conflicts": 6,
+        "iterations": 6,
+        "objective_value": 3,
+        "propagations": 21,
+        "solution": [
+          "verify",
+          "invoice",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 33,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "verify",
+        "invoice",
+        "receive",
+        "ship"
+      ],
+      "assumption_source": "pbit_binary",
+      "assumptions": [
+        "verify@0"
+      ],
+      "baseline_metrics": {
+        "conflicts": 36,
+        "iterations": 24,
+        "objective_value": 0,
+        "propagations": 75,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 135,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "baseline_solver_work": 135,
+      "baseline_status": "sat",
+      "conflicts": 6,
+      "constraint_family": "lns",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": {
+        "conflicts": 36,
+        "iterations": 24,
+        "objective_value": 0,
+        "propagations": 75,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 135,
+        "status": "sat"
+      },
+      "fallback_used": true,
+      "final_matches_exact": true,
+      "final_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "lns_valid_but_suboptimal",
+      "guided_solver_work": 168,
+      "hardware_speedup_claim": false,
+      "iterations": 6,
+      "minimal_core_assumptions": [
+        "verify@0"
+      ],
+      "minimal_core_evidence": [
+        {
+          "assumption": "verify@0",
+          "core_id": "core:lns_valid_but_suboptimal:verify_at_0",
+          "without_core_assumption_matches_exact": true
+        }
+      ],
+      "minimal_core_ids": [
+        "core:lns_valid_but_suboptimal:verify_at_0"
+      ],
+      "objective_preserved": true,
+      "overwritten_assumptions": 1,
+      "pbit_binary_sample_count": 4,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 21,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "diverse_fork_join_fulfillment",
+      "source_module": "experiment_5433_active_constraint_diversity_lns_v494",
+      "unsafe_false_accept": false,
+      "work_delta": -33
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 1,
+        "iterations": 2,
+        "objective_value": 0,
+        "propagations": 12,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 15,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "assumption_source": "pdit_multistate",
+      "assumptions": [
+        "invoice@0",
+        "verify@1"
+      ],
+      "baseline_metrics": {
+        "conflicts": 36,
+        "iterations": 24,
+        "objective_value": 0,
+        "propagations": 75,
+        "solution": [
+          "invoice",
+          "verify",
+          "receive",
+          "ship"
+        ],
+        "solver_work": 135,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "baseline_solver_work": 135,
+      "baseline_status": "sat",
+      "conflicts": 1,
+      "constraint_family": "lns",
+      "density_after": 0.5,
+      "density_after_edges": 3,
+      "density_before": 1.0,
+      "density_before_edges": 6,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "invoice",
+        "verify",
+        "receive",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "lns_valid_but_suboptimal",
+      "guided_solver_work": 15,
+      "hardware_speedup_claim": false,
+      "iterations": 2,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [
+        "pos0",
+        "pos1"
+      ],
+      "pdit_sample_count": 4,
+      "pdit_state_codes": {
+        "invoice": 0,
+        "receive": 2,
+        "ship": 3,
+        "verify": 1
+      },
+      "propagations": 12,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "diverse_fork_join_fulfillment",
+      "source_module": "experiment_5433_active_constraint_diversity_lns_v494",
+      "unsafe_false_accept": false,
+      "work_delta": 120
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 2,
+        "objective_value": 0,
+        "propagations": 36,
+        "solution": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "solver_work": 38,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "assumption_source": "active_constraint",
+      "assumptions": [
+        "ana=pack"
+      ],
+      "baseline_metrics": {
+        "conflicts": 0,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 84,
+        "solution": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "solver_work": 90,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "baseline_solver_work": 90,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "assignment",
+      "density_after": 0.333333,
+      "density_after_edges": 12,
+      "density_before": 1.0,
+      "density_before_edges": 36,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "assignment_pdit_tradeoff",
+      "guided_solver_work": 38,
+      "hardware_speedup_claim": false,
+      "iterations": 2,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 36,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "assignment:qap_style_tradeoff",
+      "source_module": "pdit_assignment_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 52
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "accepted",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 0,
+        "propagations": 48,
+        "solution": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "solver_work": 49,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "assumption_source": "pbit_binary",
+      "assumptions": [
+        "ana=pack",
+        "ben=test",
+        "cy=ship"
+      ],
+      "baseline_metrics": {
+        "conflicts": 0,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 84,
+        "solution": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "solver_work": 90,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "baseline_solver_work": 90,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "assignment",
+      "density_after": 0.333333,
+      "density_after_edges": 12,
+      "density_before": 1.0,
+      "density_before_edges": 36,
+      "fallback_metrics": null,
+      "fallback_used": false,
+      "final_matches_exact": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "assignment_pdit_tradeoff",
+      "guided_solver_work": 49,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "minimal_core_assumptions": [],
+      "minimal_core_evidence": [],
+      "minimal_core_ids": [],
+      "objective_preserved": true,
+      "overwritten_assumptions": 0,
+      "pbit_binary_sample_count": 4,
+      "pdit_control_names": [],
+      "pdit_sample_count": 0,
+      "pdit_state_codes": {},
+      "propagations": 48,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "assignment:qap_style_tradeoff",
+      "source_module": "pdit_assignment_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": 41
+    },
+    {
+      "accepted_without_verification": false,
+      "assumption_attempt_status": "sat",
+      "assumption_decision": "overwritten",
+      "assumption_metrics": {
+        "conflicts": 0,
+        "iterations": 1,
+        "objective_value": 11,
+        "propagations": 48,
+        "solution": [
+          "test",
+          "pack",
+          "ship"
+        ],
+        "solver_work": 49,
+        "status": "sat"
+      },
+      "assumption_solution": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "assumption_source": "pdit_multistate",
+      "assumptions": [
+        "ana=test",
+        "ben=pack",
+        "cy=ship"
+      ],
+      "baseline_metrics": {
+        "conflicts": 0,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 84,
+        "solution": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "solver_work": 90,
+        "status": "sat"
+      },
+      "baseline_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "baseline_solver_work": 90,
+      "baseline_status": "sat",
+      "conflicts": 0,
+      "constraint_family": "assignment",
+      "density_after": 0.333333,
+      "density_after_edges": 12,
+      "density_before": 1.0,
+      "density_before_edges": 36,
+      "fallback_metrics": {
+        "conflicts": 0,
+        "iterations": 6,
+        "objective_value": 0,
+        "propagations": 84,
+        "solution": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "solver_work": 90,
+        "status": "sat"
+      },
+      "fallback_used": true,
+      "final_matches_exact": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "final_status": "sat",
+      "fixture_id": "assignment_pdit_tradeoff",
+      "guided_solver_work": 139,
+      "hardware_speedup_claim": false,
+      "iterations": 1,
+      "minimal_core_assumptions": [
+        "ana=test"
+      ],
+      "minimal_core_evidence": [
+        {
+          "assumption": "ana=test",
+          "core_id": "core:assignment_pdit_tradeoff:ana_eq_test",
+          "without_core_assumption_matches_exact": true
+        }
+      ],
+      "minimal_core_ids": [
+        "core:assignment_pdit_tradeoff:ana_eq_test"
+      ],
+      "objective_preserved": true,
+      "overwritten_assumptions": 1,
+      "pbit_binary_sample_count": 0,
+      "pdit_control_names": [
+        "ana",
+        "ben",
+        "cy"
+      ],
+      "pdit_sample_count": 4,
+      "pdit_state_codes": {
+        "pack": 0,
+        "ship": 2,
+        "test": 1
+      },
+      "propagations": 48,
+      "rejected_assumptions": 0,
+      "solution_valid": true,
+      "solver_authoritative": true,
+      "source_fixture_id": "assignment:qap_style_tradeoff",
+      "source_module": "pdit_assignment_fixture",
+      "unsafe_false_accept": false,
+      "work_delta": -49
+    }
+  ],
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5462.active_constraint_minimal_core_pdit_bridge.v496",
+  "solver_authoritative": true,
+  "solver_work_delta": 2911,
+  "source_artifacts": [
+    "results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json",
+    "results/experiment_5433_active_constraint_diversity_lns_v494.json",
+    "results/experiment_1361_pdit_certificate_state_hardware_mapping.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5462",
+    "SCENARIO-VERIFY-5462"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py -m pytest tests/python/test_experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "passed"
+    },
+    {
+      "command": "ops/e2e-test-plan.md review: Exp5462 is a deterministic solver fixture; no live Ising training, PyO3 round-trip, KV260, or CSL e2e path applies",
+      "outcome": "not_applicable"
+    }
+  ],
+  "unsafe_false_accepts": 0
+}
