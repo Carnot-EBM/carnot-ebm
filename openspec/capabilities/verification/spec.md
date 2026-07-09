@@ -28130,6 +28130,107 @@ the artifact provenance checksum matches the source rows and core IDs.
 |---|---|---|
 | REQ-VERIFY-5458 | Planned (`python/carnot/experiment_5458_minimal_core_claim_repair_v496.py`, `results/experiment_5458_minimal_core_claim_repair_v496.json`) | Planned (`tests/python/test_experiment_5458_minimal_core_claim_repair_v496.py`) |
 
+### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
+
+The repository SHALL provide Exp 5462 at
+`python/carnot/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py`
+and write
+`results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json`
+without invoking a live LLM, generated-text judge, hardware sampler, board
+timing path, hardware timing-ratio receipt, hardware speedup claim, or
+modifying `scripts/research_conductor.py`. The diagnostic SHALL reuse existing
+active-constraint, p-bit/QUBO, and p-dit/Potts fixture helpers where available,
+stay CPU-local and deterministic, and treat active constraints, p-bit binary
+samples, and p-dit multi-state samples only as advisory assumption sources.
+
+The runner SHALL build bounded SAT, CSP/LNS, and assignment/QAP-style p-dit
+fixtures with known exact outcomes. Active constraints SHALL propose named
+Boolean or positional assumptions, p-bit samples SHALL propose binary consensus
+assumptions, and p-dit samples SHALL propose categorical assignment-style
+assumptions. The exact solver SHALL first attempt the bounded problem under
+those assumptions, then compute a deterministic minimal core for any
+contradictory or overwritten assumption set, reject or overwrite the unsafe
+assumptions, and rescue with an unrestricted exact solve before reporting any
+final SAT/UNSAT label, categorical assignment, objective, density, feasibility,
+or solution-validity predicate.
+
+For every fixture/source row, Exp 5462 SHALL record assumption provenance,
+conflicts, minimal core IDs, rejected assumptions, overwritten assumptions,
+density before restoration, density after restoration, fallback use, solution
+validity, baseline solver work, guided solver work, and whether any unsafe
+false accept occurred. Assumption-guided UNSAT under non-empty assumptions
+SHALL NOT be promoted to original-fixture UNSAT without unrestricted exact
+solver rescue. A p-bit or p-dit sample MAY reduce deterministic work only as
+advisory guidance after exact verification; it SHALL NOT certify correctness,
+replace the solver, or imply hardware acceleration.
+
+The artifact SHALL include top-level fields `fixture_count`,
+`constraint_family_counts`, `assumption_source_counts`,
+`pdit_variable_count`, `minimal_core_count`, `density_before_after`,
+`solver_authoritative`, `fallback_completeness_rate`,
+`rejected_assumption_count`, `solver_work_delta`, `unsafe_false_accepts`,
+`minimal_core_pbit_bridge_ready`, `hardware_speedup_claim`,
+`inference_substrate`, and `honest_verdict`, with field principles explaining
+each required field. `solver_authoritative` SHALL be true,
+`hardware_speedup_claim` SHALL be false, `inference_substrate` SHALL equal
+`deterministic_solver_pbit_pdit_fixture`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`. `minimal_core_pbit_bridge_ready` SHALL be true only
+when all SAT/CSP/LNS/assignment rows preserve exact solver authority, fallback
+completeness is 1.0, unsafe false accepts are zero, active-constraint, p-bit,
+and p-dit provenance are present, at least one minimal core diagnoses bad
+assumptions, density restoration is measured for every fixture, p-dit variables
+are present, and the artifact contains no hardware speedup claim.
+
+Required field principles:
+
+- `fixture_count`: principle "bounded coverage"
+- `constraint_family_counts`: principle "SAT/CSP/LNS/assignment diversity"
+- `assumption_source_counts`: principle "active vs p-bit vs p-dit provenance"
+- `pdit_variable_count`: principle "multi-state assignment coverage"
+- `minimal_core_count`: principle "bad-assumption diagnosis"
+- `density_before_after`: principle "restored-sparsity accounting"
+- `solver_authoritative`: principle "exact solver final authority"
+- `fallback_completeness_rate`: principle "correctness rescue"
+- `rejected_assumption_count`: principle "advisory boundary"
+- `solver_work_delta`: principle "utility measurement"
+- `unsafe_false_accepts`: principle "correctness boundary"
+- `minimal_core_pbit_bridge_ready`: principle "downstream hardware gate"
+- `hardware_speedup_claim`: principle "no unsupported hardware claim"
+- `inference_substrate`: principle "no hidden hardware inference"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+### SCENARIO-VERIFY-5462: Minimal Cores Diagnose Advisory p-bit and p-dit Assumption Failures
+
+Given bounded SAT, CSP/LNS, and assignment/QAP-style fixtures with known exact
+outcomes and deterministic active-constraint, p-bit, and p-dit assumptions,
+when Exp 5462 evaluates every fixture/source row, then every row records
+assumption provenance, exact solver attempt telemetry, minimal-core diagnosis
+for rejected or overwritten assumptions, fallback decisions, density
+before/after restoration, final solver-authoritative label or assignment, and
+solution validity. Correct assumptions MAY reduce solver work after exact
+verification. Wrong p-bit binary assumptions SHALL be rejected and rescued by
+unrestricted solving. Wrong p-dit categorical assumptions SHALL be rejected or
+overwritten and diagnosed by a deterministic minimal core before final exact
+fallback.
+
+If a wrong active, p-bit, or p-dit assumption creates a false SAT, false UNSAT,
+false categorical assignment, or false objective claim; if fallback does not
+recover the unrestricted exact outcome; if minimal cores omit a required bad
+assumption or include unrelated satisfied assumptions; if density
+before/after restoration is missing for any fixture; if active-constraint,
+p-bit, or p-dit provenance is absent; if `hardware_speedup_claim` is true; or
+if `inference_substrate` differs from
+`deterministic_solver_pbit_pdit_fixture`, then Exp 5462 SHALL write
+`results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json`
+with `minimal_core_pbit_bridge_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5462)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5462 | Planned (`python/carnot/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py`, `results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json`) | Planned (`tests/python/test_experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.py`) |
+
 ### REQ-VERIFY-5433: Active-Constraint Diversity LNS Diagnostic V494
 
 The repository SHALL provide Exp 5433 at
