@@ -10616,3 +10616,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 07:40 UTC | Gated deterministic guard-composition scale-up aft | OK | 89 passed, 1 warning in 10.37s |
 | 2026-07-09 07:57 UTC | Gated local SOTA evidence telemetry panel after Ex | OK | 88 passed, 1 warning in 8.39s |
 | 2026-07-09 08:10 UTC | Continuous self-learning KAN surrogate assurance p | OK | 89 passed, 1 warning in 11.63s |
+| 2026-07-09 08:25 UTC | Gated local SOTA CSL memory/action routing scale-u | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
