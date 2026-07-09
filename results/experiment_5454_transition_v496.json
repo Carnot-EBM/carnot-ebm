@@ -1,0 +1,876 @@
+{
+  "blocked_lanes": [
+    {
+      "blocked_reason": "flagged_adversarial_and_tautology",
+      "claim_boundary": "local GGUF decoding pilot is blocked from headline while adversarial tautology flags remain",
+      "classification": "blocked",
+      "lane": "local_sota_decoding",
+      "source_artifacts": [
+        "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json"
+      ],
+      "terminal_evidence": {
+        "abstention_rate": 0.25,
+        "action_unreachability_rate": 0.08333333333333333,
+        "corrigendum_pending": [
+          {
+            "detail": "abstention_rate=0.25 and guided_validity_delta_vs_unconstrained=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "action_unreachability_rate=0.08333333333333333 and semantic_false_accept_rate=0.08333333333333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flag_reasons": [
+          "flagged_adversarial",
+          "tautology"
+        ],
+        "flagged_adversarial": true,
+        "gpu_offload_verified": true,
+        "guided_validity_delta_vs_grammar_only": -0.5,
+        "guided_validity_delta_vs_unconstrained": 0.25,
+        "honest_verdict": "complete: local SOTA verifier-potential guided decoding pilot ready",
+        "inference_substrate": "live_llm_inference",
+        "runtime_backend": "llama_cpp_python_cuda_gguf",
+        "semantic_false_accept_rate": 0.08333333333333333,
+        "unsafe_false_accept_rate": 0.0,
+        "verifier_guided_decoding_ready": true
+      }
+    },
+    {
+      "blocked_reason": "no_authenticated_backend_receipt",
+      "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+      "classification": "blocked",
+      "lane": "token_internal_access",
+      "source_artifacts": [
+        "results/experiment_5441_transition_v495.json",
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "terminal_evidence": {
+        "backend_receipt_present": false,
+        "token_internal_claim_rejected": true,
+        "token_internal_lane_reopened": false
+      }
+    }
+  ],
+  "closed_lanes": [
+    {
+      "claim_boundary": "deterministic verifier-potential fixtures with exact final authority; not learned truth",
+      "classification": "headline_ready",
+      "lane": "verifier_potential_generation",
+      "source_artifacts": [
+        "results/experiment_5443_verifier_potential_prefix_fixture_v495.json"
+      ],
+      "terminal_evidence": {
+        "constraint_family_counts": {
+          "api_call_witness": 1,
+          "arithmetic_finite_domain": 1,
+          "benign": 1,
+          "ontology_triple_update": 1,
+          "schema_only_trap": 2,
+          "semantic_contradiction": 1,
+          "unreachable_tool_action": 1
+        },
+        "exact_final_authority": true,
+        "fixture_count": 8,
+        "honest_verdict": "complete: deterministic verifier-potential prefix fixture ready",
+        "inference_substrate": "deterministic_verifier_fixture_no_llm",
+        "metric_independence_checks_passed": true,
+        "prefix_final_disagreement_cases": 6,
+        "reward_evaluation_budget": {
+          "accepted_prefix_count": 7,
+          "cost_unit": "one deterministic verifier-potential or exact-final check invocation",
+          "exact_final_verifier_cost_units": 5,
+          "per_accepted_prefix": [
+            {
+              "accepted_functions": [
+                "schema_key_coverage"
+              ],
+              "cost_units": 11,
+              "fixture_id": "schema_extra_admin_override",
+              "prefix_id": "5443-001:required-keys",
+              "row_id": "5443-001"
+            },
+            {
+              "accepted_functions": [
+                "schema_key_coverage"
+              ],
+              "cost_units": 11,
+              "fixture_id": "semantic_open_and_not_open",
+              "prefix_id": "5443-003:visible-claim",
+              "row_id": "5443-003"
+            },
+            {
+              "accepted_functions": [
+                "schema_key_coverage",
+                "action_allowlist_potential"
+              ],
+              "cost_units": 11,
+              "fixture_id": "unreachable_cancel_locked_order",
+              "prefix_id": "5443-004:tool-name",
+              "row_id": "5443-004"
+            },
+            {
+              "accepted_functions": [
+                "schema_key_coverage"
+              ],
+              "cost_units": 11,
+              "fixture_id": "arithmetic_wrong_sum",
+              "prefix_id": "5443-005:operands",
+              "row_id": "5443-005"
+            },
+            {
+              "accepted_functions": [
+                "schema_key_coverage",
+                "ontology_shape_potential"
+              ],
+              "cost_units": 11,
+              "fixture_id": "ontology_cycle_update",
+              "prefix_id": "5443-006:triple",
+              "row_id": "5443-006"
+            },
+            {
+              "accepted_functions": [
+                "schema_key_coverage",
+                "api_shape_potential"
+              ],
+              "cost_units": 11,
+              "fixture_id": "api_refund_bad_witness",
+              "prefix_id": "5443-007:method-path",
+              "row_id": "5443-007"
+            },
+            {
+              "accepted_functions": [
+                "schema_key_coverage"
+              ],
+              "cost_units": 11,
+              "fixture_id": "benign_inventory_claim",
+              "prefix_id": "5443-008:claim",
+              "row_id": "5443-008"
+            }
+          ],
+          "per_row": [
+            {
+              "accepted_prefix_cost_units": 11,
+              "accepted_prefix_count": 1,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "schema_extra_admin_override",
+              "potential_evaluations": 12,
+              "prefix_cost_units": 22,
+              "prefix_count": 2,
+              "row_id": "5443-001",
+              "total_cost_units": 27
+            },
+            {
+              "accepted_prefix_cost_units": 0,
+              "accepted_prefix_count": 0,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "schema_missing_payload",
+              "potential_evaluations": 6,
+              "prefix_cost_units": 11,
+              "prefix_count": 1,
+              "row_id": "5443-002",
+              "total_cost_units": 16
+            },
+            {
+              "accepted_prefix_cost_units": 11,
+              "accepted_prefix_count": 1,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "semantic_open_and_not_open",
+              "potential_evaluations": 12,
+              "prefix_cost_units": 22,
+              "prefix_count": 2,
+              "row_id": "5443-003",
+              "total_cost_units": 27
+            },
+            {
+              "accepted_prefix_cost_units": 11,
+              "accepted_prefix_count": 1,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "unreachable_cancel_locked_order",
+              "potential_evaluations": 12,
+              "prefix_cost_units": 22,
+              "prefix_count": 2,
+              "row_id": "5443-004",
+              "total_cost_units": 27
+            },
+            {
+              "accepted_prefix_cost_units": 11,
+              "accepted_prefix_count": 1,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "arithmetic_wrong_sum",
+              "potential_evaluations": 12,
+              "prefix_cost_units": 22,
+              "prefix_count": 2,
+              "row_id": "5443-005",
+              "total_cost_units": 27
+            },
+            {
+              "accepted_prefix_cost_units": 11,
+              "accepted_prefix_count": 1,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "ontology_cycle_update",
+              "potential_evaluations": 12,
+              "prefix_cost_units": 22,
+              "prefix_count": 2,
+              "row_id": "5443-006",
+              "total_cost_units": 27
+            },
+            {
+              "accepted_prefix_cost_units": 11,
+              "accepted_prefix_count": 1,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "api_refund_bad_witness",
+              "potential_evaluations": 12,
+              "prefix_cost_units": 22,
+              "prefix_count": 2,
+              "row_id": "5443-007",
+              "total_cost_units": 27
+            },
+            {
+              "accepted_prefix_cost_units": 11,
+              "accepted_prefix_count": 1,
+              "final_verifier_cost_units": 5,
+              "final_verifier_evaluations": 1,
+              "fixture_id": "benign_inventory_claim",
+              "potential_evaluations": 12,
+              "prefix_cost_units": 22,
+              "prefix_count": 2,
+              "row_id": "5443-008",
+              "total_cost_units": 27
+            }
+          ],
+          "potential_function_cost_units": {
+            "action_allowlist_potential": 2,
+            "api_shape_potential": 2,
+            "finite_domain_bounds": 2,
+            "ontology_shape_potential": 2,
+            "schema_key_coverage": 1,
+            "semantic_pair_consistency": 2
+          },
+          "total_cost_units": 205,
+          "total_final_verifications": 8,
+          "total_potential_evaluations": 90
+        },
+        "verifier_potential_fixture_ready": true
+      }
+    },
+    {
+      "claim_boundary": "deterministic AST/KB witness rows for code/API hallucination constraints",
+      "classification": "headline_ready",
+      "lane": "ast_kb_witnesses",
+      "source_artifacts": [
+        "results/experiment_5445_static_ast_kb_witness_constraints_v495.json"
+      ],
+      "terminal_evidence": {
+        "api_family_counts": {
+          "builtins": 1,
+          "json": 5,
+          "math": 2,
+          "no_api": 1,
+          "statistics": 1
+        },
+        "ast_kb_witness_ready": true,
+        "ast_parse_success_rate": 1.0,
+        "fixture_count": 10,
+        "honest_verdict": "complete: deterministic AST/KB witness constraints ready",
+        "inference_substrate": "deterministic_ast_kb_verifier_no_llm",
+        "nonexistent_call_reject_rate": 1.0,
+        "unsafe_false_accepts": 0,
+        "valid_call_accept_rate": 1.0,
+        "witness_field_names": [
+          "row_id",
+          "fixture_family",
+          "api_family",
+          "source_sha256",
+          "ast_parse_ok",
+          "ast_error",
+          "alias_map",
+          "imported_symbol_checks",
+          "fully_qualified_call_sites",
+          "kb_lookup_results",
+          "semantic_intent",
+          "expected_outcome",
+          "outcome",
+          "accepted",
+          "reject_reasons",
+          "witness_checksum"
+        ]
+      }
+    },
+    {
+      "claim_boundary": "governed sidecar memory promotion with replay, rollback, and no model-weight mutation",
+      "classification": "headline_ready",
+      "lane": "governed_csl",
+      "source_artifacts": [
+        "results/experiment_5446_governed_memory_csl_online_v495.json"
+      ],
+      "terminal_evidence": {
+        "context_efficiency_delta": 0.393541,
+        "continuous_self_learning_task": true,
+        "governed_csl_loop_ready": true,
+        "honest_verdict": "complete: governed online memory promoted raw traces into case, skill, and rule sidecars only through replay, provenance, decay, access, rollback, and no-weight gates",
+        "inference_substrate": "deterministic_governed_memory_no_weight_update",
+        "multi_session_trace_count": 9,
+        "negative_transfer_deflection_rate": 1.0,
+        "no_weight_mutation": true,
+        "promotion_level_counts": {
+          "case": 2,
+          "raw_trace": 9,
+          "rule": 1,
+          "skill": 2
+        },
+        "quality_delta_vs_always_full": 0.0,
+        "replay_success_rate": 1.0,
+        "rollback_recovery_rate": 1.0,
+        "unsafe_false_accepts": 0,
+        "verifier_cost_delta": 0.3
+      }
+    },
+    {
+      "claim_boundary": "governed memory-failure stress with deflection, attribution, rollback, and no weight mutation",
+      "classification": "headline_ready",
+      "lane": "memory_stress",
+      "source_artifacts": [
+        "results/experiment_5447_gated_csl_memory_failure_stress_v495.json"
+      ],
+      "terminal_evidence": {
+        "csl_memory_stress_ready": true,
+        "failure_operation_counts": {
+          "access-control": 1,
+          "decay": 1,
+          "replay": 1,
+          "retrieval": 1,
+          "storage": 1,
+          "summarization": 1,
+          "verifier gate": 2
+        },
+        "gated_upstream_ready": true,
+        "honest_verdict": "complete: governed CSL memory stress attributed failures by operation, deflected stale poisoned retrieval-collision and negative-transfer memories, verified rollback, and preserved the no-weight-mutation boundary",
+        "inference_substrate": "deterministic_memory_stress_no_weight_update",
+        "memory_failure_case_count": 8,
+        "negative_transfer_deflection_rate": 1.0,
+        "no_weight_mutation": true,
+        "poisoned_memory_deflection_rate": 1.0,
+        "retrieval_collision_deflection_rate": 1.0,
+        "rollback_recovery_rate": 1.0,
+        "stale_memory_deflection_rate": 1.0,
+        "unsafe_false_accepts": 0
+      }
+    },
+    {
+      "claim_boundary": "PRD gap table synthesis from actual upstream artifacts",
+      "classification": "headline_ready",
+      "lane": "prd_gap_synthesis",
+      "source_artifacts": [
+        "results/experiment_5452_prd_gap_agent_failure_table_v495.json"
+      ],
+      "terminal_evidence": {
+        "artifacts_found": [
+          "results/experiment_5441_transition_v495.json",
+          "results/experiment_5442_source_delta_v495.json",
+          "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+          "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+          "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+          "results/experiment_5446_governed_memory_csl_online_v495.json",
+          "results/experiment_5447_gated_csl_memory_failure_stress_v495.json",
+          "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+          "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+          "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
+          "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+        ],
+        "artifacts_missing": [],
+        "blocked_count": 1,
+        "closed_count": 6,
+        "honest_null_count": 2,
+        "honest_verdict": "complete: .495 PRD gap table read actual Exp5441-Exp5451 artifacts; closed=6, partial=4, blocked=1, honest_null=2, missing=0.",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "missing_count": 0,
+        "partial_count": 4,
+        "prd_gap_table_ready": true,
+        "unsupported_claims_detected": [
+          {
+            "claim_id": "unsupported_hardware_speedup_from_certificate",
+            "claim_kind": "unsupported",
+            "classification": "missing_evidence_unsupported",
+            "missing_evidence": [
+              "exp5446.authenticated_hardware_speedup",
+              "exp5446.board_timing_receipt"
+            ],
+            "rejected": true,
+            "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+            "statement": "The bounded certificate proves hardware speedup."
+          },
+          {
+            "claim_id": "unsupported_token_level_access_from_certificate",
+            "claim_kind": "unsupported",
+            "classification": "missing_evidence_unsupported",
+            "missing_evidence": [
+              "exp5443.token_ids",
+              "exp5443.token_logprobs"
+            ],
+            "rejected": true,
+            "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+            "statement": "The bounded certificate proves token-level/logprob access."
+          },
+          {
+            "claim_id": "unsupported_internal_state_access_from_certificate",
+            "claim_kind": "unsupported",
+            "classification": "missing_evidence_unsupported",
+            "missing_evidence": [
+              "exp5446.hidden_state_tensor",
+              "exp5446.activation_checksum"
+            ],
+            "rejected": true,
+            "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+            "statement": "The bounded certificate proves hidden/internal-state access."
+          },
+          {
+            "claim_id": "unsupported_broad_kan_soundness",
+            "claim_kind": "broad_soundness",
+            "classification": "missing_evidence_unsupported",
+            "missing_evidence": [
+              "exp5443.general_kan_soundness_theorem",
+              "exp5446.general_llm_truth_certificate"
+            ],
+            "rejected": true,
+            "source_artifact": "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json",
+            "statement": "The bounded certificate proves KAN soundness or general LLM truth."
+          }
+        ]
+      }
+    }
+  ],
+  "conductor_unchanged": true,
+  "experiment": "experiment_5454_transition_v496",
+  "experiment_id": "exp5454-transition-v496",
+  "failed_preconditions": [],
+  "field_principles": {
+    "blocked_lanes": "no unsupported claims",
+    "closed_lanes": "positive evidence boundary",
+    "conductor_unchanged": "user prohibition",
+    "honest_null_lanes": "null-result honesty",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "no hidden live model inference",
+    "milestone": "conductor route key",
+    "next_task_range": "activation sanity",
+    "partial_lanes": "bounded evidence boundary",
+    "previous_milestone": "traceability",
+    "previous_task_range": "closed execution boundary",
+    "prior_capstone_path": "provenance",
+    "roadmap_yaml_unchanged": "user prohibition"
+  },
+  "honest_null_lanes": [
+    {
+      "blocked_reason": "bounded_budget_no_levelup",
+      "claim_boundary": "live ARC path ran through the reproduction gate; no new level was banked",
+      "classification": "honest_null",
+      "lane": "arc_live_progress",
+      "source_artifacts": [
+        "results/experiment_5450_arc_measurement_access_live_levelup_v495.json"
+      ],
+      "terminal_evidence": {
+        "arc_new_level_banked": false,
+        "frontier_expansion_count": 19,
+        "honest_verdict": "honest_null: ka59 L2 bounded_budget_no_levelup",
+        "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+        "live_attempt_count": 39,
+        "new_level_reproduced": false,
+        "new_levels_banked": 0,
+        "no_offline_bfs": true,
+        "no_per_game_adapter_credited": true,
+        "no_source_reading": true,
+        "offline_reproduced": false,
+        "registry_level_before": 1,
+        "registry_precheck_total_levels": 69,
+        "reproduced_levels": 0,
+        "residual_wall": "bounded_budget_no_levelup",
+        "selected_game": "ka59",
+        "selected_target_level_label": "L2",
+        "solve_provenance": "live_agent_self_discovery"
+      }
+    },
+    {
+      "blocked_reason": "no_authenticated_hardware_speedup",
+      "claim_boundary": "hardware receipts and certificates explicitly do not support speedup",
+      "classification": "honest_null",
+      "lane": "hardware_speedup_claim",
+      "source_artifacts": [
+        "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json",
+        "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json",
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "terminal_evidence": {
+        "hardware_speedup_claim": false,
+        "hardware_speedup_claim_rejected": true
+      }
+    }
+  ],
+  "honest_verdict": "complete: archived .495 terminal evidence into .496 transition receipt; closed lanes are verifier-potential fixtures, AST/KB witnesses, governed CSL, memory stress, and PRD gap synthesis; partial lanes are active/p-bit bridge, hardware receipts, and KAN certificates with no hardware speedup; blocked lanes are Exp5444 adversarial tautology and token/internal features; honest-null lanes are ka59 L2 ARC no-bank and no hardware speedup; next_task_range=exp5454-exp5467.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.496",
+  "next_task_range": "exp5454-exp5467",
+  "partial_lanes": [
+    {
+      "claim_boundary": "active and p-bit assumptions are advisory; exact solver keeps final authority",
+      "classification": "bounded",
+      "lane": "active_constraint_pbit_bridge",
+      "source_artifacts": [
+        "results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json"
+      ],
+      "terminal_evidence": {
+        "claim_limits": [
+          "deterministic CPU-local solver fixture",
+          "active constraints and p-bit consensus samples are advisory assumptions",
+          "exact unrestricted solving rejects or overwrites unsafe assumptions",
+          "density restoration is accounting only, not a hardware timing result",
+          "no LLM, generated text judge, hardware sampler, or hardware speedup claim"
+        ],
+        "density_before_after": {
+          "by_fixture": {
+            "csp_active_join_order": {
+              "after": 0.4,
+              "after_edges": 4,
+              "before": 1.0,
+              "before_edges": 10,
+              "constraint_family": "csp",
+              "density_note": "Exp5407 QUBO-style ordering terms are restored to direct precedence edges.",
+              "possible_edges": 10
+            },
+            "lns_valid_but_suboptimal": {
+              "after": 0.5,
+              "after_edges": 3,
+              "before": 1.0,
+              "before_edges": 6,
+              "constraint_family": "lns",
+              "density_note": "The LNS projection keeps the V494 family provenance but restores sparse direct constraints.",
+              "possible_edges": 6
+            },
+            "sat_consensus_accept": {
+              "after": 0.5,
+              "after_edges": 3,
+              "before": 1.0,
+              "before_edges": 6,
+              "constraint_family": "sat",
+              "density_note": "SAT clauses lifted to a pairwise QUBO-style clique before restoration.",
+              "possible_edges": 6
+            },
+            "sat_false_basin_rescue": {
+              "after": 0.666667,
+              "after_edges": 2,
+              "before": 1.0,
+              "before_edges": 3,
+              "constraint_family": "sat",
+              "density_note": "Wrong consensus fixes a unit-clause variable and must be rescued.",
+              "possible_edges": 3
+            }
+          },
+          "mean_after": 0.516667,
+          "mean_before": 1.0,
+          "mean_restored_sparsity_delta": 0.483333
+        },
+        "fallback_completeness_rate": 1.0,
+        "fixture_count": 4,
+        "hardware_speedup_claim": false,
+        "honest_verdict": "complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completeness was 1.0, density was restored, and no hardware speedup was claimed",
+        "inference_substrate": "deterministic_solver_pbit_assumption_fixture",
+        "overwritten_assumption_count": 3,
+        "pbit_assumption_bridge_ready": true,
+        "rejected_assumption_count": 3,
+        "row_count": 8,
+        "solver_authoritative": true,
+        "solver_work_delta": 1873,
+        "unsafe_false_accepts": 0
+      }
+    },
+    {
+      "claim_boundary": "hash-matched CPU and reachable-board timing receipts only; no acceleration claim",
+      "classification": "bounded",
+      "lane": "hardware_receipts",
+      "source_artifacts": [
+        "results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json"
+      ],
+      "terminal_evidence": {
+        "board_reachability": {
+          "gatemate": {
+            "blocked_reason": "blocked_gatemate_diagnostic_only",
+            "check_method": "non_destructive_dirtyjtag_detect",
+            "command": "openFPGALoader -c dirtyJtag --detect",
+            "diagnostic_only": true,
+            "identity": "gatemate",
+            "reachable": false,
+            "workload_execution_claim": false
+          },
+          "kv260": {
+            "blocked_reason": "blocked_kv260_ssh",
+            "check_method": "ssh_only",
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+            "identity": "kria",
+            "reachable": false,
+            "workload_execution_attempted": false
+          },
+          "polarfire": {
+            "blocked_reason": null,
+            "check_method": "ssh",
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+            "identity": "polarfire",
+            "reachable": true,
+            "workload_execution_attempted": true
+          }
+        },
+        "claim_refusal": "No hardware speedup is claimed; correctness hashes must match before timing facts are compared.",
+        "gated_upstream_ready": true,
+        "hardware_receipts_ready": true,
+        "hardware_speedup_claim": false,
+        "hashes_match_before_timing_compare": true,
+        "honest_verdict": "complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false",
+        "inference_substrate": "cpu_and_reachable_board_timing_receipts",
+        "readiness_blockers": [],
+        "timing_comparison": {
+          "boards_compared": [
+            "polarfire"
+          ],
+          "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
+          "comparison_performed": true,
+          "hardware_speedup_claim": false,
+          "hashes_match_before_timing_compare": true,
+          "ratios": {
+            "polarfire": 87.233815202
+          }
+        },
+        "timing_repeat_counts": {
+          "cpu": 10,
+          "gatemate": 0,
+          "kv260": 0,
+          "polarfire": 10
+        },
+        "timing_summary": {
+          "cpu": {
+            "count": 10,
+            "max_s": 0.000518724,
+            "mean_s": 0.000493565,
+            "median_s": 0.000490726,
+            "min_s": 0.000485502,
+            "variance_s2": 8.6e-11
+          },
+          "gatemate": {
+            "count": 0,
+            "max_s": 0.0,
+            "mean_s": 0.0,
+            "median_s": 0.0,
+            "min_s": 0.0,
+            "variance_s2": 0.0
+          },
+          "kv260": {
+            "count": 0,
+            "max_s": 0.0,
+            "mean_s": 0.0,
+            "median_s": 0.0,
+            "min_s": 0.0,
+            "variance_s2": 0.0
+          },
+          "polarfire": {
+            "count": 10,
+            "max_s": 0.043717261,
+            "mean_s": 0.043055558,
+            "median_s": 0.042938257,
+            "min_s": 0.042711255,
+            "variance_s2": 1.15618e-07
+          }
+        }
+      }
+    },
+    {
+      "claim_boundary": "bounded measurement-access certificates; broad KAN, hardware, and token/internal claims rejected",
+      "classification": "bounded",
+      "lane": "kan_certificates",
+      "source_artifacts": [
+        "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+      ],
+      "terminal_evidence": {
+        "broad_kan_claim_made": false,
+        "claim_count": 15,
+        "claim_limits": [
+          "bounded Exp5443 verifier-potential and Exp5446 governed-memory artifact fields only",
+          "false verifier-potential claims are rejected only from measured Exp5443 fields",
+          "false governed-memory claims are rejected only from measured Exp5446 fields",
+          "hardware speedup claims require timing evidence absent from this certificate",
+          "token and hidden/internal-state claims require evidence absent from this certificate",
+          "no broad KAN verification, KAN soundness, trained-network soundness, or general LLM truth claim"
+        ],
+        "false_property_rejection_rate": 1.0,
+        "gated_upstreams_ready": true,
+        "governed_memory_claims_checked": 6,
+        "hardware_speedup_claim_rejected": true,
+        "honest_verdict": "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims",
+        "inference_substrate": "bounded_measurement_access_certificate",
+        "kan_certificate_ready": true,
+        "property_family": "bounded_kan_verifier_potential_governed_memory_measurement_certificate",
+        "token_internal_claim_rejected": true,
+        "true_measured_claim_preservation_rate": 1.0,
+        "unsupported_claim_rejection_rate": 1.0,
+        "verifier_potential_claims_checked": 5
+      }
+    }
+  ],
+  "preconditions_checked": {
+    "capstone_loadable": true,
+    "capstone_milestone": "2026.07.495",
+    "capstone_present": true,
+    "conductor_unchanged": true,
+    "expected_next_task_range": "exp5454-exp5467",
+    "expected_previous_task_range": "exp5441-exp5453",
+    "gap_table_loadable": true,
+    "gap_table_present": true,
+    "gap_table_ready": true,
+    "roadmap_doc_names_milestone": true,
+    "roadmap_doc_present": true,
+    "roadmap_doc_task_range": "exp5454-exp5467",
+    "roadmap_loadable": true,
+    "roadmap_milestone": "2026.07.496",
+    "roadmap_present": true,
+    "roadmap_task_count": 14,
+    "roadmap_yaml_unchanged": true
+  },
+  "previous_milestone": "2026.07.495",
+  "previous_task_range": "exp5441-exp5453",
+  "prior_capstone_path": "results/experiment_5453_capstone_v495.json",
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:80a4f2a6092a3df955540c8072e5c9f36f0945dcabd563348826e2f6e586e38a"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5454,
+  "reproducibility_checksum": "sha256:e70a845053382aa449653004de424024bfbd8ceb8eb166cd9b2d481214a21fd7",
+  "result_path": "results/experiment_5454_transition_v496.json",
+  "roadmap_doc_task_range": "exp5454-exp5467",
+  "roadmap_task_ids": [
+    "exp5454-transition-v496",
+    "exp5455-source-delta-v496",
+    "exp5456-guided-decoding-tautology-corrigendum-v496",
+    "exp5457-gated-sota-distortion-guarded-decoding-v496",
+    "exp5458-minimal-core-claim-repair-v496",
+    "exp5459-constraint-distortion-guard-v496",
+    "exp5460-csl-policy-bandit-v496",
+    "exp5461-gated-sota-csl-memory-routing-v496",
+    "exp5462-active-constraint-minimal-core-pdit-bridge-v496",
+    "exp5463-gated-hardware-boundary-exchange-receipts-v496",
+    "exp5464-arc-metric-integrity-perception-precheck-v496",
+    "exp5465-gated-arc-connected-component-salience-levelup-v496",
+    "exp5466-prd-gap-agent-failure-table-v496",
+    "exp5467-capstone-v496"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5454.transition_v496.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:80a4f2a6092a3df955540c8072e5c9f36f0945dcabd563348826e2f6e586e38a"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:d5d5eec00f72412ba0180ffe9b0d181b7aadc9647e299851478e0266909808d2"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:c17788af13f19069cafcdb13c3036ca8f246dc441a6382ece697cc904aa1b497"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:a7c8350bff0fae44d57320ecb44063b96007d8082297fb1ad44cbd586b59c81b"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:c010194bc403049f5e9340d198bb3c0b5fb23dd78d4da0d4fd7d3f7d7b447ac7"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5453_capstone_v495.json",
+      "read_only": true,
+      "sha256": "sha256:2652d169f931b40bc637cdfd8eb96dc6c8bb2de2d4a4bdb9f1b0124190bc08ee"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5452_prd_gap_agent_failure_table_v495.json",
+      "read_only": true,
+      "sha256": "sha256:d021532391f04ae014c1a75502886965aba61936af8f6ef0138991878ce09345"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5454",
+    "SCENARIO-REPORT-5454",
+    "SCENARIO-REPORT-5454-BLOCKED-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5454_transition_v496.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5454_transition_v496.py -m pytest tests/python/test_experiment_5454_transition_v496.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5454_transition_v496.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}
