@@ -28367,6 +28367,94 @@ true, then Exp5477 SHALL write
 |---|---|---|
 | REQ-VERIFY-5477 | Planned (`python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py`, `results/experiment_5477_pdit_lns_boundary_exchange_v497.json`) | Planned (`tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py`) |
 
+### REQ-VERIFY-5492: Exp5491 Descriptor Hardware Receipts V498
+
+The repository SHALL provide Exp 5492 at
+`python/carnot/experiment_5492_hardware_receipts_v498.py` and write
+`results/experiment_5492_hardware_receipts_v498.json` without invoking a live
+LLM, generated-text judge, destructive board command, non-local hardware path,
+hardware speedup claim, or modifying `scripts/research_conductor.py`. Exp 5492
+SHALL consume the checked-in Exp5491 descriptor artifact and build a small
+deterministic workload from those portable descriptors before probing any local
+hardware path.
+
+The runner SHALL canonicalize each Exp5491 descriptor into a workload payload
+that records descriptor identity, domains, hard constraints, soft preferences,
+update schedule, canonical reference, and exact fallback authority. It SHALL
+record canonical workload hashes for every descriptor workload and compute a
+repeated local CPU baseline receipt with repeat count, wall time, output hash,
+and environment metadata. CPU output hashes SHALL be derived from deterministic
+exact descriptor results over the workload payloads, not from timing,
+transcript text, board identity, or the output artifact checksum.
+
+The runner SHALL probe only safe known local hardware paths. KV260 SHALL be checked through SSH board identity only
+and SHALL never infer board presence from host `/dev/mmcblk*` or other host storage devices.
+GateMate SHALL be treated as physical/JTAG diagnostic evidence only and SHALL NOT be claimed as
+executing the Exp5491 workload unless a real physical/JTAG execution path is
+available in the same run. PolarFire SHALL be checked by SSH identity and, when
+reachable, SHALL run the exact descriptor workload locally on the board and
+return matched workload hashes, result hashes, aggregate output hash, and timing
+receipts. Timing comparisons SHALL be reported only after identical input
+hashes and matching output hashes are observed.
+
+The artifact SHALL include top-level fields `workload_hashes`,
+`cpu_baseline_receipts`, `board_receipts`, `reachable_boards`,
+`blocked_boards`, `repeat_count`, `result_hash_match_rate`,
+`timing_comparison_summary`, `authenticated_board_identity_count`,
+`hardware_speedup_claim`, `hardware_receipts_ready`, `inference_substrate`, and
+`honest_verdict`, with field principles explaining each required field.
+`inference_substrate` SHALL equal
+`local_cpu_and_reachable_board_receipts`. `hardware_speedup_claim` SHALL remain
+false unless authenticated local evidence with matching workload and output
+hashes supports a different claim; the default and doubt-resolving value SHALL
+remain false. `honest_verdict` SHALL start with `complete:` or `blocked:` and
+SHALL NOT claim TSU, Kona, Aleph, or any non-local hardware execution.
+
+Required field principles:
+
+- `workload_hashes`: principle "Exp5491 descriptor workload identity"
+- `cpu_baseline_receipts`: principle "local CPU baseline timing and output hashes"
+- `board_receipts`: principle "authenticated local board receipts"
+- `reachable_boards`: principle "boards with authenticated safe local evidence"
+- `blocked_boards`: principle "per-board blockers without forced pass"
+- `repeat_count`: principle "repeatability support"
+- `result_hash_match_rate`: principle "matching output hashes before timing comparison"
+- `timing_comparison_summary`: principle "bounded timing comparison without speedup claim"
+- `authenticated_board_identity_count`: principle "board identity evidence count"
+- `hardware_speedup_claim`: principle "must remain false without matched local speedup evidence"
+- `hardware_receipts_ready`: principle "receipt readiness"
+- `inference_substrate`: principle "explicit local CPU and reachable board substrate"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+### SCENARIO-VERIFY-5492: Descriptor Receipts Stay Hash-Gated And Receipt-Only
+
+Given the checked-in Exp5491 artifact exposes portable descriptors, when
+Exp5492 runs, then it derives canonical descriptor workload hashes, repeats the
+local CPU exact descriptor workload, records CPU environment metadata, probes
+KV260 by SSH identity only, probes GateMate only as a physical/JTAG diagnostic,
+and runs the bounded descriptor workload only on reachable workload-capable
+boards such as PolarFire. Each workload-capable board receipt records board
+identity, command text, matching workload hashes, matching result hashes,
+aggregate output hash, repeat count, timing distribution, stdout checksum, and
+stderr checksum.
+
+If Exp5491 descriptors are missing or not ready, if CPU output hashes are
+unstable, if no workload-capable board is reachable, if a board returns
+mismatched workload or result hashes, if GateMate diagnostic state is promoted
+into workload execution, if a KV260 host storage probe appears, if
+`inference_substrate` differs from
+`local_cpu_and_reachable_board_receipts`, or if `hardware_speedup_claim` is true
+without authenticated matched local evidence, then Exp5492 SHALL write
+`results/experiment_5492_hardware_receipts_v498.json` with precise blockers,
+`hardware_speedup_claim=false`, and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-VERIFY-5492)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5492 | Planned (`python/carnot/experiment_5492_hardware_receipts_v498.py`, `results/experiment_5492_hardware_receipts_v498.json`) | Planned (`tests/python/test_experiment_5492_hardware_receipts_v498.py`) |
+
 ### REQ-VERIFY-5491: Portable Active-Constraint Subproblem Descriptors V498
 
 The repository SHALL provide Exp 5491 at
