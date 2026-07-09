@@ -20541,3 +20541,106 @@ run over the same task IDs
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5461 | Planned (`python/carnot/experiment_5461_gated_sota_csl_memory_routing_v496.py`, `results/experiment_5461_gated_sota_csl_memory_routing_v496.json`) | Planned (`tests/python/test_experiment_5461_gated_sota_csl_memory_routing_v496.py`) |
+
+---
+
+## REQ-LEARN-5473: CSL KAN Surrogate Assurance v497
+
+Experiment 5473 SHALL implement an interpretable KAN-style surrogate over the
+frozen continuous self-learning action and memory-routing evidence from
+Exp5460 and Exp5461. The surrogate SHALL be deterministic and SHALL NOT load,
+write, fine-tune, or mutate model or adapter weights. The artifact SHALL
+declare `inference_substrate="deterministic_csl_policy_no_llm"` and SHALL prove
+that learning is limited to governed policy-state and memory-routing records.
+
+The replay split SHALL reuse the governed CSL policy fixtures and add
+surrogate features for `context_cost`, `verifier_cost`, `prior_success`,
+`conflict_risk`, `memory_age`, and `constraint_violation_history`. The
+surrogate SHALL expose local basis and coefficient-style reporting for every
+feature so a reviewer can audit why a policy-selected action was accepted or
+deflected. The implementation MAY use a lightweight deterministic KAN-like
+additive approximation when no reusable KAN helper is present.
+
+The assurance report SHALL include chance-style accounting: `threshold_offset`,
+`accepted_action_rate`, `constraint_violation_count`,
+`rollback_trigger_count`, `assurance_ratio`, and a finite-sample conservative
+bound derived from accepted actions. The threshold offset SHALL tighten the
+acceptance threshold when conflict risk, stale memory, or constraint-violation
+history rises. Rollback-triggered evidence SHALL be removed from active
+surrogate accounting while retained in the audit trail.
+
+The same replay rows SHALL compare no-memory, naive-ICL, and governed policy
+baselines. The governed policy score SHALL be computed on the same task split
+as the no-memory and naive-ICL scores, and negative transfer SHALL count as
+deflected only when the governed policy avoids the stale or poisoned answer.
+
+The result artifact SHALL be
+`results/experiment_5473_csl_kan_surrogate_assurance_v497.json` and SHALL
+include `csl_kan_surrogate_ready`, `surrogate_feature_names`,
+`surrogate_coefficients_or_basis`, `assurance_ratio`, `threshold_offset`,
+`accepted_action_rate`, `constraint_violation_count`,
+`rollback_trigger_count`, `negative_transfer_deflection_rate`,
+`no_memory_baseline_score`, `naive_icl_baseline_score`,
+`governed_policy_score`, `model_weight_mutation`, `inference_substrate`,
+`random_seed`, and `honest_verdict`.
+
+### REQ-LEARN-5473 Sub-requirements
+
+- REQ-LEARN-5473-1: The surrogate feature set SHALL be exactly
+  `context_cost`, `verifier_cost`, `prior_success`, `conflict_risk`, `memory_age`, and `constraint_violation_history`.
+  Trace feature order: context_cost verifier_cost prior_success conflict_risk
+  memory_age constraint_violation_history.
+- REQ-LEARN-5473-2: `surrogate_coefficients_or_basis` SHALL include an
+  intercept, a coefficient for every feature, and local basis terms for every
+  scored replay row.
+- REQ-LEARN-5473-3: The chance-style assurance SHALL report
+  `threshold_offset`, `accepted_action_rate`, `constraint_violation_count`,
+  `rollback_trigger_count`, `assurance_ratio`, and a finite-sample conservative
+  bound from accepted-action counts.
+- REQ-LEARN-5473-4: The same replay split SHALL report no-memory,
+  naive-ICL, and governed-policy scores.
+- REQ-LEARN-5473-5: Rollback evidence SHALL increment
+  `rollback_trigger_count`, SHALL be retained in the audit trail, and SHALL not
+  contribute to active accepted-action assurance.
+- REQ-LEARN-5473-6: `csl_kan_surrogate_ready` SHALL be true only when all
+  required artifact fields are present, surrogate features and coefficients are
+  auditable, no accepted action violates constraints, rollback and
+  negative-transfer controls pass, tests are recorded, `model_weight_mutation`
+  is false, and inference substrate is `deterministic_csl_policy_no_llm`.
+
+### SCENARIO-LEARN-5473-ROLLBACK: Rollback Removes Active Assurance Evidence
+
+**Given** a surrogate-scored policy action later marked rollback-required
+**When** chance-style assurance is recomputed
+**Then** the rollback trigger count increases
+**And** the rolled-back action no longer contributes to active accepted-action
+rate or assurance ratio.
+
+### SCENARIO-LEARN-5473-NEGATIVE-TRANSFER: Conflict Risk Deflects Unsafe Memory
+
+**Given** a poisoned or stale memory row with high conflict risk and a tempting
+prior-success value
+**When** the KAN-style surrogate computes the acceptance margin
+**Then** the threshold offset is conservative enough to reject the unsafe
+memory route and count the row as negative-transfer deflected.
+
+### SCENARIO-LEARN-5473-MONOTONICITY: Risk Features Tighten Acceptance
+
+**Given** two synthetic rows that are identical except for conflict risk,
+memory age, or constraint-violation history
+**When** local basis contributions are computed
+**Then** the higher-risk row SHALL have a lower surrogate score and a larger
+threshold offset than the lower-risk row.
+
+### SCENARIO-LEARN-5473-ARTIFACT: Deliverable JSON Is Auditable
+
+**Given** the Exp5460 and Exp5461 V496 replay artifacts are present
+**When** Exp5473 writes its deliverable JSON
+**Then** all required fields are stable under replay
+**And** the artifact reports no model or adapter weight mutation.
+
+## Implementation Status (Exp 5473)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5473 | Planned (`python/carnot/experiment_5473_csl_kan_surrogate_assurance_v497.py`, `results/experiment_5473_csl_kan_surrogate_assurance_v497.json`) | Planned (`tests/python/test_experiment_5473_csl_kan_surrogate_assurance_v497.py`) |
