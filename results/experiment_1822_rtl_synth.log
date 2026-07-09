@@ -883,3 +883,368 @@ Finding unused cells or wires in module \potts_machine_v2..
 2.34.5. Finished fast OPT passes.
 
 2.35. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+2.36. Executing OPT pass (performing simple optimizations).
+
+2.36.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module potts_machine_v2.
+
+2.36.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\potts_machine_v2'.
+Computing hashes of 34 cells of `\potts_machine_v2'.
+Finding duplicate cells in `\potts_machine_v2'.
+Removed a total of 0 cells.
+
+2.36.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \potts_machine_v2..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+2.36.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \potts_machine_v2.
+Performed a total of 0 changes.
+
+2.36.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\potts_machine_v2'.
+Computing hashes of 34 cells of `\potts_machine_v2'.
+Finding duplicate cells in `\potts_machine_v2'.
+Removed a total of 0 cells.
+
+2.36.6. Executing OPT_SHARE pass.
+
+2.36.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+2.36.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \potts_machine_v2..
+
+2.36.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module potts_machine_v2.
+
+2.36.10. Finished fast OPT passes. (There is nothing left to do.)
+
+2.37. Executing XILINX_SRL pass (Xilinx shift register extraction).
+
+2.38. Executing TECHMAP pass (map to technology primitives).
+
+2.38.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/techmap.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+2.38.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/arith_map.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/arith_map.v' to AST representation.
+Generating RTLIL representation for module `\_80_xilinx_lcu'.
+Generating RTLIL representation for module `\_80_xilinx_alu'.
+Successfully finished Verilog frontend.
+
+2.38.3. Continuing TECHMAP pass.
+Using template $paramod$2e6fa573ec247c71d1c073ac74c0c20475cdfbce\_80_xilinx_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $eq.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=s32'00000000000000000000000000000010 for cells of type $lcu.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $xor.
+No more expansions possible.
+<suppressed ~260 debug messages>
+
+2.39. Executing OPT pass (performing simple optimizations).
+
+2.39.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module potts_machine_v2.
+<suppressed ~30 debug messages>
+
+2.39.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\potts_machine_v2'.
+Computing hashes of 198 cells of `\potts_machine_v2'.
+Finding duplicate cells in `\potts_machine_v2'.
+Computing hashes of 181 cells of `\potts_machine_v2'.
+Finding duplicate cells in `\potts_machine_v2'.
+<suppressed ~51 debug messages>
+Removed a total of 17 cells.
+
+2.39.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+2.39.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \potts_machine_v2..
+Removed 2 unused cells and 46 unused wires.
+<suppressed ~3 debug messages>
+
+2.39.5. Finished fast OPT passes.
+
+2.40. Executing IOPADMAP pass (mapping inputs/outputs to IO-PAD cells).
+Mapping port potts_machine_v2.clk using IBUF.
+Mapping port potts_machine_v2.ready using OBUF.
+Mapping port potts_machine_v2.rst_n using IBUF.
+Mapping port potts_machine_v2.spin_out using OBUF.
+
+2.41. Executing TECHMAP pass (map to technology primitives).
+
+2.41.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/techmap.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+2.41.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v' to AST representation.
+Generating RTLIL representation for module `$__SHREG_'.
+Generating RTLIL representation for module `$__XILINX_SHREG_'.
+Generating RTLIL representation for module `$__XILINX_MUXF78'.
+Successfully finished Verilog frontend.
+
+2.41.3. Continuing TECHMAP pass.
+No more expansions possible.
+<suppressed ~80 debug messages>
+Removed 0 unused cells and 1 unused wires.
+
+2.42. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+
+2.43. Executing OPT_EXPR pass (perform const folding).
+Optimizing module potts_machine_v2.
+
+2.44. Executing ABC pass (technology mapping using ABC).
+
+2.44.1. Extracting gate netlist of module `\potts_machine_v2' to `<abc-temp-dir>/input.blif'..
+
+2.44.1.1. Executed ABC.
+Extracted 177 gates and 191 wires to a netlist network with 13 inputs and 141 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Apr 24 2026 04:14:48)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lut <abc-temp-dir>/lutdefs.txt 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + dch -f 
+ABC: + if 
+ABC: + mfs2 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+2.44.1.2. Re-integrating ABC results.
+ABC RESULTS:              $lut cells:      141
+ABC RESULTS:        internal signals:       37
+ABC RESULTS:           input signals:       13
+ABC RESULTS:          output signals:      141
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 186 unused wires.
+
+2.45. Executing TECHMAP pass (map to technology primitives).
+
+2.45.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/ff_map.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/ff_map.v' to AST representation.
+Generating RTLIL representation for module `$_DFFE_NP0P_'.
+Generating RTLIL representation for module `$_DFFE_PP0P_'.
+Generating RTLIL representation for module `$_DFFE_NP1P_'.
+Generating RTLIL representation for module `$_DFFE_PP1P_'.
+Generating RTLIL representation for module `$_DFFSRE_NPPP_'.
+Generating RTLIL representation for module `$_DFFSRE_PPPP_'.
+Generating RTLIL representation for module `$_SDFFE_NP0P_'.
+Generating RTLIL representation for module `$_SDFFE_PP0P_'.
+Generating RTLIL representation for module `$_SDFFE_NP1P_'.
+Generating RTLIL representation for module `$_SDFFE_PP1P_'.
+Generating RTLIL representation for module `$_DLATCH_NP0_'.
+Generating RTLIL representation for module `$_DLATCH_PP0_'.
+Generating RTLIL representation for module `$_DLATCH_NP1_'.
+Generating RTLIL representation for module `$_DLATCH_PP1_'.
+Generating RTLIL representation for module `$_DLATCH_NPP_'.
+Generating RTLIL representation for module `$_DLATCH_PPP_'.
+Successfully finished Verilog frontend.
+
+2.45.2. Continuing TECHMAP pass.
+Using template $paramod$_DFFE_PP0P_\_TECHMAP_WIREINIT_Q_=1'x for cells of type $_DFFE_PP0P_.
+No more expansions possible.
+<suppressed ~165 debug messages>
+
+2.46. Executing XILINX_SRL pass (Xilinx shift register extraction).
+
+2.47. Executing TECHMAP pass (map to technology primitives).
+
+2.47.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/lut_map.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/lut_map.v' to AST representation.
+Generating RTLIL representation for module `$lut'.
+Successfully finished Verilog frontend.
+
+2.47.2. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/xilinx/cells_map.v' to AST representation.
+Generating RTLIL representation for module `$__SHREG_'.
+Generating RTLIL representation for module `$__XILINX_SHREG_'.
+Generating RTLIL representation for module `$__XILINX_MUXF78'.
+Successfully finished Verilog frontend.
+
+2.47.3. Continuing TECHMAP pass.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000001\LUT=2'01 for cells of type $lut.
+Using template $paramod$bea2a60a3047d5ddeaf57b1bb32ef334b3079a9e$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01110000 for cells of type $lut.
+Using template $paramod$decd7d44aed8170c3826b15dbafe01496fe539f9$lut for cells of type $lut.
+Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00000111 for cells of type $lut.
+Using template $paramod$ff73c708e04486ec093e2a4a3502c6dfe73201cc$lut for cells of type $lut.
+Using template $paramod$3c2c41a3dfa511b9d0c6ddbf4ddb8fe22bb4f3cf$lut for cells of type $lut.
+Using template $paramod$7690d29a43b3ff40d17e028e4aaa6d640f71b929$lut for cells of type $lut.
+Using template $paramod$a2b4ddfa3906001b2ef9f2414d79c3048f2a3a6e$lut for cells of type $lut.
+Using template $paramod$44bfdff5e3ae220c23a770741990ae3127a74cff$lut for cells of type $lut.
+Using template $paramod$c315fd171a22ad0b563d890e3adda172ea240769$lut for cells of type $lut.
+Using template $paramod$fced1e4a68a3ccd8a77f0172a7a27e31013c73a7$lut for cells of type $lut.
+Using template $paramod$692927e279b3d5c42ee4aacb287247c0b34943ed$lut for cells of type $lut.
+No more expansions possible.
+<suppressed ~328 debug messages>
+
+2.48. Executing XILINX_DFFOPT pass (optimize FF control signal usage).
+Optimizing FFs in potts_machine_v2.
+
+2.49. Executing OPT_LUT_INS pass (discard unused LUT inputs).
+Optimizing LUTs in potts_machine_v2.
+  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2212.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2215.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2215.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2212.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0 (6 -> 0)
+  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2212.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1 (6 -> 0)
+  Optimizing lut $abc$2210$auto$blifparse.cc:557:parse_blif$2215.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut0.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.genblk1.lut1 (6 -> 0)
+
+2.50. Executing CLKBUFMAP pass (inserting clock buffers).
+Inserting BUFG on potts_machine_v2.$iopadmap$clk[0].
+Removed 0 unused cells and 1128 unused wires.
+
+2.51. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `potts_machine_v2'. Setting top module to potts_machine_v2.
+
+2.51.1. Analyzing design hierarchy..
+Top module:  \potts_machine_v2
+
+2.51.2. Analyzing design hierarchy..
+Top module:  \potts_machine_v2
+Removed 0 unused modules.
+
+2.52. Printing statistics.
+
+=== potts_machine_v2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      157 wires
+      566 wire bits
+        6 public wires
+      267 public wire bits
+        4 ports
+      131 port bits
+      273 cells
+        1   BUFG
+        2   IBUF
+      137   INV
+        2   LUT3
+        2   LUT6
+      129   OBUF
+      144 submodules
+        2   CARRY4
+      136   FDCE
+        4   MUXF7
+        2   MUXF8
+
+   Estimated number of LCs:          4
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      273 potts_machine_v2
+
+        +----------Count including submodules.
+        | 
+      157 wires
+      566 wire bits
+        6 public wires
+      267 public wire bits
+        4 ports
+      131 port bits
+        - memories
+        - memory bits
+        - processes
+      273 cells
+        1   BUFG
+        2   IBUF
+      137   INV
+        2   LUT3
+        2   LUT6
+      129   OBUF
+      144 submodules
+        2   CARRY4
+      136   FDCE
+        4   MUXF7
+        2   MUXF8
+
+   Estimated number of LCs:          4
+
+2.53. Executing CHECK pass (checking for obvious problems).
+Checking module potts_machine_v2...
+Found and reported 0 problems.
+
+End of script. Logfile hash: 1855ef30ab, time: 3.33s, user: 2.96s, system: 0.28s, MEM: 115.08 MB peak
+Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+Time spent: 76% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...

@@ -38580,3 +38580,59 @@ does not append to `research-references.md`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5469 | Implemented (`python/carnot/experiment_5469_source_delta_v497.py`, `results/experiment_5469_source_delta_v497.json`) | Implemented (`tests/python/test_experiment_5469_source_delta_v497.py`) |
+
+### REQ-REPORT-5481: V497 Capstone Truth Table And PRD Gap Synthesis
+
+The Exp5481 workflow SHALL write
+`results/experiment_5481_capstone_v497.json` from the available Exp5468 through
+Exp5480 artifacts only. It SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-program.md`, `_bmad/prd.md`, `_bmad/architecture.md`,
+`ops/status.md`, `ops/changelog.md`, `ops/conductor-log.md`,
+`ops/e2e-test-plan.md`, and `results/` before synthesis. It SHALL record every
+existing Exp5468-Exp5480 result artifact path, explicitly list missing
+artifacts, and keep flagged evidence separate from headline-ready evidence.
+
+The workflow SHALL classify each lane as `headline_ready`, `bounded`,
+`blocked`, `honest_null`, `missing`, or `flagged` using artifact fields rather
+than roadmap intent. It SHALL build a PRD gap table for FR-11 continuous
+self-learning, FR-12 verifiable reasoning, hardware acceleration, ARC live path,
+and local SOTA runtime. It SHALL emit a failure taxonomy, next-roadmap
+recommendations, guided-decoding quarantine status, CSL status, ARC registry
+delta, and hardware speedup claim status. It SHALL NOT modify
+`research-roadmap.yaml`, `scripts/research_conductor.py`, `ops/status.md`,
+`ops/changelog.md`, or `_bmad/traceability.md`, and SHALL set
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+The artifact SHALL include required fields `milestone`, `artifact_paths`,
+`missing_artifacts`, `flagged_artifacts`, `headline_ready_lanes`,
+`bounded_lanes`, `blocked_lanes`, `honest_null_lanes`, `prd_gap_table`,
+`failure_taxonomy`, `guided_decoding_quarantine_status`, `csl_status`,
+`arc_registry_delta`, `hardware_speedup_claim`, `ops_status_updated`,
+`ops_changelog_updated`, `roadmap_yaml_unchanged`, `conductor_unchanged`,
+`next_recommendations`, `inference_substrate`, and `honest_verdict`.
+
+#### SCENARIO-REPORT-5481: Complete V497 Capstone Uses Only Real Artifacts
+
+**Given** all Exp5468 through Exp5480 artifacts are readable
+**When** the Exp5481 capstone workflow runs
+**Then** it writes `results/experiment_5481_capstone_v497.json` with no missing
+artifacts, separates headline-ready, bounded, blocked, and honest-null lanes,
+keeps guided decoding quarantined, records CSL as headline-ready only for
+frozen-policy evidence, records ARC registry delta from before/after registry
+fields, records `hardware_speedup_claim=false`, and leaves the active roadmap
+and conductor unchanged.
+
+#### SCENARIO-REPORT-5481-MISSING-FLAGGED: Missing Or Flagged Inputs Stay Non-Headline
+
+**Given** one or more Exp5468 through Exp5480 artifacts are absent or contain an
+explicit adversarial flag
+**When** the Exp5481 capstone workflow runs
+**Then** the missing paths appear in `missing_artifacts`, flagged paths appear in
+`flagged_artifacts`, affected lanes are classified `missing` or `flagged`, and
+the honest verdict remains terminal without manufacturing a headline win.
+
+## Implementation Status (REQ-REPORT-5481)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5481 | Implemented (`python/carnot/experiment_5481_capstone_v497.py`, `results/experiment_5481_capstone_v497.json`) | Implemented (`tests/python/test_experiment_5481_capstone_v497.py`) |
