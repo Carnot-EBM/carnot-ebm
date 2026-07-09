@@ -10622,3 +10622,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 09:14 UTC | p-bit/p-dit boundary exchange with LNS-style accou | OK | 87 passed, 1 warning in 9.82s |
 | 2026-07-09 09:28 UTC | Gated hardware boundary-exchange receipts after Ex | OK | 88 passed, 1 warning in 10.40s |
 | 2026-07-09 09:41 UTC | ARC target rotation and perception/salience preche | OK | 88 passed, 1 warning in 12.97s |
+| 2026-07-09 09:56 UTC | Gated ARC live salience level-up attempt on rotate | OK | 88 passed, 1 warning in 11.35s |
