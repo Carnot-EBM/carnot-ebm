@@ -1,10 +1,10 @@
-# Research Roadmap vNEXT - Milestone 2026.07.498
+# Research Roadmap vNEXT - Milestone 2026.07.499
 
-**Milestone title:** CSL Corrigendum, Preference-MaxSAT Verification, Concept Evidence Telemetry, Hardware Receipts, and ARC Trajectory Induction
+**Milestone title:** Pretest Recovery, Hard/Soft Verification Core, Trajectory-Aware CSL, Hardware Receipts, and ARC Live-Path Generation
 
 **Planner date:** 2026-07-09
-**Previous milestone:** 2026.07.497
-**Task range:** Exp 5482-5495
+**Previous milestone:** 2026.07.498
+**Task range:** Exp 5496-5509
 **Pre-staged roadmap:** `research-roadmap-next.yaml`
 
 ## Inputs Read
@@ -31,7 +31,6 @@ Additional guardrails checked before writing the roadmap:
 - `ops/known-issues.md`
 - `ops/arc_solve_registry.yaml`
 - `scripts/experiment_template.py`
-- `scripts/roadmap_schema.py`
 - `scripts/conductor_gates.py`
 - `scripts/audit_roadmap_gates.py`
 - `scripts/arc_levelup_guarantee_lint.py`
@@ -40,316 +39,267 @@ Additional guardrails checked before writing the roadmap:
 
 ## Literature Refresh Incorporated
 
-The planner performed a 2025-2026 refresh across arXiv, OpenReview,
-Extropic writing, Semantic Scholar citation routes for EBT `2507.02092` and
-ARM-EBM `2512.15605`, HuggingFace Papers, GitHub repositories, and Logical
-Intelligence public pages before designing experiments. Actionable deltas were
-appended to `research-references.md` under
-`### V498 Planner Refresh - 20260709`.
+The planner performed a 2025-2026 refresh across arXiv, OpenReview public
+pages where reachable, Extropic writing, Semantic Scholar-style citation
+routes for EBT `2507.02092` and ARM-EBM `2512.15605`, Hugging Face Papers,
+GitHub repository discovery, and Logical Intelligence public pages. Actionable
+non-duplicates were appended to `research-references.md` under:
+
+`## V499 Planner Refresh - 2026-07-09`
 
 New planning consequences:
 
-- **Preference-Based Maximum Satisfiability** (`arXiv:2605.29687`) gives V498
-  a clean way to compose hard exact constraints with soft user/preferences
-  without reopening token steering. V498 adds a typed claim-state fixture with
-  independently checked reference semantics.
-- **Natural Language based Specification and Verification** (`arXiv:2605.11315`)
-  motivates helper contracts written as natural-language specs only if they
-  compile to executable predicates or exact tests. V498 applies this to
-  deterministic witness rows, not broad code generation.
-- **Concept-level EBM interpretability** (OpenReview `Uh0F0079Lh`) motivates
-  advisory concept-energy attribution for local SOTA evidence telemetry. The
-  concept energy is explanatory only; exact validators remain final authority.
-- **LatentGym** (`arXiv:2606.15306`) becomes the CSL measurement reference
-  after Exp5474 was adversarially flagged for metric tautology. V498 separates
-  exploration, exploitation, memory support, and exact outcome metrics before
-  another SOTA CSL headline.
-- **Pitwall** (`arXiv:2607.06495`) remains the typed factual-claim reference
-  for decomposing SOTA outputs into state-linked claims with support/fallback
-  accounting.
-- **CARS** (OpenReview `OhndOnT4Ih`) is promoted only as a complete-candidate
-  rejection/abstention pattern. It does not lift guided-decoding quarantine and
-  does not justify token-level steering.
-- **Implicitly Parallel Neuromorphic Solver Design for CSPs**
-  (`arXiv:2603.01150`) was already indexed; V498 folds its partition/update
-  telemetry idea into active-constraint descriptors and hardware receipts.
+- **Trajel** (`arXiv:2605.24219`) argues for trajectory-level hallucination
+  audits over multi-step agent traces. V499 applies this to the pretest
+  cascade, SOTA panels, CSL memory, and capstone failure taxonomy.
+- **RT4CHART** (`arXiv:2603.27752`) motivates local-to-global claim
+  verification with span/evidence mappings. V499 uses it in helper contracts
+  and hard/soft claim fixtures.
+- **ExpGraph** (`arXiv:2605.30712`) and **Evo-Memory** (`arXiv:2511.20857`)
+  motivate executor-frozen, graph/stream self-learning with explicit
+  negative-transfer checks. V499 makes this the CSL path before any headline
+  GGUF panel.
+- **MILP-Evolve** provides a varied hard/soft constraint fixture source.
+  V499 uses it only for executable exact-solver descriptors, not unverified
+  heuristic solving.
+- **Hamon** is a useful GPU EBM sampler API reference, but it is not a basis
+  for a Carnot speedup claim without authenticated matched timing.
+- **Extropic TSU/XTR-0** and **Logical Intelligence Kona** remain strategic
+  architecture references only. V499 hardware evidence must come from local
+  CUDA, KV260, GateMate, PolarFire, or CPU receipts.
 
-Secondary-source status:
+## What 2026.07.498 Proved
 
-- Extropic TSU/XTR-0/Z1 writing remains architecture context only; Carnot has
-  no local authenticated TSU execution path.
-- Logical Intelligence Aleph/Kona pages reinforce EBRM-style global-state
-  reasoning and proof-bearing code verification, but no local authenticated
-  access exists.
-- Semantic Scholar public routes for EBT and ARM-EBM surfaced adjacent items
-  but no stronger executable dependency than the source EBT/ARM-EBM hooks and
-  the V498 MaxSAT/concept-energy additions.
-- HuggingFace Papers verification pages sharpen fixtures but do not replace
-  exact validators or local GGUF receipt discipline.
-- GitHub EBM/KAN/constraint repositories remain watch references; none
-  superseded Carnot's local exact solvers, GGUF runtime, or hardware receipts.
-
-## What 2026.07.497 Proved
-
-The `.497` capstone, conductor log, and results artifacts are the immediate
-planning source of truth:
+The operator reports `.498` complete. Its capstone and conductor trail make the
+main lesson unusually concrete: many planned science tasks did not fail
+scientifically; they never executed because the pretest/self-heal path skipped
+them before artifacts existed. The correct next milestone begins by fixing that
+execution reliability gap.
 
 | Lane | Experiments | Finding |
 |------|-------------|---------|
-| Transition and source freshness | 5468, 5469 | `.497` activated cleanly and execution-time source deltas were reconciled. |
-| Rewrite-state verification | 5470, 5471 | Deterministic rewrite-state, semantic guards, and guard composition are clean; hidden-premise and unlicensed-change fixtures are usable. |
-| Local SOTA evidence telemetry | 5472 | A bounded local SOTA GGUF telemetry run succeeded with GPU offload and no guided decoding; exact validators remain authority. |
-| Continuous self-learning | 5473, 5474, 5475 | KAN surrogate assurance and behavioral memory evidence were clean. Exp5474's artifact showed a large CSL scale delta, but the conductor flagged it `TAUTOLOGY`; V498 must resolve metric independence before using it as a headline. |
-| Helper repair | 5476 | Helper-lemma witness repair reduced repeated failure classes without false accepts, with exact rechecks. |
-| Active constraints and hardware | 5477, 5478 | p-bit/p-dit boundary exchange and board receipts are bounded. PolarFire receipts matched hashes; KV260 remained blocked; no speedup claim is supported. |
-| ARC | 5479, 5480 | Target precheck selected `sb26 L3`; live salience attempt was an honest null/no-bank with no registry delta. |
-| Synthesis | 5481 | `.497` closed verifiable reasoning and governed CSL as the strongest lanes, kept guided decoding quarantined, recorded ARC and hardware speedup as honest nulls, and recommended trajectory generation beyond salience. |
+| Transition and planning | 5482, 5495 | `.498` carried `.497` facts forward and closed with a capstone that preserved guided-decoding quarantine, bounded CSL, no hardware speedup claim, and no ARC registry delta. |
+| Source delta and core fixtures | 5483, 5485, 5486, 5487 | Execution was blocked or skipped by pretest failures, so source delta, Preference-MaxSAT, concept telemetry, and helper-contract repair did not produce usable artifacts. |
+| Continuous self-learning | 5484, 5488, 5489, 5490 | The required CSL corrigendum and independent-metric lanes did not land; Exp5474's tautology finding still blocks CSL headline claims. Exp5490 gate-blocked because its prerequisite artifact was missing. |
+| Active constraints | 5491 | Active-constraint subproblem descriptors completed and remain a usable seed for hardware and exact-fallback descriptors. |
+| Hardware | 5492 | PolarFire remained reachable with matched hashes. KV260 was blocked by SSH identity, GateMate by JTAG identity, and `hardware_speedup_claim=false` stayed correct. |
+| ARC | 5493, 5494 | The ARC precheck selected `dc22 L3`, but the live attempt was an honest null and was later methodologically flagged for too-short duration/missing methodology. Registry delta stayed zero. |
 
 ## Three Biggest Gaps
 
-1. **CSL scale is promising but not headline-clean.** The PRD's FR-11 asks for
-   autonomous directed self-learning, and `.497` produced strong KAN-assisted
-   CSL numbers. The adversarial tautology flag means V498 must first prove
-   metric independence, then rerun SOTA CSL on exploration/exploitation splits
-   whose outcome metrics are independent of the policy score.
+1. **Execution reliability is now the first scientific blocker.** The PRD
+   cannot progress if source-delta, CSL, helper, and MaxSAT lanes are skipped
+   before artifacts are emitted. V499 front-loads a pretest cascade diagnostic
+   and repair receipt without modifying `scripts/research_conductor.py`.
 
-2. **Verification needs hard-plus-soft semantics.** Deterministic exact guards
-   now catch unlicensed state changes, but practical reasoning also needs
-   preference ranking among admissible repairs, concept attribution, and
-   helper contracts that bridge natural language and exact predicates. V498
-   adds Preference-MaxSAT, concept-energy telemetry, and NL helper-contract
-   repair under independent exact validators.
+2. **The verifiable reasoning core lacks the hard/soft fixture layer.** Carnot
+   has exact guards and active-constraint descriptors, but `.498` failed to
+   ship the minimal Preference-MaxSAT and helper-contract artifacts needed to
+   connect hard admissibility, soft preference ranking, claim evidence, and
+   local SOTA concept telemetry.
 
-3. **Grounding is still bounded in both hardware and ARC.** Hardware work has
-   authenticated receipts but no speedup; ARC has a long no-bank tail after the
-   69-level plateau. V498 should improve descriptors and trajectory induction
-   rather than claiming speedup or repeating salience-only ARC attempts.
+3. **FR-11/ARC/hardware grounding remains bounded.** Continuous self-learning
+   is still blocked by the Exp5474 tautology issue, ARC is stuck at a 69-level
+   plateau with repeated no-bank attempts, and hardware receipts are real but
+   not a speedup result. V499 uses graph/stream memory, live ARC perception
+   generation, and multi-board receipt continuity to move these bounded lanes
+   without overstating them.
 
 ## Target Architecture
 
 ```text
-                         +--------------------------------------+
-                         | Local SOTA GGUF inference substrate  |
-                         | Qwen3.6-35B-A3B, Gemma-4-31B-it,     |
-                         | Gemma-4-26B-A4B-it via llama.cpp     |
-                         +-------------------+------------------+
-                                             |
-                       complete candidates, receipts, optional logits
-                                             |
-        +------------------------------------v----------------------------------+
-        | Typed claim-state and preference verification                         |
-        | hard exact constraints, soft preferences, canonical MaxSAT refs,      |
-        | typed factual claims, concept-energy attribution, abstention routing  |
-        +-------------------+--------------------------+------------------------+
-                            |                          |
-              exact witness stream                     | governed experience stream
-                            |                          |
-        +-------------------v----------------+   +-----v------------------------+
-        | Helper-contract repair             |   | Continuous self-learning      |
-        | NL spec rows -> executable          |   | metric-independence audit,    |
-        | predicates/tests, verifier failure  |   | latent exploration/replay,    |
-        | signatures, exact rechecks          |   | KAN surrogate, frozen GGUF    |
-        +-------------------+----------------+   +-----+------------------------+
-                            |                          |
-                            |                 descriptor / partition stream
-                            |                          |
-        +-------------------v--------------------------v------------------------+
-        | Active constraints, hardware receipts, and ARC live path              |
-        | p-bit/p-dit/MaxSAT descriptors, partition/update telemetry, matched    |
-        | board hashes/timing, live ARC trajectory induction, registry gates     |
-        +-----------------------------------------------------------------------+
+                          +---------------------------------------+
+                          |  Milestone execution substrate         |
+                          |  pretests, gates, artifacts, capstone  |
+                          +-------------------+-------------------+
+                                              |
+                     pretest taxonomy, source delta, gate receipts
+                                              |
+        +-------------------------------------v----------------------------------+
+        | Hard/soft verification core                                            |
+        | exact hard constraints, Preference-MaxSAT ranking, hierarchical claims, |
+        | helper contracts compiled to predicates, exact fallback references      |
+        +----------------------+-------------------------------+-----------------+
+                               |                               |
+                 SOTA GGUF evidence panel                      | descriptor stream
+                               |                               |
+        +----------------------v-------------------+   +-------v----------------+
+        | Local SOTA inference with receipts        |   | Active constraints     |
+        | Qwen3.6-35B-A3B, Gemma-4-31B-it,          |   | MILP/MaxSAT/CSP rows,  |
+        | Gemma-4-26B-A4B-it via llama.cpp/CUDA     |   | exact fallback checks  |
+        +----------------------+--------------------+   +-------+----------------+
+                               |                            board descriptors
+                               |                                  |
+        +----------------------v--------------------+   +---------v--------------+
+        | Continuous self-learning                  |   | Hardware receipt path  |
+        | metric-independence corrigendum,          |   | CUDA, KV260, GateMate, |
+        | graph/stream memory, frozen executor,     |   | PolarFire, no speedup  |
+        | no-memory baseline, negative transfer     |   | claim without timing   |
+        +----------------------+--------------------+   +------------------------+
+                               |
+                               | learned lessons and trajectory taxonomy
+                               |
+        +----------------------v-----------------------------------------------+
+        | ARC live path                                                         |
+        | registry precheck, null-coordinate audit, classical perception,        |
+        | salience-tiered action generation, live_agent_self_discovery solve     |
+        | provenance if a level is actually reproduced                           |
+        +----------------------------------------------------------------------+
 ```
 
 ## Phase Plan
 
-### Phase 0 - Transition and Source Delta
+### Phase 0 - Transition, Pretest Recovery, and Source Delta
 
-- **Exp5482:** archive `.497` terminal evidence and stage `.498` execution
-  context, including the Exp5474 tautology flag, guided-decoding quarantine,
-  ARC no-bank, and hardware no-speedup facts.
-- **Exp5483:** run execution-time source delta against the V498 planner refresh
-  and append only non-duplicate actionable references.
+- **Exp5496:** transition `.498` terminal facts into `.499` execution context.
+- **Exp5497:** diagnose and repair/receipt the `.498` pretest skip cascade
+  without touching `scripts/research_conductor.py`.
+- **Exp5498:** run execution-time 2025-2026 source delta only after the pretest
+  cascade receipt indicates the lane can execute.
 
-### Phase 1 - Metric Corrigendum and Hard/Soft Verification
+### Phase 1 - Hard/Soft Verification Core
 
-- **Exp5484:** resolve the Exp5474 CSL tautology finding with a metric
-  independence graph and clean/bounded/null recommendation.
-- **Exp5485:** build a deterministic Preference-MaxSAT typed claim-state
-  fixture with hard exact constraints, soft preferences, canonical references,
-  and false-accept accounting.
-- **Exp5486:** if Exp5485 is clean, run a local SOTA GGUF concept-attributed
-  evidence telemetry panel. This is not guided decoding and does not use token
-  steering.
-- **Exp5487:** extend helper-lemma witness repair into NL helper contracts that
-  must compile to executable predicates or exact tests before being credited.
+- **Exp5499:** build the minimal Preference-MaxSAT typed claim-state fixture
+  with hard exact constraints, soft preferences, executable references, and
+  false-accept accounting.
+- **Exp5500:** if Exp5499 is ready, run a local SOTA GGUF concept/claim panel
+  with mandatory flagship GGUF model receipts and exact validators as final
+  authority.
+- **Exp5501:** recover helper-contract repair using hierarchical
+  claim/evidence mappings and executable predicates.
+- **Exp5505:** extend active-constraint descriptors with MILP/MaxSAT/CSP rows
+  and exact fallback semantics.
 
 ### Phase 2 - Continuous Self-Learning With Independent Metrics
 
-- **Exp5488:** required CSL task. Build a LatentGym-style deterministic replay
-  fixture that separates exploration, exploitation, memory support, and exact
-  outcome metrics.
-- **Exp5489:** if Exp5484 and Exp5488 are clean, rerun local SOTA GGUF CSL
-  scale-up with independent metrics, frozen weights, and mandatory GGUF model
-  receipts.
-- **Exp5490:** map the governed CSL/KAN update path to hardware-compatible
-  sparse fixed-point update ledgers and resource estimates without making a
-  board speedup claim.
+- **Exp5502:** produce the CSL tautology corrigendum required before any
+  Exp5474-style CSL headline can be used.
+- **Exp5503:** build an executor-frozen ExpGraph/Evo-Memory style streaming
+  replay fixture with no-memory baseline and negative-transfer checks.
+- **Exp5504:** if Exp5502 and Exp5503 are clean, run a local SOTA GGUF CSL
+  memory panel with independent metrics and frozen model weights.
 
-### Phase 3 - Boundary Exchange, Hardware Receipts, ARC, and Synthesis
+### Phase 3 - Hardware, ARC, and Synthesis
 
-- **Exp5491:** build active-constraint subproblem descriptors for p-bit/p-dit,
-  Preference-MaxSAT, and exact fallback paths, including partition/update
-  telemetry inspired by neuromorphic CSP work.
-- **Exp5492:** if Exp5491 is ready, collect matched CPU/board receipts where
-  reachable. This remains receipt-only; no speedup claim is allowed without
-  authenticated matched timing.
-- **Exp5493:** run ARC trajectory-target precheck that avoids duplicate levels,
-  recent no-bank targets, offline BFS, and generic retired exploration signals.
-- **Exp5494:** if Exp5493 is clean, run one live ARC trajectory-induction
-  level-up attempt with `solve_provenance=live_agent_self_discovery`.
-- **Exp5495:** emit the `.498` capstone with PRD gap table, failure taxonomy,
-  headline/bounded/blocked truth table, and ops-doc alignment recommendations.
+- **Exp5506:** collect multi-board receipts across PolarFire, KV260, GateMate,
+  CUDA, and CPU where reachable, using active-constraint descriptors or the
+  last clean fallback descriptor. No speedup claim is allowed without matched
+  timing.
+- **Exp5507:** precheck ARC target eligibility, null-coordinate validity, and
+  perception grounding before any level-up attempt.
+- **Exp5508:** if Exp5507 is ready, run one live ARC perception-generation
+  level-up attempt with changed mechanism, `solve_provenance` discipline, and
+  an explicit `offline_reproduced=true` plus `reproduced_levels>=1` banking
+  gate for any new level claim.
+- **Exp5509:** synthesize `.499` actual artifacts into a capstone with PRD gap
+  table, gate truth table, failure taxonomy, hardware/ARC truth claims, and
+  next recommendations.
 
 ## Natural Next-Experiment Chain
 
 ```text
-Exp5474 TAUTOLOGY flag
-  -> Exp5484 CSL metric-independence corrigendum
-      -> Exp5488 latent exploration/replay split
-          -> Exp5489 SOTA GGUF CSL independent-metrics panel
-              -> Exp5495 capstone headline decision
+.498 pretest skip cascade
+  -> Exp5497 pretest diagnostic/repair receipt
+      -> Exp5498 source delta
+      -> Exp5499 Preference-MaxSAT fixture
+      -> Exp5502 CSL corrigendum
 
-Exp5470/5471 deterministic guards + Exp5472 local SOTA telemetry
-  -> Exp5485 Preference-MaxSAT hard/soft claim-state fixture
-      -> Exp5486 concept-attributed SOTA evidence telemetry
-      -> Exp5487 NL helper-contract repair
+Exp5499 hard/soft fixture
+  -> Exp5500 SOTA concept/claim panel
+  -> Exp5501 helper-contract hierarchical claim fixture
+  -> Exp5505 active-constraint MILP/MaxSAT descriptors
 
-Exp5477 p-bit/p-dit boundary exchange + Exp5478 hardware receipts
-  -> Exp5491 active-constraint subproblem descriptors
-      -> Exp5492 matched hardware receipt continuation
+Exp5474 TAUTOLOGY + missing .498 CSL artifacts
+  -> Exp5502 CSL metric-independence audit
+  -> Exp5503 graph/stream memory replay
+      -> Exp5504 SOTA GGUF CSL memory panel
 
-Exp5480 sb26 L3 salience no-bank
-  -> Exp5493 trajectory target precheck
-      -> Exp5494 live trajectory-induction level-up attempt
+Exp5491 descriptors + Exp5492 hardware receipts
+  -> Exp5505 descriptor extension
+  -> Exp5506 multi-board hardware receipts
+
+Exp5494 dc22 L3 no-bank and methodology flag
+  -> Exp5507 ARC null-coordinate/perception precheck
+      -> Exp5508 ARC live perception-generation attempt
+
+All lanes
+  -> Exp5509 capstone
 ```
 
 ## Dependency Graph
 
 ```text
-5482 transition
+5496 transition
   |
-5483 source-delta
+  v
+5497 pretest cascade diagnostic
+  +--> 5498 source delta
+  +--> 5499 Preference-MaxSAT fixture
+  |       +--> 5500 SOTA concept/claim panel
+  |       +--> 5501 helper-contract claim fixture
+  |       +--> 5505 active-constraint descriptors
+  |               +--> 5506 hardware receipts
+  |
+  +--> 5502 CSL tautology corrigendum
+          +--> 5503 graph/stream memory replay
+                  +--> 5504 SOTA CSL memory panel
 
-5484 CSL tautology corrigendum
-  +--> 5488 CSL latent exploration replay
-          +--> 5489 SOTA CSL independent metrics
-                 |
-                 v
-              5495 capstone
+5507 ARC precheck
+  +--> 5508 ARC live perception-generation attempt
 
-5485 Preference-MaxSAT typed claims
-  +--> 5486 SOTA concept evidence telemetry
-  +--> 5487 NL helper-contract repair
-
-5488 CSL replay
-  +--> 5490 KAN fixed-point update ledger
-
-5491 active-constraint descriptor
-  +--> 5492 hardware receipts
-
-5493 ARC target precheck
-  +--> 5494 ARC live trajectory attempt
-        |
-        v
-      5495 capstone
+5496..5508
+  +--> 5509 capstone
 ```
 
 ## Hardware Requirements
 
-- **Dual RTX 3090 / CUDA:** required for Exp5486 and Exp5489 if any headline
-  local SOTA GGUF inference runs. Use the repo SOTA cache resolver or
-  `cached_sota_pair()` pattern from `scripts/experiment_template.py`.
-- **Mandated local GGUF model specs:** every LLM experiment must include at
-  least one of, and the prompts list all three:
-  `unsloth/Qwen3.6-35B-A3B-GGUF`,
-  `unsloth/gemma-4-31B-it-GGUF`, and
-  `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models may only be used as
-  CPU smoke tests and must never be headline results.
-- **GGUF runtime discipline:** no `AutoTokenizer.from_pretrained` on GGUF repos;
-  use CUDA-enabled `llama-cpp-python` or native `llama.cpp` with explicit GPU
-  offload receipts, model paths, checksums, and VRAM/runtime data.
-- **Exact solvers and deterministic fixtures:** Exp5484, Exp5485, Exp5487,
-  Exp5488, Exp5490, Exp5491, and Exp5493 can run on CPU unless existing tests
-  require otherwise.
-- **Boards:** PolarFire, KV260, and GateMate are receipt-only. KV260 checks must
-  use SSH/board identity, never host `/dev/mmcblk*`. GateMate physical/JTAG
-  remains blocked unless local access changes. No hardware speedup claim is
-  allowed without matched workload hashes, board identity, repeated timing, and
-  an embedded/local baseline.
-- **External hardware:** Extropic TSU, Logical Intelligence Kona/Aleph, and any
-  non-local accelerator remain watch-only and cannot support execution claims.
+| Experiment | Required substrate | Preconditions | Claim discipline |
+|------------|--------------------|---------------|------------------|
+| 5500 | Local CUDA plus llama.cpp/GGUF for at least one mandated SOTA model | cached GGUF file exists, llama.cpp reports CUDA/GPU offload, GPU memory delta captured | Concept evidence only; exact validators decide. |
+| 5504 | Local CUDA plus llama.cpp/GGUF for at least one mandated SOTA model | same as Exp5500 plus clean CSL independence gate | Frozen weights only; no CSL headline if metrics are not independent. |
+| 5506 | CPU, CUDA, `ssh polarfire`, `ssh kria`, `openFPGALoader -c dirtyJtag --detect` | no host `/dev/mmcblk*` KV260 probing; record blocked boards honestly | Receipt-only unless authenticated matched timing exists. |
+| 5508 | Local ARC live agent runtime | registry precheck, no duplicate solve, no offline BFS/per-game hand adapter | Any solve must be `live_agent_self_discovery`. |
 
-## Experiment Summary
+Mandated SOTA local GGUF models for every LLM-bearing experiment:
 
-| Exp | Title | Gate | Deliverable |
-|-----|-------|------|-------------|
-| 5482 | Transition `.497` outcomes into `.498` context | none | `results/experiment_5482_transition_v498.json` |
-| 5483 | Execution-time source delta for `.498` | none | `results/experiment_5483_source_delta_v498.json` |
-| 5484 | CSL tautology corrigendum and metric independence | none | `results/experiment_5484_csl_tautology_corrigendum_v498.json` |
-| 5485 | Preference-MaxSAT typed claim-state fixture | none | `results/experiment_5485_preference_maxsat_claim_fixture_v498.json` |
-| 5486 | SOTA concept evidence telemetry | Exp5485 ready | `results/experiment_5486_sota_concept_evidence_panel_v498.json` |
-| 5487 | NL helper-contract repair | none | `results/experiment_5487_helper_contract_nl_spec_repair_v498.json` |
-| 5488 | CSL latent exploration replay | Exp5484 clean | `results/experiment_5488_csl_latent_exploration_replay_v498.json` |
-| 5489 | SOTA CSL independent metrics | Exp5484 and Exp5488 clean | `results/experiment_5489_sota_csl_independent_metrics_v498.json` |
-| 5490 | CSL/KAN fixed-point update ledger | Exp5488 ready | `results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json` |
-| 5491 | Active-constraint subproblem descriptor | none | `results/experiment_5491_active_constraint_subproblem_descriptor_v498.json` |
-| 5492 | Hardware receipt continuation | Exp5491 ready | `results/experiment_5492_hardware_receipts_v498.json` |
-| 5493 | ARC trajectory target precheck | none | `results/experiment_5493_arc_trajectory_target_precheck_v498.json` |
-| 5494 | ARC live trajectory level-up attempt | Exp5493 ready | `results/experiment_5494_arc_live_trajectory_levelup_v498.json` |
-| 5495 | `.498` capstone | none | `results/experiment_5495_capstone_v498.json` |
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-## Rerun and Retirement Discipline
+Legacy small GGUF models may appear only as CPU smoke tests and must not be
+headline models.
 
-- Exp5484 and Exp5489 both cite Exp5474's adversarial `TAUTOLOGY` flag and
-  include `prior_failures` with `retire_if_same_verdict: true`.
-- Exp5486 cites the Exp5457 guided-decoding failure and explicitly avoids token
-  steering. It uses complete-candidate evidence telemetry only.
-- Exp5494 cites recent ARC no-bank attempts and the retired generic exploration
-  scope. It changes the technique to trajectory/option induction from live
-  runtime observations, uses target rotation, and keeps solve provenance live.
-- No task references a retired upstream experiment in `requires`/`gated_on`.
-- No task reuses a retired exp_id.
+## Risk Register and Guardrails
 
-## Acceptance Criteria
+- **Pretest cascade repeats:** Exp5497 must emit a concrete taxonomy and
+  receipt before gated science tasks run. If the same skip class remains, do
+  not pretend downstream artifacts exist.
+- **Failed-experiment reruns:** All same-scope reruns include `prior_failures`
+  with `retire_if_same_verdict: true`.
+- **Guided decoding quarantine:** V499 does not perform token-level guided
+  decoding. SOTA panels generate or score complete candidates and then apply
+  exact validators.
+- **CSL tautology:** Exp5504 is gated on independent metrics. Exp5503 still
+  runs as a new graph/stream fixture so the milestone satisfies FR-11 without
+  depending on Exp5474.
+- **ARC duplicate/off-path solves:** Exp5507 must read
+  `ops/arc_solve_registry.yaml` and avoid already-reached levels. Exp5508 may
+  not use offline ground-truth BFS or per-game hand adapters as credited solve
+  paths.
+- **Hardware overclaim:** PolarFire/KV260/GateMate/CUDA receipts may be useful
+  even when blocked, but speedup claims require authenticated matched timing.
+- **Protected files:** `research-roadmap.yaml` and
+  `scripts/research_conductor.py` are not modified by this planning turn.
 
-The milestone is valid if:
+## Expected Outcomes
 
-- `research-roadmap-next.yaml` parses and has milestone `2026.07.498`.
-- Every task has a unique deliverable under `results/*.json`.
-- Every prompt includes `CONTEXT`, `EXISTING CODE TO READ FIRST`, `TASK`, and
-  `CONCRETE STEPS`, and ends with the required non-push/conductor warning.
-- All LLM tasks list the mandated SOTA GGUF model specs and block rather than
-  producing CPU-only headline results.
-- All structured gates in titles are represented in `gated_on`.
-- ARC solve tasks include `solve_provenance: live_agent_self_discovery` in the
-  required artifact fields.
-- Relevant lint checks pass before activation.
-
-## Expected Verification Commands
-
-```bash
-python -c "from pathlib import Path; import yaml; data=yaml.safe_load(Path('research-roadmap-next.yaml').read_text()); assert data['milestone']=='2026.07.498'; assert len(data['tasks'])==14"
-python scripts/validate_prior_failures.py research-roadmap-next.yaml
-python scripts/audit_roadmap_gates.py research-roadmap-next.yaml
-python scripts/arc_levelup_guarantee_lint.py research-roadmap-next.yaml --min 1
-python scripts/exclusion_manifest_lint.py research-roadmap-next.yaml
-git diff --check -- research-references.md openspec/change-proposals/research-roadmap-vNEXT.md research-roadmap-next.yaml ops/status.md ops/changelog.md
-```
-
-## Planning Position
-
-V498 should not chase a broad new capability surface. The clean move is to
-convert `.497`'s strong but flagged CSL evidence into independently measured
-self-learning, expand exact verification from hard constraints to
-hard-plus-soft preference semantics, and keep the hardware and ARC lanes honest:
-receipt-only hardware, live-only ARC provenance, and no duplicate solves.
+1. A clean answer to whether `.498` skipped because of a fixable pretest
+   failure, missing tests, or source-level regressions.
+2. A minimal hard/soft verification artifact that can support future local
+   SOTA concept telemetry.
+3. A CSL lane that is independent, graph/stream based, and honest about
+   negative transfer.
+4. Continued hardware and ARC standing-floor evidence without speedup or solve
+   overclaiming.
+5. A `.499` capstone that decides which lanes are headline-ready, bounded,
+   blocked, retired, or ready for the next milestone.

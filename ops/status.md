@@ -1,6 +1,37 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-09 (Milestone 2026.07.498 Planning Staged)
+**Last Updated:** 2026-07-09 (Milestone 2026.07.499 Planning Staged)
+
+## Session 2026-07-09 - Milestone 2026.07.499 Planning Staged
+
+Planned the next research milestone after the operator reported `.498`
+complete. The staged `.499` roadmap starts with a pretest skip-cascade
+diagnostic because `.498` lost multiple science artifacts before execution.
+It then rebuilds the hard/soft verification core through a minimal
+Preference-MaxSAT fixture, gated local SOTA GGUF concept telemetry, and
+hierarchical helper contracts; advances continuous self-learning through a
+metric-independence corrigendum plus graph/stream memory replay; keeps hardware
+receipt-only across PolarFire/KV260/GateMate/CUDA/CPU; and preserves the ARC
+standing floor with a live perception-generation level-up attempt using an
+explicit `offline_reproduced=true` and `reproduced_levels>=1` banking gate.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`, including Trajel,
+RT4CHART, ExpGraph, Evo-Memory, MILP-Evolve, Hamon, and watch-only
+Extropic/Logical Intelligence status.
+
+Validation for this planning task: YAML parsing,
+`scripts/validate_prior_failures.py`, `scripts/audit_roadmap_gates.py`,
+`scripts/arc_levelup_guarantee_lint.py --min 1 research-roadmap-next.yaml`,
+`scripts/exclusion_manifest_lint.py`, `scripts/overdue_priority_lint.py`,
+prompt-shape checks, SOTA model-spec checks, touched-file whitespace checks,
+and protected-file diff checks passed. The protected-file diff confirmed
+`research-roadmap.yaml` and `scripts/research_conductor.py` were not modified.
+Repo-wide `scripts/check_spec_coverage.py` still fails on the pre-existing
+traceability backlog (`1262 test(s) missing spec traceability`). No
+implementation code, active roadmap, conductor, model-training run, or hardware
+workload was changed.
 
 ## Session 2026-07-09 - Milestone 2026.07.498 Planning Staged
 

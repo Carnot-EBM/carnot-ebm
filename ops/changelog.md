@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-07-09 (Milestone 2026.07.499 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V499 planner refresh to `research-references.md`, incorporating
+  trajectory-level hallucination audits, hierarchical claim verification,
+  graph/stream continuous self-learning memory, MILP/MaxSAT fixture sources,
+  GPU EBM sampler watch references, and updated watch-only Extropic/Logical
+  Intelligence status.
+- The `.499` plan contains 14 conductor tasks across transition, pretest
+  cascade diagnostics, source refresh, hard/soft verification fixtures, gated
+  local SOTA GGUF concept telemetry, helper-contract claims, CSL tautology
+  corrigendum, experience-graph replay, gated SOTA CSL memory, active-constraint
+  descriptors, multi-board hardware receipts, one ARC live perception-generation
+  level-up attempt, and capstone synthesis.
+- Validation passed for YAML parsing, prior-failure validation, gate audit, ARC
+  level-up guarantee lint, exclusion-manifest lint, overdue-priority lint,
+  prompt-shape audit, SOTA model-spec audit, touched-file whitespace checks, and
+  protected-file diff checks. Repo-wide spec coverage remains blocked by the
+  pre-existing traceability backlog (`1262 test(s) missing spec traceability`).
+
 ## 2026-07-08 (Milestone 2026.07.495 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
