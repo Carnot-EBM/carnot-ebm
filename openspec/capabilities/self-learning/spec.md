@@ -20283,3 +20283,131 @@ fine-tuned, or mutated.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5447 | Planned (`python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py`, `results/experiment_5447_gated_csl_memory_failure_stress_v495.json`) | Planned (`tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py`) |
+
+---
+
+## REQ-LEARN-5460: Frozen-Model Governed CSL Policy Bandit v496
+
+Experiment 5460 SHALL implement a deterministic governed continuous
+self-learning policy layer over action and memory choices while keeping the
+base model and adapter weights frozen. The policy SHALL update only lightweight
+controller statistics, such as per-arm reward, uncertainty, context cost,
+verifier cost, and accepted evidence IDs. It SHALL not load, write, fine-tune,
+or mutate model or adapter weights. The artifact SHALL declare
+`inference_substrate="deterministic_frozen_model_policy_no_weight_update"`.
+
+The multi-session stream SHALL include repeated tasks, distribution shifts,
+poisoned memories, stale or replay-failing memory candidates, rollback-marked
+evidence, and cases where no-memory or naive in-context learning is competitive.
+The policy SHALL compare action choices against no-memory, naive in-context,
+always-full-context, and ungated-memory baselines over the identical trace IDs.
+The policy decision rule SHALL expose a confidence-bound score with explicit
+uncertainty, reward, context cost, verifier cost, and governance constraints.
+
+Policy evidence SHALL update routing statistics only after provenance, replay,
+verifier, access, and no-weight-mutation gates pass. Rejected evidence SHALL
+retain an audit record but SHALL have zero effect on policy statistics.
+Rollback SHALL remove bad policy evidence from arm statistics and SHALL prove
+future decisions do not cite the rolled-back evidence ID.
+
+The result artifact SHALL be
+`results/experiment_5460_csl_policy_bandit_v496.json` and SHALL include
+`continuous_self_learning_task`, `policy_update_count`,
+`multi_session_trace_count`, `baseline_names`,
+`policy_confidence_receipts_path`, `regret_proxy_delta_vs_no_memory`,
+`quality_delta_vs_naive_icl`, `context_efficiency_delta`,
+`verifier_cost_delta`, `cumulative_constraint_violations`,
+`negative_transfer_deflection_rate`, `rollback_recovery_rate`,
+`no_weight_mutation`, `csl_policy_ready`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL also include field principles documenting
+those required fields.
+The policy confidence receipts SHALL be written to
+`results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl`.
+
+The required field principles SHALL be:
+
+- `continuous_self_learning_task`: Research-program mandate.
+- `policy_update_count`: Online controller learning evidence.
+- `multi_session_trace_count`: Stateful stream coverage.
+- `baseline_names`: Control comparability.
+- `policy_confidence_receipts_path`: Uncertainty audit trail.
+- `regret_proxy_delta_vs_no_memory`: Online decision quality.
+- `quality_delta_vs_naive_icl`: No hidden regression against cheap ICL.
+- `context_efficiency_delta`: Context budget accounting.
+- `verifier_cost_delta`: Verifier budget accounting.
+- `cumulative_constraint_violations`: Safety boundary.
+- `negative_transfer_deflection_rate`: Unsafe memory transfer guard.
+- `rollback_recovery_rate`: Bad evidence reversibility.
+- `no_weight_mutation`: Frozen-model boundary.
+- `csl_policy_ready`: Downstream gate.
+- `inference_substrate`: Explicit learning substrate.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5460 Sub-requirements
+
+- REQ-LEARN-5460-1: The stream SHALL include at least nine chronological
+  multi-session traces covering repeated tasks, distribution shift,
+  poisoned-memory, stale-memory, replay-failure, no-memory-competitive,
+  naive-ICL-competitive, and rollback-required cases.
+- REQ-LEARN-5460-2: The policy action space SHALL include no-memory,
+  naive-ICL, always-full-context, and governed-memory choices, and the
+  evaluation SHALL also report an ungated-memory baseline.
+  The phrase no-memory, naive-ICL, always-full-context, and governed-memory choices
+  is intentionally recorded contiguously for test traceability.
+- REQ-LEARN-5460-3: Each policy decision SHALL emit a confidence receipt with
+  per-arm score, uncertainty, expected reward, context cost, verifier cost,
+  selected arm, and gate result.
+- REQ-LEARN-5460-4: Policy statistics SHALL update only when provenance,
+  replay, verifier, access, and no-weight-mutation gates pass. Failed evidence
+  SHALL not change arm counts, reward sums, or accepted evidence IDs.
+  The phrase provenance, replay, verifier, access, and no-weight-mutation gates
+  is intentionally recorded contiguously for test traceability.
+- REQ-LEARN-5460-5: Rollback SHALL remove bad policy evidence from the
+  selected arm's statistics and future decision receipts SHALL not cite the
+  rolled-back evidence ID.
+- REQ-LEARN-5460-6: `csl_policy_ready` SHALL be true only when all required
+  artifact fields are present with principles, policy updates are recorded,
+  confidence receipts cover every trace, regret against no-memory is improved,
+  quality against naive-ICL is non-negative, context and verifier costs improve
+  against always-full-context, cumulative constraint violations are zero,
+  negative transfer is fully deflected, rollback recovery is complete, tests
+  are recorded, inference substrate is
+  `deterministic_frozen_model_policy_no_weight_update`, and no model or
+  adapter weights mutate.
+
+### SCENARIO-LEARN-5460-GATES: Policy Updates Cannot Bypass Memory Gates
+
+**Given** a policy evidence candidate whose verifier reward is positive but
+whose provenance or replay gate fails
+**When** the frozen policy bandit attempts to update routing statistics
+**Then** the evidence is rejected with an audit receipt
+**And** arm counts, reward sums, and accepted evidence IDs are unchanged.
+
+### SCENARIO-LEARN-5460-ROLLBACK: Bad Policy Evidence Is Reversible
+
+**Given** accepted policy evidence later marked bad by the rollback verifier
+**When** rollback runs for that evidence ID
+**Then** the evidence is removed from the arm statistics
+**And** later confidence receipts do not cite the rolled-back evidence.
+
+### SCENARIO-LEARN-5460-CONTROLS: Frozen Policy Beats Unsafe Baselines
+
+**Given** the same trace IDs are evaluated by no-memory, naive-ICL,
+always-full-context, ungated-memory, and the governed frozen policy
+**When** aggregate metrics are computed
+**Then** the policy improves regret against no-memory
+**And** preserves quality against naive-ICL while reducing context and verifier
+costs against always-full-context and producing zero constraint violations.
+
+### SCENARIO-LEARN-5460-NO-WEIGHT-MUTATION: Learning Is Controller-State Only
+
+**Given** policy statistics update online across sessions
+**When** the experiment completes
+**Then** the artifact reports no model or adapter weights loaded, written,
+fine-tuned, or mutated.
+
+## Implementation Status (Exp 5460)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5460 | Planned (`python/carnot/experiment_5460_csl_policy_bandit_v496.py`, `results/experiment_5460_csl_policy_bandit_v496.json`) | Planned (`tests/python/test_experiment_5460_csl_policy_bandit_v496.py`) |
