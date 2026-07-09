@@ -10621,3 +10621,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 09:01 UTC | Helper-lemma minimal-core repair for deterministic | OK | 88 passed, 1 warning in 8.87s |
 | 2026-07-09 09:14 UTC | p-bit/p-dit boundary exchange with LNS-style accou | OK | 87 passed, 1 warning in 9.82s |
 | 2026-07-09 09:28 UTC | Gated hardware boundary-exchange receipts after Ex | OK | 88 passed, 1 warning in 10.40s |
+| 2026-07-09 09:41 UTC | ARC target rotation and perception/salience preche | OK | 88 passed, 1 warning in 12.97s |
