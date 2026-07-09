@@ -1,0 +1,331 @@
+{
+  "forbidden_readiness_dependencies": [
+    "prior.abstention_rate",
+    "prior.action_unreachability_rate",
+    "prior.guided_validity_delta_vs_unconstrained",
+    "prior.metric_independence_checks_passed",
+    "prior.semantic_false_accept_rate",
+    "prior.verifier_guided_decoding_ready"
+  ],
+  "independent_metric_fields": [
+    "corrected.abstentions_by_condition",
+    "corrected.condition_validity",
+    "corrected.false_accepts_by_condition",
+    "corrected.guided_decoding_ready_from_rows",
+    "corrected.guided_delta_vs_grammar_only",
+    "corrected.guided_delta_vs_unconstrained",
+    "row.condition",
+    "row.condition_advisory_accept",
+    "row.constraint_family",
+    "row.exact_final_verdict.accepted",
+    "row.exact_final_verdict.verified",
+    "row.final_authority_bypassed",
+    "row.parse_status",
+    "row.reward_evaluation_count"
+  ],
+  "invalid_tautological_fields": [
+    "abstention_rate",
+    "action_unreachability_rate",
+    "guided_validity_delta_vs_unconstrained",
+    "semantic_false_accept_rate"
+  ],
+  "nodes": {
+    "corrected.abstentions_by_condition": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "row.condition",
+        "row.parse_status",
+        "row.exact_final_verdict.verified"
+      ],
+      "reason": "abstention counts by condition"
+    },
+    "corrected.condition_validity": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "baselines",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "row.condition",
+        "row.exact_final_verdict.accepted"
+      ],
+      "reason": "validity counts and rates by condition"
+    },
+    "corrected.false_accepts_by_condition": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "row.condition",
+        "row.condition_advisory_accept",
+        "row.exact_final_verdict.accepted"
+      ],
+      "reason": "advisory accepts rejected by exact final verifier"
+    },
+    "corrected.guided_decoding_ready_from_rows": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "baselines",
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "corrected.condition_validity",
+        "corrected.false_accepts_by_condition",
+        "corrected.guided_delta_vs_unconstrained",
+        "corrected.guided_delta_vs_grammar_only"
+      ],
+      "reason": "clean readiness recomputed from row-derived metrics only"
+    },
+    "corrected.guided_delta_vs_grammar_only": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "baselines",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "corrected.condition_validity"
+      ],
+      "reason": "guided accepted-validity rate minus grammar-only accepted-validity rate"
+    },
+    "corrected.guided_delta_vs_unconstrained": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "baselines",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "corrected.condition_validity"
+      ],
+      "reason": "guided accepted-validity rate minus unconstrained accepted-validity rate"
+    },
+    "prior.abstention_rate": {
+      "classification": "invalid-tautological",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.row_results"
+      ],
+      "reason": "prior field appears in a TAUTOLOGY adversarial finding"
+    },
+    "prior.accepted_validity_rate": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.row_results"
+      ],
+      "reason": "prior aggregate preserved as context only, not readiness evidence"
+    },
+    "prior.action_unreachability_rate": {
+      "classification": "invalid-tautological",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.row_results"
+      ],
+      "reason": "prior field appears in a TAUTOLOGY adversarial finding"
+    },
+    "prior.condition_metrics": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.row_results"
+      ],
+      "reason": "prior aggregate preserved as context only, not readiness evidence"
+    },
+    "prior.guided_validity_delta_vs_grammar_only": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "baselines",
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.condition_metrics",
+        "prior.row_results"
+      ],
+      "reason": "prior aggregate preserved as context only, not readiness evidence"
+    },
+    "prior.guided_validity_delta_vs_unconstrained": {
+      "classification": "invalid-tautological",
+      "dependency_kinds": [
+        "baselines",
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.condition_metrics",
+        "prior.row_results"
+      ],
+      "reason": "prior field appears in a TAUTOLOGY adversarial finding"
+    },
+    "prior.metric_independence_checks_passed": {
+      "classification": "invalid-tautological",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.metric_details",
+        "prior.row_checksums"
+      ],
+      "reason": "prior readiness validator failed to catch the TAUTOLOGY metric surface"
+    },
+    "prior.semantic_false_accept_rate": {
+      "classification": "invalid-tautological",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.row_results"
+      ],
+      "reason": "prior field appears in a TAUTOLOGY adversarial finding"
+    },
+    "prior.unsafe_false_accept_rate": {
+      "classification": "derived-from-independent",
+      "dependency_kinds": [
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.row_results"
+      ],
+      "reason": "prior aggregate preserved as context only, not readiness evidence"
+    },
+    "prior.verifier_guided_decoding_ready": {
+      "classification": "invalid-tautological",
+      "dependency_kinds": [
+        "baselines",
+        "derived_aggregates",
+        "exact_final_verifier_labels",
+        "guided_rewards",
+        "row_counts"
+      ],
+      "depends_on": [
+        "prior.metric_independence_checks_passed",
+        "prior.exact_final_authority",
+        "prior.gpu_offload_verified",
+        "prior.row_results"
+      ],
+      "reason": "prior readiness validator failed to catch the TAUTOLOGY metric surface"
+    },
+    "row.condition": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "row_counts"
+      ],
+      "depends_on": [],
+      "reason": "condition label from row JSONL"
+    },
+    "row.condition_advisory_accept": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "derived_aggregates"
+      ],
+      "depends_on": [],
+      "reason": "parse/advisory accept recorded per row, never final authority"
+    },
+    "row.constraint_family": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "row_counts"
+      ],
+      "depends_on": [],
+      "reason": "fixture family from row JSONL"
+    },
+    "row.exact_final_verdict.accepted": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "exact_final_verifier_labels"
+      ],
+      "depends_on": [],
+      "reason": "deterministic exact final verifier label"
+    },
+    "row.exact_final_verdict.verified": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "exact_final_verifier_labels"
+      ],
+      "depends_on": [],
+      "reason": "row confirms exact verifier ran"
+    },
+    "row.final_authority_bypassed": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "exact_final_verifier_labels"
+      ],
+      "depends_on": [],
+      "reason": "must be false for every row"
+    },
+    "row.parse_status": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "row_counts"
+      ],
+      "depends_on": [],
+      "reason": "row parse status used only for abstention accounting"
+    },
+    "row.reward_evaluation_count": {
+      "classification": "independent",
+      "dependency_kinds": [
+        "guided_rewards"
+      ],
+      "depends_on": [],
+      "reason": "cost accounting row field, not a readiness label"
+    }
+  },
+  "prior_flagged_adversarial": true,
+  "prior_flagged_artifact": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+  "prior_row_results": "results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl",
+  "prior_tautology_flags": [
+    {
+      "detail": "abstention_rate=0.25 and guided_validity_delta_vs_unconstrained=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    },
+    {
+      "detail": "action_unreachability_rate=0.08333333333333333 and semantic_false_accept_rate=0.08333333333333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    }
+  ],
+  "readiness_dependencies": [
+    "corrected.condition_validity",
+    "corrected.false_accepts_by_condition",
+    "corrected.guided_delta_vs_unconstrained",
+    "corrected.guided_delta_vs_grammar_only"
+  ],
+  "readiness_dependencies_clean": true,
+  "readiness_dependency_errors": [],
+  "readiness_field": "corrected.guided_decoding_ready_from_rows",
+  "row_count": 12,
+  "schema": "carnot.experiment_5456.metric_dependency_graph.v1"
+}
