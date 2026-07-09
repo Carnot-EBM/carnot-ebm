@@ -38492,3 +38492,91 @@ does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5468 | Implemented (`python/carnot/experiment_5468_transition_v497.py`, `results/experiment_5468_transition_v497.json`) | Implemented (`tests/python/test_experiment_5468_transition_v497.py`) |
+
+### REQ-REPORT-5469: V497 Execution-Time Source Delta Refresh
+
+The Exp5469 workflow SHALL search 2025-2026 primary and secondary source
+routes for work relevant to Carnot after the `V497 Planner Refresh - 20260709`
+marker in `research-references.md`. It SHALL read `AGENTS.md`, `CODEX.md`,
+`CLAUDE.md`, `research-program.md`, `research-references.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, and `ops/changelog.md` before writing code. It
+SHALL check arXiv for EBMs for verification/reasoning, neural constraint
+satisfaction, Ising applications, hallucination mitigation, KANs,
+energy-guided decoding, hardware-accelerated sampling, and continual/online
+learning. It SHALL also check OpenReview, Extropic writing, Semantic Scholar routes for EBT `2507.02092` and ARM-EBM `2512.15605`, HuggingFace Papers,
+GitHub, Logical Intelligence public pages, V490/V491/V492/V493/V494/V495/V496/V497 duplicate history, and the exclusion manifest.
+
+The workflow SHALL append a short `### V497 Execution Refresh - 20260709`
+block to `research-references.md` only when genuinely new, non-duplicate, and
+Carnot-actionable deltas exist. If no new actionable deltas are found, it SHALL
+leave `research-references.md` unchanged and explain the no-op in
+`results/experiment_5469_source_delta_v497.json`. It SHALL explicitly classify
+closed-scope items as watch-only or excluded, SHALL keep
+`closed_scopes_reopened=false`, SHALL NOT reopen external generated-text/logprob
+scorer, broad fine-tuning, GRPO/RL, CPU-only SOTA, duplicate ARC, or
+unauthenticated hardware-speedup lanes, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT push, SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`, and SHALL use
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+The artifact SHALL include required principle-annotated fields
+`sources_checked`, `new_references_added`, `duplicates_suppressed`,
+`closed_scopes_reopened`, `research_references_updated`,
+`prior_refresh_marker_found`, `inference_substrate`, and `honest_verdict`.
+It SHOULD also include `experiment_id`, `task_id`, `milestone`, `status`,
+`search_date`, `new_actionable_findings_count`, `searched_source_details`,
+`watch_only_or_excluded`, `spec_refs`, `field_principles`,
+`methodology_duration_s`, `tests_run`, `no_deep_research_used`,
+`research_conductor_modified`, `ops_docs_modified`, `traceability_modified`,
+and `roadmap_files_modified` so the source-delta receipt remains auditable.
+
+Required field principles:
+
+- `sources_checked`: principle "reproducible literature sweep"
+- `new_references_added`: principle "current-knowledge delta"
+- `duplicates_suppressed`: principle "no reference churn"
+- `closed_scopes_reopened`: principle "exclusion-manifest compliance"
+- `research_references_updated`: principle "doc alignment"
+- `prior_refresh_marker_found`: principle "dedupe against planner work"
+- `inference_substrate`: principle "source aggregation only"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+#### SCENARIO-REPORT-5469-APPEND-DELTAS: New Findings Append A V497 Refresh
+
+**Given** `research-references.md` contains the V497 planner marker
+**And** one or more searched sources are absent from V490-V497 duplicate
+history and add a concrete Carnot-local execution hook without reopening a
+closed scope
+**When** the Exp5469 workflow runs
+**Then** it appends exactly one `V497 Execution Refresh - 20260709` block,
+writes `results/experiment_5469_source_delta_v497.json`, records all required
+source families, lists the newly added references, keeps
+`closed_scopes_reopened=false`, records
+`research_references_updated=true`, and records
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-5469-NO-NEW-DELTA: No New Findings Leave References Unchanged
+
+**Given** `research-references.md` contains the V497 planner marker
+**And** every searched source is duplicate, watch-only, excluded, or not
+Carnot-actionable after deduplication against V490-V497 history
+**When** the Exp5469 workflow runs
+**Then** it writes the source-delta JSON with `new_references_added=[]`,
+records `research_references_updated=false`, records
+`closed_scopes_reopened=false`, and leaves `research-references.md` unchanged.
+
+#### SCENARIO-REPORT-5469-BLOCKED-MISSING-PLANNER: Missing Planner Marker Fails Closed
+
+**Given** `research-references.md` lacks `V497 Planner Refresh - 20260709`
+**When** the Exp5469 workflow runs
+**Then** it writes a `blocked:` verdict, records
+`prior_refresh_marker_found=false`, sets `research_references_updated=false`,
+keeps `new_references_added=[]`, keeps `closed_scopes_reopened=false`, and
+does not append to `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5469)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5469 | Implemented (`python/carnot/experiment_5469_source_delta_v497.py`, `results/experiment_5469_source_delta_v497.json`) | Implemented (`tests/python/test_experiment_5469_source_delta_v497.py`) |
