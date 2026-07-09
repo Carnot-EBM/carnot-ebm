@@ -1,0 +1,306 @@
+{
+  "aggregate_expected_output_hash": "2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4",
+  "aggregate_input_hash": "40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74",
+  "claim_limits": [
+    "descriptor smoke hashes only",
+    "board identity reachability is not a hardware acceleration claim",
+    "CUDA smoke is local availability only, not matched timing",
+    "KV260 uses SSH identity only; host /dev/mmcblk paths are forbidden",
+    "GateMate uses dirtyJtag detect only; no flash or workload execution",
+    "hardware_speedup_claim=false without authenticated matched timing"
+  ],
+  "command_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import hashlib,json,sys,time\npayload=json.loads('\"'\"'{\"aggregate_expected_output_hash\": \"2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4\", \"aggregate_input_hash\": \"40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74\", \"descriptor_smokes\": [{\"descriptor_id\": \"milp:bounded_shipping_mix\", \"expected_output_hash\": \"589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c\", \"expected_solution_hash\": \"93f97edaf564cf3a13c1e88abf51c963b03e0b314f9023c627a98f27c8191b37\", \"expected_status\": \"optimal\", \"input_hash\": \"628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61\", \"partition_id\": \"milp_shipping_partition\"}, {\"descriptor_id\": \"milp:batch_allocation_no_speedup\", \"expected_output_hash\": \"b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84\", \"expected_solution_hash\": \"ee73781e031870fa8c81411112a717d3de808dbd861acbf633dc1299f93c45d9\", \"expected_status\": \"optimal\", \"input_hash\": \"2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4\", \"partition_id\": \"milp_batch_partition\"}], \"descriptor_source\": \"results/experiment_5505_active_constraint_milp_descriptor_v499.json\", \"smoke_workload_hash\": \"502366e42cb8a7ef62fd55bd295fe3a5f33d39c5a2571af4f2dbeee0b04b545e\"}'\"'\"')\nstarted=time.perf_counter()\nextra={}\nruntime='\"'\"'python_cpu'\"'\"'\nreceipt={\n '\"'\"'schema'\"'\"':'\"'\"'carnot.hardware_smoke_receipt.v1'\"'\"',\n '\"'\"'substrate'\"'\"':'\"'\"'cpu'\"'\"',\n '\"'\"'runtime'\"'\"':runtime,\n '\"'\"'descriptor_source'\"'\"':payload['\"'\"'descriptor_source'\"'\"'],\n '\"'\"'descriptor_count'\"'\"':len(payload['\"'\"'descriptor_smokes'\"'\"']),\n '\"'\"'aggregate_input_hash'\"'\"':payload['\"'\"'aggregate_input_hash'\"'\"'],\n '\"'\"'aggregate_expected_output_hash'\"'\"':payload['\"'\"'aggregate_expected_output_hash'\"'\"'],\n '\"'\"'smoke_workload_hash'\"'\"':payload['\"'\"'smoke_workload_hash'\"'\"'],\n '\"'\"'descriptor_hashes'\"'\"':[{'\"'\"'descriptor_id'\"'\"':row['\"'\"'descriptor_id'\"'\"'],'\"'\"'input_hash'\"'\"':row['\"'\"'input_hash'\"'\"'],'\"'\"'expected_output_hash'\"'\"':row['\"'\"'expected_output_hash'\"'\"']} for row in payload['\"'\"'descriptor_smokes'\"'\"']],\n '\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),\n}\nreceipt.update(extra)\nprint(json.dumps(receipt,sort_keys=True))'",
+      "command_sha256": "47b13e1fc00fa7bdee04a65d2f858d206b98fb5373e5127ee207f96786dc4a75",
+      "duration_s": 0.027022,
+      "exit_code": 0,
+      "hash_receipt": {
+        "aggregate_expected_output_hash": "2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4",
+        "aggregate_input_hash": "40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74",
+        "descriptor_count": 2,
+        "descriptor_hashes": [
+          {
+            "descriptor_id": "milp:bounded_shipping_mix",
+            "expected_output_hash": "589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c",
+            "input_hash": "628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61"
+          },
+          {
+            "descriptor_id": "milp:batch_allocation_no_speedup",
+            "expected_output_hash": "b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84",
+            "input_hash": "2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4"
+          }
+        ],
+        "descriptor_source": "results/experiment_5505_active_constraint_milp_descriptor_v499.json",
+        "runtime": "python_cpu",
+        "schema": "carnot.hardware_smoke_receipt.v1",
+        "smoke_workload_hash": "502366e42cb8a7ef62fd55bd295fe3a5f33d39c5a2571af4f2dbeee0b04b545e",
+        "substrate": "cpu",
+        "wall_time_s": 3.417e-06
+      },
+      "hash_receipt_sha256": "e13b6c05ccd4da42e3d9e9a62dc51034599883e0c407b2670b62d945900db618",
+      "kind": "cpu_descriptor_smoke",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"aggregate_expected_output_hash\": \"2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4\", \"aggregate_input_hash\": \"40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74\", \"descriptor_count\": 2, \"descriptor_hashes\": [",
+      "stdout_sha256": "7de218d4141b98df1660455785d799e2e25c77486a4ce19e92530fa3ed3745ef",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import hashlib,json,sys,time\npayload=json.loads('\"'\"'{\"aggregate_expected_output_hash\": \"2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4\", \"aggregate_input_hash\": \"40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74\", \"descriptor_smokes\": [{\"descriptor_id\": \"milp:bounded_shipping_mix\", \"expected_output_hash\": \"589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c\", \"expected_solution_hash\": \"93f97edaf564cf3a13c1e88abf51c963b03e0b314f9023c627a98f27c8191b37\", \"expected_status\": \"optimal\", \"input_hash\": \"628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61\", \"partition_id\": \"milp_shipping_partition\"}, {\"descriptor_id\": \"milp:batch_allocation_no_speedup\", \"expected_output_hash\": \"b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84\", \"expected_solution_hash\": \"ee73781e031870fa8c81411112a717d3de808dbd861acbf633dc1299f93c45d9\", \"expected_status\": \"optimal\", \"input_hash\": \"2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4\", \"partition_id\": \"milp_batch_partition\"}], \"descriptor_source\": \"results/experiment_5505_active_constraint_milp_descriptor_v499.json\", \"smoke_workload_hash\": \"502366e42cb8a7ef62fd55bd295fe3a5f33d39c5a2571af4f2dbeee0b04b545e\"}'\"'\"')\nstarted=time.perf_counter()\ntry:\n    import torch\nexcept Exception as exc:\n    print('\"'\"'torch_import_failed='\"'\"'+type(exc).__name__)\n    raise SystemExit(42)\nif not torch.cuda.is_available():\n    print('\"'\"'cuda_available=false'\"'\"')\n    raise SystemExit(43)\ndevice=torch.device('\"'\"'cuda'\"'\"')\nx=torch.tensor([len(payload['\"'\"'descriptor_smokes'\"'\"'])],device=device)\ntorch.cuda.synchronize()\nextra={'\"'\"'cuda_device'\"'\"':torch.cuda.get_device_name(device),'\"'\"'cuda_tensor_value'\"'\"':int(x.cpu().item())}\nruntime='\"'\"'torch_cuda'\"'\"'\nreceipt={\n '\"'\"'schema'\"'\"':'\"'\"'carnot.hardware_smoke_receipt.v1'\"'\"',\n '\"'\"'substrate'\"'\"':'\"'\"'cuda'\"'\"',\n '\"'\"'runtime'\"'\"':runtime,\n '\"'\"'descriptor_source'\"'\"':payload['\"'\"'descriptor_source'\"'\"'],\n '\"'\"'descriptor_count'\"'\"':len(payload['\"'\"'descriptor_smokes'\"'\"']),\n '\"'\"'aggregate_input_hash'\"'\"':payload['\"'\"'aggregate_input_hash'\"'\"'],\n '\"'\"'aggregate_expected_output_hash'\"'\"':payload['\"'\"'aggregate_expected_output_hash'\"'\"'],\n '\"'\"'smoke_workload_hash'\"'\"':payload['\"'\"'smoke_workload_hash'\"'\"'],\n '\"'\"'descriptor_hashes'\"'\"':[{'\"'\"'descriptor_id'\"'\"':row['\"'\"'descriptor_id'\"'\"'],'\"'\"'input_hash'\"'\"':row['\"'\"'input_hash'\"'\"'],'\"'\"'expected_output_hash'\"'\"':row['\"'\"'expected_output_hash'\"'\"']} for row in payload['\"'\"'descriptor_smokes'\"'\"']],\n '\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),\n}\nreceipt.update(extra)\nprint(json.dumps(receipt,sort_keys=True))'",
+      "command_sha256": "0060f834b8a3438c74b9ee0757552987128c29883495d1b9509f86b44994646b",
+      "duration_s": 1.739583,
+      "exit_code": 0,
+      "hash_receipt": {
+        "aggregate_expected_output_hash": "2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4",
+        "aggregate_input_hash": "40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74",
+        "cuda_device": "NVIDIA GeForce RTX 3090",
+        "cuda_tensor_value": 2,
+        "descriptor_count": 2,
+        "descriptor_hashes": [
+          {
+            "descriptor_id": "milp:bounded_shipping_mix",
+            "expected_output_hash": "589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c",
+            "input_hash": "628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61"
+          },
+          {
+            "descriptor_id": "milp:batch_allocation_no_speedup",
+            "expected_output_hash": "b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84",
+            "input_hash": "2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4"
+          }
+        ],
+        "descriptor_source": "results/experiment_5505_active_constraint_milp_descriptor_v499.json",
+        "runtime": "torch_cuda",
+        "schema": "carnot.hardware_smoke_receipt.v1",
+        "smoke_workload_hash": "502366e42cb8a7ef62fd55bd295fe3a5f33d39c5a2571af4f2dbeee0b04b545e",
+        "substrate": "cuda",
+        "wall_time_s": 1.148792387
+      },
+      "hash_receipt_sha256": "7badaaf71b621bad80e18ee50e658bfe478b276cbad76366ee3c1333486f6a11",
+      "kind": "cuda_descriptor_smoke",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"aggregate_expected_output_hash\": \"2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4\", \"aggregate_input_hash\": \"40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74\", \"cuda_device\": \"NVIDIA GeForce RTX 3090\", \"cu",
+      "stdout_sha256": "ef62dd6de29534403747ad592e0ce7e5e43cea0a79ef7cf346c49f79b54a8cad",
+      "timeout_s": 10.0
+    },
+    {
+      "blocked_reason": "blocked_kv260_ssh_identity",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'board_identity=kv260\\nhostname='\"'\"' && hostname && printf '\"'\"'\\nmachine='\"'\"' && uname -m'",
+      "command_sha256": "3086122a3cdc273b145cfab2bca954c12cf1b847f2ecd50b96668bdfdd2fe219",
+      "duration_s": 5.007425,
+      "exit_code": 124,
+      "kind": "kv260_ssh_identity",
+      "outcome": "blocked_identity",
+      "stderr_excerpt": "timeout",
+      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "command_sha256": "67601b438fbb88a70c1b25f3a913790ab47e5e19b36bc9c3b9f32a8a52363cd4",
+      "duration_s": 0.017744,
+      "exit_code": 0,
+      "kind": "gatemate_dirtyjtag_detect",
+      "outcome": "blocked_identity",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "stdout_sha256": "e96e9c9bdc5e9e0dc606129428b9716fe745efc6402f52cc56db17f800d12437",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'board_identity=polarfire\\nhostname='\"'\"' && hostname && printf '\"'\"'\\nmachine='\"'\"' && uname -m'",
+      "command_sha256": "508cd35063b25bdee26cdbbb5a890d11a030925512e760ba30bc6705b2fa2ad1",
+      "duration_s": 0.785796,
+      "exit_code": 0,
+      "kind": "polarfire_ssh_identity",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "board_identity=polarfire\nhostname=mpfs-disco-kit\n\nmachine=riscv64",
+      "stdout_sha256": "3506d5b175ae5451d6fd7a3f94a782be2c0701c8aefdd58970355b3e5608a449",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,json,time\npayload=json.loads('\"'\"'{\"aggregate_expected_output_hash\": \"2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4\", \"aggregate_input_hash\": \"40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74\", \"descriptor_smokes\": [{\"descriptor_id\": \"milp:bounded_shipping_mix\", \"expected_output_hash\": \"589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c\", \"expected_solution_hash\": \"93f97edaf564cf3a13c1e88abf51c963b03e0b314f9023c627a98f27c8191b37\", \"expected_status\": \"optimal\", \"input_hash\": \"628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61\", \"partition_id\": \"milp_shipping_partition\"}, {\"descriptor_id\": \"milp:batch_allocation_no_speedup\", \"expected_output_hash\": \"b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84\", \"expected_solution_hash\": \"ee73781e031870fa8c81411112a717d3de808dbd861acbf633dc1299f93c45d9\", \"expected_status\": \"optimal\", \"input_hash\": \"2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4\", \"partition_id\": \"milp_batch_partition\"}], \"descriptor_source\": \"results/experiment_5505_active_constraint_milp_descriptor_v499.json\", \"smoke_workload_hash\": \"502366e42cb8a7ef62fd55bd295fe3a5f33d39c5a2571af4f2dbeee0b04b545e\"}'\"'\"')\nstarted=time.perf_counter()\nextra={'\"'\"'board_local'\"'\"':True}\nruntime='\"'\"'remote_python'\"'\"'\nreceipt={\n '\"'\"'schema'\"'\"':'\"'\"'carnot.hardware_smoke_receipt.v1'\"'\"',\n '\"'\"'substrate'\"'\"':'\"'\"'polarfire'\"'\"',\n '\"'\"'runtime'\"'\"':runtime,\n '\"'\"'descriptor_source'\"'\"':payload['\"'\"'descriptor_source'\"'\"'],\n '\"'\"'descriptor_count'\"'\"':len(payload['\"'\"'descriptor_smokes'\"'\"']),\n '\"'\"'aggregate_input_hash'\"'\"':payload['\"'\"'aggregate_input_hash'\"'\"'],\n '\"'\"'aggregate_expected_output_hash'\"'\"':payload['\"'\"'aggregate_expected_output_hash'\"'\"'],\n '\"'\"'smoke_workload_hash'\"'\"':payload['\"'\"'smoke_workload_hash'\"'\"'],\n '\"'\"'descriptor_hashes'\"'\"':[{'\"'\"'descriptor_id'\"'\"':row['\"'\"'descriptor_id'\"'\"'],'\"'\"'input_hash'\"'\"':row['\"'\"'input_hash'\"'\"'],'\"'\"'expected_output_hash'\"'\"':row['\"'\"'expected_output_hash'\"'\"']} for row in payload['\"'\"'descriptor_smokes'\"'\"']],\n '\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),\n}\nreceipt.update(extra)\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "3b35c715d7041a06216ca95225bc699a4dfde8ede000c01bcbd9283d0f1f4535",
+      "duration_s": 1.31228,
+      "exit_code": 0,
+      "hash_receipt": {
+        "aggregate_expected_output_hash": "2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4",
+        "aggregate_input_hash": "40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74",
+        "board_local": true,
+        "descriptor_count": 2,
+        "descriptor_hashes": [
+          {
+            "descriptor_id": "milp:bounded_shipping_mix",
+            "expected_output_hash": "589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c",
+            "input_hash": "628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61"
+          },
+          {
+            "descriptor_id": "milp:batch_allocation_no_speedup",
+            "expected_output_hash": "b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84",
+            "input_hash": "2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4"
+          }
+        ],
+        "descriptor_source": "results/experiment_5505_active_constraint_milp_descriptor_v499.json",
+        "runtime": "remote_python",
+        "schema": "carnot.hardware_smoke_receipt.v1",
+        "smoke_workload_hash": "502366e42cb8a7ef62fd55bd295fe3a5f33d39c5a2571af4f2dbeee0b04b545e",
+        "substrate": "polarfire",
+        "wall_time_s": 6e-05
+      },
+      "hash_receipt_sha256": "8b9b84ad7b4e78fefb724f2b513ce0f91300719a3242aa2e2e538bb8d0444bf8",
+      "kind": "polarfire_descriptor_smoke",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"aggregate_expected_output_hash\": \"2f5d34694e7a45404c4de147348b61bf910b034d5508a0b5c16dcd3632c9dee4\", \"aggregate_input_hash\": \"40c4cc59e025ec78eed6395ec826b38ecf02944cd65bb08521d9df31cc875f74\", \"board_local\": true, \"descriptor_count\": 2, \"",
+      "stdout_sha256": "77014b08ba03804b6ea0853ec694f3befacdefceb9365d18e3acedc90d2fe5cb",
+      "timeout_s": 5.0
+    }
+  ],
+  "conductor_unchanged": true,
+  "cpu_status": "reachable",
+  "cuda_status": "reachable",
+  "descriptor_family": "exp5505_milp_maxsat_csp",
+  "descriptor_source": "results/experiment_5505_active_constraint_milp_descriptor_v499.json",
+  "descriptor_source_ready": true,
+  "duration_s": 8.891696,
+  "experiment": 5506,
+  "experiment_id": "exp5506-hardware-multiboard-receipts-v499",
+  "fallback_used": false,
+  "field_principles": {
+    "command_receipts": "bounded command transcripts with exit codes, summaries, hashes, timing, and blockers.",
+    "conductor_unchanged": "confirms scripts/research_conductor.py was not modified.",
+    "cpu_status": "local CPU descriptor-smoke status used as a hash reference.",
+    "cuda_status": "local CUDA smoke status, not a matched speedup benchmark.",
+    "descriptor_source": "names Exp5505 when ready or records the Exp5491 fallback.",
+    "descriptor_source_ready": "prevents board receipts from implying descriptor readiness.",
+    "gatemate_status": "DirtyJTAG detect-only status without flash or workload overclaim.",
+    "hardware_speedup_claim": "must remain false without authenticated matched timing.",
+    "honest_verdict": "terminal status with no speedup overclaim.",
+    "inference_substrate": "hardware_smoke, not live LLM inference or benchmark acceleration.",
+    "kv260_status": "SSH-only KV260 status; never host SD-card storage.",
+    "matched_hashes": "only hash matches over the selected descriptor smoke workload.",
+    "matched_timing_available": "false until authenticated equivalent-work timing exists.",
+    "polar_fire_status": "per-board terminal status from SSH identity and smoke evidence."
+  },
+  "gatemate_status": "blocked_identity",
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: descriptor smoke receipts collected with honest blocked statuses (gatemate,kv260); matched_timing_available=false; hardware_speedup_claim=false",
+  "inference_substrate": "hardware_smoke",
+  "kv260_status": "blocked_identity",
+  "matched_hashes": [
+    {
+      "descriptor_id": "milp:bounded_shipping_mix",
+      "expected_output_hash": "589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c",
+      "input_hash": "628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61",
+      "matched": true,
+      "substrate": "cpu"
+    },
+    {
+      "descriptor_id": "milp:batch_allocation_no_speedup",
+      "expected_output_hash": "b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84",
+      "input_hash": "2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4",
+      "matched": true,
+      "substrate": "cpu"
+    },
+    {
+      "descriptor_id": "milp:bounded_shipping_mix",
+      "expected_output_hash": "589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c",
+      "input_hash": "628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61",
+      "matched": true,
+      "substrate": "cuda"
+    },
+    {
+      "descriptor_id": "milp:batch_allocation_no_speedup",
+      "expected_output_hash": "b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84",
+      "input_hash": "2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4",
+      "matched": true,
+      "substrate": "cuda"
+    },
+    {
+      "descriptor_id": "milp:bounded_shipping_mix",
+      "expected_output_hash": "589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c",
+      "input_hash": "628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61",
+      "matched": true,
+      "substrate": "polarfire"
+    },
+    {
+      "descriptor_id": "milp:batch_allocation_no_speedup",
+      "expected_output_hash": "b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84",
+      "input_hash": "2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4",
+      "matched": true,
+      "substrate": "polarfire"
+    }
+  ],
+  "matched_timing_available": false,
+  "milestone": "2026.07.499",
+  "polar_fire_status": "reachable",
+  "random_seed": 5506,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "f88e3a68c4550fc5da302ecbaea0567bd994fde6578798aaaaf41a140b20d505",
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5506.hardware_multiboard_receipts.v499",
+  "selected_descriptor_count": 2,
+  "smoke_workload_hash": "502366e42cb8a7ef62fd55bd295fe3a5f33d39c5a2571af4f2dbeee0b04b545e",
+  "source_experiment_id": "exp5505-active-constraint-milp-descriptor-v499",
+  "spec_refs": [
+    "REQ-VERIFY-5506",
+    "SCENARIO-VERIFY-5506"
+  ],
+  "tests_run": [
+    {
+      "command": "pytest -o addopts=\"\" tests/python/test_experiment_5506_hardware_multiboard_receipts_v499.py -q",
+      "outcome": "passed",
+      "summary": "8 passed in 0.94s"
+    },
+    {
+      "command": "pytest tests/python/test_experiment_5506_hardware_multiboard_receipts_v499.py --no-cov -q",
+      "outcome": "passed",
+      "summary": "8 passed in 3.53s"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/.coverage-exp5506 pytest -o addopts=\"\" -n 4 tests/python/test_experiment_5506_hardware_multiboard_receipts_v499.py --cov-reset --cov=python/carnot --cov-report=term-missing:skip-covered --cov-fail-under=0 -q",
+      "outcome": "passed",
+      "summary": "8 passed in 97.75s; coverage data collected with repo-stable source selector"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/.coverage-exp5506 coverage report --fail-under=100 -m python/carnot/experiment_5506_hardware_multiboard_receipts_v499.py",
+      "outcome": "passed",
+      "summary": "394 statements, 0 missed, 100% line coverage on Exp5506 module"
+    },
+    {
+      "command": "ruff check python/carnot/experiment_5506_hardware_multiboard_receipts_v499.py tests/python/test_experiment_5506_hardware_multiboard_receipts_v499.py",
+      "outcome": "passed",
+      "summary": "All checks passed."
+    },
+    {
+      "command": "ruff format --check python/carnot/experiment_5506_hardware_multiboard_receipts_v499.py tests/python/test_experiment_5506_hardware_multiboard_receipts_v499.py",
+      "outcome": "passed",
+      "summary": "2 files already formatted."
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py tests/python/test_experiment_5506_hardware_multiboard_receipts_v499.py",
+      "outcome": "passed",
+      "summary": "OK: All tests reference specification requirements."
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py",
+      "outcome": "failed_existing_backlog",
+      "summary": "Repo-wide mode still reports the known pre-existing 1262-test traceability backlog; Exp5506 tests are covered."
+    },
+    {
+      "command": "ops/e2e-test-plan.md review",
+      "outcome": "not_applicable",
+      "summary": "Exp5506 records hardware_smoke descriptor hash receipts only; no training/sampling, PyO3, serialization, or speedup benchmark applies."
+    }
+  ]
+}

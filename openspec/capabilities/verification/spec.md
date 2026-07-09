@@ -28860,6 +28860,82 @@ is true, then Exp 5505 SHALL write the same result path with
 |---|---|---|
 | REQ-VERIFY-5505 | Implemented (`python/carnot/experiment_5505_active_constraint_milp_descriptor_v499.py`, `results/experiment_5505_active_constraint_milp_descriptor_v499.json`) | Implemented (`tests/python/test_experiment_5505_active_constraint_milp_descriptor_v499.py`) |
 
+### REQ-VERIFY-5506: Multi-Board Hardware Smoke Receipts V499
+
+The repository SHALL provide Exp 5506 at
+`python/carnot/experiment_5506_hardware_multiboard_receipts_v499.py` and write
+`results/experiment_5506_hardware_multiboard_receipts_v499.json` without
+modifying `scripts/research_conductor.py`, without probing host `/dev/mmcblk*`
+paths for KV260, without flashing GateMate or any board, without
+claiming solver speed, and without claiming hardware speedup. The receipt task
+SHALL prefer Exp 5505 descriptors when
+`results/experiment_5505_active_constraint_milp_descriptor_v499.json` exists
+and reports `descriptor_ready_for_hardware=true`; otherwise it SHALL fall back
+to the last clean Exp 5491 descriptor artifact and record the fallback in
+`descriptor_source`.
+
+Exp 5506 SHALL collect bounded identity or smoke receipts for PolarFire, KV260,
+GateMate, CUDA, and CPU where reachable. PolarFire SHALL be checked by
+`ssh polarfire`; KV260 SHALL be checked by `ssh kria` and SHALL NOT use any host
+storage precondition; GateMate SHALL be checked only by
+`openFPGALoader -c dirtyJtag --detect`; CUDA and CPU SHALL run only small
+descriptor smoke receipts unless a matched timing harness already exists. Each
+command receipt SHALL record command text, exit code, stdout/stderr summary,
+stdout/stderr hashes, timing duration, and a blocked reason when unavailable.
+Per-substrate status values SHALL be one of `reachable`, `blocked_identity`,
+`blocked_toolchain`, `blocked_descriptor`, or `not_attempted_with_reason`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`descriptor_source`, `descriptor_source_ready`, `polar_fire_status`,
+`kv260_status`, `gatemate_status`, `cuda_status`, `cpu_status`,
+`command_receipts`, `matched_hashes`, `matched_timing_available`,
+`hardware_speedup_claim`, `conductor_unchanged`, `inference_substrate`, and
+`honest_verdict`. `inference_substrate` SHALL equal `hardware_smoke`.
+`hardware_speedup_claim` SHALL be false unless authenticated matched timing over
+equivalent work exists; this task has no such harness, so
+`matched_timing_available` SHALL be false and `hardware_speedup_claim` SHALL be
+false. `honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `descriptor_source`: principle "names Exp5505 when ready or records the Exp5491 fallback."
+- `descriptor_source_ready`: principle "prevents board receipts from implying descriptor readiness."
+- `polar_fire_status`: principle "per-board terminal status from SSH identity and smoke evidence."
+- `kv260_status`: principle "SSH-only KV260 status; never host SD-card storage."
+- `gatemate_status`: principle "DirtyJTAG detect-only status without flash or workload overclaim."
+- `cuda_status`: principle "local CUDA smoke status, not a matched speedup benchmark."
+- `cpu_status`: principle "local CPU descriptor-smoke status used as a hash reference."
+- `command_receipts`: principle "bounded command transcripts with exit codes, summaries, hashes, timing, and blockers."
+- `matched_hashes`: principle "only hash matches over the selected descriptor smoke workload."
+- `matched_timing_available`: principle "false until authenticated equivalent-work timing exists."
+- `hardware_speedup_claim`: principle "must remain false without authenticated matched timing."
+- `conductor_unchanged`: principle "confirms scripts/research_conductor.py was not modified."
+- `inference_substrate`: principle "hardware_smoke, not live LLM inference or benchmark acceleration."
+- `honest_verdict`: principle "terminal status with no speedup overclaim."
+
+### SCENARIO-VERIFY-5506: Receipts Preserve Hardware Continuity Without Speedup Overclaim
+
+Given the Exp 5505 descriptor artifact is present and ready, when Exp 5506
+builds the multiboard receipt artifact, then it selects Exp 5505 as
+`descriptor_source`, runs CPU and CUDA descriptor-smoke commands locally, checks
+KV260 only through SSH identity, checks GateMate only through DirtyJTAG detect,
+checks PolarFire through SSH identity and a bounded descriptor-smoke command
+when identity is reachable, records every command transcript, records matched
+hashes only for successful smoke receipts, sets `matched_timing_available=false`,
+sets `hardware_speedup_claim=false`, and sets `inference_substrate=hardware_smoke`.
+
+If Exp 5505 is missing or not ready, Exp 5506 SHALL use the Exp 5491 descriptor
+fallback and record that source. If any board identity path, CUDA toolchain, CPU
+smoke, or descriptor source is unavailable, Exp 5506 SHALL record the matching
+blocked status and blocked reason rather than upgrading the receipt to a speedup
+or workload claim.
+
+## Implementation Status (REQ-VERIFY-5506)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5506 | Implemented (`python/carnot/experiment_5506_hardware_multiboard_receipts_v499.py`, `results/experiment_5506_hardware_multiboard_receipts_v499.json`) | Implemented (`tests/python/test_experiment_5506_hardware_multiboard_receipts_v499.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
