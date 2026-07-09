@@ -1,0 +1,812 @@
+{
+  "schema": "carnot.experiment_5467.capstone_v496.v1",
+  "experiment": "experiment_5467_capstone_v496",
+  "experiment_id": "exp5467-v496-capstone",
+  "run_date": "2026-07-09",
+  "random_seed": 5467,
+  "result_path": "results/experiment_5467_capstone_v496.json",
+  "spec_refs": [
+    "REQ-CAPSTONE-5467",
+    "SCENARIO-CAPSTONE-5467",
+    "SCENARIO-CAPSTONE-5467-MISSING-SKIPPED-PRECONDITION",
+    "SCENARIO-CAPSTONE-5467-FIELD-PRINCIPLES"
+  ],
+  "field_principles": {
+    "milestone": "route key; must equal 2026.07.496.",
+    "artifact_paths_read": "source context plus every upstream result or sidecar actually read.",
+    "truth_table": "lane-indexed evidence map for the requested capstone lanes, built only from artifacts.",
+    "headline_ready_lanes": "positive evidence; only clean lanes whose authority gate is satisfied.",
+    "bounded_lanes": "bounded evidence; useful receipts that must not become broad claims.",
+    "blocked_lanes": "blocker accounting for flagged, skipped, missing, or precondition-failed lanes.",
+    "honest_null_lanes": "executed null-result lanes that did not bank a positive outcome.",
+    "skipped_gated_tasks": "actual skipped upstreams, kept distinct from blocked and null lanes.",
+    "no_claim_boundaries": "explicit claims the capstone refuses to make.",
+    "next_milestone_recommendations": "3-5 observed gap priorities, including repeated-failure quarantine.",
+    "roadmap_yaml_unchanged": "protected-file discipline; derived from git status.",
+    "conductor_unchanged": "protected-file discipline; derived from git status.",
+    "inference_substrate": "must equal aggregation_from_upstream_artifacts.",
+    "honest_verdict": "terminal status; starts with complete: or blocked: and summarizes the bounded close."
+  },
+  "milestone": "2026.07.496",
+  "artifact_paths_read": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CODEX.md",
+    "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "ops/changelog.md",
+    "ops/status.md",
+    "research-program.md",
+    "results/experiment_5454_transition_v496.json",
+    "results/experiment_5455_source_delta_v496.json",
+    "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
+    "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+    "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
+    "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
+    "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl",
+    "results/experiment_5458_minimal_core_claim_repair_v496.json",
+    "results/experiment_5459_constraint_distortion_guard_v496.json",
+    "results/experiment_5460_csl_policy_bandit_v496.json",
+    "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl",
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl",
+    "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json",
+    "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json",
+    "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+    "results/experiment_5464_arc_perception_feature_receipts_v496.json",
+    "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json",
+    "results/experiment_5466_prd_gap_agent_failure_table_v496.json"
+  ],
+  "source_context_read": [
+    "AGENTS.md",
+    "CODEX.md",
+    "CLAUDE.md",
+    "research-program.md",
+    "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "ops/changelog.md",
+    "ops/status.md"
+  ],
+  "source_context_missing": [],
+  "missing_artifacts": [],
+  "sidecar_artifacts_read": [
+    {
+      "artifact_path": "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+      "sha256": "sha256:75bb750cfb62998ee92bdb7f78d2901c62a3697ebb70e5eb00e9d05a8eea63a9",
+      "size_bytes": 10519,
+      "format": "json",
+      "json_type": "dict",
+      "top_level_keys": [
+        "forbidden_readiness_dependencies",
+        "independent_metric_fields",
+        "invalid_tautological_fields",
+        "nodes",
+        "prior_flagged_adversarial",
+        "prior_flagged_artifact",
+        "prior_row_results",
+        "prior_tautology_flags",
+        "readiness_dependencies",
+        "readiness_dependencies_clean",
+        "readiness_dependency_errors",
+        "readiness_field",
+        "row_count",
+        "schema"
+      ]
+    },
+    {
+      "artifact_path": "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
+      "sha256": "sha256:9fa9d637f941200a19b34dfe9b1a37ee0b7b8fff2798031163310eaa81d783b6",
+      "size_bytes": 12140,
+      "format": "jsonl",
+      "row_count": 18,
+      "first_row_keys": [
+        "answer",
+        "claim_attributed",
+        "claim_text",
+        "condition",
+        "constraint_family",
+        "contradicting_evidence_span_ids",
+        "contradiction_detected",
+        "entailment_check_passed",
+        "evidence_span_count",
+        "evidence_span_ids",
+        "expected_answer",
+        "factual_distortion_detected",
+        "receipt_checksum",
+        "receipt_id",
+        "row_id",
+        "schema",
+        "supporting_evidence_span_ids"
+      ]
+    },
+    {
+      "artifact_path": "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl",
+      "sha256": "sha256:9c98e5df1bd53ffbddf96559b87db1588e97c362cf0689bd5dfb94c2d3012782",
+      "size_bytes": 43729,
+      "format": "jsonl",
+      "row_count": 18,
+      "first_row_keys": [
+        "acceptance_threshold",
+        "accepted_by_final_authority",
+        "backend_details",
+        "candidate_output",
+        "claim_attribution_receipt_id",
+        "condition",
+        "condition_advisory_accept",
+        "constraint_family",
+        "exact_final_verdict",
+        "experiment_id",
+        "factual_distortion_detected",
+        "final_authority_bypassed",
+        "fixture_id",
+        "fixture_row_id",
+        "generated_token_count",
+        "generation_duration_s",
+        "gpu_offload_evidence",
+        "model_hf_id",
+        "model_path",
+        "model_role",
+        "n_gpu_layers",
+        "output_text",
+        "parse_error",
+        "parse_status",
+        "prefix_seed",
+        "prompt_hash",
+        "random_seed",
+        "reward_evaluation_count",
+        "row_checksum",
+        "row_id",
+        "runtime_backend",
+        "schema",
+        "semantic_false_accept",
+        "token_budget"
+      ]
+    },
+    {
+      "artifact_path": "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl",
+      "sha256": "sha256:a122a501fe32adff386bf382a4592dd3c0e189ff40d71c48350643ec3e630bc8",
+      "size_bytes": 12276,
+      "format": "jsonl",
+      "row_count": 10,
+      "first_row_keys": [
+        "arm_scores",
+        "cited_evidence_ids",
+        "context_key",
+        "evidence_id",
+        "gate_receipt",
+        "selected_arm",
+        "trace_id",
+        "update_status"
+      ]
+    },
+    {
+      "artifact_path": "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl",
+      "sha256": "sha256:e3f107105ed6667fa61b02cdf6db468ff05666473c43bfb95d17e9e0dc4eb954",
+      "size_bytes": 46904,
+      "format": "jsonl",
+      "row_count": 16,
+      "first_row_keys": [
+        "accepted_by_final_authority",
+        "backend_details",
+        "case_family",
+        "condition",
+        "context_cost",
+        "decoy_answer",
+        "effective_condition",
+        "exact_verifier_witness",
+        "expected_answer",
+        "experiment_id",
+        "final_authority_bypassed",
+        "generated_token_count",
+        "generation_duration_s",
+        "gpu_offload_evidence",
+        "memory_receipt",
+        "model_hf_id",
+        "model_path",
+        "model_role",
+        "n_gpu_layers",
+        "negative_transfer_candidate",
+        "negative_transfer_detected",
+        "output_text",
+        "policy_receipt",
+        "prompt_hash",
+        "prompt_text",
+        "random_seed",
+        "row_checksum",
+        "runtime_backend",
+        "schema",
+        "selected_answer",
+        "session_id",
+        "stale_memory_candidate",
+        "task_id",
+        "token_cost",
+        "verifier_cost"
+      ]
+    },
+    {
+      "artifact_path": "results/experiment_5464_arc_perception_feature_receipts_v496.json",
+      "sha256": "sha256:6ccbf7458208a328fca7c90d0d8f3294f7d8b211acca9cc90c529a0d16e78acc",
+      "size_bytes": 9631,
+      "format": "json",
+      "json_type": "dict",
+      "top_level_keys": [
+        "action_effect_observations",
+        "action_tier_rows",
+        "changed_pixel_rows",
+        "color_blob_rows",
+        "connected_component_rows",
+        "first_live_candidate",
+        "live_agent_policy_reachable",
+        "live_salience_diagnostics",
+        "perception_frame_shape",
+        "salience_tier_rows",
+        "spec_refs"
+      ]
+    }
+  ],
+  "truth_table": {
+    "guided_decoding": {
+      "lane": "guided_decoding",
+      "classification": "blocked",
+      "authority_gate": "metric independence plus exact final authority; live SOTA rerun still must be clean",
+      "source_artifacts": [
+        "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
+        "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
+        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
+        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl"
+      ],
+      "evidence": {
+        "exp5456": {
+          "guided_decoding_corrigendum_clean": true,
+          "prior_flagged_adversarial": true,
+          "invalid_tautological_fields": [
+            "abstention_rate",
+            "action_unreachability_rate",
+            "guided_validity_delta_vs_unconstrained",
+            "semantic_false_accept_rate"
+          ],
+          "honest_verdict": "complete: guided-decoding corrigendum clean; Exp5444 headline readiness blocked"
+        },
+        "exp5456_graph": {},
+        "exp5457": {
+          "flagged_adversarial": true,
+          "corrigendum_pending": [
+            {
+              "kind": "TAUTOLOGY",
+              "severity": "critical",
+              "detail": "accepted_validity_rate=0.6666666666666666 and guided_validity_delta_vs_unconstrained=0.6666666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+            }
+          ],
+          "verifier_guided_decoding_ready": false,
+          "lcd_bias_check_passed": false,
+          "gpu_offload_verified": true,
+          "runtime_backend": "llama_cpp_python_cuda_gguf",
+          "metric_independence_checks_passed": true,
+          "exact_final_authority": true
+        }
+      },
+      "headline_blockers": [
+        "flagged_adversarial",
+        "tautology",
+        "readiness_false",
+        "lcd_bias_failed"
+      ],
+      "claim_boundary": "No guided-decoding headline; the clean posthoc corrigendum did not make the fresh live rerun clean."
+    },
+    "distortion_guards": {
+      "lane": "distortion_guards",
+      "classification": "headline_ready",
+      "authority_gate": "exact deterministic facts remain final authority",
+      "source_artifacts": [
+        "results/experiment_5459_constraint_distortion_guard_v496.json"
+      ],
+      "evidence": {
+        "exp5459": {
+          "distortion_guard_ready": true,
+          "exact_final_authority": true,
+          "truth_preserving_compliance_rate": 0.3,
+          "unsupported_fabrication_rate": 0.1,
+          "fixture_count": 10,
+          "honest_verdict": "complete: deterministic constraint-distortion guard ready"
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Headline is limited to deterministic distortion-guard readiness, not broad factuality scoring."
+    },
+    "minimal_core_repair": {
+      "lane": "minimal_core_repair",
+      "classification": "headline_ready",
+      "authority_gate": "accepted repairs are rechecked by exact final authority",
+      "source_artifacts": [
+        "results/experiment_5458_minimal_core_claim_repair_v496.json"
+      ],
+      "evidence": {
+        "exp5458": {
+          "minimal_core_repair_ready": true,
+          "exact_final_authority": true,
+          "repaired_accept_rate_after_exact_recheck": 1.0,
+          "unrepaired_reject_rate": 1.0,
+          "honest_verdict": "complete: deterministic minimal-core repairs accepted after exact recheck"
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Headline is deterministic repair acceptance after exact recheck, not learned repair quality."
+    },
+    "csl_policy": {
+      "lane": "csl_policy",
+      "classification": "headline_ready",
+      "authority_gate": "frozen-model policy receipts, rollback, and no model-weight mutation",
+      "source_artifacts": [
+        "results/experiment_5460_csl_policy_bandit_v496.json",
+        "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl"
+      ],
+      "evidence": {
+        "exp5460": {
+          "continuous_self_learning_task": true,
+          "csl_policy_ready": true,
+          "no_weight_mutation": true,
+          "cumulative_constraint_violations": 0,
+          "quality_delta_vs_naive_icl": 0.073,
+          "context_efficiency_delta": 0.525287,
+          "policy_update_count": 9,
+          "negative_transfer_deflection_rate": 1.0,
+          "honest_verdict": "complete: frozen-model governed CSL policy updated rollbackable action and memory routing statistics with zero constraint violations and no model weight mutation"
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Headline is governed policy routing with sidecar state only; no weight learning claim."
+    },
+    "sota_csl": {
+      "lane": "sota_csl",
+      "classification": "headline_ready",
+      "authority_gate": "GGUF/llama.cpp GPU offload receipts plus frozen weights",
+      "source_artifacts": [
+        "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
+        "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl"
+      ],
+      "evidence": {
+        "exp5461": {
+          "csl_sota_memory_routing_ready": true,
+          "gpu_offload_verified": true,
+          "no_weight_mutation": true,
+          "negative_transfer_deflection_rate": 1.0,
+          "quality_delta_vs_no_memory": 0.75,
+          "quality_delta_vs_naive_icl": 0.5,
+          "runtime_backend": "llama_cpp_python_cuda_gguf",
+          "precondition_details": {
+            "all_mandated_model_paths_available": true,
+            "all_passed": true,
+            "blocked_preconditions": [],
+            "cuda_visible": true,
+            "exp5460_csl_policy_ready": true,
+            "gpu_offload_preflight": true,
+            "mandated_model_specs_present": true,
+            "runtime_backend": "llama_cpp_python_cuda_gguf",
+            "selected_model_available": true
+          },
+          "honest_verdict": "complete: live SOTA GGUF governed CSL memory routing preserved quality and deflected negative transfer with frozen weights"
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Headline is live GGUF memory routing under frozen weights, not model fine-tuning."
+    },
+    "pbit_pdit_bridge": {
+      "lane": "pbit_pdit_bridge",
+      "classification": "bounded",
+      "authority_gate": "exact solver remains final authority; p-bit and p-dit assumptions are advisory",
+      "source_artifacts": [
+        "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json"
+      ],
+      "evidence": {
+        "exp5462": {
+          "minimal_core_pbit_bridge_ready": true,
+          "solver_authoritative": true,
+          "fallback_completeness_rate": 1.0,
+          "hardware_speedup_claim": false,
+          "claim_limits": [
+            "deterministic CPU-local solver fixture",
+            "active constraints, p-bit samples, and p-dit samples are advisory only",
+            "minimal cores diagnose bad assumptions but do not certify final answers",
+            "exact unrestricted solving rejects or overwrites unsafe assumptions",
+            "no hardware timing-ratio receipt or hardware speedup claim"
+          ],
+          "unsafe_false_accepts": 0,
+          "honest_verdict": "complete: active, p-bit, and p-dit assumptions stayed advisory across 5 fixtures, minimal cores diagnosed bad assumptions, fallback completeness was 1.0, and no hardware speedup was claimed"
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Bounded bridge only; no hardware timing or final-answer authority claim."
+    },
+    "hardware_receipts": {
+      "lane": "hardware_receipts",
+      "classification": "bounded",
+      "authority_gate": "hashes match before timing comparison; reachable-board receipts only",
+      "source_artifacts": [
+        "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json"
+      ],
+      "evidence": {
+        "exp5463": {
+          "hardware_receipts_ready": true,
+          "gated_upstream_ready": true,
+          "hashes_match_before_timing_compare": true,
+          "hardware_speedup_claim": false,
+          "board_reachability": {
+            "kv260": {
+              "blocked_reason": "blocked_kv260_ssh",
+              "check_method": "ssh_only",
+              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+              "identity": "kria",
+              "reachable": false,
+              "workload_execution_attempted": false
+            },
+            "polarfire": {
+              "blocked_reason": null,
+              "check_method": "ssh",
+              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+              "identity": "polarfire",
+              "reachable": true,
+              "workload_execution_attempted": true
+            }
+          },
+          "timing_repeat_counts": {
+            "cpu": 10,
+            "kv260": 0,
+            "polarfire": 10
+          },
+          "timing_comparison": {
+            "boards_compared": [
+              "polarfire"
+            ],
+            "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
+            "comparison_performed": true,
+            "hardware_speedup_claim": false,
+            "hashes_match_before_timing_compare": true,
+            "ratios": {
+              "polarfire": 79.905463487
+            }
+          },
+          "honest_verdict": "complete: Exp5462-gated CPU and reachable-board p-bit/p-dit timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false"
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Bounded CPU/Polarfire timing facts only; KV260 unreachable and no speedup claim."
+    },
+    "arc": {
+      "lane": "arc",
+      "classification": "honest_null",
+      "authority_gate": "ARC provenance gate: live-agent self-discovery plus offline reproduction for any bank",
+      "source_artifacts": [
+        "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+        "results/experiment_5464_arc_perception_feature_receipts_v496.json",
+        "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
+      ],
+      "evidence": {
+        "exp5464": {
+          "arc_metric_integrity_ready": true,
+          "registry_precheck_performed": true,
+          "duplicate_solve_rejected": true,
+          "off_path_solve_rejected": true,
+          "target_shortlist": [
+            {
+              "current_reproduced_levels": 2,
+              "game": "bp35",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "bp35:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "sb26",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "sb26:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "g50t",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "g50t:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "dc22",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "dc22:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "sp80",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "sp80:L3",
+              "target_level": 3
+            }
+          ],
+          "honest_verdict": "complete: ARC live-path metric integrity and perception precheck ready for Exp5465; no solve claimed"
+        },
+        "exp5465": {
+          "new_level_banked": false,
+          "offline_reproduced": false,
+          "registry_precheck_performed": true,
+          "failure_mode": "bounded_budget_no_levelup",
+          "live_attempt_count": 1,
+          "solve_provenance": "live_agent_self_discovery",
+          "source_reading_used": false,
+          "target_game": "bp35",
+          "honest_verdict": "honest_null: bp35 L3 bounded_budget_no_levelup"
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Metric/perception precheck is useful, but no new ARC level is claimed without offline reproduction."
+    },
+    "synthesis": {
+      "lane": "synthesis",
+      "classification": "bounded",
+      "authority_gate": "aggregation from upstream artifacts only",
+      "source_artifacts": [
+        "results/experiment_5466_prd_gap_agent_failure_table_v496.json"
+      ],
+      "evidence": {
+        "exp5466": {
+          "status": "complete",
+          "honest_verdict": "complete: .496 PRD gap table read actual Exp5454-Exp5465 artifacts; closed=8, partial=2, blocked=2, honest_null=2, missing=0, skipped=0.",
+          "artifact_paths_read": [
+            "results/experiment_5454_transition_v496.json",
+            "results/experiment_5455_source_delta_v496.json",
+            "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
+            "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
+            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
+            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl",
+            "results/experiment_5458_minimal_core_claim_repair_v496.json",
+            "results/experiment_5459_constraint_distortion_guard_v496.json",
+            "results/experiment_5460_csl_policy_bandit_v496.json",
+            "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl",
+            "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
+            "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl",
+            "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json",
+            "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json",
+            "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+            "results/experiment_5464_arc_perception_feature_receipts_v496.json",
+            "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
+          ],
+          "skipped_gated_tasks": [],
+          "missing_artifacts": []
+        }
+      },
+      "headline_blockers": [],
+      "claim_boundary": "Bounded capstone/PRD synthesis only; it is not independent experimental evidence."
+    }
+  },
+  "headline_ready_lanes": [
+    "distortion_guards",
+    "minimal_core_repair",
+    "csl_policy",
+    "sota_csl"
+  ],
+  "bounded_lanes": [
+    "pbit_pdit_bridge",
+    "hardware_receipts",
+    "synthesis"
+  ],
+  "blocked_lanes": [
+    "guided_decoding"
+  ],
+  "honest_null_lanes": [
+    "arc",
+    "hardware_speedup_claim"
+  ],
+  "skipped_gated_tasks": [],
+  "no_claim_boundaries": [
+    {
+      "claim_id": "hardware_speedup",
+      "boundary": "No hardware speedup is claimed; timing ratios are receipt facts only.",
+      "evidence": {
+        "hardware_speedup_claim": false,
+        "timing_comparison": {
+          "boards_compared": [
+            "polarfire"
+          ],
+          "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
+          "comparison_performed": true,
+          "hardware_speedup_claim": false,
+          "hashes_match_before_timing_compare": true,
+          "ratios": {
+            "polarfire": 79.905463487
+          }
+        },
+        "board_reachability": {
+          "kv260": {
+            "blocked_reason": "blocked_kv260_ssh",
+            "check_method": "ssh_only",
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+            "identity": "kria",
+            "reachable": false,
+            "workload_execution_attempted": false
+          },
+          "polarfire": {
+            "blocked_reason": null,
+            "check_method": "ssh",
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+            "identity": "polarfire",
+            "reachable": true,
+            "workload_execution_attempted": true
+          }
+        }
+      }
+    },
+    {
+      "claim_id": "token_internal_features",
+      "boundary": "No logits, hidden-state, attention, token, or intermediate-exit feature access is reopened.",
+      "evidence": {
+        "transition_blocked_lanes": [
+          {
+            "blocked_reason": "flagged_adversarial_and_tautology",
+            "claim_boundary": "local GGUF decoding pilot is blocked from headline while adversarial tautology flags remain",
+            "classification": "blocked",
+            "lane": "local_sota_decoding",
+            "source_artifacts": [
+              "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json"
+            ],
+            "terminal_evidence": {
+              "abstention_rate": 0.25,
+              "action_unreachability_rate": 0.08333333333333333,
+              "corrigendum_pending": [
+                {
+                  "detail": "abstention_rate=0.25 and guided_validity_delta_vs_unconstrained=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+                  "kind": "TAUTOLOGY",
+                  "severity": "critical"
+                },
+                {
+                  "detail": "action_unreachability_rate=0.08333333333333333 and semantic_false_accept_rate=0.08333333333333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+                  "kind": "TAUTOLOGY",
+                  "severity": "critical"
+                }
+              ],
+              "flag_reasons": [
+                "flagged_adversarial",
+                "tautology"
+              ],
+              "flagged_adversarial": true,
+              "gpu_offload_verified": true,
+              "guided_validity_delta_vs_grammar_only": -0.5,
+              "guided_validity_delta_vs_unconstrained": 0.25,
+              "honest_verdict": "complete: local SOTA verifier-potential guided decoding pilot ready",
+              "inference_substrate": "live_llm_inference",
+              "runtime_backend": "llama_cpp_python_cuda_gguf",
+              "semantic_false_accept_rate": 0.08333333333333333,
+              "unsafe_false_accept_rate": 0.0,
+              "verifier_guided_decoding_ready": true
+            }
+          },
+          {
+            "blocked_reason": "no_authenticated_backend_receipt",
+            "claim_boundary": "closed without authenticated logits, hidden-state, attention, token, or intermediate-exit receipts",
+            "classification": "blocked",
+            "lane": "token_internal_access",
+            "source_artifacts": [
+              "results/experiment_5441_transition_v495.json",
+              "results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json"
+            ],
+            "terminal_evidence": {
+              "backend_receipt_present": false,
+              "token_internal_claim_rejected": true,
+              "token_internal_lane_reopened": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "claim_id": "external_text_scorers",
+      "boundary": "Generated-text scorer and judge lanes are not used as final authority.",
+      "evidence": {
+        "final_authority": "exact deterministic verifiers and solvers only"
+      }
+    },
+    {
+      "claim_id": "non_local_tsu_kona_aleph",
+      "boundary": "Extropic TSU, Kona, and Aleph remain architecture context only without local authenticated execution.",
+      "evidence": {
+        "inference_substrate": "aggregation_from_upstream_artifacts"
+      }
+    },
+    {
+      "claim_id": "off_path_arc_solves",
+      "boundary": "ARC progress counts only live-agent self-discovery with offline reproduction; off-path solves are rejected.",
+      "evidence": {
+        "solve_provenance": "live_agent_self_discovery",
+        "new_level_banked": false,
+        "offline_reproduced": false,
+        "source_reading_used": false
+      }
+    },
+    {
+      "claim_id": "guided_decoding_headline",
+      "boundary": "Exp5457 reproduced a TAUTOLOGY-class failure and failed LCD bias readiness, so no guided-decoding headline is made.",
+      "evidence": {
+        "flagged_adversarial": true,
+        "corrigendum_pending": [
+          {
+            "kind": "TAUTOLOGY",
+            "severity": "critical",
+            "detail": "accepted_validity_rate=0.6666666666666666 and guided_validity_delta_vs_unconstrained=0.6666666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+          }
+        ],
+        "lcd_bias_check_passed": false,
+        "verifier_guided_decoding_ready": false
+      }
+    }
+  ],
+  "next_milestone_recommendations": [
+    {
+      "target": "quarantine_guided_decoding_rerun",
+      "priority": 1,
+      "recommendation": "Quarantine direct local SOTA guided-decoding reruns until a small non-tautological metric/LCD-bias fixture is clean.",
+      "rationale": "Exp5457 had GGUF receipts but reproduced the Exp5444-style TAUTOLOGY failure and failed LCD bias readiness."
+    },
+    {
+      "target": "scale_sota_csl_memory_routing",
+      "priority": 2,
+      "recommendation": "Scale the clean SOTA CSL memory-routing panel with the same GGUF/offload and frozen-weight receipts.",
+      "rationale": "Exp5461 is clean, GPU-offloaded, frozen-weight, and reports negative-transfer deflection."
+    },
+    {
+      "target": "compose_exact_guard_stack",
+      "priority": 3,
+      "recommendation": "Compose minimal-core repair and distortion guards on larger deterministic fixtures before another live decoding panel.",
+      "rationale": "Exp5458 and Exp5459 are exact-authority lanes; they can harden the next generation-time attempt."
+    },
+    {
+      "target": "restore_kv260_hardware_receipts",
+      "priority": 4,
+      "recommendation": "Restore KV260 reachability and collect repeated matched board-local timing before any speedup language.",
+      "rationale": "Exp5463 reached Polarfire only, hash-matched timing, and correctly kept hardware_speedup_claim=false."
+    },
+    {
+      "target": "arc_live_salience_frontier",
+      "priority": 5,
+      "recommendation": "Continue ARC live-agent salience work only through provenance and offline-reproduction gates.",
+      "rationale": "Exp5464 made the metric/perception precheck clean, but Exp5465 banked no reproduced new level."
+    }
+  ],
+  "roadmap_yaml_unchanged": true,
+  "conductor_unchanged": true,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "artifact_checksums": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:d5d5eec00f72412ba0180ffe9b0d181b7aadc9647e299851478e0266909808d2",
+    "ops/changelog.md": "sha256:8f8453366f66804ef19e26ecde9a537cf5753580aa398303369685ec3411554e",
+    "ops/status.md": "sha256:c17788af13f19069cafcdb13c3036ca8f246dc441a6382ece697cc904aa1b497",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_5454_transition_v496.json": "sha256:720daeb033f7b1bc15482bfb8f371a256f7d915f1bc1706d831cd08916b8bf33",
+    "results/experiment_5455_source_delta_v496.json": "sha256:101720d9bcdd5eee58c41b1b0f33a767fbd370bb867920a733e288ae7925a656",
+    "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json": "sha256:c1766209ee725b139376c1c97eab25e6671f6be88fbd9dbf3e11d76656abeae1",
+    "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json": "sha256:75bb750cfb62998ee92bdb7f78d2901c62a3697ebb70e5eb00e9d05a8eea63a9",
+    "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json": "sha256:372e8ae785e0b27108feb74e8aec4d246542d1465cde8b3dbb96c6e4eb9cb4a6",
+    "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl": "sha256:9fa9d637f941200a19b34dfe9b1a37ee0b7b8fff2798031163310eaa81d783b6",
+    "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl": "sha256:9c98e5df1bd53ffbddf96559b87db1588e97c362cf0689bd5dfb94c2d3012782",
+    "results/experiment_5458_minimal_core_claim_repair_v496.json": "sha256:a9b9b38370c86b38003a77e4de0e0d16e6f3f17deca03771df540a764cf54dc5",
+    "results/experiment_5459_constraint_distortion_guard_v496.json": "sha256:46b3d8dd12df289861fc82935136ff23b66a009a4ee08208a50525b57feb1154",
+    "results/experiment_5460_csl_policy_bandit_v496.json": "sha256:d62a15938aae66e9586484d739e331210b32b4afe114b0da46d69d155fb5c96d",
+    "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl": "sha256:a122a501fe32adff386bf382a4592dd3c0e189ff40d71c48350643ec3e630bc8",
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496.json": "sha256:465d9e8de5afca22def9a46a7d1e8867516742ec8fee9b8b6c37cf1d65590db9",
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl": "sha256:e3f107105ed6667fa61b02cdf6db468ff05666473c43bfb95d17e9e0dc4eb954",
+    "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json": "sha256:75451acda50912411dc6ebbe569e785389f7475e4eb8e4b8c166ebe2a9cbc2dc",
+    "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json": "sha256:43ddec536305b8bd63b57cd6c55ae4903eee9a5171dbc78b05bac5fc3ea7f04c",
+    "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json": "sha256:28215149062593cbe089f55374998a72d1ed21a04bd31fa35365486f968e0fbf",
+    "results/experiment_5464_arc_perception_feature_receipts_v496.json": "sha256:6ccbf7458208a328fca7c90d0d8f3294f7d8b211acca9cc90c529a0d16e78acc",
+    "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json": "sha256:377fb5f3345488486e01e4722f9aa17463a92b86883ae30fba9bf1284d4fdda9",
+    "results/experiment_5466_prd_gap_agent_failure_table_v496.json": "sha256:f89c265e76d1012dba8315c465122fd244c678ef1f14a38b0ae19a80646d1a33"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5467_capstone_v496.py -q --no-cov",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5467_capstone_v496.py -m pytest tests/python/test_experiment_5467_capstone_v496.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --include=python/carnot/experiment_5467_capstone_v496.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "honest_verdict": "complete: .496 capstone truth table from actual artifacts; headline_ready=4, bounded=3, blocked=1, honest_null=2; guided decoding quarantined, ARC no-bank, hardware_speedup_claim=false.",
+  "reproducibility_checksum": "sha256:ea08ecf50ca2e4c2b4714967249254076ea3e50caa4e4ad71b9fea4cffaa671d"
+}

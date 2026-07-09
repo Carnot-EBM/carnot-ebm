@@ -1960,3 +1960,67 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5453 | Planned (`python/carnot/experiment_5453_capstone_v495.py`, `results/experiment_5453_capstone_v495.json`) | Planned (`tests/python/test_experiment_5453_capstone_v495.py`) |
+
+- REQ-CAPSTONE-5467: The `.496` milestone-close capstone aggregator
+  `exp5467-v496-capstone` in
+  `python/carnot/experiment_5467_capstone_v496.py` SHALL write
+  `results/experiment_5467_capstone_v496.json` without modifying
+  `research-roadmap.yaml` and without modifying `scripts/research_conductor.py`.
+  It SHALL read the listed `.496` source context and the landed Exp5454 through
+  Exp5466 artifacts, including sidecar receipts, and emit a truth table for
+  guided decoding, distortion guards, minimal-core repair, CSL policy, SOTA CSL
+  memory routing, the p-bit/p-dit bridge, hardware receipts, ARC, and synthesis
+  from artifact fields only. It SHALL keep any `flagged_adversarial`,
+  skipped-gated, missing, or precondition-failed upstream out of headline-ready
+  evidence, preserve bounded claims for advisory solver and hardware receipt
+  lanes, preserve honest-null lanes for ARC no-bank and no hardware speedup, and
+  record no-claim boundaries for hardware speedup, token/internal features,
+  external text scorers, non-local TSU/Kona/Aleph execution, and off-path ARC
+  solves.
+- SCENARIO-CAPSTONE-5467: The artifact
+  `results/experiment_5467_capstone_v496.json` must emit top-level fields
+  `milestone`, `artifact_paths_read`, `truth_table`, `headline_ready_lanes`,
+  `bounded_lanes`, `blocked_lanes`, `honest_null_lanes`,
+  `skipped_gated_tasks`, `no_claim_boundaries`,
+  `next_milestone_recommendations`, `roadmap_yaml_unchanged`,
+  `conductor_unchanged`, `inference_substrate`, and `honest_verdict`. The
+  default `.496` aggregation must classify guided decoding as blocked because
+  Exp5457 is adversarially flagged with a TAUTOLOGY and failed the LCD bias
+  gate, classify deterministic distortion guards, minimal-core repair, governed
+  CSL policy, and SOTA CSL memory routing as headline-ready only within their
+  recorded authority boundaries, classify the p-bit/p-dit bridge and hardware
+  receipts as bounded, classify ARC as an honest null/no-bank, and classify
+  synthesis as bounded aggregation from upstream artifacts.
+- SCENARIO-CAPSTONE-5467-MISSING-SKIPPED-PRECONDITION: If any expected `.496`
+  upstream artifact is absent, skipped-gated, adversarially flagged, or reports
+  failed preconditions, the workflow must still write the capstone artifact,
+  list skipped-gated tasks in `skipped_gated_tasks`, keep the affected lane out
+  of `headline_ready_lanes`, record the blocker in the relevant truth-table row,
+  and start `honest_verdict` with `blocked:` when missing or skipped inputs make
+  the aggregation incomplete.
+- SCENARIO-CAPSTONE-5467-FIELD-PRINCIPLES: The required field principles are:
+  `milestone` = "route key; must equal 2026.07.496.",
+  `artifact_paths_read` = "evidence basis; source context plus every upstream
+  result or sidecar actually read.", `truth_table` = "lane-indexed evidence
+  map for the requested capstone lanes, built only from upstream artifacts.",
+  `headline_ready_lanes` = "positive evidence; only clean lanes whose required
+  authority gate is satisfied.", `bounded_lanes` = "bounded evidence; useful
+  receipts that must not become broad claims.", `blocked_lanes` = "blocker
+  accounting for flagged, skipped, missing, or precondition-failed lanes.",
+  `honest_null_lanes` = "executed null-result lanes that did not bank a positive
+  outcome.", `skipped_gated_tasks` = "actual skipped upstreams, kept distinct
+  from blocked and null lanes.", `no_claim_boundaries` = "explicit claims the
+  capstone refuses to make.", `next_milestone_recommendations` = "3-5 observed
+  gap priorities, including quarantine for repeated-failure reruns.",
+  `roadmap_yaml_unchanged` = "protected-file discipline; derived from git
+  status.", `conductor_unchanged` = "protected-file discipline; derived from
+  git status.", `inference_substrate` = "must equal
+  aggregation_from_upstream_artifacts.", and `honest_verdict` = "terminal
+  status; starts with complete: or blocked: and summarizes the bounded `.496`
+  close state."
+
+## Implementation Status (REQ-CAPSTONE-5467)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5467 | Planned (`python/carnot/experiment_5467_capstone_v496.py`, `results/experiment_5467_capstone_v496.json`) | Planned (`tests/python/test_experiment_5467_capstone_v496.py`) |
