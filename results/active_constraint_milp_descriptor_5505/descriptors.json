@@ -1,0 +1,1501 @@
+{
+  "descriptor_rows": [
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "bounded descriptor workload only; no board timing or speedup claim",
+        "solver_speedup_claim_allowed": false,
+        "speedup_claim_allowed": false
+      },
+      "descriptor_id": "milp:bounded_shipping_mix",
+      "descriptor_style": "milp",
+      "domains": {
+        "expedite": [
+          0,
+          1
+        ],
+        "ship_a": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "ship_b": [
+          0,
+          1,
+          2
+        ]
+      },
+      "exact_fallback": {
+        "agreement_with_expected": true,
+        "complete": true,
+        "feasible_assignment_count": 3,
+        "objective_score": 16.0,
+        "required": true,
+        "solution": {
+          "expedite": 0,
+          "ship_a": 2,
+          "ship_b": 1
+        },
+        "solution_hash": "93f97edaf564cf3a13c1e88abf51c963b03e0b314f9023c627a98f27c8191b37",
+        "solver": "deterministic_finite_domain_enumerator",
+        "status": "optimal"
+      },
+      "expected_outputs": {
+        "objective_score": 16.0,
+        "solution": {
+          "expedite": 0,
+          "ship_a": 2,
+          "ship_b": 1
+        },
+        "solution_hash": "93f97edaf564cf3a13c1e88abf51c963b03e0b314f9023c627a98f27c8191b37",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_DEMAND_MIN",
+          "rhs": 3,
+          "terms": [
+            {
+              "coefficient": 1,
+              "variable": "ship_a"
+            },
+            {
+              "coefficient": 1,
+              "variable": "ship_b"
+            },
+            {
+              "coefficient": 1,
+              "variable": "expedite"
+            }
+          ],
+          "type": "linear_ge"
+        },
+        {
+          "id": "HC_CAPACITY_MAX",
+          "rhs": 7,
+          "terms": [
+            {
+              "coefficient": 2,
+              "variable": "ship_a"
+            },
+            {
+              "coefficient": 3,
+              "variable": "ship_b"
+            },
+            {
+              "coefficient": 2,
+              "variable": "expedite"
+            }
+          ],
+          "type": "linear_le"
+        },
+        {
+          "id": "HC_EXPEDITE_NEEDS_B",
+          "rhs": 0,
+          "terms": [
+            {
+              "coefficient": 1,
+              "variable": "expedite"
+            },
+            {
+              "coefficient": -1,
+              "variable": "ship_b"
+            }
+          ],
+          "type": "linear_le"
+        }
+      ],
+      "objective_weights": {
+        "SP_AVOID_EXPEDITE": 1.0,
+        "SP_SHIPMENT_VALUE": 1.0
+      },
+      "partition_id": "milp_shipping_partition",
+      "partition_update": {
+        "board_neutral": true,
+        "boundary_variables": [
+          "expedite"
+        ],
+        "descriptor_input_hash": "628c64cb93afb255e53aa8308930c7d719f47688eddd435485e86b91559a6d61",
+        "expected_output_hash": "589fffb0c14e97b80d35c28b332bc5cb164af1f8c695e276d0dbaa3e8864a97c",
+        "partition_id": "milp_shipping_partition",
+        "partition_scope": [
+          "ship_a",
+          "ship_b"
+        ],
+        "receipt_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "target_receipt_fields": {
+          "cpu": [
+            "cpu_partition_id",
+            "cpu_input_hash",
+            "cpu_output_hash",
+            "cpu_status"
+          ],
+          "cuda": [
+            "cuda_partition_id",
+            "cuda_input_hash",
+            "cuda_output_hash",
+            "cuda_status"
+          ],
+          "gatemate": [
+            "gatemate_partition_id",
+            "gatemate_input_hash",
+            "gatemate_output_hash",
+            "gatemate_status"
+          ],
+          "kv260": [
+            "kv260_partition_id",
+            "kv260_input_hash",
+            "kv260_output_hash",
+            "kv260_status"
+          ],
+          "polarfire": [
+            "polarfire_partition_id",
+            "polarfire_input_hash",
+            "polarfire_output_hash",
+            "polarfire_status"
+          ]
+        },
+        "update_count": 5,
+        "update_schedule_type": "board_neutral_milp_batch"
+      },
+      "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+      "soft_preferences": [
+        {
+          "constant": 0,
+          "id": "SP_SHIPMENT_VALUE",
+          "terms": [
+            {
+              "coefficient": 4,
+              "variable": "ship_a"
+            },
+            {
+              "coefficient": 7,
+              "variable": "ship_b"
+            },
+            {
+              "coefficient": 1,
+              "variable": "expedite"
+            }
+          ],
+          "type": "linear_reward",
+          "weight": 1
+        },
+        {
+          "id": "SP_AVOID_EXPEDITE",
+          "type": "value_reward",
+          "value": 0,
+          "variable": "expedite",
+          "weight": 1
+        }
+      ],
+      "source_artifact": "built_in_finite_domain_milp_rows",
+      "source_instance_id": "milp:bounded_shipping_mix",
+      "status": "ready",
+      "typed_variables": [
+        {
+          "domain": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "ship_a",
+          "role": "partition_control",
+          "variable_type": "integer"
+        },
+        {
+          "domain": [
+            0,
+            1,
+            2
+          ],
+          "name": "ship_b",
+          "role": "partition_control",
+          "variable_type": "integer"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "expedite",
+          "role": "boundary_context",
+          "variable_type": "binary"
+        }
+      ],
+      "update_schedule": {
+        "board_neutral": true,
+        "type": "board_neutral_milp_batch",
+        "update_count": 5
+      }
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "bounded descriptor workload only; no board timing or speedup claim",
+        "solver_speedup_claim_allowed": false,
+        "speedup_claim_allowed": false
+      },
+      "descriptor_id": "milp:batch_allocation_no_speedup",
+      "descriptor_style": "milp",
+      "domains": {
+        "route_accel": [
+          0,
+          1
+        ],
+        "route_cpu": [
+          0,
+          1
+        ],
+        "tiles": [
+          1,
+          2,
+          3
+        ]
+      },
+      "exact_fallback": {
+        "agreement_with_expected": true,
+        "complete": true,
+        "feasible_assignment_count": 3,
+        "objective_score": 16.0,
+        "required": true,
+        "solution": {
+          "route_accel": 0,
+          "route_cpu": 1,
+          "tiles": 3
+        },
+        "solution_hash": "ee73781e031870fa8c81411112a717d3de808dbd861acbf633dc1299f93c45d9",
+        "solver": "deterministic_finite_domain_enumerator",
+        "status": "optimal"
+      },
+      "expected_outputs": {
+        "objective_score": 16.0,
+        "solution": {
+          "route_accel": 0,
+          "route_cpu": 1,
+          "tiles": 3
+        },
+        "solution_hash": "ee73781e031870fa8c81411112a717d3de808dbd861acbf633dc1299f93c45d9",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_ONE_ROUTE",
+          "rhs": 1,
+          "terms": [
+            {
+              "coefficient": 1,
+              "variable": "route_cpu"
+            },
+            {
+              "coefficient": 1,
+              "variable": "route_accel"
+            }
+          ],
+          "type": "linear_eq"
+        },
+        {
+          "id": "HC_TILE_BUDGET",
+          "rhs": 7,
+          "terms": [
+            {
+              "coefficient": 2,
+              "variable": "tiles"
+            },
+            {
+              "coefficient": 2,
+              "variable": "route_accel"
+            }
+          ],
+          "type": "linear_le"
+        },
+        {
+          "id": "HC_MIN_TILES",
+          "rhs": 2,
+          "terms": [
+            {
+              "coefficient": 1,
+              "variable": "tiles"
+            }
+          ],
+          "type": "linear_ge"
+        }
+      ],
+      "objective_weights": {
+        "SP_ACCEL_ADVISORY": 3.0,
+        "SP_CPU_BASELINE": 1.0,
+        "SP_TILE_COVERAGE": 1.0
+      },
+      "partition_id": "milp_batch_partition",
+      "partition_update": {
+        "board_neutral": true,
+        "boundary_variables": [
+          "tiles"
+        ],
+        "descriptor_input_hash": "2262a4775a32011b954d6acaf7d124525ee068bc4dcb8c4ad1cc033c41d6e4f4",
+        "expected_output_hash": "b59df03c9795699e23152e061003c46dfce815359173b7555cc737f2e3568d84",
+        "partition_id": "milp_batch_partition",
+        "partition_scope": [
+          "route_cpu",
+          "route_accel"
+        ],
+        "receipt_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "target_receipt_fields": {
+          "cpu": [
+            "cpu_partition_id",
+            "cpu_input_hash",
+            "cpu_output_hash",
+            "cpu_status"
+          ],
+          "cuda": [
+            "cuda_partition_id",
+            "cuda_input_hash",
+            "cuda_output_hash",
+            "cuda_status"
+          ],
+          "gatemate": [
+            "gatemate_partition_id",
+            "gatemate_input_hash",
+            "gatemate_output_hash",
+            "gatemate_status"
+          ],
+          "kv260": [
+            "kv260_partition_id",
+            "kv260_input_hash",
+            "kv260_output_hash",
+            "kv260_status"
+          ],
+          "polarfire": [
+            "polarfire_partition_id",
+            "polarfire_input_hash",
+            "polarfire_output_hash",
+            "polarfire_status"
+          ]
+        },
+        "update_count": 6,
+        "update_schedule_type": "board_neutral_milp_batch"
+      },
+      "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+      "soft_preferences": [
+        {
+          "constant": 0,
+          "id": "SP_TILE_COVERAGE",
+          "terms": [
+            {
+              "coefficient": 5,
+              "variable": "tiles"
+            }
+          ],
+          "type": "linear_reward",
+          "weight": 1
+        },
+        {
+          "id": "SP_ACCEL_ADVISORY",
+          "type": "value_reward",
+          "value": 1,
+          "variable": "route_accel",
+          "weight": 3
+        },
+        {
+          "id": "SP_CPU_BASELINE",
+          "type": "value_reward",
+          "value": 1,
+          "variable": "route_cpu",
+          "weight": 1
+        }
+      ],
+      "source_artifact": "built_in_finite_domain_milp_rows",
+      "source_instance_id": "milp:batch_allocation_no_speedup",
+      "status": "ready",
+      "typed_variables": [
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "route_cpu",
+          "role": "partition_control",
+          "variable_type": "binary"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "route_accel",
+          "role": "partition_control",
+          "variable_type": "binary"
+        },
+        {
+          "domain": [
+            1,
+            2,
+            3
+          ],
+          "name": "tiles",
+          "role": "boundary_context",
+          "variable_type": "integer"
+        }
+      ],
+      "update_schedule": {
+        "board_neutral": true,
+        "type": "board_neutral_milp_batch",
+        "update_count": 6
+      }
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "bounded descriptor workload only; no board timing or speedup claim",
+        "solver_speedup_claim_allowed": false,
+        "speedup_claim_allowed": false
+      },
+      "descriptor_id": "maxsat:exp5499:claim_support_preference",
+      "descriptor_style": "maxsat",
+      "domains": {
+        "scope": [
+          "overbroad",
+          "bounded"
+        ],
+        "source_quality": [
+          "secondary",
+          "primary"
+        ],
+        "support": [
+          "unsupported",
+          "entailed"
+        ]
+      },
+      "exact_fallback": {
+        "agreement_with_expected": true,
+        "complete": true,
+        "feasible_assignment_count": 2,
+        "objective_score": 11.0,
+        "required": true,
+        "solution": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "solution_hash": "5a672e62f9d44643c5143210c54f16e199f453d9bb36eb16e881edac44ed5d63",
+        "solver": "deterministic_finite_domain_enumerator",
+        "status": "optimal"
+      },
+      "exp5499_reference": {
+        "assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "assignment_hash": "2c52605737bfbd2bfa5233e552f09b753ded312d009208bedbfbe631f1e49d9e",
+        "feasible_assignment_count": 2,
+        "objective_score": 11.0,
+        "status": "optimal"
+      },
+      "expected_outputs": {
+        "objective_score": 11.0,
+        "solution": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "solution_hash": "5a672e62f9d44643c5143210c54f16e199f453d9bb36eb16e881edac44ed5d63",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_SUPPORT_ENTAILED",
+          "literals": [
+            {
+              "equals": "entailed",
+              "variable": "support"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_SCOPE_BOUNDED",
+          "literals": [
+            {
+              "equals": "bounded",
+              "variable": "scope"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "objective_weights": {
+        "SP_BOUNDED_SCOPE": 1.0,
+        "SP_ENTAILED_SUPPORT": 3.0,
+        "SP_PRIMARY_SOURCE": 7.0
+      },
+      "partition_id": "maxsat_claim_partition_0",
+      "partition_update": {
+        "board_neutral": true,
+        "boundary_variables": [],
+        "descriptor_input_hash": "2bd34c56810d2707a4df16ba08c948cd1d27bd4ecfbeb50c20df6a0355b15a87",
+        "expected_output_hash": "61832a8326293cc49aa039d9be5d3a4505619d9ff517e584ed01548f1e725911",
+        "partition_id": "maxsat_claim_partition_0",
+        "partition_scope": [
+          "support",
+          "source_quality",
+          "scope"
+        ],
+        "receipt_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "target_receipt_fields": {
+          "cpu": [
+            "cpu_partition_id",
+            "cpu_input_hash",
+            "cpu_output_hash",
+            "cpu_status"
+          ],
+          "cuda": [
+            "cuda_partition_id",
+            "cuda_input_hash",
+            "cuda_output_hash",
+            "cuda_status"
+          ],
+          "gatemate": [
+            "gatemate_partition_id",
+            "gatemate_input_hash",
+            "gatemate_output_hash",
+            "gatemate_status"
+          ],
+          "kv260": [
+            "kv260_partition_id",
+            "kv260_input_hash",
+            "kv260_output_hash",
+            "kv260_status"
+          ],
+          "polarfire": [
+            "polarfire_partition_id",
+            "polarfire_input_hash",
+            "polarfire_output_hash",
+            "polarfire_status"
+          ]
+        },
+        "update_count": 5,
+        "update_schedule_type": "board_neutral_maxsat_batch"
+      },
+      "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+      "soft_preferences": [
+        {
+          "id": "SP_PRIMARY_SOURCE",
+          "type": "value_reward",
+          "value": "primary",
+          "variable": "source_quality",
+          "weight": 7
+        },
+        {
+          "id": "SP_ENTAILED_SUPPORT",
+          "type": "value_reward",
+          "value": "entailed",
+          "variable": "support",
+          "weight": 3
+        },
+        {
+          "id": "SP_BOUNDED_SCOPE",
+          "type": "value_reward",
+          "value": "bounded",
+          "variable": "scope",
+          "weight": 1
+        }
+      ],
+      "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+      "source_instance_id": "claim_support_preference",
+      "status": "ready",
+      "typed_variables": [
+        {
+          "domain": [
+            "unsupported",
+            "entailed"
+          ],
+          "name": "support",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        },
+        {
+          "domain": [
+            "secondary",
+            "primary"
+          ],
+          "name": "source_quality",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        },
+        {
+          "domain": [
+            "overbroad",
+            "bounded"
+          ],
+          "name": "scope",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        }
+      ],
+      "update_schedule": {
+        "board_neutral": true,
+        "type": "board_neutral_maxsat_batch",
+        "update_count": 5
+      }
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "bounded descriptor workload only; no board timing or speedup claim",
+        "solver_speedup_claim_allowed": false,
+        "speedup_claim_allowed": false
+      },
+      "descriptor_id": "maxsat:exp5499:claim_safety_conflict",
+      "descriptor_style": "maxsat",
+      "domains": {
+        "action": [
+          "reject",
+          "accept"
+        ],
+        "citation": [
+          "missing",
+          "present"
+        ],
+        "safety": [
+          "unsafe",
+          "safe"
+        ]
+      },
+      "exact_fallback": {
+        "agreement_with_expected": true,
+        "complete": true,
+        "feasible_assignment_count": 2,
+        "objective_score": 12.0,
+        "required": true,
+        "solution": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "solution_hash": "33da32c7a9b20807845db4061dbc0a3ac3c81e733d9f609240dd908fbba669c5",
+        "solver": "deterministic_finite_domain_enumerator",
+        "status": "optimal"
+      },
+      "exp5499_reference": {
+        "assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "assignment_hash": "18593a04479ad10f303da93394675b65b1243732f139b5777c42d2a3518d23ea",
+        "feasible_assignment_count": 2,
+        "objective_score": 12.0,
+        "status": "optimal"
+      },
+      "expected_outputs": {
+        "objective_score": 12.0,
+        "solution": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "solution_hash": "33da32c7a9b20807845db4061dbc0a3ac3c81e733d9f609240dd908fbba669c5",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_SAFETY_SAFE",
+          "literals": [
+            {
+              "equals": "safe",
+              "variable": "safety"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_CITATION_PRESENT",
+          "literals": [
+            {
+              "equals": "present",
+              "variable": "citation"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "objective_weights": {
+        "SP_ACCEPT_WHEN_SAFE": 5.0,
+        "SP_CITATION_PRESENT": 3.0,
+        "SP_SAFE_LABEL": 4.0
+      },
+      "partition_id": "maxsat_claim_partition_1",
+      "partition_update": {
+        "board_neutral": true,
+        "boundary_variables": [],
+        "descriptor_input_hash": "0a9fcce820aeab0c4f4e394b5c99a7dc826d4e3e4e43e0a5dfd416c25133fcc8",
+        "expected_output_hash": "1bc21b3f47a270a3655fb585609ca52e3df77bc692a11a9587a1d7dbc5b04298",
+        "partition_id": "maxsat_claim_partition_1",
+        "partition_scope": [
+          "safety",
+          "citation",
+          "action"
+        ],
+        "receipt_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "target_receipt_fields": {
+          "cpu": [
+            "cpu_partition_id",
+            "cpu_input_hash",
+            "cpu_output_hash",
+            "cpu_status"
+          ],
+          "cuda": [
+            "cuda_partition_id",
+            "cuda_input_hash",
+            "cuda_output_hash",
+            "cuda_status"
+          ],
+          "gatemate": [
+            "gatemate_partition_id",
+            "gatemate_input_hash",
+            "gatemate_output_hash",
+            "gatemate_status"
+          ],
+          "kv260": [
+            "kv260_partition_id",
+            "kv260_input_hash",
+            "kv260_output_hash",
+            "kv260_status"
+          ],
+          "polarfire": [
+            "polarfire_partition_id",
+            "polarfire_input_hash",
+            "polarfire_output_hash",
+            "polarfire_status"
+          ]
+        },
+        "update_count": 5,
+        "update_schedule_type": "board_neutral_maxsat_batch"
+      },
+      "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+      "soft_preferences": [
+        {
+          "id": "SP_ACCEPT_WHEN_SAFE",
+          "type": "value_reward",
+          "value": "accept",
+          "variable": "action",
+          "weight": 5
+        },
+        {
+          "id": "SP_SAFE_LABEL",
+          "type": "value_reward",
+          "value": "safe",
+          "variable": "safety",
+          "weight": 4
+        },
+        {
+          "id": "SP_CITATION_PRESENT",
+          "type": "value_reward",
+          "value": "present",
+          "variable": "citation",
+          "weight": 3
+        }
+      ],
+      "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+      "source_instance_id": "claim_safety_conflict",
+      "status": "ready",
+      "typed_variables": [
+        {
+          "domain": [
+            "unsafe",
+            "safe"
+          ],
+          "name": "safety",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        },
+        {
+          "domain": [
+            "missing",
+            "present"
+          ],
+          "name": "citation",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        },
+        {
+          "domain": [
+            "reject",
+            "accept"
+          ],
+          "name": "action",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        }
+      ],
+      "update_schedule": {
+        "board_neutral": true,
+        "type": "board_neutral_maxsat_batch",
+        "update_count": 5
+      }
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "bounded descriptor workload only; no board timing or speedup claim",
+        "solver_speedup_claim_allowed": false,
+        "speedup_claim_allowed": false
+      },
+      "descriptor_id": "maxsat:exp5499:claim_infeasible_negative_control",
+      "descriptor_style": "maxsat",
+      "domains": {
+        "evidence": [
+          "absent",
+          "present"
+        ],
+        "verdict": [
+          "reject",
+          "accept"
+        ]
+      },
+      "exact_fallback": {
+        "agreement_with_expected": true,
+        "complete": true,
+        "feasible_assignment_count": 0,
+        "objective_score": null,
+        "required": true,
+        "solution": null,
+        "solution_hash": null,
+        "solver": "deterministic_finite_domain_enumerator",
+        "status": "infeasible"
+      },
+      "exp5499_reference": {
+        "assignment": null,
+        "assignment_hash": null,
+        "feasible_assignment_count": 0,
+        "objective_score": null,
+        "status": "infeasible"
+      },
+      "expected_outputs": {
+        "objective_score": null,
+        "solution": null,
+        "solution_hash": null,
+        "status": "infeasible"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_VERDICT_ACCEPT",
+          "literals": [
+            {
+              "equals": "accept",
+              "variable": "verdict"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_VERDICT_REJECT",
+          "literals": [
+            {
+              "equals": "reject",
+              "variable": "verdict"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "objective_weights": {
+        "SP_ACCEPT_WRONG_IF_HARD_IGNORED": 10.0,
+        "SP_EVIDENCE_PRESENT": 2.0
+      },
+      "partition_id": "maxsat_claim_partition_2",
+      "partition_update": {
+        "board_neutral": true,
+        "boundary_variables": [],
+        "descriptor_input_hash": "767a642aa950d93a7dc900bb3f4a73b4b39c876597d01d485d363a6a9f596915",
+        "expected_output_hash": "f23cb60701e7e072834a8ed0bfb337fc79187b1bf41535bd2558900b1d8cb6d8",
+        "partition_id": "maxsat_claim_partition_2",
+        "partition_scope": [
+          "verdict",
+          "evidence"
+        ],
+        "receipt_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "target_receipt_fields": {
+          "cpu": [
+            "cpu_partition_id",
+            "cpu_input_hash",
+            "cpu_output_hash",
+            "cpu_status"
+          ],
+          "cuda": [
+            "cuda_partition_id",
+            "cuda_input_hash",
+            "cuda_output_hash",
+            "cuda_status"
+          ],
+          "gatemate": [
+            "gatemate_partition_id",
+            "gatemate_input_hash",
+            "gatemate_output_hash",
+            "gatemate_status"
+          ],
+          "kv260": [
+            "kv260_partition_id",
+            "kv260_input_hash",
+            "kv260_output_hash",
+            "kv260_status"
+          ],
+          "polarfire": [
+            "polarfire_partition_id",
+            "polarfire_input_hash",
+            "polarfire_output_hash",
+            "polarfire_status"
+          ]
+        },
+        "update_count": 4,
+        "update_schedule_type": "board_neutral_maxsat_batch"
+      },
+      "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+      "soft_preferences": [
+        {
+          "id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+          "type": "value_reward",
+          "value": "accept",
+          "variable": "verdict",
+          "weight": 10
+        },
+        {
+          "id": "SP_EVIDENCE_PRESENT",
+          "type": "value_reward",
+          "value": "present",
+          "variable": "evidence",
+          "weight": 2
+        }
+      ],
+      "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+      "source_instance_id": "claim_infeasible_negative_control",
+      "status": "ready",
+      "typed_variables": [
+        {
+          "domain": [
+            "reject",
+            "accept"
+          ],
+          "name": "verdict",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        },
+        {
+          "domain": [
+            "absent",
+            "present"
+          ],
+          "name": "evidence",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        }
+      ],
+      "update_schedule": {
+        "board_neutral": true,
+        "type": "board_neutral_maxsat_batch",
+        "update_count": 4
+      }
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "bounded descriptor workload only; no board timing or speedup claim",
+        "solver_speedup_claim_allowed": false,
+        "speedup_claim_allowed": false
+      },
+      "descriptor_id": "csp:micro_schedule_all_different",
+      "descriptor_style": "csp",
+      "domains": {
+        "task_a": [
+          0,
+          1,
+          2
+        ],
+        "task_b": [
+          0,
+          1,
+          2
+        ],
+        "task_c": [
+          0,
+          1,
+          2
+        ]
+      },
+      "exact_fallback": {
+        "agreement_with_expected": true,
+        "complete": true,
+        "feasible_assignment_count": 6,
+        "objective_score": 7.0,
+        "required": true,
+        "solution": {
+          "task_a": 0,
+          "task_b": 1,
+          "task_c": 2
+        },
+        "solution_hash": "399830ef0e227cfedfaec02553a3d602dcada7ac15f1147732a340523afcc93e",
+        "solver": "deterministic_finite_domain_enumerator",
+        "status": "optimal"
+      },
+      "expected_outputs": {
+        "objective_score": 7.0,
+        "solution": {
+          "task_a": 0,
+          "task_b": 1,
+          "task_c": 2
+        },
+        "solution_hash": "399830ef0e227cfedfaec02553a3d602dcada7ac15f1147732a340523afcc93e",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_DISTINCT_TASKS",
+          "type": "all_different",
+          "variables": [
+            "task_a",
+            "task_b",
+            "task_c"
+          ]
+        },
+        {
+          "id": "HC_A_NOT_C",
+          "left": "task_a",
+          "right": "task_c",
+          "type": "not_equal"
+        }
+      ],
+      "objective_weights": {
+        "SP_A_EARLY": 3.0,
+        "SP_B_MIDDLE": 2.0,
+        "SP_C_LATE": 2.0
+      },
+      "partition_id": "csp_schedule_partition",
+      "partition_update": {
+        "board_neutral": true,
+        "boundary_variables": [
+          "task_c"
+        ],
+        "descriptor_input_hash": "47d48b48dda2007e7510fdfed43f2beab9ea38aee6d9727feaebec49ce8e18e5",
+        "expected_output_hash": "144336ade24d8c764bba3d1a1fce3c801d0d2d1305e9c756e94c44e1e98b159f",
+        "partition_id": "csp_schedule_partition",
+        "partition_scope": [
+          "task_a",
+          "task_b"
+        ],
+        "receipt_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "target_receipt_fields": {
+          "cpu": [
+            "cpu_partition_id",
+            "cpu_input_hash",
+            "cpu_output_hash",
+            "cpu_status"
+          ],
+          "cuda": [
+            "cuda_partition_id",
+            "cuda_input_hash",
+            "cuda_output_hash",
+            "cuda_status"
+          ],
+          "gatemate": [
+            "gatemate_partition_id",
+            "gatemate_input_hash",
+            "gatemate_output_hash",
+            "gatemate_status"
+          ],
+          "kv260": [
+            "kv260_partition_id",
+            "kv260_input_hash",
+            "kv260_output_hash",
+            "kv260_status"
+          ],
+          "polarfire": [
+            "polarfire_partition_id",
+            "polarfire_input_hash",
+            "polarfire_output_hash",
+            "polarfire_status"
+          ]
+        },
+        "update_count": 5,
+        "update_schedule_type": "board_neutral_csp_batch"
+      },
+      "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+      "soft_preferences": [
+        {
+          "id": "SP_A_EARLY",
+          "type": "value_reward",
+          "value": 0,
+          "variable": "task_a",
+          "weight": 3
+        },
+        {
+          "id": "SP_B_MIDDLE",
+          "type": "value_reward",
+          "value": 1,
+          "variable": "task_b",
+          "weight": 2
+        },
+        {
+          "id": "SP_C_LATE",
+          "type": "value_reward",
+          "value": 2,
+          "variable": "task_c",
+          "weight": 2
+        }
+      ],
+      "source_artifact": "built_in_finite_domain_csp_rows",
+      "source_instance_id": "csp:micro_schedule_all_different",
+      "status": "ready",
+      "typed_variables": [
+        {
+          "domain": [
+            0,
+            1,
+            2
+          ],
+          "name": "task_a",
+          "role": "partition_control",
+          "variable_type": "integer"
+        },
+        {
+          "domain": [
+            0,
+            1,
+            2
+          ],
+          "name": "task_b",
+          "role": "partition_control",
+          "variable_type": "integer"
+        },
+        {
+          "domain": [
+            0,
+            1,
+            2
+          ],
+          "name": "task_c",
+          "role": "boundary_context",
+          "variable_type": "integer"
+        }
+      ],
+      "update_schedule": {
+        "board_neutral": true,
+        "type": "board_neutral_csp_batch",
+        "update_count": 5
+      }
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "bounded descriptor workload only; no board timing or speedup claim",
+        "solver_speedup_claim_allowed": false,
+        "speedup_claim_allowed": false
+      },
+      "descriptor_id": "csp:boundary_coloring",
+      "descriptor_style": "csp",
+      "domains": {
+        "color_left": [
+          "red",
+          "green",
+          "blue"
+        ],
+        "color_mid": [
+          "red",
+          "green",
+          "blue"
+        ],
+        "color_right": [
+          "red",
+          "green",
+          "blue"
+        ]
+      },
+      "exact_fallback": {
+        "agreement_with_expected": true,
+        "complete": true,
+        "feasible_assignment_count": 8,
+        "objective_score": 8.0,
+        "required": true,
+        "solution": {
+          "color_left": "red",
+          "color_mid": "green",
+          "color_right": "red"
+        },
+        "solution_hash": "0d110cf4cfd9fe67714504f5f1a729d10705d6323e31ff4f67fdec227205c275",
+        "solver": "deterministic_finite_domain_enumerator",
+        "status": "optimal"
+      },
+      "expected_outputs": {
+        "objective_score": 8.0,
+        "solution": {
+          "color_left": "red",
+          "color_mid": "green",
+          "color_right": "red"
+        },
+        "solution_hash": "0d110cf4cfd9fe67714504f5f1a729d10705d6323e31ff4f67fdec227205c275",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_LEFT_MID_DIFF",
+          "left": "color_left",
+          "right": "color_mid",
+          "type": "not_equal"
+        },
+        {
+          "id": "HC_MID_RIGHT_DIFF",
+          "left": "color_mid",
+          "right": "color_right",
+          "type": "not_equal"
+        },
+        {
+          "id": "HC_LEFT_NOT_BLUE",
+          "literals": [
+            {
+              "equals": "red",
+              "variable": "color_left"
+            },
+            {
+              "equals": "green",
+              "variable": "color_left"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "objective_weights": {
+        "SP_EDGE_DIVERSITY_ADVISORY": 1.0,
+        "SP_LEFT_RED": 3.0,
+        "SP_MID_GREEN": 3.0,
+        "SP_RIGHT_RED": 2.0
+      },
+      "partition_id": "csp_coloring_partition",
+      "partition_update": {
+        "board_neutral": true,
+        "boundary_variables": [
+          "color_right"
+        ],
+        "descriptor_input_hash": "10e236528a994cfe5323f69055287f2ffe652c5ff166d9feb0b4235bbe92af5e",
+        "expected_output_hash": "3e0cb78e0be4d289f48365b00ad2794c627578c3b476dc14211d7c479592904f",
+        "partition_id": "csp_coloring_partition",
+        "partition_scope": [
+          "color_left",
+          "color_mid"
+        ],
+        "receipt_targets": [
+          "cpu",
+          "cuda",
+          "kv260",
+          "gatemate",
+          "polarfire"
+        ],
+        "target_receipt_fields": {
+          "cpu": [
+            "cpu_partition_id",
+            "cpu_input_hash",
+            "cpu_output_hash",
+            "cpu_status"
+          ],
+          "cuda": [
+            "cuda_partition_id",
+            "cuda_input_hash",
+            "cuda_output_hash",
+            "cuda_status"
+          ],
+          "gatemate": [
+            "gatemate_partition_id",
+            "gatemate_input_hash",
+            "gatemate_output_hash",
+            "gatemate_status"
+          ],
+          "kv260": [
+            "kv260_partition_id",
+            "kv260_input_hash",
+            "kv260_output_hash",
+            "kv260_status"
+          ],
+          "polarfire": [
+            "polarfire_partition_id",
+            "polarfire_input_hash",
+            "polarfire_output_hash",
+            "polarfire_status"
+          ]
+        },
+        "update_count": 7,
+        "update_schedule_type": "board_neutral_csp_batch"
+      },
+      "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+      "soft_preferences": [
+        {
+          "id": "SP_LEFT_RED",
+          "type": "value_reward",
+          "value": "red",
+          "variable": "color_left",
+          "weight": 3
+        },
+        {
+          "id": "SP_MID_GREEN",
+          "type": "value_reward",
+          "value": "green",
+          "variable": "color_mid",
+          "weight": 3
+        },
+        {
+          "id": "SP_RIGHT_RED",
+          "type": "value_reward",
+          "value": "red",
+          "variable": "color_right",
+          "weight": 2
+        },
+        {
+          "id": "SP_EDGE_DIVERSITY_ADVISORY",
+          "left": "color_left",
+          "right": "color_right",
+          "type": "pairwise_difference_reward",
+          "weight": 1
+        }
+      ],
+      "source_artifact": "built_in_finite_domain_csp_rows",
+      "source_instance_id": "csp:boundary_coloring",
+      "status": "ready",
+      "typed_variables": [
+        {
+          "domain": [
+            "red",
+            "green",
+            "blue"
+          ],
+          "name": "color_left",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        },
+        {
+          "domain": [
+            "red",
+            "green",
+            "blue"
+          ],
+          "name": "color_mid",
+          "role": "partition_control",
+          "variable_type": "categorical"
+        },
+        {
+          "domain": [
+            "red",
+            "green",
+            "blue"
+          ],
+          "name": "color_right",
+          "role": "boundary_context",
+          "variable_type": "categorical"
+        }
+      ],
+      "update_schedule": {
+        "board_neutral": true,
+        "type": "board_neutral_csp_batch",
+        "update_count": 7
+      }
+    }
+  ],
+  "experiment_id": "exp5505-active-constraint-milp-descriptor-v499",
+  "hardware_speedup_claim": false,
+  "schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+  "source_artifacts": [
+    "built_in_finite_domain_csp_rows",
+    "built_in_finite_domain_milp_rows",
+    "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "constraint_types": [
+    "all_different",
+    "clause",
+    "linear_eq",
+    "linear_ge",
+    "linear_le",
+    "not_equal"
+  ],
+  "descriptor_schema": "carnot.descriptor.active_constraint_milp_maxsat_csp.v1",
+  "descriptor_styles": [
+    "milp",
+    "maxsat",
+    "csp"
+  ],
+  "hardware_speedup_claim_allowed": false,
+  "hardware_targets": [
+    "cpu",
+    "cuda",
+    "kv260",
+    "gatemate",
+    "polarfire"
+  ],
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "preference_types": [
+    "linear_reward",
+    "pairwise_difference_reward",
+    "value_reward"
+  ],
+  "required_artifact_fields": [
+    "descriptor_paths",
+    "schema_paths",
+    "test_paths",
+    "num_descriptor_rows",
+    "milp_style_rows",
+    "maxsat_style_rows",
+    "csp_style_rows",
+    "exact_fallback_agreement_rate",
+    "partition_update_fields_present",
+    "descriptor_ready_for_hardware",
+    "hardware_speedup_claim",
+    "inference_substrate",
+    "honest_verdict"
+  ],
+  "required_descriptor_fields": [
+    "descriptor_id",
+    "descriptor_style",
+    "schema",
+    "source_artifact",
+    "typed_variables",
+    "domains",
+    "hard_constraints",
+    "soft_preferences",
+    "objective_weights",
+    "update_schedule",
+    "partition_id",
+    "partition_update",
+    "admissible_hardware_mapping",
+    "expected_outputs",
+    "exact_fallback",
+    "status"
+  ],
+  "schema": "carnot.schema.active_constraint_descriptor_bundle.v1"
+}
