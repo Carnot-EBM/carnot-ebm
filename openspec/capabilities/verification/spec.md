@@ -28367,6 +28367,99 @@ true, then Exp5477 SHALL write
 |---|---|---|
 | REQ-VERIFY-5477 | Planned (`python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py`, `results/experiment_5477_pdit_lns_boundary_exchange_v497.json`) | Planned (`tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py`) |
 
+### REQ-VERIFY-5491: Portable Active-Constraint Subproblem Descriptors V498
+
+The repository SHALL provide Exp 5491 at
+`python/carnot/experiment_5491_active_constraint_subproblem_descriptor_v498.py`
+and write
+`results/experiment_5491_active_constraint_subproblem_descriptor_v498.json`
+without invoking a live LLM, generated-text judge, hardware sampler, board
+timing path, hardware performance comparison, hardware speedup claim, or
+modifying `scripts/research_conductor.py`. Exp 5491 SHALL emit portable
+active-constraint subproblem descriptors for exact solvers, p-bit/p-dit
+relaxation planning, and Preference-MaxSAT hard/soft rows before any hardware
+run.
+
+Each descriptor SHALL include the portable fields `variables`, `domains`,
+`hard_constraints`, `soft_preferences`, `coupling_type`, `update_schedule`,
+`partition_id`, `exact_fallback`, and `admissible_hardware_mapping`.
+Descriptors built from p-bit/p-dit fixtures SHALL reuse the bounded Exp 5477
+SAT, MaxCut, and assignment-style workload definitions where available.
+Preference-MaxSAT descriptors SHALL load
+`results/experiment_5485_preference_maxsat_claim_fixture_v498.json` when that
+artifact is present and SHALL otherwise use deterministic local hard/soft rows
+with the same descriptor contract. The hardware mapping field SHALL be
+advisory-only, SHALL record that board timing was not collected, and SHALL NOT
+authorize a hardware speedup claim.
+
+The runner SHALL canonicalize each descriptor, round-trip it through JSON, run
+or preserve a deterministic exact fallback for every descriptor, compare the
+fallback against a canonical reference hash, and record partition/update
+telemetry before declaring the descriptor solved. A descriptor SHALL NOT be
+marked solved unless exact fallback is complete and the canonical reference
+agrees with the solved assignment. Advisory p-bit, p-dit, or Preference-MaxSAT
+rows MAY improve a baseline score only as guidance; they SHALL NOT certify
+correctness, replace exact fallback, or imply hardware acceleration.
+
+The artifact SHALL include top-level fields `descriptor_count`,
+`variable_count_summary`, `hard_constraint_count_summary`,
+`soft_preference_count_summary`, `partition_count_summary`,
+`update_schedule_types`, `descriptor_roundtrip_rate`,
+`exact_fallback_completeness`, `unsafe_false_accept_count`,
+`advisory_improvement_delta`, `hardware_speedup_claim`,
+`subproblem_descriptor_ready`, `inference_substrate`, `random_seed`, and
+`honest_verdict`, with field principles explaining each required field.
+`inference_substrate` SHALL equal `deterministic_descriptor_no_llm`.
+`hardware_speedup_claim` SHALL be false. `honest_verdict` SHALL start with
+`complete:` or `blocked:`. `subproblem_descriptor_ready` SHALL be true only
+when descriptor round-trip integrity is 1.0, exact fallback completeness is
+1.0, unsafe false accepts are zero, update schedules and partition telemetry
+are present, and no hardware timing or speedup claim is made.
+
+Required field principles:
+
+- `descriptor_count`: principle "portable descriptor coverage"
+- `variable_count_summary`: principle "descriptor variable scale"
+- `hard_constraint_count_summary`: principle "exact hard-row coverage"
+- `soft_preference_count_summary`: principle "Preference-MaxSAT and advisory objective coverage"
+- `partition_count_summary`: principle "partition telemetry before hardware run"
+- `update_schedule_types`: principle "p-bit, p-dit, and MaxSAT schedule coverage"
+- `descriptor_roundtrip_rate`: principle "canonical JSON portability"
+- `exact_fallback_completeness`: principle "exact fallback final authority"
+- `unsafe_false_accept_count`: principle "advisory safety boundary"
+- `advisory_improvement_delta`: principle "advisory utility without correctness authority"
+- `hardware_speedup_claim`: principle "must remain false"
+- `subproblem_descriptor_ready`: principle "downstream descriptor gate"
+- `inference_substrate`: principle "deterministic descriptor generation with no LLM"
+- `random_seed`: principle "deterministic replay seed"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+### SCENARIO-VERIFY-5491: Descriptors Cannot Be Solved Without Exact Reference Agreement
+
+Given bounded p-bit/p-dit fixtures and Preference-MaxSAT hard/soft rows, when
+Exp 5491 builds active-constraint subproblem descriptors, then every descriptor
+records variables, domains, hard constraints, soft preferences, coupling type,
+update schedule, partition ID, exact fallback, advisory hardware mapping, and
+canonical reference hash. Every descriptor round-trips through canonical JSON,
+records partition/update telemetry, and is marked solved only after exact
+fallback completeness and canonical reference agreement are both true.
+
+If any descriptor is marked solved without complete exact fallback, if the
+canonical reference hash disagrees with the fallback assignment, if a p-bit,
+p-dit, or Preference-MaxSAT advisory row is accepted as authoritative, if
+partition/update telemetry is missing, if `inference_substrate` differs from
+`deterministic_descriptor_no_llm`, or if `hardware_speedup_claim` is true, then
+Exp 5491 SHALL write
+`results/experiment_5491_active_constraint_subproblem_descriptor_v498.json`
+with `subproblem_descriptor_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5491)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5491 | Planned (`python/carnot/experiment_5491_active_constraint_subproblem_descriptor_v498.py`, `results/experiment_5491_active_constraint_subproblem_descriptor_v498.json`) | Planned (`tests/python/test_experiment_5491_active_constraint_subproblem_descriptor_v498.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
