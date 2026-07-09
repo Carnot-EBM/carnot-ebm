@@ -1,0 +1,679 @@
+{
+  "context_token_cost_delta": 0.08596,
+  "csl_scale_ready": true,
+  "delta_vs_naive_icl": 0.5,
+  "delta_vs_no_memory": 0.75,
+  "duration_s": 99.832308,
+  "exact_validator_pass_rate": 1.0,
+  "experiment_id": "experiment_5474_sota_csl_scale_v497",
+  "field_principles": {
+    "context_token_cost_delta": "context/token budget accounting.",
+    "csl_scale_ready": "downstream readiness gate for the scale-up.",
+    "delta_vs_naive_icl": "KAN-assured utility against naive memory.",
+    "delta_vs_no_memory": "KAN-assured utility against no-memory.",
+    "exact_validator_pass_rate": "final-authority pass rate.",
+    "gpu_offload_receipts": "no CPU-only headline evidence.",
+    "headline_models_run": "mandated model IDs that actually support the headline.",
+    "honest_verdict": "terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "local SOTA GGUF llama.cpp or blocked declaration.",
+    "kan_assured_csl_score": "exact-validator score after KAN assurance gating.",
+    "model_file_checksums": "before/after model-file mutation evidence.",
+    "model_specs": "all mandated SOTA GGUF specs and resolved path status.",
+    "model_weight_mutation": "frozen base-model and adapter boundary.",
+    "n_samples": "count of comparable panel task IDs.",
+    "naive_icl_score": "exact-validator baseline with naive in-context memory.",
+    "negative_transfer_deflection_rate": "poisoned or stale memory guard.",
+    "no_memory_score": "exact-validator baseline without memory.",
+    "random_seed": "deterministic run seed.",
+    "rollback_trigger_count": "retired-evidence rollback accounting.",
+    "threshold_offset_summary": "KAN assurance threshold accounting."
+  },
+  "gpu_offload_receipts": [
+    {
+      "current_runtime_ready": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "n_gpu_layers": -1,
+      "offload_verified": true,
+      "pre_generation": true,
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "source_load_receipt": {
+        "gpu_memory_after": [
+          {
+            "index": "0",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 8604,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": "1",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 8518,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 100
+          }
+        ],
+        "gpu_memory_before": [
+          {
+            "index": "0",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": "1",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          }
+        ],
+        "gpu_memory_delta_mb": 8600,
+        "load_duration_s": 8.026386888697743,
+        "n_gpu_layers": -1,
+        "offload_evidence": true
+      },
+      "upstream_experiment": "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
+    }
+  ],
+  "headline_models_run": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "honest_verdict": "complete: local SOTA GGUF CSL scale-up used KAN assurance with frozen weights",
+  "inference_substrate": "local_sota_gguf_llama_cpp_or_blocked",
+  "kan_assured_csl_score": 1.0,
+  "milestone": "2026.07.497",
+  "model_file_checksums": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "sha256_after": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "sha256_before": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "unchanged": true
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "sha256_after": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "sha256_before": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744,
+      "unchanged": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "sha256_after": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "sha256_before": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "unchanged": true
+    }
+  },
+  "model_specs": [
+    {
+      "headline_required": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_smoke_only": false,
+      "local_model_present": true,
+      "model_file_size_bytes": 22134528992,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "quantization": "Q4_K_M",
+      "role": "flagship_moe",
+      "spec_order": 0
+    },
+    {
+      "headline_required": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_smoke_only": false,
+      "local_model_present": true,
+      "model_file_size_bytes": 18323731456,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense",
+      "spec_order": 1
+    },
+    {
+      "headline_required": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_smoke_only": false,
+      "local_model_present": true,
+      "model_file_size_bytes": 16947539744,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "quantization": "Q4_K_M",
+      "role": "middle_moe",
+      "spec_order": 2
+    }
+  ],
+  "model_weight_mutation": false,
+  "n_samples": 4,
+  "naive_icl_score": 0.5,
+  "negative_transfer_deflection_rate": 1.0,
+  "no_memory_score": 0.25,
+  "panel_rows": [
+    {
+      "accepted_by_final_authority": false,
+      "action_decision": {
+        "downstream_action_passed": false,
+        "selected_answer": "unknown"
+      },
+      "case_family": "repeated_task",
+      "condition": "no_memory",
+      "context_token_cost": 62,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "no_memory",
+        "memory_ids": [],
+        "memory_line_count": 0
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "repeated_task"
+      ],
+      "row_id": "5461-a1-repeat-gasket",
+      "source_condition": "no_memory",
+      "source_row_checksum": "sha256:6866277b3e4b53ba891d6fc02a157c68225c6263c94cde7b9664dfac49b63026",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-a1-repeat-gasket",
+      "threshold_offset": 0.0,
+      "token_cost": 63,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": true,
+      "action_decision": {
+        "downstream_action_passed": true,
+        "selected_answer": "blue-crate-17"
+      },
+      "case_family": "repeated_task",
+      "condition": "naive_icl",
+      "context_token_cost": 95,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-a1-repeat-gasket:naive_icl:memory-1",
+          "5461-a1-repeat-gasket:naive_icl:memory-2"
+        ],
+        "memory_line_count": 2
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "repeated_task"
+      ],
+      "row_id": "5461-a1-repeat-gasket",
+      "source_condition": "naive_icl",
+      "source_row_checksum": "sha256:3ddd730753167a1a165ab13bfe15fc236e4dc21236241e840b978b10754a5b88",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-a1-repeat-gasket",
+      "threshold_offset": 0.0,
+      "token_cost": 101,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "action_decision": {
+        "downstream_action_passed": true,
+        "selected_answer": "blue-crate-17"
+      },
+      "case_family": "repeated_task",
+      "condition": "kan_assured_csl",
+      "context_token_cost": 77,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-a1-repeat-gasket:governed_memory:memory-1"
+        ],
+        "memory_line_count": 1
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "repeated_task"
+      ],
+      "row_id": "5461-a1-repeat-gasket",
+      "source_condition": "policy_selected",
+      "source_row_checksum": "sha256:aaed6147c30da6be7549dc7199aae6a5954b15091d1ab1bdbe03723eb3ff41b1",
+      "source_surrogate_checksum": "sha256:aaed6147c30da6be7549dc7199aae6a5954b15091d1ab1bdbe03723eb3ff41b1",
+      "surrogate_accept": true,
+      "surrogate_acceptance_margin": 0.1989,
+      "task_id": "5461-a1-repeat-gasket",
+      "threshold_offset": 0.01,
+      "token_cost": 101,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": false,
+      "action_decision": {
+        "downstream_action_passed": false,
+        "selected_answer": "unknown"
+      },
+      "case_family": "poisoned_memory",
+      "condition": "no_memory",
+      "context_token_cost": 65,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "no_memory",
+        "memory_ids": [],
+        "memory_line_count": 0
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "conflicting_memory",
+        "downstream_action_use"
+      ],
+      "row_id": "5461-b1-poisoned-vendor",
+      "source_condition": "no_memory",
+      "source_row_checksum": "sha256:76f5c90bc4cc2cb679230ba694a41077ad851019c9ef67266b3cd86c859398c3",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-b1-poisoned-vendor",
+      "threshold_offset": 0.0,
+      "token_cost": 66,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": false,
+      "action_decision": {
+        "downstream_action_passed": false,
+        "selected_answer": "vendor-B"
+      },
+      "case_family": "poisoned_memory",
+      "condition": "naive_icl",
+      "context_token_cost": 79,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-b1-poisoned-vendor:naive_icl:memory-1"
+        ],
+        "memory_line_count": 1
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": true,
+      "panel_task_tags": [
+        "conflicting_memory",
+        "downstream_action_use"
+      ],
+      "row_id": "5461-b1-poisoned-vendor",
+      "source_condition": "naive_icl",
+      "source_row_checksum": "sha256:28883b7ab0848a42c39df40b60e769eff8a2ad68bff6791a5929fc94589ad995",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-b1-poisoned-vendor",
+      "threshold_offset": 0.0,
+      "token_cost": 103,
+      "verifier_cost": 3
+    },
+    {
+      "accepted_by_final_authority": true,
+      "action_decision": {
+        "downstream_action_passed": true,
+        "selected_answer": "vendor-A"
+      },
+      "case_family": "poisoned_memory",
+      "condition": "kan_assured_csl",
+      "context_token_cost": 79,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-b1-poisoned-vendor:governed_memory:memory-1"
+        ],
+        "memory_line_count": 1
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "conflicting_memory",
+        "downstream_action_use"
+      ],
+      "row_id": "5461-b1-poisoned-vendor",
+      "source_condition": "policy_selected",
+      "source_row_checksum": "sha256:e083d54c41bb55761376af9e2f51015bbf78ee15203a0cd55288314a11c195cf",
+      "source_surrogate_checksum": "sha256:e083d54c41bb55761376af9e2f51015bbf78ee15203a0cd55288314a11c195cf",
+      "surrogate_accept": true,
+      "surrogate_acceptance_margin": 0.0978,
+      "task_id": "5461-b1-poisoned-vendor",
+      "threshold_offset": 0.03,
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": false,
+      "action_decision": {
+        "downstream_action_passed": false,
+        "selected_answer": "unknown"
+      },
+      "case_family": "stale_memory",
+      "condition": "no_memory",
+      "context_token_cost": 63,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "no_memory",
+        "memory_ids": [],
+        "memory_line_count": 0
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "conflicting_memory"
+      ],
+      "row_id": "5461-c1-stale-queue",
+      "source_condition": "no_memory",
+      "source_row_checksum": "sha256:ff88b0867e709017e6145ca4cc4151ee4766f13beb0b4efe7f42a25bffcc8366",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-c1-stale-queue",
+      "threshold_offset": 0.0,
+      "token_cost": 64,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": false,
+      "action_decision": {
+        "downstream_action_passed": false,
+        "selected_answer": "queue-alpha"
+      },
+      "case_family": "stale_memory",
+      "condition": "naive_icl",
+      "context_token_cost": 76,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-c1-stale-queue:naive_icl:memory-1"
+        ],
+        "memory_line_count": 1
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": true,
+      "panel_task_tags": [
+        "conflicting_memory"
+      ],
+      "row_id": "5461-c1-stale-queue",
+      "source_condition": "naive_icl",
+      "source_row_checksum": "sha256:4650ed0001d03bfcdf6992305fe9af8db7808662316000bd0170e6dd357a4e19",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-c1-stale-queue",
+      "threshold_offset": 0.0,
+      "token_cost": 79,
+      "verifier_cost": 3
+    },
+    {
+      "accepted_by_final_authority": true,
+      "action_decision": {
+        "downstream_action_passed": true,
+        "selected_answer": "queue-beta"
+      },
+      "case_family": "stale_memory",
+      "condition": "kan_assured_csl",
+      "context_token_cost": 79,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-c1-stale-queue:governed_memory:memory-1"
+        ],
+        "memory_line_count": 1
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "conflicting_memory"
+      ],
+      "row_id": "5461-c1-stale-queue",
+      "source_condition": "policy_selected",
+      "source_row_checksum": "sha256:45e3e004f02a242bcb8b7b9bf5d2eba416a3eb7ed51a70c1187af59d76a10a3b",
+      "source_surrogate_checksum": "sha256:45e3e004f02a242bcb8b7b9bf5d2eba416a3eb7ed51a70c1187af59d76a10a3b",
+      "surrogate_accept": true,
+      "surrogate_acceptance_margin": 0.0453,
+      "task_id": "5461-c1-stale-queue",
+      "threshold_offset": 0.0425,
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "action_decision": {
+        "downstream_action_passed": true,
+        "selected_answer": "K-42"
+      },
+      "case_family": "no_memory_competitive",
+      "condition": "no_memory",
+      "context_token_cost": 84,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "no_memory",
+        "memory_ids": [
+          "5461-d1-fresh-ticket:no_memory:memory-1"
+        ],
+        "memory_line_count": 1
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "support_removal",
+        "downstream_action_use"
+      ],
+      "row_id": "5461-d1-fresh-ticket",
+      "source_condition": "no_memory",
+      "source_row_checksum": "sha256:888323ac327b81590db01ef6a471962c876992327a97509fd734289032f5de3b",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-d1-fresh-ticket",
+      "threshold_offset": 0.0,
+      "token_cost": 108,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": true,
+      "action_decision": {
+        "downstream_action_passed": true,
+        "selected_answer": "K-42"
+      },
+      "case_family": "no_memory_competitive",
+      "condition": "naive_icl",
+      "context_token_cost": 99,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-d1-fresh-ticket:naive_icl:memory-1",
+          "5461-d1-fresh-ticket:naive_icl:memory-2"
+        ],
+        "memory_line_count": 2
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "support_removal",
+        "downstream_action_use"
+      ],
+      "row_id": "5461-d1-fresh-ticket",
+      "source_condition": "naive_icl",
+      "source_row_checksum": "sha256:4356534d4f28aed604c9c58a16cbab31f3a3e8f64cd72cf9629e03d9e06ad007",
+      "source_surrogate_checksum": "",
+      "surrogate_accept": null,
+      "surrogate_acceptance_margin": null,
+      "task_id": "5461-d1-fresh-ticket",
+      "threshold_offset": 0.0,
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "action_decision": {
+        "downstream_action_passed": true,
+        "selected_answer": "K-42"
+      },
+      "case_family": "no_memory_competitive",
+      "condition": "kan_assured_csl",
+      "context_token_cost": 84,
+      "exact_validator_authority": "exact_task_verifier",
+      "final_authority_bypassed": false,
+      "memory_decision": {
+        "effective_condition": "no_memory",
+        "memory_ids": [
+          "5461-d1-fresh-ticket:no_memory:memory-1"
+        ],
+        "memory_line_count": 1
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "panel_task_tags": [
+        "support_removal",
+        "downstream_action_use"
+      ],
+      "row_id": "5461-d1-fresh-ticket",
+      "source_condition": "policy_selected",
+      "source_row_checksum": "sha256:3facd99cad08b6e453c49c2b95d6a8c57b38175ae728a2dca879f732a263da1b",
+      "source_surrogate_checksum": "sha256:3facd99cad08b6e453c49c2b95d6a8c57b38175ae728a2dca879f732a263da1b",
+      "surrogate_accept": true,
+      "surrogate_acceptance_margin": 0.2468,
+      "task_id": "5461-d1-fresh-ticket",
+      "threshold_offset": 0.0,
+      "token_cost": 108,
+      "verifier_cost": 1
+    }
+  ],
+  "random_seed": 5474,
+  "reproducibility_checksum": "sha256:e1ef16f5b2a305adec998a7681ca047b35097d5bb95ee357a680c11b70db347e",
+  "research_conductor_modified": false,
+  "rollback_trigger_count": 1,
+  "row_ids_by_condition": {
+    "kan_assured_csl": [
+      "5461-a1-repeat-gasket",
+      "5461-b1-poisoned-vendor",
+      "5461-c1-stale-queue",
+      "5461-d1-fresh-ticket"
+    ],
+    "naive_icl": [
+      "5461-a1-repeat-gasket",
+      "5461-b1-poisoned-vendor",
+      "5461-c1-stale-queue",
+      "5461-d1-fresh-ticket"
+    ],
+    "no_memory": [
+      "5461-a1-repeat-gasket",
+      "5461-b1-poisoned-vendor",
+      "5461-c1-stale-queue",
+      "5461-d1-fresh-ticket"
+    ]
+  },
+  "run_date": "2026-07-09",
+  "runtime_precondition_receipt": {
+    "blocked_reasons": [],
+    "cuda_device_count": 2,
+    "cuda_visible": true,
+    "llama_cpp_gpu_offload": true,
+    "raw_receipt": {
+      "blocked_preconditions": [],
+      "cuda_visible": true,
+      "gpu_offload_supported": true,
+      "llama_cpp": {
+        "gpu_offload_supported": true,
+        "import_ok": true,
+        "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | "
+      },
+      "llama_cpp_import_ok": true,
+      "n_gpu_layers": -1,
+      "nvidia_smi": {
+        "gpus": [
+          {
+            "index": "0",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": "1",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          }
+        ],
+        "ok": true,
+        "stderr": ""
+      },
+      "offload_evidence": true,
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "torch_cuda": {
+        "cuda_available": true,
+        "device_count": 2,
+        "import_ok": true
+      }
+    },
+    "runtime_backend": "llama_cpp_python_cuda_gguf",
+    "runtime_ready": true
+  },
+  "schema": "carnot.experiment_5474.sota_csl_scale.v497",
+  "source_artifacts": [
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
+    "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+  ],
+  "source_file_checksums": {
+    "module": "sha256:7767ab31aa6b283b6aa2d59898b2f57d9bfe194f77fd028fd8ea83c68ab8d188",
+    "spec": "sha256:d76a36ef3fbf89e8179cee4bfdd4fb3ac7fec1618a2db577badf25362169b625",
+    "upstream_assurance": "sha256:7431ddbb25410c26c1138e5cf7951fedb7100c0d8b66651490df362107cfa2e2",
+    "upstream_routing": "sha256:465d9e8de5afca22def9a46a7d1e8867516742ec8fee9b8b6c37cf1d65590db9"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5474_sota_csl_scale_v497.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "upstream_assurance": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
+    "upstream_routing": "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5474",
+    "SCENARIO-LEARN-5474-LIVE-OR-BLOCKED",
+    "SCENARIO-LEARN-5474-SAME-ROWS",
+    "SCENARIO-LEARN-5474-FROZEN-WEIGHTS"
+  ],
+  "task_id": "exp5474-v497-sota-csl-scale",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5474_sota_csl_scale_v497.py -q --no-cov -n 0",
+      "outcome": "reported"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5474_sota_csl_scale_v497.py -m pytest tests/python/test_experiment_5474_sota_csl_scale_v497.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5474_sota_csl_scale_v497.py --fail-under=100",
+      "outcome": "reported"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "reported"
+    }
+  ],
+  "threshold_offset_summary": {
+    "count": 4,
+    "max": 0.0425,
+    "mean": 0.020625,
+    "min": 0.0
+  }
+}

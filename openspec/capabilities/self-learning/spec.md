@@ -20644,3 +20644,116 @@ threshold offset than the lower-risk row.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5473 | Planned (`python/carnot/experiment_5473_csl_kan_surrogate_assurance_v497.py`, `results/experiment_5473_csl_kan_surrogate_assurance_v497.json`) | Planned (`tests/python/test_experiment_5473_csl_kan_surrogate_assurance_v497.py`) |
+
+---
+
+## REQ-LEARN-5474: SOTA GGUF CSL Scale-Up v497
+
+Experiment 5474 SHALL run or honestly block a local SOTA GGUF continuous
+self-learning scale-up panel using the Exp5473 KAN-assured frozen policy as
+the only adaptive decision state. The base model and adapter weights SHALL stay
+frozen; learning SHALL be limited to governed CSL memory/action routing
+receipts and policy-side state. The artifact SHALL declare
+`inference_substrate="local_sota_gguf_llama_cpp_or_blocked"`.
+
+The precondition gate SHALL verify a CUDA-enabled llama.cpp or native
+llama.cpp GGUF runtime, non-empty local `model_path` entries, and GPU-offload
+receipts before any headline readiness is allowed. `model_specs` SHALL include
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models MAY appear only as
+smoke-test metadata and SHALL NOT appear in `headline_models_run`. The
+implementation SHALL resolve GGUFs through the repo-standard SOTA cache
+resolver or `cached_sota_pair()` style model paths and SHALL NOT call
+`AutoTokenizer.from_pretrained` on GGUF repositories.
+
+The panel SHALL compare no-memory, naive in-context learning, and
+KAN-assured CSL policy conditions on identical row IDs. The panel SHALL cover
+repeated tasks, support-removal tasks, conflicting-memory tasks, and downstream action-use tasks.
+Every scored row SHALL include exact-validator evidence,
+context-token cost, verifier cost, memory/action decisions, and KAN threshold
+offsets when the KAN-assured CSL condition is evaluated.
+
+The result artifact SHALL be
+`results/experiment_5474_sota_csl_scale_v497.json` and SHALL include
+`model_specs`, `headline_models_run`, `n_samples`, `csl_scale_ready`,
+`no_memory_score`, `naive_icl_score`, `kan_assured_csl_score`,
+`delta_vs_no_memory`, `delta_vs_naive_icl`,
+`negative_transfer_deflection_rate`, `rollback_trigger_count`,
+`threshold_offset_summary`, `context_token_cost_delta`,
+`exact_validator_pass_rate`, `model_weight_mutation`, `gpu_offload_receipts`,
+`model_file_checksums`, `inference_substrate`, `random_seed`, and
+`honest_verdict`.
+
+The required field principles SHALL be:
+
+- `model_specs`: all mandated SOTA GGUF specs and resolved path status.
+- `headline_models_run`: mandated model IDs that actually support the headline.
+- `n_samples`: count of comparable panel task IDs.
+- `csl_scale_ready`: downstream readiness gate for the scale-up.
+- `no_memory_score`: exact-validator baseline without memory.
+- `naive_icl_score`: exact-validator baseline with naive in-context memory.
+- `kan_assured_csl_score`: exact-validator score after KAN assurance gating.
+- `delta_vs_no_memory`: KAN-assured utility against no-memory.
+- `delta_vs_naive_icl`: KAN-assured utility against naive memory.
+- `negative_transfer_deflection_rate`: poisoned or stale memory guard.
+- `rollback_trigger_count`: retired-evidence rollback accounting.
+- `threshold_offset_summary`: KAN assurance threshold accounting.
+- `context_token_cost_delta`: context/token budget accounting.
+- `exact_validator_pass_rate`: final-authority pass rate.
+- `model_weight_mutation`: frozen base-model and adapter boundary.
+- `gpu_offload_receipts`: no CPU-only headline evidence.
+- `model_file_checksums`: before/after model-file mutation evidence.
+- `inference_substrate`: local SOTA GGUF llama.cpp or blocked declaration.
+- `random_seed`: deterministic run seed.
+- `honest_verdict`: terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5474 Sub-requirements
+
+- REQ-LEARN-5474-1: Readiness SHALL require Exp5473
+  `csl_kan_surrogate_ready=true`, Exp5461 live SOTA routing evidence, all three
+  mandated local GGUF model specs with non-empty paths, at least one mandated
+  headline model run with verified GPU offload, and no legacy smoke-test
+  headline rows.
+- REQ-LEARN-5474-2: The same row IDs SHALL be present for no-memory,
+  naive-ICL, and KAN-assured CSL conditions; exact deterministic validators
+  SHALL be the final authority for quality and action-use pass rates.
+- REQ-LEARN-5474-3: The KAN-assured CSL condition SHALL record memory/action
+  decisions, threshold offsets, rollback counts, and negative-transfer
+  deflection using Exp5473 surrogate evidence rather than model
+  self-verdicts.
+- REQ-LEARN-5474-4: `model_file_checksums` SHALL record before/after checksum
+  or state receipts for local GGUF files, and `model_weight_mutation` SHALL be
+  false only when model and adapter weight receipts are unchanged.
+- REQ-LEARN-5474-5: If no mandated local SOTA model can run with verified GPU
+  offload, the artifact SHALL set `csl_scale_ready=false`, leave
+  `headline_models_run` empty, report `honest_verdict` with a `blocked:`
+  prefix, and SHALL NOT emit CPU-only headline results.
+
+### SCENARIO-LEARN-5474-LIVE-OR-BLOCKED: SOTA Runtime Gates Readiness
+
+**Given** the three mandated GGUF model specs are resolved and Exp5473 is
+ready
+**When** the current runtime lacks CUDA-visible llama.cpp GPU offload
+**Then** the deliverable is blocked with `csl_scale_ready=false`
+**And** no CPU-only model appears in `headline_models_run`.
+
+### SCENARIO-LEARN-5474-SAME-ROWS: Baselines Share Row IDs
+
+**Given** repeated, support-removal, conflicting-memory, and downstream
+action-use panel rows
+**When** no-memory, naive-ICL, and KAN-assured CSL scores are derived
+**Then** all three conditions use the same row IDs
+**And** deltas are computed from exact-validator pass rates over those rows.
+
+### SCENARIO-LEARN-5474-FROZEN-WEIGHTS: Scale-Up Does Not Mutate Weights
+
+**Given** a local GGUF file has before and after receipts
+**When** the scale-up artifact is validated
+**Then** changed model checksums or adapter-write receipts fail validation
+**And** a ready artifact requires `model_weight_mutation=false`.
+
+## Implementation Status (Exp 5474)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5474 | Planned (`python/carnot/experiment_5474_sota_csl_scale_v497.py`, `results/experiment_5474_sota_csl_scale_v497.json`) | Planned (`tests/python/test_experiment_5474_sota_csl_scale_v497.py`) |
