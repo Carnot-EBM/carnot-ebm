@@ -10590,3 +10590,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-08 23:36 UTC | Gated hardware timing receipts for p-bit sparsity  | OK | 88 passed, 1 warning in 11.49s |
 | 2026-07-08 23:50 UTC | ARC live-path measurement-access predicate inducti | OK | 86 passed, 1 warning in 11.83s |
 | 2026-07-09 00:04 UTC | Bounded KAN certificates for verifier-potential an | OK | 91 passed, 1 warning in 11.65s |
+| 2026-07-09 00:19 UTC | PRD gap and agent-failure table for .495 | OK | 88 passed, 1 warning in 8.56s |
