@@ -28839,3 +28839,18 @@ adds the following Carnot-local hooks.
   targets, offline BFS, and generic retired exploration signals.
 
 <!-- V498-PLANNER-REFRESH-20260709-END -->
+
+
+## V499 Execution Refresh - 20260709
+
+Execution-time sweep after the `.499` planner refresh checked arXiv primary pages and recent API results, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V499/V49x duplicate history, the Exp5497 pretest gate, and the exclusion manifest. Only non-duplicate actionable deltas are listed below.
+
+### New actionable delta
+- **Constrained Decoding for Diffusion Language Models via Efficient Inference over Finite Automata** (https://arxiv.org/abs/2607.07026): For any V499-or-later diffusion-LM structured-output pilot, compile JSON, tool-call, Sudoku, Countdown, or text-to-SQL constraints into a finite-automaton posterior and validate constraint satisfaction by construction. Keep this separate from autoregressive prefix masks and do not promote diffusion decoding as a current `.499` roadmap change without a local backend receipt.
+
+### Execution impact
+- **Plan impact:** No active `.499` roadmap edit is required. The delta is a future diffusion-LM structured-output fixture hook; V499 hard/soft exact validators, local GGUF receipts, and gate discipline remain unchanged.
+- **Duplicates suppressed:** Trajel, RT4CHART, ExpGraph, Evo-Memory, MILP-Evolve, Hamon, VeryTrace, the acoustic Ising machine, constrained API invocation, Resource-Aware Neuro-Symbolic Reasoning, NeuroSCA, Pitwall, LatentGym, EBT, ARM-EBM, Extropic, and Logical Intelligence context were already covered or stayed watch-only.
+- **Closed scope:** No closed scope was reopened. External logprob scorers, broad policy-gradient/RL/fine-tuning loops, duplicate ARC lanes, non-local TSU/Kona/Aleph execution claims, and hardware speedup claims without matched board timing remain closed.
+
+<!-- V499-EXECUTION-REFRESH-20260709-END -->
