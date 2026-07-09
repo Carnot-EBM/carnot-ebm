@@ -1,0 +1,833 @@
+{
+  "accepted_helper_count": 5,
+  "exact_recheck_pass_rate": 0.833333,
+  "experiment_id": "experiment_5476_helper_lemma_core_witness_repair_v497",
+  "failure_signature_count": 5,
+  "failure_signature_groups": [
+    {
+      "count": 2,
+      "failure_signature": "ast_kb:intent_mismatch+kb_missing_call",
+      "repeated": true,
+      "row_ids": [
+        "fixture.nonexistent_json_method",
+        "fixture.wrong_module_alias"
+      ]
+    },
+    {
+      "count": 1,
+      "failure_signature": "ast_kb:kb_missing_call",
+      "repeated": false,
+      "row_ids": [
+        "fixture.nonexistent_math_alias_method"
+      ]
+    },
+    {
+      "count": 1,
+      "failure_signature": "ast_kb:intent_mismatch+missing_import_for_bare_call",
+      "repeated": false,
+      "row_ids": [
+        "fixture.missing_bare_import"
+      ]
+    },
+    {
+      "count": 1,
+      "failure_signature": "ast_kb:imported_symbol_missing+intent_mismatch+kb_missing_call",
+      "repeated": false,
+      "row_ids": [
+        "fixture.imported_symbol_missing"
+      ]
+    },
+    {
+      "count": 1,
+      "failure_signature": "ast_kb:intent_mismatch",
+      "repeated": false,
+      "row_ids": [
+        "fixture.argument_intent_mismatch"
+      ]
+    }
+  ],
+  "false_accept_count": 0,
+  "field_principles": {
+    "accepted_helper_count": "helpers counted only after exact AST/KB recheck accepts.",
+    "exact_recheck_pass_rate": "final authority pass rate over helper candidates.",
+    "failure_signature_count": "pre-repair verifier signatures are grouped before repair.",
+    "false_accept_count": "exact recheck rejects unsupported helpers instead of trusting helper text.",
+    "helper_candidate_count": "bounded helper lemmas/contracts generated from row evidence only.",
+    "helper_lemma_repair_ready": "downstream gate for deterministic helper-contract witness repair.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "no hidden LLM, source lookup, or generated judgment.",
+    "random_seed": "deterministic row selection and ordering.",
+    "repeated_failure_reduction_rate": "measures solved rows from repeated pre-repair failure signatures.",
+    "witness_row_count": "bounded deterministic AST/KB witness rows selected for helper repair."
+  },
+  "helper_candidate_count": 6,
+  "helper_candidates": [
+    {
+      "accepted_after_exact_recheck": true,
+      "candidate_source": "import json\nresult = json.loads(payload)\n",
+      "exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "kb_lookup_results": [
+          {
+            "exists": true,
+            "fully_qualified_name": "json.loads",
+            "kb_source": "fallback_metadata",
+            "status": "known_module"
+          }
+        ],
+        "semantic_intent": {
+          "actual_call_fqns": [
+            "json.loads"
+          ],
+          "expected_call_fqns": [
+            "json.loads"
+          ],
+          "intent": "parse_json_to_object",
+          "matched": true
+        },
+        "witness_checksum": "4cf7d7bc3399a62f86d4bff984da8b77ae64d5ec86d17eef6964e3f19fe82137"
+      },
+      "failure_signature": "ast_kb:intent_mismatch+kb_missing_call",
+      "false_accept": false,
+      "generated_from": "witness_row_source_semantic_intent_and_kb_results",
+      "helper_contract": {
+        "actual_call_fqns": [
+          "json.parse"
+        ],
+        "expected_call_fqn": "json.loads",
+        "intent": "parse_json_to_object",
+        "statement": "API precondition for parse_json_to_object requires an exact KB-valid call to json.loads."
+      },
+      "helper_id": "5b1eb1665db142220b6cad69e976b2d64e4ffa5e69dc3bf4d0ea76340fd762ea",
+      "helper_kind": "api_member_precondition",
+      "rejection_reason": "",
+      "row_id": "fixture.nonexistent_json_method",
+      "semantics_changed_incorrectly": false,
+      "source_before": "import json\nresult = json.parse(payload)\n",
+      "source_fields_used": [
+        "source",
+        "semantic_intent",
+        "fully_qualified_call_sites",
+        "imported_symbol_checks",
+        "kb_lookup_results",
+        "reject_reasons"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": false,
+      "candidate_source": "import math\nresult = math.relu(x)\n",
+      "exact_recheck": {
+        "accepted": false,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "relu",
+            "col_offset": 9,
+            "fqn": "math.relu",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "math.relu(x)"
+          }
+        ],
+        "failure_reasons": [
+          "kb_missing_call:math.relu"
+        ],
+        "kb_lookup_results": [
+          {
+            "exists": false,
+            "fully_qualified_name": "math.relu",
+            "kb_source": "fallback_metadata",
+            "status": "known_module"
+          }
+        ],
+        "semantic_intent": {
+          "actual_call_fqns": [
+            "math.relu"
+          ],
+          "expected_call_fqns": [
+            "math.relu"
+          ],
+          "intent": "compute_relu",
+          "matched": true
+        },
+        "witness_checksum": "9167350d7c30b7b2b8b912b3f5aa0e3fb73d75aba5cbdf461344bf6c5769a871"
+      },
+      "failure_signature": "ast_kb:kb_missing_call",
+      "false_accept": false,
+      "generated_from": "witness_row_source_semantic_intent_and_kb_results",
+      "helper_contract": {
+        "actual_call_fqns": [
+          "math.relu"
+        ],
+        "expected_call_fqn": "math.relu",
+        "intent": "compute_relu",
+        "statement": "API precondition for compute_relu requires an exact KB-valid call to math.relu."
+      },
+      "helper_id": "59e183b84bea0345c524ed6b8e74f9e108369bf59b6f124b7d91b12e5014bf9c",
+      "helper_kind": "api_member_precondition",
+      "rejection_reason": "exact_recheck_rejected",
+      "row_id": "fixture.nonexistent_math_alias_method",
+      "semantics_changed_incorrectly": false,
+      "source_before": "import math as m\nresult = m.relu(x)\n",
+      "source_fields_used": [
+        "source",
+        "semantic_intent",
+        "fully_qualified_call_sites",
+        "imported_symbol_checks",
+        "kb_lookup_results",
+        "reject_reasons"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "candidate_source": "import json\nresult = json.loads(payload)\n",
+      "exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "kb_lookup_results": [
+          {
+            "exists": true,
+            "fully_qualified_name": "json.loads",
+            "kb_source": "fallback_metadata",
+            "status": "known_module"
+          }
+        ],
+        "semantic_intent": {
+          "actual_call_fqns": [
+            "json.loads"
+          ],
+          "expected_call_fqns": [
+            "json.loads"
+          ],
+          "intent": "parse_json_to_object",
+          "matched": true
+        },
+        "witness_checksum": "16af4f70d452312869239bfb57a52c1db3898eca592f5962ce27e0ce29635f7f"
+      },
+      "failure_signature": "ast_kb:intent_mismatch+kb_missing_call",
+      "false_accept": false,
+      "generated_from": "witness_row_source_semantic_intent_and_kb_results",
+      "helper_contract": {
+        "actual_call_fqns": [
+          "statistics.loads"
+        ],
+        "expected_call_fqn": "json.loads",
+        "intent": "parse_json_to_object",
+        "statement": "Alias binding must resolve the parse_json_to_object call to json.loads."
+      },
+      "helper_id": "96dcb478be1831c41ee964e9fb533aae7714370dffc3a4f23be892b1ae3c5372",
+      "helper_kind": "module_alias_invariant",
+      "rejection_reason": "",
+      "row_id": "fixture.wrong_module_alias",
+      "semantics_changed_incorrectly": false,
+      "source_before": "import statistics as json\nresult = json.loads(payload)\n",
+      "source_fields_used": [
+        "source",
+        "semantic_intent",
+        "fully_qualified_call_sites",
+        "imported_symbol_checks",
+        "kb_lookup_results",
+        "reject_reasons"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "candidate_source": "import json\nresult = json.loads(payload)\n",
+      "exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "kb_lookup_results": [
+          {
+            "exists": true,
+            "fully_qualified_name": "json.loads",
+            "kb_source": "fallback_metadata",
+            "status": "known_module"
+          }
+        ],
+        "semantic_intent": {
+          "actual_call_fqns": [
+            "json.loads"
+          ],
+          "expected_call_fqns": [
+            "json.loads"
+          ],
+          "intent": "parse_json_to_object",
+          "matched": true
+        },
+        "witness_checksum": "52b446934864b4314fb174bccede7d1b49d3092c32de7ac296d1f97b49a9c4af"
+      },
+      "failure_signature": "ast_kb:intent_mismatch+missing_import_for_bare_call",
+      "false_accept": false,
+      "generated_from": "witness_row_source_semantic_intent_and_kb_results",
+      "helper_contract": {
+        "actual_call_fqns": [
+          "<unresolved>.loads"
+        ],
+        "expected_call_fqn": "json.loads",
+        "intent": "parse_json_to_object",
+        "statement": "Bare helper call for parse_json_to_object must be imported as json.loads."
+      },
+      "helper_id": "b847cc91573d6565f9ad5e686ccf4674e00c14ea99771d957aa6508dd5370fe8",
+      "helper_kind": "api_import_binding_contract",
+      "rejection_reason": "",
+      "row_id": "fixture.missing_bare_import",
+      "semantics_changed_incorrectly": false,
+      "source_before": "result = loads(payload)\n",
+      "source_fields_used": [
+        "source",
+        "semantic_intent",
+        "fully_qualified_call_sites",
+        "imported_symbol_checks",
+        "kb_lookup_results",
+        "reject_reasons"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "candidate_source": "import json\nresult = json.loads(payload)\n",
+      "exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "kb_lookup_results": [
+          {
+            "exists": true,
+            "fully_qualified_name": "json.loads",
+            "kb_source": "fallback_metadata",
+            "status": "known_module"
+          }
+        ],
+        "semantic_intent": {
+          "actual_call_fqns": [
+            "json.loads"
+          ],
+          "expected_call_fqns": [
+            "json.loads"
+          ],
+          "intent": "parse_json_to_object",
+          "matched": true
+        },
+        "witness_checksum": "d761f47f3ef88b63520d2510f6096c44ada78445c00adcaf9ce988392592f958"
+      },
+      "failure_signature": "ast_kb:imported_symbol_missing+intent_mismatch+kb_missing_call",
+      "false_accept": false,
+      "generated_from": "witness_row_source_semantic_intent_and_kb_results",
+      "helper_contract": {
+        "actual_call_fqns": [
+          "json.parse"
+        ],
+        "expected_call_fqn": "json.loads",
+        "intent": "parse_json_to_object",
+        "statement": "API precondition for parse_json_to_object requires an exact KB-valid call to json.loads."
+      },
+      "helper_id": "22a4db4f203262d8cbe4ea7df76e9234ee1a4e0e613770da4cc7c5e8440ff45c",
+      "helper_kind": "api_import_precondition",
+      "rejection_reason": "",
+      "row_id": "fixture.imported_symbol_missing",
+      "semantics_changed_incorrectly": false,
+      "source_before": "from json import parse\nresult = parse(payload)\n",
+      "source_fields_used": [
+        "source",
+        "semantic_intent",
+        "fully_qualified_call_sites",
+        "imported_symbol_checks",
+        "kb_lookup_results",
+        "reject_reasons"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "candidate_source": "import json\ntext = json.loads(payload)\n",
+      "exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 7,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "kb_lookup_results": [
+          {
+            "exists": true,
+            "fully_qualified_name": "json.loads",
+            "kb_source": "fallback_metadata",
+            "status": "known_module"
+          }
+        ],
+        "semantic_intent": {
+          "actual_call_fqns": [
+            "json.loads"
+          ],
+          "expected_call_fqns": [
+            "json.loads"
+          ],
+          "intent": "parse_json_to_object",
+          "matched": true
+        },
+        "witness_checksum": "be5d03f843254b64fb0ff0c4a52f6547b7ecc1308d3499a123801b2986530651"
+      },
+      "failure_signature": "ast_kb:intent_mismatch",
+      "false_accept": false,
+      "generated_from": "witness_row_source_semantic_intent_and_kb_results",
+      "helper_contract": {
+        "actual_call_fqns": [
+          "json.dumps"
+        ],
+        "expected_call_fqn": "json.loads",
+        "intent": "parse_json_to_object",
+        "statement": "Documentation intent parse_json_to_object is satisfied by json.loads."
+      },
+      "helper_id": "efbe507eba0943c2e7d31cfc9f7c6c4ef0741b62086ab93ad6c590e99930622f",
+      "helper_kind": "documentation_contract",
+      "rejection_reason": "",
+      "row_id": "fixture.argument_intent_mismatch",
+      "semantics_changed_incorrectly": false,
+      "source_before": "import json\ntext = json.dumps(payload)\n",
+      "source_fields_used": [
+        "source",
+        "semantic_intent",
+        "fully_qualified_call_sites",
+        "imported_symbol_checks",
+        "kb_lookup_results",
+        "reject_reasons"
+      ]
+    }
+  ],
+  "helper_lemma_repair_ready": true,
+  "honest_verdict": "complete: bounded helper-contract witness repair accepts supported helpers and rejects unsupported helpers after exact recheck",
+  "inference_substrate": "deterministic_witness_repair_no_llm",
+  "milestone": "2026.07.497",
+  "minimal_core_reference_case_ids": [
+    "exp5445:fixture.nonexistent_json_method",
+    "exp5445:fixture.wrong_module_alias",
+    "exp5445:fixture.imported_symbol_missing",
+    "exp5445:fixture.argument_intent_mismatch"
+  ],
+  "random_seed": 5476,
+  "repeated_failure_reduction_rate": 1.0,
+  "reproducibility_checksum": "6af7d3a4d0a8a59a68e64dd05c6a82524cd51cec25e418508eed1ba37451a155",
+  "research_conductor_modified": false,
+  "row_provenance_checksum": "11c63c4c17877578f122d341708ea05375302851ffd41ad0ca3b884c1891c340",
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5476.helper_lemma_core_witness_repair.v497",
+  "semantic_change_rejections": [],
+  "source_artifacts": [
+    "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+    "results/experiment_5458_minimal_core_claim_repair_v496.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5476",
+    "SCENARIO-VERIFY-5476",
+    "REQ-CODE-5445",
+    "REQ-VERIFY-5458"
+  ],
+  "task_id": "exp5476-v497-helper-lemma-core-witness-repair",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest -o addopts=\"\" tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py -q",
+      "outcome": "passed: 7 passed"
+    },
+    {
+      "command": ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest -o addopts=\"\" tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py -q && .venv/bin/coverage report --include=\"*/experiment_5476_helper_lemma_core_witness_repair_v497.py\" --fail-under=100 -m",
+      "outcome": "passed: new module 100% coverage"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5476_helper_lemma_core_witness_repair_v497.py tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed: pre-existing 1262 untraced tests reported"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "interrupted after 9 unrelated failures, 9910 passed, 8 skipped, Z3 worker crash"
+    }
+  ],
+  "witness_row_count": 6,
+  "witness_rows": [
+    {
+      "accepted": false,
+      "alias_map": {
+        "json": "json"
+      },
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "nonexistent_method",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "parse",
+          "col_offset": 9,
+          "fqn": "json.parse",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "json.parse(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "json.parse",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "nonexistent_call",
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object",
+        "kb_missing_call:json.parse"
+      ],
+      "row_id": "fixture.nonexistent_json_method",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "json.parse"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "import json\nresult = json.parse(payload)\n",
+      "source_sha256": "0d3ee49a692ad1fac05ba03168842627301c2c808a6bb7565e7a1da0c13b94c9",
+      "witness_checksum": "fe691e9a14eba423067e880771602eafa892872d3c944bb7e577193b295c91e0"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "m": "math"
+      },
+      "api_family": "math",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "nonexistent_method",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "relu",
+          "col_offset": 9,
+          "fqn": "math.relu",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "m.relu(x)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "math.relu",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "nonexistent_call",
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "kb_missing_call:math.relu"
+      ],
+      "row_id": "fixture.nonexistent_math_alias_method",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "math.relu"
+        ],
+        "expected_call_fqns": [
+          "math.relu"
+        ],
+        "intent": "compute_relu",
+        "matched": true
+      },
+      "source": "import math as m\nresult = m.relu(x)\n",
+      "source_sha256": "8bf5630b6bca6ec026907e6856efe578282107b6a5ebee4db3614a9360f6c283",
+      "witness_checksum": "784f895887fe160bbea08f206dc312147dffbf0e5d5e191d63ccd7c1b453e26b"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "json": "statistics"
+      },
+      "api_family": "statistics",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "wrong_module_alias",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "loads",
+          "col_offset": 9,
+          "fqn": "statistics.loads",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "json.loads(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "statistics.loads",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "nonexistent_call",
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object",
+        "kb_missing_call:statistics.loads"
+      ],
+      "row_id": "fixture.wrong_module_alias",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "statistics.loads"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "import statistics as json\nresult = json.loads(payload)\n",
+      "source_sha256": "0ba4f1c96a928657e2e616484a65b20e690f9abad1fbcfed00f16cacd73e6d3c",
+      "witness_checksum": "ef3d46497c687327e23aa89772fc93799def074667da6fdeb691b372de51145a"
+    },
+    {
+      "accepted": false,
+      "alias_map": {},
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "bare_call_missing_import",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "bare",
+          "call_name": "loads",
+          "col_offset": 9,
+          "fqn": "<unresolved>.loads",
+          "lineno": 1,
+          "resolved": false,
+          "source_segment": "loads(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "<unresolved>.loads",
+          "kb_source": "none",
+          "status": "unresolved_bare_call"
+        }
+      ],
+      "metric_tags": [
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object",
+        "missing_import_for_bare_call:loads"
+      ],
+      "row_id": "fixture.missing_bare_import",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "<unresolved>.loads"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "result = loads(payload)\n",
+      "source_sha256": "94fea9b9ef3f2599e5e2b5dfb9a1b7d63d412df6318f1de1fffec741d2066a8b",
+      "witness_checksum": "e08f399b08176259cde98ef476731119ada980df3b6f358d97e6fdf9ec931980"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "parse": "json.parse"
+      },
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "imported_symbol_missing",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "imported_symbol",
+          "call_name": "parse",
+          "col_offset": 9,
+          "fqn": "json.parse",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "parse(payload)"
+        }
+      ],
+      "imported_symbol_checks": [
+        {
+          "exists": false,
+          "fully_qualified_name": "json.parse",
+          "kb_source": "local_introspection",
+          "local_name": "parse",
+          "module": "json",
+          "symbol": "parse"
+        }
+      ],
+      "kb_lookup_results": [
+        {
+          "exists": false,
+          "fully_qualified_name": "json.parse",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "imported_symbol_missing:json.parse",
+        "intent_mismatch:parse_json_to_object",
+        "kb_missing_call:json.parse"
+      ],
+      "row_id": "fixture.imported_symbol_missing",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "json.parse"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "from json import parse\nresult = parse(payload)\n",
+      "source_sha256": "0f8937283cfd4a4c419aa2bd7cbf30981451b351c32478e2a2a4112f3c839243",
+      "witness_checksum": "7e25351bdc9b609b10b4fc1b64ae8918517838910bc4c5359f49faab91441406"
+    },
+    {
+      "accepted": false,
+      "alias_map": {
+        "json": "json"
+      },
+      "api_family": "json",
+      "ast_error": "",
+      "ast_parse_ok": true,
+      "expected_outcome": "reject",
+      "fixture_family": "argument_intent_mismatch",
+      "fully_qualified_call_sites": [
+        {
+          "call_kind": "attribute",
+          "call_name": "dumps",
+          "col_offset": 7,
+          "fqn": "json.dumps",
+          "lineno": 2,
+          "resolved": true,
+          "source_segment": "json.dumps(payload)"
+        }
+      ],
+      "imported_symbol_checks": [],
+      "kb_lookup_results": [
+        {
+          "exists": true,
+          "fully_qualified_name": "json.dumps",
+          "kb_source": "local_introspection",
+          "status": "known_module"
+        }
+      ],
+      "metric_tags": [
+        "invalid_row"
+      ],
+      "outcome": "reject",
+      "reject_reasons": [
+        "intent_mismatch:parse_json_to_object"
+      ],
+      "row_id": "fixture.argument_intent_mismatch",
+      "semantic_intent": {
+        "actual_call_fqns": [
+          "json.dumps"
+        ],
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "intent": "parse_json_to_object",
+        "matched": false
+      },
+      "source": "import json\ntext = json.dumps(payload)\n",
+      "source_sha256": "e88b27c88925d4fb33300f14ee516d93400ae5d978b9ff254b64e56c1daefd71",
+      "witness_checksum": "fbd907933e89de4246e552641bc4f68c573399b22886861b2c3fa0649c9ec500"
+    }
+  ]
+}
