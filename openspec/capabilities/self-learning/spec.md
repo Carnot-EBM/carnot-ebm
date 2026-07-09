@@ -20757,3 +20757,95 @@ action-use panel rows
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5474 | Planned (`python/carnot/experiment_5474_sota_csl_scale_v497.py`, `results/experiment_5474_sota_csl_scale_v497.json`) | Planned (`tests/python/test_experiment_5474_sota_csl_scale_v497.py`) |
+
+---
+
+## REQ-LEARN-5475: CSL Behavioral Memory Replay Audit v497
+
+Experiment 5475 SHALL implement a deterministic no-LLM replay audit for
+continuous self-learning memory claims. The audit SHALL measure whether stored
+experience is actually used under governed behavioral memory controls rather
+than merely present in a prompt, sidecar, or upstream artifact. The audit SHALL
+compare no-memory, naive in-context learning, governed memory, and
+KAN-surrogate policy variants on identical replay row IDs whenever a row is
+applicable to all variants. The implementation SHALL NOT load, write,
+fine-tune, or mutate model or adapter weights, and SHALL declare
+`inference_substrate="deterministic_replay_no_llm"`.
+
+The replay fixture SHALL include support removal, paraphrase robustness,
+locality, conflict handling, downstream action use, and stale memory rejection.
+Each scored row SHALL record memory retrieval IDs, provenance, a decision path,
+accepted and rejected memory records, rollback pointers, and exact validator
+results. A memory-use claim SHALL fail closed when retrieved support is removed
+or when the selected memory is irrelevant to the replay row. The KAN-surrogate
+policy variant SHALL use Exp5473-style deterministic risk controls without
+requiring a live SOTA model.
+
+The result artifact SHALL be
+`results/experiment_5475_csl_behavioral_memory_ladder_v497.json` and SHALL
+include `replay_fixture_count`, `support_removal_pass_rate`,
+`paraphrase_robustness_rate`, `locality_pass_rate`,
+`conflict_handling_pass_rate`, `downstream_action_use_rate`,
+`stale_memory_rejection_rate`, `no_memory_baseline_score`,
+`naive_icl_baseline_score`, `governed_memory_score`,
+`csl_behavioral_memory_ready`, `model_weight_mutation`,
+`inference_substrate`, `random_seed`, and `honest_verdict`.
+
+### REQ-LEARN-5475 Sub-requirements
+
+- REQ-LEARN-5475-1: The fixture SHALL include at least one replay row for each
+  ladder axis: support removal, paraphrase robustness, locality, conflict
+  handling, downstream action use, and stale memory rejection.
+  Trace axis order: support_removal paraphrase_robustness locality
+  conflict_handling downstream_action_use stale_memory_rejection.
+- REQ-LEARN-5475-2: Every comparable row SHALL be evaluated under no-memory,
+  naive-ICL, governed-memory, and KAN-surrogate policy variants with stable
+  row IDs and exact deterministic validators.
+- REQ-LEARN-5475-3: Every row result SHALL record memory retrieval IDs,
+  provenance, decision path, accepted memory records, rejected memory records,
+  rollback pointers, and exact validator results.
+- REQ-LEARN-5475-4: Support-removal rows SHALL pass only when the policy
+  rejects memory records whose required support has been removed; irrelevant
+  retrieved memories SHALL not count as behavioral memory use.
+- REQ-LEARN-5475-5: `csl_behavioral_memory_ready` SHALL be true only when all
+  six ladder pass rates are positive and governed memory beats both no-memory
+  and naive-ICL baselines without model or adapter weight mutation.
+- REQ-LEARN-5475-6: The artifact SHALL set `model_weight_mutation=false`,
+  `inference_substrate="deterministic_replay_no_llm"`, record a deterministic
+  integer `random_seed`, and write an honest terminal verdict.
+
+### SCENARIO-LEARN-5475-SUPPORT-REMOVAL: Removed Support Blocks Memory Claims
+
+**Given** a retrieved memory record whose support pointer is marked removed
+**When** a governed or KAN-surrogate policy evaluates the replay row
+**Then** the memory record SHALL be rejected before answer selection
+**And** the support-removal pass SHALL fail if the row still claims memory use.
+
+### SCENARIO-LEARN-5475-IRRELEVANT-MEMORY: Irrelevant Retrievals Cannot Pass
+
+**Given** a replay row with retrieved memory from the wrong locality or topic
+**When** a governed or KAN-surrogate policy evaluates the row
+**Then** the irrelevant memory SHALL appear in rejected memory records
+**And** a memory-use claim SHALL fail when the exact validator sees an answer
+derived from that irrelevant memory.
+
+### SCENARIO-LEARN-5475-LADDER: Behavioral Axes Are Audited
+
+**Given** replay fixtures for paraphrase robustness, locality, conflict
+handling, downstream action use, and stale memory rejection
+**When** the deterministic replay audit runs
+**Then** each axis SHALL report a pass rate derived from exact validator
+results and per-row decision-path evidence.
+
+### SCENARIO-LEARN-5475-ARTIFACT: Deliverable JSON Is Stable
+
+**Given** the V496/V497 CSL policy artifacts are present
+**When** Exp5475 writes its deliverable JSON
+**Then** all required schema fields are stable under replay
+**And** the artifact reports no model or adapter weight mutation.
+
+## Implementation Status (Exp 5475)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5475 | Planned (`python/carnot/experiment_5475_csl_behavioral_memory_ladder_v497.py`, `results/experiment_5475_csl_behavioral_memory_ladder_v497.json`) | Planned (`tests/python/test_experiment_5475_csl_behavioral_memory_ladder_v497.py`) |
