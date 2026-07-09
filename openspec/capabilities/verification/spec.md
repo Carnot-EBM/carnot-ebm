@@ -28197,6 +28197,85 @@ artifact rather than upgrading it to solved.
 |---|---|---|
 | REQ-VERIFY-5476 | Planned (`python/carnot/experiment_5476_helper_lemma_core_witness_repair_v497.py`, `results/experiment_5476_helper_lemma_core_witness_repair_v497.json`) | Planned (`tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py`) |
 
+### REQ-VERIFY-5478: Exp5477 Hardware Receipt Collection V497
+
+The repository SHALL provide Exp 5478 at
+`python/carnot/experiment_5478_hardware_receipts_v497.py` and write
+`results/experiment_5478_hardware_receipts_v497.json` without invoking a live
+LLM, generated-text judge, destructive board command, hardware speedup claim,
+or modifying `scripts/research_conductor.py`. Exp 5478 SHALL collect CPU and
+reachable-board receipts for the exact Exp5477 workload hashes and SHALL keep
+all acceleration claims receipt-bound.
+
+The runner SHALL load the checked-in Exp5477 artifact and the canonical
+Exp5477 workload definitions, verify that the upstream workload hashes match,
+and compute repeated local CPU reference result hashes for every Exp5477
+workload hash. CPU reference hashes SHALL be derived from deterministic
+fixture-local exact results, not from timing, command transcripts, or the
+output artifact checksum.
+
+The runner SHALL probe KV260 by SSH reachability only. It SHALL probe
+PolarFire by SSH reachability and, when reachable, execute only a bounded safe
+board-local Python replay for the Exp5477 workload hashes. GateMate SHALL be diagnostic-only
+unless a current physical/JTAG evidence source is explicitly
+available in repository artifacts or docs; diagnostic GateMate state SHALL NOT
+be treated as a workload receipt. For every board that runs a workload, the
+artifact SHALL record board identity, command, workload hash, result hash,
+repeat count, timing distribution, stdout checksum, and stderr checksum.
+
+The artifact SHALL include top-level fields `upstream_workload_hashes`,
+`cpu_reference_hashes`, `reachable_boards`, `unreachable_boards`,
+`board_receipts`, `repeat_count`, `timing_summary`, `result_hash_match_rate`,
+`hardware_receipts_ready`, `hardware_speedup_claim`, `inference_substrate`, and
+`honest_verdict`, with field principles explaining each required field.
+`inference_substrate` SHALL equal
+`local_cpu_and_reachable_board_receipts`. `hardware_speedup_claim` SHALL be
+false unless repeated matched board-local timing honestly supports a different
+claim; the default and doubt-resolving value SHALL remain false.
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `upstream_workload_hashes`: principle "Exp5477 workload identity"
+- `cpu_reference_hashes`: principle "local CPU correctness receipts"
+- `reachable_boards`: principle "boards that accepted safe workload receipts"
+- `unreachable_boards`: principle "boards blocked or diagnostic-only"
+- `board_receipts`: principle "board-local command and hash receipts"
+- `repeat_count`: principle "repeatability support"
+- `timing_summary`: principle "receipt timing distribution"
+- `result_hash_match_rate`: principle "matched hashes before claims"
+- `hardware_receipts_ready`: principle "receipt readiness"
+- `hardware_speedup_claim`: principle "receipt-bound acceleration claim"
+- `inference_substrate`: principle "explicit local CPU and board substrate"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+### SCENARIO-VERIFY-5478: Exp5477 Board Receipts Stay Hash-Bound
+
+Given the checked-in Exp5477 artifact exposes stable workload hashes, when
+Exp5478 runs, then it recomputes those hashes from canonical fixture content,
+repeats the local CPU reference for each workload hash, probes boards through
+safe reachability commands, and runs the bounded board-local replay only for
+reachable workload-capable boards. Each board receipt records the same Exp5477
+workload hashes as the CPU reference, result hashes that match the CPU
+reference, repeat timing distribution, command text, stdout checksum, stderr
+checksum, and board identity.
+
+If Exp5477 workload hashes drift, if CPU reference hashes are unstable, if no
+reachable board runs a workload, if a board returns a mismatched result hash,
+if a diagnostic-only board is promoted into workload evidence, if
+`inference_substrate` differs from
+`local_cpu_and_reachable_board_receipts`, or if `hardware_speedup_claim` is
+true without repeated matched board-local timing evidence, then Exp5478 SHALL
+write `results/experiment_5478_hardware_receipts_v497.json` with precise
+blockers, `hardware_speedup_claim=false`, and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-VERIFY-5478)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5478 | Planned (`python/carnot/experiment_5478_hardware_receipts_v497.py`, `results/experiment_5478_hardware_receipts_v497.json`) | Planned (`tests/python/test_experiment_5478_hardware_receipts_v497.py`) |
+
 ### REQ-VERIFY-5477: p-dit LNS Boundary-Exchange Accounting V497
 
 The repository SHALL provide Exp 5477 at

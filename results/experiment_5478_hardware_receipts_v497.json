@@ -1,0 +1,383 @@
+{
+  "board_receipts": [
+    {
+      "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+      "attempts": [
+        {
+          "matched": true,
+          "parse_error": null,
+          "receipt": {
+            "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+            "board_identity": "polarfire",
+            "board_local": true,
+            "result_hashes": [
+              "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+              "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+              "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+            ],
+            "wall_time_s": 0.006167039,
+            "workload_hashes": [
+              "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+              "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+              "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+            ]
+          },
+          "repeat_index": 1,
+          "valid": true,
+          "wall_time_s": 0.006167039
+        },
+        {
+          "matched": true,
+          "parse_error": null,
+          "receipt": {
+            "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+            "board_identity": "polarfire",
+            "board_local": true,
+            "result_hashes": [
+              "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+              "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+              "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+            ],
+            "wall_time_s": 0.006212039,
+            "workload_hashes": [
+              "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+              "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+              "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+            ]
+          },
+          "repeat_index": 2,
+          "valid": true,
+          "wall_time_s": 0.006212039
+        },
+        {
+          "matched": true,
+          "parse_error": null,
+          "receipt": {
+            "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+            "board_identity": "polarfire",
+            "board_local": true,
+            "result_hashes": [
+              "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+              "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+              "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+            ],
+            "wall_time_s": 0.006156039,
+            "workload_hashes": [
+              "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+              "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+              "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+            ]
+          },
+          "repeat_index": 3,
+          "valid": true,
+          "wall_time_s": 0.006156039
+        }
+      ],
+      "board_identity": "polarfire",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
+      "invalid_repeat_count": 0,
+      "matched_repeat_count": 3,
+      "repeat_count": 3,
+      "result_hashes": [
+        "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+        "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+        "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+      ],
+      "stderr_combined": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_combined": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7\", \"7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785\"], \"wall_time_s\": 0.006167039, \"workload_hashes\": [\"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\", \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\", \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"]}\n{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7\", \"7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785\"], \"wall_time_s\": 0.006212039, \"workload_hashes\": [\"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\", \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\", \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"]}\n{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7\", \"7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785\"], \"wall_time_s\": 0.006156039, \"workload_hashes\": [\"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\", \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\", \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"]}\n",
+      "stdout_sha256": "7840eceee8b3e718cb026752c9e20bb24fc1fad03efdff92868e2378d7343e2f",
+      "timing_distribution": {
+        "count": 3,
+        "max_s": 0.006212039,
+        "mean_s": 0.006178372,
+        "median_s": 0.006167039,
+        "min_s": 0.006156039,
+        "variance_s2": 5.87e-10
+      },
+      "workload_hashes": [
+        "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+        "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+        "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+      ]
+    }
+  ],
+  "claim_limits": [
+    "Exp5477 workload hashes only",
+    "CPU and board result hashes must match before timing facts matter",
+    "GateMate is diagnostic-only for this artifact",
+    "no hardware speedup claim"
+  ],
+  "command_receipts": [
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "command_sha256": "dfcb05ec95a68b9ca25ea5227c0ff787385cda524db9d23617679e6cf2f2d0f4",
+      "duration_s": 5.007705,
+      "exit_code": 124,
+      "kind": "kv260_ssh_reachability",
+      "outcome": "blocked",
+      "stderr_excerpt": "timeout",
+      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "command_sha256": "b9e814f65c86bee7dd7fe7a7d7944e2e76fdcd1330e6f7f0cb813bcf9cd690aa",
+      "duration_s": 0.903556,
+      "exit_code": 0,
+      "kind": "polarfire_ssh_reachability",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
+      "duration_s": 1.353082,
+      "exit_code": 0,
+      "kind": "polarfire_exp5477_workload_repeat_1",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39",
+      "stdout_sha256": "961e195e719ff469f0dd1be4cde70618e0d98dbcc73b657523fa99759f25fd49",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
+      "duration_s": 1.33836,
+      "exit_code": 0,
+      "kind": "polarfire_exp5477_workload_repeat_2",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39",
+      "stdout_sha256": "588740b5f2f92732622cb97efeb30a7ad636900d1a9361a09eed342ecfeb1cfb",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib,itertools,json,time\npayload=json.loads('\"'\"'{\"board_identity\": \"polarfire\", \"fixture_payloads\": [{\"advisory_start\": [false, true, true], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"sat_left\", \"sat_right\", \"clause_x2_not_x3\"]], \"clauses\": [[1], [2, -3], [1, 2]], \"conflict_core\": [\"x1\", \"x3\"], \"fixture_family\": \"sat\", \"fixture_id\": \"sat_boundary_core\", \"maxcut_edges\": [], \"pairwise_costs\": [], \"partitions\": [[\"sat_left\", [\"x1\", \"x2\"]], [\"sat_right\", [\"x3\"]]], \"pbit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_controls\": [\"x1\", \"x2\", \"x3\"], \"pdit_domains\": [[\"x1\", [\"false\", \"unknown\", \"true\"]], [\"x2\", [\"false\", \"unknown\", \"true\"]], [\"x3\", [\"false\", \"unknown\", \"true\"]]], \"prediction_scores\": [[\"x1\", 0.96], [\"x2\", 0.37], [\"x3\", 0.82]], \"preferred_solution\": [true, true, false], \"variables\": [\"x1\", \"x2\", \"x3\"], \"workload_hash\": \"d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc\"}, {\"advisory_start\": [0, 0, 1, 1], \"assignment_costs\": [], \"assignment_domain\": [], \"boundary_links\": [[\"cut_left\", \"cut_right\", \"edge_a_c\"], [\"cut_left\", \"cut_right\", \"edge_b_d\"]], \"clauses\": [], \"conflict_core\": [\"b\", \"c\"], \"fixture_family\": \"maxcut\", \"fixture_id\": \"maxcut_boundary_square\", \"maxcut_edges\": [[\"a\", \"b\", 3], [\"a\", \"c\", 2], [\"b\", \"d\", 2], [\"c\", \"d\", 3], [\"a\", \"d\", 1], [\"b\", \"c\", 1]], \"pairwise_costs\": [], \"partitions\": [[\"cut_left\", [\"a\", \"b\"]], [\"cut_right\", [\"c\", \"d\"]]], \"pbit_controls\": [\"a\", \"b\", \"c\", \"d\"], \"pdit_controls\": [\"left_partition\", \"right_partition\"], \"pdit_domains\": [[\"left_partition\", [\"side0\", \"side1\", \"defer\"]], [\"right_partition\", [\"side0\", \"side1\", \"defer\"]]], \"prediction_scores\": [[\"a\", 0.12], [\"b\", 0.91], [\"c\", 0.88], [\"d\", 0.34]], \"preferred_solution\": [0, 1, 1, 0], \"variables\": [\"a\", \"b\", \"c\", \"d\"], \"workload_hash\": \"ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43\"}, {\"advisory_start\": [\"test\", \"pack\", \"ship\"], \"assignment_costs\": [[\"ana\", \"pack\", 0], [\"ana\", \"test\", 4], [\"ana\", \"ship\", 6], [\"ben\", \"pack\", 5], [\"ben\", \"test\", 0], [\"ben\", \"ship\", 4], [\"cy\", \"pack\", 6], [\"cy\", \"test\", 5], [\"cy\", \"ship\", 0]], \"assignment_domain\": [\"pack\", \"test\", \"ship\"], \"boundary_links\": [[\"assign_left\", \"assign_right\", \"handoff_ship\"]], \"clauses\": [], \"conflict_core\": [\"ana\", \"ben\"], \"fixture_family\": \"assignment\", \"fixture_id\": \"assignment_pdit_boundary\", \"maxcut_edges\": [], \"pairwise_costs\": [[\"ana\", \"test\", \"ben\", \"pack\", 2], [\"ana\", \"pack\", \"ben\", \"test\", 0], [\"ben\", \"test\", \"cy\", \"ship\", 0]], \"partitions\": [[\"assign_left\", [\"ana\", \"ben\"]], [\"assign_right\", [\"cy\"]]], \"pbit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_controls\": [\"ana\", \"ben\", \"cy\"], \"pdit_domains\": [[\"ana\", [\"pack\", \"test\", \"ship\"]], [\"ben\", [\"pack\", \"test\", \"ship\"]], [\"cy\", [\"pack\", \"test\", \"ship\"]]], \"prediction_scores\": [[\"ana\", 0.99], [\"ben\", 0.8], [\"cy\", 0.1]], \"preferred_solution\": [\"pack\", \"test\", \"ship\"], \"variables\": [\"ana\", \"ben\", \"cy\"], \"workload_hash\": \"bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5\"}]}'\"'\"')\nstarted=time.perf_counter()\ndef canon(obj): return json.dumps(obj,sort_keys=True,separators=('\"'\"','\"'\"','\"'\"':'\"'\"'),ensure_ascii=True)\ndef h(obj): return hashlib.sha256(canon(obj).encode()).hexdigest()\ndef clause_ok(c,clause): return any(bool(c[abs(int(lit))-1])==(int(lit)>0) for lit in clause)\ndef cut_weight(w,c):\n    assign={str(name):int(c[i]) for i,name in enumerate(w['\"'\"'variables'\"'\"'])}\n    return sum(int(weight) for left,right,weight in w['\"'\"'maxcut_edges'\"'\"'] if assign[str(left)]!=assign[str(right)])\ndef assignment_cost(w,c):\n    assign={str(worker):str(c[i]) for i,worker in enumerate(w['\"'\"'variables'\"'\"'])}\n    lookup={(str(worker),str(job)):int(cost) for worker,job,cost in w['\"'\"'assignment_costs'\"'\"']}\n    total=sum(lookup[(str(worker),assign[str(worker)])] for worker in w['\"'\"'variables'\"'\"'])\n    for lw,lj,rw,rj,cost in w['\"'\"'pairwise_costs'\"'\"']:\n        if assign[str(lw)]==str(lj) and assign[str(rw)]==str(rj): total+=int(cost)\n    return total\ndef result(w):\n    fam=str(w['\"'\"'fixture_family'\"'\"'])\n    if fam=='\"'\"'sat'\"'\"':\n        pref=list(w['\"'\"'preferred_solution'\"'\"'])\n        best=min((c for c in itertools.product((False,True), repeat=len(w['\"'\"'variables'\"'\"'])) if all(clause_ok(c,cl) for cl in w['\"'\"'clauses'\"'\"'])), key=lambda c: sum(int(bool(c[i])!=bool(pref[i])) for i in range(len(c))))\n        sol=[bool(v) for v in best]; obj=sum(int(bool(best[i])!=bool(pref[i])) for i in range(len(best))); label='\"'\"'sat'\"'\"'\n    elif fam=='\"'\"'maxcut'\"'\"':\n        best=max(itertools.product((0,1), repeat=len(w['\"'\"'variables'\"'\"'])), key=lambda c: (cut_weight(w,c), tuple(-int(v) for v in c)))\n        weight=cut_weight(w,best); sol=[int(v) for v in best]; obj=-weight; label='\"'\"'maxcut_weight='\"'\"'+str(weight)\n    else:\n        best=min(itertools.permutations(tuple(w['\"'\"'assignment_domain'\"'\"'])), key=lambda c: (assignment_cost(w,c), tuple(c)))\n        cost=assignment_cost(w,best); sol=[str(v) for v in best]; obj=cost; label='\"'\"'assignment_cost='\"'\"'+str(cost)\n    return {'\"'\"'fixture_id'\"'\"':str(w['\"'\"'fixture_id'\"'\"']),'\"'\"'fixture_family'\"'\"':fam,'\"'\"'workload_hash'\"'\"':str(w['\"'\"'workload_hash'\"'\"']),'\"'\"'exact_label'\"'\"':label,'\"'\"'exact_solution'\"'\"':sol,'\"'\"'exact_objective_value'\"'\"':obj}\nworkload_hashes=[str(w['\"'\"'workload_hash'\"'\"']) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nresult_hashes=[h(result(w)) for w in payload['\"'\"'fixture_payloads'\"'\"']]\nreceipt={'\"'\"'aggregate_result_hash'\"'\"':h({'\"'\"'result_hashes'\"'\"':result_hashes}),'\"'\"'board_identity'\"'\"':payload['\"'\"'board_identity'\"'\"'],'\"'\"'board_local'\"'\"':True,'\"'\"'result_hashes'\"'\"':result_hashes,'\"'\"'wall_time_s'\"'\"':round(time.perf_counter()-started,9),'\"'\"'workload_hashes'\"'\"':workload_hashes}\nprint(json.dumps(receipt,sort_keys=True))\nPY'",
+      "command_sha256": "54d43a34a2c78832ad5ceeedf2916f42a1aa9285b3bd837d363b1d5ce2f0bf13",
+      "duration_s": 1.377038,
+      "exit_code": 0,
+      "kind": "polarfire_exp5477_workload_repeat_3",
+      "outcome": "valid_repeat",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"aggregate_result_hash\": \"ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5\", \"board_identity\": \"polarfire\", \"board_local\": true, \"result_hashes\": [\"8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb\", \"9104e39",
+      "stdout_sha256": "775ee2bef5bacd5b973bd751ea0cfafd362d9487b6d4288e5c4362e08a02e978",
+      "timeout_s": 5.0
+    }
+  ],
+  "commit": "unknown",
+  "cpu_reference_hashes": [
+    "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+    "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+    "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+  ],
+  "cpu_reference_receipt": {
+    "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+    "kind": "cpu_reference",
+    "repeat_count": 3,
+    "repeat_timings_s": [
+      0.000119063,
+      0.000104225,
+      9.3516e-05
+    ],
+    "repeats": [
+      {
+        "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+        "matches_expected": true,
+        "repeat_index": 1,
+        "result_hashes": [
+          "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+          "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+          "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+        ],
+        "wall_time_s": 0.000119063,
+        "workload_hashes": [
+          "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+          "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+          "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        ]
+      },
+      {
+        "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+        "matches_expected": true,
+        "repeat_index": 2,
+        "result_hashes": [
+          "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+          "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+          "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+        ],
+        "wall_time_s": 0.000104225,
+        "workload_hashes": [
+          "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+          "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+          "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        ]
+      },
+      {
+        "aggregate_result_hash": "ddcad4c69685d3080fcb346904d65e592b30e4a57e95dca56a1db985403bf7c5",
+        "matches_expected": true,
+        "repeat_index": 3,
+        "result_hashes": [
+          "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+          "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+          "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+        ],
+        "wall_time_s": 9.3516e-05,
+        "workload_hashes": [
+          "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+          "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+          "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        ]
+      }
+    ],
+    "result_hashes": [
+      "8be3124100aafc3083c5a12e821707b659e5cb96ed95a6f9a7955de974b21aeb",
+      "9104e39e14a12d8ca0886bb6e6b2a4da70eb90d9ba4cb60652380e40c70ce8b7",
+      "7315b86e4a286b231cbad8d2cac377ee10b8d8443364afe7f9d4e32a17968785"
+    ],
+    "stable_result_hashes": true,
+    "substrate": "local_cpu_exp5477_exact_reference",
+    "timing_distribution": {
+      "count": 3,
+      "max_s": 0.000119063,
+      "mean_s": 0.000105601,
+      "median_s": 0.000104225,
+      "min_s": 9.3516e-05,
+      "variance_s2": 1.1e-10
+    },
+    "workload_hashes": [
+      "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+      "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+      "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    ]
+  },
+  "duration_s": 9.982516,
+  "experiment": 5478,
+  "experiment_id": "exp5478-hardware-receipts-v497",
+  "field_principles": {
+    "board_receipts": "board-local command and hash receipts",
+    "cpu_reference_hashes": "local CPU correctness receipts",
+    "hardware_receipts_ready": "receipt readiness",
+    "hardware_speedup_claim": "receipt-bound acceleration claim",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "explicit local CPU and board substrate",
+    "reachable_boards": "boards that accepted safe workload receipts",
+    "repeat_count": "repeatability support",
+    "result_hash_match_rate": "matched hashes before claims",
+    "timing_summary": "receipt timing distribution",
+    "unreachable_boards": "boards blocked or diagnostic-only",
+    "upstream_workload_hashes": "Exp5477 workload identity"
+  },
+  "hardware_receipts_ready": true,
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: Exp5477 CPU and reachable-board workload hashes matched with repeated local receipts; hardware_speedup_claim=false",
+  "inference_substrate": "local_cpu_and_reachable_board_receipts",
+  "milestone": "2026.07.497",
+  "random_seed": 5478,
+  "reachable_boards": [
+    "polarfire"
+  ],
+  "readiness_blockers": [],
+  "repeat_count": 3,
+  "reproducibility_checksum": "fbb6ea3531ea38ecfd89c4ff8c0b49b8b2f20894a173c090bc312c8149b9f8f3",
+  "research_conductor_modified": false,
+  "result_hash_match_rate": 1.0,
+  "run_date": "20260709",
+  "schema": "carnot.experiment_5478.hardware_receipts.v497",
+  "selected_workload": {
+    "expected_workload_count": 3,
+    "upstream_hash_match": true,
+    "workload_hashes": [
+      "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+      "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+      "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    ]
+  },
+  "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
+  "source_experiment_id": "exp5477-pdit-lns-boundary-exchange-v497",
+  "source_reproducibility_checksum": "ce4ca63b3fa6126deb2b346f34942baf2e5010a5ed9fd25acafd498ac0b16451",
+  "spec_refs": [
+    "REQ-VERIFY-5478",
+    "SCENARIO-VERIFY-5478"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5478_hardware_receipts_v497.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5478_hardware_receipts_v497.py -m pytest tests/python/test_experiment_5478_hardware_receipts_v497.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5478_hardware_receipts_v497.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": "ops/e2e-test-plan.md review: Exp5478 collects local CPU and SSH-safe reachable-board receipts only; no live training, PyO3, or destructive hardware path applies",
+      "outcome": "not_applicable"
+    }
+  ],
+  "timing_summary": {
+    "cpu": {
+      "count": 3,
+      "max_s": 0.000119063,
+      "mean_s": 0.000105601,
+      "median_s": 0.000104225,
+      "min_s": 9.3516e-05,
+      "variance_s2": 1.1e-10
+    },
+    "kv260": {
+      "count": 0,
+      "max_s": 0.0,
+      "mean_s": 0.0,
+      "median_s": 0.0,
+      "min_s": 0.0,
+      "variance_s2": 0.0
+    },
+    "polarfire": {
+      "count": 3,
+      "max_s": 0.006212039,
+      "mean_s": 0.006178372,
+      "median_s": 0.006167039,
+      "min_s": 0.006156039,
+      "variance_s2": 5.87e-10
+    }
+  },
+  "unreachable_boards": [
+    {
+      "blocked_reason": "blocked_kv260_ssh",
+      "board_identity": "kv260",
+      "reachable": false,
+      "status_exit_code": 124,
+      "workload_execution_attempted": false
+    },
+    {
+      "blocked_reason": "diagnostic_only_no_exp5477_workload_receipt",
+      "board_identity": "gatemate",
+      "diagnostic_only": true,
+      "reachable": false,
+      "workload_execution_attempted": false
+    }
+  ],
+  "upstream_workload_hashes": [
+    "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+    "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+    "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+  ]
+}
