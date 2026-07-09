@@ -1480,6 +1480,60 @@ Required field principles:
 - `random_seed`: principle "deterministic seed for reproducible target ordering and dry-check fixtures."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked: with no solve claim."
 
+### REQ-ARC-FCP-5480: Rotated Live Salience Level-Up Attempt
+
+Experiment 5480 SHALL write
+`results/experiment_5480_arc_live_salience_levelup_v497.json` only after
+loading `selected_game` and `selected_target_level` from
+`results/experiment_5479_arc_target_rotation_precheck_v497.json`. The workflow
+SHALL abort with a blocked artifact when the Exp5479 target is missing or when
+`ops/arc_solve_registry.yaml` already records the selected target level as
+reproduced. Otherwise it SHALL run exactly one bounded live-agent
+self-discovery attempt on that rotated target, using the submitted live
+connected-component/color-blob/change-cell salience path as the prioritization
+substrate.
+
+The credited path SHALL be the agent's own observed frames, action effects, and
+runtime reverse engineering only. It SHALL NOT read hidden game source, run an
+offline ground-truth BFS, credit a hand per-game adapter, or rely on an
+outer-loop reverse-engineered adapter. Any candidate new level SHALL be
+reproduced through the registry-approved live reproduction mechanism before the
+registry is updated. Success SHALL require `offline_reproduced=true` and
+`reproduced_levels >= 1` beyond the selected target's precheck depth; otherwise
+the artifact SHALL report an honest null and SHALL NOT modify
+`ops/arc_solve_registry.yaml`.
+
+The result artifact SHALL include `game`, `target_level`,
+`solve_provenance`, `hidden_source_reading`, `offline_bfs_used`,
+`hand_adapter_used`, `outer_loop_re_used`, `action_count`,
+`explored_state_count`, `failed_hypotheses`, `offline_reproduced`,
+`reproduced_levels`, `new_level_banked`, `reproduced_levels_before`,
+`reproduced_levels_after`, `registry_updated`, `first_win_trace_path`,
+`inference_substrate`, `random_seed`, and `honest_verdict`.
+
+Required field principles:
+
+- `game`: principle "selected Exp5479 game, or none when the target precondition blocks the attempt."
+- `target_level`: principle "selected Exp5479 target level; success must reproduce at least this level."
+- `solve_provenance`: principle "must equal live_agent_self_discovery."
+- `hidden_source_reading`: principle "must be false; hidden/public game source is not part of the credited path."
+- `offline_bfs_used`: principle "must be false; exhaustive offline ground-truth BFS is not the credited path."
+- `hand_adapter_used`: principle "must be false; a hand per-game adapter is not credited."
+- `outer_loop_re_used`: principle "must be false; outer-loop reverse engineering is not credited."
+- `action_count`: principle "bare integer count of bounded live-agent actions actually executed."
+- `explored_state_count`: principle "bare integer count of live-agent states observed or tracked during the attempt."
+- `failed_hypotheses`: principle "list of rejected salience/runtime hypotheses when no target level is banked."
+- `offline_reproduced`: principle "true only when the live-agent candidate reproduces beyond the precheck depth."
+- `reproduced_levels`: principle "new reproduced levels banked beyond the precheck depth; success requires >=1."
+- `new_level_banked`: principle "true only when offline_reproduced=true and reproduced_levels>=1."
+- `reproduced_levels_before`: principle "registry reproduced depth for the selected game before Exp5480."
+- `reproduced_levels_after`: principle "registry reproduced depth after Exp5480; unchanged on honest null."
+- `registry_updated`: principle "true only when ops/arc_solve_registry.yaml was updated for a newly reproduced level."
+- `first_win_trace_path`: principle "relative path to the first reproduced winning trace, or empty string when none exists."
+- `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
+- `random_seed`: principle "deterministic seed for the bounded live attempt."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -2051,3 +2105,36 @@ When experiment 5479 writes
 Then `arc_target_rotation_ready=true`, `solve_claimed=false`,
 `inference_substrate=arc_live_path_precheck_no_solve`, and `honest_verdict`
 contains no level-solve claim.
+
+### SCENARIO-ARC-FCP-5480: Rotated Salience Attempt Banks Only Reproduced New Levels
+
+Given Exp5479 selected `sb26:L3` and the registry records `sb26` at L2
+When experiment 5480 loads the target before attempting a level-up
+Then it records `game=sb26`, `target_level=3`,
+`reproduced_levels_before=2`, and proceeds only because the target is not
+already reproduced.
+
+Given the registry already records the selected target level or the Exp5479
+target fields are missing
+When experiment 5480 runs
+Then it emits a `blocked:` artifact with `action_count=0`,
+`offline_reproduced=false`, `new_level_banked=false`, and
+`registry_updated=false`.
+
+Given the bounded live salience attempt does not reproduce a level beyond the
+precheck depth
+When experiment 5480 validates its artifact
+Then `offline_reproduced=false`, `reproduced_levels=0`,
+`reproduced_levels_after=reproduced_levels_before`,
+`new_level_banked=false`, `registry_updated=false`,
+`hidden_source_reading=false`, `offline_bfs_used=false`,
+`hand_adapter_used=false`, `outer_loop_re_used=false`, and
+`honest_verdict` starts with `honest_null:`.
+
+Given a candidate reaches the selected target level through the live-agent
+self-discovery path
+When the registry-approved reproduction gate confirms it beyond the precheck
+depth
+Then and only then `offline_reproduced=true`, `reproduced_levels>=1`,
+`new_level_banked=true`, `registry_updated=true`, `first_win_trace_path` is
+non-empty, and `honest_verdict` starts with `complete:`.
