@@ -5841,3 +5841,9 @@ The critical path for milestone .250:
 - theme: timing assembly mismatch blocks operational retrospective accounting
 - key result: no data available this milestone; the authoritative timing data reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also reporting changelog references for 2026.07.494, so compute-bound durations, GPU efficiency, and DualGPURunner assessment cannot be derived
 - acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for scoring
+
+### Milestone 2026.07.495
+- exp_range: no data available this milestone
+- theme: timing detector mismatch blocks compute-efficiency ranking
+- key result: no data available this milestone; the authorized timing block records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also reporting changelog references, so GPU utilization and DualGPURunner questions remain unscored
+- acceptance: 0/0 criteria met -- no milestone-scoped timing rows were available for acceptance scoring

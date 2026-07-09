@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.495",
+  "generated_at": "2026-07-09T00:40:17Z",
+  "retro_type": "operational_in_progress",
+  "summary": "No data available this milestone for experiment-level timing: the locked fields record 0 total wall-time minutes, 0 completed experiments, 0 compute-bound experiments, an empty slowest list, and gpu_idle_on_compute_bound_tasks=null. The timing block reports an integrity mismatch between the live git-log path, disk-mtime reconstruction, and ops/changelog.md references for 2026.07.495, so no experiment ID, duration, compute-bound GPU-efficiency finding, or DualGPURunner finding is inferred.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "bottlenecks_identified": [
+    "Timing assembly integrity mismatch: live git-log and disk-mtime reconstruction found 0 experiment commits while ops/changelog.md contains entries referencing 2026.07.495.",
+    "Experiment-level throughput analysis is unavailable because the authoritative timing rows are empty; slowest compute-bound runs, compute-bound GPU efficiency, and DualGPURunner engagement cannot be evaluated from the supplied data."
+  ],
+  "improvements_suggested": [
+    "Repair the timing assembly path that can report 0 experiment commits despite milestone references in ops/changelog.md.",
+    "Add a regression fixture for the 2026.07.495 mismatch shape so a changelog-referenced milestone cannot silently collapse to an authoritative zero window.",
+    "Emit a machine-readable timing_mismatch_reason with zero-count retrospectives so downstream summaries can distinguish true empty milestones from detector failures.",
+    "Keep GPU-idle claims gated on compute_bound timing rows; idle synthesis-only snapshots should remain non-bottlenecks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the timing assembler path that diverges when changelog references exist but live git-log and disk-mtime reconstruction return 0 experiment commits.",
+    "Add automated coverage for zero reconstructed experiment rows plus present milestone changelog references.",
+    "Expose timing mismatch diagnostics in the retro artifact before narrative generation."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The operational lesson is measurement trust: a runtime-efficiency retrospective cannot rank experiments when the timing assembler reports 0 rows while the changelog has milestone references. The next milestone should treat this detector mismatch as the first tooling fix before drawing compute-bound, GPU, or parallel-runner conclusions.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true
+}
