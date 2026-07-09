@@ -28615,6 +28615,78 @@ Exp 5499 SHALL write the same result path with
 |---|---|---|
 | REQ-VERIFY-5499 | Implemented (`python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py`, `results/experiment_5499_preference_maxsat_minimal_fixture_v499.json`) | Implemented (`tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py`) |
 
+### REQ-VERIFY-5500: SOTA GGUF Concept Claim Evidence Panel V499
+
+The repository SHALL provide Exp 5500 at
+`python/carnot/experiment_5500_sota_concept_claim_panel_v499.py` and write
+`results/experiment_5500_sota_concept_claim_panel_v499.json` over the Exp 5499
+minimal hard/soft typed claim-state fixture. The panel SHALL use the mandated
+headline-eligible local GGUF model set
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` in `MODEL_SPECS`, SHALL resolve cached GGUF
+files through `cached_sota_pair()` or the repository local-GGUF resolver
+pattern, and SHALL NOT call `AutoTokenizer.from_pretrained` on a GGUF
+repository.
+
+Before headline inference, the workflow SHALL verify that at least one
+mandated model file is cached, CUDA is visible, and llama.cpp CUDA/GPU offload
+is available and verified by runtime evidence. If no mandated model is cached,
+if CUDA is unavailable, or if llama.cpp GPU offload cannot be verified, Exp 5500
+SHALL write a blocked artifact with exact cache, model-file, CUDA, llama.cpp,
+and offload diagnostics instead of running CPU headline inference or silently
+using a legacy small model. Legacy small models MAY appear only in
+`legacy_smoke_models_used` and SHALL NOT contribute to headline fields.
+
+When preconditions pass, the workflow SHALL run at least one cached mandated
+headline model and may run the pair/panel when cache and GPU memory allow. The
+model may generate complete candidate claim states or natural-language
+explanations, but Exp 5500 SHALL NOT use guided decoding, token-level steering,
+grammar-constrained decoding, or legacy small-model headline claims. Exact
+validators from Exp 5499 SHALL remain final authority for hard-constraint
+feasibility, soft-preference optimality, infeasible negative controls, and
+abstentions.
+
+The artifact SHALL include at minimum these top-level fields: `model_specs`,
+`headline_models_used`, `legacy_smoke_models_used`, `cached_models_missing`,
+`llama_cpp_cuda_available`, `gpu_offload_verified`, `gpu_memory_delta_mb`,
+`fixture_artifact`,
+`exact_validator_accuracy`, `hard_constraint_violation_rate`,
+`preference_optimality_rate`, `concept_claim_telemetry_rows`,
+`guided_decoding_used`, `inference_substrate`, and `honest_verdict`.
+`fixture_artifact` SHALL equal
+`results/experiment_5499_preference_maxsat_minimal_fixture_v499.json`.
+`guided_decoding_used` SHALL be false. `inference_substrate` SHALL equal
+`live_llm_inference`. `honest_verdict` SHALL start with `complete:` or
+`blocked:` and SHALL NOT overstate blocked or abstained evidence.
+
+### SCENARIO-VERIFY-5500: Local SOTA Panel Uses Exact Validators As Final Authority
+
+Given the Exp 5499 fixture artifact exists, at least one mandated local GGUF is
+cached, CUDA is visible, and llama.cpp GPU offload is available and verified,
+when Exp 5500 runs, then it prompts at least one mandated headline model to
+produce candidate claim states or explanations for the Exp 5499 instances,
+records model file, quantization, llama.cpp command or binding,
+`n_gpu_layers`, GPU memory delta, wall time, token counts, exact-validator
+verdicts, abstentions, and concept/claim telemetry, and writes
+`results/experiment_5500_sota_concept_claim_panel_v499.json` with
+`guided_decoding_used=false`, `inference_substrate=live_llm_inference`, and
+metrics computed only by the Exp 5499 exact validators.
+
+If no mandated GGUF is cached, CUDA is unavailable, llama.cpp CUDA offload is
+unavailable, model loading fails before offload verification, or every model
+abstains or emits unparsable claim states, then Exp 5500 SHALL preserve the
+diagnostics in the same artifact, keep `gpu_offload_verified` truthful, keep
+legacy smoke models out of headline fields, record abstentions explicitly, and
+emit an `honest_verdict` beginning with `blocked:` or a measured `complete:`
+verdict that reports the exact validator outcome without upgrading weak
+evidence into a headline claim.
+
+## Implementation Status (REQ-VERIFY-5500)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5500 | Planned (`python/carnot/experiment_5500_sota_concept_claim_panel_v499.py`, `results/experiment_5500_sota_concept_claim_panel_v499.json`) | Planned (`tests/python/test_experiment_5500_sota_concept_claim_panel_v499.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
