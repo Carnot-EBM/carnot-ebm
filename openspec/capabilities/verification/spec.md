@@ -28130,6 +28130,73 @@ the artifact provenance checksum matches the source rows and core IDs.
 |---|---|---|
 | REQ-VERIFY-5458 | Planned (`python/carnot/experiment_5458_minimal_core_claim_repair_v496.py`, `results/experiment_5458_minimal_core_claim_repair_v496.json`) | Planned (`tests/python/test_experiment_5458_minimal_core_claim_repair_v496.py`) |
 
+### REQ-VERIFY-5476: Helper-Lemma Core Witness Repair V497
+
+The repository SHALL provide Exp 5476 at
+`python/carnot/experiment_5476_helper_lemma_core_witness_repair_v497.py` and
+write `results/experiment_5476_helper_lemma_core_witness_repair_v497.json`
+without invoking a live LLM, external judge, hidden source lookup, generated
+diagnosis, or modifying `scripts/research_conductor.py`. The runner SHALL
+extend the Exp5458 minimal-core repair boundary to bounded helper lemmas or
+helper contracts over deterministic Exp5445 AST/KB witness rows. It SHALL read
+the checked-in Exp5445 and Exp5458 artifacts, select only failed witness rows
+whose source, semantic-intent, AST call-site, imported-symbol, or KB lookup
+fields can explain a missing helper invariant, API precondition, or
+documentation contract, and generate helper candidates only from those row
+fields.
+
+Before repair, Exp 5476 SHALL group failed rows by normalized verifier failure
+signature so repeated failure modes are measured explicitly. For every helper
+candidate, the runner SHALL record the helper kind, the row fields used as the
+inference substrate, the generated candidate source, the before-repair failure
+signature, and the final exact AST/KB recheck. A helper candidate SHALL be
+accepted only when the exact AST parse, KB lookup, and semantic-intent checks
+accept the repaired source. Unsupported helpers and helpers that would change
+the row semantics incorrectly SHALL be rejected and SHALL NOT count as false
+accepts.
+
+The artifact SHALL include bare top-level fields `witness_row_count`,
+`failure_signature_count`, `helper_candidate_count`,
+`accepted_helper_count`, `exact_recheck_pass_rate`, `false_accept_count`,
+`repeated_failure_reduction_rate`, `helper_lemma_repair_ready`,
+`inference_substrate`, `random_seed`, and `honest_verdict`.
+`inference_substrate` SHALL equal `deterministic_witness_repair_no_llm`, and
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `witness_row_count`: principle "bounded deterministic AST/KB witness rows selected for helper repair."
+- `failure_signature_count`: principle "pre-repair verifier signatures are grouped before repair."
+- `helper_candidate_count`: principle "bounded helper lemmas/contracts generated from row evidence only."
+- `accepted_helper_count`: principle "helpers counted only after exact AST/KB recheck accepts."
+- `exact_recheck_pass_rate`: principle "final authority pass rate over helper candidates."
+- `false_accept_count`: principle "exact recheck rejects unsupported helpers instead of trusting helper text."
+- `repeated_failure_reduction_rate`: principle "measures solved rows from repeated pre-repair failure signatures."
+- `helper_lemma_repair_ready`: principle "downstream gate for deterministic helper-contract witness repair."
+- `inference_substrate`: principle "no hidden LLM, source lookup, or generated judgment."
+- `random_seed`: principle "deterministic row selection and ordering."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:."
+
+### SCENARIO-VERIFY-5476: Helper Contracts Are Accepted Or Rejected By Exact Recheck
+
+Given Exp5445 and Exp5458 artifacts are present and validate under their own
+schemas, when Exp5476 selects failed AST/KB witness rows, then it groups rows
+by verifier failure signature before repair, generates bounded helper
+contracts from row source/spec/context fields, and re-runs exact AST parsing,
+KB lookup, and semantic-intent checks before accepting any helper.
+
+If a helper proposes an API member that remains absent from the KB, preserves a
+wrong documentation intent, uses a hidden source not present in the row, or
+claims acceptance without an exact recheck, then Exp5476 SHALL reject the helper
+candidate, keep `false_accept_count=0`, and report the rejected helper in the
+artifact rather than upgrading it to solved.
+
+## Implementation Status (REQ-VERIFY-5476)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5476 | Planned (`python/carnot/experiment_5476_helper_lemma_core_witness_repair_v497.py`, `results/experiment_5476_helper_lemma_core_witness_repair_v497.json`) | Planned (`tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
