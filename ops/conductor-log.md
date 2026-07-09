@@ -10666,3 +10666,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 16:47 UTC | Gated execution-time 2025-2026 source delta for .4 | OK | 122 passed, 1 warning in 11.11s |
 | 2026-07-09 17:47 UTC | Gated Preference-MaxSAT minimal hard/soft claim fi | OK | 88 passed, 1 warning in 8.95s |
 | 2026-07-09 18:05 UTC | Gated SOTA GGUF concept/claim evidence panel | OK | 90 passed, 1 warning in 12.09s |
+| 2026-07-09 18:22 UTC | Gated helper-contract hierarchical claim fixture | OK | 88 passed, 1 warning in 12.18s |
