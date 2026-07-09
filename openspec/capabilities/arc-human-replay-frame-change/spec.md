@@ -1434,6 +1434,52 @@ Required field principles:
 - `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5479: Target Rotation Live-Path Precheck Without Solve Claim
+
+Experiment 5479 SHALL write
+`results/experiment_5479_arc_target_rotation_precheck_v497.json` as a
+no-solve ARC target-rotation precheck before any level-up attempt. The workflow
+SHALL read `ops/arc_solve_registry.yaml`, the Exp5464 precheck shortlist, the
+Exp5465 no-bank artifact, and `ops/known-issues.md`; reject target levels that
+the live mechanism already reproduces; avoid recent no-bank targets `bp35:L3`,
+`ka59:L2`, and `cn04:L4` unless a new mechanism and target level are recorded;
+and prefer a rotated Exp5464 shortlist target such as `sb26:L3`, `g50t:L3`,
+`dc22:L3`, or `sp80:L3`.
+
+The workflow SHALL verify live-path eligibility through frame-only
+connected-component/color-blob salience diagnostics without reading hidden game
+source, running offline ground-truth BFS, or crediting a hand per-game adapter.
+The bounded dry check SHALL report connected components, color blobs, changed
+cells, target-region candidates, and known blockers. The artifact SHALL make no
+solve claim and SHALL use
+`inference_substrate=arc_live_path_precheck_no_solve`.
+
+The result artifact SHALL include `selected_game`,
+`selected_target_level`, `registry_reproducible_total_levels_before`,
+`duplicate_target_rejected`, `recent_no_bank_targets_avoided`,
+`live_path_reachable`, `hidden_source_reading`, `offline_bfs_used`,
+`hand_adapter_used`, `salience_feature_summary`,
+`arc_target_rotation_ready`, `solve_claimed`, `inference_substrate`,
+`random_seed`, and `honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "rotated non-duplicate Exp5464 shortlist game selected before any level-up attempt."
+- `selected_target_level`: principle "selected next level, strictly greater than the registry reproduced depth."
+- `registry_reproducible_total_levels_before`: principle "authoritative registry total before this no-solve precheck."
+- `duplicate_target_rejected`: principle "bare bool proving already reproduced target levels are rejected before selection."
+- `recent_no_bank_targets_avoided`: principle "auditable list containing bp35:L3, ka59:L2, and cn04:L4 unless a new mechanism justifies inclusion."
+- `live_path_reachable`: principle "true only when submitted live salience/perception code emits the dry-check features."
+- `hidden_source_reading`: principle "must be false; hidden/public source is not read in this precheck."
+- `offline_bfs_used`: principle "must be false; no offline ground-truth BFS is used."
+- `hand_adapter_used`: principle "must be false; target eligibility is not credited to a hand per-game adapter."
+- `salience_feature_summary`: principle "dict summarizing connected components, color blobs, changed cells, target-region candidates, and known blockers."
+- `arc_target_rotation_ready`: principle "true only when non-duplicate target rotation and live-path salience eligibility both pass."
+- `solve_claimed`: principle "must be false; this artifact is a precheck, not a level solve."
+- `inference_substrate`: principle "must equal arc_live_path_precheck_no_solve."
+- `random_seed`: principle "deterministic seed for reproducible target ordering and dry-check fixtures."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked: with no solve claim."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1981,3 +2027,27 @@ precheck depth
 Then and only then `offline_reproduced=true`, `new_level_banked=true`,
 `arc_registry_update_required=true`, and `honest_verdict` starts with
 `complete:`.
+
+### SCENARIO-ARC-FCP-5479: Rotated Target Precheck Avoids Duplicate And Recent No-Bank Lanes
+
+Given Exp5464 shortlisted `bp35:L3`, `sb26:L3`, `g50t:L3`, `dc22:L3`, and
+`sp80:L3`, Exp5465 no-banked `bp35:L3`, and the registry records those games at
+L2
+When experiment 5479 selects a target before any level-up attempt
+Then it rejects already reproduced duplicate target probes, avoids
+`bp35:L3`, `ka59:L2`, and `cn04:L4`, selects the first eligible rotated target
+from `sb26:L3`, `g50t:L3`, `dc22:L3`, or `sp80:L3`, and records the registry
+total before the attempt.
+
+Given the submitted live salience path is importable
+When experiment 5479 runs the bounded dry check
+Then the salience summary reports connected components, color blobs, changed
+cells, target-region candidates, and known blockers without hidden source
+reading, offline BFS, or hand-adapter credit.
+
+Given the artifact is validated
+When experiment 5479 writes
+`results/experiment_5479_arc_target_rotation_precheck_v497.json`
+Then `arc_target_rotation_ready=true`, `solve_claimed=false`,
+`inference_substrate=arc_live_path_precheck_no_solve`, and `honest_verdict`
+contains no level-solve claim.
