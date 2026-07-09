@@ -1,0 +1,1564 @@
+{
+  "core_constraint_id_count": 9,
+  "exact_final_authority": true,
+  "experiment_id": "experiment_5458_minimal_core_claim_repair_v496",
+  "field_principles": {
+    "core_constraint_id_count": "number of distinct stable core IDs used for repairs.",
+    "exact_final_authority": "exact verifier or AST/KB witness is the only acceptance authority.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "no hidden LLM or generated diagnosis.",
+    "minimal_core_repair_ready": "downstream gate for deterministic core-guided repair.",
+    "minimal_core_success_rate": "fraction of selected failures with a deterministic minimal repair core.",
+    "repair_case_count": "bounded failed-row coverage.",
+    "repaired_accept_rate_after_exact_recheck": "repairs accepted only after exact recheck.",
+    "row_provenance_checksum": "source-row and core reproducibility.",
+    "source_artifacts": "lists the exact Exp5443 and Exp5445 inputs.",
+    "unrepaired_reject_rate": "original failed rows still reject under exact authority."
+  },
+  "honest_verdict": "complete: deterministic minimal-core repairs accepted after exact recheck",
+  "inference_substrate": "deterministic_solver_core_repair_no_llm",
+  "milestone": "2026.07.496",
+  "minimal_core_repair_ready": true,
+  "minimal_core_success_rate": 1.0,
+  "random_seed": 5458,
+  "repair_case_count": 8,
+  "repair_cases": [
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5443:5443-001",
+      "encoded_constraints": [
+        {
+          "constraint_id": "vp:5443-001:schema:required_keys_present",
+          "repair_action": {
+            "op": "fill_missing_required_keys"
+          },
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-001:schema:allowed_keys_only",
+          "repair_action": {
+            "op": "remove_disallowed_keys"
+          },
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "vp:5443-001:schema:allowed_keys_only"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "exact_final_verifier",
+          "remaining_core_ids": [],
+          "removed_constraint_id": "vp:5443-001:schema:allowed_keys_only"
+        }
+      ],
+      "original_candidate": {
+        "admin_override": true,
+        "kind": "claim",
+        "payload": {
+          "answer": "yes"
+        }
+      },
+      "recheck_context": {
+        "allowed_keys": [
+          "kind",
+          "payload"
+        ],
+        "constraint_family": "schema_only_trap",
+        "fixture_id": "schema_extra_admin_override",
+        "prefixes": [
+          {
+            "accepted_by_potential": false,
+            "accepted_functions": [],
+            "fields": {},
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "abstain",
+                "evidence": {
+                  "present_required_keys": []
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": []
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "method_path_visible": false
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              }
+            ],
+            "prefix_id": "5443-001:empty",
+            "reward_evaluation_cost_units": 11
+          },
+          {
+            "accepted_by_potential": true,
+            "accepted_functions": [
+              "schema_key_coverage"
+            ],
+            "fields": {
+              "kind": "claim",
+              "payload": {
+                "answer": "yes"
+              }
+            },
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "accept",
+                "evidence": {
+                  "present_required_keys": [
+                    "kind",
+                    "payload"
+                  ]
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 1.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": []
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "method_path_visible": false
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              }
+            ],
+            "prefix_id": "5443-001:required-keys",
+            "reward_evaluation_cost_units": 11
+          }
+        ],
+        "required_keys": [
+          "kind",
+          "payload"
+        ],
+        "row_id": "5443-001"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "kind": "claim",
+          "payload": {
+            "answer": "yes"
+          }
+        },
+        "core_constraint_ids": [
+          "vp:5443-001:schema:allowed_keys_only"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "619b6dd039ce4a07b95727c1525589e1e813f8080d2106f15d0520267471ce68",
+        "repair_actions": [
+          {
+            "constraint_id": "vp:5443-001:schema:allowed_keys_only",
+            "op": "remove_disallowed_keys"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [],
+        "verifiers_run": [
+          "schema_exact",
+          "schema_only_trap_exact"
+        ]
+      },
+      "satisfied_constraint_ids": [
+        "vp:5443-001:schema:required_keys_present"
+      ],
+      "source_artifact": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+      "source_row_checksum": "8ee1deb70433ad1f91652821bca50fdf5e54955f7e5c77c7c89d371a141cb655",
+      "source_row_id": "5443-001",
+      "substrate": "verifier_potential",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "schema_exact_failed"
+        ],
+        "verifiers_run": [
+          "schema_exact",
+          "schema_only_trap_exact"
+        ]
+      },
+      "violated_constraint_ids": [
+        "vp:5443-001:schema:allowed_keys_only"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5443:5443-003",
+      "encoded_constraints": [
+        {
+          "constraint_id": "vp:5443-003:schema:required_keys_present",
+          "repair_action": {
+            "op": "fill_missing_required_keys"
+          },
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-003:schema:allowed_keys_only",
+          "repair_action": {
+            "op": "remove_disallowed_keys"
+          },
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-003:semantic:no_equal_object_negated_object",
+          "repair_action": {
+            "op": "separate_negated_object"
+          },
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "vp:5443-003:semantic:no_equal_object_negated_object"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "exact_final_verifier",
+          "remaining_core_ids": [],
+          "removed_constraint_id": "vp:5443-003:semantic:no_equal_object_negated_object"
+        }
+      ],
+      "original_candidate": {
+        "negated_object": "open",
+        "object": "open",
+        "relation": "state",
+        "subject": "door-17"
+      },
+      "recheck_context": {
+        "allowed_keys": [
+          "subject",
+          "relation",
+          "object",
+          "negated_object"
+        ],
+        "constraint_family": "semantic_contradiction",
+        "fixture_id": "semantic_open_and_not_open",
+        "prefixes": [
+          {
+            "accepted_by_potential": false,
+            "accepted_functions": [],
+            "fields": {},
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "abstain",
+                "evidence": {
+                  "present_required_keys": []
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": []
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "method_path_visible": false
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              }
+            ],
+            "prefix_id": "5443-003:empty",
+            "reward_evaluation_cost_units": 11
+          },
+          {
+            "accepted_by_potential": true,
+            "accepted_functions": [
+              "schema_key_coverage"
+            ],
+            "fields": {
+              "object": "open",
+              "relation": "state",
+              "subject": "door-17"
+            },
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "accept",
+                "evidence": {
+                  "present_required_keys": [
+                    "subject",
+                    "relation",
+                    "object"
+                  ]
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 1.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": []
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "method_path_visible": false
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              }
+            ],
+            "prefix_id": "5443-003:visible-claim",
+            "reward_evaluation_cost_units": 11
+          }
+        ],
+        "required_keys": [
+          "subject",
+          "relation",
+          "object"
+        ],
+        "row_id": "5443-003"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "negated_object": "not_open",
+          "object": "open",
+          "relation": "state",
+          "subject": "door-17"
+        },
+        "core_constraint_ids": [
+          "vp:5443-003:semantic:no_equal_object_negated_object"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "58e19014ee7ec13acfcaf6c35e1fc8d3d734df62caeb001ca8e90a848493d00d",
+        "repair_actions": [
+          {
+            "constraint_id": "vp:5443-003:semantic:no_equal_object_negated_object",
+            "op": "separate_negated_object"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [],
+        "verifiers_run": [
+          "schema_exact",
+          "semantic_contradiction_exact"
+        ]
+      },
+      "satisfied_constraint_ids": [
+        "vp:5443-003:schema:required_keys_present",
+        "vp:5443-003:schema:allowed_keys_only"
+      ],
+      "source_artifact": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+      "source_row_checksum": "d32303d909be8cb4d87ddd3daedfe5159fa794651973b937344603e5ab110cb2",
+      "source_row_id": "5443-003",
+      "substrate": "verifier_potential",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "semantic_contradiction_detected"
+        ],
+        "verifiers_run": [
+          "schema_exact",
+          "semantic_contradiction_exact"
+        ]
+      },
+      "violated_constraint_ids": [
+        "vp:5443-003:semantic:no_equal_object_negated_object"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5443:5443-005",
+      "encoded_constraints": [
+        {
+          "constraint_id": "vp:5443-005:schema:required_keys_present",
+          "repair_action": {
+            "op": "fill_missing_required_keys"
+          },
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-005:schema:allowed_keys_only",
+          "repair_action": {
+            "op": "remove_disallowed_keys"
+          },
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-005:arithmetic:sum_matches_operands",
+          "repair_action": {
+            "op": "set_sum_from_operands"
+          },
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "vp:5443-005:arithmetic:sum_matches_operands"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "exact_final_verifier",
+          "remaining_core_ids": [],
+          "removed_constraint_id": "vp:5443-005:arithmetic:sum_matches_operands"
+        }
+      ],
+      "original_candidate": {
+        "sum": 6,
+        "x": 2,
+        "y": 3
+      },
+      "recheck_context": {
+        "allowed_keys": [
+          "x",
+          "y",
+          "sum"
+        ],
+        "constraint_family": "arithmetic_finite_domain",
+        "domain_fields": [
+          "x",
+          "y",
+          "sum"
+        ],
+        "finite_domain": {
+          "max": 9,
+          "min": 0
+        },
+        "fixture_id": "arithmetic_wrong_sum",
+        "prefixes": [
+          {
+            "accepted_by_potential": false,
+            "accepted_functions": [],
+            "fields": {},
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "abstain",
+                "evidence": {
+                  "present_required_keys": []
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": []
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "method_path_visible": false
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              }
+            ],
+            "prefix_id": "5443-005:empty",
+            "reward_evaluation_cost_units": 11
+          },
+          {
+            "accepted_by_potential": true,
+            "accepted_functions": [
+              "schema_key_coverage"
+            ],
+            "fields": {
+              "x": 2,
+              "y": 3
+            },
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "accept",
+                "evidence": {
+                  "present_required_keys": [
+                    "x",
+                    "y"
+                  ]
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 1.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": [
+                    "x",
+                    "y"
+                  ],
+                  "in_domain": true
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.7
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "method_path_visible": false
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              }
+            ],
+            "prefix_id": "5443-005:operands",
+            "reward_evaluation_cost_units": 11
+          }
+        ],
+        "required_keys": [
+          "x",
+          "y"
+        ],
+        "row_id": "5443-005"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "sum": 5,
+          "x": 2,
+          "y": 3
+        },
+        "core_constraint_ids": [
+          "vp:5443-005:arithmetic:sum_matches_operands"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "a250179881f4b08b6135d6450c0f7676b0691ec928067bee78627520ac827790",
+        "repair_actions": [
+          {
+            "constraint_id": "vp:5443-005:arithmetic:sum_matches_operands",
+            "op": "set_sum_from_operands"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [],
+        "verifiers_run": [
+          "schema_exact",
+          "arithmetic_finite_domain_exact"
+        ]
+      },
+      "satisfied_constraint_ids": [
+        "vp:5443-005:schema:required_keys_present",
+        "vp:5443-005:schema:allowed_keys_only"
+      ],
+      "source_artifact": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+      "source_row_checksum": "64339c9e68b881063509b937c21922a0cb96fe4eeaadd9a4f4802a3d75c4eb79",
+      "source_row_id": "5443-005",
+      "substrate": "verifier_potential",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "arithmetic_relation_failed"
+        ],
+        "verifiers_run": [
+          "schema_exact",
+          "arithmetic_finite_domain_exact"
+        ]
+      },
+      "violated_constraint_ids": [
+        "vp:5443-005:arithmetic:sum_matches_operands"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5443:5443-007",
+      "encoded_constraints": [
+        {
+          "constraint_id": "vp:5443-007:schema:required_keys_present",
+          "repair_action": {
+            "op": "fill_missing_required_keys"
+          },
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-007:schema:allowed_keys_only",
+          "repair_action": {
+            "op": "remove_disallowed_keys"
+          },
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-007:api:call_allowed",
+          "satisfied": true
+        },
+        {
+          "constraint_id": "vp:5443-007:api:signature_matches",
+          "repair_action": {
+            "op": "set_api_signature"
+          },
+          "satisfied": false
+        },
+        {
+          "constraint_id": "vp:5443-007:api:nonce_fresh",
+          "repair_action": {
+            "op": "set_api_nonce_fresh"
+          },
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "vp:5443-007:api:nonce_fresh",
+        "vp:5443-007:api:signature_matches"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "exact_final_verifier",
+          "remaining_core_ids": [
+            "vp:5443-007:api:signature_matches"
+          ],
+          "removed_constraint_id": "vp:5443-007:api:nonce_fresh"
+        },
+        {
+          "accepted_without_constraint": false,
+          "authority": "exact_final_verifier",
+          "remaining_core_ids": [
+            "vp:5443-007:api:nonce_fresh"
+          ],
+          "removed_constraint_id": "vp:5443-007:api:signature_matches"
+        }
+      ],
+      "original_candidate": {
+        "method": "POST",
+        "path": "/orders/42/refund",
+        "witness": {
+          "nonce_reused": true,
+          "signature": "sig:refund:42:forged"
+        }
+      },
+      "recheck_context": {
+        "allowed_keys": [
+          "method",
+          "path",
+          "witness"
+        ],
+        "api": {
+          "allowed_calls": [
+            [
+              "POST",
+              "/orders/42/refund"
+            ]
+          ],
+          "expected_signature": "sig:refund:42:approved"
+        },
+        "constraint_family": "api_call_witness",
+        "fixture_id": "api_refund_bad_witness",
+        "prefixes": [
+          {
+            "accepted_by_potential": false,
+            "accepted_functions": [],
+            "fields": {},
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "abstain",
+                "evidence": {
+                  "present_required_keys": []
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": []
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "method_path_visible": false
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              }
+            ],
+            "prefix_id": "5443-007:empty",
+            "reward_evaluation_cost_units": 11
+          },
+          {
+            "accepted_by_potential": true,
+            "accepted_functions": [
+              "schema_key_coverage",
+              "api_shape_potential"
+            ],
+            "fields": {
+              "method": "POST",
+              "path": "/orders/42/refund"
+            },
+            "potential_evaluations": [
+              {
+                "cost_units": 1,
+                "decision": "accept",
+                "evidence": {
+                  "present_required_keys": [
+                    "method",
+                    "path"
+                  ]
+                },
+                "function_id": "schema_key_coverage",
+                "monotone": true,
+                "score": 1.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "visible_pair": false
+                },
+                "function_id": "semantic_pair_consistency",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "tool_visible": false
+                },
+                "function_id": "action_allowlist_potential",
+                "monotone": true,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "domain_fields_visible": []
+                },
+                "function_id": "finite_domain_bounds",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "abstain",
+                "evidence": {
+                  "triple_visible": false
+                },
+                "function_id": "ontology_shape_potential",
+                "monotone": false,
+                "score": 0.0
+              },
+              {
+                "cost_units": 2,
+                "decision": "accept",
+                "evidence": {
+                  "call_allowed": true,
+                  "method_path_visible": true
+                },
+                "function_id": "api_shape_potential",
+                "monotone": false,
+                "score": 0.7
+              }
+            ],
+            "prefix_id": "5443-007:method-path",
+            "reward_evaluation_cost_units": 11
+          }
+        ],
+        "required_keys": [
+          "method",
+          "path"
+        ],
+        "row_id": "5443-007"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "method": "POST",
+          "path": "/orders/42/refund",
+          "witness": {
+            "nonce_reused": false,
+            "signature": "sig:refund:42:approved"
+          }
+        },
+        "core_constraint_ids": [
+          "vp:5443-007:api:nonce_fresh",
+          "vp:5443-007:api:signature_matches"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "171fbcd61bfc25cb5fcad5b47eb41cb3b3f81c0efd0dc180bcaca2903cf740c7",
+        "repair_actions": [
+          {
+            "constraint_id": "vp:5443-007:api:nonce_fresh",
+            "op": "set_api_nonce_fresh"
+          },
+          {
+            "constraint_id": "vp:5443-007:api:signature_matches",
+            "op": "set_api_signature"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [],
+        "verifiers_run": [
+          "schema_exact",
+          "api_call_witness_exact"
+        ]
+      },
+      "satisfied_constraint_ids": [
+        "vp:5443-007:schema:required_keys_present",
+        "vp:5443-007:schema:allowed_keys_only",
+        "vp:5443-007:api:call_allowed"
+      ],
+      "source_artifact": "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+      "source_row_checksum": "03377f829a8c881a49bb4f0bb8ab727ac2e1178f1bb8eb45c408c35d9495d1be",
+      "source_row_id": "5443-007",
+      "substrate": "verifier_potential",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "exact_final_verifier",
+        "failure_reasons": [
+          "api_witness_signature_failed"
+        ],
+        "verifiers_run": [
+          "schema_exact",
+          "api_call_witness_exact"
+        ]
+      },
+      "violated_constraint_ids": [
+        "vp:5443-007:api:signature_matches",
+        "vp:5443-007:api:nonce_fresh"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5445:fixture.nonexistent_json_method",
+      "encoded_constraints": [
+        {
+          "constraint_id": "astkb:fixture.nonexistent_json_method:ast:parse_ok",
+          "satisfied": true
+        },
+        {
+          "constraint_id": "astkb:fixture.nonexistent_json_method:call_exists:json.parse",
+          "repair_action": {
+            "op": "rewrite_to_expected_call"
+          },
+          "satisfied": false
+        },
+        {
+          "constraint_id": "astkb:fixture.nonexistent_json_method:intent_matches:parse_json_to_object",
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "astkb:fixture.nonexistent_json_method:call_exists:json.parse"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "ast_kb_witness",
+          "remaining_core_ids": [],
+          "removed_constraint_id": "astkb:fixture.nonexistent_json_method:call_exists:json.parse"
+        }
+      ],
+      "original_candidate": {
+        "source": "import json\nresult = json.parse(payload)\n"
+      },
+      "recheck_context": {
+        "api_family": "json",
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "first_call_source_segment": "json.parse(payload)",
+        "fixture_family": "nonexistent_method",
+        "intent": "parse_json_to_object",
+        "row_id": "fixture.nonexistent_json_method"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "source": "import json\nresult = json.loads(payload)\n"
+        },
+        "core_constraint_ids": [
+          "astkb:fixture.nonexistent_json_method:call_exists:json.parse"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "1ac48b17090aa6a3dbfd719ab25a99fddb6add8667569e82964bbab55b3dc8f2",
+        "repair_actions": [
+          {
+            "constraint_id": "astkb:fixture.nonexistent_json_method:call_exists:json.parse",
+            "op": "rewrite_to_expected_call"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "witness_checksum": "4cf7d7bc3399a62f86d4bff984da8b77ae64d5ec86d17eef6964e3f19fe82137"
+      },
+      "satisfied_constraint_ids": [
+        "astkb:fixture.nonexistent_json_method:ast:parse_ok"
+      ],
+      "source_artifact": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+      "source_row_checksum": "fe691e9a14eba423067e880771602eafa892872d3c944bb7e577193b295c91e0",
+      "source_row_id": "fixture.nonexistent_json_method",
+      "substrate": "ast_kb_witness",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "parse",
+            "col_offset": 9,
+            "fqn": "json.parse",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.parse(payload)"
+          }
+        ],
+        "failure_reasons": [
+          "intent_mismatch:parse_json_to_object",
+          "kb_missing_call:json.parse"
+        ],
+        "witness_checksum": "8a52b81660242f75ee7add6f317ab3292a581d13dbd88ea172269d96d49e4975"
+      },
+      "violated_constraint_ids": [
+        "astkb:fixture.nonexistent_json_method:call_exists:json.parse",
+        "astkb:fixture.nonexistent_json_method:intent_matches:parse_json_to_object"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5445:fixture.wrong_module_alias",
+      "encoded_constraints": [
+        {
+          "constraint_id": "astkb:fixture.wrong_module_alias:ast:parse_ok",
+          "satisfied": true
+        },
+        {
+          "constraint_id": "astkb:fixture.wrong_module_alias:call_exists:statistics.loads",
+          "repair_action": {
+            "op": "rewrite_to_expected_call"
+          },
+          "satisfied": false
+        },
+        {
+          "constraint_id": "astkb:fixture.wrong_module_alias:intent_matches:parse_json_to_object",
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "astkb:fixture.wrong_module_alias:call_exists:statistics.loads"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "ast_kb_witness",
+          "remaining_core_ids": [],
+          "removed_constraint_id": "astkb:fixture.wrong_module_alias:call_exists:statistics.loads"
+        }
+      ],
+      "original_candidate": {
+        "source": "import statistics as json\nresult = json.loads(payload)\n"
+      },
+      "recheck_context": {
+        "api_family": "statistics",
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "first_call_source_segment": "json.loads(payload)",
+        "fixture_family": "wrong_module_alias",
+        "intent": "parse_json_to_object",
+        "row_id": "fixture.wrong_module_alias"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "source": "import json\nresult = json.loads(payload)\n"
+        },
+        "core_constraint_ids": [
+          "astkb:fixture.wrong_module_alias:call_exists:statistics.loads"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "0cb852fcc5daf7a53d9db276f322cb5e4403b2b819b0270a59bd7f5fe087a85e",
+        "repair_actions": [
+          {
+            "constraint_id": "astkb:fixture.wrong_module_alias:call_exists:statistics.loads",
+            "op": "rewrite_to_expected_call"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "witness_checksum": "16af4f70d452312869239bfb57a52c1db3898eca592f5962ce27e0ce29635f7f"
+      },
+      "satisfied_constraint_ids": [
+        "astkb:fixture.wrong_module_alias:ast:parse_ok"
+      ],
+      "source_artifact": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+      "source_row_checksum": "ef3d46497c687327e23aa89772fc93799def074667da6fdeb691b372de51145a",
+      "source_row_id": "fixture.wrong_module_alias",
+      "substrate": "ast_kb_witness",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "statistics.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [
+          "intent_mismatch:parse_json_to_object",
+          "kb_missing_call:statistics.loads"
+        ],
+        "witness_checksum": "0b78c54b09901774dd9cfbb9b4140cf04382e4a24ee8b0d01892d299c74a6d43"
+      },
+      "violated_constraint_ids": [
+        "astkb:fixture.wrong_module_alias:call_exists:statistics.loads",
+        "astkb:fixture.wrong_module_alias:intent_matches:parse_json_to_object"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5445:fixture.imported_symbol_missing",
+      "encoded_constraints": [
+        {
+          "constraint_id": "astkb:fixture.imported_symbol_missing:ast:parse_ok",
+          "satisfied": true
+        },
+        {
+          "constraint_id": "astkb:fixture.imported_symbol_missing:imported_symbol_exists:json.parse",
+          "repair_action": {
+            "op": "rewrite_to_expected_call"
+          },
+          "satisfied": false
+        },
+        {
+          "constraint_id": "astkb:fixture.imported_symbol_missing:call_exists:json.parse",
+          "satisfied": false
+        },
+        {
+          "constraint_id": "astkb:fixture.imported_symbol_missing:intent_matches:parse_json_to_object",
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "astkb:fixture.imported_symbol_missing:imported_symbol_exists:json.parse"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "ast_kb_witness",
+          "remaining_core_ids": [],
+          "removed_constraint_id": "astkb:fixture.imported_symbol_missing:imported_symbol_exists:json.parse"
+        }
+      ],
+      "original_candidate": {
+        "source": "from json import parse\nresult = parse(payload)\n"
+      },
+      "recheck_context": {
+        "api_family": "json",
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "first_call_source_segment": "parse(payload)",
+        "fixture_family": "imported_symbol_missing",
+        "intent": "parse_json_to_object",
+        "row_id": "fixture.imported_symbol_missing"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "source": "import json\nresult = json.loads(payload)\n"
+        },
+        "core_constraint_ids": [
+          "astkb:fixture.imported_symbol_missing:imported_symbol_exists:json.parse"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "94cc53048f4e070496b8f7fec1f0bec8bc6af286eddde01bd44b6b4cec16fe3e",
+        "repair_actions": [
+          {
+            "constraint_id": "astkb:fixture.imported_symbol_missing:imported_symbol_exists:json.parse",
+            "op": "rewrite_to_expected_call"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 9,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "witness_checksum": "d761f47f3ef88b63520d2510f6096c44ada78445c00adcaf9ce988392592f958"
+      },
+      "satisfied_constraint_ids": [
+        "astkb:fixture.imported_symbol_missing:ast:parse_ok"
+      ],
+      "source_artifact": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+      "source_row_checksum": "7e25351bdc9b609b10b4fc1b64ae8918517838910bc4c5359f49faab91441406",
+      "source_row_id": "fixture.imported_symbol_missing",
+      "substrate": "ast_kb_witness",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "imported_symbol",
+            "call_name": "parse",
+            "col_offset": 9,
+            "fqn": "json.parse",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "parse(payload)"
+          }
+        ],
+        "failure_reasons": [
+          "imported_symbol_missing:json.parse",
+          "intent_mismatch:parse_json_to_object",
+          "kb_missing_call:json.parse"
+        ],
+        "witness_checksum": "0af4fed156de202f20522f214b65e431c153031505fd28f90ec1f09366481bd5"
+      },
+      "violated_constraint_ids": [
+        "astkb:fixture.imported_symbol_missing:imported_symbol_exists:json.parse",
+        "astkb:fixture.imported_symbol_missing:call_exists:json.parse",
+        "astkb:fixture.imported_symbol_missing:intent_matches:parse_json_to_object"
+      ]
+    },
+    {
+      "accepted_after_exact_recheck": true,
+      "case_id": "exp5445:fixture.argument_intent_mismatch",
+      "encoded_constraints": [
+        {
+          "constraint_id": "astkb:fixture.argument_intent_mismatch:ast:parse_ok",
+          "satisfied": true
+        },
+        {
+          "constraint_id": "astkb:fixture.argument_intent_mismatch:call_exists:json.dumps",
+          "satisfied": true
+        },
+        {
+          "constraint_id": "astkb:fixture.argument_intent_mismatch:intent_matches:parse_json_to_object",
+          "repair_action": {
+            "op": "rewrite_to_expected_call"
+          },
+          "satisfied": false
+        }
+      ],
+      "minimal_core_ids": [
+        "astkb:fixture.argument_intent_mismatch:intent_matches:parse_json_to_object"
+      ],
+      "minimality_evidence": [
+        {
+          "accepted_without_constraint": false,
+          "authority": "ast_kb_witness",
+          "remaining_core_ids": [],
+          "removed_constraint_id": "astkb:fixture.argument_intent_mismatch:intent_matches:parse_json_to_object"
+        }
+      ],
+      "original_candidate": {
+        "source": "import json\ntext = json.dumps(payload)\n"
+      },
+      "recheck_context": {
+        "api_family": "json",
+        "expected_call_fqns": [
+          "json.loads"
+        ],
+        "first_call_source_segment": "json.dumps(payload)",
+        "fixture_family": "argument_intent_mismatch",
+        "intent": "parse_json_to_object",
+        "row_id": "fixture.argument_intent_mismatch"
+      },
+      "repair_hypothesis": {
+        "candidate": {
+          "source": "import json\nvalue = json.loads(payload)\n"
+        },
+        "core_constraint_ids": [
+          "astkb:fixture.argument_intent_mismatch:intent_matches:parse_json_to_object"
+        ],
+        "generated_from": "minimal_core_ids_only",
+        "hypothesis_id": "2c7031b3321342391a7241654b90a2146e4a08687cdbc774c4bec06177534fae",
+        "repair_actions": [
+          {
+            "constraint_id": "astkb:fixture.argument_intent_mismatch:intent_matches:parse_json_to_object",
+            "op": "rewrite_to_expected_call"
+          }
+        ]
+      },
+      "repaired_exact_recheck": {
+        "accepted": true,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "loads",
+            "col_offset": 8,
+            "fqn": "json.loads",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.loads(payload)"
+          }
+        ],
+        "failure_reasons": [],
+        "witness_checksum": "2398febcd27c91101111f32b6bfc4dda3c8487484722140f0eb9f73570e07e0f"
+      },
+      "satisfied_constraint_ids": [
+        "astkb:fixture.argument_intent_mismatch:ast:parse_ok",
+        "astkb:fixture.argument_intent_mismatch:call_exists:json.dumps"
+      ],
+      "source_artifact": "results/experiment_5445_static_ast_kb_witness_constraints_v495.json",
+      "source_row_checksum": "fbd907933e89de4246e552641bc4f68c573399b22886861b2c3fa0649c9ec500",
+      "source_row_id": "fixture.argument_intent_mismatch",
+      "substrate": "ast_kb_witness",
+      "unrepaired_exact_recheck": {
+        "accepted": false,
+        "authority": "ast_kb_witness",
+        "call_sites": [
+          {
+            "call_kind": "attribute",
+            "call_name": "dumps",
+            "col_offset": 7,
+            "fqn": "json.dumps",
+            "lineno": 2,
+            "resolved": true,
+            "source_segment": "json.dumps(payload)"
+          }
+        ],
+        "failure_reasons": [
+          "intent_mismatch:parse_json_to_object"
+        ],
+        "witness_checksum": "6d2bc7c8e861b2c3ce8fe6257fbc03ce0a208b59ec08f5a8088944ac14ae8b01"
+      },
+      "violated_constraint_ids": [
+        "astkb:fixture.argument_intent_mismatch:intent_matches:parse_json_to_object"
+      ]
+    }
+  ],
+  "repaired_accept_rate_after_exact_recheck": 1.0,
+  "reproducibility_checksum": "9b4499d12e82e0ab82ec3550b6b77397e8d84b4eb608143603c9041acf858fcb",
+  "research_conductor_modified": false,
+  "row_provenance_checksum": "b854fa1cc2b3866d29f540ccedf261698ec35a2f360f8443cbc4eb73f3139240",
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5458.minimal_core_claim_repair.v496",
+  "source_artifacts": [
+    "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+    "results/experiment_5445_static_ast_kb_witness_constraints_v495.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5458",
+    "SCENARIO-VERIFY-5458",
+    "REQ-SAFE-5443",
+    "REQ-CODE-5445"
+  ],
+  "task_id": "exp5458-v496-minimal-core-claim-repair",
+  "tests_run": [],
+  "unrepaired_reject_rate": 1.0
+}

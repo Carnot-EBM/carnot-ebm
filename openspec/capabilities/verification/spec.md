@@ -28063,6 +28063,73 @@ with `pbit_assumption_bridge_ready=false`, precise blocker details, and an
 |---|---|---|
 | REQ-VERIFY-5448 | Planned (`python/carnot/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py`, `results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json`) | Planned (`tests/python/test_experiment_5448_active_constraint_pbit_sparsity_bridge_v495.py`) |
 
+### REQ-VERIFY-5458: Minimal-Core Claim Repair V496
+
+The repository SHALL provide Exp 5458 at
+`python/carnot/experiment_5458_minimal_core_claim_repair_v496.py` and write
+`results/experiment_5458_minimal_core_claim_repair_v496.json` without invoking
+a live LLM, local GGUF model, external judge, generated-text diagnosis, or
+modifying `scripts/research_conductor.py`. The runner SHALL consume the checked
+in Exp5443 verifier-potential fixture and Exp5445 AST/KB witness fixture, select
+a bounded set of failed rows from both source artifacts, encode each failure as
+stable constraint IDs, and derive a deterministic minimal repair core where the
+available exact verifier can prove that every listed core ID is required for the
+repair candidate to pass final recheck.
+
+Repair hypotheses SHALL be generated only from core IDs and deterministic row
+metadata. Free-form model text, prose diagnoses, confidence scores, prefix
+potentials, and witness self-reports SHALL NOT determine the repair. For every
+repair case, the original unrepaired row SHALL be rechecked and rejected by the
+same exact authority, the repaired candidate SHALL be rechecked by the same
+exact authority before it can be accepted, and non-minimal or stale core ID sets
+SHALL be rejected before any repair hypothesis is emitted.
+
+The artifact SHALL include top-level fields `source_artifacts`,
+`repair_case_count`, `minimal_core_success_rate`,
+`core_constraint_id_count`, `repaired_accept_rate_after_exact_recheck`,
+`unrepaired_reject_rate`, `exact_final_authority`,
+`row_provenance_checksum`, `minimal_core_repair_ready`,
+`inference_substrate`, and `honest_verdict`. `exact_final_authority` SHALL be
+true, `inference_substrate` SHALL equal
+`deterministic_solver_core_repair_no_llm`, and `honest_verdict` SHALL start
+with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `source_artifacts`: principle "lists the exact Exp5443 and Exp5445 inputs."
+- `repair_case_count`: principle "bounded failed-row coverage."
+- `minimal_core_success_rate`: principle "fraction of selected failures with a deterministic minimal repair core."
+- `core_constraint_id_count`: principle "number of distinct stable core IDs used for repairs."
+- `repaired_accept_rate_after_exact_recheck`: principle "repairs accepted only after exact recheck."
+- `unrepaired_reject_rate`: principle "original failed rows still reject under exact authority."
+- `exact_final_authority`: principle "exact verifier or AST/KB witness is the only acceptance authority."
+- `row_provenance_checksum`: principle "source-row and core reproducibility."
+- `minimal_core_repair_ready`: principle "downstream gate for deterministic core-guided repair."
+- `inference_substrate`: principle "no hidden LLM or generated diagnosis."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:."
+
+### SCENARIO-VERIFY-5458: Core-Guided Repairs Require Exact Recheck
+
+Given Exp5443 and Exp5445 artifacts are present and validate under their own
+schemas, when Exp5458 selects bounded failed verifier-potential and AST/KB
+witness rows, then each selected row records stable core constraint IDs,
+minimal-core evidence, deterministic repair actions derived from those IDs,
+the unrepaired exact rejection, and the repaired exact recheck result.
+
+If a core contains an unrelated satisfied constraint, omits a required failing
+constraint, reuses stale IDs from another row, or produces a candidate that only
+claims to be repaired without satisfying the exact verifier or AST/KB witness,
+then Exp5458 SHALL reject the core or candidate and SHALL NOT count it as a
+repaired accept. `minimal_core_repair_ready` may be true only when all selected
+unrepaired rows reject, all generated repairs accept after exact recheck, and
+the artifact provenance checksum matches the source rows and core IDs.
+
+## Implementation Status (REQ-VERIFY-5458)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5458 | Planned (`python/carnot/experiment_5458_minimal_core_claim_repair_v496.py`, `results/experiment_5458_minimal_core_claim_repair_v496.json`) | Planned (`tests/python/test_experiment_5458_minimal_core_claim_repair_v496.py`) |
+
 ### REQ-VERIFY-5433: Active-Constraint Diversity LNS Diagnostic V494
 
 The repository SHALL provide Exp 5433 at
