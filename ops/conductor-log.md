@@ -10604,3 +10604,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 03:53 UTC | Gated local SOTA CSL memory-routing panel after Ex | OK | 88 passed, 1 warning in 12.21s |
 | 2026-07-09 04:13 UTC | Minimal-core p-bit/p-dit bridge with solver author | OK | 89 passed, 1 warning in 12.63s |
 | 2026-07-09 04:43 UTC | Gated hardware boundary-exchange timing receipts a | OK | 88 passed, 1 warning in 9.08s |
+| 2026-07-09 04:59 UTC | ARC metric-integrity and perception precheck for l | OK | 87 passed, 1 warning in 12.36s |
