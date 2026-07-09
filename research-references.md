@@ -28673,3 +28673,91 @@ Execution-time sweep after the `.497` planner refresh checked arXiv, OpenReview,
 - **Watch-only/excluded:** GASP, UA-ChatDev, AReaL2.0, VaseMuseum, Pitwall fine-tuning, LatentGym post-training, Extropic TSU/XTR-0/Z1, Logical Intelligence Aleph/Kona pages, and Semantic Scholar citation routes were checked but not promoted as executable `.497` dependencies.
 
 <!-- V497-EXECUTION-REFRESH-20260709-END -->
+
+
+### V498 Planner Refresh - 20260709
+
+Planning-time sweep for milestone `.498` rechecked arXiv, OpenReview,
+HuggingFace Papers, Semantic Scholar routes for EBT `2507.02092` and
+ARM-EBM `2512.15605`, GitHub repositories, Extropic writing, Logical
+Intelligence public pages, the V497 planner/execution refresh blocks, and the
+exclusion manifest. The sweep keeps guided decoding quarantined, leaves
+retired external text-scorer and generic ARC exploration scopes closed, and
+adds the following Carnot-local hooks.
+
+### New actionable deltas
+- **Reliable Reasoning with Large Language Models via Preference-Based Maximum
+  Satisfiability** (https://arxiv.org/abs/2605.29687): Combines LLM-generated
+  encodings with exact MaxSAT solving and independently verified reference
+  semantics for feasibility and optimality. Carnot hook: build a typed
+  claim-state fixture where hard constraints stay exact and soft preferences
+  rank admissible repairs; report hard-constraint pass rate, preference delta,
+  false accepts, and independent reference-check agreement. This is not token
+  steering and does not lift guided-decoding quarantine.
+- **Natural Language based Specification and Verification**
+  (https://arxiv.org/abs/2605.11315): Explores LLM-generated natural-language
+  specifications and compositional verification as a bridge before rigid formal
+  languages. Carnot hook: extend helper-contract witness repair with NL spec
+  rows that must compile to explicit predicates or exact tests before being
+  credited; record ambiguity, predicate extraction failures, and exact recheck
+  outcomes.
+- **A Concept Level Energy-Based Framework for Interpreting Black-box LLMs**
+  (https://openreview.net/forum?id=Uh0F0079Lh): Uses concept-level energies to
+  quantify consistency between a prompt and generated response. Carnot hook:
+  add advisory concept-energy attribution to local SOTA evidence telemetry so
+  verifier decisions expose which concept claims contributed to accept/reject;
+  keep exact validators as the only authority.
+
+### Promoted existing references for `.498`
+- **LatentGym** (https://arxiv.org/abs/2606.15306) becomes the main CSL
+  measurement reference after Exp5474 was adversarially flagged for metric
+  tautology despite a clean artifact. `.498` should separate exploration,
+  exploitation, memory support, and exact-validator outcomes before another
+  headline CSL scale claim.
+- **Pitwall** (https://arxiv.org/abs/2607.06495) remains the typed
+  factual-claim reference for evidence telemetry: decompose generated answers
+  into state-linked claims and require support/fallback accounting.
+- **Constrained Adaptive Rejection Sampling / CARS**
+  (https://openreview.net/forum?id=OhndOnT4Ih) remains relevant only as a
+  post-candidate rejection/abstention pattern. Carnot should not reopen
+  token-level guided decoding; any use must sample complete candidates and let
+  exact validators accept, reject, or abstain.
+- **Implicitly Parallel Neuromorphic Solver Design for CSPs**
+  (https://arxiv.org/abs/2603.01150) was already indexed. `.498` should fold
+  partition/update telemetry into the active-constraint and hardware receipt
+  lane without making speedup claims.
+
+### Secondary-source status
+- **Extropic:** X0/XTR-0/TSU writing continues to match Carnot's
+  programmable-energy and thermodynamic-sampling direction, but remains
+  watch-only because there is no local authenticated TSU execution path.
+- **Logical Intelligence:** Aleph/Kona public pages reinforce the architecture
+  split between LLM coordination and EBRM/global-state reasoning. They remain
+  context only unless local authenticated access appears.
+- **Semantic Scholar EBT/ARM-EBM routes:** public citation/search routes did
+  not surface a stronger local dependency than the existing EBT/ARM-EBM hooks,
+  MaxSAT reference-semantics pattern, and concept-energy telemetry above.
+- **HuggingFace Papers:** verification and hallucination-mitigation pages
+  sharpen test fixtures, but none supersede Carnot's exact-solver authority or
+  local GGUF runtime requirements.
+- **GitHub:** EBM/KAN/constraint repositories remain watch references. No
+  repository found in the sweep replaces local exact validators, GGUF receipts,
+  or hardware receipt discipline.
+
+### Planner impact
+- Start `.498` with a transition/source-delta pair, then repair the Exp5474
+  CSL tautology flag before depending on CSL scale-up as a headline lane.
+- Move verification forward with preference-MaxSAT hard/soft constraint rows,
+  NL helper-contract witnesses, and concept-attributed SOTA evidence telemetry
+  under exact final validators.
+- Continue continuous self-learning as the growth lane, but split exploration
+  from exploitation and require independent metrics before a SOTA GGUF CSL
+  headline.
+- Keep hardware receipt-only: active-constraint partition descriptors, matched
+  hashes, repeated timing when boards are reachable, and explicit no-speedup
+  wording unless authenticated local timing supports otherwise.
+- Maintain the ARC standing floor through target precheck plus one live
+  trajectory-induction attempt that avoids duplicate solves, recent no-bank
+  targets, offline BFS, and generic retired exploration signals.
+
+<!-- V498-PLANNER-REFRESH-20260709-END -->

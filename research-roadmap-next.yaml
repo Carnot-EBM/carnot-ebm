@@ -1,0 +1,926 @@
+milestone: "2026.07.498"
+milestone_title: "CSL Corrigendum, Preference-MaxSAT Verification, Concept Evidence Telemetry, Hardware Receipts, and ARC Trajectory Induction"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+overdue_priority_override: "Operator request for this planning turn explicitly says Do NOT modify scripts/research_conductor.py, so the stale retro_timing_fallback_wiring priority is not included in this research roadmap."
+tasks:
+  - id: exp5482-transition-v498
+    milestone: "2026.07.498"
+    title: "Transition .497 outcomes into .498 execution context"
+    priority: critical
+    track: planning
+    deliverable: results/experiment_5482_transition_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 30
+    estimated_wall_time_min: 20
+    prior_failures:
+      - experiment_id: exp5481-capstone-v497
+        verdict: "complete: .497 capstone read 13/13 artifacts; guided_decoding=quarantined; csl=headline_ready; arc_registry_delta=0; hardware_speedup_claim=False."
+        addressed_by: "This is the routine next-milestone transition from .497 to .498 and carries terminal facts forward rather than rerunning the capstone."
+        retire_if_same_verdict: true
+      - experiment_id: exp5468-transition-v497
+        verdict: "complete: archived .496 terminal evidence into .497 transition receipt with next_task_range exp5468-exp5481."
+        addressed_by: "This transition targets the newer .497 artifact set and increments the CalVer sequence to 2026.07.498."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      You are starting milestone 2026.07.498 on {date} after all 2026.07.497 tasks completed. The planner has staged {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml. Your job is to archive prior milestone facts into a transition receipt, not to re-plan the milestone.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/results/experiment_5481_capstone_v497.json
+      - {project_root}/results/experiment_5474_sota_csl_scale_v497.json
+      - {project_root}/results/experiment_5480_arc_live_salience_levelup_v497.json
+
+      TASK:
+      Emit results/experiment_5482_transition_v498.json summarizing exact .497 terminal evidence and .498 execution gates.
+
+      CONCRETE STEPS:
+      1. Read the listed files and extract .497 facts from real artifacts, especially Exp5481, Exp5474, and Exp5480.
+      2. Record the CalVer transition to 2026.07.498 and the expected task range exp5482-exp5495.
+      3. Summarize clean lanes: rewrite-state guards, guard composition, SOTA evidence telemetry, KAN assurance, behavioral memory, helper repair, p-bit/p-dit boundary exchange, and hardware receipts.
+      4. Explicitly record that Exp5474 was adversarially flagged TAUTOLOGY even though the artifact reported CSL scale readiness.
+      5. Summarize blocked/honest-null lanes: guided decoding quarantined, ARC sb26 L3 no-bank, KV260/GateMate blocks, and no hardware speedup claim.
+      6. Confirm that research-roadmap.yaml and scripts/research_conductor.py were not modified.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.498
+         - previous_milestone: 2026.07.497
+         - prior_capstone_path: results/experiment_5481_capstone_v497.json
+         - previous_task_range: exp5468-exp5481
+         - clean_lanes: list
+         - bounded_lanes: list
+         - blocked_lanes: list
+         - honest_null_lanes: list
+         - flagged_lanes: list
+         - exp5474_tautology_flag_recorded: bool
+         - next_task_range: exp5482-exp5495
+         - roadmap_yaml_unchanged: bool
+         - conductor_unchanged: bool
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5483-source-delta-v498
+    milestone: "2026.07.498"
+    title: "Execution-time 2025-2026 source delta for .498"
+    priority: high
+    track: literature
+    deliverable: results/experiment_5483_source_delta_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 35
+    estimated_wall_time_min: 35
+    prior_failures:
+      - experiment_id: exp5469-source-delta-v497
+        verdict: "complete: V497 execution source delta appended 2 new actionable deltas and kept closed scopes closed."
+        addressed_by: "This is the next execution-time source-ingestion cycle and dedupes against the V498 planner refresh already appended to research-references.md."
+        retire_if_same_verdict: true
+      - experiment_id: exp5455-source-delta-v496
+        verdict: "complete: V496 source delta appended 4 new actionable deltas and kept retired scopes closed."
+        addressed_by: "This refresh targets only new or newly actionable 2025-2026 deltas after the .498 planner block."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The planner appended a V498 Planner Refresh to research-references.md on {date}. This task is the execution-time freshness check before implementation experiments run. It must add only genuinely new actionable deltas and must not reopen retired lanes.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/changelog.md
+
+      TASK:
+      Search arXiv and secondary sources for 2025-2026 work relevant to Carnot since the V498 planner refresh, append only non-duplicate actionable findings to research-references.md, and emit a source-delta receipt.
+
+      CONCRETE STEPS:
+      1. Search arXiv for EBMs for verification/reasoning, neural constraint satisfaction, Ising applications, hallucination mitigation, KANs, energy-guided decoding, hardware-accelerated sampling, and continual/online learning.
+      2. Check OpenReview, Extropic writing, Semantic Scholar routes for EBT 2507.02092 and ARM-EBM 2512.15605, HuggingFace Papers, GitHub, and Logical Intelligence public pages.
+      3. Dedupe against research-references.md, especially V490-V498 blocks.
+      4. Append a short "V498 Execution Refresh - {date}" block only if new actionable deltas exist. If none exist, append nothing and explain the no-op in the artifact.
+      5. Explicitly classify closed-scope items as watch-only or excluded.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - sources_checked: list
+         - new_references_added: list
+         - duplicates_suppressed: list
+         - closed_scopes_reopened: false
+         - research_references_updated: bool
+         - prior_refresh_marker_found: bool
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5484-csl-tautology-corrigendum-v498
+    milestone: "2026.07.498"
+    title: "CSL tautology corrigendum and metric-independence audit"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_5484_csl_tautology_corrigendum_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 40
+    prior_failures:
+      - experiment_id: exp5474-gated-sota-csl-scale-v497
+        verdict: "FLAGGED: adversarial_verify CRITICAL TAUTOLOGY"
+        addressed_by: "This task audits metric independence and produces a corrigendum before any downstream CSL headline can depend on Exp5474."
+        retire_if_same_verdict: true
+      - experiment_id: exp5473-csl-kan-surrogate-assurance-v497
+        verdict: "complete: CSL KAN surrogate ready with assurance, rollback, and negative-transfer controls."
+        addressed_by: "This task checks whether the later SOTA scale metrics are independent from the KAN policy score rather than rerunning the surrogate."
+        retire_if_same_verdict: true
+      - experiment_id: exp5475-csl-behavioral-memory-ladder-v497
+        verdict: "complete: behavioral memory ladder ready with support-removal, paraphrase, locality, conflict, downstream-action, and stale-rejection controls."
+        addressed_by: "This task uses behavioral controls as independence checks for the flagged scale result."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5474 reported a large local SOTA GGUF CSL gain, but the conductor/adversarial verification log flagged it CRITICAL TAUTOLOGY. Do not treat Exp5474 as headline evidence until the metrics are audited and separated from the policy score.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/results/experiment_5474_sota_csl_scale_v497.json
+      - {project_root}/results/experiment_5473_csl_kan_surrogate_assurance_v497.json
+      - {project_root}/results/experiment_5475_csl_behavioral_memory_ladder_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Emit a deterministic CSL metric-independence corrigendum that decides whether Exp5474 can be used as prior evidence, must be bounded, or must be retired for same-scope reruns.
+
+      CONCRETE STEPS:
+      1. Reconstruct the metric graph for Exp5474: policy score inputs, memory/action decisions, exact-validator outcomes, baseline scores, and reported deltas.
+      2. Mark each metric as upstream feature, policy decision, evaluator outcome, baseline outcome, or derived summary.
+      3. Fail the audit if any headline outcome is computed from the same scalar used to select the action or memory route.
+      4. Cross-check against Exp5473 and Exp5475 to see whether support-removal, conflict, downstream-action, and exact-validator fields provide independent evidence.
+      5. Produce a clear downstream recommendation: clean, bounded_requires_rerun, or retire_same_scope_if_repeated.
+      6. Do not run SOTA GGUF inference in this task; it is an audit/corrigendum.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - audited_artifacts: list
+         - metric_graph_nodes: list
+         - policy_score_fields: list
+         - outcome_metric_fields: list
+         - independence_violations: list
+         - metric_independence_clean: bool
+         - tautology_flag_resolved: bool
+         - csl_scale_headline_allowed: bool
+         - downstream_recommendation: string
+         - retire_same_scope_if_repeated: bool
+         - inference_substrate: deterministic_audit_no_llm
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5485-preference-maxsat-claim-fixture-v498
+    milestone: "2026.07.498"
+    title: "Preference-MaxSAT typed claim-state fixture"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5485_preference_maxsat_claim_fixture_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 55
+    prior_failures:
+      - experiment_id: exp5470-rewrite-state-semantic-fixture-v497
+        verdict: "complete: rewrite-state fixture ready; hidden-premise and unlicensed mutation catch rates were clean and guided decoding stayed quarantined."
+        addressed_by: "This task changes the fixture from hard-only rewrite validity to hard-plus-soft Preference-MaxSAT ranking with independent canonical references."
+        retire_if_same_verdict: true
+      - experiment_id: exp5471-gated-guard-composition-scale-v497
+        verdict: "complete: deterministic guard composition ready with exact final agreement and no false accepts."
+        addressed_by: "This task measures preference ranking among exact-admissible repairs rather than guard overlap alone."
+        retire_if_same_verdict: true
+      - experiment_id: exp5457-gated-sota-distortion-guarded-decoding-v496
+        verdict: "complete: live panel ran; readiness false (lcd_bias_check_failed)"
+        addressed_by: "This task avoids token steering entirely and uses exact hard constraints plus canonical MaxSAT references."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V497 left guided decoding quarantined but gave Carnot clean deterministic rewrite-state guards. V498 should add preference-aware reasoning without token-level steering: exact hard constraints decide admissibility, and soft preferences rank admissible repairs.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5470_rewrite_state_semantic_fixture_v497.json
+      - {project_root}/results/experiment_5471_guard_composition_scale_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Implement a deterministic Preference-MaxSAT typed claim-state fixture with independent reference semantics and exact validators as final authority.
+
+      CONCRETE STEPS:
+      1. Add or extend a small experiment module under the existing experiment/code organization; do not write scratch files to the repo root.
+      2. Build typed claim-state rows with hard constraints, soft preferences, valid repairs, invalid repairs, multiple optimal repairs, and preference-tie cases.
+      3. Encode hard constraints and preferences in a solver-backed or deterministic reference implementation. If a MaxSAT dependency is unavailable, implement a tiny exhaustive reference for small fixtures and document the boundary.
+      4. Keep a canonical reference semantics independent from any generated/proposed encoding.
+      5. Compute hard_constraint_pass_rate, preference_optimality_rate, reference_agreement_rate, false_accept_rate, false_reject_rate, and abstention_or_tie_rate.
+      6. Add focused tests that fail if preference optimality is credited when hard constraints fail.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - fixture_count: int
+         - hard_constraint_count: int
+         - soft_preference_count: int
+         - canonical_reference_rows: int
+         - hard_constraint_pass_rate: float
+         - preference_optimality_rate: float
+         - reference_agreement_rate: float
+         - false_accept_rate: float
+         - false_reject_rate: float
+         - abstention_or_tie_rate: float
+         - preference_maxsat_fixture_ready: bool
+         - guided_decoding_quarantine_lifted: false
+         - inference_substrate: deterministic_fixture_no_llm
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5486-gated-sota-concept-evidence-panel-v498
+    milestone: "2026.07.498"
+    title: "Gated local SOTA concept evidence telemetry panel after Exp5485"
+    priority: high
+    track: sota-runtime
+    deliverable: results/experiment_5486_sota_concept_evidence_panel_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 75
+    requires_gpu: true
+    gated_on:
+      - upstream: exp5485-preference-maxsat-claim-fixture-v498
+        artifact_field: preference_maxsat_fixture_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5472-gated-sota-evidence-telemetry-v497
+        verdict: "complete: local SOTA evidence telemetry ran with GPU offload, guided_decoding_used=false, and exact validators as authority."
+        addressed_by: "This task adds concept-energy attribution and Preference-MaxSAT claim rows rather than repeating the same telemetry panel."
+        retire_if_same_verdict: true
+      - experiment_id: exp5457-gated-sota-distortion-guarded-decoding-v496
+        verdict: "complete: live panel ran; readiness false (lcd_bias_check_failed)"
+        addressed_by: "This task explicitly avoids verifier-guided token steering and measures complete-candidate evidence telemetry only."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5485 must prove the hard-plus-soft claim fixture is clean before this task runs. This task is a small local SOTA GGUF evidence panel with advisory concept-energy attribution. It is not guided decoding and must not steer tokens.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5485_preference_maxsat_claim_fixture_v498.json
+      - {project_root}/results/experiment_5472_sota_evidence_telemetry_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run a bounded local SOTA GGUF concept evidence telemetry panel over the Exp5485 fixture, reporting model/runtime receipts, concept attribution, and exact validator outcomes.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify CUDA-enabled llama-cpp-python or native llama.cpp GGUF runtime, non-empty local model_path entries, and GPU offload receipts before generation. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use legacy small models only for fast CPU smoke-tests and mark them non-headline.
+      1. Use scripts/experiment_template.py cached_sota_pair() or the repo-standard SOTA cache resolver to find model paths; never call AutoTokenizer.from_pretrained on GGUF repositories.
+      2. Select a balanced fixture subset from Exp5485: valid, hard-invalid, soft-suboptimal, multiple-optimal, and sparse-support rows.
+      3. Run at least one mandated SOTA GGUF headline model if runtime is available; include model specs for all three mandated models even if only one runs.
+      4. Decompose outputs into typed factual/concept claims and compute advisory concept-energy attribution for support, contradiction, missing premise, and preference quality.
+      5. Let exact validators and canonical Preference-MaxSAT references decide acceptance; concept energy may only explain or route abstention.
+      6. If no mandated local SOTA model can run with GPU offload, emit a blocked artifact with readiness false rather than falling back to CPU-only headline results.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - model_specs: list
+         - headline_models_run: list
+         - n_samples: int
+         - concept_claim_count: int
+         - concept_energy_components: list
+         - exact_validator_accuracy: float
+         - hard_constraint_false_accept_rate: float
+         - preference_suboptimal_accept_rate: float
+         - unsupported_claim_rate: float
+         - abstention_rate: float
+         - concept_attribution_agreement_rate: float
+         - logprob_telemetry_available: bool
+         - gpu_offload_receipts: list
+         - model_file_checksums: dict
+         - guided_decoding_used: false
+         - sota_concept_evidence_ready: bool
+         - inference_substrate: local_sota_gguf_llama_cpp_or_blocked
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5487-helper-contract-nl-spec-repair-v498
+    milestone: "2026.07.498"
+    title: "Natural-language helper-contract repair for deterministic witness rows"
+    priority: high
+    track: formal-verification
+    deliverable: results/experiment_5487_helper_contract_nl_spec_repair_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 55
+    prior_failures:
+      - experiment_id: exp5476-helper-lemma-core-witness-repair-v497
+        verdict: "complete: helper-lemma witness repair accepted 5/6 candidates, reduced repeated failures, and had zero false accepts."
+        addressed_by: "This task changes the helper form to NL contracts that must compile to executable predicates/tests before exact recheck."
+        retire_if_same_verdict: true
+      - experiment_id: exp5458-minimal-core-claim-repair-v496
+        verdict: "complete: deterministic minimal-core repairs accepted after exact recheck."
+        addressed_by: "This task uses minimal-core/failure signatures as inputs to helper-contract synthesis rather than direct repair patches."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Natural-language specifications are useful only if they become executable checks. V498 should test NL helper contracts on deterministic witness rows, with exact solver/tests as the final authority and no LLM dependency required.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5476_helper_lemma_core_witness_repair_v497.json
+      - {project_root}/results/experiment_5458_minimal_core_claim_repair_v496.json
+      - {project_root}/results/experiment_5445_static_ast_kb_witness_constraints_v495.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Extend helper-lemma witness repair into deterministic natural-language helper contracts that must compile to explicit predicates or exact tests before they can be credited.
+
+      CONCRETE STEPS:
+      1. Reuse AST/KB/doc-code witness rows and verifier failure signatures from prior helper/minimal-core work.
+      2. Add a small set of human-readable helper-contract templates: precondition, postcondition, invariant, provenance, and support-scope contracts.
+      3. Compile each contract template to executable predicates or exact tests; ambiguous contracts must be rejected or abstained, not credited.
+      4. Compare direct minimal-core repair, helper-lemma repair, and NL helper-contract repair on identical witness rows.
+      5. Record ambiguity rate, compile failure rate, exact recheck pass rate, false accepts, repeated failure reduction, and contract provenance.
+      6. Add tests that fail if a natural-language contract is credited without an executable predicate/test.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - witness_row_count: int
+         - nl_contract_count: int
+         - compiled_predicate_count: int
+         - ambiguity_rejection_rate: float
+         - contract_compile_failure_rate: float
+         - exact_recheck_pass_rate: float
+         - false_accept_count: int
+         - repeated_failure_reduction: float
+         - helper_contract_ready: bool
+         - inference_substrate: deterministic_fixture_no_llm
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5488-csl-latent-exploration-replay-v498
+    milestone: "2026.07.498"
+    title: "Gated CSL latent exploration replay with independent metrics"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_5488_csl_latent_exploration_replay_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 60
+    gated_on:
+      - upstream: exp5484-csl-tautology-corrigendum-v498
+        artifact_field: metric_independence_clean
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5474-gated-sota-csl-scale-v497
+        verdict: "FLAGGED: adversarial_verify CRITICAL TAUTOLOGY"
+        addressed_by: "This task separates exploration, exploitation, memory support, and exact outcome metrics before any SOTA CSL rerun."
+        retire_if_same_verdict: true
+      - experiment_id: exp5475-csl-behavioral-memory-ladder-v497
+        verdict: "complete: behavioral memory ladder ready."
+        addressed_by: "This task adds latent-state exploration accounting and independent outcome metrics to the behavioral memory controls."
+        retire_if_same_verdict: true
+      - experiment_id: exp5460-csl-policy-bandit-v496
+        verdict: "complete: frozen-model governed CSL policy updated rollbackable action and memory routing statistics with zero constraint violations and no model weight mutation."
+        addressed_by: "This task changes from bandit replay to latent exploration/exploitation splits with independent metrics."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Continuous self-learning is a required Carnot lane. Exp5484 must first confirm that the metric-independence audit is clean. This task builds the deterministic replay fixture needed before a SOTA CSL rerun: exploration metrics must not be the same as exploitation outcomes.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5484_csl_tautology_corrigendum_v498.json
+      - {project_root}/results/experiment_5475_csl_behavioral_memory_ladder_v497.json
+      - {project_root}/results/experiment_5473_csl_kan_surrogate_assurance_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Build a deterministic LatentGym-style CSL replay fixture that separates exploration, exploitation, memory support, and exact-validator outcomes under frozen-model/no-weight-mutation rules.
+
+      CONCRETE STEPS:
+      1. Create latent-task replay rows where the policy must first gather information about a hidden state, then use that information in a later decision.
+      2. Split metrics into exploration_success, exploitation_success, memory_support_validity, exact_outcome_score, and policy_cost.
+      3. Ensure the policy-selection score cannot directly include the exact_outcome_score it is later evaluated against.
+      4. Compare no-memory, naive in-context, governed memory, and KAN-surrogate variants on identical row IDs.
+      5. Include negative-transfer, stale-memory, conflict, and support-removal controls.
+      6. Add tests that fail if a replay row can pass without evidence that the policy gathered latent-state information before using it.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - replay_fixture_count: int
+         - latent_state_count: int
+         - exploration_success_rate: float
+         - exploitation_success_rate: float
+         - memory_support_validity_rate: float
+         - exact_outcome_score: float
+         - no_memory_baseline_score: float
+         - naive_icl_baseline_score: float
+         - governed_memory_score: float
+         - kan_surrogate_score: float
+         - metric_independence_rechecked: bool
+         - negative_transfer_deflection_rate: float
+         - model_weight_mutation: false
+         - csl_latent_replay_ready: bool
+         - inference_substrate: deterministic_csl_replay_no_llm
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5489-gated-sota-csl-independent-metrics-v498
+    milestone: "2026.07.498"
+    title: "Gated local SOTA CSL scale-up with independent metrics after Exp5488"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_5489_sota_csl_independent_metrics_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 90
+    requires_gpu: true
+    gated_on:
+      - upstream: exp5484-csl-tautology-corrigendum-v498
+        artifact_field: metric_independence_clean
+        op: "=="
+        value: true
+      - upstream: exp5488-csl-latent-exploration-replay-v498
+        artifact_field: csl_latent_replay_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5474-gated-sota-csl-scale-v497
+        verdict: "FLAGGED: adversarial_verify CRITICAL TAUTOLOGY"
+        addressed_by: "This rerun changes the metric design, gates on the corrigendum, separates exploration from exploitation, and uses independent exact outcomes."
+        retire_if_same_verdict: true
+      - experiment_id: exp5461-gated-sota-csl-memory-routing-v496
+        verdict: "complete: live SOTA GGUF governed CSL memory routing preserved quality and deflected negative transfer with frozen weights."
+        addressed_by: "This task uses stronger independent metrics and latent replay rather than memory-routing quality alone."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5484 and Exp5488 must both pass before this task runs. This is the only V498 SOTA CSL scale-up candidate, and it exists specifically to avoid the Exp5474 tautology failure. Base model weights must stay frozen.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5484_csl_tautology_corrigendum_v498.json
+      - {project_root}/results/experiment_5488_csl_latent_exploration_replay_v498.json
+      - {project_root}/results/experiment_5474_sota_csl_scale_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run a local SOTA GGUF CSL memory/action routing panel on the Exp5488 latent replay fixture using independent metrics, frozen weights, exact validators, and full runtime receipts.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify CUDA-enabled llama-cpp-python or native llama.cpp GGUF runtime, non-empty local model_path entries, and GPU offload receipts. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Legacy small models are smoke-tests only and cannot be headline results.
+      1. Use scripts/experiment_template.py cached_sota_pair() or the repo-standard SOTA cache resolver; never call AutoTokenizer.from_pretrained on GGUF repositories.
+      2. Run the KAN-assured CSL policy, no-memory baseline, naive in-context baseline, and governed-memory baseline on identical Exp5488 row IDs.
+      3. Keep exploration_success, exploitation_success, memory_support_validity, and exact_outcome_score separate in the artifact.
+      4. Record context-token cost, verifier cost, threshold offsets, rollback, negative-transfer deflection, and exact-validator pass rate.
+      5. Prove no model or adapter weights changed by checksum/state receipts before and after the run.
+      6. If no mandated local SOTA model can run with GPU offload, emit a blocked artifact with readiness false rather than falling back to CPU-only headline results.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - model_specs: list
+         - headline_models_run: list
+         - n_samples: int
+         - metric_independence_clean: bool
+         - csl_independent_scale_ready: bool
+         - exploration_success_rate: float
+         - exploitation_success_rate: float
+         - memory_support_validity_rate: float
+         - exact_outcome_score: float
+         - no_memory_score: float
+         - naive_icl_score: float
+         - governed_memory_score: float
+         - kan_assured_csl_score: float
+         - delta_vs_no_memory: float
+         - delta_vs_naive_icl: float
+         - negative_transfer_deflection_rate: float
+         - rollback_trigger_count: int
+         - threshold_offset_summary: dict
+         - context_token_cost_delta: float
+         - exact_validator_pass_rate: float
+         - model_weight_mutation: false
+         - gpu_offload_receipts: list
+         - model_file_checksums: dict
+         - inference_substrate: local_sota_gguf_llama_cpp_or_blocked
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5490-csl-kan-fixed-point-update-ledger-v498
+    milestone: "2026.07.498"
+    title: "CSL KAN fixed-point update ledger for hardware-compatible self-learning"
+    priority: high
+    track: continuous-self-learning
+    deliverable: results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 45
+    estimated_wall_time_min: 50
+    gated_on:
+      - upstream: exp5488-csl-latent-exploration-replay-v498
+        artifact_field: csl_latent_replay_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5473-csl-kan-surrogate-assurance-v497
+        verdict: "complete: CSL KAN surrogate ready with assurance, rollback, and negative-transfer controls."
+        addressed_by: "This task maps the KAN surrogate update path to sparse fixed-point ledgers and hardware resource estimates rather than rerunning assurance."
+        retire_if_same_verdict: true
+      - experiment_id: exp5478-gated-hardware-receipts-v497
+        verdict: "complete: hardware receipts ready; reachable_boards=['polarfire']; no speedup claim."
+        addressed_by: "This task only estimates hardware-compatible update ledgers and does not claim board speedup."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The PRD's continuous self-learning path eventually needs hardware-compatible online updates. V497 proved KAN surrogate assurance; V498 should produce a fixed-point update ledger and resource estimate without claiming board speedup.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5488_csl_latent_exploration_replay_v498.json
+      - {project_root}/results/experiment_5473_csl_kan_surrogate_assurance_v497.json
+      - {project_root}/results/experiment_5478_hardware_receipts_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Convert the governed CSL/KAN surrogate update path into a sparse fixed-point update ledger with deterministic replay equivalence checks and hardware resource estimates.
+
+      CONCRETE STEPS:
+      1. Identify the KAN/surrogate basis coefficients or local basis updates used by the CSL replay policy.
+      2. Quantize updates to one or more fixed-point formats and record saturation, rounding, and error bounds.
+      3. Produce a per-row update ledger: touched basis IDs, coefficient deltas, memory reads/writes, rollback records, and exact replay outcome.
+      4. Estimate FPGA/near-memory resources such as coefficient RAM, update bandwidth, multiplier/add count, and control-state size.
+      5. Compare floating replay and fixed-point replay on the Exp5488 fixture; exact validators remain final authority.
+      6. Do not access hardware unless an existing safe helper already does so; no speedup claim is allowed from this task.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - update_row_count: int
+         - basis_count: int
+         - fixed_point_formats_tested: list
+         - max_quantization_error: float
+         - replay_equivalence_rate: float
+         - constraint_violation_count: int
+         - rollback_equivalence_rate: float
+         - coefficient_ram_estimate_bytes: int
+         - update_bandwidth_estimate_bytes_per_step: int
+         - hardware_speedup_claim: false
+         - csl_kan_fixed_point_ready: bool
+         - inference_substrate: deterministic_fixed_point_sim_no_llm
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5491-active-constraint-subproblem-descriptor-v498
+    milestone: "2026.07.498"
+    title: "Active-constraint subproblem descriptors for p-bit, p-dit, and MaxSAT boundary exchange"
+    priority: high
+    track: active-constraints
+    deliverable: results/experiment_5491_active_constraint_subproblem_descriptor_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 60
+    prior_failures:
+      - experiment_id: exp5477-pbit-pdit-boundary-exchange-v497
+        verdict: "complete: boundary_exchange_ready true; exact fallback completeness 1.0; unsafe false accepts 0; hardware_speedup false."
+        addressed_by: "This task changes from boundary exchange accounting to portable subproblem descriptors that include partition/update telemetry and Preference-MaxSAT paths."
+        retire_if_same_verdict: true
+      - experiment_id: exp5462-pbit-pdit-boundary-v496
+        verdict: "complete: p-bit/p-dit bridge bounded with exact fallback and no hardware speedup claim."
+        addressed_by: "This task extends the descriptor vocabulary and keeps exact fallback authority."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V497 showed p-bit/p-dit boundary exchange can be useful but still bounded. V498 should build portable subproblem descriptors for exact solvers, p-bit/p-dit relaxations, and Preference-MaxSAT hard/soft rows, including partition/update telemetry before any hardware run.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5477_pbit_pdit_boundary_exchange_v497.json
+      - {project_root}/results/experiment_5485_preference_maxsat_claim_fixture_v498.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Implement or emit portable active-constraint subproblem descriptors with exact fallback semantics, partition/update telemetry, and no unsupported hardware-speedup claims.
+
+      CONCRETE STEPS:
+      1. Define descriptor fields for variables, domains, hard constraints, soft preferences, coupling type, update schedule, partition ID, exact fallback, and admissible hardware mapping.
+      2. Populate descriptors from small p-bit/p-dit fixtures and the Exp5485 Preference-MaxSAT rows when available.
+      3. Measure descriptor round-trip integrity, exact fallback completeness, unsafe false accepts, partition/update counts, and advisory improvement over a simple baseline.
+      4. Add tests that fail if a descriptor can be marked solved without exact fallback or canonical reference agreement.
+      5. Keep any hardware mapping field advisory only; do not collect board timing in this task.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - descriptor_count: int
+         - variable_count_summary: dict
+         - hard_constraint_count_summary: dict
+         - soft_preference_count_summary: dict
+         - partition_count_summary: dict
+         - update_schedule_types: list
+         - descriptor_roundtrip_rate: float
+         - exact_fallback_completeness: float
+         - unsafe_false_accept_count: int
+         - advisory_improvement_delta: float
+         - hardware_speedup_claim: false
+         - subproblem_descriptor_ready: bool
+         - inference_substrate: deterministic_descriptor_no_llm
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5492-gated-hardware-receipts-v498
+    milestone: "2026.07.498"
+    title: "Gated hardware receipt continuation after Exp5491"
+    priority: high
+    track: hardware
+    deliverable: results/experiment_5492_hardware_receipts_v498.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 70
+    gated_on:
+      - upstream: exp5491-active-constraint-subproblem-descriptor-v498
+        artifact_field: subproblem_descriptor_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5478-gated-hardware-receipts-v497
+        verdict: "complete: hardware receipts ready; reachable_boards=['polarfire']; KV260 blocked SSH; GateMate diagnostic-only; speedup false."
+        addressed_by: "This task reruns receipt collection with the new descriptor workload hashes and keeps speedup claims disabled unless matched local timing supports them."
+        retire_if_same_verdict: true
+      - experiment_id: exp5463-gated-hardware-receipts-v496
+        verdict: "complete: hardware receipts bounded; no speedup claim."
+        addressed_by: "This task uses the newer Exp5491 descriptor workload and explicit board identity/hash receipts."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5491 must produce portable subproblem descriptors before this task runs. Hardware work is receipt-only unless authenticated matched timing proves otherwise. Do not edit scripts/research_conductor.py.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/results/experiment_5491_active_constraint_subproblem_descriptor_v498.json
+      - {project_root}/results/experiment_5478_hardware_receipts_v497.json
+      - {project_root}/ops/status.md
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Collect matched workload hash, board identity, and timing receipts for reachable local hardware using the Exp5491 descriptor workload. Keep no-speedup wording unless authenticated local evidence supports it.
+
+      CONCRETE STEPS:
+      1. Build a small deterministic workload from Exp5491 descriptors and record canonical workload hashes.
+      2. Collect CPU baseline receipts with repeat count, wall time, output hash, and environment metadata.
+      3. Probe only safe known hardware paths. For KV260, use SSH/board identity only; never infer board presence from host /dev/mmcblk* devices. For GateMate, do not claim execution unless the physical/JTAG path is actually available. For PolarFire, record SSH identity and exact workload/hash receipts if reachable.
+      4. Require identical input hashes and matching output hashes before comparing timings.
+      5. If no board is reachable or hashes do not match, emit bounded/no-speedup evidence rather than forcing a pass.
+      6. Do not claim TSU, Kona, Aleph, or any non-local hardware execution.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - workload_hashes: list
+         - cpu_baseline_receipts: list
+         - board_receipts: list
+         - reachable_boards: list
+         - blocked_boards: dict
+         - repeat_count: int
+         - result_hash_match_rate: float
+         - timing_comparison_summary: dict
+         - authenticated_board_identity_count: int
+         - hardware_speedup_claim: false
+         - hardware_receipts_ready: bool
+         - inference_substrate: local_cpu_and_reachable_board_receipts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5493-arc-trajectory-target-precheck-v498
+    milestone: "2026.07.498"
+    title: "ARC trajectory target precheck with duplicate-solve avoidance"
+    priority: high
+    track: arc
+    deliverable: results/experiment_5493_arc_trajectory_target_precheck_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 45
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp5479-arc-target-rotation-precheck-v497
+        verdict: "complete: sb26 L3 live-path precheck ready; no level bank claimed."
+        addressed_by: "This precheck rotates away from the sb26 salience target after Exp5480 no-banked and evaluates trajectory/option induction prerequisites."
+        retire_if_same_verdict: true
+      - experiment_id: exp5480-gated-arc-live-salience-levelup-v497
+        verdict: "honest_null: sb26 L3 bounded_budget_no_target_level_reproduction"
+        addressed_by: "This task does not reattempt sb26 L3; it selects a non-duplicate target and prepares trajectory induction rather than salience-only clicks."
+        retire_if_same_verdict: true
+      - experiment_id: exp5465-gated-arc-connected-component-salience-levelup-v496
+        verdict: "honest_null: bp35 L3 bounded_budget_no_levelup"
+        addressed_by: "This task excludes recent no-bank targets and checks the registry before proposing a live attempt."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      ARC has a standing floor through November 2026, but duplicate solves and offline BFS are prohibited. Exp5480 no-banked sb26 L3 with salience. V498 should precheck a trajectory/option-induction target that is not already solved and not a recent no-bank duplicate.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5480_arc_live_salience_levelup_v497.json
+      - {project_root}/results/experiment_5479_arc_target_rotation_precheck_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run an ARC registry and live-path precheck that selects one non-duplicate trajectory-induction target for Exp5494, or emits a clean no-target artifact if no eligible target exists.
+
+      CONCRETE STEPS:
+      1. Read the ARC solve registry and identify current levels_reproduced for candidate games.
+      2. Exclude already-reproduced levels, recent no-bank targets including sb26 L3, bp35 L3, ka59 L2, cn04 L4, and re86 L3 unless the registry proves a different target level and mechanism.
+      3. Exclude retired generic exploration-signal scopes from exp5154: novelty-only, curiosity-only, energy-as-fitness quality-diversity, and archive-granularity reruns.
+      4. Select a target based on evidence that the live agent can form option/trajectory hypotheses from its own runtime observations. Prefer a target with a grounded next-level delta and existing live mechanism hooks.
+      5. Do not read game source, run offline ground-truth BFS, or build a per-game hand adapter.
+      6. Emit target metadata and a concrete Exp5494 command path, or state why the ARC live attempt should be blocked.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - registry_path: ops/arc_solve_registry.yaml
+         - excluded_recent_no_bank_targets: list
+         - duplicate_solve_avoided: bool
+         - selected_game: string
+         - selected_target_level: int
+         - prior_levels_reproduced: int
+         - proposed_live_mechanism: string
+         - trajectory_induction_preconditions: list
+         - offline_bfs_used: false
+         - per_game_adapter_used: false
+         - arc_trajectory_precheck_ready: bool
+         - inference_substrate: registry_precheck_no_solve
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5494-gated-arc-live-trajectory-levelup-v498
+    milestone: "2026.07.498"
+    title: "Gated ARC live trajectory-induction level-up attempt after Exp5493"
+    priority: high
+    track: arc
+    deliverable: results/experiment_5494_arc_live_trajectory_levelup_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 75
+    gated_on:
+      - upstream: exp5493-arc-trajectory-target-precheck-v498
+        artifact_field: arc_trajectory_precheck_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5480-gated-arc-live-salience-levelup-v497
+        verdict: "honest_null: sb26 L3 bounded_budget_no_target_level_reproduction"
+        addressed_by: "This attempt rotates target and changes from salience-only to live trajectory/option induction from runtime observations."
+        retire_if_same_verdict: true
+      - experiment_id: exp5465-gated-arc-connected-component-salience-levelup-v496
+        verdict: "honest_null: bp35 L3 bounded_budget_no_levelup"
+        addressed_by: "This attempt excludes the recent bp35 no-bank target and uses trajectory induction rather than connected-component salience alone."
+        retire_if_same_verdict: true
+      - experiment_id: exp5450-arc-measurement-access-live-levelup-v495
+        verdict: "honest_null: ka59 L2 bounded_budget_no_levelup"
+        addressed_by: "This attempt avoids the ka59 measurement-access dead end and uses the Exp5493 registry-selected target."
+        retire_if_same_verdict: true
+      - experiment_id: exp5154-multi-level-deepening-generation-axis-exploration-v473
+        verdict: "retired: generation-axis exploration signal produced no reliable ARC level growth and was retired in the exclusion manifest."
+        addressed_by: "This is not a generic novelty/curiosity/energy-as-fitness rerun; it uses live trajectory/option induction from the agent's own runtime observations and exact reproduction gates."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5493 must select a non-duplicate target and define trajectory-induction preconditions. This task is the milestone's ARC live level-up attempt. The credited path must be the live agent self-discovering the solve from its own attempts and runtime observations. Acceptance requires offline_reproduced=true and reproduced_levels>=1 for a new level reproduced, either first-contact or +1 deeper on the selected game.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5493_arc_trajectory_target_precheck_v498.json
+      - {project_root}/results/experiment_5480_arc_live_salience_levelup_v497.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run one bounded live ARC trajectory-induction level-up attempt on the Exp5493-selected target and update the registry only if the live path reproduces a new level.
+
+      CONCRETE STEPS:
+      1. Read Exp5493 and refuse to run if the target is already reproduced, recently no-banked with the same mechanism, or missing live trajectory preconditions.
+      2. Use only live_agent_self_discovery: the agent's own attempts, observations, and runtime reverse-engineering. Do not read game source, run offline ground-truth BFS, or build a per-game hand adapter.
+      3. Add trajectory/option induction on top of the live path: record hypothesized action sequences, observation deltas, verifier checks, and rejection reasons.
+      4. If the live path invokes an LLM generator, MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF; legacy small models are smoke-tests only and cannot be headline results. If the existing live path cannot satisfy this, emit blocked rather than substituting a non-mandated headline LLM.
+      5. Reproduce the target level through the standard live/offline reproduction gate before updating ops/arc_solve_registry.yaml; the banking gate is offline_reproduced=true and reproduced_levels>=1 for a new level, not a duplicate re-solve.
+      6. If no level is banked, emit an honest null with bounded-budget diagnostics and do not modify the registry.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - selected_game: string
+         - target_level: int
+         - prior_levels_reproduced: int
+         - post_levels_reproduced: int
+         - solve_provenance: live_agent_self_discovery
+         - offline_bfs_used: false
+         - per_game_adapter_used: false
+         - game_source_read: false
+         - trajectory_hypothesis_count: int
+         - live_attempt_count: int
+         - offline_reproduced: bool
+         - reproduced_levels: int
+         - new_level_banked: bool
+         - registry_updated: bool
+         - model_specs_if_llm_used: list
+         - failure_mode: string
+         - inference_substrate: arc_live_agent_self_discovery
+         - random_seed: int
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5495-capstone-v498
+    milestone: "2026.07.498"
+    title: "Milestone .498 capstone PRD gap table and next-roadmap recommendations"
+    priority: critical
+    track: synthesis
+    deliverable: results/experiment_5495_capstone_v498.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 45
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp5481-capstone-v497
+        verdict: "complete: .497 capstone read 13/13 artifacts; guided_decoding=quarantined; csl=headline_ready; arc_registry_delta=0; hardware_speedup_claim=False."
+        addressed_by: "This capstone targets the newer .498 artifact set and must account for Exp5474 tautology corrigendum, independent CSL metrics, ARC trajectory status, and hardware receipts."
+        retire_if_same_verdict: true
+      - experiment_id: exp5467-capstone-v496
+        verdict: "complete: .496 capstone truth table from actual artifacts; headline_ready=4, bounded=3, blocked=1, honest_null=2; guided decoding quarantined, ARC no-bank, hardware_speedup_claim=false."
+        addressed_by: "This capstone summarizes .498 rather than repeating the .496/.497 synthesis."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the final synthesis task for milestone 2026.07.498. It must read actual artifacts that exist, distinguish complete/bounded/blocked/honest-null lanes, and produce next-roadmap recommendations grounded in evidence.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/_bmad/prd.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/results
+
+      TASK:
+      Emit the .498 capstone artifact with PRD gap table, experiment truth table, failure taxonomy, and concrete next-roadmap recommendations.
+
+      CONCRETE STEPS:
+      1. Read every existing result artifact for exp5482 through exp5494; record missing artifacts explicitly rather than fabricating.
+      2. Build a lane truth table for transition/source delta, CSL corrigendum, Preference-MaxSAT verification, concept SOTA telemetry, helper contracts, CSL independent metrics, fixed-point KAN ledger, active constraints, hardware, ARC, and synthesis.
+      3. Classify each lane as headline_ready, bounded, blocked, honest_null, skipped_by_gate, or missing.
+      4. Update the PRD gap table against FR-11 continuous self-learning, FR-12 verifiable reasoning, hardware acceleration, local SOTA runtime, and ARC live-path grounding.
+      5. Explicitly state whether guided decoding remains quarantined, whether Exp5474 tautology was resolved, whether any SOTA CSL headline is allowed, whether any ARC registry delta occurred, and whether any hardware speedup claim is supported.
+      6. Recommend the next milestone's top 3 research moves and any retirements needed under the failed-experiment discipline.
+      7. Confirm research-roadmap.yaml and scripts/research_conductor.py were not modified by this task.
+      8. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.498
+         - artifacts_expected: list
+         - artifacts_read: list
+         - artifacts_missing: list
+         - lane_truth_table: dict
+         - prd_gap_table: dict
+         - headline_ready_lanes: list
+         - bounded_lanes: list
+         - blocked_lanes: list
+         - honest_null_lanes: list
+         - skipped_by_gate_lanes: list
+         - exp5474_tautology_resolved: bool
+         - guided_decoding_quarantine_status: string
+         - csl_status: string
+         - arc_registry_delta: int
+         - hardware_speedup_claim: false
+         - next_recommendations: list
+         - roadmap_yaml_unchanged: bool
+         - conductor_unchanged: bool
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

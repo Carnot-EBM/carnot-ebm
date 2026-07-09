@@ -1,6 +1,33 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-08 (Milestone 2026.07.495 Planning Staged)
+**Last Updated:** 2026-07-09 (Milestone 2026.07.498 Planning Staged)
+
+## Session 2026-07-09 - Milestone 2026.07.498 Planning Staged
+
+Planned the next research milestone after `.497` completed. The staged `.498`
+roadmap focuses on resolving the Exp5474 CSL tautology flag before any CSL
+headline, adding Preference-MaxSAT hard/soft verification, running
+concept-attributed local SOTA evidence telemetry under exact validators,
+extending helper contracts through executable NL-spec rows, keeping hardware
+receipt-only, and maintaining the ARC live level-up floor through
+trajectory-induction target rotation.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`.
+
+Validation for this planning task: YAML parsing,
+`scripts/validate_prior_failures.py`, `scripts/audit_roadmap_gates.py`,
+`scripts/arc_levelup_guarantee_lint.py --min 1`,
+`scripts/exclusion_manifest_lint.py`, `scripts/overdue_priority_lint.py`,
+prompt-shape checks, SOTA model-spec checks, and touched-file
+`git diff --check` passed for `research-roadmap-next.yaml` and the planning
+docs. The overdue-priority lint is satisfied by a roadmap-level override because
+the current operator request explicitly forbids modifying
+`scripts/research_conductor.py`. Repo-wide `scripts/check_spec_coverage.py`
+still fails on the pre-existing traceability backlog (`1262 test(s) missing
+spec traceability`). No implementation code, active roadmap, conductor,
+model-training run, or hardware workload was changed.
 
 ## Session 2026-07-08 - Milestone 2026.07.495 Planning Staged
 
