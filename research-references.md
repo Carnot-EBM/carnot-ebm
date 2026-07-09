@@ -28559,3 +28559,100 @@ Execution-time sweep after the `.496` planner refresh checked arXiv, OpenReview,
 - **Watch-only/excluded:** Extropic TSU/XTR-0/THRML writing, Logical Intelligence Aleph/Kona pages, OpenReview EBT/LCAD/continual-memory surfaces, Formal Disco fine-tuning, HCRC, defeater-quality meta-classifiers, and Semantic Scholar citation-route material were checked but not promoted as executable `.496` dependencies.
 
 <!-- V496-EXECUTION-REFRESH-20260709-END -->
+
+
+### V497 Planner Refresh - 20260709
+
+Planning-time sweep for milestone `.497` rechecked arXiv, OpenReview, HuggingFace
+Papers, Semantic Scholar routes for EBT `2507.02092` and ARM-EBM `2512.15605`,
+GitHub repositories, Extropic writing, Logical Intelligence public pages, the
+V496 execution refresh, and the exclusion manifest. The sweep does not justify
+reopening retired external text-scorer, broad fine-tuning, CPU-only SOTA, duplicate
+ARC, or unauthenticated hardware-speedup lanes. It does add the following
+Carnot-local hooks.
+
+### New actionable deltas
+- **inRAN: Interpretable Online Bayesian Learning for Network Automation in Open RAN**
+  (https://arxiv.org/abs/2601.03219): Combines KAN surrogate ensembles, safe
+  optimization solvers, online dynamics tracking, and adaptive threshold offsets
+  to maintain chance-constraint assurance under non-stationary conditions.
+  Carnot hook: the next CSL policy should add an interpretable KAN-style
+  surrogate over action/memory routing and report assurance, threshold offset,
+  rollback, and negative-transfer deflection with frozen model weights.
+- **Lemma Discovery in Agentic Program Verification / LemmaNet**
+  (https://arxiv.org/abs/2603.22114): Shows that helper lemmas synthesized from
+  source/spec comprehension and adapted online can discharge harder verification
+  conditions than proof-state search alone. Carnot hook: extend minimal-core
+  repair into bounded helper-lemma or helper-contract witness rows for AST/KB
+  and doc/code claims, with exact solver/test recheck as final authority.
+- **Ultrafast On-Chip Online Learning via Spline Locality in KANs**
+  (https://arxiv.org/abs/2602.02056): Uses B-spline locality for sparse
+  fixed-point KAN updates and FPGA-friendly online learning. Carnot hook:
+  model the CSL policy surrogate as sparse local coefficient updates and record
+  quantization/fixed-point compatibility, but keep local CPU/GPU simulation
+  separate from any board-speedup claim.
+- **Compile to Compress: Boosting Formal Theorem Provers by Compiler Outputs**
+  (https://arxiv.org/abs/2604.18587): Treats compiler/verifier outputs as a
+  compressed set of structured failure modes that guide local proof repair.
+  Carnot hook: group exact-check failures by verifier/exception signature before
+  helper-lemma repair, and measure whether local repair reduces repeated
+  failure classes without increasing false accepts.
+- **Real-Time, Energy-Efficient, Sampling-Based Optimal Control via FPGA
+  Acceleration** (https://arxiv.org/abs/2601.17231): Demonstrates FPGA
+  acceleration for MPPI-style sampling control with matched embedded baselines.
+  Carnot hook: hardware tasks should adopt its receipt discipline -- identical
+  workload hashes, embedded CPU/GPU baselines, repeated timing, and explicit
+  energy/speedup non-claims unless local authenticated board data exists.
+
+### Promoted existing references for `.497`
+- **Theoria rewrite-acceptability verification** (https://arxiv.org/abs/2607.01223)
+  was already indexed, but `.496` made it more urgent: the failed guided-decoding
+  lane needs typed state-transition fixtures that catch hidden premises and
+  unlicensed rewrites before another local SOTA decoding headline.
+- **SEM-CTRL semantically controlled decoding** (https://arxiv.org/abs/2503.01804)
+  was already indexed. Use it as a fixture-design pattern for small semantic
+  constraints and answer-set-like guards; do not treat token-level search success
+  as proof unless exact final validators agree.
+- **HALT logprob time-series hallucination detection** (https://arxiv.org/abs/2602.02888)
+  remains useful only as telemetry when local GGUF logprobs are available. It
+  must not replace exact validators or reopen external generated-text scorer
+  work.
+- **ConsFormer-LNS** (https://arxiv.org/abs/2603.20801) remains the most relevant
+  neural-CSP design reference: separate destroy selection, repair mode, classical
+  baseline, and exact fallback telemetry before crediting a neural repair operator.
+- **FPGA Ising decomposition** (https://arxiv.org/abs/2602.15985) remains hardware
+  context for boundary-exchange and p-bit/p-dit work, but `.497` should collect
+  receipt-only hash/timing data on reachable boards and avoid speedup language.
+
+### Secondary-source status
+- **Extropic:** X0/XTR-0 and TSU writing remains aligned with direct sampling
+  from programmable energy functions, but Carnot has no local TSU execution path.
+- **Logical Intelligence:** Aleph/Kona public posts reinforce the PRD direction
+  toward proof-bearing verified code generation and EBRM-style global state
+  scoring. They are architecture context only unless local authenticated Kona or
+  Aleph access appears.
+- **Semantic Scholar EBT/ARM-EBM routes:** public citation/search routes surfaced
+  adjacent transformer-as-optimizer and Bellman/LLM items but no stronger local
+  experiment than the source EBT/ARM-EBM hooks already tracked.
+- **HuggingFace Papers:** VeriFY, HALT/HUB, and self-verification pages sharpen
+  hallucination and self-verification controls; `.497` should use them as
+  telemetry/fixture references, not as post-training mandates.
+- **GitHub:** EBM/KAN/hallucination/ML4CO repositories remain watch references.
+  No repository found in the sweep supersedes Carnot's local GGUF runtime,
+  exact-solver authority, or hardware receipt requirements.
+
+### Planner impact
+- Start `.497` with a transition/source-delta pair, then keep guided decoding in
+  quarantine behind deterministic rewrite-state, semantic-constraint, and
+  distortion-guard fixtures.
+- Make continuous self-learning the headline growth lane: frozen SOTA GGUF
+  memory/action routing plus an interpretable KAN surrogate, chance-style
+  assurance, no-memory and in-context baselines, and no weight mutation.
+- Add helper-lemma/core repair for deterministic code/API/doc witnesses before
+  any broader formal-verification claim.
+- Continue p-bit/p-dit and hardware as receipt-only boundary-exchange work with
+  matched workload hashes and no speedup claims.
+- Keep ARC on the live-agent standing floor through a perception/salience target
+  rotation rather than duplicate `bp35`, `ka59`, or `cn04` no-bank reruns.
+
+<!-- V497-PLANNER-REFRESH-20260709-END -->
