@@ -10599,3 +10599,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 02:16 UTC | Guided-decoding tautology corrigendum for Exp5444 | OK | 88 passed, 1 warning in 11.22s |
 | 2026-07-09 02:38 UTC | Gated local SOTA distortion-guarded verifier-poten | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-09 02:54 UTC | Minimal-core-guided repair for verifier-potential  | OK | 89 passed, 1 warning in 8.61s |
+| 2026-07-09 03:14 UTC | Constraint-distortion guard for factual and semant | OK | 88 passed, 1 warning in 8.67s |
