@@ -1440,6 +1440,86 @@ workflow retrieval controls stay provable, `false_property_rejection_rate=1.0`,
 `kan_ontology_certificate_ready=true` only for the bounded
 ontology/workflow-memory fixture.
 
+## REQ-KAN-5451: V495 Verifier-Potential And Governed-Memory Measurement-Access Certificate
+
+The KAN verification tier SHALL add an Exp 5451 CPU-only deterministic
+certificate experiment that extends the bounded measurement-access certificate
+family to the V495 verifier-potential generation fixture and governed-memory
+CSL loop after Exp5443 reports `verifier_potential_fixture_ready=true` and
+Exp5446 reports `governed_csl_loop_ready=true`. The experiment MUST read only
+the committed Exp5443 and Exp5446 artifacts and MUST distinguish claims
+supported by measured artifact fields, false claims contradicted by measured
+artifact fields, and unsupported claims whose required measurement fields are
+absent. It MUST NOT modify `scripts/research_conductor.py`.
+
+The claim set MUST include true artifact-measured properties, false
+verifier-potential properties, false memory/provenance properties, unsupported hardware speedup claims,
+unsupported token or internal-state claims, and broad KAN soundness claims. Claims whose required measurement fields are absent MUST
+be rejected as unsupported rather than accepted or converted into broad KAN
+verification. False claims over verifier-potential and governed-memory fields
+MUST be rejected by measured counterexamples. True measured claims MUST be
+preserved under the same bounded certificate. The experiment MUST state
+directly that it is a bounded measurement-access certificate only and MUST NOT
+claim KAN soundness, trained-network soundness, hardware execution, hardware
+speedup, token-level access, hidden/internal-state access, or general LLM
+truth.
+
+The deliverable MUST be written to
+`results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json`
+with the required top-level fields `gated_upstreams_ready`, `claim_count`,
+`true_measured_claim_preservation_rate`, `false_property_rejection_rate`,
+`unsupported_claim_rejection_rate`, `verifier_potential_claims_checked`,
+`governed_memory_claims_checked`, `hardware_speedup_claim_rejected`,
+`token_internal_claim_rejected`, `broad_kan_claim_made`,
+`certificate_checksum`, `kan_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `gated_upstreams_ready` MUST be true only when both upstream
+ready gates are true. `claim_count` MUST be the integer count of evaluated
+claims. `verifier_potential_claims_checked` and
+`governed_memory_claims_checked` MUST count claims that depend on Exp5443 and
+Exp5446 evidence respectively. `hardware_speedup_claim_rejected` MUST be true
+only when the unsupported hardware speedup claim is rejected.
+`token_internal_claim_rejected` MUST be true only when token-level and
+hidden/internal-state claims are rejected. `broad_kan_claim_made` MUST be
+false. `certificate_checksum` MUST be a stable checksum of the certificate
+records. `inference_substrate` MUST equal
+`bounded_measurement_access_certificate`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_certificate_ready` MUST be true only when both
+upstreams are gated ready, true measured claims are preserved, all false and
+unsupported claims are rejected, no broad KAN claim is made, the checksum is
+present, and claim limits are explicit.
+
+Required field principles:
+- `gated_upstreams_ready`: structured gate provenance.
+- `claim_count`: certificate coverage.
+- `true_measured_claim_preservation_rate`: useful certificate.
+- `false_property_rejection_rate`: soundness guard.
+- `unsupported_claim_rejection_rate`: measurement-access boundary.
+- `verifier_potential_claims_checked`: V495 claim coverage.
+- `governed_memory_claims_checked`: CSL claim coverage.
+- `hardware_speedup_claim_rejected`: hardware honesty.
+- `token_internal_claim_rejected`: closed-lane enforcement.
+- `broad_kan_claim_made`: no overclaim.
+- `certificate_checksum`: reproducibility.
+- `kan_certificate_ready`: capstone evidence.
+- `inference_substrate`: explicit certificate substrate.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5451: Missing Verifier And Memory Evidence Does Not Become KAN Soundness
+
+Given the completed Exp5443 verifier-potential fixture and Exp5446 governed
+memory CSL artifact,
+When Exp5451 evaluates true measured artifact claims, false
+verifier-potential claims, false memory/provenance claims, unsupported hardware
+speedup claims, unsupported token/internal-state claims, and broad KAN
+soundness claims,
+Then true measured claims remain preserved, verifier-potential and
+governed-memory false claims are rejected from measured artifact fields,
+unsupported hardware/token/internal claims are rejected because required
+measurement fields are absent, `broad_kan_claim_made=false`,
+`inference_substrate=bounded_measurement_access_certificate`, and
+`kan_certificate_ready=true` only for the bounded measurement-access
+certificate over Exp5443 and Exp5446 artifacts.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1490,6 +1570,7 @@ ontology/workflow-memory fixture.
 | REQ-KAN-5346 | Planned | Exp 5346 target: V487 bounded bridge from Exp 5332 localized counterexample cells to explicit downstream KAN cuts / Ising penalties, with before/after false-property rejection and true-property preservation checks. |
 | REQ-KAN-5399 | Planned | Exp 5399 target: V491 bounded KAN/KANDy-style dynamic counterexample certificate over Exp 5395 verifier-routing drift traces or an explicit synthetic fallback, with held-out true/false checks and no broad KAN verification claim. |
 | REQ-KAN-5412 | Planned | Exp 5412 target: V492 bounded KAN/KANDy-style active-constraint hint-routing certificate over Exp 5406 rows, with stale/adversarial false-property counterexamples, true-property preservation, and no broad KAN verification claim. |
+| REQ-KAN-5451 | Planned | Exp 5451 target: V495 bounded verifier-potential/governed-memory measurement-access certificate over Exp 5443 and Exp 5446 artifacts, rejecting missing-evidence hardware, token/internal, and broad KAN soundness claims. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
