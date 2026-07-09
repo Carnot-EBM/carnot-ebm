@@ -1,0 +1,1460 @@
+{
+  "advisory_improvement_delta": 250018.0,
+  "claim_limits": [
+    "descriptors are deterministic CPU-local JSON payloads",
+    "p-bit, p-dit, and Preference-MaxSAT mappings are advisory only",
+    "exact fallback plus canonical reference agreement gates solved status",
+    "partition/update telemetry is recorded before any hardware run",
+    "no board timing and no hardware speedup claim"
+  ],
+  "descriptor_count": 8,
+  "descriptor_roundtrip_rate": 1.0,
+  "descriptors": [
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "pbit_pdit_relaxation_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 1000004.0,
+      "baseline_assignment": {
+        "x1": false,
+        "x2": true,
+        "x3": true
+      },
+      "canonical_reference": {
+        "objective_score": 6.0,
+        "solution": {
+          "x1": true,
+          "x2": true,
+          "x3": false
+        },
+        "solution_hash": "71f13e234698c93dfa0e579d86c2507bd09679c76efdafbf740fed0c2df0bb2c"
+      },
+      "coupling_type": "pbit_binary",
+      "descriptor_id": "exp5477:sat_boundary_core:sat_left",
+      "domains": {
+        "x1": [
+          false,
+          true
+        ],
+        "x2": [
+          false,
+          true
+        ],
+        "x3": [
+          false,
+          true
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 6.0,
+        "required": true,
+        "solution": {
+          "x1": true,
+          "x2": true,
+          "x3": false
+        },
+        "solution_hash": "71f13e234698c93dfa0e579d86c2507bd09679c76efdafbf740fed0c2df0bb2c",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_sat_boundary_core_0",
+          "literals": [
+            {
+              "equals": true,
+              "variable": "x1"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_sat_boundary_core_1",
+          "literals": [
+            {
+              "equals": true,
+              "variable": "x2"
+            },
+            {
+              "equals": false,
+              "variable": "x3"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_sat_boundary_core_2",
+          "literals": [
+            {
+              "equals": true,
+              "variable": "x1"
+            },
+            {
+              "equals": true,
+              "variable": "x2"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "partition_id": "sat_left",
+      "partition_telemetry": {
+        "boundary_message_count": 1,
+        "partition_count": 2,
+        "partition_id": "sat_left",
+        "partition_ids": [
+          "sat_left",
+          "sat_right"
+        ],
+        "partition_scope": [
+          "x1",
+          "x2"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_sat_boundary_core_x1_reference",
+          "type": "value_reward",
+          "value": true,
+          "variable": "x1",
+          "weight": 2
+        },
+        {
+          "id": "SP_sat_boundary_core_x2_reference",
+          "type": "value_reward",
+          "value": true,
+          "variable": "x2",
+          "weight": 2
+        },
+        {
+          "id": "SP_sat_boundary_core_x3_reference",
+          "type": "value_reward",
+          "value": false,
+          "variable": "x3",
+          "weight": 2
+        }
+      ],
+      "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
+      "source_fixture_id": "sat_boundary_core",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 1,
+        "type": "pbit_async_sweep",
+        "update_count": 6
+      },
+      "variables": [
+        {
+          "domain": [
+            false,
+            true
+          ],
+          "name": "x1",
+          "role": "partition_control"
+        },
+        {
+          "domain": [
+            false,
+            true
+          ],
+          "name": "x2",
+          "role": "partition_control"
+        },
+        {
+          "domain": [
+            false,
+            true
+          ],
+          "name": "x3",
+          "role": "boundary_context"
+        }
+      ]
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "pbit_pdit_relaxation_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 1000004.0,
+      "baseline_assignment": {
+        "x1": false,
+        "x2": true,
+        "x3": true
+      },
+      "canonical_reference": {
+        "objective_score": 6.0,
+        "solution": {
+          "x1": true,
+          "x2": true,
+          "x3": false
+        },
+        "solution_hash": "71f13e234698c93dfa0e579d86c2507bd09679c76efdafbf740fed0c2df0bb2c"
+      },
+      "coupling_type": "pbit_binary",
+      "descriptor_id": "exp5477:sat_boundary_core:sat_right",
+      "domains": {
+        "x1": [
+          false,
+          true
+        ],
+        "x2": [
+          false,
+          true
+        ],
+        "x3": [
+          false,
+          true
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 6.0,
+        "required": true,
+        "solution": {
+          "x1": true,
+          "x2": true,
+          "x3": false
+        },
+        "solution_hash": "71f13e234698c93dfa0e579d86c2507bd09679c76efdafbf740fed0c2df0bb2c",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_sat_boundary_core_0",
+          "literals": [
+            {
+              "equals": true,
+              "variable": "x1"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_sat_boundary_core_1",
+          "literals": [
+            {
+              "equals": true,
+              "variable": "x2"
+            },
+            {
+              "equals": false,
+              "variable": "x3"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_sat_boundary_core_2",
+          "literals": [
+            {
+              "equals": true,
+              "variable": "x1"
+            },
+            {
+              "equals": true,
+              "variable": "x2"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "partition_id": "sat_right",
+      "partition_telemetry": {
+        "boundary_message_count": 1,
+        "partition_count": 2,
+        "partition_id": "sat_right",
+        "partition_ids": [
+          "sat_left",
+          "sat_right"
+        ],
+        "partition_scope": [
+          "x3"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_sat_boundary_core_x1_reference",
+          "type": "value_reward",
+          "value": true,
+          "variable": "x1",
+          "weight": 2
+        },
+        {
+          "id": "SP_sat_boundary_core_x2_reference",
+          "type": "value_reward",
+          "value": true,
+          "variable": "x2",
+          "weight": 2
+        },
+        {
+          "id": "SP_sat_boundary_core_x3_reference",
+          "type": "value_reward",
+          "value": false,
+          "variable": "x3",
+          "weight": 2
+        }
+      ],
+      "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
+      "source_fixture_id": "sat_boundary_core",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 1,
+        "type": "pbit_async_sweep",
+        "update_count": 3
+      },
+      "variables": [
+        {
+          "domain": [
+            false,
+            true
+          ],
+          "name": "x1",
+          "role": "boundary_context"
+        },
+        {
+          "domain": [
+            false,
+            true
+          ],
+          "name": "x2",
+          "role": "boundary_context"
+        },
+        {
+          "domain": [
+            false,
+            true
+          ],
+          "name": "x3",
+          "role": "partition_control"
+        }
+      ]
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "pbit_pdit_relaxation_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 42.0,
+      "baseline_assignment": {
+        "a": 0,
+        "b": 0,
+        "c": 1,
+        "d": 1
+      },
+      "canonical_reference": {
+        "objective_score": 104.0,
+        "solution": {
+          "a": 0,
+          "b": 1,
+          "c": 1,
+          "d": 0
+        },
+        "solution_hash": "005086434eb0a272d3edd8426a07cb64226c7d61358d34752ed0118a9538f7a9"
+      },
+      "coupling_type": "pbit_binary",
+      "descriptor_id": "exp5477:maxcut_boundary_square:cut_left",
+      "domains": {
+        "a": [
+          0,
+          1
+        ],
+        "b": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "d": [
+          0,
+          1
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 104.0,
+        "required": true,
+        "solution": {
+          "a": 0,
+          "b": 1,
+          "c": 1,
+          "d": 0
+        },
+        "solution_hash": "005086434eb0a272d3edd8426a07cb64226c7d61358d34752ed0118a9538f7a9",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_maxcut_boundary_square_a_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "a"
+            },
+            {
+              "equals": 1,
+              "variable": "a"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_maxcut_boundary_square_b_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "b"
+            },
+            {
+              "equals": 1,
+              "variable": "b"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_maxcut_boundary_square_c_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "c"
+            },
+            {
+              "equals": 1,
+              "variable": "c"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_maxcut_boundary_square_d_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "d"
+            },
+            {
+              "equals": 1,
+              "variable": "d"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "partition_id": "cut_left",
+      "partition_telemetry": {
+        "boundary_message_count": 2,
+        "partition_count": 2,
+        "partition_id": "cut_left",
+        "partition_ids": [
+          "cut_left",
+          "cut_right"
+        ],
+        "partition_scope": [
+          "a",
+          "b"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_maxcut_boundary_square_a_b_cut",
+          "left": "a",
+          "right": "b",
+          "type": "cut_edge",
+          "weight": 30
+        },
+        {
+          "id": "SP_maxcut_boundary_square_a_c_cut",
+          "left": "a",
+          "right": "c",
+          "type": "cut_edge",
+          "weight": 20
+        },
+        {
+          "id": "SP_maxcut_boundary_square_b_d_cut",
+          "left": "b",
+          "right": "d",
+          "type": "cut_edge",
+          "weight": 20
+        },
+        {
+          "id": "SP_maxcut_boundary_square_c_d_cut",
+          "left": "c",
+          "right": "d",
+          "type": "cut_edge",
+          "weight": 30
+        },
+        {
+          "id": "SP_maxcut_boundary_square_a_d_cut",
+          "left": "a",
+          "right": "d",
+          "type": "cut_edge",
+          "weight": 10
+        },
+        {
+          "id": "SP_maxcut_boundary_square_b_c_cut",
+          "left": "b",
+          "right": "c",
+          "type": "cut_edge",
+          "weight": 10
+        },
+        {
+          "id": "SP_maxcut_boundary_square_a_reference",
+          "type": "value_reward",
+          "value": 0,
+          "variable": "a",
+          "weight": 1
+        },
+        {
+          "id": "SP_maxcut_boundary_square_b_reference",
+          "type": "value_reward",
+          "value": 1,
+          "variable": "b",
+          "weight": 1
+        },
+        {
+          "id": "SP_maxcut_boundary_square_c_reference",
+          "type": "value_reward",
+          "value": 1,
+          "variable": "c",
+          "weight": 1
+        },
+        {
+          "id": "SP_maxcut_boundary_square_d_reference",
+          "type": "value_reward",
+          "value": 0,
+          "variable": "d",
+          "weight": 1
+        }
+      ],
+      "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
+      "source_fixture_id": "maxcut_boundary_square",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 2,
+        "type": "pbit_async_sweep",
+        "update_count": 6
+      },
+      "variables": [
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "a",
+          "role": "partition_control"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "b",
+          "role": "partition_control"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "c",
+          "role": "boundary_context"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "d",
+          "role": "boundary_context"
+        }
+      ]
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "pbit_pdit_relaxation_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 42.0,
+      "baseline_assignment": {
+        "a": 0,
+        "b": 0,
+        "c": 1,
+        "d": 1
+      },
+      "canonical_reference": {
+        "objective_score": 104.0,
+        "solution": {
+          "a": 0,
+          "b": 1,
+          "c": 1,
+          "d": 0
+        },
+        "solution_hash": "005086434eb0a272d3edd8426a07cb64226c7d61358d34752ed0118a9538f7a9"
+      },
+      "coupling_type": "pbit_binary",
+      "descriptor_id": "exp5477:maxcut_boundary_square:cut_right",
+      "domains": {
+        "a": [
+          0,
+          1
+        ],
+        "b": [
+          0,
+          1
+        ],
+        "c": [
+          0,
+          1
+        ],
+        "d": [
+          0,
+          1
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 104.0,
+        "required": true,
+        "solution": {
+          "a": 0,
+          "b": 1,
+          "c": 1,
+          "d": 0
+        },
+        "solution_hash": "005086434eb0a272d3edd8426a07cb64226c7d61358d34752ed0118a9538f7a9",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_maxcut_boundary_square_a_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "a"
+            },
+            {
+              "equals": 1,
+              "variable": "a"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_maxcut_boundary_square_b_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "b"
+            },
+            {
+              "equals": 1,
+              "variable": "b"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_maxcut_boundary_square_c_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "c"
+            },
+            {
+              "equals": 1,
+              "variable": "c"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_maxcut_boundary_square_d_binary_domain",
+          "literals": [
+            {
+              "equals": 0,
+              "variable": "d"
+            },
+            {
+              "equals": 1,
+              "variable": "d"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "partition_id": "cut_right",
+      "partition_telemetry": {
+        "boundary_message_count": 2,
+        "partition_count": 2,
+        "partition_id": "cut_right",
+        "partition_ids": [
+          "cut_left",
+          "cut_right"
+        ],
+        "partition_scope": [
+          "c",
+          "d"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_maxcut_boundary_square_a_b_cut",
+          "left": "a",
+          "right": "b",
+          "type": "cut_edge",
+          "weight": 30
+        },
+        {
+          "id": "SP_maxcut_boundary_square_a_c_cut",
+          "left": "a",
+          "right": "c",
+          "type": "cut_edge",
+          "weight": 20
+        },
+        {
+          "id": "SP_maxcut_boundary_square_b_d_cut",
+          "left": "b",
+          "right": "d",
+          "type": "cut_edge",
+          "weight": 20
+        },
+        {
+          "id": "SP_maxcut_boundary_square_c_d_cut",
+          "left": "c",
+          "right": "d",
+          "type": "cut_edge",
+          "weight": 30
+        },
+        {
+          "id": "SP_maxcut_boundary_square_a_d_cut",
+          "left": "a",
+          "right": "d",
+          "type": "cut_edge",
+          "weight": 10
+        },
+        {
+          "id": "SP_maxcut_boundary_square_b_c_cut",
+          "left": "b",
+          "right": "c",
+          "type": "cut_edge",
+          "weight": 10
+        },
+        {
+          "id": "SP_maxcut_boundary_square_a_reference",
+          "type": "value_reward",
+          "value": 0,
+          "variable": "a",
+          "weight": 1
+        },
+        {
+          "id": "SP_maxcut_boundary_square_b_reference",
+          "type": "value_reward",
+          "value": 1,
+          "variable": "b",
+          "weight": 1
+        },
+        {
+          "id": "SP_maxcut_boundary_square_c_reference",
+          "type": "value_reward",
+          "value": 1,
+          "variable": "c",
+          "weight": 1
+        },
+        {
+          "id": "SP_maxcut_boundary_square_d_reference",
+          "type": "value_reward",
+          "value": 0,
+          "variable": "d",
+          "weight": 1
+        }
+      ],
+      "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
+      "source_fixture_id": "maxcut_boundary_square",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 2,
+        "type": "pbit_async_sweep",
+        "update_count": 6
+      },
+      "variables": [
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "a",
+          "role": "boundary_context"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "b",
+          "role": "boundary_context"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "c",
+          "role": "partition_control"
+        },
+        {
+          "domain": [
+            0,
+            1
+          ],
+          "name": "d",
+          "role": "partition_control"
+        }
+      ]
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "pbit_pdit_relaxation_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 20.0,
+      "baseline_assignment": {
+        "ana": "test",
+        "ben": "pack",
+        "cy": "ship"
+      },
+      "canonical_reference": {
+        "objective_score": 30.0,
+        "solution": {
+          "ana": "pack",
+          "ben": "test",
+          "cy": "ship"
+        },
+        "solution_hash": "8f3905345eebb2de8733c88fa78f728f604a28e0a304405e20d07dc5efda7616"
+      },
+      "coupling_type": "pdit_categorical",
+      "descriptor_id": "exp5477:assignment_pdit_boundary:assign_left",
+      "domains": {
+        "ana": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "ben": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "cy": [
+          "pack",
+          "test",
+          "ship"
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 30.0,
+        "required": true,
+        "solution": {
+          "ana": "pack",
+          "ben": "test",
+          "cy": "ship"
+        },
+        "solution_hash": "8f3905345eebb2de8733c88fa78f728f604a28e0a304405e20d07dc5efda7616",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_assignment_pdit_boundary_all_different",
+          "type": "all_different",
+          "variables": [
+            "ana",
+            "ben",
+            "cy"
+          ]
+        }
+      ],
+      "partition_id": "assign_left",
+      "partition_telemetry": {
+        "boundary_message_count": 1,
+        "partition_count": 2,
+        "partition_id": "assign_left",
+        "partition_ids": [
+          "assign_left",
+          "assign_right"
+        ],
+        "partition_scope": [
+          "ana",
+          "ben"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_assignment_pdit_boundary_ana_reference",
+          "type": "value_reward",
+          "value": "pack",
+          "variable": "ana",
+          "weight": 10
+        },
+        {
+          "id": "SP_assignment_pdit_boundary_ben_reference",
+          "type": "value_reward",
+          "value": "test",
+          "variable": "ben",
+          "weight": 10
+        },
+        {
+          "id": "SP_assignment_pdit_boundary_cy_reference",
+          "type": "value_reward",
+          "value": "ship",
+          "variable": "cy",
+          "weight": 10
+        }
+      ],
+      "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
+      "source_fixture_id": "assignment_pdit_boundary",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 1,
+        "type": "pdit_block_gibbs",
+        "update_count": 4
+      },
+      "variables": [
+        {
+          "domain": [
+            "pack",
+            "test",
+            "ship"
+          ],
+          "name": "ana",
+          "role": "partition_control"
+        },
+        {
+          "domain": [
+            "pack",
+            "test",
+            "ship"
+          ],
+          "name": "ben",
+          "role": "partition_control"
+        },
+        {
+          "domain": [
+            "pack",
+            "test",
+            "ship"
+          ],
+          "name": "cy",
+          "role": "boundary_context"
+        }
+      ]
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "pbit_pdit_relaxation_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 20.0,
+      "baseline_assignment": {
+        "ana": "test",
+        "ben": "pack",
+        "cy": "ship"
+      },
+      "canonical_reference": {
+        "objective_score": 30.0,
+        "solution": {
+          "ana": "pack",
+          "ben": "test",
+          "cy": "ship"
+        },
+        "solution_hash": "8f3905345eebb2de8733c88fa78f728f604a28e0a304405e20d07dc5efda7616"
+      },
+      "coupling_type": "pdit_categorical",
+      "descriptor_id": "exp5477:assignment_pdit_boundary:assign_right",
+      "domains": {
+        "ana": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "ben": [
+          "pack",
+          "test",
+          "ship"
+        ],
+        "cy": [
+          "pack",
+          "test",
+          "ship"
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 30.0,
+        "required": true,
+        "solution": {
+          "ana": "pack",
+          "ben": "test",
+          "cy": "ship"
+        },
+        "solution_hash": "8f3905345eebb2de8733c88fa78f728f604a28e0a304405e20d07dc5efda7616",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_assignment_pdit_boundary_all_different",
+          "type": "all_different",
+          "variables": [
+            "ana",
+            "ben",
+            "cy"
+          ]
+        }
+      ],
+      "partition_id": "assign_right",
+      "partition_telemetry": {
+        "boundary_message_count": 1,
+        "partition_count": 2,
+        "partition_id": "assign_right",
+        "partition_ids": [
+          "assign_left",
+          "assign_right"
+        ],
+        "partition_scope": [
+          "cy"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_assignment_pdit_boundary_ana_reference",
+          "type": "value_reward",
+          "value": "pack",
+          "variable": "ana",
+          "weight": 10
+        },
+        {
+          "id": "SP_assignment_pdit_boundary_ben_reference",
+          "type": "value_reward",
+          "value": "test",
+          "variable": "ben",
+          "weight": 10
+        },
+        {
+          "id": "SP_assignment_pdit_boundary_cy_reference",
+          "type": "value_reward",
+          "value": "ship",
+          "variable": "cy",
+          "weight": 10
+        }
+      ],
+      "source_artifact": "results/experiment_5477_pdit_lns_boundary_exchange_v497.json",
+      "source_fixture_id": "assignment_pdit_boundary",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 1,
+        "type": "pdit_block_gibbs",
+        "update_count": 2
+      },
+      "variables": [
+        {
+          "domain": [
+            "pack",
+            "test",
+            "ship"
+          ],
+          "name": "ana",
+          "role": "boundary_context"
+        },
+        {
+          "domain": [
+            "pack",
+            "test",
+            "ship"
+          ],
+          "name": "ben",
+          "role": "boundary_context"
+        },
+        {
+          "domain": [
+            "pack",
+            "test",
+            "ship"
+          ],
+          "name": "cy",
+          "role": "partition_control"
+        }
+      ]
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "preference_maxsat_solver_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 6.0,
+      "baseline_assignment": {
+        "decision": "abstain"
+      },
+      "canonical_reference": {
+        "objective_score": 10.0,
+        "solution": {
+          "decision": "accept"
+        },
+        "solution_hash": "4feedfc2103f929afcbe44233176d1c2cde604fd7624e883056cc672ae5b552b"
+      },
+      "coupling_type": "preference_maxsat",
+      "descriptor_id": "preference-maxsat:pref_accept_when_exact_consistent:0",
+      "domains": {
+        "decision": [
+          "abstain",
+          "accept",
+          "reject"
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 10.0,
+        "required": true,
+        "solution": {
+          "decision": "accept"
+        },
+        "solution_hash": "4feedfc2103f929afcbe44233176d1c2cde604fd7624e883056cc672ae5b552b",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_EXACT_CONSISTENT",
+          "literals": [
+            {
+              "equals": "accept",
+              "variable": "decision"
+            },
+            {
+              "equals": "abstain",
+              "variable": "decision"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "partition_id": "pref_accept_partition",
+      "partition_telemetry": {
+        "boundary_message_count": 0,
+        "partition_count": 1,
+        "partition_id": "pref_accept_partition",
+        "partition_ids": [
+          "pref_accept_partition"
+        ],
+        "partition_scope": [
+          "decision"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_ACCEPT_EXACT",
+          "type": "value_reward",
+          "value": "accept",
+          "variable": "decision",
+          "weight": 10
+        },
+        {
+          "id": "SP_ABSTAIN_BACKSTOP",
+          "type": "value_reward",
+          "value": "abstain",
+          "variable": "decision",
+          "weight": 4
+        }
+      ],
+      "source_artifact": "built_in_preference_maxsat_rows",
+      "source_fixture_id": "pref_accept_when_exact_consistent",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 0,
+        "type": "preference_maxsat_batch",
+        "update_count": 3
+      },
+      "variables": [
+        {
+          "domain": [
+            "abstain",
+            "accept",
+            "reject"
+          ],
+          "name": "decision",
+          "role": "partition_control"
+        }
+      ]
+    },
+    {
+      "admissible_hardware_mapping": {
+        "admissible_targets": [
+          "cpu_exact_solver",
+          "preference_maxsat_solver_advisory"
+        ],
+        "advisory_only": true,
+        "board_timing_collected": false,
+        "mapping_note": "portable workload mapping only; no board timing collected",
+        "speedup_claim_allowed": false
+      },
+      "advisory_improvement": 6.0,
+      "baseline_assignment": {
+        "decision": "abstain"
+      },
+      "canonical_reference": {
+        "objective_score": 9.0,
+        "solution": {
+          "decision": "reject"
+        },
+        "solution_hash": "2a84e6c0558905fa90e35a7577207a702485ed6a2f8d47e08f1c2f1934e9466b"
+      },
+      "coupling_type": "preference_maxsat",
+      "descriptor_id": "preference-maxsat:pref_reject_when_exact_inconsistent:1",
+      "domains": {
+        "decision": [
+          "abstain",
+          "accept",
+          "reject"
+        ]
+      },
+      "exact_fallback": {
+        "canonical_reference_agreement": true,
+        "complete": true,
+        "objective_score": 9.0,
+        "required": true,
+        "solution": {
+          "decision": "reject"
+        },
+        "solution_hash": "2a84e6c0558905fa90e35a7577207a702485ed6a2f8d47e08f1c2f1934e9466b",
+        "solver": "deterministic_exhaustive_enumerator",
+        "status": "optimal"
+      },
+      "hard_constraints": [
+        {
+          "id": "HC_EXACT_INCONSISTENT",
+          "literals": [
+            {
+              "equals": "reject",
+              "variable": "decision"
+            },
+            {
+              "equals": "abstain",
+              "variable": "decision"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "partition_id": "pref_reject_partition",
+      "partition_telemetry": {
+        "boundary_message_count": 0,
+        "partition_count": 1,
+        "partition_id": "pref_reject_partition",
+        "partition_ids": [
+          "pref_reject_partition"
+        ],
+        "partition_scope": [
+          "decision"
+        ]
+      },
+      "soft_preferences": [
+        {
+          "id": "SP_REJECT_FALSE_ACCEPT",
+          "type": "value_reward",
+          "value": "reject",
+          "variable": "decision",
+          "weight": 9
+        },
+        {
+          "id": "SP_ABSTAIN_SAFE",
+          "type": "value_reward",
+          "value": "abstain",
+          "variable": "decision",
+          "weight": 3
+        }
+      ],
+      "source_artifact": "built_in_preference_maxsat_rows",
+      "source_fixture_id": "pref_reject_when_exact_inconsistent",
+      "status": "solved",
+      "unsafe_false_accept": false,
+      "update_schedule": {
+        "boundary_refresh_count": 0,
+        "type": "preference_maxsat_batch",
+        "update_count": 3
+      },
+      "variables": [
+        {
+          "domain": [
+            "abstain",
+            "accept",
+            "reject"
+          ],
+          "name": "decision",
+          "role": "partition_control"
+        }
+      ]
+    }
+  ],
+  "exact_fallback_completeness": 1.0,
+  "experiment": 5491,
+  "experiment_id": "exp5491-active-constraint-subproblem-descriptor-v498",
+  "field_principles": {
+    "advisory_improvement_delta": "advisory utility without correctness authority",
+    "descriptor_count": "portable descriptor coverage",
+    "descriptor_roundtrip_rate": "canonical JSON portability",
+    "exact_fallback_completeness": "exact fallback final authority",
+    "hard_constraint_count_summary": "exact hard-row coverage",
+    "hardware_speedup_claim": "must remain false",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "deterministic descriptor generation with no LLM",
+    "partition_count_summary": "partition telemetry before hardware run",
+    "random_seed": "deterministic replay seed",
+    "soft_preference_count_summary": "Preference-MaxSAT and advisory objective coverage",
+    "subproblem_descriptor_ready": "downstream descriptor gate",
+    "unsafe_false_accept_count": "advisory safety boundary",
+    "update_schedule_types": "p-bit, p-dit, and MaxSAT schedule coverage",
+    "variable_count_summary": "descriptor variable scale"
+  },
+  "hard_constraint_count_summary": {
+    "count": 8,
+    "max": 4,
+    "mean": 2.25,
+    "min": 1,
+    "total": 18
+  },
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: portable active-constraint descriptors cover p-bit, p-dit, and Preference-MaxSAT rows with exact fallback completeness 1.0, zero unsafe false accepts, partition/update telemetry, and no hardware speedup claim",
+  "inference_substrate": "deterministic_descriptor_no_llm",
+  "milestone": "2026.07.498",
+  "partition_count_summary": {
+    "count": 8,
+    "max": 2,
+    "mean": 1.75,
+    "min": 1,
+    "total": 14
+  },
+  "random_seed": 5491,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "9500e3e25be602c00e501a93f7b99b4f65a6f8e40e09cc6bbf6833fb81d3bfab",
+  "research_conductor_modified": false,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5491.active_constraint_subproblem_descriptor.v498",
+  "soft_preference_count_summary": {
+    "count": 8,
+    "max": 10,
+    "mean": 4.5,
+    "min": 2,
+    "total": 36
+  },
+  "source_artifacts": [
+    "built_in_preference_maxsat_rows",
+    "results/experiment_5477_pdit_lns_boundary_exchange_v497.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5491",
+    "SCENARIO-VERIFY-5491"
+  ],
+  "status": "complete",
+  "subproblem_descriptor_ready": true,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5491_active_constraint_subproblem_descriptor_v498.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5491_active_constraint_subproblem_descriptor_v498.py -m pytest tests/python/test_experiment_5491_active_constraint_subproblem_descriptor_v498.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5491_active_constraint_subproblem_descriptor_v498.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "passed"
+    },
+    {
+      "command": "ops/e2e-test-plan.md review: Exp5491 is deterministic descriptor emission; no live training, PyO3, KV260, board timing, or hardware execution e2e path applies",
+      "outcome": "not_applicable"
+    }
+  ],
+  "unsafe_false_accept_count": 0,
+  "update_schedule_types": [
+    "pbit_async_sweep",
+    "pdit_block_gibbs",
+    "preference_maxsat_batch"
+  ],
+  "variable_count_summary": {
+    "count": 8,
+    "max": 4,
+    "mean": 2.75,
+    "min": 1,
+    "total": 22
+  }
+}
