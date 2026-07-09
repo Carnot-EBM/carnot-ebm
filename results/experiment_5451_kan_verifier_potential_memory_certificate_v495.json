@@ -1,0 +1,374 @@
+{
+  "broad_kan_claim_made": false,
+  "certificate_checksum": "sha256:9ae9fda687ee364f4042865f24c8ead1491c79e661851e65c772946c66fac221",
+  "claim_count": 15,
+  "claim_limits": [
+    "bounded Exp5443 verifier-potential and Exp5446 governed-memory artifact fields only",
+    "false verifier-potential claims are rejected only from measured Exp5443 fields",
+    "false governed-memory claims are rejected only from measured Exp5446 fields",
+    "hardware speedup claims require timing evidence absent from this certificate",
+    "token and hidden/internal-state claims require evidence absent from this certificate",
+    "no broad KAN verification, KAN soundness, trained-network soundness, or general LLM truth claim"
+  ],
+  "claim_records": [
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "verifier_potential",
+      "claim_id": "true_exp5443_fixture_ready",
+      "claim_kind": "true_measured",
+      "claim_truth": true,
+      "classification": "measured_supported",
+      "measured_values": {
+        "exp5443.verifier_potential_fixture_ready": true
+      },
+      "missing_evidence": [],
+      "preserved": true,
+      "rejected": false,
+      "required_fields": [
+        "exp5443.verifier_potential_fixture_ready"
+      ],
+      "statement": "Exp5443 reports verifier_potential_fixture_ready=true."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "verifier_potential",
+      "claim_id": "true_exp5443_exact_final_authority",
+      "claim_kind": "true_measured",
+      "claim_truth": true,
+      "classification": "measured_supported",
+      "measured_values": {
+        "exp5443.exact_final_authority": true
+      },
+      "missing_evidence": [],
+      "preserved": true,
+      "rejected": false,
+      "required_fields": [
+        "exp5443.exact_final_authority"
+      ],
+      "statement": "Exp5443 keeps exact final verifier authority."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "verifier_potential",
+      "claim_id": "true_exp5443_prefix_final_disagreements_measured",
+      "claim_kind": "true_measured",
+      "claim_truth": true,
+      "classification": "measured_supported",
+      "measured_values": {
+        "exp5443.prefix_final_disagreement_cases": 6
+      },
+      "missing_evidence": [],
+      "preserved": true,
+      "rejected": false,
+      "required_fields": [
+        "exp5443.prefix_final_disagreement_cases"
+      ],
+      "statement": "Exp5443 measured prefix/final disagreement cases."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "governed_memory",
+      "claim_id": "true_exp5446_governed_loop_ready",
+      "claim_kind": "true_measured",
+      "claim_truth": true,
+      "classification": "measured_supported",
+      "measured_values": {
+        "exp5446.governed_csl_loop_ready": true
+      },
+      "missing_evidence": [],
+      "preserved": true,
+      "rejected": false,
+      "required_fields": [
+        "exp5446.governed_csl_loop_ready"
+      ],
+      "statement": "Exp5446 reports governed_csl_loop_ready=true."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "governed_memory",
+      "claim_id": "true_exp5446_no_weight_mutation",
+      "claim_kind": "true_measured",
+      "claim_truth": true,
+      "classification": "measured_supported",
+      "measured_values": {
+        "exp5446.no_weight_mutation": true
+      },
+      "missing_evidence": [],
+      "preserved": true,
+      "rejected": false,
+      "required_fields": [
+        "exp5446.no_weight_mutation"
+      ],
+      "statement": "Exp5446 reports no model-weight mutation."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "governed_memory",
+      "claim_id": "true_exp5446_zero_unsafe_false_accepts",
+      "claim_kind": "true_measured",
+      "claim_truth": true,
+      "classification": "measured_supported",
+      "measured_values": {
+        "exp5446.unsafe_false_accepts": 0
+      },
+      "missing_evidence": [],
+      "preserved": true,
+      "rejected": false,
+      "required_fields": [
+        "exp5446.unsafe_false_accepts"
+      ],
+      "statement": "Exp5446 governed memory has zero unsafe false accepts."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "verifier_potential",
+      "claim_id": "false_exp5443_no_prefix_final_disagreements",
+      "claim_kind": "false_property",
+      "claim_truth": false,
+      "classification": "measured_contradicted",
+      "measured_values": {
+        "exp5443.prefix_final_disagreement_cases": 6
+      },
+      "missing_evidence": [],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5443.prefix_final_disagreement_cases"
+      ],
+      "statement": "Verifier potential never disagrees with final authority."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "verifier_potential",
+      "claim_id": "false_exp5443_metric_independence_failed",
+      "claim_kind": "false_property",
+      "claim_truth": false,
+      "classification": "measured_contradicted",
+      "measured_values": {
+        "exp5443.metric_independence_checks_passed": true
+      },
+      "missing_evidence": [],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5443.metric_independence_checks_passed"
+      ],
+      "statement": "Exp5443 metric independence checks failed."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "governed_memory",
+      "claim_id": "false_exp5446_ungated_memory_safe",
+      "claim_kind": "false_property",
+      "claim_truth": false,
+      "classification": "measured_contradicted",
+      "measured_values": {
+        "exp5446.control_metrics.ungated_memory.unsafe_false_accepts": 3
+      },
+      "missing_evidence": [],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5446.control_metrics.ungated_memory.unsafe_false_accepts"
+      ],
+      "statement": "Ungated memory had zero unsafe false accepts."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "governed_memory",
+      "claim_id": "false_exp5446_all_memories_active_for_routing",
+      "claim_kind": "false_property",
+      "claim_truth": false,
+      "classification": "measured_contradicted",
+      "measured_values": {
+        "exp5446.abstained_memories": {
+          "count": 1
+        },
+        "exp5446.rejected_memories": {
+          "count": 3
+        }
+      },
+      "missing_evidence": [],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5446.rejected_memories",
+        "exp5446.abstained_memories"
+      ],
+      "statement": "Every memory record stayed active for future routing."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "governed_memory",
+      "claim_id": "false_exp5446_model_weights_mutated",
+      "claim_kind": "false_property",
+      "claim_truth": false,
+      "classification": "measured_contradicted",
+      "measured_values": {
+        "exp5446.no_weight_mutation": true
+      },
+      "missing_evidence": [],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5446.no_weight_mutation"
+      ],
+      "statement": "Governed online memory mutated model weights."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "hardware_speedup",
+      "claim_id": "unsupported_hardware_speedup_from_certificate",
+      "claim_kind": "unsupported",
+      "claim_truth": false,
+      "classification": "missing_evidence_unsupported",
+      "measured_values": {},
+      "missing_evidence": [
+        "exp5446.authenticated_hardware_speedup",
+        "exp5446.board_timing_receipt"
+      ],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5446.authenticated_hardware_speedup",
+        "exp5446.board_timing_receipt"
+      ],
+      "statement": "The bounded certificate proves hardware speedup."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "token_internal",
+      "claim_id": "unsupported_token_level_access_from_certificate",
+      "claim_kind": "unsupported",
+      "claim_truth": false,
+      "classification": "missing_evidence_unsupported",
+      "measured_values": {},
+      "missing_evidence": [
+        "exp5443.token_ids",
+        "exp5443.token_logprobs"
+      ],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5443.token_ids",
+        "exp5443.token_logprobs"
+      ],
+      "statement": "The bounded certificate proves token-level/logprob access."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "token_internal",
+      "claim_id": "unsupported_internal_state_access_from_certificate",
+      "claim_kind": "unsupported",
+      "claim_truth": false,
+      "classification": "missing_evidence_unsupported",
+      "measured_values": {},
+      "missing_evidence": [
+        "exp5446.hidden_state_tensor",
+        "exp5446.activation_checksum"
+      ],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5446.hidden_state_tensor",
+        "exp5446.activation_checksum"
+      ],
+      "statement": "The bounded certificate proves hidden/internal-state access."
+    },
+    {
+      "bounded_fixture_only": true,
+      "claim_domain": "kan_soundness",
+      "claim_id": "unsupported_broad_kan_soundness",
+      "claim_kind": "broad_soundness",
+      "claim_truth": false,
+      "classification": "missing_evidence_unsupported",
+      "measured_values": {},
+      "missing_evidence": [
+        "exp5443.general_kan_soundness_theorem",
+        "exp5446.general_llm_truth_certificate"
+      ],
+      "preserved": false,
+      "rejected": true,
+      "required_fields": [
+        "exp5443.general_kan_soundness_theorem",
+        "exp5446.general_llm_truth_certificate"
+      ],
+      "statement": "The bounded certificate proves KAN soundness or general LLM truth."
+    }
+  ],
+  "experiment": "experiment_5451_kan_verifier_potential_memory_certificate_v495",
+  "experiment_id": "exp5451-v495-kan-verifier-potential-memory-certificate",
+  "false_property_rejection_rate": 1.0,
+  "field_principles": {
+    "broad_kan_claim_made": "no overclaim.",
+    "certificate_checksum": "reproducibility.",
+    "claim_count": "certificate coverage.",
+    "false_property_rejection_rate": "soundness guard.",
+    "gated_upstreams_ready": "structured gate provenance.",
+    "governed_memory_claims_checked": "CSL claim coverage.",
+    "hardware_speedup_claim_rejected": "hardware honesty.",
+    "honest_verdict": "terminal status; start with complete: or blocked:.",
+    "inference_substrate": "explicit certificate substrate.",
+    "kan_certificate_ready": "capstone evidence.",
+    "token_internal_claim_rejected": "closed-lane enforcement.",
+    "true_measured_claim_preservation_rate": "useful certificate.",
+    "unsupported_claim_rejection_rate": "measurement-access boundary.",
+    "verifier_potential_claims_checked": "V495 claim coverage."
+  },
+  "gated_upstreams_ready": true,
+  "governed_memory_claims_checked": 6,
+  "hardware_speedup_claim_rejected": true,
+  "honest_verdict": "complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims",
+  "inference_substrate": "bounded_measurement_access_certificate",
+  "kan_certificate_ready": true,
+  "methodology_note": "Exp5451 is a bounded measurement-access certificate over committed Exp5443 and Exp5446 artifact fields. It preserves true measured claims, rejects measured false claims, and rejects hardware, token, internal-state, broad KAN soundness, and general LLM truth claims whose required measurements are absent.",
+  "milestone": "2026.07.495",
+  "property_family": "bounded_kan_verifier_potential_governed_memory_measurement_certificate",
+  "random_seed": 5451,
+  "readiness_blockers": [],
+  "run_date": "2026-07-08",
+  "schema": "carnot.experiment_5451.kan_verifier_potential_memory_certificate.v495",
+  "source_artifact_checksums": {
+    "exp5438": "sha256:18cb59d3f6562cb0437f1c9632909f1939eda2164d51b3f6c45721cf1000a361",
+    "exp5443": "sha256:7820f6c658da60ce94c06361f845e0421117cc52bcc25bca28dc8e2a2c570cf1",
+    "exp5446": "sha256:ecf61e48077395db8625da542361f178824ed450f46283e7db8bd1e80ecd2749",
+    "module": "sha256:a8082ee836b72539f74408473d203aed3bc7a0f963022e58cdc595fe2e2bc9aa",
+    "spec": "sha256:b7f1a9254b776813b679081507c453b59cce9ee3b7b96a15d2a926b9b8a249fd"
+  },
+  "source_artifacts": [
+    "results/experiment_5443_verifier_potential_prefix_fixture_v495.json",
+    "results/experiment_5446_governed_memory_csl_online_v495.json",
+    "results/experiment_5438_kan_ontology_measurement_certificate_v494.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5451",
+    "SCENARIO-KAN-5451"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5451_kan_verifier_potential_memory_certificate_v495.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5451_kan_verifier_potential_memory_certificate_v495.py -m pytest tests/python/test_experiment_5451_kan_verifier_potential_memory_certificate_v495.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5451_kan_verifier_potential_memory_certificate_v495.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py",
+      "outcome": "failed_pre_existing_1262_missing_spec_refs"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "token_internal_claim_rejected": true,
+  "true_measured_claim_preservation_rate": 1.0,
+  "unsupported_claim_rejection_rate": 1.0,
+  "verifier_potential_claims_checked": 5
+}
