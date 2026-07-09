@@ -1640,6 +1640,51 @@ Required field principles:
 - `random_seed`: principle "deterministic seed for the bounded attempt."
 - `honest_verdict`: principle "terminal status starts with complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5507: Null-Coordinate And Perception-Grounding Target Precheck
+
+Experiment 5507 SHALL write
+`results/experiment_5507_arc_null_coordinate_perception_precheck_v499.json`
+as a no-solve aggregation artifact before Exp5508 spends any live-agent
+budget. The workflow SHALL read `ops/arc_solve_registry.yaml`,
+`ops/known-issues.md`, `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`,
+`results/experiment_5493_arc_trajectory_target_precheck_v498.json`, and
+`results/experiment_5494_arc_live_trajectory_levelup_v498.json`. It MAY also
+read prior ARC salience/precheck artifacts as upstream evidence, but it SHALL
+NOT read game source, run offline ground-truth BFS, build a hand per-game
+adapter, or claim a solve.
+
+The workflow SHALL reject any requested target level that the registry already
+records as reproduced. It SHALL audit recent no-bank targets and reject exact
+same-target/same-mechanism reruns unless the selected mechanism is materially
+changed. It SHALL audit prior null-coordinate or no-op behavior as either valid
+game actions with zero frame effect or metric artifacts, and SHALL record
+whether any banked level appears contaminated by a null-coordinate exploit. It
+SHALL inspect upstream live observations for perception-grounding findings that
+a classical connected-component/color-blob segmentation pass can expose.
+
+The result artifact SHALL include `registry_path`,
+`reproducible_total_levels_before`, `duplicate_targets_rejected`,
+`recent_no_bank_targets_rejected`, `null_coordinate_audit`,
+`perception_grounding_findings`, `selected_game`, `selected_level`,
+`selected_mechanism`, `levelup_attempt_ready`, `solve_claimed`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `registry_path`: principle "must equal ops/arc_solve_registry.yaml."
+- `reproducible_total_levels_before`: principle "authoritative registry total before this no-solve target precheck."
+- `duplicate_targets_rejected`: principle "auditable list of requested target levels rejected because the registry already reproduces them."
+- `recent_no_bank_targets_rejected`: principle "auditable list of recent same-target/same-mechanism no-bank reruns rejected before selection."
+- `null_coordinate_audit`: principle "dict classifying null/missing/no-op coordinate evidence as valid game action, metric artifact, or contamination."
+- `perception_grounding_findings`: principle "list of upstream live-observation findings exposed by connected components, color blobs, salience tiers, changed pixels, or action-effect asymmetry."
+- `selected_game`: principle "selected game id, or empty string when blocked."
+- `selected_level`: principle "selected level label such as L3, or empty string when blocked."
+- `selected_mechanism`: principle "changed live-path perception-generation mechanism, not a same-mechanism rerun."
+- `levelup_attempt_ready`: principle "bare bool true only when the selected level is non-duplicate, same-mechanism reruns are rejected, null-coordinate audit is clean, and perception findings are present."
+- `solve_claimed`: principle "must be false; this artifact is a precheck and cannot bank a level."
+- `inference_substrate`: principle "must equal aggregation_from_upstream_artifacts."
+- `honest_verdict`: principle "terminal status starts with complete: or blocked: and makes no solve claim."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -2309,3 +2354,36 @@ Then and only then `offline_reproduced=true`, `reproduced_levels>=1`,
 `new_level_banked=true`, `registry_updated=true`,
 `post_levels_reproduced>prior_levels_reproduced`, and `honest_verdict` starts
 with `complete:`.
+
+### SCENARIO-ARC-FCP-5507: Null-Coordinate Perception Precheck Selects Changed Mechanism
+
+Given Exp5494 records a `dc22:L3` no-bank trajectory attempt, the registry
+records `dc22` at L2, and prior no-bank artifacts record `bp35:L3` and
+`sb26:L3` salience-only nulls
+When experiment 5507 aggregates upstream evidence
+Then it rejects the already reproduced duplicate probes, rejects recent
+same-target/same-mechanism no-bank reruns, audits Exp5494's zero-change click
+receipts as valid recorded ACTION6 coordinates rather than missing/null
+coordinates, records perception-grounding findings from connected components,
+color blobs, salience tiers, changed pixels, and action-effect asymmetry, and
+selects `dc22` `L3` only with a materially changed perception-generation
+mechanism.
+
+Given experiment 5507 writes
+`results/experiment_5507_arc_null_coordinate_perception_precheck_v499.json`
+When the artifact is validated
+Then `registry_path=ops/arc_solve_registry.yaml`,
+`reproducible_total_levels_before` is a bare int,
+`duplicate_targets_rejected` and `recent_no_bank_targets_rejected` are lists,
+`null_coordinate_audit` is a dict, `perception_grounding_findings` is a list,
+`selected_game` and `selected_level` are strings,
+`levelup_attempt_ready=true`, `solve_claimed=false`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and
+`honest_verdict` starts with `complete:`.
+
+Given every candidate is either already reproduced, a same-mechanism no-bank
+rerun, or lacks perception evidence
+When experiment 5507 builds its artifact
+Then it leaves `selected_game`, `selected_level`, and `selected_mechanism`
+empty, sets `levelup_attempt_ready=false`, keeps `solve_claimed=false`, and
+uses a `blocked:` honest verdict with exact reasons.
