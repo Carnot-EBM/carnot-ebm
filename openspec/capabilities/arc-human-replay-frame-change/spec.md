@@ -1387,6 +1387,53 @@ Required field principles:
 - `inference_substrate`: principle "must equal live_path_precheck_no_solve_claim."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked: with no level-solve claim."
 
+### REQ-ARC-FCP-5465: Gated Connected-Component Salience Level-Up Attempt
+
+Experiment 5465 SHALL write
+`results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json`
+only after the Exp5464 metric-integrity precheck reports
+`arc_metric_integrity_ready=true`. The workflow SHALL re-run the registry
+precheck, select one target from Exp5464's `target_shortlist`, exercise
+live-agent reachable connected-component, color-blob, changed-pixel,
+salience-tier, and action-effect features, and run a bounded live/offline
+agent attempt using the submitted `E3AgentPolicy`/`StepwiseExplorer` salience
+path. It SHALL NOT read hidden game source, run offline ground-truth BFS, or
+credit a hand-built per-game adapter as the solve path.
+
+If the live attempt reaches a candidate new level, the workflow SHALL reproduce
+that candidate through `arc_solver_kit.reproduce` or the official
+`scripts/arc_loop_solve.py` reproduction gate before claiming progress. Success
+SHALL require `offline_reproduced=true` and `reproduced_levels` strictly
+greater than the selected target's registry-precheck depth. Otherwise the
+artifact SHALL report an honest null while preserving the live-attempt feature
+receipts and prohibited-input flags.
+
+The result artifact SHALL include `solve_provenance`,
+`registry_precheck_performed`, `target_game`, `target_level_before`,
+`target_level_attempted`, `live_attempt_count`, `perception_features_used`,
+`source_reading_used`, `offline_bfs_used`, `hand_adapter_credited`,
+`offline_reproduced`, `reproduced_levels`, `new_level_banked`,
+`arc_registry_update_required`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `solve_provenance`: principle "live_agent_self_discovery; credited path is the live agent's own attempts plus runtime reverse engineering."
+- `registry_precheck_performed`: principle "bare bool proving the registry was re-read before selecting a target from Exp5464's shortlist."
+- `target_game`: principle "game selected from Exp5464 target_shortlist after the rerun precheck."
+- `target_level_before`: principle "registry-precheck reproduced depth for the selected target before this attempt."
+- `target_level_attempted`: principle "one deeper level attempted by the live/offline agent."
+- `live_attempt_count`: principle "bounded count of live-agent attempts actually executed."
+- `perception_features_used`: principle "auditable list containing connected_component, color_blob, changed_pixel, salience_tier, and action_effect when exercised."
+- `source_reading_used`: principle "must be false; hidden/public game source is not credited in this live self-discovery path."
+- `offline_bfs_used`: principle "must be false; exhaustive offline ground-truth BFS is not the credited solve path."
+- `hand_adapter_credited`: principle "must be false; a hand GameAdapter may not receive live-agent self-discovery credit."
+- `offline_reproduced`: principle "true only when the live-agent candidate reproduces through the official reproduction gate beyond the precheck depth."
+- `reproduced_levels`: principle "absolute reproduced level count after the gate; success requires this to exceed target_level_before."
+- `new_level_banked`: principle "true only when offline_reproduced=true and reproduced_levels > target_level_before."
+- `arc_registry_update_required`: principle "true only when a newly banked level should update ops/arc_solve_registry.yaml."
+- `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1904,3 +1951,33 @@ Given recent no-bank targets include `re86` L3, `lf52` L3, `cn04` L4, and
 When experiment 5464 builds the Exp5465 shortlist
 Then shortlisted targets avoid already reached levels and those recent no-bank
 lanes unless a row records an explicit justification.
+
+### SCENARIO-ARC-FCP-5465: Gated Salience Attempt Uses Live Features And Reproduction Credit
+
+Given Exp5464 reports `arc_metric_integrity_ready=true` and a non-empty
+`target_shortlist`
+When experiment 5465 re-runs the registry precheck
+Then it selects a target from that shortlist, records the precheck depth as
+`target_level_before`, and attempts `target_level_before + 1`.
+
+Given the live `E3AgentPolicy` salience path is available
+When experiment 5465 builds its live attempt receipts
+Then `perception_features_used` contains connected-component, color-blob,
+changed-pixel, salience-tier, and action-effect features from live-path
+reachable code.
+
+Given a bounded live/offline attempt does not reproduce deeper than the selected
+precheck depth
+When experiment 5465 validates its artifact
+Then `offline_reproduced=false`, `reproduced_levels` remains at
+`target_level_before`, `new_level_banked=false`,
+`arc_registry_update_required=false`, `source_reading_used=false`,
+`offline_bfs_used=false`, `hand_adapter_credited=false`, and
+`honest_verdict` starts with `honest_null:`.
+
+Given a candidate reaches a deeper level through the live-agent route
+When the official reproduction gate confirms the candidate beyond the selected
+precheck depth
+Then and only then `offline_reproduced=true`, `new_level_banked=true`,
+`arc_registry_update_required=true`, and `honest_verdict` starts with
+`complete:`.
