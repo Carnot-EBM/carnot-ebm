@@ -28656,3 +28656,20 @@ Carnot-local hooks.
   rotation rather than duplicate `bp35`, `ka59`, or `cn04` no-bank reruns.
 
 <!-- V497-PLANNER-REFRESH-20260709-END -->
+
+
+### V497 Execution Refresh - 20260709
+
+Execution-time sweep after the `.497` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V490/V491/V492/V493/V494/V495/V496/V497 duplicate history, and the exclusion manifest. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **Pitwall: Faithful Natural-Language Race-Strategy Briefings from a Calibrated Real-Time Monte Carlo Engine** (https://arxiv.org/abs/2607.06495): For Exp5470 and Exp5472 rewrite-state and local SOTA telemetry, add a tiny typed factual claims fixture: decompose each generated sentence into state-linked claims, verify every claim against the deterministic or probabilistic state snapshot that prompted it, and require a safe fallback when support is sparse. Do not import the paper's domain-specific Formula 1 substrate or fine-tuning data gate.
+- **LatentGym: A Testbed For Cross-Task Experiential Learning With Controllable Latent Structure** (https://arxiv.org/abs/2606.15306): For Exp5473-Exp5475 CSL replay evidence, separate exploration metrics from exploitation metrics on a controllable latent-task fixture. Report whether the frozen action/memory policy gathered information about the latent state before measuring whether it used that information, and keep post-training sequence learning outside the V497 execution scope.
+
+### Execution impact
+- **Plan impact:** No active `.497` roadmap edit is required. The deltas sharpen Exp5470/Exp5472 typed claim-state verification and Exp5473-Exp5475 CSL replay metrics without expanding scope.
+- **Duplicates suppressed:** V497 planner sources, Distributional EBM, energy-guided decoding, p-bit/p-dit hardware, JitRL, SkillLearnBench, EBT, ARM-EBM, and prior Extropic/Logical Intelligence context were already covered or stayed watch-only and are not re-added.
+- **Closed scope:** No closed scope was reopened. External generated-text/logprob scorers, token/internal-feature authority without local backend receipts, broad GRPO/RL, LoRA/fine-tuning reruns, CPU-only SOTA headline paths, non-local TSU/Kona/Aleph execution claims, duplicate ARC lanes, and hardware speedup claims without matched board timing remain closed.
+- **Watch-only/excluded:** GASP, UA-ChatDev, AReaL2.0, VaseMuseum, Pitwall fine-tuning, LatentGym post-training, Extropic TSU/XTR-0/Z1, Logical Intelligence Aleph/Kona pages, and Semantic Scholar citation routes were checked but not promoted as executable `.497` dependencies.
+
+<!-- V497-EXECUTION-REFRESH-20260709-END -->
