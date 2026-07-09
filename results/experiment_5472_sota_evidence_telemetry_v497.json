@@ -1,0 +1,531 @@
+{
+  "abstention_rate": 0.25,
+  "duration_s": 170.93984,
+  "exact_validator_accuracy": 0.5,
+  "experiment_id": "experiment_5472_sota_evidence_telemetry_v497",
+  "factual_distortion_rate": 0.0,
+  "field_principles": {
+    "abstention_rate": "generated decisions parsed as abstention or undecided.",
+    "exact_validator_accuracy": "model decision agreement with exact final validator labels.",
+    "factual_distortion_rate": "distortion-guard rows accepted by the generated model decision.",
+    "gpu_offload_receipts": "pre-generation runtime evidence for CUDA llama.cpp offload.",
+    "guided_decoding_used": "guided decoding remains quarantined and is not used.",
+    "headline_models_run": "mandated model IDs that actually generated rows with verified GPU offload.",
+    "honest_verdict": "terminal status; start with \"complete:\" or \"blocked:\".",
+    "inference_substrate": "local SOTA GGUF llama.cpp run or honest blocked artifact.",
+    "logprob_telemetry_available": "whether llama.cpp returned token/top-k logprob telemetry.",
+    "model_file_checksums": "SHA-256 checksums for local model files used or considered.",
+    "model_specs": "all mandated SOTA GGUF specs and resolved local path status.",
+    "n_samples": "count of selected exact Exp5471 fixture rows.",
+    "random_seed": "deterministic fixture and run seed.",
+    "semantic_false_accept_rate": "semantic-invalid rows accepted by the generated model decision.",
+    "sota_evidence_telemetry_ready": "downstream gate for local SOTA evidence telemetry."
+  },
+  "fixture_rows": [
+    {
+      "candidate_id": "5470-valid-fact-paraphrase",
+      "case_type": "valid_rewrite",
+      "description": "Preserves the opened-year fact and its witness row.",
+      "domain": "fact_anchor",
+      "exact_guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [],
+                "present": [
+                  "fact_supported:clinic.opened_year"
+                ],
+                "required": [
+                  "fact_supported:clinic.opened_year"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "exact_validator_label": {
+        "accepted": true,
+        "caught_by_guards": [],
+        "computed_from_repair_score": false,
+        "expected_accept": true,
+        "final_authority": "exact_guard_composition_validators",
+        "label": "accept",
+        "matches_expected": true,
+        "violation_kinds": []
+      },
+      "fixture_bucket": "valid",
+      "model_outputs": [
+        {
+          "abstained": false,
+          "duration_s": 32.918086,
+          "logprob_telemetry": {
+            "available": true,
+            "token_logprob_count": 96,
+            "top_logprobs_count": 96
+          },
+          "matches_exact_validator": false,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_name": "Qwen3.6-35B-A3B",
+          "output_text": "\nLCD advisory reject: False\nLCD advisory abstain: False\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Decide whether a candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\n   - **Output Format:** Return exactly one of those three words as the first word, then a short reason.\n   - **Candidate ID:** 5470-valid-fact-paraph",
+          "parsed_decision": "reject",
+          "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-valid-fact-paraphrase\nDomain: fact_anchor\nDescription: Preserves the opened-year fact and its witness row.\nSource state ID: source-valid-fact\nTarget state ID: target-valid-fact\nLocal syntax valid: True\nLCD advisory accept: True",
+          "runtime_backend": "llama_cpp_python"
+        }
+      ],
+      "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-valid-fact-paraphrase\nDomain: fact_anchor\nDescription: Preserves the opened-year fact and its witness row.\nSource state ID: source-valid-fact\nTarget state ID: target-valid-fact\nLocal syntax valid: True\nLCD advisory accept: True",
+      "source_state_id": "source-valid-fact",
+      "target_state_id": "target-valid-fact"
+    },
+    {
+      "candidate_id": "5470-hidden-premise",
+      "case_type": "hidden_premise_mutation",
+      "description": "Adds an unlicensed backup-generator premise.",
+      "domain": "fact_anchor",
+      "exact_guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": true,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [
+              "clinic.has_backup_generator"
+            ],
+            "missing_or_bad_license_ids": [
+              "UNLICENSED:backup-generator"
+            ],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": [
+            "hidden_premise"
+          ]
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [],
+                "present": [
+                  "fact_supported:clinic.opened_year"
+                ],
+                "required": [
+                  "fact_supported:clinic.opened_year"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "exact_validator_label": {
+        "accepted": false,
+        "caught_by_guards": [
+          "license_transition_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "final_authority": "exact_guard_composition_validators",
+        "label": "reject",
+        "matches_expected": true,
+        "violation_kinds": [
+          "hidden_premise"
+        ]
+      },
+      "fixture_bucket": "hidden_premise",
+      "model_outputs": [
+        {
+          "abstained": true,
+          "duration_s": 1.168359,
+          "logprob_telemetry": {
+            "available": true,
+            "token_logprob_count": 1,
+            "top_logprobs_count": 1
+          },
+          "matches_exact_validator": false,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_name": "Qwen3.6-35B-A3B",
+          "output_text": "\n",
+          "parsed_decision": "abstain",
+          "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-hidden-premise\nDomain: fact_anchor\nDescription: Adds an unlicensed backup-generator premise.\nSource state ID: source-hidden-premise\nTarget state ID: target-hidden-premise\nLocal syntax valid: True\nLCD advisory accept: True",
+          "runtime_backend": "llama_cpp_python"
+        }
+      ],
+      "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-hidden-premise\nDomain: fact_anchor\nDescription: Adds an unlicensed backup-generator premise.\nSource state ID: source-hidden-premise\nTarget state ID: target-hidden-premise\nLocal syntax valid: True\nLCD advisory accept: True",
+      "source_state_id": "source-hidden-premise",
+      "target_state_id": "target-hidden-premise"
+    },
+    {
+      "candidate_id": "5470-json-semantic-invalid",
+      "case_type": "semantic_json_invalid",
+      "description": "JSON shape is valid but quantity exceeds licensed stock.",
+      "domain": "json_constraints",
+      "exact_guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": true,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "json_constraints": {
+                "forbidden_present": [],
+                "present": [
+                  "json_shape_valid"
+                ],
+                "required": [
+                  "json_shape_valid",
+                  "json_semantic_valid"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": [
+              "json_semantic_valid"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": [
+            "semantic_invalid"
+          ]
+        }
+      },
+      "exact_validator_label": {
+        "accepted": false,
+        "caught_by_guards": [
+          "semantic_graph_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "final_authority": "exact_guard_composition_validators",
+        "label": "reject",
+        "matches_expected": true,
+        "violation_kinds": [
+          "semantic_invalid"
+        ]
+      },
+      "fixture_bucket": "semantic_invalid",
+      "model_outputs": [
+        {
+          "abstained": false,
+          "duration_s": 32.623561,
+          "logprob_telemetry": {
+            "available": true,
+            "token_logprob_count": 96,
+            "top_logprobs_count": 96
+          },
+          "matches_exact_validator": true,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_name": "Qwen3.6-35B-A3B",
+          "output_text": "\nLCD advisory reject: False\nLCD advisory abstain: False\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Decide whether a candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\n   - **Output Format:** Return exactly one of those three words as the first word, then a short reason.\n   - **Candidate ID:** 5470-json-semantic-invalid\n",
+          "parsed_decision": "reject",
+          "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-json-semantic-invalid\nDomain: json_constraints\nDescription: JSON shape is valid but quantity exceeds licensed stock.\nSource state ID: source-json\nTarget state ID: target-json\nLocal syntax valid: True\nLCD advisory accept: True",
+          "runtime_backend": "llama_cpp_python"
+        }
+      ],
+      "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-json-semantic-invalid\nDomain: json_constraints\nDescription: JSON shape is valid but quantity exceeds licensed stock.\nSource state ID: source-json\nTarget state ID: target-json\nLocal syntax valid: True\nLCD advisory accept: True",
+      "source_state_id": "source-json",
+      "target_state_id": "target-json"
+    },
+    {
+      "candidate_id": "5470-factual-distortion",
+      "case_type": "factual_distortion",
+      "description": "Raises an anchored budget fact while reusing the old citation.",
+      "domain": "fact_anchor",
+      "exact_guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": true,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": [
+              "budget.max_usd"
+            ]
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": [
+            "factual_distortion"
+          ]
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [
+                  "fact_distorted"
+                ],
+                "present": [],
+                "required": [
+                  "fact_supported:budget.max_usd",
+                  "fact_anchor_supported"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [
+              "fact_distorted"
+            ],
+            "missing_atoms": [
+              "fact_supported:budget.max_usd",
+              "fact_anchor_supported"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "exact_validator_label": {
+        "accepted": false,
+        "caught_by_guards": [
+          "distortion_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "final_authority": "exact_guard_composition_validators",
+        "label": "reject",
+        "matches_expected": true,
+        "violation_kinds": [
+          "factual_distortion"
+        ]
+      },
+      "fixture_bucket": "factual_distortion",
+      "model_outputs": [
+        {
+          "abstained": false,
+          "duration_s": 35.834798,
+          "logprob_telemetry": {
+            "available": true,
+            "token_logprob_count": 96,
+            "top_logprobs_count": 96
+          },
+          "matches_exact_validator": true,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_name": "Qwen3.6-35B-A3B",
+          "output_text": "\nLCD advisory reject: False\nLCD advisory abstain: False\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Task:** Decide whether a candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\n   - **Output Format:** Return exactly one of those three words as the first word, then a short reason.\n   - **Candidate ID:** 5470-factual-distortion\n",
+          "parsed_decision": "reject",
+          "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-factual-distortion\nDomain: fact_anchor\nDescription: Raises an anchored budget fact while reusing the old citation.\nSource state ID: source-distortion\nTarget state ID: target-distortion\nLocal syntax valid: True\nLCD advisory accept: True",
+          "runtime_backend": "llama_cpp_python"
+        }
+      ],
+      "prompt_text": "Decide whether this candidate rewrite should be ACCEPT, REJECT, or ABSTAIN.\nReturn exactly one of those three words as the first word, then a short reason.\nCandidate ID: 5470-factual-distortion\nDomain: fact_anchor\nDescription: Raises an anchored budget fact while reusing the old citation.\nSource state ID: source-distortion\nTarget state ID: target-distortion\nLocal syntax valid: True\nLCD advisory accept: True",
+      "source_state_id": "source-distortion",
+      "target_state_id": "target-distortion"
+    }
+  ],
+  "gpu_offload_receipts": [
+    {
+      "gpu_offload_supported": true,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "n_gpu_layers": -1,
+      "offload_verified": true,
+      "pre_generation": true,
+      "runtime_backend": "llama_cpp_python",
+      "vram_after_load_mb": 21836,
+      "vram_before_mb": 8,
+      "vram_delta_mb": 21828
+    }
+  ],
+  "guided_decoding_used": false,
+  "headline_models_run": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "honest_verdict": "complete: local SOTA GGUF evidence telemetry collected with GPU offload; guided decoding not used",
+  "inference_substrate": "local_sota_gguf_llama_cpp_or_blocked",
+  "logprob_telemetry_available": true,
+  "metric_details": {
+    "abstention_rate": 0.25,
+    "exact_validator_accuracy": 0.5,
+    "factual_distortion_rate": 0.0,
+    "logprob_telemetry_available": true,
+    "n_model_evaluations": 4,
+    "n_samples": 4,
+    "semantic_false_accept_rate": 0.0
+  },
+  "milestone": "2026.07.497",
+  "model_file_checksums": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "sha256": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "sha256": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "sha256": "9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    }
+  },
+  "model_specs": [
+    {
+      "active_params_b": 3.0,
+      "gpu": 0,
+      "headline_required": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_smoke_only": false,
+      "local_model_present": true,
+      "min_vram_gb": 24,
+      "model_file_size_bytes": 22134528992,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "spec_order": 0,
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 31.0,
+      "gpu": 0,
+      "headline_required": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_smoke_only": false,
+      "local_model_present": true,
+      "min_vram_gb": 24,
+      "model_file_size_bytes": 18323731456,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "spec_order": 1,
+      "total_params_b": 31.0
+    },
+    {
+      "active_params_b": 4.0,
+      "gpu": 0,
+      "headline_required": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_smoke_only": false,
+      "local_model_present": true,
+      "min_vram_gb": 16,
+      "model_file_size_bytes": 16947539744,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "spec_order": 2,
+      "total_params_b": 26.0
+    }
+  ],
+  "n_samples": 4,
+  "random_seed": 5472,
+  "reproducibility_checksum": "b515179259dd28a6830374692b4b2769fc9192f22b4aa72e1b676197ef88efeb",
+  "research_conductor_modified": false,
+  "run_date": "2026-07-09",
+  "runtime_precondition_receipt": {
+    "blocked_reasons": [],
+    "cuda_available": true,
+    "cuda_device_count": 2,
+    "llama_cpp_gpu_offload": true,
+    "llama_cpp_python_available": true,
+    "llama_cpp_python_error": null,
+    "native_llama_cli_available": true,
+    "native_llama_cli_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+    "runtime_ready": true
+  },
+  "schema": "carnot.experiment_5472.sota_evidence_telemetry.v497",
+  "semantic_false_accept_rate": 0.0,
+  "sota_evidence_telemetry_ready": true,
+  "spec_refs": [
+    "REQ-SAFE-5472",
+    "SCENARIO-SAFE-5472",
+    "REQ-SAFE-5471"
+  ],
+  "task_id": "exp5472-v497-sota-evidence-telemetry",
+  "tests_run": []
+}
