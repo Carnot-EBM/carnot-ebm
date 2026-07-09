@@ -1490,6 +1490,122 @@ validate, or `scripts/research_conductor.py` is modified,
 **Then** validation fails closed or emits a blocked artifact, and no new SOTA
 guided-decoding headline is permitted.
 
+### REQ-SAFE-5457: Distortion-Guarded SOTA Verifier-Potential Decoding V496
+
+Carnot SHALL provide Exp5457 at
+`python/carnot/experiment_5457_gated_sota_distortion_guarded_decoding_v496.py`
+and write
+`results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json`
+without modifying `scripts/research_conductor.py`.  The workflow SHALL run only
+after Exp5456 reports `guided_decoding_corrigendum_clean=true`; otherwise it
+SHALL emit a blocked artifact before model generation.
+
+Before generation, the workflow SHALL verify a CUDA-visible
+llama.cpp-compatible GGUF runtime, non-empty local `.gguf` `model_path` entries
+for the mandated local SOTA GGUF IDs, and GPU-offload evidence.  `model_specs`
+SHALL include all of:
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Legacy small models MAY be used only by unit tests as non-headline smoke
+fixtures and MUST NOT be marked as `ran_headline=true`.  A CPU-only path, a
+missing mandated GGUF path, or a runtime receipt without GPU-offload evidence
+SHALL force `gpu_offload_verified=false`, `verifier_guided_decoding_ready=false`,
+and an honest blocked verdict.
+
+The panel SHALL load Exp5443 verifier-potential fixture rows plus at least two
+additional conflict/distortion rows inspired by strict-constraint distortion and
+CoCoA-style context conflict.  It SHALL attempt the feasible unconstrained,
+grammar/LCD-only, and verifier-potential guided conditions.  Every generated
+candidate row SHALL record model spec, GGUF path, runtime backend,
+`n_gpu_layers`/offload evidence, random seed, prompt hash, token budget,
+reward-evaluation count, acceptance threshold, and generation duration.
+
+Every row SHALL produce attribution receipts that bind candidate claims to
+evidence span IDs before exact final verification.  Exact final verifiers,
+AST/KB witnesses, and entailment/contradiction checks SHALL remain the only
+final authority; grammar validity, local constrained decoding masks,
+verifier-potential scores, and model self-confidence SHALL be advisory only.
+
+Aggregate metrics SHALL be recomputed from row records and attribution receipts
+only: accepted validity, semantic false accepts, factual distortion, LCD-bias
+indicators, abstention, chance-risk bounds, and guided deltas versus both
+unconstrained and grammar/LCD-only baselines.  `chance_risk_bound` SHALL be a
+finite-sample upper bound over accepted false accepts, not a copied error rate.
+`guided_validity_delta_vs_unconstrained` and
+`guided_validity_delta_vs_lcd_only` SHALL be computed as the guided accepted
+rate minus the respective baseline accepted rate.  Validation SHALL fail if a
+readiness decision imports Exp5444 or Exp5456 readiness booleans, copies a prior
+tautological scalar, bypasses exact final authority, or treats schema-valid LCD
+output as factual correctness.
+
+The terminal result artifact MUST include:
+`preconditions_checked`, `model_specs`, `headline_required_any_of`,
+`runtime_backend`, `gpu_offload_verified`, `fixture_count`, `condition_names`,
+`row_results_path`, `exact_final_authority`,
+`claim_attribution_receipts_path`, `chance_risk_bound`,
+`factual_distortion_rate`, `semantic_false_accept_rate`,
+`lcd_bias_check_passed`, `guided_validity_delta_vs_unconstrained`,
+`guided_validity_delta_vs_lcd_only`, `metric_independence_checks_passed`,
+`verifier_guided_decoding_ready`, `inference_substrate`, and
+`honest_verdict`.  A complete live panel SHALL set
+`inference_substrate=live_llm_inference`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+Field principles:
+- `preconditions_checked`: compute-bound task must fail fast.
+- `model_specs`: mandated SOTA GGUF provenance.
+- `headline_required_any_of`: confirms headline rows can only use mandated GGUFs.
+- `runtime_backend`: GGUF/llama.cpp path, not transformers tokenizer path.
+- `gpu_offload_verified`: no CPU-only SOTA headline.
+- `fixture_count`: bounded fixture coverage.
+- `condition_names`: unconstrained, LCD-only, and guided baseline clarity.
+- `row_results_path`: inspectable row evidence.
+- `exact_final_authority`: deterministic verifier authority.
+- `claim_attribution_receipts_path`: claim-to-evidence provenance.
+- `chance_risk_bound`: finite-sample accepted-risk guard.
+- `factual_distortion_rate`: strict-constraint distortion guard.
+- `semantic_false_accept_rate`: semantic contradiction guard.
+- `lcd_bias_check_passed`: local constrained decoding bias check.
+- `guided_validity_delta_vs_unconstrained`: guided utility versus free decoding.
+- `guided_validity_delta_vs_lcd_only`: guided utility versus grammar/LCD-only decoding.
+- `metric_independence_checks_passed`: tautology prevention.
+- `verifier_guided_decoding_ready`: downstream gate.
+- `inference_substrate`: real local model invocation.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5457: Distortion-Guarded Rows Use Exact Final Authority
+
+**Given** Exp5456 is clean, Exp5443 is ready, all mandated local SOTA GGUF
+paths are present, and the llama.cpp runtime reports CUDA/GPU-offload evidence,
+
+**When** Exp5457 runs the bounded unconstrained, grammar/LCD-only, and
+verifier-potential guided conditions over Exp5443 plus conflict/distortion rows,
+
+**Then** it writes
+`results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json`,
+writes row-level evidence to
+`results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl`,
+writes claim-attribution receipts to
+`results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl`,
+records the three mandated model specs, records runtime/backend/offload
+receipts, attributes claims to evidence span IDs, runs exact final verifier and
+entailment/contradiction checks on every candidate, computes chance-risk,
+factual-distortion, semantic-false-accept, LCD-bias, abstention, and guided
+delta metrics from row evidence only, and sets
+`verifier_guided_decoding_ready=true` only when exact authority, offload,
+row evidence, attribution receipts, chance-risk, LCD-bias, and
+metric-independence checks all pass.
+
+**And** if Exp5456 is not clean, mandated model specs are missing, any headline
+row is CPU-only or legacy-smoke-only, claim attribution is missing, final
+verifier authority is bypassed, a readiness decision depends on a prior
+tautological scalar, or `scripts/research_conductor.py` is modified,
+
+**Then** validation fails closed or emits a blocked artifact, and no
+verifier-guided decoding readiness claim is made.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1520,5 +1636,6 @@ guided-decoding headline is permitted.
 | REQ-SAFE-5443 | Planned | Exp 5443: deterministic verifier-potential prefix fixture |
 | REQ-SAFE-5444 | Planned | Exp 5444: gated local SOTA verifier-potential decoding pilot |
 | REQ-SAFE-5456 | Planned | Exp 5456: guided-decoding tautology corrigendum |
+| REQ-SAFE-5457 | Planned | Exp 5457: distortion-guarded local SOTA verifier-potential decoding rerun |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
