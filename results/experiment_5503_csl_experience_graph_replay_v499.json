@@ -1,0 +1,2215 @@
+{
+  "control_counts": {
+    "negative_transfer_candidates_accepted": 0,
+    "negative_transfer_candidates_seen": 2,
+    "stale_candidates_rejected": 2,
+    "stale_candidates_seen": 2
+  },
+  "csl_experience_graph_ready": true,
+  "episode_records": [
+    {
+      "episode_id": 1,
+      "learned_node": {
+        "action": "crate-blue",
+        "conflict_group": null,
+        "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
+        "domain": "logistics",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 1,
+        "learned_from_selected_action": "crate-red",
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-failure-dock-crate-red",
+        "node_type": "failure",
+        "source_task_id": "5503-train-dock-crate",
+        "success_count": 0,
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "trust_score": 0.84,
+        "verifier_accepted": false,
+        "version": 1
+      },
+      "memory_update_hash": "sha256:f08746fe3206ced92dbd0fc6a3de5c0ba43145717367788487d8d914617e333d",
+      "next_task_retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-failure-dock-crate-red"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "crate-blue",
+            "conflict_group": null,
+            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
+            "domain": "logistics",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 1,
+            "learned_from_selected_action": "crate-red",
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-failure-dock-crate-red",
+            "node_type": "failure",
+            "source_task_id": "5503-train-dock-crate",
+            "success_count": 0,
+            "tags": [
+              "dock",
+              "crate",
+              "release"
+            ],
+            "trust_score": 0.84,
+            "utility_score": 2.55,
+            "verifier_accepted": false,
+            "version": 1
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-failure-dock-crate-red"
+        ],
+        "rejected_node_ids_by_reason": {
+          "action_not_cached": [
+            "node5503-conflict-gate-new",
+            "node5503-conflict-gate-old"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "gate-B",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Newer verified dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-new",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "success_count": 3,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.92,
+            "utility_score": 1.42,
+            "version": 2
+          },
+          {
+            "action": "gate-A",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Older dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-old",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "success_count": 2,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.61,
+            "utility_score": 1.0,
+            "version": 1
+          }
+        ],
+        "selected_action": "crate-blue",
+        "selected_node_id": "node5503-failure-dock-crate-red",
+        "task_id": "5503-heldout-dock-crate",
+        "utility_scores": {
+          "node5503-conflict-gate-new": 1.42,
+          "node5503-conflict-gate-old": 1.0,
+          "node5503-failure-dock-crate-red": 2.55
+        }
+      },
+      "retrieval_decision": {
+        "accepted_node_ids": [],
+        "accepted_nodes": [],
+        "ranked_node_ids": [],
+        "rejected_node_ids_by_reason": {
+          "action_not_cached": [
+            "node5503-conflict-gate-new",
+            "node5503-conflict-gate-old"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "gate-B",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Newer verified dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-new",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "success_count": 3,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.92,
+            "utility_score": 1.42,
+            "version": 2
+          },
+          {
+            "action": "gate-A",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Older dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-old",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "success_count": 2,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.61,
+            "utility_score": 1.0,
+            "version": 1
+          }
+        ],
+        "selected_action": "crate-red",
+        "selected_node_id": null,
+        "task_id": "5503-train-dock-crate",
+        "utility_scores": {
+          "node5503-conflict-gate-new": 1.42,
+          "node5503-conflict-gate-old": 1.0
+        }
+      },
+      "selected_action": "crate-red",
+      "selected_memory_node_id": null,
+      "split": "train",
+      "task_id": "5503-train-dock-crate",
+      "task_state": {
+        "candidate_actions": [
+          "crate-red",
+          "crate-blue"
+        ],
+        "domain": "logistics",
+        "locality": "dock-7",
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "version": 1
+      },
+      "verifier_outcome": {
+        "accepted": false,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "crate-blue",
+        "failure_reasons": [
+          "expected_action_mismatch"
+        ],
+        "selected_action": "crate-red"
+      }
+    },
+    {
+      "episode_id": 2,
+      "learned_node": {
+        "action": "crate-blue",
+        "conflict_group": null,
+        "description": "Dock-7 release routing now prefers the blue crate.",
+        "domain": "logistics",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "crate-blue",
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-dock-crate-blue",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-dock-crate",
+        "success_count": 1,
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "trust_score": 0.9,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      "memory_update_hash": "sha256:047f7eb771c18a14eef4a449fe103c06b94276989da70a755ee3a352fc9a9bc5",
+      "next_task_retrieval_decision": {
+        "accepted_node_ids": [],
+        "accepted_nodes": [],
+        "ranked_node_ids": [],
+        "rejected_node_ids_by_reason": {
+          "negative_transfer": [
+            "node5503-transfer-sql-offset"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "use-sql-offset",
+            "conflict_group": null,
+            "description": "SQL offset repair that should not transfer to Python loop bounds.",
+            "domain": "sql-pagination",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "warehouse-db",
+            "negative_transfer_domains": [
+              "python-loop"
+            ],
+            "node_id": "node5503-transfer-sql-offset",
+            "node_type": "skill",
+            "rejection_reason": "negative_transfer",
+            "success_count": 4,
+            "tags": [
+              "bounds",
+              "iteration",
+              "repair"
+            ],
+            "trust_score": 0.83,
+            "utility_score": 2.18,
+            "version": 1
+          }
+        ],
+        "selected_action": "use-range-len",
+        "selected_node_id": null,
+        "task_id": "5503-train-python-loop",
+        "utility_scores": {
+          "node5503-transfer-sql-offset": 2.18
+        }
+      },
+      "retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-failure-dock-crate-red"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "crate-blue",
+            "conflict_group": null,
+            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
+            "domain": "logistics",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 1,
+            "learned_from_selected_action": "crate-red",
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-failure-dock-crate-red",
+            "node_type": "failure",
+            "source_task_id": "5503-train-dock-crate",
+            "success_count": 0,
+            "tags": [
+              "dock",
+              "crate",
+              "release"
+            ],
+            "trust_score": 0.84,
+            "utility_score": 2.55,
+            "verifier_accepted": false,
+            "version": 1
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-failure-dock-crate-red"
+        ],
+        "rejected_node_ids_by_reason": {
+          "action_not_cached": [
+            "node5503-conflict-gate-new",
+            "node5503-conflict-gate-old"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "gate-B",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Newer verified dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-new",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "success_count": 3,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.92,
+            "utility_score": 1.42,
+            "version": 2
+          },
+          {
+            "action": "gate-A",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Older dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-old",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "success_count": 2,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.61,
+            "utility_score": 1.0,
+            "version": 1
+          }
+        ],
+        "selected_action": "crate-blue",
+        "selected_node_id": "node5503-failure-dock-crate-red",
+        "task_id": "5503-heldout-dock-crate",
+        "utility_scores": {
+          "node5503-conflict-gate-new": 1.42,
+          "node5503-conflict-gate-old": 1.0,
+          "node5503-failure-dock-crate-red": 2.55
+        }
+      },
+      "selected_action": "crate-blue",
+      "selected_memory_node_id": "node5503-failure-dock-crate-red",
+      "split": "heldout",
+      "task_id": "5503-heldout-dock-crate",
+      "task_state": {
+        "candidate_actions": [
+          "crate-red",
+          "crate-blue"
+        ],
+        "domain": "logistics",
+        "locality": "dock-7",
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "version": 1
+      },
+      "verifier_outcome": {
+        "accepted": true,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "crate-blue",
+        "failure_reasons": [],
+        "selected_action": "crate-blue"
+      }
+    },
+    {
+      "episode_id": 3,
+      "learned_node": {
+        "action": "use-range-len",
+        "conflict_group": null,
+        "description": "Python loop repairs should use range(len(items)) for bound checks.",
+        "domain": "python-loop",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "use-range-len",
+        "locality": "repo-alpha",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-python-range-len",
+        "node_type": "skill",
+        "source_task_id": "5503-train-python-loop",
+        "success_count": 1,
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "trust_score": 0.88,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      "memory_update_hash": "sha256:f9e1451f181e7ad8234f6c34042b9d85411f97e2d7f348658cfb77b16652bd8c",
+      "next_task_retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-skill-python-range-len"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "use-range-len",
+            "conflict_group": null,
+            "description": "Python loop repairs should use range(len(items)) for bound checks.",
+            "domain": "python-loop",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "learned_from_selected_action": "use-range-len",
+            "locality": "repo-alpha",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-skill-python-range-len",
+            "node_type": "skill",
+            "source_task_id": "5503-train-python-loop",
+            "success_count": 1,
+            "tags": [
+              "bounds",
+              "iteration",
+              "repair"
+            ],
+            "trust_score": 0.88,
+            "utility_score": 2.59,
+            "verifier_accepted": true,
+            "version": 1
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-skill-python-range-len"
+        ],
+        "rejected_node_ids_by_reason": {
+          "negative_transfer": [
+            "node5503-transfer-sql-offset"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "use-sql-offset",
+            "conflict_group": null,
+            "description": "SQL offset repair that should not transfer to Python loop bounds.",
+            "domain": "sql-pagination",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "warehouse-db",
+            "negative_transfer_domains": [
+              "python-loop"
+            ],
+            "node_id": "node5503-transfer-sql-offset",
+            "node_type": "skill",
+            "rejection_reason": "negative_transfer",
+            "success_count": 4,
+            "tags": [
+              "bounds",
+              "iteration",
+              "repair"
+            ],
+            "trust_score": 0.83,
+            "utility_score": 2.18,
+            "version": 1
+          }
+        ],
+        "selected_action": "use-range-len",
+        "selected_node_id": "node5503-skill-python-range-len",
+        "task_id": "5503-heldout-python-loop",
+        "utility_scores": {
+          "node5503-skill-python-range-len": 2.59,
+          "node5503-transfer-sql-offset": 2.18
+        }
+      },
+      "retrieval_decision": {
+        "accepted_node_ids": [],
+        "accepted_nodes": [],
+        "ranked_node_ids": [],
+        "rejected_node_ids_by_reason": {
+          "negative_transfer": [
+            "node5503-transfer-sql-offset"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "use-sql-offset",
+            "conflict_group": null,
+            "description": "SQL offset repair that should not transfer to Python loop bounds.",
+            "domain": "sql-pagination",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "warehouse-db",
+            "negative_transfer_domains": [
+              "python-loop"
+            ],
+            "node_id": "node5503-transfer-sql-offset",
+            "node_type": "skill",
+            "rejection_reason": "negative_transfer",
+            "success_count": 4,
+            "tags": [
+              "bounds",
+              "iteration",
+              "repair"
+            ],
+            "trust_score": 0.83,
+            "utility_score": 2.18,
+            "version": 1
+          }
+        ],
+        "selected_action": "use-range-len",
+        "selected_node_id": null,
+        "task_id": "5503-train-python-loop",
+        "utility_scores": {
+          "node5503-transfer-sql-offset": 2.18
+        }
+      },
+      "selected_action": "use-range-len",
+      "selected_memory_node_id": null,
+      "split": "train",
+      "task_id": "5503-train-python-loop",
+      "task_state": {
+        "candidate_actions": [
+          "use-sql-offset",
+          "use-range-len"
+        ],
+        "domain": "python-loop",
+        "locality": "repo-alpha",
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "version": 1
+      },
+      "verifier_outcome": {
+        "accepted": true,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "use-range-len",
+        "failure_reasons": [],
+        "selected_action": "use-range-len"
+      }
+    },
+    {
+      "episode_id": 4,
+      "learned_node": {
+        "action": "use-range-len",
+        "conflict_group": null,
+        "description": "Held-out Python bound repair confirmed the range-len skill.",
+        "domain": "python-loop",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "use-range-len",
+        "locality": "repo-alpha",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-python-heldout-range-len",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-python-loop",
+        "success_count": 1,
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "trust_score": 0.9,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      "memory_update_hash": "sha256:9d693422189f72cf10176a23e2268f794043d67679c37ae4608c957bc56385b5",
+      "next_task_retrieval_decision": {
+        "accepted_node_ids": [],
+        "accepted_nodes": [],
+        "ranked_node_ids": [],
+        "rejected_node_ids_by_reason": {
+          "stale_evidence": [
+            "node5503-stale-rx4-alpha"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "queue-alpha",
+            "conflict_group": null,
+            "description": "Old RX-4 queue-alpha owner before the handoff.",
+            "domain": "incident-routing",
+            "evidence_status": "active",
+            "expires_before_version": 3,
+            "failure_count": 0,
+            "locality": "rx-4",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-stale-rx4-alpha",
+            "node_type": "skill",
+            "rejection_reason": "stale_evidence",
+            "success_count": 3,
+            "tags": [
+              "handoff",
+              "rx4",
+              "queue"
+            ],
+            "trust_score": 0.89,
+            "utility_score": 2.76,
+            "version": 1
+          }
+        ],
+        "selected_action": "queue-beta",
+        "selected_node_id": null,
+        "task_id": "5503-train-rx4-handoff",
+        "utility_scores": {
+          "node5503-stale-rx4-alpha": 2.76
+        }
+      },
+      "retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-skill-python-range-len"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "use-range-len",
+            "conflict_group": null,
+            "description": "Python loop repairs should use range(len(items)) for bound checks.",
+            "domain": "python-loop",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "learned_from_selected_action": "use-range-len",
+            "locality": "repo-alpha",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-skill-python-range-len",
+            "node_type": "skill",
+            "source_task_id": "5503-train-python-loop",
+            "success_count": 1,
+            "tags": [
+              "bounds",
+              "iteration",
+              "repair"
+            ],
+            "trust_score": 0.88,
+            "utility_score": 2.59,
+            "verifier_accepted": true,
+            "version": 1
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-skill-python-range-len"
+        ],
+        "rejected_node_ids_by_reason": {
+          "negative_transfer": [
+            "node5503-transfer-sql-offset"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "use-sql-offset",
+            "conflict_group": null,
+            "description": "SQL offset repair that should not transfer to Python loop bounds.",
+            "domain": "sql-pagination",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "warehouse-db",
+            "negative_transfer_domains": [
+              "python-loop"
+            ],
+            "node_id": "node5503-transfer-sql-offset",
+            "node_type": "skill",
+            "rejection_reason": "negative_transfer",
+            "success_count": 4,
+            "tags": [
+              "bounds",
+              "iteration",
+              "repair"
+            ],
+            "trust_score": 0.83,
+            "utility_score": 2.18,
+            "version": 1
+          }
+        ],
+        "selected_action": "use-range-len",
+        "selected_node_id": "node5503-skill-python-range-len",
+        "task_id": "5503-heldout-python-loop",
+        "utility_scores": {
+          "node5503-skill-python-range-len": 2.59,
+          "node5503-transfer-sql-offset": 2.18
+        }
+      },
+      "selected_action": "use-range-len",
+      "selected_memory_node_id": "node5503-skill-python-range-len",
+      "split": "heldout",
+      "task_id": "5503-heldout-python-loop",
+      "task_state": {
+        "candidate_actions": [
+          "use-sql-offset",
+          "use-range-len"
+        ],
+        "domain": "python-loop",
+        "locality": "repo-alpha",
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "version": 1
+      },
+      "verifier_outcome": {
+        "accepted": true,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "use-range-len",
+        "failure_reasons": [],
+        "selected_action": "use-range-len"
+      }
+    },
+    {
+      "episode_id": 5,
+      "learned_node": {
+        "action": "queue-beta",
+        "conflict_group": null,
+        "description": "RX-4 handoff moved ownership to queue beta.",
+        "domain": "incident-routing",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "queue-beta",
+        "locality": "rx-4",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-rx4-beta",
+        "node_type": "skill",
+        "source_task_id": "5503-train-rx4-handoff",
+        "success_count": 1,
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "trust_score": 0.91,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      "memory_update_hash": "sha256:786f5f16c21cf159a9b33d63c7aa16ad8ca4fe5801a20a103ef0cb5f0a3b7863",
+      "next_task_retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-skill-rx4-beta"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "queue-beta",
+            "conflict_group": null,
+            "description": "RX-4 handoff moved ownership to queue beta.",
+            "domain": "incident-routing",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "learned_from_selected_action": "queue-beta",
+            "locality": "rx-4",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-skill-rx4-beta",
+            "node_type": "skill",
+            "source_task_id": "5503-train-rx4-handoff",
+            "success_count": 1,
+            "tags": [
+              "handoff",
+              "rx4",
+              "queue"
+            ],
+            "trust_score": 0.91,
+            "utility_score": 2.62,
+            "verifier_accepted": true,
+            "version": 1
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-skill-rx4-beta"
+        ],
+        "rejected_node_ids_by_reason": {
+          "stale_evidence": [
+            "node5503-stale-rx4-alpha"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "queue-alpha",
+            "conflict_group": null,
+            "description": "Old RX-4 queue-alpha owner before the handoff.",
+            "domain": "incident-routing",
+            "evidence_status": "active",
+            "expires_before_version": 3,
+            "failure_count": 0,
+            "locality": "rx-4",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-stale-rx4-alpha",
+            "node_type": "skill",
+            "rejection_reason": "stale_evidence",
+            "success_count": 3,
+            "tags": [
+              "handoff",
+              "rx4",
+              "queue"
+            ],
+            "trust_score": 0.89,
+            "utility_score": 2.76,
+            "version": 1
+          }
+        ],
+        "selected_action": "queue-beta",
+        "selected_node_id": "node5503-skill-rx4-beta",
+        "task_id": "5503-heldout-rx4-handoff",
+        "utility_scores": {
+          "node5503-skill-rx4-beta": 2.62,
+          "node5503-stale-rx4-alpha": 2.76
+        }
+      },
+      "retrieval_decision": {
+        "accepted_node_ids": [],
+        "accepted_nodes": [],
+        "ranked_node_ids": [],
+        "rejected_node_ids_by_reason": {
+          "stale_evidence": [
+            "node5503-stale-rx4-alpha"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "queue-alpha",
+            "conflict_group": null,
+            "description": "Old RX-4 queue-alpha owner before the handoff.",
+            "domain": "incident-routing",
+            "evidence_status": "active",
+            "expires_before_version": 3,
+            "failure_count": 0,
+            "locality": "rx-4",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-stale-rx4-alpha",
+            "node_type": "skill",
+            "rejection_reason": "stale_evidence",
+            "success_count": 3,
+            "tags": [
+              "handoff",
+              "rx4",
+              "queue"
+            ],
+            "trust_score": 0.89,
+            "utility_score": 2.76,
+            "version": 1
+          }
+        ],
+        "selected_action": "queue-beta",
+        "selected_node_id": null,
+        "task_id": "5503-train-rx4-handoff",
+        "utility_scores": {
+          "node5503-stale-rx4-alpha": 2.76
+        }
+      },
+      "selected_action": "queue-beta",
+      "selected_memory_node_id": null,
+      "split": "train",
+      "task_id": "5503-train-rx4-handoff",
+      "task_state": {
+        "candidate_actions": [
+          "queue-alpha",
+          "queue-beta"
+        ],
+        "domain": "incident-routing",
+        "locality": "rx-4",
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "version": 3
+      },
+      "verifier_outcome": {
+        "accepted": true,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "queue-beta",
+        "failure_reasons": [],
+        "selected_action": "queue-beta"
+      }
+    },
+    {
+      "episode_id": 6,
+      "learned_node": {
+        "action": "queue-beta",
+        "conflict_group": null,
+        "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
+        "domain": "incident-routing",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "queue-beta",
+        "locality": "rx-4",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-rx4-heldout-beta",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-rx4-handoff",
+        "success_count": 1,
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "trust_score": 0.92,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      "memory_update_hash": "sha256:517e439b88247253318ed5589e23b07346beb94997a84a11dd4cb8b05172fb11",
+      "next_task_retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-conflict-gate-new"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "gate-B",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Newer verified dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-new",
+            "node_type": "skill",
+            "success_count": 3,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.92,
+            "utility_score": 2.82,
+            "version": 2
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-conflict-gate-new"
+        ],
+        "rejected_node_ids_by_reason": {
+          "action_not_cached": [
+            "node5503-failure-dock-crate-red",
+            "node5503-skill-dock-crate-blue"
+          ],
+          "conflict_lower_utility": [
+            "node5503-conflict-gate-old"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "gate-A",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Older dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-old",
+            "node_type": "skill",
+            "rejection_reason": "conflict_lower_utility",
+            "success_count": 2,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.61,
+            "utility_score": 2.4,
+            "version": 1
+          },
+          {
+            "action": "crate-blue",
+            "conflict_group": null,
+            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
+            "domain": "logistics",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 1,
+            "learned_from_selected_action": "crate-red",
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-failure-dock-crate-red",
+            "node_type": "failure",
+            "rejection_reason": "action_not_cached",
+            "source_task_id": "5503-train-dock-crate",
+            "success_count": 0,
+            "tags": [
+              "dock",
+              "crate",
+              "release"
+            ],
+            "trust_score": 0.84,
+            "utility_score": 1.15,
+            "verifier_accepted": false,
+            "version": 1
+          },
+          {
+            "action": "crate-blue",
+            "conflict_group": null,
+            "description": "Dock-7 release routing now prefers the blue crate.",
+            "domain": "logistics",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "learned_from_selected_action": "crate-blue",
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-skill-dock-crate-blue",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "source_task_id": "5503-heldout-dock-crate",
+            "success_count": 1,
+            "tags": [
+              "dock",
+              "crate",
+              "release"
+            ],
+            "trust_score": 0.9,
+            "utility_score": 1.21,
+            "verifier_accepted": true,
+            "version": 1
+          }
+        ],
+        "selected_action": "gate-B",
+        "selected_node_id": "node5503-conflict-gate-new",
+        "task_id": "5503-heldout-dock-gate",
+        "utility_scores": {
+          "node5503-conflict-gate-new": 2.82,
+          "node5503-conflict-gate-old": 2.4,
+          "node5503-failure-dock-crate-red": 1.15,
+          "node5503-skill-dock-crate-blue": 1.21
+        }
+      },
+      "retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-skill-rx4-beta"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "queue-beta",
+            "conflict_group": null,
+            "description": "RX-4 handoff moved ownership to queue beta.",
+            "domain": "incident-routing",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "learned_from_selected_action": "queue-beta",
+            "locality": "rx-4",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-skill-rx4-beta",
+            "node_type": "skill",
+            "source_task_id": "5503-train-rx4-handoff",
+            "success_count": 1,
+            "tags": [
+              "handoff",
+              "rx4",
+              "queue"
+            ],
+            "trust_score": 0.91,
+            "utility_score": 2.62,
+            "verifier_accepted": true,
+            "version": 1
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-skill-rx4-beta"
+        ],
+        "rejected_node_ids_by_reason": {
+          "stale_evidence": [
+            "node5503-stale-rx4-alpha"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "queue-alpha",
+            "conflict_group": null,
+            "description": "Old RX-4 queue-alpha owner before the handoff.",
+            "domain": "incident-routing",
+            "evidence_status": "active",
+            "expires_before_version": 3,
+            "failure_count": 0,
+            "locality": "rx-4",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-stale-rx4-alpha",
+            "node_type": "skill",
+            "rejection_reason": "stale_evidence",
+            "success_count": 3,
+            "tags": [
+              "handoff",
+              "rx4",
+              "queue"
+            ],
+            "trust_score": 0.89,
+            "utility_score": 2.76,
+            "version": 1
+          }
+        ],
+        "selected_action": "queue-beta",
+        "selected_node_id": "node5503-skill-rx4-beta",
+        "task_id": "5503-heldout-rx4-handoff",
+        "utility_scores": {
+          "node5503-skill-rx4-beta": 2.62,
+          "node5503-stale-rx4-alpha": 2.76
+        }
+      },
+      "selected_action": "queue-beta",
+      "selected_memory_node_id": "node5503-skill-rx4-beta",
+      "split": "heldout",
+      "task_id": "5503-heldout-rx4-handoff",
+      "task_state": {
+        "candidate_actions": [
+          "queue-alpha",
+          "queue-beta"
+        ],
+        "domain": "incident-routing",
+        "locality": "rx-4",
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "version": 4
+      },
+      "verifier_outcome": {
+        "accepted": true,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "queue-beta",
+        "failure_reasons": [],
+        "selected_action": "queue-beta"
+      }
+    },
+    {
+      "episode_id": 7,
+      "learned_node": {
+        "action": "gate-B",
+        "conflict_group": null,
+        "description": "Held-out gate replay confirmed newer gate-B evidence.",
+        "domain": "controller-action",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "gate-B",
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-gate-b-heldout",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-dock-gate",
+        "success_count": 1,
+        "tags": [
+          "gate",
+          "amber",
+          "controller"
+        ],
+        "trust_score": 0.9,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      "memory_update_hash": "sha256:fc2dedd5ca5c2b8a055e8289acdec8afed7f9441fe0c1de58514cfddafd95fb9",
+      "next_task_retrieval_decision": {
+        "accepted_node_ids": [],
+        "accepted_nodes": [],
+        "ranked_node_ids": [],
+        "rejected_node_ids_by_reason": {},
+        "rejected_nodes": [],
+        "selected_action": null,
+        "selected_node_id": null,
+        "task_id": null,
+        "utility_scores": {}
+      },
+      "retrieval_decision": {
+        "accepted_node_ids": [
+          "node5503-conflict-gate-new"
+        ],
+        "accepted_nodes": [
+          {
+            "action": "gate-B",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Newer verified dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-new",
+            "node_type": "skill",
+            "success_count": 3,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.92,
+            "utility_score": 2.82,
+            "version": 2
+          }
+        ],
+        "ranked_node_ids": [
+          "node5503-conflict-gate-new"
+        ],
+        "rejected_node_ids_by_reason": {
+          "action_not_cached": [
+            "node5503-failure-dock-crate-red",
+            "node5503-skill-dock-crate-blue"
+          ],
+          "conflict_lower_utility": [
+            "node5503-conflict-gate-old"
+          ]
+        },
+        "rejected_nodes": [
+          {
+            "action": "gate-A",
+            "conflict_group": "dock-7-amber-gate",
+            "description": "Older dock-7 amber gate action.",
+            "domain": "controller-action",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-conflict-gate-old",
+            "node_type": "skill",
+            "rejection_reason": "conflict_lower_utility",
+            "success_count": 2,
+            "tags": [
+              "gate",
+              "amber",
+              "controller"
+            ],
+            "trust_score": 0.61,
+            "utility_score": 2.4,
+            "version": 1
+          },
+          {
+            "action": "crate-blue",
+            "conflict_group": null,
+            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
+            "domain": "logistics",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 1,
+            "learned_from_selected_action": "crate-red",
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-failure-dock-crate-red",
+            "node_type": "failure",
+            "rejection_reason": "action_not_cached",
+            "source_task_id": "5503-train-dock-crate",
+            "success_count": 0,
+            "tags": [
+              "dock",
+              "crate",
+              "release"
+            ],
+            "trust_score": 0.84,
+            "utility_score": 1.15,
+            "verifier_accepted": false,
+            "version": 1
+          },
+          {
+            "action": "crate-blue",
+            "conflict_group": null,
+            "description": "Dock-7 release routing now prefers the blue crate.",
+            "domain": "logistics",
+            "evidence_status": "active",
+            "expires_before_version": null,
+            "failure_count": 0,
+            "learned_from_selected_action": "crate-blue",
+            "locality": "dock-7",
+            "negative_transfer_domains": [],
+            "node_id": "node5503-skill-dock-crate-blue",
+            "node_type": "skill",
+            "rejection_reason": "action_not_cached",
+            "source_task_id": "5503-heldout-dock-crate",
+            "success_count": 1,
+            "tags": [
+              "dock",
+              "crate",
+              "release"
+            ],
+            "trust_score": 0.9,
+            "utility_score": 1.21,
+            "verifier_accepted": true,
+            "version": 1
+          }
+        ],
+        "selected_action": "gate-B",
+        "selected_node_id": "node5503-conflict-gate-new",
+        "task_id": "5503-heldout-dock-gate",
+        "utility_scores": {
+          "node5503-conflict-gate-new": 2.82,
+          "node5503-conflict-gate-old": 2.4,
+          "node5503-failure-dock-crate-red": 1.15,
+          "node5503-skill-dock-crate-blue": 1.21
+        }
+      },
+      "selected_action": "gate-B",
+      "selected_memory_node_id": "node5503-conflict-gate-new",
+      "split": "heldout",
+      "task_id": "5503-heldout-dock-gate",
+      "task_state": {
+        "candidate_actions": [
+          "gate-A",
+          "gate-B"
+        ],
+        "domain": "controller-action",
+        "locality": "dock-7",
+        "tags": [
+          "gate",
+          "amber",
+          "controller"
+        ],
+        "version": 2
+      },
+      "verifier_outcome": {
+        "accepted": true,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "gate-B",
+        "failure_reasons": [],
+        "selected_action": "gate-B"
+      }
+    }
+  ],
+  "experiment_id": "experiment_5503_csl_experience_graph_replay_v499",
+  "field_principles": {
+    "csl_experience_graph_ready": "Terminal readiness gate for executor-frozen memory replay.",
+    "graph_memory_score": "Exact held-out score with governed graph-memory retrieval.",
+    "heldout_delta": "Exact graph-memory minus no-memory pass-rate delta.",
+    "honest_verdict": "Terminal status beginning with complete: or blocked:.",
+    "inference_substrate": "Cached-candidate verifier substrate declaration.",
+    "memory_graph_path": "External skill and failure graph after all updates.",
+    "memory_state_hashes": "Deterministic graph hashes after each episode update.",
+    "metric_independence_notes": "Why retrieval utility is not the held-out score scalar.",
+    "model_weights_mutated": "Frozen model and adapter boundary.",
+    "negative_transfer_rate": "Accepted negative-transfer candidates divided by candidates seen.",
+    "no_memory_baseline_score": "Exact held-out score without memory access.",
+    "num_stream_tasks": "Number of stream interactions processed by the frozen executor.",
+    "replay_fixture_path": "External chronological stream fixture used for replay.",
+    "stale_evidence_rejection_rate": "Rejected stale candidates divided by stale candidates seen.",
+    "test_paths": "Focused tests that anchor REQ-LEARN-5503 behavior."
+  },
+  "graph_memory_results": [
+    {
+      "accepted": true,
+      "selected_action": "crate-blue",
+      "task_id": "5503-heldout-dock-crate"
+    },
+    {
+      "accepted": true,
+      "selected_action": "use-range-len",
+      "task_id": "5503-heldout-python-loop"
+    },
+    {
+      "accepted": true,
+      "selected_action": "queue-beta",
+      "task_id": "5503-heldout-rx4-handoff"
+    },
+    {
+      "accepted": true,
+      "selected_action": "gate-B",
+      "task_id": "5503-heldout-dock-gate"
+    }
+  ],
+  "graph_memory_score": 1.0,
+  "heldout_delta": 1.0,
+  "heldout_task_ids": [
+    "5503-heldout-dock-crate",
+    "5503-heldout-python-loop",
+    "5503-heldout-rx4-handoff",
+    "5503-heldout-dock-gate"
+  ],
+  "honest_verdict": "complete: experience_graph_replay_ready_delta_+1.000000",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "memory_graph": {
+    "edges": [
+      {
+        "edge_type": "replaces",
+        "source": "node5503-conflict-gate-new",
+        "target": "node5503-conflict-gate-old"
+      },
+      {
+        "edge_type": "learned_after_action",
+        "source": "node5503-failure-dock-crate-red",
+        "target": "no-memory-baseline"
+      },
+      {
+        "edge_type": "learned_after_action",
+        "source": "node5503-skill-dock-crate-blue",
+        "target": "node5503-failure-dock-crate-red"
+      },
+      {
+        "edge_type": "learned_after_action",
+        "source": "node5503-skill-python-range-len",
+        "target": "no-memory-baseline"
+      },
+      {
+        "edge_type": "learned_after_action",
+        "source": "node5503-skill-python-heldout-range-len",
+        "target": "node5503-skill-python-range-len"
+      },
+      {
+        "edge_type": "learned_after_action",
+        "source": "node5503-skill-rx4-beta",
+        "target": "no-memory-baseline"
+      },
+      {
+        "edge_type": "learned_after_action",
+        "source": "node5503-skill-rx4-heldout-beta",
+        "target": "node5503-skill-rx4-beta"
+      },
+      {
+        "edge_type": "learned_after_action",
+        "source": "node5503-skill-gate-b-heldout",
+        "target": "node5503-conflict-gate-new"
+      }
+    ],
+    "episode_count": 7,
+    "graph_id": "exp5503-experience-graph",
+    "nodes": [
+      {
+        "action": "queue-alpha",
+        "conflict_group": null,
+        "description": "Old RX-4 queue-alpha owner before the handoff.",
+        "domain": "incident-routing",
+        "evidence_status": "active",
+        "expires_before_version": 3,
+        "failure_count": 0,
+        "locality": "rx-4",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-stale-rx4-alpha",
+        "node_type": "skill",
+        "success_count": 3,
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "trust_score": 0.89,
+        "version": 1
+      },
+      {
+        "action": "use-sql-offset",
+        "conflict_group": null,
+        "description": "SQL offset repair that should not transfer to Python loop bounds.",
+        "domain": "sql-pagination",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "locality": "warehouse-db",
+        "negative_transfer_domains": [
+          "python-loop"
+        ],
+        "node_id": "node5503-transfer-sql-offset",
+        "node_type": "skill",
+        "success_count": 4,
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "trust_score": 0.83,
+        "version": 1
+      },
+      {
+        "action": "gate-A",
+        "conflict_group": "dock-7-amber-gate",
+        "description": "Older dock-7 amber gate action.",
+        "domain": "controller-action",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-conflict-gate-old",
+        "node_type": "skill",
+        "success_count": 2,
+        "tags": [
+          "gate",
+          "amber",
+          "controller"
+        ],
+        "trust_score": 0.61,
+        "version": 1
+      },
+      {
+        "action": "gate-B",
+        "conflict_group": "dock-7-amber-gate",
+        "description": "Newer verified dock-7 amber gate action.",
+        "domain": "controller-action",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-conflict-gate-new",
+        "node_type": "skill",
+        "success_count": 3,
+        "tags": [
+          "gate",
+          "amber",
+          "controller"
+        ],
+        "trust_score": 0.92,
+        "version": 2
+      },
+      {
+        "action": "crate-blue",
+        "conflict_group": null,
+        "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
+        "domain": "logistics",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 1,
+        "learned_from_selected_action": "crate-red",
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-failure-dock-crate-red",
+        "node_type": "failure",
+        "source_task_id": "5503-train-dock-crate",
+        "success_count": 0,
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "trust_score": 0.84,
+        "verifier_accepted": false,
+        "version": 1
+      },
+      {
+        "action": "crate-blue",
+        "conflict_group": null,
+        "description": "Dock-7 release routing now prefers the blue crate.",
+        "domain": "logistics",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "crate-blue",
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-dock-crate-blue",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-dock-crate",
+        "success_count": 1,
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "trust_score": 0.9,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      {
+        "action": "use-range-len",
+        "conflict_group": null,
+        "description": "Python loop repairs should use range(len(items)) for bound checks.",
+        "domain": "python-loop",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "use-range-len",
+        "locality": "repo-alpha",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-python-range-len",
+        "node_type": "skill",
+        "source_task_id": "5503-train-python-loop",
+        "success_count": 1,
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "trust_score": 0.88,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      {
+        "action": "use-range-len",
+        "conflict_group": null,
+        "description": "Held-out Python bound repair confirmed the range-len skill.",
+        "domain": "python-loop",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "use-range-len",
+        "locality": "repo-alpha",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-python-heldout-range-len",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-python-loop",
+        "success_count": 1,
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "trust_score": 0.9,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      {
+        "action": "queue-beta",
+        "conflict_group": null,
+        "description": "RX-4 handoff moved ownership to queue beta.",
+        "domain": "incident-routing",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "queue-beta",
+        "locality": "rx-4",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-rx4-beta",
+        "node_type": "skill",
+        "source_task_id": "5503-train-rx4-handoff",
+        "success_count": 1,
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "trust_score": 0.91,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      {
+        "action": "queue-beta",
+        "conflict_group": null,
+        "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
+        "domain": "incident-routing",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "queue-beta",
+        "locality": "rx-4",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-rx4-heldout-beta",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-rx4-handoff",
+        "success_count": 1,
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "trust_score": 0.92,
+        "verifier_accepted": true,
+        "version": 1
+      },
+      {
+        "action": "gate-B",
+        "conflict_group": null,
+        "description": "Held-out gate replay confirmed newer gate-B evidence.",
+        "domain": "controller-action",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "failure_count": 0,
+        "learned_from_selected_action": "gate-B",
+        "locality": "dock-7",
+        "negative_transfer_domains": [],
+        "node_id": "node5503-skill-gate-b-heldout",
+        "node_type": "skill",
+        "source_task_id": "5503-heldout-dock-gate",
+        "success_count": 1,
+        "tags": [
+          "gate",
+          "amber",
+          "controller"
+        ],
+        "trust_score": 0.9,
+        "verifier_accepted": true,
+        "version": 1
+      }
+    ],
+    "schema": "carnot.experiment_5503.memory_graph.v1",
+    "state_hash": "sha256:ffc9c81deac0e75f99d52579c27f17fd7d6699e6fcc19933ab1e1bb1c24876d5",
+    "state_hashes": [
+      "sha256:f08746fe3206ced92dbd0fc6a3de5c0ba43145717367788487d8d914617e333d",
+      "sha256:047f7eb771c18a14eef4a449fe103c06b94276989da70a755ee3a352fc9a9bc5",
+      "sha256:f9e1451f181e7ad8234f6c34042b9d85411f97e2d7f348658cfb77b16652bd8c",
+      "sha256:9d693422189f72cf10176a23e2268f794043d67679c37ae4608c957bc56385b5",
+      "sha256:786f5f16c21cf159a9b33d63c7aa16ad8ca4fe5801a20a103ef0cb5f0a3b7863",
+      "sha256:517e439b88247253318ed5589e23b07346beb94997a84a11dd4cb8b05172fb11",
+      "sha256:fc2dedd5ca5c2b8a055e8289acdec8afed7f9441fe0c1de58514cfddafd95fb9"
+    ]
+  },
+  "memory_graph_path": "results/experiment_5503_csl_experience_graph_memory_v499.json",
+  "memory_state_hashes": [
+    "sha256:f08746fe3206ced92dbd0fc6a3de5c0ba43145717367788487d8d914617e333d",
+    "sha256:047f7eb771c18a14eef4a449fe103c06b94276989da70a755ee3a352fc9a9bc5",
+    "sha256:f9e1451f181e7ad8234f6c34042b9d85411f97e2d7f348658cfb77b16652bd8c",
+    "sha256:9d693422189f72cf10176a23e2268f794043d67679c37ae4608c957bc56385b5",
+    "sha256:786f5f16c21cf159a9b33d63c7aa16ad8ca4fe5801a20a103ef0cb5f0a3b7863",
+    "sha256:517e439b88247253318ed5589e23b07346beb94997a84a11dd4cb8b05172fb11",
+    "sha256:fc2dedd5ca5c2b8a055e8289acdec8afed7f9441fe0c1de58514cfddafd95fb9"
+  ],
+  "metric_independence_notes": "Retrieval ranks nodes by utility_score from tag overlap, trust, counts, and freshness; heldout_delta is not the retrieval utility and is computed only from exact cached-candidate verifier outcomes on held-out task IDs.",
+  "milestone": "2026.07.499",
+  "model_weights_mutated": false,
+  "negative_transfer_rate": 0.0,
+  "no_memory_baseline_results": [
+    {
+      "accepted": false,
+      "selected_action": "crate-red",
+      "task_id": "5503-heldout-dock-crate",
+      "verifier_outcome": {
+        "accepted": false,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "crate-blue",
+        "failure_reasons": [
+          "expected_action_mismatch"
+        ],
+        "selected_action": "crate-red"
+      }
+    },
+    {
+      "accepted": false,
+      "selected_action": "use-sql-offset",
+      "task_id": "5503-heldout-python-loop",
+      "verifier_outcome": {
+        "accepted": false,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "use-range-len",
+        "failure_reasons": [
+          "expected_action_mismatch"
+        ],
+        "selected_action": "use-sql-offset"
+      }
+    },
+    {
+      "accepted": false,
+      "selected_action": "queue-alpha",
+      "task_id": "5503-heldout-rx4-handoff",
+      "verifier_outcome": {
+        "accepted": false,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "queue-beta",
+        "failure_reasons": [
+          "expected_action_mismatch"
+        ],
+        "selected_action": "queue-alpha"
+      }
+    },
+    {
+      "accepted": false,
+      "selected_action": "gate-A",
+      "task_id": "5503-heldout-dock-gate",
+      "verifier_outcome": {
+        "accepted": false,
+        "authority": "cached_candidate_exact_action_verifier",
+        "cached_candidate": true,
+        "expected_action": "gate-B",
+        "failure_reasons": [
+          "expected_action_mismatch"
+        ],
+        "selected_action": "gate-A"
+      }
+    }
+  ],
+  "no_memory_baseline_score": 0.0,
+  "num_stream_tasks": 7,
+  "random_seed": 5503,
+  "replay_fixture": {
+    "fixture_id": "exp5503-csl-experience-graph-stream",
+    "heldout_task_ids": [
+      "5503-heldout-dock-crate",
+      "5503-heldout-python-loop",
+      "5503-heldout-rx4-handoff",
+      "5503-heldout-dock-gate"
+    ],
+    "random_seed": 5503,
+    "schema": "carnot.experiment_5503.replay_fixture.v1",
+    "stream_tasks": [
+      {
+        "candidates": [
+          "crate-red",
+          "crate-blue"
+        ],
+        "domain": "logistics",
+        "expected_action": "crate-blue",
+        "lesson_node": {
+          "action": "crate-blue",
+          "conflict_group": null,
+          "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
+          "domain": "logistics",
+          "evidence_status": "active",
+          "expires_before_version": null,
+          "failure_count": 0,
+          "locality": "dock-7",
+          "negative_transfer_domains": [],
+          "node_id": "node5503-failure-dock-crate-red",
+          "node_type": "failure",
+          "success_count": 0,
+          "tags": [
+            "dock",
+            "crate",
+            "release"
+          ],
+          "trust_score": 0.84,
+          "version": 1
+        },
+        "locality": "dock-7",
+        "no_memory_action": "crate-red",
+        "split": "train",
+        "state": {
+          "domain": "logistics",
+          "locality": "dock-7",
+          "tags": [
+            "dock",
+            "crate",
+            "release"
+          ],
+          "version": 1
+        },
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "task_id": "5503-train-dock-crate",
+        "version": 1
+      },
+      {
+        "candidates": [
+          "crate-red",
+          "crate-blue"
+        ],
+        "domain": "logistics",
+        "expected_action": "crate-blue",
+        "lesson_node": {
+          "action": "crate-blue",
+          "conflict_group": null,
+          "description": "Dock-7 release routing now prefers the blue crate.",
+          "domain": "logistics",
+          "evidence_status": "active",
+          "expires_before_version": null,
+          "failure_count": 0,
+          "locality": "dock-7",
+          "negative_transfer_domains": [],
+          "node_id": "node5503-skill-dock-crate-blue",
+          "node_type": "skill",
+          "success_count": 0,
+          "tags": [
+            "dock",
+            "crate",
+            "release"
+          ],
+          "trust_score": 0.9,
+          "version": 1
+        },
+        "locality": "dock-7",
+        "no_memory_action": "crate-red",
+        "split": "heldout",
+        "state": {
+          "domain": "logistics",
+          "locality": "dock-7",
+          "tags": [
+            "dock",
+            "crate",
+            "release"
+          ],
+          "version": 1
+        },
+        "tags": [
+          "dock",
+          "crate",
+          "release"
+        ],
+        "task_id": "5503-heldout-dock-crate",
+        "version": 1
+      },
+      {
+        "candidates": [
+          "use-sql-offset",
+          "use-range-len"
+        ],
+        "domain": "python-loop",
+        "expected_action": "use-range-len",
+        "lesson_node": {
+          "action": "use-range-len",
+          "conflict_group": null,
+          "description": "Python loop repairs should use range(len(items)) for bound checks.",
+          "domain": "python-loop",
+          "evidence_status": "active",
+          "expires_before_version": null,
+          "failure_count": 0,
+          "locality": "repo-alpha",
+          "negative_transfer_domains": [],
+          "node_id": "node5503-skill-python-range-len",
+          "node_type": "skill",
+          "success_count": 0,
+          "tags": [
+            "bounds",
+            "iteration",
+            "repair"
+          ],
+          "trust_score": 0.88,
+          "version": 1
+        },
+        "locality": "repo-alpha",
+        "no_memory_action": "use-range-len",
+        "split": "train",
+        "state": {
+          "domain": "python-loop",
+          "locality": "repo-alpha",
+          "tags": [
+            "bounds",
+            "iteration",
+            "repair"
+          ],
+          "version": 1
+        },
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "task_id": "5503-train-python-loop",
+        "version": 1
+      },
+      {
+        "candidates": [
+          "use-sql-offset",
+          "use-range-len"
+        ],
+        "domain": "python-loop",
+        "expected_action": "use-range-len",
+        "lesson_node": {
+          "action": "use-range-len",
+          "conflict_group": null,
+          "description": "Held-out Python bound repair confirmed the range-len skill.",
+          "domain": "python-loop",
+          "evidence_status": "active",
+          "expires_before_version": null,
+          "failure_count": 0,
+          "locality": "repo-alpha",
+          "negative_transfer_domains": [],
+          "node_id": "node5503-skill-python-heldout-range-len",
+          "node_type": "skill",
+          "success_count": 0,
+          "tags": [
+            "bounds",
+            "iteration",
+            "repair"
+          ],
+          "trust_score": 0.9,
+          "version": 1
+        },
+        "locality": "repo-alpha",
+        "no_memory_action": "use-sql-offset",
+        "split": "heldout",
+        "state": {
+          "domain": "python-loop",
+          "locality": "repo-alpha",
+          "tags": [
+            "bounds",
+            "iteration",
+            "repair"
+          ],
+          "version": 1
+        },
+        "tags": [
+          "bounds",
+          "iteration",
+          "repair"
+        ],
+        "task_id": "5503-heldout-python-loop",
+        "version": 1
+      },
+      {
+        "candidates": [
+          "queue-alpha",
+          "queue-beta"
+        ],
+        "domain": "incident-routing",
+        "expected_action": "queue-beta",
+        "lesson_node": {
+          "action": "queue-beta",
+          "conflict_group": null,
+          "description": "RX-4 handoff moved ownership to queue beta.",
+          "domain": "incident-routing",
+          "evidence_status": "active",
+          "expires_before_version": null,
+          "failure_count": 0,
+          "locality": "rx-4",
+          "negative_transfer_domains": [],
+          "node_id": "node5503-skill-rx4-beta",
+          "node_type": "skill",
+          "success_count": 0,
+          "tags": [
+            "handoff",
+            "rx4",
+            "queue"
+          ],
+          "trust_score": 0.91,
+          "version": 1
+        },
+        "locality": "rx-4",
+        "no_memory_action": "queue-beta",
+        "split": "train",
+        "state": {
+          "domain": "incident-routing",
+          "locality": "rx-4",
+          "tags": [
+            "handoff",
+            "rx4",
+            "queue"
+          ],
+          "version": 3
+        },
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "task_id": "5503-train-rx4-handoff",
+        "version": 3
+      },
+      {
+        "candidates": [
+          "queue-alpha",
+          "queue-beta"
+        ],
+        "domain": "incident-routing",
+        "expected_action": "queue-beta",
+        "lesson_node": {
+          "action": "queue-beta",
+          "conflict_group": null,
+          "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
+          "domain": "incident-routing",
+          "evidence_status": "active",
+          "expires_before_version": null,
+          "failure_count": 0,
+          "locality": "rx-4",
+          "negative_transfer_domains": [],
+          "node_id": "node5503-skill-rx4-heldout-beta",
+          "node_type": "skill",
+          "success_count": 0,
+          "tags": [
+            "handoff",
+            "rx4",
+            "queue"
+          ],
+          "trust_score": 0.92,
+          "version": 1
+        },
+        "locality": "rx-4",
+        "no_memory_action": "queue-alpha",
+        "split": "heldout",
+        "state": {
+          "domain": "incident-routing",
+          "locality": "rx-4",
+          "tags": [
+            "handoff",
+            "rx4",
+            "queue"
+          ],
+          "version": 4
+        },
+        "tags": [
+          "handoff",
+          "rx4",
+          "queue"
+        ],
+        "task_id": "5503-heldout-rx4-handoff",
+        "version": 4
+      },
+      {
+        "candidates": [
+          "gate-A",
+          "gate-B"
+        ],
+        "domain": "controller-action",
+        "expected_action": "gate-B",
+        "lesson_node": {
+          "action": "gate-B",
+          "conflict_group": null,
+          "description": "Held-out gate replay confirmed newer gate-B evidence.",
+          "domain": "controller-action",
+          "evidence_status": "active",
+          "expires_before_version": null,
+          "failure_count": 0,
+          "locality": "dock-7",
+          "negative_transfer_domains": [],
+          "node_id": "node5503-skill-gate-b-heldout",
+          "node_type": "skill",
+          "success_count": 0,
+          "tags": [
+            "gate",
+            "amber",
+            "controller"
+          ],
+          "trust_score": 0.9,
+          "version": 1
+        },
+        "locality": "dock-7",
+        "no_memory_action": "gate-A",
+        "split": "heldout",
+        "state": {
+          "domain": "controller-action",
+          "locality": "dock-7",
+          "tags": [
+            "gate",
+            "amber",
+            "controller"
+          ],
+          "version": 2
+        },
+        "tags": [
+          "gate",
+          "amber",
+          "controller"
+        ],
+        "task_id": "5503-heldout-dock-gate",
+        "version": 2
+      }
+    ]
+  },
+  "replay_fixture_path": "results/experiment_5503_csl_experience_graph_replay_fixture_v499.json",
+  "reproducibility_checksum": "sha256:b0eba8d1fa385bb997350f372f40c7631a6dacf7df1b9e3e9af956a3342f79ab",
+  "research_conductor_modified": false,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5503.csl_experience_graph_replay.v499",
+  "source_file_checksums": {
+    "module": "sha256:46e7884700db1e16e214a7709ecf9b8b1b7c865655ee938cd157a4151ae656e6",
+    "spec": "sha256:52347e2c7d65c3a29672b9d26c572733e357ca9b6ecf3e0526d4994bac9358bf",
+    "test": "sha256:4438077c3a1bc7902016ca32fa5a7c98a0da48a03e84ee6e274cebff566c3c23"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5503_csl_experience_graph_replay_v499.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "test": "tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5503",
+    "SCENARIO-LEARN-5503-GRAPH-UPDATE",
+    "SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS",
+    "SCENARIO-LEARN-5503-BASELINE",
+    "SCENARIO-LEARN-5503-ARTIFACT"
+  ],
+  "stale_evidence_rejection_rate": 1.0,
+  "task_id": "exp5503-csl-experience-graph-replay-v499",
+  "test_paths": [
+    "tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5503_csl_experience_graph_replay_v499.py -m pytest tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5503_csl_experience_graph_replay_v499.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}

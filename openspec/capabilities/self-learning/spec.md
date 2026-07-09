@@ -20968,3 +20968,94 @@ support
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5502 | Planned (`python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py`, `results/experiment_5502_csl_tautology_static_corrigendum_v499.json`) | Planned (`tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py`) |
+
+---
+
+## REQ-LEARN-5503: CSL Experience-Graph Replay Fixture v499
+
+Experiment 5503 SHALL implement a deterministic executor-frozen
+experience-graph replay fixture for continuous self-learning. The fixture
+SHALL store reusable skills and failure lessons in an external JSON memory
+graph, retrieve them for a chronological task stream with utility-aware
+ranking, update the graph after each interaction, and compare the resulting
+policy against a no-memory baseline on held-out tasks. The implementation SHALL
+NOT depend on Exp5474 being clean, SHALL NOT load live model weights, and SHALL
+set `model_weights_mutated=false` and
+`inference_substrate="verifier_ensemble_against_cached_candidates"`.
+
+Each episode record SHALL include task state, selected action, verifier
+outcome, learned skill or failure node, memory update hash, and the next-task
+retrieval decision. Retrieval SHALL reject stale evidence, resolve conflicts in
+favor of newer verified evidence, and reject negative-transfer candidates before
+they can affect action selection. Held-out delta SHALL be measured with exact
+verifier outcomes over cached candidate actions, and SHALL NOT be the same
+scalar as the utility score used for retrieval ranking.
+
+The result artifact SHALL be
+`results/experiment_5503_csl_experience_graph_replay_v499.json` and SHALL
+include `replay_fixture_path`, `memory_graph_path`, `test_paths`,
+`num_stream_tasks`, `memory_state_hashes`, `no_memory_baseline_score`,
+`graph_memory_score`, `heldout_delta`, `negative_transfer_rate`,
+`stale_evidence_rejection_rate`, `metric_independence_notes`,
+`csl_experience_graph_ready`, `model_weights_mutated`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-5503 Sub-requirements
+
+- REQ-LEARN-5503-1: The replay fixture SHALL contain a chronological task
+  stream with train and held-out rows, cached candidate actions, exact expected
+  actions, and deterministic lessons to write after each interaction.
+- REQ-LEARN-5503-2: The memory graph SHALL store skill and failure nodes
+  externally, compute deterministic state hashes after every episode update,
+  and expose graph edges for conflict or support relationships.
+- REQ-LEARN-5503-3: Retrieval SHALL rank eligible nodes by a deterministic
+  utility score, while held-out scores SHALL be exact verifier pass rates over
+  selected cached actions rather than the utility score itself.
+- REQ-LEARN-5503-4: Stale-evidence, conflict, and negative-transfer controls
+  SHALL reject unsafe nodes before action selection and SHALL report stale
+  rejection and negative-transfer rates.
+- REQ-LEARN-5503-5: The no-memory baseline SHALL run over the same held-out row
+  IDs as the graph-memory policy and SHALL not observe memory graph nodes.
+- REQ-LEARN-5503-6: `csl_experience_graph_ready` SHALL be true only when tests
+  are recorded, the graph-memory held-out score exceeds the no-memory baseline,
+  stale evidence rejection is complete, negative-transfer rate is zero, and no
+  model weights mutate.
+
+### SCENARIO-LEARN-5503-GRAPH-UPDATE: Episodes Write Auditable Memory Nodes
+
+**Given** a chronological replay task with a verifier-approved skill lesson
+**When** the executor-frozen graph replay processes the task
+**Then** the episode record SHALL include the selected action, verifier
+outcome, learned skill node, memory update hash, and next-task retrieval
+decision.
+
+### SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS: Unsafe Memory Is Rejected
+
+**Given** eligible, stale, conflicting, and negative-transfer memory nodes
+**When** retrieval ranks the candidates for a task
+**Then** stale and negative-transfer nodes SHALL be rejected
+**And** lower-utility conflict losers SHALL be rejected before action selection.
+
+### SCENARIO-LEARN-5503-BASELINE: Held-Out Delta Uses Exact Outcomes
+
+**Given** graph-memory and no-memory policies evaluate the same held-out task
+IDs
+**When** Exp5503 computes scores
+**Then** `heldout_delta` SHALL equal the exact verifier pass-rate difference
+between graph memory and no-memory baseline
+**And** the artifact SHALL explain that retrieval utility is not the held-out
+outcome scalar.
+
+### SCENARIO-LEARN-5503-ARTIFACT: Deliverable JSON Is Stable
+
+**Given** the deterministic replay fixture and external memory graph are
+unchanged
+**When** Exp5503 writes its deliverable JSON
+**Then** all required schema fields SHALL be present and stable under replay
+**And** `model_weights_mutated` SHALL be false.
+
+## Implementation Status (Exp 5503)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5503 | Planned (`python/carnot/experiment_5503_csl_experience_graph_replay_v499.py`, `results/experiment_5503_csl_experience_graph_replay_v499.json`) | Planned (`tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py`) |
