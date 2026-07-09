@@ -1685,7 +1685,78 @@ Required field principles:
 - `inference_substrate`: principle "must equal aggregation_from_upstream_artifacts."
 - `honest_verdict`: principle "terminal status starts with complete: or blocked: and makes no solve claim."
 
+### REQ-ARC-FCP-5508: Live Perception-Generation Level-Up Attempt
+
+Experiment 5508 SHALL write
+`results/experiment_5508_arc_live_perception_generation_levelup_v499.json`
+after re-reading `ops/arc_solve_registry.yaml` and the Exp5507 precheck
+artifact immediately before any live-agent attempt. The workflow SHALL abort
+with a blocked artifact when the Exp5507 target is absent, not ready, or already
+reproducible in the re-read registry. Otherwise it SHALL run one bounded live
+ARC attempt on the selected target using `E3AgentPolicy` with a reusable
+classical perception-generation pass that extracts connected components, color
+blobs, sprite overlays, salient motion, and action affordances from runtime
+frames only.
+
+The credited path SHALL be `live_agent_self_discovery`: the live agent's own
+runtime observations, action effects, perception-generated candidates, and
+standard reproduction gate. It SHALL NOT read game source, run offline
+ground-truth BFS, or use a hand-built per-game adapter. Any candidate level-up
+SHALL be reproduced through the standard live/offline reproduction gate before
+the registry is updated. Success SHALL require `offline_reproduced=true` and
+`reproduced_levels>=1` for a strictly new level beyond the selected game's
+registry depth; otherwise the artifact SHALL report an honest null and SHALL
+NOT modify `ops/arc_solve_registry.yaml`.
+
+The workflow SHALL record per-step trajectory-taxonomy counts inspired by
+Trajel for factual, referential, logical, procedural, and scope-based failures
+when applicable. Honest-null artifacts SHALL still record enough live-attempt
+duration, candidate-generation, prohibited-input, and methodology fields to
+distinguish a bounded runtime null from a missing-methodology artifact.
+
+The result artifact SHALL include `selected_game`, `selected_level`,
+`registry_before_levels`, `registry_after_levels`, `arc_registry_delta`,
+`offline_reproduced`, `reproduced_levels`, `solve_provenance`,
+`live_agent_attempts`, `runtime_observation_steps`,
+`perception_features_enabled`, `trajectory_taxonomy_counts`,
+`offline_bfs_used`, `game_source_read`,
+`hand_built_per_game_adapter_used`, `methodology_receipt`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "Exp5507-selected game id, or empty string only when the precheck blocks before a target can be attempted."
+- `selected_level`: principle "Exp5507-selected level label such as L3; success must be strictly deeper than the re-read registry depth."
+- `registry_before_levels`: principle "authoritative `ops/arc_solve_registry.yaml` total immediately before the live attempt."
+- `registry_after_levels`: principle "authoritative registry total after the attempt; unchanged on honest null or blocked runs."
+- `arc_registry_delta`: principle "bare int delta between after and before totals; success requires this to equal the newly reproduced levels."
+- `offline_reproduced`: principle "true only when the live-discovered candidate passes the standard reproduction gate for a new level."
+- `reproduced_levels`: principle "new reproduced levels banked beyond the selected game's pre-run depth; success requires >=1."
+- `solve_provenance`: principle "must equal live_agent_self_discovery."
+- `live_agent_attempts`: principle "bare int count of runtime actions actually executed by the live agent."
+- `runtime_observation_steps`: principle "bare int count of runtime frame/action observations available to perception generation."
+- `perception_features_enabled`: principle "list containing connected_components, color_blobs, sprite_overlays, salient_motion, and action_affordances when the pass is active."
+- `trajectory_taxonomy_counts`: principle "dict with factual, referential, logical, procedural, and scope_based failure counts."
+- `offline_bfs_used`: principle "must be false; offline ground-truth BFS is not part of the credited path."
+- `game_source_read`: principle "must be false; game source reading is outside live self-discovery credit."
+- `hand_built_per_game_adapter_used`: principle "must be false; no hand per-game adapter is credited."
+- `methodology_receipt`: principle "string receipt naming the bounded live runtime, candidate-generation mechanism, reproduction gate, and prohibited-input flags."
+- `inference_substrate`: principle "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+
 ## Scenarios
+
+### SCENARIO-ARC-FCP-5508: Classical Perception Generation Is Runtime-Grounded
+
+Given the Exp5507 target precheck is ready and the registry re-read shows the
+selected level is not already reproducible
+When Exp5508 runs one bounded live `E3AgentPolicy` attempt with the classical
+perception-generation pass
+Then candidate actions are generated from connected components, color blobs,
+sprite overlays, salient motion, and action affordances observed at runtime
+And the artifact records trajectory-taxonomy counts, prohibited-input flags,
+registry before/after totals, and an honest null unless the standard
+reproduction gate confirms at least one new level.
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
 
