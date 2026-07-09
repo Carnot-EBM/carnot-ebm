@@ -1581,6 +1581,65 @@ Required field principles:
 - `inference_substrate`: principle "must equal registry_precheck_no_solve."
 - `honest_verdict`: principle "one-line verdict starting complete: or blocked: without a solve claim."
 
+### REQ-ARC-FCP-5494: Exp5493-Selected Live Trajectory-Induction Level-Up Attempt
+
+Experiment 5494 SHALL write
+`results/experiment_5494_arc_live_trajectory_levelup_v498.json` after exactly
+one bounded live ARC trajectory/option-induction attempt on the target selected
+by Exp5493. The workflow SHALL read the Exp5493 precheck artifact and
+`ops/arc_solve_registry.yaml` before spending live-agent budget; it SHALL block
+without attempting when the target is already reproduced, appears in the recent
+same-mechanism no-bank set, or lacks the live trajectory-induction
+preconditions recorded by Exp5493. The credited path SHALL be
+`live_agent_self_discovery`: the live agent's own attempted actions, observed
+frame deltas, runtime hypotheses, verifier checks, and rejected option
+sequences. It SHALL NOT read game source, run offline ground-truth BFS, or build
+or credit a per-game hand adapter.
+
+The workflow SHALL run through the live `E3AgentPolicy` path with
+`LiveCoExLandmarkFrontierGenerator` as the trajectory/option-induction
+generator when the preconditions pass. It SHALL record hypothesized action
+sequences, observation deltas, verifier checks, and rejection reasons even when
+no level is banked. If an LLM generator is invoked, the artifact's
+`model_specs_if_llm_used` SHALL include
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; if those model specs are unavailable for the
+live path, the workflow SHALL emit a blocked artifact instead of substituting a
+legacy small model as a headline generator. The registry SHALL be updated only
+when the standard live/offline reproduction gate reports
+`offline_reproduced=true` and at least one new level beyond the Exp5493 prior
+depth is reproduced.
+
+The result artifact SHALL include `selected_game`, `target_level`,
+`prior_levels_reproduced`, `post_levels_reproduced`, `solve_provenance`,
+`offline_bfs_used`, `per_game_adapter_used`, `game_source_read`,
+`trajectory_hypothesis_count`, `live_attempt_count`, `offline_reproduced`,
+`reproduced_levels`, `new_level_banked`, `registry_updated`,
+`model_specs_if_llm_used`, `failure_mode`, `inference_substrate`,
+`random_seed`, and `honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "Exp5493-selected game id, or empty string only when the attempt blocks before target selection."
+- `target_level`: principle "Exp5493-selected target level as a bare int."
+- `prior_levels_reproduced`: principle "registry depth before Exp5494; success must be strictly deeper."
+- `post_levels_reproduced`: principle "registry depth after Exp5494; unchanged on honest null."
+- `solve_provenance`: principle "must equal live_agent_self_discovery."
+- `offline_bfs_used`: principle "must be false; no offline ground-truth BFS is credited."
+- `per_game_adapter_used`: principle "must be false; no hand per-game adapter is credited."
+- `game_source_read`: principle "must be false; source reading is outside the credited live path."
+- `trajectory_hypothesis_count`: principle "bare int count of hypothesized action sequences induced from runtime observations."
+- `live_attempt_count`: principle "bare int count of live actions actually executed."
+- `offline_reproduced`: principle "true only after the live-discovered candidate passes the reproduction gate."
+- `reproduced_levels`: principle "new reproduced levels beyond the prior depth; complete requires >=1."
+- `new_level_banked`: principle "true only when offline_reproduced=true and reproduced_levels>=1."
+- `registry_updated`: principle "true only when a newly reproduced level is written to ops/arc_solve_registry.yaml."
+- `model_specs_if_llm_used`: principle "empty when no LLM was invoked; otherwise contains the three mandated headline GGUF model specs."
+- `failure_mode`: principle "empty on success or concise blocked/no-bank reason."
+- `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
+- `random_seed`: principle "deterministic seed for the bounded attempt."
+- `honest_verdict`: principle "terminal status starts with complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -2214,3 +2273,39 @@ When experiment 5493 writes its artifact
 Then `selected_game` is an empty string, `selected_target_level=0`,
 `arc_trajectory_precheck_ready=false`, `offline_bfs_used=false`,
 `per_game_adapter_used=false`, and `honest_verdict` starts with `blocked:`.
+
+### SCENARIO-ARC-FCP-5494: Exp5493 Target Attempts Through Live Trajectory Induction
+
+Given Exp5493 selected `dc22:L3`, the registry records `dc22` at L2, and the
+Exp5493 trajectory preconditions include runtime action-effect observations,
+visible toggle/navigation state changes, level-counter deltas, and frontier
+prefix grouping
+When experiment 5494 performs its pre-attempt gate
+Then it selects `selected_game=dc22`, `target_level=3`,
+`prior_levels_reproduced=2`, `solve_provenance=live_agent_self_discovery`,
+`offline_bfs_used=false`, `per_game_adapter_used=false`,
+`game_source_read=false`, and proceeds only because the target is not already
+reproduced and is not a recent same-mechanism no-bank duplicate.
+
+Given the live agent executes a bounded `E3AgentPolicy` attempt with
+`LiveCoExLandmarkFrontierGenerator`
+When the attempt is summarized
+Then the artifact records `trajectory_hypothesis_count`,
+`live_attempt_count`, hypothesized action sequences, observation deltas,
+verifier checks, rejection reasons, and `model_specs_if_llm_used=[]` when no
+LLM generator was invoked.
+
+Given the bounded live trajectory-induction attempt does not reproduce a new
+level beyond the prior registry depth
+When experiment 5494 validates the artifact
+Then `offline_reproduced=false`, `reproduced_levels=0`,
+`new_level_banked=false`, `registry_updated=false`,
+`post_levels_reproduced=prior_levels_reproduced`, and `honest_verdict` starts
+with `honest_null:`.
+
+Given a live self-discovered trajectory candidate reaches the target level
+When the standard reproduction gate confirms it beyond the prior depth
+Then and only then `offline_reproduced=true`, `reproduced_levels>=1`,
+`new_level_banked=true`, `registry_updated=true`,
+`post_levels_reproduced>prior_levels_reproduced`, and `honest_verdict` starts
+with `complete:`.
