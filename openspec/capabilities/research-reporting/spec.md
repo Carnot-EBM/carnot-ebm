@@ -38724,3 +38724,72 @@ or edit `research-roadmap.yaml` or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5482 | Planned (`python/carnot/experiment_5482_transition_v498.py`, `results/experiment_5482_transition_v498.json`) | Planned (`tests/python/test_experiment_5482_transition_v498.py`) |
+
+### REQ-REPORT-5495: V498 Capstone PRD Gap And Roadmap Synthesis
+
+The Exp5495 workflow SHALL write
+`results/experiment_5495_capstone_v498.json` from repository artifacts only.
+It SHALL read `CLAUDE.md`, `research-program.md`, `_bmad/prd.md`,
+`_bmad/architecture.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/changelog.md`,
+`ops/status.md`, `ops/conductor-log.md`, and every available result artifact
+for Exp5482 through Exp5494. Missing expected artifacts SHALL be listed
+explicitly instead of inferred or fabricated.
+
+The workflow SHALL build a lane truth table for transition/source delta, CSL
+corrigendum, Preference-MaxSAT verification, concept SOTA telemetry, helper
+contracts, CSL independent metrics, fixed-point KAN ledger, active
+constraints, hardware, ARC, and synthesis. Each lane SHALL be classified as
+one of `headline_ready`, `bounded`, `blocked`, `honest_null`,
+`skipped_by_gate`, or `missing` using actual artifact files plus conductor
+evidence. It SHALL preserve adversarial flags and gate-skip reasons as
+evidence but SHALL NOT promote flagged or skipped work to headline-ready.
+
+The workflow SHALL build a PRD gap table for FR-11 continuous self-learning,
+FR-12 verifiable reasoning, hardware acceleration, local SOTA runtime, and ARC
+live-path grounding. It SHALL state whether guided decoding remains
+quarantined, whether the Exp5474 tautology was resolved, whether any SOTA CSL
+headline is allowed, whether an ARC registry delta occurred, and whether any
+hardware speedup claim is supported. It SHALL emit top-three next-roadmap
+recommendations and retirements under failed-experiment discipline. It SHALL
+declare `inference_substrate="aggregation_from_upstream_artifacts"` and SHALL
+NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The artifact SHALL include required fields `milestone`, `artifacts_expected`,
+`artifacts_read`, `artifacts_missing`, `lane_truth_table`, `prd_gap_table`,
+`headline_ready_lanes`, `bounded_lanes`, `blocked_lanes`,
+`honest_null_lanes`, `skipped_by_gate_lanes`,
+`exp5474_tautology_resolved`, `guided_decoding_quarantine_status`,
+`csl_status`, `arc_registry_delta`, `hardware_speedup_claim`,
+`next_recommendations`, `roadmap_yaml_unchanged`, `conductor_unchanged`,
+`inference_substrate`, and `honest_verdict`.
+
+#### SCENARIO-REPORT-5495: V498 Capstone Uses Actual Upstream Artifacts
+
+**Given** some Exp5482 through Exp5494 result artifacts exist and some are
+absent
+**When** the Exp5495 capstone workflow runs
+**Then** it writes `results/experiment_5495_capstone_v498.json`, records all
+expected, read, and missing artifacts, classifies lanes from observed artifact
+and conductor evidence, keeps guided decoding quarantined, records
+`exp5474_tautology_resolved=false` when the required corrigendum artifact is
+missing, records `hardware_speedup_claim=false`, and keeps the active roadmap
+and conductor unchanged.
+
+#### SCENARIO-REPORT-5495-GATE-SKIPS: Skipped Inputs Stay Non-Headline
+
+**Given** the conductor log reports skipped or gate-blocked Exp5483 through
+Exp5490 tasks
+**When** the Exp5495 capstone workflow runs
+**Then** those lanes appear as `skipped_by_gate`, `blocked`, or `missing`
+according to the evidence available, SOTA CSL headline readiness remains
+disallowed when Exp5484, Exp5488, or Exp5489 are absent or skipped, and
+next-roadmap recommendations cite the blocking evidence rather than roadmap
+intent.
+
+## Implementation Status (REQ-REPORT-5495)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5495 | Planned (`python/carnot/experiment_5495_capstone_v498.py`, `results/experiment_5495_capstone_v498.json`) | Planned (`tests/python/test_experiment_5495_capstone_v498.py`) |

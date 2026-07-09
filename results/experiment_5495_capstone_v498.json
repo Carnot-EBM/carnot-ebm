@@ -1,0 +1,807 @@
+{
+  "arc_registry_delta": 0,
+  "artifacts_expected": [
+    "results/experiment_5482_transition_v498.json",
+    "results/experiment_5483_source_delta_v498.json",
+    "results/experiment_5484_csl_tautology_corrigendum_v498.json",
+    "results/experiment_5485_preference_maxsat_claim_fixture_v498.json",
+    "results/experiment_5486_sota_concept_evidence_panel_v498.json",
+    "results/experiment_5487_helper_contract_nl_spec_repair_v498.json",
+    "results/experiment_5488_csl_latent_exploration_replay_v498.json",
+    "results/experiment_5489_sota_csl_independent_metrics_v498.json",
+    "results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json",
+    "results/experiment_5491_active_constraint_subproblem_descriptor_v498.json",
+    "results/experiment_5492_hardware_receipts_v498.json",
+    "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+    "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+  ],
+  "artifacts_missing": [
+    "results/experiment_5483_source_delta_v498.json",
+    "results/experiment_5484_csl_tautology_corrigendum_v498.json",
+    "results/experiment_5485_preference_maxsat_claim_fixture_v498.json",
+    "results/experiment_5486_sota_concept_evidence_panel_v498.json",
+    "results/experiment_5487_helper_contract_nl_spec_repair_v498.json",
+    "results/experiment_5488_csl_latent_exploration_replay_v498.json",
+    "results/experiment_5489_sota_csl_independent_metrics_v498.json"
+  ],
+  "artifacts_read": [
+    "results/experiment_5482_transition_v498.json",
+    "results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json",
+    "results/experiment_5491_active_constraint_subproblem_descriptor_v498.json",
+    "results/experiment_5492_hardware_receipts_v498.json",
+    "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+    "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+  ],
+  "blocked_lanes": [
+    {
+      "claim_boundary": "Guided decoding remains quarantined; no V498 artifact lifts it.",
+      "classification": "blocked",
+      "evidence": {
+        "guided_decoding_quarantine_lifted": false,
+        "quarantine_status": "quarantined"
+      },
+      "lane": "guided_decoding",
+      "source_artifacts": [
+        "results/experiment_5482_transition_v498.json"
+      ]
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "claim_boundary": "Transition evidence exists, but the .498 execution source-delta artifact is absent.",
+      "classification": "bounded",
+      "evidence": {
+        "conductor_evidence": [],
+        "source_delta_missing": true,
+        "transition_complete": true
+      },
+      "lane": "transition_source_delta",
+      "source_artifacts": [
+        "results/experiment_5482_transition_v498.json",
+        "results/experiment_5483_source_delta_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "Descriptors are useful and exact-fallback checked, but hardware mappings remain advisory.",
+      "classification": "bounded",
+      "evidence": {
+        "descriptor_count": 8,
+        "exact_fallback_completeness": 1.0,
+        "hardware_speedup_claim": false,
+        "subproblem_descriptor_ready": true,
+        "unsafe_false_accept_count": 0
+      },
+      "lane": "active_constraints",
+      "source_artifacts": [
+        "results/experiment_5491_active_constraint_subproblem_descriptor_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "Hardware evidence is receipt-only; matched hashes do not support a speedup claim.",
+      "classification": "bounded",
+      "evidence": {
+        "authenticated_board_identity_count": 1,
+        "blocked_boards": {
+          "gatemate": {
+            "blocked_reason": "blocked_gatemate_jtag_identity",
+            "board_identity": "gatemate",
+            "diagnostic_only": true,
+            "identity": null,
+            "reachable": false,
+            "status_exit_code": 0,
+            "workload_execution_attempted": false
+          },
+          "kv260": {
+            "blocked_reason": "blocked_kv260_ssh_identity",
+            "board_identity": "kv260",
+            "identity": null,
+            "reachable": false,
+            "status_exit_code": 124,
+            "workload_execution_attempted": false
+          }
+        },
+        "hardware_receipts_ready": true,
+        "hardware_speedup_claim": false,
+        "reachable_boards": [
+          "polarfire"
+        ],
+        "result_hash_match_rate": 1.0
+      },
+      "lane": "hardware",
+      "source_artifacts": [
+        "results/experiment_5492_hardware_receipts_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "This capstone is aggregation-only and cannot manufacture missing upstream evidence.",
+      "classification": "bounded",
+      "evidence": {
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "upstream_missing_count": 7
+      },
+      "lane": "synthesis",
+      "source_artifacts": [
+        "results/experiment_5495_capstone_v498.json"
+      ]
+    }
+  ],
+  "conductor_unchanged": true,
+  "csl_status": "blocked: Exp5474 tautology unresolved; Exp5484/Exp5488/Exp5489 did not produce clean artifacts; no V498 SOTA CSL headline is allowed",
+  "exp5474_tautology_resolved": false,
+  "experiment": "experiment_5495_capstone_v498",
+  "experiment_id": "exp5495-capstone-v498",
+  "failure_taxonomy": {
+    "arc_no_bank": {
+      "discipline": "Do not repeat same-depth live attempts without a changed generator.",
+      "experiments": [
+        "5494"
+      ],
+      "failure_mode": "bounded_budget_no_target_level_reproduction",
+      "flagged_adversarial": true
+    },
+    "hardware_receipt_boundary": {
+      "blocked_boards": {
+        "gatemate": {
+          "blocked_reason": "blocked_gatemate_jtag_identity",
+          "board_identity": "gatemate",
+          "diagnostic_only": true,
+          "identity": null,
+          "reachable": false,
+          "status_exit_code": 0,
+          "workload_execution_attempted": false
+        },
+        "kv260": {
+          "blocked_reason": "blocked_kv260_ssh_identity",
+          "board_identity": "kv260",
+          "identity": null,
+          "reachable": false,
+          "status_exit_code": 124,
+          "workload_execution_attempted": false
+        }
+      },
+      "discipline": "Matched receipt evidence is not a speedup claim.",
+      "experiments": [
+        "5492"
+      ]
+    },
+    "pre_test_skip": {
+      "discipline": "Do not count planned fixtures without emitted artifacts.",
+      "evidence": [
+        "| 2026-07-09 13:45 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+        "| 2026-07-09 13:47 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+        "| 2026-07-09 13:50 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+        "| 2026-07-09 13:52 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:52 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:54 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:54 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:56 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:56 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |"
+      ],
+      "experiments": [
+        "5483",
+        "5484",
+        "5485",
+        "5487"
+      ]
+    },
+    "tautology_quarantine": {
+      "discipline": "Retire same-scope CSL scale claims if the metric-independence repair cannot run.",
+      "experiments": [
+        "5474",
+        "5484"
+      ],
+      "resolved": false
+    },
+    "upstream_gate_block": {
+      "discipline": "Resolve the upstream gate before rerunning downstream SOTA or fixed-point work.",
+      "evidence": [
+        "| 2026-07-09 13:52 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+        "| 2026-07-09 13:54 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+        "| 2026-07-09 13:56 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |"
+      ],
+      "experiments": [
+        "5486",
+        "5488",
+        "5489",
+        "5490"
+      ]
+    }
+  },
+  "field_principles": {
+    "arc_registry_delta": "new ARC levels banked in this milestone.",
+    "artifacts_expected": "all Exp5482-Exp5494 result paths that should have existed.",
+    "artifacts_missing": "expected upstream result artifacts absent from disk.",
+    "artifacts_read": "actual upstream JSON artifacts used as evidence.",
+    "blocked_lanes": "quarantined lanes that must not be promoted.",
+    "bounded_lanes": "useful lanes that remain claim-limited.",
+    "conductor_unchanged": "protected-file check for scripts/research_conductor.py.",
+    "csl_status": "whether any V498 CSL headline is allowed.",
+    "exp5474_tautology_resolved": "bare boolean for the CSL tautology corrigendum outcome.",
+    "guided_decoding_quarantine_status": "explicit guided-decoding boundary.",
+    "hardware_speedup_claim": "must remain false without matched local speedup evidence.",
+    "headline_ready_lanes": "lanes safe to promote without caveats.",
+    "honest_null_lanes": "executed lanes that banked no positive result.",
+    "honest_verdict": "terminal summary starting with complete: or blocked:.",
+    "inference_substrate": "aggregation only; no hidden live inference or hardware run.",
+    "lane_truth_table": "per-lane classification from artifacts and conductor evidence.",
+    "milestone": "route key for the .498 capstone.",
+    "next_recommendations": "top three grounded next-roadmap moves.",
+    "prd_gap_table": "PRD requirement status grounded in upstream evidence.",
+    "roadmap_yaml_unchanged": "protected-file check for research-roadmap.yaml.",
+    "skipped_by_gate_lanes": "lanes skipped or gate-blocked by conductor evidence."
+  },
+  "guided_decoding_quarantine_status": "quarantined",
+  "hardware_speedup_claim": false,
+  "headline_ready_lanes": [],
+  "honest_null_lanes": [
+    {
+      "claim_boundary": "The trajectory attempt produced diagnostics but no banked ARC registry delta.",
+      "classification": "honest_null",
+      "evidence": {
+        "arc_registry_delta": 0,
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=16.147303318139166 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "failure_mode": "bounded_budget_no_target_level_reproduction",
+        "flagged_adversarial": true,
+        "new_level_banked": false,
+        "post_levels_reproduced": 2,
+        "precheck_ready": true,
+        "prior_levels_reproduced": 2,
+        "registry_updated": false,
+        "selected_game": "dc22",
+        "target_level": 3
+      },
+      "lane": "arc",
+      "source_artifacts": [
+        "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+        "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+      ]
+    }
+  ],
+  "honest_verdict": "complete: .498 capstone read actual Exp5482-Exp5494 artifacts, recorded missing/skipped lanes, kept guided decoding quarantined, kept CSL headlines blocked by unresolved Exp5474 tautology, recorded arc_registry_delta=0, and preserved hardware_speedup_claim=false",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "lane_truth_table": {
+    "active_constraints": {
+      "claim_boundary": "Descriptors are useful and exact-fallback checked, but hardware mappings remain advisory.",
+      "classification": "bounded",
+      "evidence": {
+        "descriptor_count": 8,
+        "exact_fallback_completeness": 1.0,
+        "hardware_speedup_claim": false,
+        "subproblem_descriptor_ready": true,
+        "unsafe_false_accept_count": 0
+      },
+      "lane": "active_constraints",
+      "source_artifacts": [
+        "results/experiment_5491_active_constraint_subproblem_descriptor_v498.json"
+      ]
+    },
+    "arc": {
+      "claim_boundary": "The trajectory attempt produced diagnostics but no banked ARC registry delta.",
+      "classification": "honest_null",
+      "evidence": {
+        "arc_registry_delta": 0,
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=16.147303318139166 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "failure_mode": "bounded_budget_no_target_level_reproduction",
+        "flagged_adversarial": true,
+        "new_level_banked": false,
+        "post_levels_reproduced": 2,
+        "precheck_ready": true,
+        "prior_levels_reproduced": 2,
+        "registry_updated": false,
+        "selected_game": "dc22",
+        "target_level": 3
+      },
+      "lane": "arc",
+      "source_artifacts": [
+        "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+        "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+      ]
+    },
+    "concept_sota_telemetry": {
+      "claim_boundary": "No V498 concept-attributed local SOTA artifact exists, so no concept SOTA headline.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [],
+        "sota_concept_evidence_ready": false
+      },
+      "lane": "concept_sota_telemetry",
+      "source_artifacts": [
+        "results/experiment_5486_sota_concept_evidence_panel_v498.json"
+      ]
+    },
+    "csl_corrigendum": {
+      "claim_boundary": "Exp5474 tautology cannot be considered resolved without the Exp5484 corrigendum.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [
+          "| 2026-07-09 13:52 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:52 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:54 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:54 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:56 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:56 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |"
+        ],
+        "tautology_flag_resolved": false
+      },
+      "lane": "csl_corrigendum",
+      "source_artifacts": [
+        "results/experiment_5484_csl_tautology_corrigendum_v498.json"
+      ]
+    },
+    "csl_independent_metrics": {
+      "claim_boundary": "Independent CSL metrics did not run cleanly, so no V498 SOTA CSL headline is allowed.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "conductor_evidence": [
+          "| 2026-07-09 13:52 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+          "| 2026-07-09 13:54 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+          "| 2026-07-09 13:56 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |"
+        ],
+        "csl_independent_scale_ready": false,
+        "csl_latent_replay_ready": false,
+        "exp5488_missing": true,
+        "exp5489_missing": true,
+        "metric_independence_clean": false
+      },
+      "lane": "csl_independent_metrics",
+      "source_artifacts": [
+        "results/experiment_5488_csl_latent_exploration_replay_v498.json",
+        "results/experiment_5489_sota_csl_independent_metrics_v498.json"
+      ]
+    },
+    "fixed_point_kan_ledger": {
+      "claim_boundary": "The fixed-point ledger was gate-blocked by the missing Exp5488 replay.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "conductor_evidence": [],
+        "csl_kan_fixed_point_ready": false,
+        "gates_evaluated": [
+          {
+            "actual": null,
+            "artifact_field": "csl_latent_replay_ready",
+            "expected": true,
+            "op": "==",
+            "passed": false,
+            "reason": "upstream artifact not found for task id 'exp5488-csl-latent-exploration-replay-v498'",
+            "upstream": "exp5488-csl-latent-exploration-replay-v498"
+          }
+        ],
+        "status": "blocked"
+      },
+      "lane": "fixed_point_kan_ledger",
+      "source_artifacts": [
+        "results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json"
+      ]
+    },
+    "guided_decoding": {
+      "claim_boundary": "Guided decoding remains quarantined; no V498 artifact lifts it.",
+      "classification": "blocked",
+      "evidence": {
+        "guided_decoding_quarantine_lifted": false,
+        "quarantine_status": "quarantined"
+      },
+      "lane": "guided_decoding",
+      "source_artifacts": [
+        "results/experiment_5482_transition_v498.json"
+      ]
+    },
+    "hardware": {
+      "claim_boundary": "Hardware evidence is receipt-only; matched hashes do not support a speedup claim.",
+      "classification": "bounded",
+      "evidence": {
+        "authenticated_board_identity_count": 1,
+        "blocked_boards": {
+          "gatemate": {
+            "blocked_reason": "blocked_gatemate_jtag_identity",
+            "board_identity": "gatemate",
+            "diagnostic_only": true,
+            "identity": null,
+            "reachable": false,
+            "status_exit_code": 0,
+            "workload_execution_attempted": false
+          },
+          "kv260": {
+            "blocked_reason": "blocked_kv260_ssh_identity",
+            "board_identity": "kv260",
+            "identity": null,
+            "reachable": false,
+            "status_exit_code": 124,
+            "workload_execution_attempted": false
+          }
+        },
+        "hardware_receipts_ready": true,
+        "hardware_speedup_claim": false,
+        "reachable_boards": [
+          "polarfire"
+        ],
+        "result_hash_match_rate": 1.0
+      },
+      "lane": "hardware",
+      "source_artifacts": [
+        "results/experiment_5492_hardware_receipts_v498.json"
+      ]
+    },
+    "helper_contracts": {
+      "claim_boundary": "NL helper contracts were not produced; prior helper-lemma evidence remains prior only.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [],
+        "helper_contract_ready": false
+      },
+      "lane": "helper_contracts",
+      "source_artifacts": [
+        "results/experiment_5487_helper_contract_nl_spec_repair_v498.json"
+      ]
+    },
+    "preference_maxsat_verification": {
+      "claim_boundary": "Preference-MaxSAT fixture evidence is absent; later fallback rows do not replace it.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [
+          "| 2026-07-09 13:45 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+          "| 2026-07-09 13:47 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+          "| 2026-07-09 13:50 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |"
+        ],
+        "preference_maxsat_fixture_ready": false
+      },
+      "lane": "preference_maxsat_verification",
+      "source_artifacts": [
+        "results/experiment_5485_preference_maxsat_claim_fixture_v498.json"
+      ]
+    },
+    "synthesis": {
+      "claim_boundary": "This capstone is aggregation-only and cannot manufacture missing upstream evidence.",
+      "classification": "bounded",
+      "evidence": {
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "upstream_missing_count": 7
+      },
+      "lane": "synthesis",
+      "source_artifacts": [
+        "results/experiment_5495_capstone_v498.json"
+      ]
+    },
+    "transition_source_delta": {
+      "claim_boundary": "Transition evidence exists, but the .498 execution source-delta artifact is absent.",
+      "classification": "bounded",
+      "evidence": {
+        "conductor_evidence": [],
+        "source_delta_missing": true,
+        "transition_complete": true
+      },
+      "lane": "transition_source_delta",
+      "source_artifacts": [
+        "results/experiment_5482_transition_v498.json",
+        "results/experiment_5483_source_delta_v498.json"
+      ]
+    }
+  },
+  "milestone": "2026.07.498",
+  "next_recommendations": [
+    {
+      "action": "Run a small deterministic metric-independence corrigendum and latent replay before any GGUF CSL panel.",
+      "evidence": "Exp5484, Exp5488, and Exp5489 are absent or gate-blocked; Exp5490 blocked on missing Exp5488.",
+      "move": "Recover CSL from the actual blocker chain.",
+      "rank": 1,
+      "retirement": "Retire Exp5474-style SOTA CSL scale headlines if the same tautology remains."
+    },
+    {
+      "action": "Produce a minimal Preference-MaxSAT fixture with executable references, then rerun concept telemetry.",
+      "evidence": "Exp5485 is missing, while Exp5491 only used built-in Preference-MaxSAT fallback rows.",
+      "move": "Rebuild hard-plus-soft verification as a deterministic core.",
+      "rank": 2,
+      "retirement": "Retire concept SOTA telemetry tasks that run without the exact hard/soft fixture."
+    },
+    {
+      "action": "Add a different trajectory enumerator or world-model induction path before the next live target.",
+      "evidence": "Exp5494 produced two hypotheses and 47 live attempts but banked no level and was flagged.",
+      "move": "Change ARC trajectory generation rather than repeating no-bank attempts.",
+      "rank": 3,
+      "retirement": "Retire same-target or same-mechanism ARC reruns that only reproduce bounded-budget no-bank diagnostics."
+    }
+  ],
+  "prd_gap_table": {
+    "ARC live-path grounding": {
+      "evidence_lanes": [
+        "arc"
+      ],
+      "gap": "Trajectory induction selected a target but banked arc_registry_delta=0.",
+      "next_action": "Change the ARC generator/search mechanism before another same-depth no-bank attempt.",
+      "status": "honest_null"
+    },
+    "FR-11 continuous self-learning": {
+      "evidence_lanes": [
+        "csl_corrigendum",
+        "csl_independent_metrics",
+        "fixed_point_kan_ledger"
+      ],
+      "gap": "Exp5474 tautology remains unresolved and V498 independent-metrics artifacts are absent or gate-blocked.",
+      "next_action": "Run the metric-independence corrigendum and deterministic latent replay before any SOTA CSL rerun.",
+      "status": "blocked_unresolved_tautology"
+    },
+    "FR-12 verifiable reasoning": {
+      "evidence_lanes": [
+        "preference_maxsat_verification",
+        "active_constraints"
+      ],
+      "gap": "Active descriptors have exact fallback, but the planned Preference-MaxSAT claim fixture is missing.",
+      "next_action": "Recover Exp5485 or fold its hard/soft rows into a smaller deterministic verifier fixture.",
+      "status": "bounded"
+    },
+    "hardware acceleration": {
+      "evidence_lanes": [
+        "hardware",
+        "fixed_point_kan_ledger"
+      ],
+      "gap": "PolarFire receipts matched hashes, KV260/GateMate stayed blocked, and no hardware speedup is supported.",
+      "next_action": "Keep receipt collection, but retire speedup language until embedded matched baselines exist.",
+      "status": "bounded_receipts_only"
+    },
+    "local SOTA runtime": {
+      "evidence_lanes": [
+        "concept_sota_telemetry",
+        "csl_independent_metrics"
+      ],
+      "gap": "The V498 concept SOTA and independent CSL SOTA panels did not produce artifacts.",
+      "next_action": "Gate future GGUF tasks on runtime preflight plus clean deterministic fixtures.",
+      "status": "blocked_no_v498_sota_panel"
+    }
+  },
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:9d22edcb539cb81db1df8755769388424a85c0f52b19f9a615d945c5130b7e1e"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5495,
+  "reproducibility_checksum": "sha256:64da861e81dbaa812fd273d136d973192a43db2997fff46cd9a81153297eb2af",
+  "result_path": "results/experiment_5495_capstone_v498.json",
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5495.capstone_v498.v1",
+  "skipped_by_gate_lanes": [
+    {
+      "claim_boundary": "Exp5474 tautology cannot be considered resolved without the Exp5484 corrigendum.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [
+          "| 2026-07-09 13:52 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:52 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:54 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:54 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:56 utc | gated csl latent exploration replay with independe | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+          "| 2026-07-09 13:56 utc | gated local sota csl scale-up with independent met | gate_block | pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |"
+        ],
+        "tautology_flag_resolved": false
+      },
+      "lane": "csl_corrigendum",
+      "source_artifacts": [
+        "results/experiment_5484_csl_tautology_corrigendum_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "Preference-MaxSAT fixture evidence is absent; later fallback rows do not replace it.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [
+          "| 2026-07-09 13:45 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+          "| 2026-07-09 13:47 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+          "| 2026-07-09 13:50 utc | gated local sota concept evidence telemetry panel | gate_block | pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |"
+        ],
+        "preference_maxsat_fixture_ready": false
+      },
+      "lane": "preference_maxsat_verification",
+      "source_artifacts": [
+        "results/experiment_5485_preference_maxsat_claim_fixture_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "No V498 concept-attributed local SOTA artifact exists, so no concept SOTA headline.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [],
+        "sota_concept_evidence_ready": false
+      },
+      "lane": "concept_sota_telemetry",
+      "source_artifacts": [
+        "results/experiment_5486_sota_concept_evidence_panel_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "NL helper contracts were not produced; prior helper-lemma evidence remains prior only.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "artifact_missing": true,
+        "conductor_evidence": [],
+        "helper_contract_ready": false
+      },
+      "lane": "helper_contracts",
+      "source_artifacts": [
+        "results/experiment_5487_helper_contract_nl_spec_repair_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "Independent CSL metrics did not run cleanly, so no V498 SOTA CSL headline is allowed.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "conductor_evidence": [
+          "| 2026-07-09 13:52 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+          "| 2026-07-09 13:54 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+          "| 2026-07-09 13:56 utc | csl kan fixed-point update ledger for hardware-com | gate_block | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |"
+        ],
+        "csl_independent_scale_ready": false,
+        "csl_latent_replay_ready": false,
+        "exp5488_missing": true,
+        "exp5489_missing": true,
+        "metric_independence_clean": false
+      },
+      "lane": "csl_independent_metrics",
+      "source_artifacts": [
+        "results/experiment_5488_csl_latent_exploration_replay_v498.json",
+        "results/experiment_5489_sota_csl_independent_metrics_v498.json"
+      ]
+    },
+    {
+      "claim_boundary": "The fixed-point ledger was gate-blocked by the missing Exp5488 replay.",
+      "classification": "skipped_by_gate",
+      "evidence": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "conductor_evidence": [],
+        "csl_kan_fixed_point_ready": false,
+        "gates_evaluated": [
+          {
+            "actual": null,
+            "artifact_field": "csl_latent_replay_ready",
+            "expected": true,
+            "op": "==",
+            "passed": false,
+            "reason": "upstream artifact not found for task id 'exp5488-csl-latent-exploration-replay-v498'",
+            "upstream": "exp5488-csl-latent-exploration-replay-v498"
+          }
+        ],
+        "status": "blocked"
+      },
+      "lane": "fixed_point_kan_ledger",
+      "source_artifacts": [
+        "results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json"
+      ]
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "research-program.md",
+      "read_only": true,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/prd.md",
+      "read_only": true,
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/architecture.md",
+      "read_only": true,
+      "sha256": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:9d22edcb539cb81db1df8755769388424a85c0f52b19f9a615d945c5130b7e1e"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:bd4b3e1e5f66c1ac1a8101689f668d08e7b99cfcf4638e1bd396d67f8144c918"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:767a32869be8291d3fc8ca2ec145fbd54b8f7134ab2c3b43d5ceb3dac6cb4491"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:e6eed32197cb1ad5af3a4ab7164830da5f0cc5656b473dc6f21598734a49edc6"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:3089242bf203901347b144347976c4c45576935a453cfc11892805d041a60026"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5495",
+    "SCENARIO-REPORT-5495",
+    "SCENARIO-REPORT-5495-GATE-SKIPS"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5495_capstone_v498.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5495_capstone_v498.py -m pytest tests/python/test_experiment_5495_capstone_v498.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5495_capstone_v498.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": "ops/e2e-test-plan.md review: Exp5495 is aggregation-only; no fresh training, PyO3, ARC solve, or hardware workload applies",
+      "outcome": "not_applicable"
+    }
+  ]
+}
