@@ -1,0 +1,1084 @@
+{
+  "contract_reports": [
+    {
+      "claim_reports": [
+        {
+          "claim_id": "support_entailment_required",
+          "compiled_to": "executable_predicate",
+          "contract_id": "support_acceptance_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_exact_optimum",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "support"
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_assignment_equals",
+          "predicate_result": {
+            "candidate_id": "support_exact_optimum",
+            "expected": "entailed",
+            "observed": "entailed",
+            "variable": "support"
+          },
+          "predicate_type": "assignment_equals",
+          "span_text": "support='entailed'",
+          "typed_claim": "support"
+        },
+        {
+          "claim_id": "scope_bounded_required",
+          "compiled_to": "executable_predicate",
+          "contract_id": "support_acceptance_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_exact_optimum",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "scope"
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_assignment_equals",
+          "predicate_result": {
+            "candidate_id": "support_exact_optimum",
+            "expected": "bounded",
+            "observed": "bounded",
+            "variable": "scope"
+          },
+          "predicate_type": "assignment_equals",
+          "span_text": "scope='bounded'",
+          "typed_claim": "scope"
+        },
+        {
+          "claim_id": "primary_source_soft_only",
+          "compiled_to": "executable_predicate",
+          "contract_id": "support_acceptance_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_soft_preference_declared",
+          "predicate_result": {
+            "declared": true,
+            "instance_id": "claim_support_preference",
+            "preference_id": "SP_PRIMARY_SOURCE",
+            "value": "primary",
+            "variable": "source_quality"
+          },
+          "predicate_type": "soft_preference_declared",
+          "span_text": "source_quality='primary' is a soft preference",
+          "typed_claim": "source_quality"
+        }
+      ],
+      "contract_id": "support_acceptance_contract",
+      "contract_kind": "acceptance_rule",
+      "expected_verdict": "accepted",
+      "false_accept": false,
+      "observed_verdict": "accepted",
+      "repair_attempted": false,
+      "useful_repair": false,
+      "verdict_matches": true
+    },
+    {
+      "claim_reports": [
+        {
+          "claim_id": "safe_label_required",
+          "compiled_to": "executable_predicate",
+          "contract_id": "safety_acceptance_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_exact_optimum",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "safety"
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_assignment_equals",
+          "predicate_result": {
+            "candidate_id": "safety_exact_optimum",
+            "expected": "safe",
+            "observed": "safe",
+            "variable": "safety"
+          },
+          "predicate_type": "assignment_equals",
+          "span_text": "safety='safe'",
+          "typed_claim": "safety"
+        },
+        {
+          "claim_id": "citation_present_required",
+          "compiled_to": "executable_predicate",
+          "contract_id": "safety_acceptance_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_exact_optimum",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "citation"
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_assignment_equals",
+          "predicate_result": {
+            "candidate_id": "safety_exact_optimum",
+            "expected": "present",
+            "observed": "present",
+            "variable": "citation"
+          },
+          "predicate_type": "assignment_equals",
+          "span_text": "citation='present'",
+          "typed_claim": "citation"
+        },
+        {
+          "claim_id": "accept_action_soft_preferred",
+          "compiled_to": "executable_predicate",
+          "contract_id": "safety_acceptance_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_safety_conflict",
+              "preference_id": "SP_ACCEPT_WHEN_SAFE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "action"
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_soft_preference_declared",
+          "predicate_result": {
+            "declared": true,
+            "instance_id": "claim_safety_conflict",
+            "preference_id": "SP_ACCEPT_WHEN_SAFE",
+            "value": "accept",
+            "variable": "action"
+          },
+          "predicate_type": "soft_preference_declared",
+          "span_text": "action='accept' is the soft-preferred",
+          "typed_claim": "action"
+        }
+      ],
+      "contract_id": "safety_acceptance_contract",
+      "contract_kind": "acceptance_rule",
+      "expected_verdict": "accepted",
+      "false_accept": false,
+      "observed_verdict": "accepted",
+      "repair_attempted": false,
+      "useful_repair": false,
+      "verdict_matches": true
+    },
+    {
+      "claim_reports": [
+        {
+          "claim_id": "support_candidate_is_soft_suboptimal",
+          "compiled_to": "executable_predicate",
+          "contract_id": "support_soft_repair_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_candidate_soft_suboptimal",
+          "predicate_result": {
+            "candidate_id": "support_soft_suboptimal",
+            "hard_constraints_pass": true,
+            "reference_agreement": false,
+            "reference_objective_score": 11.0,
+            "soft_score": 4.0
+          },
+          "predicate_type": "candidate_soft_suboptimal",
+          "span_text": "support_soft_suboptimal",
+          "typed_claim": "source_quality"
+        },
+        {
+          "claim_id": "support_repair_matches_reference",
+          "compiled_to": "executable_predicate",
+          "contract_id": "support_soft_repair_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_repair_to_reference",
+          "predicate_result": {
+            "after_assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "after_hard_constraints_pass": true,
+            "after_reference_agreement": true,
+            "after_soft_score": 11.0,
+            "before_assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "before_reference_agreement": false,
+            "candidate_id": "support_soft_suboptimal"
+          },
+          "predicate_type": "repair_to_reference",
+          "span_text": "changing source_quality from secondary to primary",
+          "typed_claim": "source_quality"
+        }
+      ],
+      "contract_id": "support_soft_repair_contract",
+      "contract_kind": "repair_rule",
+      "expected_verdict": "accepted",
+      "false_accept": false,
+      "observed_verdict": "accepted",
+      "repair_attempted": true,
+      "useful_repair": true,
+      "verdict_matches": true
+    },
+    {
+      "claim_reports": [
+        {
+          "claim_id": "safety_candidate_is_soft_suboptimal",
+          "compiled_to": "executable_predicate",
+          "contract_id": "safety_soft_repair_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_candidate_soft_suboptimal",
+          "predicate_result": {
+            "candidate_id": "safety_soft_suboptimal",
+            "hard_constraints_pass": true,
+            "reference_agreement": false,
+            "reference_objective_score": 12.0,
+            "soft_score": 7.0
+          },
+          "predicate_type": "candidate_soft_suboptimal",
+          "span_text": "safety_soft_suboptimal",
+          "typed_claim": "action"
+        },
+        {
+          "claim_id": "safety_repair_matches_reference",
+          "compiled_to": "executable_predicate",
+          "contract_id": "safety_soft_repair_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_repair_to_reference",
+          "predicate_result": {
+            "after_assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "after_hard_constraints_pass": true,
+            "after_reference_agreement": true,
+            "after_soft_score": 12.0,
+            "before_assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "before_reference_agreement": false,
+            "candidate_id": "safety_soft_suboptimal"
+          },
+          "predicate_type": "repair_to_reference",
+          "span_text": "changing action from reject to accept",
+          "typed_claim": "action"
+        }
+      ],
+      "contract_id": "safety_soft_repair_contract",
+      "contract_kind": "repair_rule",
+      "expected_verdict": "accepted",
+      "false_accept": false,
+      "observed_verdict": "accepted",
+      "repair_attempted": true,
+      "useful_repair": true,
+      "verdict_matches": true
+    },
+    {
+      "claim_reports": [
+        {
+          "claim_id": "confidence_has_no_typed_evidence",
+          "compiled_to": "unsupported_label",
+          "contract_id": "baseless_confidence_contract",
+          "evidence_refs": [],
+          "expected_label": "unsupported",
+          "label_matches": true,
+          "observed_label": "unsupported",
+          "predicate_path": "",
+          "predicate_result": {
+            "reason": "confidence prose has no Exp5499 typed claim or executable evidence"
+          },
+          "predicate_type": "unsupported",
+          "span_text": "sounds confident",
+          "typed_claim": "confidence"
+        }
+      ],
+      "contract_id": "baseless_confidence_contract",
+      "contract_kind": "negative_control_baseless",
+      "expected_verdict": "refused_unsupported",
+      "false_accept": false,
+      "observed_verdict": "refused_unsupported",
+      "repair_attempted": false,
+      "useful_repair": false,
+      "verdict_matches": true
+    },
+    {
+      "claim_reports": [
+        {
+          "claim_id": "hard_violation_primary_source_present",
+          "compiled_to": "executable_predicate",
+          "contract_id": "contradicted_support_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ],
+          "expected_label": "entailed",
+          "label_matches": true,
+          "observed_label": "entailed",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_assignment_equals",
+          "predicate_result": {
+            "candidate_id": "support_hard_violation",
+            "expected": "primary",
+            "observed": "primary",
+            "variable": "source_quality"
+          },
+          "predicate_type": "assignment_equals",
+          "span_text": "source_quality is primary",
+          "typed_claim": "source_quality"
+        },
+        {
+          "claim_id": "hard_violation_acceptance_authorized",
+          "compiled_to": "executable_predicate",
+          "contract_id": "contradicted_support_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "contradicted",
+          "label_matches": true,
+          "observed_label": "contradicted",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_candidate_acceptance_authorized",
+          "predicate_result": {
+            "authorized": false,
+            "candidate_id": "support_hard_violation",
+            "hard_constraints_pass": false,
+            "reference_agreement": false
+          },
+          "predicate_type": "candidate_acceptance_authorized",
+          "span_text": "candidate should be accepted",
+          "typed_claim": "support"
+        }
+      ],
+      "contract_id": "contradicted_support_contract",
+      "contract_kind": "negative_control_contradicted",
+      "expected_verdict": "rejected_contradicted",
+      "false_accept": false,
+      "observed_verdict": "rejected_contradicted",
+      "repair_attempted": false,
+      "useful_repair": false,
+      "verdict_matches": true
+    },
+    {
+      "claim_reports": [
+        {
+          "claim_id": "primary_source_soft_preference_not_sufficient",
+          "compiled_to": "executable_predicate",
+          "contract_id": "overbroad_primary_contract",
+          "evidence_refs": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ],
+          "expected_label": "overbroad",
+          "label_matches": true,
+          "observed_label": "overbroad",
+          "predicate_path": "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_soft_preference_sufficient",
+          "predicate_result": {
+            "counterexample_candidate_id": "support_hard_violation",
+            "counterexample_hard_constraints_pass": false,
+            "counterexample_has_soft_value": true,
+            "counterexample_reference_agreement": false,
+            "declared": true,
+            "instance_id": "claim_support_preference",
+            "preference_id": "SP_PRIMARY_SOURCE",
+            "value": "primary",
+            "variable": "source_quality"
+          },
+          "predicate_type": "soft_preference_sufficient",
+          "span_text": "primary-source soft preference sufficient",
+          "typed_claim": "source_quality"
+        }
+      ],
+      "contract_id": "overbroad_primary_contract",
+      "contract_kind": "negative_control_overbroad",
+      "expected_verdict": "rejected_overbroad",
+      "false_accept": false,
+      "observed_verdict": "rejected_overbroad",
+      "repair_attempted": false,
+      "useful_repair": false,
+      "verdict_matches": true
+    }
+  ],
+  "executable_predicate_paths": [
+    "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_assignment_equals",
+    "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_soft_preference_declared",
+    "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_candidate_soft_suboptimal",
+    "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_repair_to_reference",
+    "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_candidate_acceptance_authorized",
+    "python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py::predicate_soft_preference_sufficient"
+  ],
+  "experiment": 5501,
+  "experiment_id": "exp5501-helper-contract-hierarchical-claim-fixture-v499",
+  "false_accept_count": 0,
+  "false_accept_rate": 0.0,
+  "field_principles": {
+    "executable_predicate_paths": "lists the exact predicate entry points that make helper text auditable.",
+    "false_accept_rate": "guards against unsupported, contradicted, or overbroad helper text being accepted.",
+    "helper_contract_fixture_path": "points to the checked helper-contract fixture rather than relying on prose in the result artifact.",
+    "helper_contract_fixture_ready": "downstream gate for the hierarchical helper-contract fixture.",
+    "honest_verdict": "terminal status; start with complete: or blocked: and do not launder unsupported text.",
+    "inference_substrate": "declares verifier-scoring against cached candidates rather than live model inference.",
+    "local_claim_label_accuracy": "measures local span labels against exact predicates before rolling up.",
+    "num_helper_contracts": "bounds the fixture size and prevents silent row loss.",
+    "rolled_up_verdict_accuracy": "measures RT4CHART-style local-to-global verdict agreement.",
+    "test_paths": "identifies the tests that assert the REQ/SCENARIO contract.",
+    "unsupported_contract_count": "counts helper text refused because it lacked executable support.",
+    "useful_repair_rate": "counts only repair suggestions that become exact-reference agreements."
+  },
+  "fixture": {
+    "fixture_id": "helper_contract_hierarchical_claim_fixture_5501",
+    "guided_decoding_used": false,
+    "helper_contracts": [
+      {
+        "claim_spans": [
+          {
+            "char_end": 77,
+            "char_start": 59,
+            "claim_id": "support_entailment_required",
+            "evidence_refs": [
+              {
+                "candidate_id": "support_exact_optimum",
+                "instance_id": "claim_support_preference",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "support"
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "support_exact_optimum",
+              "equals": "entailed",
+              "instance_id": "claim_support_preference",
+              "type": "assignment_equals",
+              "variable": "support"
+            },
+            "span_text": "support='entailed'",
+            "typed_claim": "support"
+          },
+          {
+            "char_end": 97,
+            "char_start": 82,
+            "claim_id": "scope_bounded_required",
+            "evidence_refs": [
+              {
+                "candidate_id": "support_exact_optimum",
+                "instance_id": "claim_support_preference",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "scope"
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "support_exact_optimum",
+              "equals": "bounded",
+              "instance_id": "claim_support_preference",
+              "type": "assignment_equals",
+              "variable": "scope"
+            },
+            "span_text": "scope='bounded'",
+            "typed_claim": "scope"
+          },
+          {
+            "char_end": 144,
+            "char_start": 99,
+            "claim_id": "primary_source_soft_only",
+            "evidence_refs": [
+              {
+                "candidate_id": null,
+                "instance_id": "claim_support_preference",
+                "preference_id": "SP_PRIMARY_SOURCE",
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "source_quality"
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "type": "soft_preference_declared",
+              "value": "primary",
+              "variable": "source_quality"
+            },
+            "span_text": "source_quality='primary' is a soft preference",
+            "typed_claim": "source_quality"
+          }
+        ],
+        "contract_id": "support_acceptance_contract",
+        "contract_kind": "acceptance_rule",
+        "evidence_map": {
+          "primary_source_soft_only": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ],
+          "scope_bounded_required": [
+            {
+              "candidate_id": "support_exact_optimum",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "scope"
+            }
+          ],
+          "support_entailment_required": [
+            {
+              "candidate_id": "support_exact_optimum",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "support"
+            }
+          ]
+        },
+        "expected_verdict": "accepted",
+        "repair_attempt": false,
+        "statement": "For claim_support_preference, the helper accepts only when support='entailed' and scope='bounded'; source_quality='primary' is a soft preference after hard support and scope pass."
+      },
+      {
+        "claim_spans": [
+          {
+            "char_end": 69,
+            "char_start": 56,
+            "claim_id": "safe_label_required",
+            "evidence_refs": [
+              {
+                "candidate_id": "safety_exact_optimum",
+                "instance_id": "claim_safety_conflict",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "safety"
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "safety_exact_optimum",
+              "equals": "safe",
+              "instance_id": "claim_safety_conflict",
+              "type": "assignment_equals",
+              "variable": "safety"
+            },
+            "span_text": "safety='safe'",
+            "typed_claim": "safety"
+          },
+          {
+            "char_end": 92,
+            "char_start": 74,
+            "claim_id": "citation_present_required",
+            "evidence_refs": [
+              {
+                "candidate_id": "safety_exact_optimum",
+                "instance_id": "claim_safety_conflict",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "citation"
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "safety_exact_optimum",
+              "equals": "present",
+              "instance_id": "claim_safety_conflict",
+              "type": "assignment_equals",
+              "variable": "citation"
+            },
+            "span_text": "citation='present'",
+            "typed_claim": "citation"
+          },
+          {
+            "char_end": 131,
+            "char_start": 94,
+            "claim_id": "accept_action_soft_preferred",
+            "evidence_refs": [
+              {
+                "candidate_id": null,
+                "instance_id": "claim_safety_conflict",
+                "preference_id": "SP_ACCEPT_WHEN_SAFE",
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "action"
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "instance_id": "claim_safety_conflict",
+              "preference_id": "SP_ACCEPT_WHEN_SAFE",
+              "type": "soft_preference_declared",
+              "value": "accept",
+              "variable": "action"
+            },
+            "span_text": "action='accept' is the soft-preferred",
+            "typed_claim": "action"
+          }
+        ],
+        "contract_id": "safety_acceptance_contract",
+        "contract_kind": "acceptance_rule",
+        "evidence_map": {
+          "accept_action_soft_preferred": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_safety_conflict",
+              "preference_id": "SP_ACCEPT_WHEN_SAFE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "action"
+            }
+          ],
+          "citation_present_required": [
+            {
+              "candidate_id": "safety_exact_optimum",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "citation"
+            }
+          ],
+          "safe_label_required": [
+            {
+              "candidate_id": "safety_exact_optimum",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "safety"
+            }
+          ]
+        },
+        "expected_verdict": "accepted",
+        "repair_attempt": false,
+        "statement": "For claim_safety_conflict, the helper accepts only when safety='safe' and citation='present'; action='accept' is the soft-preferred validator action."
+      },
+      {
+        "claim_spans": [
+          {
+            "char_end": 27,
+            "char_start": 4,
+            "claim_id": "support_candidate_is_soft_suboptimal",
+            "evidence_refs": [
+              {
+                "candidate_id": "support_soft_suboptimal",
+                "instance_id": "claim_support_preference",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": null
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "type": "candidate_soft_suboptimal"
+            },
+            "span_text": "support_soft_suboptimal",
+            "typed_claim": "source_quality"
+          },
+          {
+            "char_end": 78,
+            "char_start": 29,
+            "claim_id": "support_repair_matches_reference",
+            "evidence_refs": [
+              {
+                "candidate_id": "support_soft_suboptimal",
+                "instance_id": "claim_support_preference",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": null
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "repair_assignment": {
+                "scope": "bounded",
+                "source_quality": "primary",
+                "support": "entailed"
+              },
+              "type": "repair_to_reference"
+            },
+            "span_text": "changing source_quality from secondary to primary",
+            "typed_claim": "source_quality"
+          }
+        ],
+        "contract_id": "support_soft_repair_contract",
+        "contract_kind": "repair_rule",
+        "evidence_map": {
+          "support_candidate_is_soft_suboptimal": [
+            {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "support_repair_matches_reference": [
+            {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ]
+        },
+        "expected_verdict": "accepted",
+        "repair_attempt": true,
+        "statement": "For support_soft_suboptimal, changing source_quality from secondary to primary while preserving support and scope repairs the helper to the exact reference assignment."
+      },
+      {
+        "claim_spans": [
+          {
+            "char_end": 26,
+            "char_start": 4,
+            "claim_id": "safety_candidate_is_soft_suboptimal",
+            "evidence_refs": [
+              {
+                "candidate_id": "safety_soft_suboptimal",
+                "instance_id": "claim_safety_conflict",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": null
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "type": "candidate_soft_suboptimal"
+            },
+            "span_text": "safety_soft_suboptimal",
+            "typed_claim": "action"
+          },
+          {
+            "char_end": 65,
+            "char_start": 28,
+            "claim_id": "safety_repair_matches_reference",
+            "evidence_refs": [
+              {
+                "candidate_id": "safety_soft_suboptimal",
+                "instance_id": "claim_safety_conflict",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": null
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "repair_assignment": {
+                "action": "accept",
+                "citation": "present",
+                "safety": "safe"
+              },
+              "type": "repair_to_reference"
+            },
+            "span_text": "changing action from reject to accept",
+            "typed_claim": "action"
+          }
+        ],
+        "contract_id": "safety_soft_repair_contract",
+        "contract_kind": "repair_rule",
+        "evidence_map": {
+          "safety_candidate_is_soft_suboptimal": [
+            {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "safety_repair_matches_reference": [
+            {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ]
+        },
+        "expected_verdict": "accepted",
+        "repair_attempt": true,
+        "statement": "For safety_soft_suboptimal, changing action from reject to accept while preserving safety and citation repairs the helper to the exact reference assignment."
+      },
+      {
+        "claim_spans": [
+          {
+            "char_end": 35,
+            "char_start": 19,
+            "claim_id": "confidence_has_no_typed_evidence",
+            "evidence_refs": [],
+            "expected_label": "unsupported",
+            "predicate": {
+              "reason": "confidence prose has no Exp5499 typed claim or executable evidence",
+              "type": "unsupported"
+            },
+            "span_text": "sounds confident",
+            "typed_claim": "confidence"
+          }
+        ],
+        "contract_id": "baseless_confidence_contract",
+        "contract_kind": "negative_control_baseless",
+        "evidence_map": {
+          "confidence_has_no_typed_evidence": []
+        },
+        "expected_verdict": "refused_unsupported",
+        "repair_attempt": false,
+        "statement": "Because the helper sounds confident, claim_support_preference should be accepted."
+      },
+      {
+        "claim_spans": [
+          {
+            "char_end": 89,
+            "char_start": 64,
+            "claim_id": "hard_violation_primary_source_present",
+            "evidence_refs": [
+              {
+                "candidate_id": "support_hard_violation",
+                "instance_id": "claim_support_preference",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "source_quality"
+              }
+            ],
+            "expected_label": "entailed",
+            "predicate": {
+              "candidate_id": "support_hard_violation",
+              "equals": "primary",
+              "instance_id": "claim_support_preference",
+              "type": "assignment_equals",
+              "variable": "source_quality"
+            },
+            "span_text": "source_quality is primary",
+            "typed_claim": "source_quality"
+          },
+          {
+            "char_end": 55,
+            "char_start": 27,
+            "claim_id": "hard_violation_acceptance_authorized",
+            "evidence_refs": [
+              {
+                "candidate_id": "support_hard_violation",
+                "instance_id": "claim_support_preference",
+                "preference_id": null,
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": null
+              }
+            ],
+            "expected_label": "contradicted",
+            "predicate": {
+              "candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "type": "candidate_acceptance_authorized"
+            },
+            "span_text": "candidate should be accepted",
+            "typed_claim": "support"
+          }
+        ],
+        "contract_id": "contradicted_support_contract",
+        "contract_kind": "negative_control_contradicted",
+        "evidence_map": {
+          "hard_violation_acceptance_authorized": [
+            {
+              "candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "hard_violation_primary_source_present": [
+            {
+              "candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ]
+        },
+        "expected_verdict": "rejected_contradicted",
+        "repair_attempt": false,
+        "statement": "The support_hard_violation candidate should be accepted because source_quality is primary even when support is unsupported."
+      },
+      {
+        "claim_spans": [
+          {
+            "char_end": 135,
+            "char_start": 94,
+            "claim_id": "primary_source_soft_preference_not_sufficient",
+            "evidence_refs": [
+              {
+                "candidate_id": null,
+                "instance_id": "claim_support_preference",
+                "preference_id": "SP_PRIMARY_SOURCE",
+                "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+                "variable": "source_quality"
+              }
+            ],
+            "expected_label": "overbroad",
+            "predicate": {
+              "counterexample_candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "type": "soft_preference_sufficient",
+              "value": "primary",
+              "variable": "source_quality"
+            },
+            "span_text": "primary-source soft preference sufficient",
+            "typed_claim": "source_quality"
+          }
+        ],
+        "contract_id": "overbroad_primary_contract",
+        "contract_kind": "negative_control_overbroad",
+        "evidence_map": {
+          "primary_source_soft_preference_not_sufficient": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ]
+        },
+        "expected_verdict": "rejected_overbroad",
+        "repair_attempt": false,
+        "statement": "Any candidate with source_quality='primary' can be accepted regardless of support, making the primary-source soft preference sufficient for helper acceptance."
+      }
+    ],
+    "schema": "carnot.fixture.helper_contract_hierarchical_claims.v1",
+    "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+    "source_fixture_sha256": "5e5bc66f0f9eee90c83468d3cdcc294938975ee7b2b872f902ccb88ee782d02a",
+    "token_steering_used": false
+  },
+  "helper_contract_fixture_path": "results/helper_contract_hierarchical_claim_fixture_5501/fixture.json",
+  "helper_contract_fixture_ready": true,
+  "honest_verdict": "complete: helper_contract_hierarchical_claim_fixture_ready_exact_predicates_authoritative",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "local_claim_label_accuracy": 1.0,
+  "milestone": "2026.07.499",
+  "num_helper_contracts": 7,
+  "random_seed": 5501,
+  "readiness_blockers": [],
+  "repair_attempt_count": 2,
+  "reproducibility_checksum": "fbbfd463f234d681e4b9deab43b15e0630eefd460ab8e9302e20db6cb4532995",
+  "research_conductor_modified": false,
+  "rolled_up_verdict_accuracy": 1.0,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5501.helper_contract_hierarchical_claim_fixture.v499",
+  "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+  "spec_refs": [
+    "REQ-VERIFY-5501",
+    "SCENARIO-VERIFY-5501",
+    "REQ-VERIFY-5499"
+  ],
+  "test_paths": [
+    "tests/python/test_experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py -q --no-cov -n 0 -o addopts='' && .venv/bin/coverage report --include='*/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py' --fail-under=100 --show-missing",
+      "outcome": "passed_100_percent_new_module_coverage"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py tests/python/test_experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py && .venv/bin/ruff format --check python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py tests/python/test_experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py",
+      "outcome": "passed"
+    }
+  ],
+  "unsupported_contract_count": 1,
+  "useful_repair_count": 2,
+  "useful_repair_rate": 1.0
+}

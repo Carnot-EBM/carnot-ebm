@@ -1,0 +1,531 @@
+{
+  "fixture_id": "helper_contract_hierarchical_claim_fixture_5501",
+  "guided_decoding_used": false,
+  "helper_contracts": [
+    {
+      "claim_spans": [
+        {
+          "char_end": 77,
+          "char_start": 59,
+          "claim_id": "support_entailment_required",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_exact_optimum",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "support"
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "support_exact_optimum",
+            "equals": "entailed",
+            "instance_id": "claim_support_preference",
+            "type": "assignment_equals",
+            "variable": "support"
+          },
+          "span_text": "support='entailed'",
+          "typed_claim": "support"
+        },
+        {
+          "char_end": 97,
+          "char_start": 82,
+          "claim_id": "scope_bounded_required",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_exact_optimum",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "scope"
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "support_exact_optimum",
+            "equals": "bounded",
+            "instance_id": "claim_support_preference",
+            "type": "assignment_equals",
+            "variable": "scope"
+          },
+          "span_text": "scope='bounded'",
+          "typed_claim": "scope"
+        },
+        {
+          "char_end": 144,
+          "char_start": 99,
+          "claim_id": "primary_source_soft_only",
+          "evidence_refs": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "instance_id": "claim_support_preference",
+            "preference_id": "SP_PRIMARY_SOURCE",
+            "type": "soft_preference_declared",
+            "value": "primary",
+            "variable": "source_quality"
+          },
+          "span_text": "source_quality='primary' is a soft preference",
+          "typed_claim": "source_quality"
+        }
+      ],
+      "contract_id": "support_acceptance_contract",
+      "contract_kind": "acceptance_rule",
+      "evidence_map": {
+        "primary_source_soft_only": [
+          {
+            "candidate_id": null,
+            "instance_id": "claim_support_preference",
+            "preference_id": "SP_PRIMARY_SOURCE",
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "source_quality"
+          }
+        ],
+        "scope_bounded_required": [
+          {
+            "candidate_id": "support_exact_optimum",
+            "instance_id": "claim_support_preference",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "scope"
+          }
+        ],
+        "support_entailment_required": [
+          {
+            "candidate_id": "support_exact_optimum",
+            "instance_id": "claim_support_preference",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "support"
+          }
+        ]
+      },
+      "expected_verdict": "accepted",
+      "repair_attempt": false,
+      "statement": "For claim_support_preference, the helper accepts only when support='entailed' and scope='bounded'; source_quality='primary' is a soft preference after hard support and scope pass."
+    },
+    {
+      "claim_spans": [
+        {
+          "char_end": 69,
+          "char_start": 56,
+          "claim_id": "safe_label_required",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_exact_optimum",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "safety"
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "safety_exact_optimum",
+            "equals": "safe",
+            "instance_id": "claim_safety_conflict",
+            "type": "assignment_equals",
+            "variable": "safety"
+          },
+          "span_text": "safety='safe'",
+          "typed_claim": "safety"
+        },
+        {
+          "char_end": 92,
+          "char_start": 74,
+          "claim_id": "citation_present_required",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_exact_optimum",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "citation"
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "safety_exact_optimum",
+            "equals": "present",
+            "instance_id": "claim_safety_conflict",
+            "type": "assignment_equals",
+            "variable": "citation"
+          },
+          "span_text": "citation='present'",
+          "typed_claim": "citation"
+        },
+        {
+          "char_end": 131,
+          "char_start": 94,
+          "claim_id": "accept_action_soft_preferred",
+          "evidence_refs": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_safety_conflict",
+              "preference_id": "SP_ACCEPT_WHEN_SAFE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "action"
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "instance_id": "claim_safety_conflict",
+            "preference_id": "SP_ACCEPT_WHEN_SAFE",
+            "type": "soft_preference_declared",
+            "value": "accept",
+            "variable": "action"
+          },
+          "span_text": "action='accept' is the soft-preferred",
+          "typed_claim": "action"
+        }
+      ],
+      "contract_id": "safety_acceptance_contract",
+      "contract_kind": "acceptance_rule",
+      "evidence_map": {
+        "accept_action_soft_preferred": [
+          {
+            "candidate_id": null,
+            "instance_id": "claim_safety_conflict",
+            "preference_id": "SP_ACCEPT_WHEN_SAFE",
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "action"
+          }
+        ],
+        "citation_present_required": [
+          {
+            "candidate_id": "safety_exact_optimum",
+            "instance_id": "claim_safety_conflict",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "citation"
+          }
+        ],
+        "safe_label_required": [
+          {
+            "candidate_id": "safety_exact_optimum",
+            "instance_id": "claim_safety_conflict",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "safety"
+          }
+        ]
+      },
+      "expected_verdict": "accepted",
+      "repair_attempt": false,
+      "statement": "For claim_safety_conflict, the helper accepts only when safety='safe' and citation='present'; action='accept' is the soft-preferred validator action."
+    },
+    {
+      "claim_spans": [
+        {
+          "char_end": 27,
+          "char_start": 4,
+          "claim_id": "support_candidate_is_soft_suboptimal",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "support_soft_suboptimal",
+            "instance_id": "claim_support_preference",
+            "type": "candidate_soft_suboptimal"
+          },
+          "span_text": "support_soft_suboptimal",
+          "typed_claim": "source_quality"
+        },
+        {
+          "char_end": 78,
+          "char_start": 29,
+          "claim_id": "support_repair_matches_reference",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_soft_suboptimal",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "support_soft_suboptimal",
+            "instance_id": "claim_support_preference",
+            "repair_assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "type": "repair_to_reference"
+          },
+          "span_text": "changing source_quality from secondary to primary",
+          "typed_claim": "source_quality"
+        }
+      ],
+      "contract_id": "support_soft_repair_contract",
+      "contract_kind": "repair_rule",
+      "evidence_map": {
+        "support_candidate_is_soft_suboptimal": [
+          {
+            "candidate_id": "support_soft_suboptimal",
+            "instance_id": "claim_support_preference",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": null
+          }
+        ],
+        "support_repair_matches_reference": [
+          {
+            "candidate_id": "support_soft_suboptimal",
+            "instance_id": "claim_support_preference",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": null
+          }
+        ]
+      },
+      "expected_verdict": "accepted",
+      "repair_attempt": true,
+      "statement": "For support_soft_suboptimal, changing source_quality from secondary to primary while preserving support and scope repairs the helper to the exact reference assignment."
+    },
+    {
+      "claim_spans": [
+        {
+          "char_end": 26,
+          "char_start": 4,
+          "claim_id": "safety_candidate_is_soft_suboptimal",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "safety_soft_suboptimal",
+            "instance_id": "claim_safety_conflict",
+            "type": "candidate_soft_suboptimal"
+          },
+          "span_text": "safety_soft_suboptimal",
+          "typed_claim": "action"
+        },
+        {
+          "char_end": 65,
+          "char_start": 28,
+          "claim_id": "safety_repair_matches_reference",
+          "evidence_refs": [
+            {
+              "candidate_id": "safety_soft_suboptimal",
+              "instance_id": "claim_safety_conflict",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "safety_soft_suboptimal",
+            "instance_id": "claim_safety_conflict",
+            "repair_assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "type": "repair_to_reference"
+          },
+          "span_text": "changing action from reject to accept",
+          "typed_claim": "action"
+        }
+      ],
+      "contract_id": "safety_soft_repair_contract",
+      "contract_kind": "repair_rule",
+      "evidence_map": {
+        "safety_candidate_is_soft_suboptimal": [
+          {
+            "candidate_id": "safety_soft_suboptimal",
+            "instance_id": "claim_safety_conflict",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": null
+          }
+        ],
+        "safety_repair_matches_reference": [
+          {
+            "candidate_id": "safety_soft_suboptimal",
+            "instance_id": "claim_safety_conflict",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": null
+          }
+        ]
+      },
+      "expected_verdict": "accepted",
+      "repair_attempt": true,
+      "statement": "For safety_soft_suboptimal, changing action from reject to accept while preserving safety and citation repairs the helper to the exact reference assignment."
+    },
+    {
+      "claim_spans": [
+        {
+          "char_end": 35,
+          "char_start": 19,
+          "claim_id": "confidence_has_no_typed_evidence",
+          "evidence_refs": [],
+          "expected_label": "unsupported",
+          "predicate": {
+            "reason": "confidence prose has no Exp5499 typed claim or executable evidence",
+            "type": "unsupported"
+          },
+          "span_text": "sounds confident",
+          "typed_claim": "confidence"
+        }
+      ],
+      "contract_id": "baseless_confidence_contract",
+      "contract_kind": "negative_control_baseless",
+      "evidence_map": {
+        "confidence_has_no_typed_evidence": []
+      },
+      "expected_verdict": "refused_unsupported",
+      "repair_attempt": false,
+      "statement": "Because the helper sounds confident, claim_support_preference should be accepted."
+    },
+    {
+      "claim_spans": [
+        {
+          "char_end": 89,
+          "char_start": 64,
+          "claim_id": "hard_violation_primary_source_present",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ],
+          "expected_label": "entailed",
+          "predicate": {
+            "candidate_id": "support_hard_violation",
+            "equals": "primary",
+            "instance_id": "claim_support_preference",
+            "type": "assignment_equals",
+            "variable": "source_quality"
+          },
+          "span_text": "source_quality is primary",
+          "typed_claim": "source_quality"
+        },
+        {
+          "char_end": 55,
+          "char_start": 27,
+          "claim_id": "hard_violation_acceptance_authorized",
+          "evidence_refs": [
+            {
+              "candidate_id": "support_hard_violation",
+              "instance_id": "claim_support_preference",
+              "preference_id": null,
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": null
+            }
+          ],
+          "expected_label": "contradicted",
+          "predicate": {
+            "candidate_id": "support_hard_violation",
+            "instance_id": "claim_support_preference",
+            "type": "candidate_acceptance_authorized"
+          },
+          "span_text": "candidate should be accepted",
+          "typed_claim": "support"
+        }
+      ],
+      "contract_id": "contradicted_support_contract",
+      "contract_kind": "negative_control_contradicted",
+      "evidence_map": {
+        "hard_violation_acceptance_authorized": [
+          {
+            "candidate_id": "support_hard_violation",
+            "instance_id": "claim_support_preference",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": null
+          }
+        ],
+        "hard_violation_primary_source_present": [
+          {
+            "candidate_id": "support_hard_violation",
+            "instance_id": "claim_support_preference",
+            "preference_id": null,
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "source_quality"
+          }
+        ]
+      },
+      "expected_verdict": "rejected_contradicted",
+      "repair_attempt": false,
+      "statement": "The support_hard_violation candidate should be accepted because source_quality is primary even when support is unsupported."
+    },
+    {
+      "claim_spans": [
+        {
+          "char_end": 135,
+          "char_start": 94,
+          "claim_id": "primary_source_soft_preference_not_sufficient",
+          "evidence_refs": [
+            {
+              "candidate_id": null,
+              "instance_id": "claim_support_preference",
+              "preference_id": "SP_PRIMARY_SOURCE",
+              "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+              "variable": "source_quality"
+            }
+          ],
+          "expected_label": "overbroad",
+          "predicate": {
+            "counterexample_candidate_id": "support_hard_violation",
+            "instance_id": "claim_support_preference",
+            "preference_id": "SP_PRIMARY_SOURCE",
+            "type": "soft_preference_sufficient",
+            "value": "primary",
+            "variable": "source_quality"
+          },
+          "span_text": "primary-source soft preference sufficient",
+          "typed_claim": "source_quality"
+        }
+      ],
+      "contract_id": "overbroad_primary_contract",
+      "contract_kind": "negative_control_overbroad",
+      "evidence_map": {
+        "primary_source_soft_preference_not_sufficient": [
+          {
+            "candidate_id": null,
+            "instance_id": "claim_support_preference",
+            "preference_id": "SP_PRIMARY_SOURCE",
+            "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+            "variable": "source_quality"
+          }
+        ]
+      },
+      "expected_verdict": "rejected_overbroad",
+      "repair_attempt": false,
+      "statement": "Any candidate with source_quality='primary' can be accepted regardless of support, making the primary-source soft preference sufficient for helper acceptance."
+    }
+  ],
+  "schema": "carnot.fixture.helper_contract_hierarchical_claims.v1",
+  "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+  "source_fixture_sha256": "5e5bc66f0f9eee90c83468d3cdcc294938975ee7b2b872f902ccb88ee782d02a",
+  "token_steering_used": false
+}
