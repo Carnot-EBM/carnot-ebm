@@ -1534,6 +1534,53 @@ Required field principles:
 - `random_seed`: principle "deterministic seed for the bounded live attempt."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5493: Registry-Only Trajectory Target Precheck
+
+Experiment 5493 SHALL write
+`results/experiment_5493_arc_trajectory_target_precheck_v498.json` as a
+no-solve ARC registry and live-path precheck for the follow-on Exp5494
+trajectory/option-induction attempt. The workflow SHALL read
+`ops/arc_solve_registry.yaml`, `ops/exclusion_manifest.yaml`,
+`ops/known-issues.md`, and the recent Exp5479/Exp5480 target artifacts before
+selecting any target. It SHALL report each candidate game's current
+`levels_reproduced`, reject any already reproduced target level, and avoid
+recent no-bank targets `sb26:L3`, `bp35:L3`, `ka59:L2`, `cn04:L4`, and
+`re86:L3` unless the registry proves a different target level and mechanism.
+
+The workflow SHALL reject retired generic exploration-signal scopes from
+Exp5154, including novelty-only, curiosity-only, energy-as-fitness
+quality-diversity, and archive-granularity reruns. It SHALL prefer a target
+whose registry row records live-path mechanism hooks and enough visible
+runtime-observation structure for the live agent to form trajectory or option
+hypotheses from its own observations. It SHALL NOT read game source, run
+offline ground-truth BFS, or build or credit a per-game hand adapter. When no
+eligible target exists, it SHALL emit a clean blocked no-target artifact rather
+than selecting a stale duplicate.
+
+The result artifact SHALL include `registry_path`,
+`excluded_recent_no_bank_targets`, `duplicate_solve_avoided`,
+`selected_game`, `selected_target_level`, `prior_levels_reproduced`,
+`proposed_live_mechanism`, `trajectory_induction_preconditions`,
+`offline_bfs_used`, `per_game_adapter_used`,
+`arc_trajectory_precheck_ready`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `registry_path`: principle "must equal ops/arc_solve_registry.yaml."
+- `excluded_recent_no_bank_targets`: principle "auditable list containing sb26:L3, bp35:L3, ka59:L2, cn04:L4, and re86:L3 unless the selected target proves a different level and mechanism."
+- `duplicate_solve_avoided`: principle "bare bool proving the selected target is strictly deeper than the registry depth."
+- `selected_game`: principle "selected game id, or empty string when no eligible target exists."
+- `selected_target_level`: principle "selected next target level as a bare int, or 0 when blocked."
+- `prior_levels_reproduced`: principle "authoritative registry depth for the selected game before Exp5493."
+- `proposed_live_mechanism`: principle "one-line live-path mechanism to hand to Exp5494, not a retired exploration-signal rerun."
+- `trajectory_induction_preconditions`: principle "list of live-observation prerequisites that must hold before Exp5494 attempts the target."
+- `offline_bfs_used`: principle "must be false; this precheck is registry-only and no offline ground-truth BFS is run."
+- `per_game_adapter_used`: principle "must be false; target eligibility is not credited to a hand adapter."
+- `arc_trajectory_precheck_ready`: principle "true only when a non-duplicate, non-recent-no-bank, non-retired-scope target is selected."
+- `inference_substrate`: principle "must equal registry_precheck_no_solve."
+- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without a solve claim."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -2138,3 +2185,32 @@ depth
 Then and only then `offline_reproduced=true`, `reproduced_levels>=1`,
 `new_level_banked=true`, `registry_updated=true`, `first_win_trace_path` is
 non-empty, and `honest_verdict` starts with `complete:`.
+
+### SCENARIO-ARC-FCP-5493: Trajectory Target Precheck Avoids Stale And Retired Lanes
+
+Given the registry records `sb26`, `bp35`, and `re86` at L2, `ka59` at L1,
+`cn04` at L3, and `dc22` at L2
+When experiment 5493 evaluates trajectory/option-induction candidates
+Then it excludes `sb26:L3`, `bp35:L3`, `ka59:L2`, `cn04:L4`, and `re86:L3`,
+rejects any candidate target whose level is already reproduced, rejects
+novelty-only, curiosity-only, energy-as-fitness quality-diversity, and
+archive-granularity reruns from the Exp5154 retired scope, and selects the
+first remaining target with live-observation trajectory hooks.
+
+Given `dc22:L3` survives those filters
+When experiment 5493 writes
+`results/experiment_5493_arc_trajectory_target_precheck_v498.json`
+Then `registry_path=ops/arc_solve_registry.yaml`,
+`duplicate_solve_avoided=true`, `selected_game=dc22`,
+`selected_target_level=3`, `prior_levels_reproduced=2`,
+`offline_bfs_used=false`, `per_game_adapter_used=false`,
+`arc_trajectory_precheck_ready=true`,
+`inference_substrate=registry_precheck_no_solve`, and `honest_verdict`
+starts with `complete:`.
+
+Given no candidate survives duplicate, recent no-bank, and retired-scope
+filters
+When experiment 5493 writes its artifact
+Then `selected_game` is an empty string, `selected_target_level=0`,
+`arc_trajectory_precheck_ready=false`, `offline_bfs_used=false`,
+`per_game_adapter_used=false`, and `honest_verdict` starts with `blocked:`.
