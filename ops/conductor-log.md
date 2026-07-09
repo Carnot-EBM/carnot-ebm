@@ -10597,3 +10597,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 01:38 UTC | Transition .495 outcomes into .496 execution conte | OK | 87 passed, 1 warning in 10.62s |
 | 2026-07-09 01:53 UTC | Execution-time 2025-2026 source delta for .496 | OK | 121 passed, 1 warning in 9.00s |
 | 2026-07-09 02:16 UTC | Guided-decoding tautology corrigendum for Exp5444 | OK | 88 passed, 1 warning in 11.22s |
+| 2026-07-09 02:38 UTC | Gated local SOTA distortion-guarded verifier-poten | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
