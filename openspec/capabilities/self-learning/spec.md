@@ -20411,3 +20411,133 @@ fine-tuned, or mutated.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5460 | Planned (`python/carnot/experiment_5460_csl_policy_bandit_v496.py`, `results/experiment_5460_csl_policy_bandit_v496.json`) | Planned (`tests/python/test_experiment_5460_csl_policy_bandit_v496.py`) |
+
+---
+
+## REQ-LEARN-5461: Gated Local SOTA CSL Memory Routing Panel v496
+
+Experiment 5461 SHALL run only when
+`results/experiment_5460_csl_policy_bandit_v496.json` reports
+`csl_policy_ready=true`. The experiment SHALL load the Exp5460 governed policy
+state, record a stable `policy_state_checksum`, and use that state only for
+memory/action routing. The base local SOTA GGUF model SHALL remain frozen:
+learning is limited to memory receipts and policy routing state, never model or
+adapter weights. The artifact SHALL declare
+`inference_substrate="live_llm_inference_with_frozen_policy_state"`.
+
+The preflight SHALL verify a CUDA-enabled llama.cpp GGUF runtime, non-empty
+local `model_path` entries, and GPU offload receipts. `MODEL_SPECS` SHALL list
+the three mandated local SOTA GGUF IDs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models MAY be recorded only as
+smoke-test fallbacks and SHALL NOT support a headline row. At least one
+mandated local SOTA GGUF model SHALL complete inference before readiness can be
+true.
+
+The bounded stateful stream SHALL compare no-memory, naive-ICL,
+governed-memory, and policy-selected conditions over identical task IDs under
+negative-transfer pressure. Prompts, memory receipts, policy receipts, token
+and context cost, verifier cost, runtime backend, GGUF path, GPU offload
+evidence, and seeds SHALL be recorded per row. Exact deterministic task
+verifiers or witnesses SHALL score rows; model self-verdicts SHALL NOT be
+accepted as final authority.
+The phrase Exact deterministic task verifiers or witnesses is intentionally
+recorded contiguously for test traceability.
+
+The result artifact SHALL be
+`results/experiment_5461_gated_sota_csl_memory_routing_v496.json` and SHALL
+write row evidence to
+`results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl`. The
+artifact SHALL include `preconditions_checked`, `model_specs`,
+`headline_required_any_of`, `runtime_backend`, `gpu_offload_verified`,
+`condition_names`, `row_results_path`, `policy_state_checksum`,
+`quality_delta_vs_no_memory`, `quality_delta_vs_naive_icl`,
+`context_efficiency_delta`, `verifier_cost_delta`,
+`negative_transfer_deflection_rate`, `no_weight_mutation`,
+`csl_sota_memory_routing_ready`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL also include field principles documenting
+those required fields.
+
+The required field principles SHALL be:
+
+- `preconditions_checked`: Compute gate transparency.
+- `model_specs`: Mandated SOTA GGUF provenance.
+- `headline_required_any_of`: Headline model boundary.
+- `runtime_backend`: Live GGUF runtime provenance.
+- `gpu_offload_verified`: No CPU-only headline.
+- `condition_names`: Baseline comparability.
+- `row_results_path`: Inspectable row evidence.
+- `policy_state_checksum`: Frozen policy-state provenance.
+- `quality_delta_vs_no_memory`: Utility against no-memory.
+- `quality_delta_vs_naive_icl`: Utility against naive memory.
+- `context_efficiency_delta`: Context budget accounting.
+- `verifier_cost_delta`: Verifier budget accounting.
+- `negative_transfer_deflection_rate`: Unsafe memory-transfer guard.
+- `no_weight_mutation`: Frozen-model boundary.
+- `csl_sota_memory_routing_ready`: Downstream gate.
+- `inference_substrate`: Explicit learning substrate.
+- `honest_verdict`: Terminal status; starts with complete: or blocked:.
+
+### REQ-LEARN-5461 Sub-requirements
+
+- REQ-LEARN-5461-1: The precondition check SHALL block readiness unless
+  Exp5460 reports `csl_policy_ready=true`, all three mandated SOTA GGUF specs
+  are listed, at least one mandated local GGUF path is selected, CUDA is
+  visible, and llama.cpp GPU offload evidence is recorded.
+- REQ-LEARN-5461-2: The condition set SHALL be exactly no-memory, naive-ICL,
+  governed-memory, and policy-selected memory over identical task IDs.
+- REQ-LEARN-5461-3: Every row SHALL record prompt hash, bounded prompt text,
+  seed, model spec, GGUF path, runtime backend, GPU offload receipt, memory
+  receipt, policy receipt, context/token cost, verifier cost, model output, and
+  an exact verifier witness.
+- REQ-LEARN-5461-4: Row quality SHALL be derived only from exact task
+  verifiers or deterministic witnesses, never from model self-verdicts.
+- REQ-LEARN-5461-5: Negative-transfer and stale-memory rows SHALL count as
+  deflected only when the policy-selected condition avoids the stale or
+  poisoned answer and passes the exact verifier.
+- REQ-LEARN-5461-6: `csl_sota_memory_routing_ready` SHALL be true only when all
+  required fields are present with principles, row evidence is written, at
+  least one mandated SOTA GGUF completes live inference with GPU offload, policy
+  state is checksummed, quality does not regress against no-memory or naive-ICL,
+  context and verifier costs improve against naive-ICL, negative transfer is
+  deflected, tests are recorded, inference substrate is
+  `live_llm_inference_with_frozen_policy_state`, and model/adaptor weights do
+  not mutate.
+
+### SCENARIO-LEARN-5461-PRECONDITIONS: Local SOTA Runtime Gates Headline Rows
+
+**Given** Exp5460 policy state is ready and mandated local GGUF model specs are
+resolved
+**When** the Exp5461 preflight runs
+**Then** readiness requires CUDA visibility, llama.cpp GPU offload support,
+non-empty local model paths, and a selected mandated model
+**And** missing runtime or offload evidence blocks headline readiness.
+
+### SCENARIO-LEARN-5461-CONDITIONS: Policy Routing Is Compared Against Memory Baselines
+
+**Given** a bounded stateful stream with repeated, stale, and poisoned memory
+tasks
+**When** no-memory, naive-ICL, governed-memory, and policy-selected conditions
+run over the same task IDs
+**Then** aggregate quality and cost deltas are computed from condition rows
+**And** policy-selected rows carry Exp5460 policy receipts.
+
+### SCENARIO-LEARN-5461-VERIFIERS: Exact Witnesses Score Rows
+
+**Given** a live model output claims an answer
+**When** the row is scored
+**Then** the exact verifier extracts a deterministic answer witness
+**And** model self-verdict text cannot set final correctness.
+
+### SCENARIO-LEARN-5461-NO-WEIGHT-MUTATION: Learning Is Policy State Only
+
+**Given** the local GGUF is loaded for inference
+**When** the panel completes
+**Then** model file receipts are unchanged
+**And** the artifact reports no model or adapter weights written or fine-tuned.
+
+## Implementation Status (Exp 5461)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5461 | Planned (`python/carnot/experiment_5461_gated_sota_csl_memory_routing_v496.py`, `results/experiment_5461_gated_sota_csl_memory_routing_v496.json`) | Planned (`tests/python/test_experiment_5461_gated_sota_csl_memory_routing_v496.py`) |
