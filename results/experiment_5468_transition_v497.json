@@ -1,0 +1,563 @@
+{
+  "blocked_lanes": [
+    {
+      "authority_gate": "metric independence plus exact final authority; live SOTA rerun still must be clean",
+      "claim_boundary": "No guided-decoding headline; the clean posthoc corrigendum did not make the fresh live rerun clean.",
+      "classification": "blocked",
+      "headline_blockers": [
+        "flagged_adversarial",
+        "tautology",
+        "readiness_false",
+        "lcd_bias_failed"
+      ],
+      "lane": "guided_decoding",
+      "source_artifacts": [
+        "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
+        "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
+        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
+        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl"
+      ],
+      "terminal_evidence": {
+        "exp5456": {
+          "guided_decoding_corrigendum_clean": true,
+          "honest_verdict": "complete: guided-decoding corrigendum clean; Exp5444 headline readiness blocked",
+          "invalid_tautological_fields": [
+            "abstention_rate",
+            "action_unreachability_rate",
+            "guided_validity_delta_vs_unconstrained",
+            "semantic_false_accept_rate"
+          ],
+          "prior_flagged_adversarial": true
+        },
+        "exp5456_graph": {},
+        "exp5457": {
+          "corrigendum_pending": [
+            {
+              "detail": "accepted_validity_rate=0.6666666666666666 and guided_validity_delta_vs_unconstrained=0.6666666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+              "kind": "TAUTOLOGY",
+              "severity": "critical"
+            }
+          ],
+          "exact_final_authority": true,
+          "flagged_adversarial": true,
+          "gpu_offload_verified": true,
+          "lcd_bias_check_passed": false,
+          "metric_independence_checks_passed": true,
+          "runtime_backend": "llama_cpp_python_cuda_gguf",
+          "verifier_guided_decoding_ready": false
+        }
+      }
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "authority_gate": "exact solver remains final authority; p-bit and p-dit assumptions are advisory",
+      "claim_boundary": "Bounded bridge only; no hardware timing or final-answer authority claim.",
+      "classification": "bounded",
+      "headline_blockers": [],
+      "lane": "pbit_pdit_bridge",
+      "source_artifacts": [
+        "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json"
+      ],
+      "terminal_evidence": {
+        "exp5462": {
+          "claim_limits": [
+            "deterministic CPU-local solver fixture",
+            "active constraints, p-bit samples, and p-dit samples are advisory only",
+            "minimal cores diagnose bad assumptions but do not certify final answers",
+            "exact unrestricted solving rejects or overwrites unsafe assumptions",
+            "no hardware timing-ratio receipt or hardware speedup claim"
+          ],
+          "fallback_completeness_rate": 1.0,
+          "hardware_speedup_claim": false,
+          "honest_verdict": "complete: active, p-bit, and p-dit assumptions stayed advisory across 5 fixtures, minimal cores diagnosed bad assumptions, fallback completeness was 1.0, and no hardware speedup was claimed",
+          "minimal_core_pbit_bridge_ready": true,
+          "solver_authoritative": true,
+          "unsafe_false_accepts": 0
+        }
+      }
+    },
+    {
+      "authority_gate": "hashes match before timing comparison; reachable-board receipts only",
+      "claim_boundary": "Bounded CPU/Polarfire timing facts only; KV260 unreachable and no speedup claim.",
+      "classification": "bounded",
+      "headline_blockers": [],
+      "lane": "hardware_receipts",
+      "source_artifacts": [
+        "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json"
+      ],
+      "terminal_evidence": {
+        "exp5463": {
+          "board_reachability": {
+            "kv260": {
+              "blocked_reason": "blocked_kv260_ssh",
+              "check_method": "ssh_only",
+              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+              "identity": "kria",
+              "reachable": false,
+              "workload_execution_attempted": false
+            },
+            "polarfire": {
+              "blocked_reason": null,
+              "check_method": "ssh",
+              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+              "identity": "polarfire",
+              "reachable": true,
+              "workload_execution_attempted": true
+            }
+          },
+          "gated_upstream_ready": true,
+          "hardware_receipts_ready": true,
+          "hardware_speedup_claim": false,
+          "hashes_match_before_timing_compare": true,
+          "honest_verdict": "complete: Exp5462-gated CPU and reachable-board p-bit/p-dit timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false",
+          "timing_comparison": {
+            "boards_compared": [
+              "polarfire"
+            ],
+            "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
+            "comparison_performed": true,
+            "hardware_speedup_claim": false,
+            "hashes_match_before_timing_compare": true,
+            "ratios": {
+              "polarfire": 79.905463487
+            }
+          },
+          "timing_repeat_counts": {
+            "cpu": 10,
+            "kv260": 0,
+            "polarfire": 10
+          }
+        }
+      }
+    },
+    {
+      "authority_gate": "aggregation from upstream artifacts only",
+      "claim_boundary": "Bounded capstone/PRD synthesis only; it is not independent experimental evidence.",
+      "classification": "bounded",
+      "headline_blockers": [],
+      "lane": "synthesis",
+      "source_artifacts": [
+        "results/experiment_5466_prd_gap_agent_failure_table_v496.json"
+      ],
+      "terminal_evidence": {
+        "exp5466": {
+          "artifact_paths_read": [
+            "results/experiment_5454_transition_v496.json",
+            "results/experiment_5455_source_delta_v496.json",
+            "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
+            "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
+            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
+            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl",
+            "results/experiment_5458_minimal_core_claim_repair_v496.json",
+            "results/experiment_5459_constraint_distortion_guard_v496.json",
+            "results/experiment_5460_csl_policy_bandit_v496.json",
+            "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl",
+            "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
+            "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl",
+            "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json",
+            "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json",
+            "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+            "results/experiment_5464_arc_perception_feature_receipts_v496.json",
+            "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
+          ],
+          "honest_verdict": "complete: .496 PRD gap table read actual Exp5454-Exp5465 artifacts; closed=8, partial=2, blocked=2, honest_null=2, missing=0, skipped=0.",
+          "missing_artifacts": [],
+          "skipped_gated_tasks": [],
+          "status": "complete"
+        }
+      }
+    }
+  ],
+  "closed_lanes": [
+    {
+      "authority_gate": "accepted repairs are rechecked by exact final authority",
+      "claim_boundary": "Headline is deterministic repair acceptance after exact recheck, not learned repair quality.",
+      "classification": "headline_ready",
+      "headline_blockers": [],
+      "lane": "minimal_core_repair",
+      "source_artifacts": [
+        "results/experiment_5458_minimal_core_claim_repair_v496.json"
+      ],
+      "terminal_evidence": {
+        "exp5458": {
+          "exact_final_authority": true,
+          "honest_verdict": "complete: deterministic minimal-core repairs accepted after exact recheck",
+          "minimal_core_repair_ready": true,
+          "repaired_accept_rate_after_exact_recheck": 1.0,
+          "unrepaired_reject_rate": 1.0
+        }
+      }
+    },
+    {
+      "authority_gate": "exact deterministic facts remain final authority",
+      "claim_boundary": "Headline is limited to deterministic distortion-guard readiness, not broad factuality scoring.",
+      "classification": "headline_ready",
+      "headline_blockers": [],
+      "lane": "distortion_guards",
+      "source_artifacts": [
+        "results/experiment_5459_constraint_distortion_guard_v496.json"
+      ],
+      "terminal_evidence": {
+        "exp5459": {
+          "distortion_guard_ready": true,
+          "exact_final_authority": true,
+          "fixture_count": 10,
+          "honest_verdict": "complete: deterministic constraint-distortion guard ready",
+          "truth_preserving_compliance_rate": 0.3,
+          "unsupported_fabrication_rate": 0.1
+        }
+      }
+    },
+    {
+      "authority_gate": "frozen-model policy receipts, rollback, and no model-weight mutation",
+      "claim_boundary": "Headline is governed policy routing with sidecar state only; no weight learning claim.",
+      "classification": "headline_ready",
+      "headline_blockers": [],
+      "lane": "csl_policy",
+      "source_artifacts": [
+        "results/experiment_5460_csl_policy_bandit_v496.json",
+        "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl"
+      ],
+      "terminal_evidence": {
+        "exp5460": {
+          "context_efficiency_delta": 0.525287,
+          "continuous_self_learning_task": true,
+          "csl_policy_ready": true,
+          "cumulative_constraint_violations": 0,
+          "honest_verdict": "complete: frozen-model governed CSL policy updated rollbackable action and memory routing statistics with zero constraint violations and no model weight mutation",
+          "negative_transfer_deflection_rate": 1.0,
+          "no_weight_mutation": true,
+          "policy_update_count": 9,
+          "quality_delta_vs_naive_icl": 0.073
+        }
+      }
+    },
+    {
+      "authority_gate": "GGUF/llama.cpp GPU offload receipts plus frozen weights",
+      "claim_boundary": "Headline is live GGUF memory routing under frozen weights, not model fine-tuning.",
+      "classification": "headline_ready",
+      "headline_blockers": [],
+      "lane": "sota_csl",
+      "source_artifacts": [
+        "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
+        "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl"
+      ],
+      "terminal_evidence": {
+        "exp5461": {
+          "csl_sota_memory_routing_ready": true,
+          "gpu_offload_verified": true,
+          "honest_verdict": "complete: live SOTA GGUF governed CSL memory routing preserved quality and deflected negative transfer with frozen weights",
+          "negative_transfer_deflection_rate": 1.0,
+          "no_weight_mutation": true,
+          "precondition_details": {
+            "all_mandated_model_paths_available": true,
+            "all_passed": true,
+            "blocked_preconditions": [],
+            "cuda_visible": true,
+            "exp5460_csl_policy_ready": true,
+            "gpu_offload_preflight": true,
+            "mandated_model_specs_present": true,
+            "runtime_backend": "llama_cpp_python_cuda_gguf",
+            "selected_model_available": true
+          },
+          "quality_delta_vs_naive_icl": 0.5,
+          "quality_delta_vs_no_memory": 0.75,
+          "runtime_backend": "llama_cpp_python_cuda_gguf"
+        }
+      }
+    }
+  ],
+  "conductor_unchanged": true,
+  "experiment": "experiment_5468_transition_v497",
+  "experiment_id": "exp5468-transition-v497",
+  "failed_preconditions": [],
+  "field_principles": {
+    "blocked_lanes": "no unsupported claims",
+    "bounded_lanes": "bounded evidence boundary",
+    "closed_lanes": "positive evidence boundary",
+    "conductor_unchanged": "user prohibition",
+    "honest_null_lanes": "null-result honesty",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "no hidden live model inference",
+    "milestone": "conductor route key",
+    "next_task_range": "activation sanity",
+    "previous_milestone": "traceability",
+    "previous_task_range": "closed execution boundary",
+    "prior_capstone_path": "provenance",
+    "roadmap_yaml_unchanged": "user prohibition"
+  },
+  "honest_null_lanes": [
+    {
+      "authority_gate": "ARC provenance gate: live-agent self-discovery plus offline reproduction for any bank",
+      "claim_boundary": "Metric/perception precheck is useful, but no new ARC level is claimed without offline reproduction.",
+      "classification": "honest_null",
+      "headline_blockers": [],
+      "lane": "arc",
+      "source_artifacts": [
+        "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+        "results/experiment_5464_arc_perception_feature_receipts_v496.json",
+        "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
+      ],
+      "terminal_evidence": {
+        "exp5464": {
+          "arc_metric_integrity_ready": true,
+          "duplicate_solve_rejected": true,
+          "honest_verdict": "complete: ARC live-path metric integrity and perception precheck ready for Exp5465; no solve claimed",
+          "off_path_solve_rejected": true,
+          "registry_precheck_performed": true,
+          "target_shortlist": [
+            {
+              "current_reproduced_levels": 2,
+              "game": "bp35",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "bp35:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "sb26",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "sb26:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "g50t",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "g50t:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "dc22",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "dc22:L3",
+              "target_level": 3
+            },
+            {
+              "current_reproduced_levels": 2,
+              "game": "sp80",
+              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
+              "target": "sp80:L3",
+              "target_level": 3
+            }
+          ]
+        },
+        "exp5465": {
+          "failure_mode": "bounded_budget_no_levelup",
+          "honest_verdict": "honest_null: bp35 L3 bounded_budget_no_levelup",
+          "live_attempt_count": 1,
+          "new_level_banked": false,
+          "offline_reproduced": false,
+          "registry_precheck_performed": true,
+          "solve_provenance": "live_agent_self_discovery",
+          "source_reading_used": false,
+          "target_game": "bp35"
+        }
+      }
+    },
+    {
+      "authority_gate": "matched repeatable speedup evidence is required before any speedup claim",
+      "claim_boundary": "No hardware speedup is claimed; timing ratios are receipt facts only.",
+      "classification": "honest_null",
+      "lane": "hardware_speedup_claim",
+      "source_artifacts": [
+        "results/experiment_5467_capstone_v496.json"
+      ],
+      "terminal_evidence": {
+        "board_reachability": {
+          "kv260": {
+            "blocked_reason": "blocked_kv260_ssh",
+            "check_method": "ssh_only",
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+            "identity": "kria",
+            "reachable": false,
+            "workload_execution_attempted": false
+          },
+          "polarfire": {
+            "blocked_reason": null,
+            "check_method": "ssh",
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+            "identity": "polarfire",
+            "reachable": true,
+            "workload_execution_attempted": true
+          }
+        },
+        "hardware_speedup_claim": false,
+        "timing_comparison": {
+          "boards_compared": [
+            "polarfire"
+          ],
+          "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
+          "comparison_performed": true,
+          "hardware_speedup_claim": false,
+          "hashes_match_before_timing_compare": true,
+          "ratios": {
+            "polarfire": 79.905463487
+          }
+        }
+      }
+    }
+  ],
+  "honest_verdict": "complete: archived .496 terminal evidence into .497 transition receipt; closed lanes are deterministic minimal-core repair, deterministic constraint-distortion guards, governed CSL policy, and live SOTA CSL memory routing; bounded lanes are p-bit/p-dit bridge, hardware receipts with KV260 unreachable and no speedup, and milestone synthesis; blocked lane is Exp5457 guided decoding quarantine; honest-null lanes are bp35 L3 ARC no-bank and no hardware speedup claim; next_task_range=exp5468-exp5481.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.497",
+  "next_task_range": "exp5468-exp5481",
+  "preconditions_checked": {
+    "capstone_hardware_speedup_claim_boundary_false": true,
+    "capstone_loadable": true,
+    "capstone_milestone": "2026.07.496",
+    "capstone_present": true,
+    "capstone_status": null,
+    "conductor_unchanged": true,
+    "expected_next_task_range": "exp5468-exp5481",
+    "expected_previous_task_range": "exp5454-exp5467",
+    "gap_table_loadable": true,
+    "gap_table_milestone": "2026.07.496",
+    "gap_table_present": true,
+    "gap_table_status": "complete",
+    "roadmap_doc_names_milestone": true,
+    "roadmap_doc_present": true,
+    "roadmap_doc_task_range": "exp5468-exp5481",
+    "roadmap_loadable": true,
+    "roadmap_milestone": "2026.07.497",
+    "roadmap_present": true,
+    "roadmap_task_count": 14,
+    "roadmap_yaml_unchanged": true
+  },
+  "previous_milestone": "2026.07.496",
+  "previous_task_range": "exp5454-exp5467",
+  "prior_capstone_path": "results/experiment_5467_capstone_v496.json",
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:d1ed6fb384e9f76781fd9caf2a2b3fb565070988929840036f019a7e8bbb4c53"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5468,
+  "reproducibility_checksum": "sha256:8110249ba7a70f5845b1427752e99a82777e20b6cf91f1085ea4e118bd8195b0",
+  "result_path": "results/experiment_5468_transition_v497.json",
+  "roadmap_doc_task_range": "exp5468-exp5481",
+  "roadmap_task_ids": [
+    "exp5468-transition-v497",
+    "exp5469-source-delta-v497",
+    "exp5470-rewrite-state-semantic-fixture-v497",
+    "exp5471-gated-guard-composition-scale-v497",
+    "exp5472-gated-sota-evidence-telemetry-v497",
+    "exp5473-csl-kan-surrogate-assurance-v497",
+    "exp5474-gated-sota-csl-scale-v497",
+    "exp5475-csl-behavioral-memory-ladder-v497",
+    "exp5476-helper-lemma-core-witness-repair-v497",
+    "exp5477-pdit-lns-boundary-exchange-v497",
+    "exp5478-gated-hardware-receipts-v497",
+    "exp5479-arc-target-rotation-precheck-v497",
+    "exp5480-gated-arc-live-salience-levelup-v497",
+    "exp5481-capstone-v497"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5468.transition_v497.v1",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:d1ed6fb384e9f76781fd9caf2a2b3fb565070988929840036f019a7e8bbb4c53"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:46f9591e011ff27bee4b191ef9714ec5e2327bb524d75bd1c5e9ee3446190ccc"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:c17788af13f19069cafcdb13c3036ca8f246dc441a6382ece697cc904aa1b497"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:2070dd0554af66cfa5b42adc852f404a911adbcc3383761d3f9b9971a8b2a2bb"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:2b7fd4cf6c0f95690b38f2214cfe7c742c5e75c4e2ec79fce40dccac3007cccd"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5467_capstone_v496.json",
+      "read_only": true,
+      "sha256": "sha256:4630b2db0b2e69f5053c8955536e195097f6cc37cd479b0b8bc3f7b73fce4278"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5466_prd_gap_agent_failure_table_v496.json",
+      "read_only": true,
+      "sha256": "sha256:f89c265e76d1012dba8315c465122fd244c678ef1f14a38b0ae19a80646d1a33"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5468",
+    "SCENARIO-REPORT-5468",
+    "SCENARIO-REPORT-5468-BLOCKED-INPUT"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5468_transition_v497.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5468_transition_v497.py -m pytest tests/python/test_experiment_5468_transition_v497.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5468_transition_v497.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}
