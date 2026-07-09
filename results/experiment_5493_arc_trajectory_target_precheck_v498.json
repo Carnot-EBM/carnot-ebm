@@ -1,0 +1,171 @@
+{
+  "arc_trajectory_precheck_ready": true,
+  "candidate_audit": {
+    "bp35:L3": {
+      "decision": "rejected_recent_no_bank",
+      "game": "bp35",
+      "prior_levels_reproduced": 2,
+      "proposed_live_mechanism": "platformer trajectory option induction from visible falls and blocker clears",
+      "target_level": 3
+    },
+    "cn04:L4": {
+      "decision": "rejected_recent_no_bank",
+      "game": "cn04",
+      "prior_levels_reproduced": 3,
+      "proposed_live_mechanism": "marker-pair option reinduction from observed sprite moves",
+      "target_level": 4
+    },
+    "dc22:L3": {
+      "decision": "selected",
+      "evidence": "registry records dc22 L2 config-toggle navigation with visible movement and ACTION6 toggles",
+      "game": "dc22",
+      "live_mechanism_hooks": [
+        "python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy",
+        "python/carnot/agentic/arc_live_trajectory_frontier.py:LiveCoExLandmarkFrontierGenerator"
+      ],
+      "prior_levels_reproduced": 2,
+      "proposed_live_mechanism": "E3AgentPolicy + LiveCoExLandmarkFrontierGenerator option induction over visible toggle-navigation action effects",
+      "target_level": 3
+    },
+    "ka59:L2": {
+      "decision": "rejected_recent_no_bank",
+      "game": "ka59",
+      "prior_levels_reproduced": 1,
+      "proposed_live_mechanism": "object-motion trajectory induction from pushed block effects",
+      "target_level": 2
+    },
+    "re86:L3": {
+      "decision": "rejected_recent_no_bank",
+      "game": "re86",
+      "prior_levels_reproduced": 2,
+      "proposed_live_mechanism": "sprite-overlay trajectory reinduction from observed source cycling",
+      "target_level": 3
+    },
+    "sb26:L3": {
+      "decision": "rejected_recent_no_bank",
+      "game": "sb26",
+      "prior_levels_reproduced": 2,
+      "proposed_live_mechanism": "connected-component salience sequence induction",
+      "target_level": 3
+    }
+  },
+  "duplicate_solve_avoided": true,
+  "duration_s": 0.1255987361073494,
+  "excluded_recent_no_bank_targets": [
+    "sb26:L3",
+    "bp35:L3",
+    "ka59:L2",
+    "cn04:L4",
+    "re86:L3"
+  ],
+  "excluded_retired_scope_patterns": [
+    "archive granularity",
+    "archive-granularity",
+    "curiosity",
+    "curiosity-only",
+    "energy-as-fitness",
+    "energy-as-fitness first-contact rerun",
+    "first contact exploration signal rerun",
+    "first-contact candidate-generation rerun",
+    "novelty-bonus",
+    "novelty-bonus first-contact rerun",
+    "novelty-only",
+    "program-synthesis first-contact rerun",
+    "quality-diversity"
+  ],
+  "exp5494_command": ".venv/bin/python -m carnot.experiment_5494_arc_live_trajectory_option_induction_v498 --game dc22 --target-level 3 --prior-levels 2 --mechanism live-coex-landmark-frontier --no-offline-bfs --no-per-game-adapter",
+  "experiment": "experiment_5493_arc_trajectory_target_precheck_v498",
+  "experiment_id": 5493,
+  "field_principles": {
+    "arc_trajectory_precheck_ready": {
+      "principle": "true only when a non-duplicate, non-recent-no-bank, non-retired-scope target is selected."
+    },
+    "duplicate_solve_avoided": {
+      "principle": "bare bool proving the selected target is strictly deeper than the registry depth."
+    },
+    "excluded_recent_no_bank_targets": {
+      "principle": "auditable list containing sb26:L3, bp35:L3, ka59:L2, cn04:L4, and re86:L3 unless the selected target proves a different level and mechanism."
+    },
+    "honest_verdict": {
+      "principle": "one-line verdict starting complete: or blocked: without a solve claim."
+    },
+    "inference_substrate": {
+      "principle": "must equal registry_precheck_no_solve."
+    },
+    "offline_bfs_used": {
+      "principle": "must be false; this precheck is registry-only and no offline ground-truth BFS is run."
+    },
+    "per_game_adapter_used": {
+      "principle": "must be false; target eligibility is not credited to a hand adapter."
+    },
+    "prior_levels_reproduced": {
+      "principle": "authoritative registry depth for the selected game before Exp5493."
+    },
+    "proposed_live_mechanism": {
+      "principle": "one-line live-path mechanism to hand to Exp5494, not a retired exploration-signal rerun."
+    },
+    "registry_path": {
+      "principle": "must equal ops/arc_solve_registry.yaml."
+    },
+    "selected_game": {
+      "principle": "selected game id, or empty string when no eligible target exists."
+    },
+    "selected_target_level": {
+      "principle": "selected next target level as a bare int, or 0 when blocked."
+    },
+    "trajectory_induction_preconditions": {
+      "principle": "list of live-observation prerequisites that must hold before Exp5494 attempts the target."
+    }
+  },
+  "honest_verdict": "complete: dc22 L3 trajectory precheck ready for Exp5494",
+  "inference_substrate": "registry_precheck_no_solve",
+  "levels_reproduced_by_candidate_game": {
+    "bp35": 2,
+    "cn04": 3,
+    "dc22": 2,
+    "g50t": 2,
+    "ka59": 1,
+    "re86": 2,
+    "sb26": 2
+  },
+  "milestone": "2026.07.498",
+  "offline_bfs_used": false,
+  "per_game_adapter_used": false,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "exclusion_manifest_present": true,
+    "exp5479_present": true,
+    "exp5480_present": true,
+    "known_issues_present": true,
+    "offline_bfs_used": false,
+    "per_game_adapter_used": false,
+    "registry_present": true,
+    "retired_archive_granularity_scope_seen": true,
+    "spec_has_req_5493": true
+  },
+  "prior_levels_reproduced": 2,
+  "proposed_live_mechanism": "E3AgentPolicy + LiveCoExLandmarkFrontierGenerator option induction over visible toggle-navigation action effects",
+  "registry_path": "ops/arc_solve_registry.yaml",
+  "result_path": "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+  "schema": "carnot.experiment_5493_arc_trajectory_target_precheck_v498.v1",
+  "selected_game": "dc22",
+  "selected_target_level": 3,
+  "selection_reason": "dc22:L3 is the first eligible trajectory target after registry filters",
+  "spec_refs": [
+    "REQ-ARC-FCP-5493",
+    "SCENARIO-ARC-FCP-5493"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5493_arc_trajectory_target_precheck_v498.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "trajectory_induction_preconditions": [
+    "runtime_action_effect_observations",
+    "visible_toggle_or_navigation_state_changes",
+    "level_counter_delta_read_from_frames",
+    "frontier_prefixes_grouped_into_options"
+  ]
+}
