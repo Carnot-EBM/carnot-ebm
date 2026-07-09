@@ -1891,3 +1891,72 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5440 | Planned (`python/carnot/experiment_5440_capstone_v494.py`, `results/experiment_5440_capstone_v494.json`) | Planned (`tests/python/test_experiment_5440_capstone_v494.py`) |
+
+- REQ-CAPSTONE-5453: The `.495` milestone-close capstone aggregator
+  `exp5453-v495-capstone` in
+  `python/carnot/experiment_5453_capstone_v495.py` SHALL write
+  `results/experiment_5453_capstone_v495.json` without modifying
+  `research-roadmap.yaml` and without modifying `scripts/research_conductor.py`.
+  It SHALL read the listed `.495` source context and upstream artifacts from
+  Exp5441 through Exp5452, record any missing or unreadable input, and classify
+  verifier-potential generation, local SOTA decoding, AST/KB witnesses,
+  governed CSL, memory stress, active-constraint/p-bit bridge, hardware
+  receipts, ARC, KAN certificates, PRD gap synthesis, token/internal access,
+  and hardware speedup into headline-ready, bounded, blocked, honest-null, or
+  missing lanes from artifact fields only. It SHALL keep adversarial,
+  tautology, duration, or unsupported-claim flagged lanes out of
+  `headline_ready_lanes`, keep `hardware_speedup_claim=false` without
+  authenticated acceleration evidence, keep `token_internal_lane_reopened=false`
+  without authenticated backend logits/hidden-state/token receipts, and set
+  `arc_new_level_banked` only from the ARC reproduction-gated artifact.
+- SCENARIO-CAPSTONE-5453: The artifact
+  `results/experiment_5453_capstone_v495.json` must emit top-level fields
+  `milestone`, `task_range`, `artifacts_found`, `headline_ready_lanes`,
+  `bounded_lanes`, `blocked_lanes`, `honest_null_lanes`, `missing_lanes`,
+  `arc_new_level_banked`, `hardware_speedup_claim`,
+  `token_internal_lane_reopened`, `next_recommendations`,
+  `roadmap_yaml_unchanged`, `conductor_unchanged`, `inference_substrate`, and
+  `honest_verdict`. The default `.495` aggregation must classify Exp5443
+  verifier-potential fixtures, Exp5445 AST/KB witnesses, Exp5446 governed
+  online memory, Exp5447 memory-failure stress, and Exp5452 PRD gap synthesis
+  as headline-ready; Exp5444 local SOTA decoding as blocked from headline
+  readiness because it is adversarially flagged with TAUTOLOGY corrigendum
+  pending; Exp5448 active-constraint/p-bit bridge, Exp5449 hardware receipts,
+  and Exp5451 KAN certificates as bounded; Exp5450 ARC as honest-null/no-bank;
+  token/internal access as blocked; and hardware speedup as honest-null false.
+  Exact terminal labels for downstream tests: Exp5443 verifier-potential fixtures;
+  Exp5444 local SOTA decoding as blocked; Exp5450 ARC as honest-null/no-bank.
+- SCENARIO-CAPSTONE-5453-MISSING-INPUT: If any expected `.495` source context
+  or upstream artifact is absent or unreadable, the workflow must still write
+  the capstone artifact, list the path in `missing_lanes` and supporting
+  read-error fields, classify affected lanes as missing instead of inferring
+  success from roadmap, status, changelog, PRD prose, or Exp5452 summaries, and
+  start `honest_verdict` with `blocked:`.
+- SCENARIO-CAPSTONE-5453-FIELD-PRINCIPLES: The required field principles are:
+  `milestone` = "route key; must equal 2026.07.495.",
+  `task_range` = "execution boundary; must equal exp5441-exp5453.",
+  `artifacts_found` = "evidence basis; ordered list of expected upstream
+  artifacts actually read.", `headline_ready_lanes` = "positive evidence;
+  only unflagged closed rows with no adversarial, tautology, duration, or
+  unsupported-claim blockers.", `bounded_lanes` = "bounded evidence; useful
+  receipts that must not become headline claims.", `blocked_lanes` = "blocker
+  accounting; flagged, closed-backend, or unsupported lanes.", `honest_null_lanes`
+  = "null-result honesty; executed lanes with no banked or positive outcome.",
+  `missing_lanes` = "no fabricated evidence; missing or unreadable inputs are
+  recorded here.", `arc_new_level_banked` = "north-star status; true only for a
+  reproduction-gated new ARC level.", `hardware_speedup_claim` = "hardware
+  honesty; must be false for `.495`.", `token_internal_lane_reopened` =
+  "closed-lane discipline; must be false without authenticated backend
+  receipts.", `next_recommendations` = "planning handoff; 3-5 directions
+  grounded in actual evidence.", `roadmap_yaml_unchanged` = "user prohibition;
+  derived from git status.", `conductor_unchanged` = "user prohibition; derived
+  from git status.", `inference_substrate` = "no hidden live model inference;
+  must equal aggregation_from_upstream_artifacts.", and `honest_verdict` =
+  "terminal status; starts with complete: or blocked: and summarizes the honest
+  `.495` close state."
+
+## Implementation Status (REQ-CAPSTONE-5453)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5453 | Planned (`python/carnot/experiment_5453_capstone_v495.py`, `results/experiment_5453_capstone_v495.json`) | Planned (`tests/python/test_experiment_5453_capstone_v495.py`) |
