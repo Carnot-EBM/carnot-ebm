@@ -10674,3 +10674,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 18:57 UTC | Gated SOTA GGUF CSL memory panel with independent  | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5502-csl-tautology-static-corrigendum-v |
 | 2026-07-09 19:11 UTC | Gated active-constraint MILP/MaxSAT descriptor ext | OK | 87 passed, 1 warning in 8.17s |
 | 2026-07-09 20:00 UTC | Multi-board hardware receipt continuity without sp | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-09 20:23 UTC | ARC null-coordinate and perception-grounding prech | OK | 89 passed, 1 warning in 9.28s |
