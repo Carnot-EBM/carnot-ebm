@@ -1,0 +1,1746 @@
+{
+  "condition_metrics": {
+    "governed_memory": {
+      "accepted_count": 4,
+      "context_cost": 335,
+      "count": 4,
+      "quality_score": 1.0,
+      "token_cost": 431,
+      "verifier_cost": 8
+    },
+    "naive_icl": {
+      "accepted_count": 2,
+      "context_cost": 349,
+      "count": 4,
+      "quality_score": 0.5,
+      "token_cost": 386,
+      "verifier_cost": 10
+    },
+    "no_memory": {
+      "accepted_count": 1,
+      "context_cost": 274,
+      "count": 4,
+      "quality_score": 0.25,
+      "token_cost": 301,
+      "verifier_cost": 4
+    },
+    "policy_selected": {
+      "accepted_count": 4,
+      "context_cost": 319,
+      "count": 4,
+      "quality_score": 1.0,
+      "token_cost": 415,
+      "verifier_cost": 7
+    }
+  },
+  "condition_names": [
+    "no_memory",
+    "naive_icl",
+    "governed_memory",
+    "policy_selected"
+  ],
+  "context_efficiency_delta": 0.08596,
+  "csl_sota_memory_routing_ready": true,
+  "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+  "field_principles": {
+    "condition_names": "Baseline comparability.",
+    "context_efficiency_delta": "Context budget accounting.",
+    "csl_sota_memory_routing_ready": "Downstream gate.",
+    "gpu_offload_verified": "No CPU-only headline.",
+    "headline_required_any_of": "Headline model boundary.",
+    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "Explicit learning substrate.",
+    "model_specs": "Mandated SOTA GGUF provenance.",
+    "negative_transfer_deflection_rate": "Unsafe memory-transfer guard.",
+    "no_weight_mutation": "Frozen-model boundary.",
+    "policy_state_checksum": "Frozen policy-state provenance.",
+    "preconditions_checked": "Compute gate transparency.",
+    "quality_delta_vs_naive_icl": "Utility against naive memory.",
+    "quality_delta_vs_no_memory": "Utility against no-memory.",
+    "row_results_path": "Inspectable row evidence.",
+    "runtime_backend": "Live GGUF runtime provenance.",
+    "verifier_cost_delta": "Verifier budget accounting."
+  },
+  "gpu_offload_verified": true,
+  "headline_required_any_of": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "honest_verdict": "complete: live SOTA GGUF governed CSL memory routing preserved quality and deflected negative transfer with frozen weights",
+  "inference_substrate": "live_llm_inference_with_frozen_policy_state",
+  "methodology_duration_s": 11.84837916167453,
+  "metric_dependency_graph": {
+    "context_efficiency_delta": [
+      "condition_metrics.naive_icl.context_cost",
+      "condition_metrics.policy_selected.context_cost"
+    ],
+    "csl_sota_memory_routing_ready": [
+      "gpu_offload_verified",
+      "metric_independence_checks_passed",
+      "quality_delta_vs_no_memory",
+      "quality_delta_vs_naive_icl",
+      "context_efficiency_delta",
+      "verifier_cost_delta",
+      "negative_transfer_deflection_rate",
+      "no_weight_mutation"
+    ],
+    "negative_transfer_deflection_rate": [
+      "row.condition",
+      "row.negative_transfer_candidate",
+      "row.exact_verifier_witness.selected_answer"
+    ],
+    "quality_delta_vs_naive_icl": [
+      "condition_metrics.policy_selected.quality_score",
+      "condition_metrics.naive_icl.quality_score"
+    ],
+    "quality_delta_vs_no_memory": [
+      "condition_metrics.policy_selected.quality_score",
+      "condition_metrics.no_memory.quality_score"
+    ],
+    "verifier_cost_delta": [
+      "condition_metrics.naive_icl.verifier_cost",
+      "condition_metrics.policy_selected.verifier_cost"
+    ]
+  },
+  "metric_details": {
+    "case_family_counts": {
+      "no_memory_competitive": 1,
+      "poisoned_memory": 1,
+      "repeated_task": 1,
+      "stale_memory": 1
+    },
+    "condition_metrics": {
+      "governed_memory": {
+        "accepted_count": 4,
+        "context_cost": 335,
+        "count": 4,
+        "quality_score": 1.0,
+        "token_cost": 431,
+        "verifier_cost": 8
+      },
+      "naive_icl": {
+        "accepted_count": 2,
+        "context_cost": 349,
+        "count": 4,
+        "quality_score": 0.5,
+        "token_cost": 386,
+        "verifier_cost": 10
+      },
+      "no_memory": {
+        "accepted_count": 1,
+        "context_cost": 274,
+        "count": 4,
+        "quality_score": 0.25,
+        "token_cost": 301,
+        "verifier_cost": 4
+      },
+      "policy_selected": {
+        "accepted_count": 4,
+        "context_cost": 319,
+        "count": 4,
+        "quality_score": 1.0,
+        "token_cost": 415,
+        "verifier_cost": 7
+      }
+    },
+    "context_efficiency_delta": 0.08596,
+    "exact_authority_rows": 16,
+    "metric_independence_checks_passed": true,
+    "negative_transfer_deflection_rate": 1.0,
+    "policy_regret_proxy": {
+      "condition_regret": {
+        "governed_memory": 0.0,
+        "naive_icl": 2.0,
+        "no_memory": 3.0,
+        "policy_selected": 0.0
+      },
+      "oracle_regret": 0.0,
+      "policy_regret_delta_vs_naive_icl": 2.0,
+      "policy_regret_delta_vs_no_memory": 3.0
+    },
+    "predicate_support": {
+      "context_cost": "row.context_cost",
+      "negative_transfer": "policy row exact verifier avoids decoy answer",
+      "policy_regret": "oracle accepted row score minus condition score",
+      "quality": "row.accepted_by_final_authority",
+      "verifier_cost": "row.verifier_cost"
+    },
+    "quality_delta_vs_naive_icl": 0.5,
+    "quality_delta_vs_no_memory": 0.75,
+    "row_checksums_match": true,
+    "row_count": 16,
+    "stale_memory_deflection_rate": 1.0,
+    "task_count": 4,
+    "verifier_cost_delta": 0.3
+  },
+  "metric_independence_checks_passed": true,
+  "milestone": "2026.07.496",
+  "model_specs": [
+    {
+      "file_receipt": {
+        "exists": true,
+        "inode": 1612890840,
+        "mtime_ns": 1780046332847654213,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "size_bytes": 22134528992,
+        "suffix": ".gguf"
+      },
+      "gpu_offload_verified": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_smoke_only": false,
+      "local_path_available": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "n_gpu_layers": null,
+      "quantization": "Q4_K_M",
+      "ran_headline": false,
+      "role": "flagship_moe",
+      "runtime_backend": null
+    },
+    {
+      "file_receipt": {
+        "exists": true,
+        "inode": 5906408257,
+        "mtime_ns": 1780838958726406205,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456,
+        "suffix": ".gguf"
+      },
+      "gpu_offload_verified": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_smoke_only": false,
+      "local_path_available": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "n_gpu_layers": null,
+      "quantization": "Q4_K_M",
+      "ran_headline": false,
+      "role": "flagship_dense",
+      "runtime_backend": null
+    },
+    {
+      "file_receipt": {
+        "exists": true,
+        "inode": 4865361091,
+        "mtime_ns": 1778129415691941084,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "size_bytes": 16947539744,
+        "suffix": ".gguf"
+      },
+      "gpu_offload_verified": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_smoke_only": false,
+      "local_path_available": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "n_gpu_layers": -1,
+      "quantization": "Q4_K_M",
+      "ran_headline": true,
+      "role": "middle_moe",
+      "runtime_backend": "llama_cpp_python_cuda_gguf"
+    }
+  ],
+  "negative_transfer_deflection_rate": 1.0,
+  "no_weight_mutation": true,
+  "policy_regret_proxy": {
+    "condition_regret": {
+      "governed_memory": 0.0,
+      "naive_icl": 2.0,
+      "no_memory": 3.0,
+      "policy_selected": 0.0
+    },
+    "oracle_regret": 0.0,
+    "policy_regret_delta_vs_naive_icl": 2.0,
+    "policy_regret_delta_vs_no_memory": 3.0
+  },
+  "policy_source": {
+    "csl_policy_ready": true,
+    "path": "results/experiment_5460_csl_policy_bandit_v496.json",
+    "reproducibility_checksum": "sha256:8c935ebd9581d3b01bac9fce4c7e37d9e4c3f07145a85343149738d139f8b046"
+  },
+  "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+  "precondition_details": {
+    "all_mandated_model_paths_available": true,
+    "all_passed": true,
+    "blocked_preconditions": [],
+    "cuda_visible": true,
+    "exp5460_csl_policy_ready": true,
+    "gpu_offload_preflight": true,
+    "mandated_model_specs_present": true,
+    "runtime_backend": "llama_cpp_python_cuda_gguf",
+    "selected_model_available": true
+  },
+  "preconditions_checked": true,
+  "quality_delta_vs_naive_icl": 0.5,
+  "quality_delta_vs_no_memory": 0.75,
+  "random_seed": 5461,
+  "reproducibility_checksum": "sha256:1ee1691a76dd932052b74018fc02fc0e7d4a2b99e26a029364f8ea6d19deb0f6",
+  "research_conductor_modified": false,
+  "row_checksums": [
+    "sha256:6866277b3e4b53ba891d6fc02a157c68225c6263c94cde7b9664dfac49b63026",
+    "sha256:3ddd730753167a1a165ab13bfe15fc236e4dc21236241e840b978b10754a5b88",
+    "sha256:91bc28db5425c3aef54e2c52a2248941a2d0aad4b5b4fd18d6e51ff7b8a42a88",
+    "sha256:aaed6147c30da6be7549dc7199aae6a5954b15091d1ab1bdbe03723eb3ff41b1",
+    "sha256:76f5c90bc4cc2cb679230ba694a41077ad851019c9ef67266b3cd86c859398c3",
+    "sha256:28883b7ab0848a42c39df40b60e769eff8a2ad68bff6791a5929fc94589ad995",
+    "sha256:1309ab51ecc486e24d01b761360038a55329f5e44df302062037ef0dc6d8909e",
+    "sha256:e083d54c41bb55761376af9e2f51015bbf78ee15203a0cd55288314a11c195cf",
+    "sha256:ff88b0867e709017e6145ca4cc4151ee4766f13beb0b4efe7f42a25bffcc8366",
+    "sha256:4650ed0001d03bfcdf6992305fe9af8db7808662316000bd0170e6dd357a4e19",
+    "sha256:74f534c95de6d6c4543afb3022978aa85954b8276996f2d91234fb66d897cf6e",
+    "sha256:45e3e004f02a242bcb8b7b9bf5d2eba416a3eb7ed51a70c1187af59d76a10a3b",
+    "sha256:888323ac327b81590db01ef6a471962c876992327a97509fd734289032f5de3b",
+    "sha256:4356534d4f28aed604c9c58a16cbab31f3a3e8f64cd72cf9629e03d9e06ad007",
+    "sha256:74a345e5852602d8e8061f0d372164930b237b5511bcba0d928a98e7b1992b9c",
+    "sha256:3facd99cad08b6e453c49c2b95d6a8c57b38175ae728a2dca879f732a263da1b"
+  ],
+  "row_count": 16,
+  "row_results": [
+    {
+      "accepted_by_final_authority": false,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "repeated_task",
+      "condition": "no_memory",
+      "context_cost": 62,
+      "decoy_answer": "red-crate-09",
+      "effective_condition": "no_memory",
+      "exact_verifier_witness": {
+        "accepted": false,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "red-crate-09",
+        "expected_answer": "blue-crate-17",
+        "failure_reasons": [
+          "answer_mismatch"
+        ],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "unknown",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "blue-crate-17",
+            "red-crate-09",
+            "unknown"
+          ],
+          "normalized_output": "unknown"
+        }
+      },
+      "expected_answer": "blue-crate-17",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 1,
+      "generation_duration_s": 0.47329260082915425,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "no_memory",
+        "effective_condition": "no_memory",
+        "memory_ids": [],
+        "memory_lines": [],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-a1-repeat-gasket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " unknown",
+      "policy_receipt": {
+        "condition": "no_memory",
+        "policy_reason": "Exp5460 repeat-task arm favors governed memory.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "c77bf7405d4627b69d5b307a15182ecdd31833ded78768e3449d49598ff53007",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-a1-repeat-gasket\nQuestion: Which crate holds the signed gasket?\nSupplied evidence: none.\nFinal answer:",
+      "random_seed": 5461,
+      "row_checksum": "sha256:6866277b3e4b53ba891d6fc02a157c68225c6263c94cde7b9664dfac49b63026",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "unknown",
+      "session_id": "session-a",
+      "stale_memory_candidate": false,
+      "task_id": "5461-a1-repeat-gasket",
+      "token_cost": 63,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "repeated_task",
+      "condition": "naive_icl",
+      "context_cost": 95,
+      "decoy_answer": "red-crate-09",
+      "effective_condition": "naive_icl",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "red-crate-09",
+        "expected_answer": "blue-crate-17",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "blue-crate-17",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "blue-crate-17",
+            "red-crate-09",
+            "unknown"
+          ],
+          "normalized_output": "blue-crate-17"
+        }
+      },
+      "expected_answer": "blue-crate-17",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 6,
+      "generation_duration_s": 0.09152680495753884,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "naive_icl",
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-a1-repeat-gasket:naive_icl:memory-1",
+          "5461-a1-repeat-gasket:naive_icl:memory-2"
+        ],
+        "memory_lines": [
+          "old note: red-crate-09 held an unsigned gasket during intake.",
+          "verified repeat note: blue-crate-17 holds the signed gasket."
+        ],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-a1-repeat-gasket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " blue-crate-17",
+      "policy_receipt": {
+        "condition": "naive_icl",
+        "policy_reason": "Exp5460 repeat-task arm favors governed memory.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "b6c0293c9e59f1b3ed97c97e7a6c090d8630ac1343faaf1b23703ca3df06a917",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-a1-repeat-gasket\nQuestion: Which crate holds the signed gasket?\nSupplied evidence:\n- old note: red-crate-09 held an unsigned gasket during intake.\n- verified repeat note: blue-crate-17 holds the signed gasket.\nFinal answer:",
+      "random_seed": 5462,
+      "row_checksum": "sha256:3ddd730753167a1a165ab13bfe15fc236e4dc21236241e840b978b10754a5b88",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "blue-crate-17",
+      "session_id": "session-a",
+      "stale_memory_candidate": false,
+      "task_id": "5461-a1-repeat-gasket",
+      "token_cost": 101,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "repeated_task",
+      "condition": "governed_memory",
+      "context_cost": 77,
+      "decoy_answer": "red-crate-09",
+      "effective_condition": "governed_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "red-crate-09",
+        "expected_answer": "blue-crate-17",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "blue-crate-17",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "blue-crate-17",
+            "red-crate-09",
+            "unknown"
+          ],
+          "normalized_output": "blue-crate-17 task id: 5461-a1-repeat-gasket"
+        }
+      },
+      "expected_answer": "blue-crate-17",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.2146047749556601,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "governed_memory",
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-a1-repeat-gasket:governed_memory:memory-1"
+        ],
+        "memory_lines": [
+          "verified repeat note: blue-crate-17 holds the signed gasket."
+        ],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-a1-repeat-gasket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " blue-crate-17\nTask id: 5461-a1-repeat-gasket\n",
+      "policy_receipt": {
+        "condition": "governed_memory",
+        "policy_reason": "Exp5460 repeat-task arm favors governed memory.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "a26fe10c118dc79dacdcfc4d3a827ce0cc6d30a8abd5471f096ff21aaa274742",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-a1-repeat-gasket\nQuestion: Which crate holds the signed gasket?\nSupplied evidence:\n- verified repeat note: blue-crate-17 holds the signed gasket.\nFinal answer:",
+      "random_seed": 5463,
+      "row_checksum": "sha256:91bc28db5425c3aef54e2c52a2248941a2d0aad4b5b4fd18d6e51ff7b8a42a88",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "blue-crate-17",
+      "session_id": "session-a",
+      "stale_memory_candidate": false,
+      "task_id": "5461-a1-repeat-gasket",
+      "token_cost": 101,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "repeated_task",
+      "condition": "policy_selected",
+      "context_cost": 77,
+      "decoy_answer": "red-crate-09",
+      "effective_condition": "governed_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "red-crate-09",
+        "expected_answer": "blue-crate-17",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "blue-crate-17",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "blue-crate-17",
+            "red-crate-09",
+            "unknown"
+          ],
+          "normalized_output": "blue-crate-17 task id: 5461-a1-repeat-gasket"
+        }
+      },
+      "expected_answer": "blue-crate-17",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.18933709617704153,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "policy_selected",
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-a1-repeat-gasket:governed_memory:memory-1"
+        ],
+        "memory_lines": [
+          "verified repeat note: blue-crate-17 holds the signed gasket."
+        ],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-a1-repeat-gasket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " blue-crate-17\nTask id: 5461-a1-repeat-gasket\n",
+      "policy_receipt": {
+        "condition": "policy_selected",
+        "policy_reason": "Exp5460 repeat-task arm favors governed memory.",
+        "policy_selected": true,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": "governed_memory",
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "a26fe10c118dc79dacdcfc4d3a827ce0cc6d30a8abd5471f096ff21aaa274742",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-a1-repeat-gasket\nQuestion: Which crate holds the signed gasket?\nSupplied evidence:\n- verified repeat note: blue-crate-17 holds the signed gasket.\nFinal answer:",
+      "random_seed": 5464,
+      "row_checksum": "sha256:aaed6147c30da6be7549dc7199aae6a5954b15091d1ab1bdbe03723eb3ff41b1",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "blue-crate-17",
+      "session_id": "session-a",
+      "stale_memory_candidate": false,
+      "task_id": "5461-a1-repeat-gasket",
+      "token_cost": 101,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": false,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "poisoned_memory",
+      "condition": "no_memory",
+      "context_cost": 65,
+      "decoy_answer": "vendor-B",
+      "effective_condition": "no_memory",
+      "exact_verifier_witness": {
+        "accepted": false,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "vendor-B",
+        "expected_answer": "vendor-A",
+        "failure_reasons": [
+          "answer_mismatch"
+        ],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "unknown",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "vendor-A",
+            "vendor-B",
+            "unknown"
+          ],
+          "normalized_output": "unknown"
+        }
+      },
+      "expected_answer": "vendor-A",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 1,
+      "generation_duration_s": 0.03806434292346239,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "no_memory",
+        "effective_condition": "no_memory",
+        "memory_ids": [],
+        "memory_lines": [],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": false,
+        "task_id": "5461-b1-poisoned-vendor"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "output_text": " unknown",
+      "policy_receipt": {
+        "condition": "no_memory",
+        "policy_reason": "Exp5460 rejects poisoned-memory evidence before routing.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "7d768b8f1e67c89621592b3fee32ab1c73cfee628ae1f13056438218cd398415",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-b1-poisoned-vendor\nQuestion: Which vendor is verified for lot 77?\nSupplied evidence: none.\nFinal answer:",
+      "random_seed": 5562,
+      "row_checksum": "sha256:76f5c90bc4cc2cb679230ba694a41077ad851019c9ef67266b3cd86c859398c3",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "unknown",
+      "session_id": "session-b",
+      "stale_memory_candidate": false,
+      "task_id": "5461-b1-poisoned-vendor",
+      "token_cost": 66,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": false,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "poisoned_memory",
+      "condition": "naive_icl",
+      "context_cost": 79,
+      "decoy_answer": "vendor-B",
+      "effective_condition": "naive_icl",
+      "exact_verifier_witness": {
+        "accepted": false,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "vendor-B",
+        "expected_answer": "vendor-A",
+        "failure_reasons": [
+          "answer_mismatch",
+          "decoy_memory_selected"
+        ],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": true,
+        "selected_answer": "vendor-B",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "vendor-A",
+            "vendor-B",
+            "unknown"
+          ],
+          "normalized_output": "vendor-b. task id: 5461-b1-poisoned-vendor question:"
+        }
+      },
+      "expected_answer": "vendor-A",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.20574353775009513,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "naive_icl",
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-b1-poisoned-vendor:naive_icl:memory-1"
+        ],
+        "memory_lines": [
+          "poisoned sidecar: lot 77 vendor is vendor-B."
+        ],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": false,
+        "task_id": "5461-b1-poisoned-vendor"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": true,
+      "output_text": " vendor-B.\nTask id: 5461-b1-poisoned-vendor\nQuestion:",
+      "policy_receipt": {
+        "condition": "naive_icl",
+        "policy_reason": "Exp5460 rejects poisoned-memory evidence before routing.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "6d8603db731bb055287ef9741472cb944d571d420fd8224acaafe61147eb6f6a",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-b1-poisoned-vendor\nQuestion: Which vendor is verified for lot 77?\nSupplied evidence:\n- poisoned sidecar: lot 77 vendor is vendor-B.\nFinal answer:",
+      "random_seed": 5563,
+      "row_checksum": "sha256:28883b7ab0848a42c39df40b60e769eff8a2ad68bff6791a5929fc94589ad995",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "vendor-B",
+      "session_id": "session-b",
+      "stale_memory_candidate": false,
+      "task_id": "5461-b1-poisoned-vendor",
+      "token_cost": 103,
+      "verifier_cost": 3
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "poisoned_memory",
+      "condition": "governed_memory",
+      "context_cost": 79,
+      "decoy_answer": "vendor-B",
+      "effective_condition": "governed_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "vendor-B",
+        "expected_answer": "vendor-A",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "vendor-A",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "vendor-A",
+            "vendor-B",
+            "unknown"
+          ],
+          "normalized_output": "vendor-a task id: 5461-b1-poisoned-vendor question: which"
+        }
+      },
+      "expected_answer": "vendor-A",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.20705645298585296,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "governed_memory",
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-b1-poisoned-vendor:governed_memory:memory-1"
+        ],
+        "memory_lines": [
+          "verified procurement receipt: lot 77 vendor is vendor-A."
+        ],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": false,
+        "task_id": "5461-b1-poisoned-vendor"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "output_text": " vendor-A\nTask id: 5461-b1-poisoned-vendor\nQuestion: Which",
+      "policy_receipt": {
+        "condition": "governed_memory",
+        "policy_reason": "Exp5460 rejects poisoned-memory evidence before routing.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "523998f359cbe83beba8d5b854ea604e9899b9327df13a44b156492c91cd1c70",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-b1-poisoned-vendor\nQuestion: Which vendor is verified for lot 77?\nSupplied evidence:\n- verified procurement receipt: lot 77 vendor is vendor-A.\nFinal answer:",
+      "random_seed": 5564,
+      "row_checksum": "sha256:1309ab51ecc486e24d01b761360038a55329f5e44df302062037ef0dc6d8909e",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "vendor-A",
+      "session_id": "session-b",
+      "stale_memory_candidate": false,
+      "task_id": "5461-b1-poisoned-vendor",
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "poisoned_memory",
+      "condition": "policy_selected",
+      "context_cost": 79,
+      "decoy_answer": "vendor-B",
+      "effective_condition": "governed_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "vendor-B",
+        "expected_answer": "vendor-A",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "vendor-A",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "vendor-A",
+            "vendor-B",
+            "unknown"
+          ],
+          "normalized_output": "vendor-a task id: 5461-b1-poisoned-vendor question: which"
+        }
+      },
+      "expected_answer": "vendor-A",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.18764834571629763,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "policy_selected",
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-b1-poisoned-vendor:governed_memory:memory-1"
+        ],
+        "memory_lines": [
+          "verified procurement receipt: lot 77 vendor is vendor-A."
+        ],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": false,
+        "task_id": "5461-b1-poisoned-vendor"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "output_text": " vendor-A\nTask id: 5461-b1-poisoned-vendor\nQuestion: Which",
+      "policy_receipt": {
+        "condition": "policy_selected",
+        "policy_reason": "Exp5460 rejects poisoned-memory evidence before routing.",
+        "policy_selected": true,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": "governed_memory",
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "523998f359cbe83beba8d5b854ea604e9899b9327df13a44b156492c91cd1c70",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-b1-poisoned-vendor\nQuestion: Which vendor is verified for lot 77?\nSupplied evidence:\n- verified procurement receipt: lot 77 vendor is vendor-A.\nFinal answer:",
+      "random_seed": 5565,
+      "row_checksum": "sha256:e083d54c41bb55761376af9e2f51015bbf78ee15203a0cd55288314a11c195cf",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "vendor-A",
+      "session_id": "session-b",
+      "stale_memory_candidate": false,
+      "task_id": "5461-b1-poisoned-vendor",
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": false,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "stale_memory",
+      "condition": "no_memory",
+      "context_cost": 63,
+      "decoy_answer": "queue-alpha",
+      "effective_condition": "no_memory",
+      "exact_verifier_witness": {
+        "accepted": false,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "queue-alpha",
+        "expected_answer": "queue-beta",
+        "failure_reasons": [
+          "answer_mismatch"
+        ],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "unknown",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "queue-beta",
+            "queue-alpha",
+            "unknown"
+          ],
+          "normalized_output": "unknown"
+        }
+      },
+      "expected_answer": "queue-beta",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 1,
+      "generation_duration_s": 0.03653168585151434,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "no_memory",
+        "effective_condition": "no_memory",
+        "memory_ids": [],
+        "memory_lines": [],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": true,
+        "task_id": "5461-c1-stale-queue"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "output_text": " unknown",
+      "policy_receipt": {
+        "condition": "no_memory",
+        "policy_reason": "Exp5460 replay gates suppress stale queue memories.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "069dcbc0bf3fa2cb0a8f7a137c1699a9e50e884a0db5895d0d573eead045d631",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-c1-stale-queue\nQuestion: Which queue owns incident RX-4?\nSupplied evidence: none.\nFinal answer:",
+      "random_seed": 5663,
+      "row_checksum": "sha256:ff88b0867e709017e6145ca4cc4151ee4766f13beb0b4efe7f42a25bffcc8366",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "unknown",
+      "session_id": "session-c",
+      "stale_memory_candidate": true,
+      "task_id": "5461-c1-stale-queue",
+      "token_cost": 64,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": false,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "stale_memory",
+      "condition": "naive_icl",
+      "context_cost": 76,
+      "decoy_answer": "queue-alpha",
+      "effective_condition": "naive_icl",
+      "exact_verifier_witness": {
+        "accepted": false,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "queue-alpha",
+        "expected_answer": "queue-beta",
+        "failure_reasons": [
+          "answer_mismatch",
+          "decoy_memory_selected"
+        ],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": true,
+        "selected_answer": "queue-alpha",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "queue-beta",
+            "queue-alpha",
+            "unknown"
+          ],
+          "normalized_output": "queue-alpha"
+        }
+      },
+      "expected_answer": "queue-beta",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 3,
+      "generation_duration_s": 0.049614998046308756,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "naive_icl",
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-c1-stale-queue:naive_icl:memory-1"
+        ],
+        "memory_lines": [
+          "stale memory: incident RX-4 belongs to queue-alpha."
+        ],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": true,
+        "task_id": "5461-c1-stale-queue"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": true,
+      "output_text": " queue-alpha",
+      "policy_receipt": {
+        "condition": "naive_icl",
+        "policy_reason": "Exp5460 replay gates suppress stale queue memories.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "986b0ace46ade3d68a42b2c0f5a460c1cb22b4d1090f9e7c9ffdd8a4e7eeb06c",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-c1-stale-queue\nQuestion: Which queue owns incident RX-4?\nSupplied evidence:\n- stale memory: incident RX-4 belongs to queue-alpha.\nFinal answer:",
+      "random_seed": 5664,
+      "row_checksum": "sha256:4650ed0001d03bfcdf6992305fe9af8db7808662316000bd0170e6dd357a4e19",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "queue-alpha",
+      "session_id": "session-c",
+      "stale_memory_candidate": true,
+      "task_id": "5461-c1-stale-queue",
+      "token_cost": 79,
+      "verifier_cost": 3
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "stale_memory",
+      "condition": "governed_memory",
+      "context_cost": 79,
+      "decoy_answer": "queue-alpha",
+      "effective_condition": "governed_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "queue-alpha",
+        "expected_answer": "queue-beta",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "queue-beta",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "queue-beta",
+            "queue-alpha",
+            "unknown"
+          ],
+          "normalized_output": "queue-beta. task id: 5461-c1-stale-queue question:"
+        }
+      },
+      "expected_answer": "queue-beta",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.20649275509640574,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "governed_memory",
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-c1-stale-queue:governed_memory:memory-1"
+        ],
+        "memory_lines": [
+          "fresh replay-verified memory: incident RX-4 belongs to queue-beta."
+        ],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": true,
+        "task_id": "5461-c1-stale-queue"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "output_text": " queue-beta.\nTask id: 5461-c1-stale-queue\nQuestion:",
+      "policy_receipt": {
+        "condition": "governed_memory",
+        "policy_reason": "Exp5460 replay gates suppress stale queue memories.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "03ed956fe4c32e645b0498fb46d6c53cb3e5c6ed4b1da2d7b1182bfb6051439f",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-c1-stale-queue\nQuestion: Which queue owns incident RX-4?\nSupplied evidence:\n- fresh replay-verified memory: incident RX-4 belongs to queue-beta.\nFinal answer:",
+      "random_seed": 5665,
+      "row_checksum": "sha256:74f534c95de6d6c4543afb3022978aa85954b8276996f2d91234fb66d897cf6e",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "queue-beta",
+      "session_id": "session-c",
+      "stale_memory_candidate": true,
+      "task_id": "5461-c1-stale-queue",
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "stale_memory",
+      "condition": "policy_selected",
+      "context_cost": 79,
+      "decoy_answer": "queue-alpha",
+      "effective_condition": "governed_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "queue-alpha",
+        "expected_answer": "queue-beta",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "queue-beta",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "queue-beta",
+            "queue-alpha",
+            "unknown"
+          ],
+          "normalized_output": "queue-beta. task id: 5461-c1-stale-queue question:"
+        }
+      },
+      "expected_answer": "queue-beta",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.18784144800156355,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "policy_selected",
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-c1-stale-queue:governed_memory:memory-1"
+        ],
+        "memory_lines": [
+          "fresh replay-verified memory: incident RX-4 belongs to queue-beta."
+        ],
+        "negative_transfer_candidate": true,
+        "stale_memory_candidate": true,
+        "task_id": "5461-c1-stale-queue"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "output_text": " queue-beta.\nTask id: 5461-c1-stale-queue\nQuestion:",
+      "policy_receipt": {
+        "condition": "policy_selected",
+        "policy_reason": "Exp5460 replay gates suppress stale queue memories.",
+        "policy_selected": true,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": "governed_memory",
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "03ed956fe4c32e645b0498fb46d6c53cb3e5c6ed4b1da2d7b1182bfb6051439f",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-c1-stale-queue\nQuestion: Which queue owns incident RX-4?\nSupplied evidence:\n- fresh replay-verified memory: incident RX-4 belongs to queue-beta.\nFinal answer:",
+      "random_seed": 5666,
+      "row_checksum": "sha256:45e3e004f02a242bcb8b7b9bf5d2eba416a3eb7ed51a70c1187af59d76a10a3b",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "queue-beta",
+      "session_id": "session-c",
+      "stale_memory_candidate": true,
+      "task_id": "5461-c1-stale-queue",
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "no_memory_competitive",
+      "condition": "no_memory",
+      "context_cost": 84,
+      "decoy_answer": "K-24",
+      "effective_condition": "no_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "K-24",
+        "expected_answer": "K-42",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "K-42",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "K-42",
+            "K-24",
+            "unknown"
+          ],
+          "normalized_output": "k-42. task id: 5461-d1-fresh-ticket question:"
+        }
+      },
+      "expected_answer": "K-42",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.21854190714657307,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "no_memory",
+        "effective_condition": "no_memory",
+        "memory_ids": [
+          "5461-d1-fresh-ticket:no_memory:memory-1"
+        ],
+        "memory_lines": [
+          "current ticket text: shipping code is K-42."
+        ],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-d1-fresh-ticket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " K-42.\n\nTask id: 5461-d1-fresh-ticket\nQuestion:",
+      "policy_receipt": {
+        "condition": "no_memory",
+        "policy_reason": "Exp5460 keeps no-memory competitive for fresh simple rows.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "bd9333ea64d2fd476bcb8394d0b118aece469ea2246df790870955f477940677",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-d1-fresh-ticket\nQuestion: Current ticket says the shipping code is K-42. What is the shipping code?\nSupplied evidence:\n- current ticket text: shipping code is K-42.\nFinal answer:",
+      "random_seed": 5764,
+      "row_checksum": "sha256:888323ac327b81590db01ef6a471962c876992327a97509fd734289032f5de3b",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "K-42",
+      "session_id": "session-d",
+      "stale_memory_candidate": false,
+      "task_id": "5461-d1-fresh-ticket",
+      "token_cost": 108,
+      "verifier_cost": 1
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "no_memory_competitive",
+      "condition": "naive_icl",
+      "context_cost": 99,
+      "decoy_answer": "K-24",
+      "effective_condition": "naive_icl",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "K-24",
+        "expected_answer": "K-42",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "K-42",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "K-42",
+            "K-24",
+            "unknown"
+          ],
+          "normalized_output": "k-42"
+        }
+      },
+      "expected_answer": "K-42",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 4,
+      "generation_duration_s": 0.05853736912831664,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "naive_icl",
+        "effective_condition": "naive_icl",
+        "memory_ids": [
+          "5461-d1-fresh-ticket:naive_icl:memory-1",
+          "5461-d1-fresh-ticket:naive_icl:memory-2"
+        ],
+        "memory_lines": [
+          "current ticket text: shipping code is K-42.",
+          "irrelevant old example: a different ticket used K-24."
+        ],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-d1-fresh-ticket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " K-42",
+      "policy_receipt": {
+        "condition": "naive_icl",
+        "policy_reason": "Exp5460 keeps no-memory competitive for fresh simple rows.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "676b0c2544eae7b18f427cacd7c194b0b80e630a4b7a948dea68e2aca2d6527c",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-d1-fresh-ticket\nQuestion: Current ticket says the shipping code is K-42. What is the shipping code?\nSupplied evidence:\n- current ticket text: shipping code is K-42.\n- irrelevant old example: a different ticket used K-24.\nFinal answer:",
+      "random_seed": 5765,
+      "row_checksum": "sha256:4356534d4f28aed604c9c58a16cbab31f3a3e8f64cd72cf9629e03d9e06ad007",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "K-42",
+      "session_id": "session-d",
+      "stale_memory_candidate": false,
+      "task_id": "5461-d1-fresh-ticket",
+      "token_cost": 103,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "no_memory_competitive",
+      "condition": "governed_memory",
+      "context_cost": 100,
+      "decoy_answer": "K-24",
+      "effective_condition": "governed_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "K-24",
+        "expected_answer": "K-42",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "K-42",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "K-42",
+            "K-24",
+            "unknown"
+          ],
+          "normalized_output": "k-42. task id: 5461-d1-fresh-ticket question:"
+        }
+      },
+      "expected_answer": "K-42",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.20543472794815898,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "governed_memory",
+        "effective_condition": "governed_memory",
+        "memory_ids": [
+          "5461-d1-fresh-ticket:governed_memory:memory-1",
+          "5461-d1-fresh-ticket:governed_memory:memory-2"
+        ],
+        "memory_lines": [
+          "current ticket text: shipping code is K-42.",
+          "fresh current-ticket receipt: shipping code is K-42."
+        ],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-d1-fresh-ticket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " K-42.\nTask id: 5461-d1-fresh-ticket\nQuestion:",
+      "policy_receipt": {
+        "condition": "governed_memory",
+        "policy_reason": "Exp5460 keeps no-memory competitive for fresh simple rows.",
+        "policy_selected": false,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": null,
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "e25f25199f4d17759f260f3ae76b8861d53c3ea76425b846d5fcb563db4c0bdc",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-d1-fresh-ticket\nQuestion: Current ticket says the shipping code is K-42. What is the shipping code?\nSupplied evidence:\n- current ticket text: shipping code is K-42.\n- fresh current-ticket receipt: shipping code is K-42.\nFinal answer:",
+      "random_seed": 5766,
+      "row_checksum": "sha256:74a345e5852602d8e8061f0d372164930b237b5511bcba0d928a98e7b1992b9c",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "K-42",
+      "session_id": "session-d",
+      "stale_memory_candidate": false,
+      "task_id": "5461-d1-fresh-ticket",
+      "token_cost": 124,
+      "verifier_cost": 2
+    },
+    {
+      "accepted_by_final_authority": true,
+      "backend_details": {
+        "llama_cpp_create_completion": true
+      },
+      "case_family": "no_memory_competitive",
+      "condition": "policy_selected",
+      "context_cost": 84,
+      "decoy_answer": "K-24",
+      "effective_condition": "no_memory",
+      "exact_verifier_witness": {
+        "accepted": true,
+        "authority": "exact_task_verifier",
+        "decoy_answer": "K-24",
+        "expected_answer": "K-42",
+        "failure_reasons": [],
+        "model_self_verdict_ignored": true,
+        "negative_transfer_detected": false,
+        "selected_answer": "K-42",
+        "verified": true,
+        "witness": {
+          "literal_match_candidates": [
+            "K-42",
+            "K-24",
+            "unknown"
+          ],
+          "normalized_output": "k-42. task id: 5461-d1-fresh-ticket question:"
+        }
+      },
+      "expected_answer": "K-42",
+      "experiment_id": "experiment_5461_gated_sota_csl_memory_routing_v496",
+      "final_authority_bypassed": false,
+      "generated_token_count": 24,
+      "generation_duration_s": 0.20102167269214988,
+      "gpu_offload_evidence": true,
+      "memory_receipt": {
+        "condition": "policy_selected",
+        "effective_condition": "no_memory",
+        "memory_ids": [
+          "5461-d1-fresh-ticket:no_memory:memory-1"
+        ],
+        "memory_lines": [
+          "current ticket text: shipping code is K-42."
+        ],
+        "negative_transfer_candidate": false,
+        "stale_memory_candidate": false,
+        "task_id": "5461-d1-fresh-ticket"
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_role": "middle_moe",
+      "n_gpu_layers": -1,
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "output_text": " K-42.\n\nTask id: 5461-d1-fresh-ticket\nQuestion:",
+      "policy_receipt": {
+        "condition": "policy_selected",
+        "policy_reason": "Exp5460 keeps no-memory competitive for fresh simple rows.",
+        "policy_selected": true,
+        "policy_state_checksum": "sha256:a8b85f28cc3baace93466cf204eedf976d2dfc450208d324ac2c992886fc48a8",
+        "routed_condition": "no_memory",
+        "source_policy_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ]
+      },
+      "prompt_hash": "bd9333ea64d2fd476bcb8394d0b118aece469ea2246df790870955f477940677",
+      "prompt_text": "Return only the final answer token. Do not explain.\nIf no supplied evidence determines the answer, return unknown.\nTask id: 5461-d1-fresh-ticket\nQuestion: Current ticket says the shipping code is K-42. What is the shipping code?\nSupplied evidence:\n- current ticket text: shipping code is K-42.\nFinal answer:",
+      "random_seed": 5767,
+      "row_checksum": "sha256:3facd99cad08b6e453c49c2b95d6a8c57b38175ae728a2dca879f732a263da1b",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "schema": "carnot.experiment_5461.row.v1",
+      "selected_answer": "K-42",
+      "session_id": "session-d",
+      "stale_memory_candidate": false,
+      "task_id": "5461-d1-fresh-ticket",
+      "token_cost": 108,
+      "verifier_cost": 1
+    }
+  ],
+  "row_results_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl",
+  "run_date": "2026-07-09",
+  "runtime_backend": "llama_cpp_python_cuda_gguf",
+  "runtime_receipt": {
+    "blocked_preconditions": [],
+    "cuda_visible": true,
+    "gpu_offload_supported": true,
+    "llama_cpp": {
+      "gpu_offload_supported": true,
+      "import_ok": true,
+      "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | "
+    },
+    "llama_cpp_import_ok": true,
+    "load_receipt": {
+      "gpu_memory_after": [
+        {
+          "index": "0",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 8604,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": "1",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 8518,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 100
+        }
+      ],
+      "gpu_memory_before": [
+        {
+          "index": "0",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": "1",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "gpu_memory_delta_mb": 8600,
+      "load_duration_s": 8.026386888697743,
+      "n_gpu_layers": -1,
+      "offload_evidence": true
+    },
+    "n_gpu_layers": -1,
+    "nvidia_smi": {
+      "gpus": [
+        {
+          "index": "0",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": "1",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "ok": true,
+      "stderr": ""
+    },
+    "offload_evidence": true,
+    "runtime_backend": "llama_cpp_python_cuda_gguf",
+    "torch_cuda": {
+      "cuda_available": true,
+      "device_count": 2,
+      "import_ok": true
+    }
+  },
+  "schema": "carnot.experiment_5461.gated_sota_csl_memory_routing.v496",
+  "selected_model_spec": {
+    "file_receipt": {
+      "exists": true,
+      "inode": 4865361091,
+      "mtime_ns": 1778129415691941084,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "size_bytes": 16947539744,
+      "suffix": ".gguf"
+    },
+    "gpu_offload_verified": false,
+    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "legacy_smoke_only": false,
+    "local_path_available": true,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "n_gpu_layers": null,
+    "quantization": "Q4_K_M",
+    "ran_headline": false,
+    "role": "middle_moe",
+    "runtime_backend": null
+  },
+  "source_file_checksums": {
+    "module": "sha256:606607cfc634e867bdd6bdad53143896de258bd64e7522d7f9e6e3d721c0baa1",
+    "spec": "sha256:33b3000147c0a46eb70aaa100ec5454eeb904cd8f25562008a043649ac90b57e",
+    "upstream_policy": "sha256:d62a15938aae66e9586484d739e331210b32b4afe114b0da46d69d155fb5c96d"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5461_gated_sota_csl_memory_routing_v496.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "upstream_policy": "results/experiment_5460_csl_policy_bandit_v496.json"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5461",
+    "SCENARIO-LEARN-5461-PRECONDITIONS",
+    "SCENARIO-LEARN-5461-CONDITIONS",
+    "SCENARIO-LEARN-5461-VERIFIERS",
+    "SCENARIO-LEARN-5461-NO-WEIGHT-MUTATION"
+  ],
+  "stale_memory_deflection_rate": 1.0,
+  "status": "complete",
+  "task_count": 4,
+  "task_id": "exp5461-gated-sota-csl-memory-routing-v496",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5461_gated_sota_csl_memory_routing_v496.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5461_gated_sota_csl_memory_routing_v496.py -m pytest tests/python/test_experiment_5461_gated_sota_csl_memory_routing_v496.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5461_gated_sota_csl_memory_routing_v496.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "verifier_cost_delta": 0.3,
+  "weight_mutation_receipt": {
+    "adapter_weights_loaded": false,
+    "adapter_weights_written": false,
+    "learned_state_scope": "exp5460_policy_state_and_prompt_memory_routing_only",
+    "model_file_receipt_after": {
+      "exists": true,
+      "inode": 4865361091,
+      "mtime_ns": 1778129415691941084,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "size_bytes": 16947539744,
+      "suffix": ".gguf"
+    },
+    "model_file_receipt_before": {
+      "exists": true,
+      "inode": 4865361091,
+      "mtime_ns": 1778129415691941084,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "size_bytes": 16947539744,
+      "suffix": ".gguf"
+    },
+    "model_weights_loaded": true,
+    "model_weights_written": false,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true
+  }
+}
