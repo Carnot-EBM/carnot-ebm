@@ -28197,6 +28197,97 @@ artifact rather than upgrading it to solved.
 |---|---|---|
 | REQ-VERIFY-5476 | Planned (`python/carnot/experiment_5476_helper_lemma_core_witness_repair_v497.py`, `results/experiment_5476_helper_lemma_core_witness_repair_v497.json`) | Planned (`tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py`) |
 
+### REQ-VERIFY-5477: p-dit LNS Boundary-Exchange Accounting V497
+
+The repository SHALL provide Exp 5477 at
+`python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py` and write
+`results/experiment_5477_pdit_lns_boundary_exchange_v497.json` without invoking
+a live LLM, generated-text judge, hardware sampler, board timing path, hardware
+performance comparison, hardware speedup claim, or modifying
+`scripts/research_conductor.py`. Exp 5477 SHALL remain a CPU-local,
+deterministic accounting fixture for p-bit/p-dit boundary-exchange workloads
+before hardware receipts.
+
+The runner SHALL build a small SAT, MaxCut, and assignment-style fixture set
+with explicit p-bit binary controls and p-dit categorical controls. Every
+fixture SHALL expose stable workload-hash inputs, partition or boundary
+metadata, boundary messages, prediction scores where available, an exact
+unrestricted solution, and advisory p-bit/p-dit assumptions. The fixture set
+SHALL count p-bit and p-dit variables separately and SHALL report workload
+hashes derived only from canonical fixture content, not from timing, row order
+side effects, or the output artifact checksum.
+
+The runner SHALL simulate exactly these LNS-style destroy strategies:
+`random`, `conflict_core_guided`, and `prediction_score_guided`. It SHALL
+simulate exactly these repair modes: `greedy_exact_fallback`,
+`stochastic_advisory_repair`, and `no_repair_baseline`. Destroy and repair
+telemetry SHALL record the destroyed controls, boundary messages sent across
+partitions, advisory repair candidate, solver final label, fallback use, and
+whether any unsafe false accept occurred. Advisory p-bit or p-dit repair MAY
+improve a candidate objective or violation count, but no advisory candidate
+SHALL become the final SAT/UNSAT, MaxCut, or assignment label without an exact
+solver fallback recheck.
+
+The artifact SHALL include top-level fields `fixture_count`,
+`pbit_variable_count`, `pdit_variable_count`, `destroy_strategies`,
+`repair_modes`, `workload_hashes`, `exact_fallback_completeness_rate`,
+`unsafe_false_accept_count`, `advisory_improvement_delta`,
+`boundary_exchange_ready`, `hardware_speedup_claim`, `inference_substrate`,
+`random_seed`, and `honest_verdict`, with field principles explaining each
+required field. `inference_substrate` SHALL equal
+`deterministic_solver_no_hardware_speedup`. `hardware_speedup_claim` SHALL be
+false. `honest_verdict` SHALL start with `complete:` or `blocked:`. The
+`boundary_exchange_ready` gate SHALL be true only when SAT, MaxCut, and
+assignment fixtures are present, all destroy strategies and repair modes are
+measured, workload hashes are stable and unique, exact fallback completeness is
+1.0, unsafe false accepts are zero, and the artifact contains no hardware
+speedup claim.
+
+Required field principles:
+
+- `fixture_count`: principle "SAT/MaxCut/assignment fixture coverage"
+- `pbit_variable_count`: principle "binary p-bit control accounting"
+- `pdit_variable_count`: principle "categorical p-dit control accounting"
+- `destroy_strategies`: principle "LNS destroy strategy coverage"
+- `repair_modes`: principle "repair mode coverage"
+- `workload_hashes`: principle "stable canonical workload identity"
+- `exact_fallback_completeness_rate`: principle "exact solver final authority"
+- `unsafe_false_accept_count`: principle "advisory safety boundary"
+- `advisory_improvement_delta`: principle "advisory utility without final authority"
+- `boundary_exchange_ready`: principle "downstream boundary-exchange gate"
+- `hardware_speedup_claim`: principle "must be false"
+- `inference_substrate`: principle "deterministic CPU solver, no hardware speedup"
+- `random_seed`: principle "deterministic replay seed"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+### SCENARIO-VERIFY-5477: Advisory Boundary Repairs Cannot Override Exact Fallback
+
+Given bounded SAT, MaxCut, and assignment-style fixtures with p-bit and p-dit
+controls, when Exp5477 evaluates every destroy strategy and repair mode, then
+every row records boundary messages, destroyed controls, advisory repair
+candidate quality, exact solver final label, fallback use, and unsafe
+false-accept status. Random, conflict-core-guided, and prediction-score-guided
+destroy rows MAY produce different advisory candidates, and stochastic advisory
+repair MAY improve objective or violation telemetry, but the final labels SHALL
+match unrestricted exact fallback for every row.
+
+If workload hashes are unstable, if any destroy strategy or repair mode is
+missing, if SAT/MaxCut/assignment coverage is incomplete, if an advisory repair
+candidate is accepted as final without exact fallback authority, if exact
+fallback completeness drops below 1.0, if unsafe false accepts are nonzero, if
+`inference_substrate` differs from
+`deterministic_solver_no_hardware_speedup`, or if `hardware_speedup_claim` is
+true, then Exp5477 SHALL write
+`results/experiment_5477_pdit_lns_boundary_exchange_v497.json` with
+`boundary_exchange_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5477)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5477 | Planned (`python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py`, `results/experiment_5477_pdit_lns_boundary_exchange_v497.json`) | Planned (`tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
