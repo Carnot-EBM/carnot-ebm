@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.498",
+  "generated_at": "2026-07-09T15:14:52Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true,
+  "summary": "No data available this milestone for experiment-level timing: locked fields report 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. The timing block reports a timing integrity mismatch: both reconstruction paths found 0 experiment commits while ops/changelog.md contains 2026.07.498 references, so no slowest experiment, compute-bound cause, GPU-efficiency finding, or DualGPURunner miss is inferred.",
+  "bottlenecks_identified": [
+    "TIMING INTEGRITY MISMATCH: the live git-log path and disk-mtime reconstruction both found 0 experiment commits for 2026.07.498 while ops/changelog.md contains entries referencing 2026.07.498.",
+    "Experiment-level operational accounting is unavailable for this milestone, so compute-bound slowest-run causes, GPU utilization efficiency, and DualGPURunner engagement cannot be assessed."
+  ],
+  "improvements_suggested": [
+    "Repair the timing assembly path that can produce zero experiment rows for a changelog-referenced milestone.",
+    "Persist per-experiment timing records during conductor execution, including experiment id, wall time, compute_bound marker, model-count marker, and runner marker.",
+    "Add a closeout consistency check that blocks metric-bearing retrospectives when changelog references exist but both timing reconstruction paths return zero rows."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a regression test for the 2026.07.498 timing integrity mismatch so the closeout path cannot silently emit zero rows for a referenced milestone.",
+    "Write timing receipts at experiment completion instead of relying only on post-hoc git-log or disk-mtime reconstruction.",
+    "Gate GPU and DualGPURunner retrospective claims on persisted compute_bound and parallel-model markers."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is an accounting-failure report, not a runtime-performance report. The GPU snapshot showed idle devices, but with 0 compute-bound timing rows the correct interpretation is to avoid a GPU bottleneck claim and fix timing provenance first."
+}
