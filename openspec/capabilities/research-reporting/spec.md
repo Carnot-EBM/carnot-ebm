@@ -38330,3 +38330,75 @@ keeps `new_references_added=[]`, and does not append a references block.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5455 | Planned (`python/carnot/experiment_5455_source_delta_v496.py`, `results/experiment_5455_source_delta_v496.json`) | Planned (`tests/python/test_experiment_5455_source_delta_v496.py`) |
+
+### REQ-REPORT-5466: V496 PRD Gap And Agent-Failure Evidence Table
+
+The Exp5466 workflow SHALL read every available result artifact for Exp5454
+through Exp5465, including sidecar JSON and JSONL evidence files whose names
+begin with the corresponding experiment id. It SHALL explicitly record missing
+main experiment artifacts and tasks skipped by upstream gates instead of
+inferring planned task success. It SHALL write
+`results/experiment_5466_prd_gap_agent_failure_table_v496.json`, SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT modify `ops/changelog.md`, SHALL
+NOT modify `ops/status.md`, and SHALL NOT modify `_bmad/traceability.md`.
+
+The workflow SHALL map the actual Exp5454-Exp5465 evidence to PRD requirements,
+especially FR-11 continuous self-learning and FR-12 verifiable reasoning. It
+SHALL separate closed, partial, blocked, honest-null, skipped-gated, and missing
+lanes. It SHALL record agent failure modes covering tautology, duration/precondition failures (duration precondition failures), missing hardware, no-bank ARC (no bank arc), GGUF/offload gaps (GGUF offload gaps; gguf offload gaps), and unsupported hidden/internal claims (unsupported hidden internal claims). It SHALL preserve artifact
+failure stamps, readiness blockers, no-speedup boundaries, and no-bank ARC
+outcomes without laundering them into stronger claims.
+
+The artifact SHALL include the required fields `milestone`,
+`artifact_paths_read`, `missing_artifacts`, `skipped_gated_tasks`,
+`closed_lanes`, `partial_lanes`, `blocked_lanes`, `honest_null_lanes`,
+`prd_requirement_map`, `agent_failure_taxonomy`, `docs_updated`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include `status`,
+`schema`, `experiment_id`, `field_principles`, `sidecar_artifacts_read`,
+`spec_refs`, `tests_run`, `random_seed`, and `reproducibility_checksum` so the
+gap table can be audited without rerunning upstream experiments.
+
+Required field principles:
+
+- `milestone`: principle "conductor route key for 2026.07.496"
+- `artifact_paths_read`: principle "actual evidence basis"
+- `missing_artifacts`: principle "no fabricated upstream evidence"
+- `skipped_gated_tasks`: principle "gate skips stay distinct from completed work"
+- `closed_lanes`: principle "positive PRD evidence boundary"
+- `partial_lanes`: principle "bounded progress boundary"
+- `blocked_lanes`: principle "blocked evidence stays blocked"
+- `honest_null_lanes`: principle "measured null outcomes remain explicit"
+- `prd_requirement_map`: principle "FR-11 and FR-12 traceability"
+- `agent_failure_taxonomy`: principle "operational learning from agent failures"
+- `docs_updated`: principle "task-specific stop rule; no ops reconciliation here"
+- `inference_substrate`: principle "aggregation only; no hidden live inference"
+- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
+
+#### SCENARIO-REPORT-5466: Present V496 Artifacts Emit Complete PRD Gap Table
+
+**Given** all main Exp5454 through Exp5465 result artifacts are readable
+**And** any same-prefix sidecar JSON or JSONL artifacts are readable
+**When** the Exp5466 workflow runs
+**Then** it writes the required JSON artifact, records all artifact paths read,
+sets `missing_artifacts=[]`, separates closed, partial, blocked, and honest-null
+lanes from actual artifact fields, records an empty `skipped_gated_tasks` list
+when no upstream artifact reports a gate skip, maps FR-11 and FR-12 evidence,
+records the required agent failure taxonomy entries, sets `docs_updated=[]`,
+and starts `honest_verdict` with `complete:`.
+
+#### SCENARIO-REPORT-5466-MISSING-OR-SKIPPED: Missing Or Skipped Inputs Fail Honest
+
+**Given** one or more main Exp5454 through Exp5465 result artifacts are absent
+or an upstream artifact reports a skipped gate
+**When** the Exp5466 workflow runs
+**Then** it preserves the observed missing paths or skipped-gated tasks, leaves
+uncited lanes in the missing or skipped classification rather than fabricating
+evidence, and starts `honest_verdict` with `blocked:` when any required main
+artifact is missing.
+
+## Implementation Status (REQ-REPORT-5466)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5466 | Planned (`python/carnot/reporting/prd_gap_agent_failure_table_v496_5466.py`, `results/experiment_5466_prd_gap_agent_failure_table_v496.json`) | Planned (`tests/python/test_experiment_5466_prd_gap_agent_failure_table_v496.py`) |
