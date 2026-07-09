@@ -10668,3 +10668,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 18:05 UTC | Gated SOTA GGUF concept/claim evidence panel | OK | 90 passed, 1 warning in 12.09s |
 | 2026-07-09 18:22 UTC | Gated helper-contract hierarchical claim fixture | OK | 88 passed, 1 warning in 12.18s |
 | 2026-07-09 18:36 UTC | CSL tautology corrigendum and metric-independence  | OK | 87 passed, 1 warning in 10.36s |
+| 2026-07-09 18:51 UTC | Executor-frozen CSL experience-graph replay fixtur | OK | 88 passed, 1 warning in 11.84s |
