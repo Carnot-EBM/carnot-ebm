@@ -1736,6 +1736,76 @@ accepted, the LCD-bias probe has no positive advisory trap, or
 **Then** validation fails closed or emits a blocked artifact, and no live
 guided-decoding headline is reconsidered.
 
+### REQ-SAFE-5471: Guard-Composition Scale Fixture V497
+
+Carnot SHALL provide Exp5471 at
+`python/carnot/experiment_5471_guard_composition_scale_v497.py` and write
+`results/experiment_5471_guard_composition_scale_v497.json` without modifying
+`scripts/research_conductor.py`. The experiment SHALL reuse the Exp5470 typed
+rewrite-state fixture shape, extend it with additional deterministic rows, and
+compose license-transition guards, semantic-graph guards, deterministic distortion
+guards, and minimal-core feedback. The fixture SHALL include rows
+where exactly one guard catches the failure and rows where a failure requires
+composed guards.
+The deterministic distortion guards SHALL own factual rewrite catches.
+
+Every candidate SHALL carry an exact final validator result that is independent
+from repair proposal scores, scoring heuristics, or local syntax/LCD-style
+advice. Minimal-core feedback for unsatisfied constraints SHALL report stable
+minimal core IDs separately from semantic graph node IDs. Guard success,
+readiness, and final acceptance SHALL be recomputed from exact validator
+evidence, not from the scalar used to propose a repair.
+
+The terminal result artifact MUST include:
+`fixture_count`, `minimal_core_count`, `semantic_graph_node_count`,
+`guard_overlap_matrix`, `false_accept_rate`, `false_reject_rate`,
+`exact_final_agreement`, `guard_composition_ready`,
+`guided_decoding_quarantine_lifted`, `inference_substrate`, `random_seed`, and
+`honest_verdict`. `guided_decoding_quarantine_lifted` MUST be false,
+`inference_substrate` MUST equal `deterministic_fixture_no_llm`, and
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Field principles:
+- `fixture_count`: scaled deterministic fixture coverage.
+- `minimal_core_count`: distinct unsatisfied-constraint minimal core IDs, separate from semantic graph nodes.
+- `semantic_graph_node_count`: distinct semantic graph node IDs observed in receipts.
+- `guard_overlap_matrix`: per-guard catch and pairwise overlap rates from exact evidence.
+- `false_accept_rate`: invalid candidates accepted by exact final validators.
+- `false_reject_rate`: valid candidates rejected by exact final validators.
+- `exact_final_agreement`: exact final verdicts matching curated expected labels.
+- `guard_composition_ready`: downstream gate for deterministic guard composition.
+- `guided_decoding_quarantine_lifted`: guided-decoding quarantine remains closed.
+- `inference_substrate`: deterministic fixture with no LLM inference.
+- `random_seed`: deterministic fixture seed.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5471: Exact Guard Composition Beats Repair Scores
+
+**Given** the clean Exp5470 fixture, additional scale-up rows, deterministic
+minimal-core feedback, semantic graph receipts, and deterministic distortion
+guards,
+
+**When** Exp5471 evaluates valid rows, single-guard failures, and composed-guard
+failures,
+
+**Then** it writes
+`results/experiment_5471_guard_composition_scale_v497.json`, reports which
+guard catches each failed candidate, computes per-guard catch rates, pairwise
+overlap rates, false accepts, false rejects, and exact final agreement from
+row-level exact evidence, keeps minimal core IDs disjoint from semantic graph
+node IDs, sets `exact_final_agreement=1.0`, sets
+`guard_composition_ready=true`, keeps
+`guided_decoding_quarantine_lifted=false`, and records
+`inference_substrate=deterministic_fixture_no_llm`.
+
+**And** if guard success is derived from the same scalar used to propose a
+repair, if an exact final validator result is missing, if core IDs are conflated
+with semantic graph node IDs, if an invalid candidate is accepted, if a valid
+candidate is rejected, or if `scripts/research_conductor.py` is modified,
+
+**Then** validation fails closed or emits a blocked artifact, and guided decoding
+remains quarantined.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1769,5 +1839,6 @@ guided-decoding headline is reconsidered.
 | REQ-SAFE-5457 | Planned | Exp 5457: distortion-guarded local SOTA verifier-potential decoding rerun |
 | REQ-SAFE-5459 | Planned | Exp 5459: deterministic constraint-distortion guard |
 | REQ-SAFE-5470 | Planned | Exp 5470: deterministic rewrite-state semantic fixture |
+| REQ-SAFE-5471 | Planned | Exp 5471: deterministic guard-composition scale-up |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |

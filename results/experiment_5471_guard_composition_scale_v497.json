@@ -1,0 +1,1799 @@
+{
+  "composed_guard_failure_count": 4,
+  "exact_final_agreement": 1.0,
+  "experiment_id": "experiment_5471_guard_composition_scale_v497",
+  "false_accept_rate": 0.0,
+  "false_reject_rate": 0.0,
+  "field_principles": {
+    "exact_final_agreement": "exact final verdicts matching curated expected labels.",
+    "false_accept_rate": "invalid candidates accepted by exact final validators.",
+    "false_reject_rate": "valid candidates rejected by exact final validators.",
+    "fixture_count": "scaled deterministic fixture coverage.",
+    "guard_composition_ready": "downstream gate for deterministic guard composition.",
+    "guard_overlap_matrix": "per-guard catch and pairwise overlap rates from exact evidence.",
+    "guided_decoding_quarantine_lifted": "guided-decoding quarantine remains closed.",
+    "honest_verdict": "terminal status; start with \"complete:\" or \"blocked:\".",
+    "inference_substrate": "deterministic fixture with no LLM inference.",
+    "minimal_core_count": "distinct unsatisfied-constraint minimal core IDs, separate from semantic graph nodes.",
+    "random_seed": "deterministic fixture seed.",
+    "semantic_graph_node_count": "distinct semantic graph node IDs observed in receipts."
+  },
+  "fixture_count": 13,
+  "guard_catch_counts": {
+    "distortion_guard": 4,
+    "license_transition_guard": 6,
+    "semantic_graph_guard": 5
+  },
+  "guard_catch_rates": {
+    "distortion_guard": 0.4,
+    "license_transition_guard": 0.6,
+    "semantic_graph_guard": 0.5
+  },
+  "guard_composition_ready": true,
+  "guard_ids": [
+    "license_transition_guard",
+    "semantic_graph_guard",
+    "distortion_guard"
+  ],
+  "guard_overlap_matrix": {
+    "distortion_guard": {
+      "distortion_guard": {
+        "count": 4,
+        "rate": 0.4
+      },
+      "license_transition_guard": {
+        "count": 2,
+        "rate": 0.2
+      },
+      "semantic_graph_guard": {
+        "count": 2,
+        "rate": 0.2
+      }
+    },
+    "license_transition_guard": {
+      "distortion_guard": {
+        "count": 2,
+        "rate": 0.2
+      },
+      "license_transition_guard": {
+        "count": 6,
+        "rate": 0.6
+      },
+      "semantic_graph_guard": {
+        "count": 2,
+        "rate": 0.2
+      }
+    },
+    "semantic_graph_guard": {
+      "distortion_guard": {
+        "count": 2,
+        "rate": 0.2
+      },
+      "license_transition_guard": {
+        "count": 2,
+        "rate": 0.2
+      },
+      "semantic_graph_guard": {
+        "count": 5,
+        "rate": 0.5
+      }
+    }
+  },
+  "guided_decoding_quarantine_lifted": false,
+  "honest_verdict": "complete: deterministic guard composition ready; guided decoding remains quarantined",
+  "inference_substrate": "deterministic_fixture_no_llm",
+  "metric_details": {
+    "composed_guard_failure_count": 4,
+    "core_ids_separate_from_semantic_nodes": true,
+    "exact_authority_rows": 13,
+    "exact_final_agreement": 1.0,
+    "false_accept_rate": 0.0,
+    "false_reject_rate": 0.0,
+    "fixture_count": 13,
+    "guard_catch_counts": {
+      "distortion_guard": 4,
+      "license_transition_guard": 6,
+      "semantic_graph_guard": 5
+    },
+    "guard_catch_rates": {
+      "distortion_guard": 0.4,
+      "license_transition_guard": 0.6,
+      "semantic_graph_guard": 0.5
+    },
+    "guard_evidence_independent": true,
+    "guard_overlap_matrix": {
+      "distortion_guard": {
+        "distortion_guard": {
+          "count": 4,
+          "rate": 0.4
+        },
+        "license_transition_guard": {
+          "count": 2,
+          "rate": 0.2
+        },
+        "semantic_graph_guard": {
+          "count": 2,
+          "rate": 0.2
+        }
+      },
+      "license_transition_guard": {
+        "distortion_guard": {
+          "count": 2,
+          "rate": 0.2
+        },
+        "license_transition_guard": {
+          "count": 6,
+          "rate": 0.6
+        },
+        "semantic_graph_guard": {
+          "count": 2,
+          "rate": 0.2
+        }
+      },
+      "semantic_graph_guard": {
+        "distortion_guard": {
+          "count": 2,
+          "rate": 0.2
+        },
+        "license_transition_guard": {
+          "count": 2,
+          "rate": 0.2
+        },
+        "semantic_graph_guard": {
+          "count": 5,
+          "rate": 0.5
+        }
+      }
+    },
+    "minimal_core_count": 15,
+    "row_checksums_match": true,
+    "semantic_graph_node_count": 55,
+    "single_guard_failure_count": 6
+  },
+  "milestone": "2026.07.497",
+  "minimal_core_count": 15,
+  "random_seed": 5471,
+  "reproducibility_checksum": "300fd76f9d55d1e5f3fce6b3762f0ac3c25f5d065675365f8b07f1d37046603c",
+  "research_conductor_modified": false,
+  "row_provenance_checksum": "251dce6a3b1fdf29f354578da0755a3fd81d5bb49d131e34fcfea4ed3117d18a",
+  "row_results": [
+    {
+      "candidate_id": "5470-valid-fact-paraphrase",
+      "case_type": "valid_rewrite",
+      "caught_by_guards": [],
+      "description": "Preserves the opened-year fact and its witness row.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": true,
+        "caught_by_guards": [],
+        "computed_from_repair_score": false,
+        "expected_accept": true,
+        "expected_guard_ids": [],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": []
+      },
+      "expected_accept": true,
+      "expected_guard_ids": [],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [],
+                "present": [
+                  "fact_supported:clinic.opened_year"
+                ],
+                "required": [
+                  "fact_supported:clinic.opened_year"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {},
+        "minimal_core_ids": [],
+        "unsatisfied_constraint_ids": []
+      },
+      "repair_proposal": {
+        "proposal_score": 0.13,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "none",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "40c8cd526afe183661382e9a3917da88cdcb910fc090507862dbdb5ba5fa262a",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5470-valid-fact-paraphrase:fact_anchor:present",
+          "edge:5470-valid-fact-paraphrase:fact_anchor:required"
+        ],
+        "node_count": 3,
+        "node_ids": [
+          "sem:5470-valid-fact-paraphrase:domain:fact_anchor",
+          "sem:5470-valid-fact-paraphrase:fact_anchor:present:fact_supported:clinic.opened_year",
+          "sem:5470-valid-fact-paraphrase:fact_anchor:required:fact_supported:clinic.opened_year"
+        ]
+      },
+      "source_state_id": "source-valid-fact",
+      "target_state_id": "target-valid-fact"
+    },
+    {
+      "candidate_id": "5470-valid-arithmetic",
+      "case_type": "arithmetic_valid",
+      "caught_by_guards": [],
+      "description": "Computes 2 + 3 = 5 with an explicit computation license.",
+      "domain": "arithmetic",
+      "exact_final_verdict": {
+        "accepted": true,
+        "caught_by_guards": [],
+        "computed_from_repair_score": false,
+        "expected_accept": true,
+        "expected_guard_ids": [],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": []
+      },
+      "expected_accept": true,
+      "expected_guard_ids": [],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "arithmetic": {
+                "forbidden_present": [],
+                "present": [
+                  "arithmetic_result_matches"
+                ],
+                "required": [
+                  "arithmetic_result_matches"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {},
+        "minimal_core_ids": [],
+        "unsatisfied_constraint_ids": []
+      },
+      "repair_proposal": {
+        "proposal_score": 0.183,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "none",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "02113c19273f014ae419eb1d5c5f4d783417bd13dc866855e505e2aff7a95570",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5470-valid-arithmetic:arithmetic:present",
+          "edge:5470-valid-arithmetic:arithmetic:required"
+        ],
+        "node_count": 3,
+        "node_ids": [
+          "sem:5470-valid-arithmetic:arithmetic:present:arithmetic_result_matches",
+          "sem:5470-valid-arithmetic:arithmetic:required:arithmetic_result_matches",
+          "sem:5470-valid-arithmetic:domain:arithmetic"
+        ]
+      },
+      "source_state_id": "source-valid-arithmetic",
+      "target_state_id": "target-valid-arithmetic"
+    },
+    {
+      "candidate_id": "5470-hidden-premise",
+      "case_type": "hidden_premise_mutation",
+      "caught_by_guards": [
+        "license_transition_guard"
+      ],
+      "description": "Adds an unlicensed backup-generator premise.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "license_transition_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "license_transition_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "hidden_premise"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "license_transition_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": true,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [
+              "clinic.has_backup_generator"
+            ],
+            "missing_or_bad_license_ids": [
+              "UNLICENSED:backup-generator"
+            ],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": [
+            "hidden_premise"
+          ]
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [],
+                "present": [
+                  "fact_supported:clinic.opened_year"
+                ],
+                "required": [
+                  "fact_supported:clinic.opened_year"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "license_transition_guard": [
+            "core:5470-hidden-premise:license_transition_guard:hidden_premise"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5470-hidden-premise:license_transition_guard:hidden_premise"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:license_transition_guard:hidden_premise"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.236,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "minimal_core_feedback",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "cdea18cdb648d1f9a8843c524896d657b4ce947e014719422a20190a9c43ab7f",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5470-hidden-premise:fact_anchor:present",
+          "edge:5470-hidden-premise:fact_anchor:required"
+        ],
+        "node_count": 3,
+        "node_ids": [
+          "sem:5470-hidden-premise:domain:fact_anchor",
+          "sem:5470-hidden-premise:fact_anchor:present:fact_supported:clinic.opened_year",
+          "sem:5470-hidden-premise:fact_anchor:required:fact_supported:clinic.opened_year"
+        ]
+      },
+      "source_state_id": "source-hidden-premise",
+      "target_state_id": "target-hidden-premise"
+    },
+    {
+      "candidate_id": "5470-unlicensed-state-change",
+      "case_type": "unlicensed_state_change",
+      "caught_by_guards": [
+        "license_transition_guard"
+      ],
+      "description": "Flips a locked order to unlocked without a transition license.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "license_transition_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "license_transition_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "unlicensed_mutation"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "license_transition_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": true,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": [
+              "order.locked"
+            ]
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": [
+            "unlicensed_mutation"
+          ]
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [],
+                "present": [],
+                "required": []
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "license_transition_guard": [
+            "core:5470-unlicensed-state-change:license_transition_guard:unlicensed_mutation"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5470-unlicensed-state-change:license_transition_guard:unlicensed_mutation"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:license_transition_guard:unlicensed_mutation"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.289,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "minimal_core_feedback",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "899546a242a0f6ef0cbce72a2f04b6e3b5e389199ff30e64ed373abcab10d6b6",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [],
+        "node_count": 1,
+        "node_ids": [
+          "sem:5470-unlicensed-state-change:domain:fact_anchor"
+        ]
+      },
+      "source_state_id": "source-unlicensed-state",
+      "target_state_id": "target-unlicensed-state"
+    },
+    {
+      "candidate_id": "5470-fabricated-citation",
+      "case_type": "fabricated_evidence",
+      "caught_by_guards": [
+        "license_transition_guard"
+      ],
+      "description": "Keeps the fact but cites a non-existent witness row.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "license_transition_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "license_transition_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "fabricated_evidence"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "license_transition_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": true,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [
+              "CITE:phantom-report"
+            ],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [
+              "CITE:phantom-report"
+            ],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": [
+            "fabricated_evidence"
+          ]
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [],
+                "present": [
+                  "fact_supported:clinic.opened_year"
+                ],
+                "required": [
+                  "fact_supported:clinic.opened_year"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "license_transition_guard": [
+            "core:5470-fabricated-citation:license_transition_guard:fabricated_evidence"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5470-fabricated-citation:license_transition_guard:fabricated_evidence"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:license_transition_guard:fabricated_evidence"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.342,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "minimal_core_feedback",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "97e74f2594bb158b105d7bbb132aa8d3e21921b1ef0631b53586862164579e91",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5470-fabricated-citation:fact_anchor:present",
+          "edge:5470-fabricated-citation:fact_anchor:required"
+        ],
+        "node_count": 3,
+        "node_ids": [
+          "sem:5470-fabricated-citation:domain:fact_anchor",
+          "sem:5470-fabricated-citation:fact_anchor:present:fact_supported:clinic.opened_year",
+          "sem:5470-fabricated-citation:fact_anchor:required:fact_supported:clinic.opened_year"
+        ]
+      },
+      "source_state_id": "source-fabricated-citation",
+      "target_state_id": "target-fabricated-citation"
+    },
+    {
+      "candidate_id": "5470-json-semantic-invalid",
+      "case_type": "semantic_json_invalid",
+      "caught_by_guards": [
+        "semantic_graph_guard"
+      ],
+      "description": "JSON shape is valid but quantity exceeds licensed stock.",
+      "domain": "json_constraints",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "semantic_graph_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "semantic_graph_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "semantic_invalid"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "semantic_graph_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": true,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "json_constraints": {
+                "forbidden_present": [],
+                "present": [
+                  "json_shape_valid"
+                ],
+                "required": [
+                  "json_shape_valid",
+                  "json_semantic_valid"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": [
+              "json_semantic_valid"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": [
+            "semantic_invalid"
+          ]
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "semantic_graph_guard": [
+            "core:5470-json-semantic-invalid:semantic_graph_guard:semantic_invalid"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5470-json-semantic-invalid:semantic_graph_guard:semantic_invalid"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:semantic_graph_guard:semantic_invalid"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.395,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "minimal_core_feedback",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "02c8bfb4db08347e8303afe2d6acda4c22c23a93d28a34c9125a7ca2fbdfd3fb",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5470-json-semantic-invalid:json_constraints:present",
+          "edge:5470-json-semantic-invalid:json_constraints:required",
+          "edge:5470-json-semantic-invalid:missing"
+        ],
+        "node_count": 5,
+        "node_ids": [
+          "sem:5470-json-semantic-invalid:domain:json_constraints",
+          "sem:5470-json-semantic-invalid:json_constraints:present:json_shape_valid",
+          "sem:5470-json-semantic-invalid:json_constraints:required:json_semantic_valid",
+          "sem:5470-json-semantic-invalid:json_constraints:required:json_shape_valid",
+          "sem:5470-json-semantic-invalid:missing:json_semantic_valid"
+        ]
+      },
+      "source_state_id": "source-json",
+      "target_state_id": "target-json"
+    },
+    {
+      "candidate_id": "5470-api-precondition-invalid",
+      "case_type": "api_precondition_invalid",
+      "caught_by_guards": [
+        "semantic_graph_guard"
+      ],
+      "description": "API call is well-formed but violates the locked-order precondition.",
+      "domain": "api_preconditions",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "semantic_graph_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "semantic_graph_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "api_precondition_failed"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "semantic_graph_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": true,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "api_preconditions": {
+                "forbidden_present": [],
+                "present": [
+                  "api_shape_valid"
+                ],
+                "required": [
+                  "api_shape_valid",
+                  "api_preconditions_met"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": [
+              "api_preconditions_met"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": [
+            "api_precondition_failed"
+          ]
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "semantic_graph_guard": [
+            "core:5470-api-precondition-invalid:semantic_graph_guard:api_precondition_failed"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5470-api-precondition-invalid:semantic_graph_guard:api_precondition_failed"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:semantic_graph_guard:api_precondition_failed"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.448,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "minimal_core_feedback",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "9c41865d2a1c692a94cbd87804b1a95b141ef7a8cbfa4e4ed3d7dce75f2388f2",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5470-api-precondition-invalid:api_preconditions:present",
+          "edge:5470-api-precondition-invalid:api_preconditions:required",
+          "edge:5470-api-precondition-invalid:missing"
+        ],
+        "node_count": 5,
+        "node_ids": [
+          "sem:5470-api-precondition-invalid:api_preconditions:present:api_shape_valid",
+          "sem:5470-api-precondition-invalid:api_preconditions:required:api_preconditions_met",
+          "sem:5470-api-precondition-invalid:api_preconditions:required:api_shape_valid",
+          "sem:5470-api-precondition-invalid:domain:api_preconditions",
+          "sem:5470-api-precondition-invalid:missing:api_preconditions_met"
+        ]
+      },
+      "source_state_id": "source-api",
+      "target_state_id": "target-api"
+    },
+    {
+      "candidate_id": "5470-factual-distortion",
+      "case_type": "factual_distortion",
+      "caught_by_guards": [
+        "distortion_guard"
+      ],
+      "description": "Raises an anchored budget fact while reusing the old citation.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "distortion_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "distortion_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "factual_distortion"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "distortion_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": true,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": [
+              "budget.max_usd"
+            ]
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": [
+            "factual_distortion"
+          ]
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [
+                  "fact_distorted"
+                ],
+                "present": [],
+                "required": [
+                  "fact_supported:budget.max_usd",
+                  "fact_anchor_supported"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [
+              "fact_distorted"
+            ],
+            "missing_atoms": [
+              "fact_supported:budget.max_usd",
+              "fact_anchor_supported"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "distortion_guard": [
+            "core:5470-factual-distortion:distortion_guard:factual_distortion"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5470-factual-distortion:distortion_guard:factual_distortion"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:distortion_guard:factual_distortion"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.501,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "minimal_core_feedback",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "9ad05dbca5ddecde4950ac615e1e3d2e5b8b86d99b1a501b60e690fadefa6e04",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5470-factual-distortion:fact_anchor:required",
+          "edge:5470-factual-distortion:forbidden",
+          "edge:5470-factual-distortion:missing"
+        ],
+        "node_count": 6,
+        "node_ids": [
+          "sem:5470-factual-distortion:domain:fact_anchor",
+          "sem:5470-factual-distortion:fact_anchor:required:fact_anchor_supported",
+          "sem:5470-factual-distortion:fact_anchor:required:fact_supported:budget.max_usd",
+          "sem:5470-factual-distortion:forbidden:fact_distorted",
+          "sem:5470-factual-distortion:missing:fact_anchor_supported",
+          "sem:5470-factual-distortion:missing:fact_supported:budget.max_usd"
+        ]
+      },
+      "source_state_id": "source-distortion",
+      "target_state_id": "target-distortion"
+    },
+    {
+      "candidate_id": "5471-valid-api-unlocked",
+      "case_type": "valid_api_rewrite",
+      "caught_by_guards": [],
+      "description": "Valid unlocked-order cancellation row in the scaled fixture.",
+      "domain": "api_preconditions",
+      "exact_final_verdict": {
+        "accepted": true,
+        "caught_by_guards": [],
+        "computed_from_repair_score": false,
+        "expected_accept": true,
+        "expected_guard_ids": [],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": []
+      },
+      "expected_accept": true,
+      "expected_guard_ids": [],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": true,
+            "answer_set_atoms": {
+              "api_preconditions": {
+                "forbidden_present": [],
+                "present": [
+                  "api_shape_valid",
+                  "api_preconditions_met"
+                ],
+                "required": [
+                  "api_shape_valid",
+                  "api_preconditions_met"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": []
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {},
+        "minimal_core_ids": [],
+        "unsatisfied_constraint_ids": []
+      },
+      "repair_proposal": {
+        "proposal_score": 0.044,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "none",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "a0ec392bfce5f4ab43103f9411672887b0097b0d852c96a7367994c2fea1d864",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5471-valid-api-unlocked:api_preconditions:present",
+          "edge:5471-valid-api-unlocked:api_preconditions:required"
+        ],
+        "node_count": 5,
+        "node_ids": [
+          "sem:5471-valid-api-unlocked:api_preconditions:present:api_preconditions_met",
+          "sem:5471-valid-api-unlocked:api_preconditions:present:api_shape_valid",
+          "sem:5471-valid-api-unlocked:api_preconditions:required:api_preconditions_met",
+          "sem:5471-valid-api-unlocked:api_preconditions:required:api_shape_valid",
+          "sem:5471-valid-api-unlocked:domain:api_preconditions"
+        ]
+      },
+      "source_state_id": "source-5471-valid-api",
+      "target_state_id": "target-5471-valid-api"
+    },
+    {
+      "candidate_id": "5471-json-api-composed",
+      "case_type": "composed_license_semantic",
+      "caught_by_guards": [
+        "license_transition_guard",
+        "semantic_graph_guard"
+      ],
+      "description": "Adds an unlicensed premise and exceeds stock in one JSON row.",
+      "domain": "json_constraints",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "license_transition_guard",
+          "semantic_graph_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "license_transition_guard",
+          "semantic_graph_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "hidden_premise",
+          "semantic_invalid"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "license_transition_guard",
+        "semantic_graph_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": false,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": []
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": []
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": true,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [
+              "clinic.has_backup_generator"
+            ],
+            "missing_or_bad_license_ids": [
+              "UNLICENSED:backup-generator-5471"
+            ],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": [
+            "hidden_premise"
+          ]
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": true,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "json_constraints": {
+                "forbidden_present": [],
+                "present": [
+                  "json_shape_valid"
+                ],
+                "required": [
+                  "json_shape_valid",
+                  "json_semantic_valid"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": [
+              "json_semantic_valid"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": [
+            "semantic_invalid"
+          ]
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "license_transition_guard": [
+            "core:5471-json-api-composed:license_transition_guard:hidden_premise"
+          ],
+          "semantic_graph_guard": [
+            "core:5471-json-api-composed:semantic_graph_guard:semantic_invalid"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5471-json-api-composed:license_transition_guard:hidden_premise",
+          "core:5471-json-api-composed:semantic_graph_guard:semantic_invalid"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:license_transition_guard:hidden_premise",
+          "constraint:semantic_graph_guard:semantic_invalid"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.992,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "repair_json_and_remove_hidden_fact",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "9b7be852f5cc2a1acffeee1823a4cf1fb8bbd99d7adb2aa4ac017026ee720441",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5471-json-api-composed:json_constraints:present",
+          "edge:5471-json-api-composed:json_constraints:required",
+          "edge:5471-json-api-composed:missing"
+        ],
+        "node_count": 5,
+        "node_ids": [
+          "sem:5471-json-api-composed:domain:json_constraints",
+          "sem:5471-json-api-composed:json_constraints:present:json_shape_valid",
+          "sem:5471-json-api-composed:json_constraints:required:json_semantic_valid",
+          "sem:5471-json-api-composed:json_constraints:required:json_shape_valid",
+          "sem:5471-json-api-composed:missing:json_semantic_valid"
+        ]
+      },
+      "source_state_id": "source-5471-json-composed",
+      "target_state_id": "target-5471-json-composed"
+    },
+    {
+      "candidate_id": "5471-distortion-api-composed",
+      "case_type": "composed_semantic_distortion",
+      "caught_by_guards": [
+        "semantic_graph_guard",
+        "distortion_guard"
+      ],
+      "description": "Violates API preconditions while distorting a budget fact.",
+      "domain": "api_preconditions",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "semantic_graph_guard",
+          "distortion_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "semantic_graph_guard",
+          "distortion_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "api_precondition_failed",
+          "factual_distortion"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "semantic_graph_guard",
+        "distortion_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": true,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": [
+              "budget.max_usd"
+            ]
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": [
+            "factual_distortion"
+          ]
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": false,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [],
+            "missing_or_bad_license_ids": [],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": []
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": true,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "api_preconditions": {
+                "forbidden_present": [],
+                "present": [
+                  "api_shape_valid"
+                ],
+                "required": [
+                  "api_shape_valid",
+                  "api_preconditions_met"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": [
+              "api_preconditions_met"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": [
+            "api_precondition_failed"
+          ]
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "distortion_guard": [
+            "core:5471-distortion-api-composed:distortion_guard:factual_distortion"
+          ],
+          "semantic_graph_guard": [
+            "core:5471-distortion-api-composed:semantic_graph_guard:api_precondition_failed"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5471-distortion-api-composed:distortion_guard:factual_distortion",
+          "core:5471-distortion-api-composed:semantic_graph_guard:api_precondition_failed"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:distortion_guard:factual_distortion",
+          "constraint:semantic_graph_guard:api_precondition_failed"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.881,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "unlock_order_and_restore_budget",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "f825a05a6bace811ff3667723cbe6e4daa1066c681e3e7e494aa9e18d1df0dd3",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5471-distortion-api-composed:api_preconditions:present",
+          "edge:5471-distortion-api-composed:api_preconditions:required",
+          "edge:5471-distortion-api-composed:missing"
+        ],
+        "node_count": 5,
+        "node_ids": [
+          "sem:5471-distortion-api-composed:api_preconditions:present:api_shape_valid",
+          "sem:5471-distortion-api-composed:api_preconditions:required:api_preconditions_met",
+          "sem:5471-distortion-api-composed:api_preconditions:required:api_shape_valid",
+          "sem:5471-distortion-api-composed:domain:api_preconditions",
+          "sem:5471-distortion-api-composed:missing:api_preconditions_met"
+        ]
+      },
+      "source_state_id": "source-5471-api-distortion",
+      "target_state_id": "target-5471-api-distortion"
+    },
+    {
+      "candidate_id": "5471-license-distortion-composed",
+      "case_type": "composed_license_distortion",
+      "caught_by_guards": [
+        "license_transition_guard",
+        "distortion_guard"
+      ],
+      "description": "Distorts a budget fact and adds an unlicensed premise.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "license_transition_guard",
+          "distortion_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "license_transition_guard",
+          "distortion_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "factual_distortion",
+          "hidden_premise"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "license_transition_guard",
+        "distortion_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": true,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": [
+              "budget.max_usd"
+            ]
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": [
+            "factual_distortion"
+          ]
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": true,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [
+              "budget.has_exception"
+            ],
+            "missing_or_bad_license_ids": [
+              "UNLICENSED:budget-exception"
+            ],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": [
+            "hidden_premise"
+          ]
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": false,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "fact_anchor": {
+                "forbidden_present": [
+                  "fact_distorted"
+                ],
+                "present": [],
+                "required": [
+                  "fact_supported:budget.max_usd",
+                  "fact_anchor_supported"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [
+              "fact_distorted"
+            ],
+            "missing_atoms": [
+              "fact_supported:budget.max_usd",
+              "fact_anchor_supported"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": []
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "distortion_guard": [
+            "core:5471-license-distortion-composed:distortion_guard:factual_distortion"
+          ],
+          "license_transition_guard": [
+            "core:5471-license-distortion-composed:license_transition_guard:hidden_premise"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5471-license-distortion-composed:distortion_guard:factual_distortion",
+          "core:5471-license-distortion-composed:license_transition_guard:hidden_premise"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:distortion_guard:factual_distortion",
+          "constraint:license_transition_guard:hidden_premise"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.927,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "remove_exception_and_restore_budget",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "d159283676391603475f5cb1d01ab7eadf588db250e3005216772efe39ad0b35",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5471-license-distortion-composed:fact_anchor:required",
+          "edge:5471-license-distortion-composed:forbidden",
+          "edge:5471-license-distortion-composed:missing"
+        ],
+        "node_count": 6,
+        "node_ids": [
+          "sem:5471-license-distortion-composed:domain:fact_anchor",
+          "sem:5471-license-distortion-composed:fact_anchor:required:fact_anchor_supported",
+          "sem:5471-license-distortion-composed:fact_anchor:required:fact_supported:budget.max_usd",
+          "sem:5471-license-distortion-composed:forbidden:fact_distorted",
+          "sem:5471-license-distortion-composed:missing:fact_anchor_supported",
+          "sem:5471-license-distortion-composed:missing:fact_supported:budget.max_usd"
+        ]
+      },
+      "source_state_id": "source-5471-license-distortion",
+      "target_state_id": "target-5471-license-distortion"
+    },
+    {
+      "candidate_id": "5471-all-guards-composed",
+      "case_type": "composed_all_guards",
+      "caught_by_guards": [
+        "license_transition_guard",
+        "semantic_graph_guard",
+        "distortion_guard"
+      ],
+      "description": "Combines hidden premise, API precondition failure, and fact distortion.",
+      "domain": "api_preconditions",
+      "exact_final_verdict": {
+        "accepted": false,
+        "caught_by_guards": [
+          "license_transition_guard",
+          "semantic_graph_guard",
+          "distortion_guard"
+        ],
+        "computed_from_repair_score": false,
+        "expected_accept": false,
+        "expected_guard_ids": [
+          "license_transition_guard",
+          "semantic_graph_guard",
+          "distortion_guard"
+        ],
+        "final_authority": "exact_guard_composition_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "api_precondition_failed",
+          "factual_distortion",
+          "hidden_premise"
+        ]
+      },
+      "expected_accept": false,
+      "expected_guard_ids": [
+        "license_transition_guard",
+        "semantic_graph_guard",
+        "distortion_guard"
+      ],
+      "guard_results": {
+        "distortion_guard": {
+          "authority": "exact_problem_fact_distortion_guard",
+          "caught": true,
+          "details": {
+            "authority": "exact_problem_fact_distortion_guard",
+            "distorted_fact_keys": [
+              "budget.max_usd"
+            ]
+          },
+          "evidence_source": "exact_problem_fact_distortion_guard",
+          "violation_kinds": [
+            "factual_distortion"
+          ]
+        },
+        "license_transition_guard": {
+          "authority": "exact_license_transition_validator",
+          "caught": true,
+          "details": {
+            "authority": "exact_license_transition_validator",
+            "fabricated_citation_ids": [],
+            "hidden_premise_keys": [
+              "clinic.has_backup_generator"
+            ],
+            "missing_or_bad_license_ids": [
+              "UNLICENSED:backup-generator-all"
+            ],
+            "unlicensed_mutation_keys": []
+          },
+          "evidence_source": "exact_license_transition_validator",
+          "violation_kinds": [
+            "hidden_premise"
+          ]
+        },
+        "semantic_graph_guard": {
+          "authority": "exact_answer_set_semantic_validator",
+          "caught": true,
+          "details": {
+            "accepted": false,
+            "answer_set_atoms": {
+              "api_preconditions": {
+                "forbidden_present": [],
+                "present": [
+                  "api_shape_valid"
+                ],
+                "required": [
+                  "api_shape_valid",
+                  "api_preconditions_met"
+                ]
+              }
+            },
+            "authority": "exact_answer_set_semantic_validator",
+            "failure_reasons": [],
+            "forbidden_atoms": [],
+            "missing_atoms": [
+              "api_preconditions_met"
+            ]
+          },
+          "evidence_source": "exact_answer_set_semantic_validator",
+          "violation_kinds": [
+            "api_precondition_failed"
+          ]
+        }
+      },
+      "lcd_advisory_accept": true,
+      "local_syntax_valid": true,
+      "minimal_core_feedback": {
+        "authority": "deterministic_minimal_core_feedback",
+        "generated_from": "exact_guard_violations_not_repair_score",
+        "guard_to_core_ids": {
+          "distortion_guard": [
+            "core:5471-all-guards-composed:distortion_guard:factual_distortion"
+          ],
+          "license_transition_guard": [
+            "core:5471-all-guards-composed:license_transition_guard:hidden_premise"
+          ],
+          "semantic_graph_guard": [
+            "core:5471-all-guards-composed:semantic_graph_guard:api_precondition_failed"
+          ]
+        },
+        "minimal_core_ids": [
+          "core:5471-all-guards-composed:distortion_guard:factual_distortion",
+          "core:5471-all-guards-composed:license_transition_guard:hidden_premise",
+          "core:5471-all-guards-composed:semantic_graph_guard:api_precondition_failed"
+        ],
+        "unsatisfied_constraint_ids": [
+          "constraint:distortion_guard:factual_distortion",
+          "constraint:license_transition_guard:hidden_premise",
+          "constraint:semantic_graph_guard:api_precondition_failed"
+        ]
+      },
+      "repair_proposal": {
+        "proposal_score": 0.997,
+        "score_purpose": "repair_ranking_only",
+        "selected_repair_action": "compose_all_exact_repairs",
+        "used_for_guard_success": false
+      },
+      "row_checksum": "cd009912b6bd97c646d23bb7c1d732168dce28334f58f8153812bd4793b22a00",
+      "semantic_graph_receipt": {
+        "authority": "exact_answer_set_semantic_validator",
+        "edge_ids": [
+          "edge:5471-all-guards-composed:api_preconditions:present",
+          "edge:5471-all-guards-composed:api_preconditions:required",
+          "edge:5471-all-guards-composed:missing"
+        ],
+        "node_count": 5,
+        "node_ids": [
+          "sem:5471-all-guards-composed:api_preconditions:present:api_shape_valid",
+          "sem:5471-all-guards-composed:api_preconditions:required:api_preconditions_met",
+          "sem:5471-all-guards-composed:api_preconditions:required:api_shape_valid",
+          "sem:5471-all-guards-composed:domain:api_preconditions",
+          "sem:5471-all-guards-composed:missing:api_preconditions_met"
+        ]
+      },
+      "source_state_id": "source-5471-all",
+      "target_state_id": "target-5471-all"
+    }
+  ],
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5471.guard_composition_scale.v497",
+  "semantic_graph_node_count": 55,
+  "single_guard_failure_count": 6,
+  "spec_refs": [
+    "REQ-SAFE-5471",
+    "SCENARIO-SAFE-5471",
+    "REQ-SAFE-5470"
+  ],
+  "task_id": "exp5471-v497-guard-composition-scale",
+  "tests_run": [
+    {
+      "command": "not_recorded",
+      "outcome": "not_recorded"
+    }
+  ]
+}
