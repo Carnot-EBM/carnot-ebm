@@ -1,0 +1,189 @@
+{
+  "duplicate_targets_rejected": [
+    {
+      "reason": "upstream_duplicate_depth_probe",
+      "registry_depth": 2,
+      "source_artifact": "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+      "target": "r11l:L2"
+    }
+  ],
+  "duration_s": 0.18003228027373552,
+  "experiment": "experiment_5507_arc_null_coordinate_perception_precheck_v499",
+  "experiment_id": 5507,
+  "field_principles": {
+    "duplicate_targets_rejected": "auditable list of requested target levels rejected because the registry already reproduces them.",
+    "honest_verdict": "terminal status starts with complete: or blocked: and makes no solve claim.",
+    "inference_substrate": "must equal aggregation_from_upstream_artifacts.",
+    "levelup_attempt_ready": "bare bool true only when the selected level is non-duplicate, same-mechanism reruns are rejected, null-coordinate audit is clean, and perception findings are present.",
+    "null_coordinate_audit": "dict classifying null/missing/no-op coordinate evidence as valid game action, metric artifact, or contamination.",
+    "perception_grounding_findings": "list of upstream live-observation findings exposed by connected components, color blobs, salience tiers, changed pixels, or action-effect asymmetry.",
+    "recent_no_bank_targets_rejected": "auditable list of recent same-target/same-mechanism no-bank reruns rejected before selection.",
+    "registry_path": "must equal ops/arc_solve_registry.yaml.",
+    "reproducible_total_levels_before": "authoritative registry total before this no-solve target precheck.",
+    "selected_game": "selected game id, or empty string when blocked.",
+    "selected_level": "selected level label such as L3, or empty string when blocked.",
+    "selected_mechanism": "changed live-path perception-generation mechanism, not a same-mechanism rerun.",
+    "solve_claimed": "must be false; this artifact is a precheck and cannot bank a level."
+  },
+  "honest_verdict": "complete: dc22 L3 perception-generation precheck ready; no solve claimed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "input_artifacts": [
+    "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+    "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json",
+    "results/experiment_5480_arc_live_salience_levelup_v497.json",
+    "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+    "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+  ],
+  "levelup_attempt_ready": true,
+  "milestone": "2026.07.499",
+  "null_coordinate_audit": {
+    "checked_reproduced_loop_artifacts": 22,
+    "contaminated_artifacts": [],
+    "coordinate_effect_summary": {
+      "10,40": {
+        "changed_cells_total": 1,
+        "changed_receipts": 1,
+        "receipts": 23,
+        "x": 10,
+        "y": 40,
+        "zero_change_receipts": 22
+      },
+      "24,20": {
+        "changed_cells_total": 22,
+        "changed_receipts": 22,
+        "receipts": 23,
+        "x": 24,
+        "y": 20,
+        "zero_change_receipts": 1
+      }
+    },
+    "metric_artifact_detected": false,
+    "null_coordinate_exploit_valid": false,
+    "null_or_missing_coordinate_receipts": 0,
+    "null_or_missing_receipt_ids": [],
+    "prior_noop_behaviors_valid_game_actions": true,
+    "receipts_checked": 46,
+    "source_artifacts": [
+      "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
+      "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+    ],
+    "valid_coordinate_receipts": 46,
+    "verdict": "valid_recorded_actions_with_noop_effects",
+    "zero_change_receipts": 23
+  },
+  "perception_grounding_findings": [
+    {
+      "classical_pass": "action_effect_delta_filter",
+      "evidence": "Exp5494 recorded ACTION6 data coordinates for zero-change receipts.",
+      "finding": "dc22_zero_change_clicks_are_valid_observations",
+      "source_artifact": "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+    },
+    {
+      "classical_pass": "connected_component_color_blob_plus_effect_rate",
+      "effect_rate_max": 0.956,
+      "effect_rate_min": 0.043,
+      "finding": "dc22_action_effect_asymmetry_between_blob_candidates",
+      "routes": [
+        "blob_tier_0_button_like"
+      ],
+      "source_artifact": "results/experiment_5494_arc_live_trajectory_levelup_v498.json"
+    },
+    {
+      "classical_pass": "connected_component_color_blob_salience_receipts",
+      "feature_counts": {
+        "action_effect_observations": 1,
+        "changed_pixels": 4,
+        "color_blobs": 4,
+        "connected_components": 4,
+        "salience_tiers": 4
+      },
+      "finding": "prior_salience_no_bank_needs_generation_not_ranking_only",
+      "source_artifact": "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json",
+      "target": "bp35:L3"
+    }
+  ],
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "exp5493_present": true,
+    "exp5494_present": true,
+    "game_source_read": false,
+    "known_issues_present": true,
+    "levers_note_present": true,
+    "levers_note_updated": false,
+    "offline_bfs_used": false,
+    "per_game_adapter_used": false,
+    "registry_present": true,
+    "spec_has_req_5507": true
+  },
+  "recent_no_bank_targets_rejected": [
+    {
+      "decision": "rejected_recent_no_bank",
+      "prior_mechanism": "recent_live_no_bank_target",
+      "source_artifact": "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+      "target": "sb26:L3"
+    },
+    {
+      "decision": "rejected_recent_no_bank",
+      "prior_mechanism": "recent_live_no_bank_target",
+      "source_artifact": "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+      "target": "bp35:L3"
+    },
+    {
+      "decision": "rejected_recent_no_bank",
+      "prior_mechanism": "recent_live_no_bank_target",
+      "source_artifact": "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+      "target": "ka59:L2"
+    },
+    {
+      "decision": "rejected_recent_no_bank",
+      "prior_mechanism": "recent_live_no_bank_target",
+      "source_artifact": "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+      "target": "cn04:L4"
+    },
+    {
+      "decision": "rejected_recent_no_bank",
+      "prior_mechanism": "recent_live_no_bank_target",
+      "source_artifact": "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
+      "target": "re86:L3"
+    },
+    {
+      "decision": "rejected_same_target_same_mechanism",
+      "prior_mechanism": "connected_component_salience_only",
+      "source_artifact": "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json",
+      "target": "bp35:L3"
+    },
+    {
+      "decision": "rejected_same_target_same_mechanism",
+      "prior_mechanism": "connected_component_salience_only",
+      "source_artifact": "results/experiment_5480_arc_live_salience_levelup_v497.json",
+      "target": "sb26:L3"
+    },
+    {
+      "decision": "rejected_same_target_same_mechanism",
+      "prior_mechanism": "trajectory_option_induction",
+      "replacement_mechanism": "perception-grounded connected-component/color-blob segmentation plus salience-tiered action generation with trajectory taxonomy receipts",
+      "source_artifact": "results/experiment_5494_arc_live_trajectory_levelup_v498.json",
+      "target": "dc22:L3"
+    }
+  ],
+  "registry_path": "ops/arc_solve_registry.yaml",
+  "reproducible_total_levels_before": 69,
+  "result_path": "results/experiment_5507_arc_null_coordinate_perception_precheck_v499.json",
+  "schema": "carnot.experiment_5507_arc_null_coordinate_perception_precheck_v499.v1",
+  "selected_game": "dc22",
+  "selected_level": "L3",
+  "selected_mechanism": "perception-grounded connected-component/color-blob segmentation plus salience-tiered action generation with trajectory taxonomy receipts",
+  "solve_claimed": false,
+  "spec_refs": [
+    "REQ-ARC-FCP-5507",
+    "SCENARIO-ARC-FCP-5507"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5507_arc_null_coordinate_perception_precheck_v499.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5507_arc_null_coordinate_perception_precheck_v499.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5507_arc_null_coordinate_perception_precheck_v499.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
