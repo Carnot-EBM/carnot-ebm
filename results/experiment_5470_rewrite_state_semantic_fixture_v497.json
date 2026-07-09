@@ -1,0 +1,1031 @@
+{
+  "exact_validator_agreement": 1.0,
+  "experiment_id": "experiment_5470_rewrite_state_semantic_fixture_v497",
+  "factual_distortion_rate": 0.0,
+  "field_principles": {
+    "exact_validator_agreement": "exact validators agree with curated expected transition labels.",
+    "factual_distortion_rate": "factual-distortion false accepts after exact validation.",
+    "fixture_count": "bounded fixture coverage.",
+    "guided_decoding_quarantine_lifted": "guided-decoding quarantine remains closed.",
+    "hidden_premise_catch_rate": "hidden premises rejected by license validation.",
+    "honest_verdict": "terminal status; start with \"complete:\" or \"blocked:\".",
+    "inference_substrate": "deterministic fixture with no LLM inference.",
+    "lcd_bias_probe_passed": "LCD-style advisory accepts are exposed and rejected by exact validators.",
+    "random_seed": "deterministic fixture seed.",
+    "rewrite_state_fixture_ready": "downstream deterministic fixture gate.",
+    "semantic_false_accept_rate": "exact-validator false accepts on locally syntax-valid semantic traps.",
+    "transition_count": "typed source-to-target state transition denominator.",
+    "unlicensed_mutation_catch_rate": "unlicensed state changes rejected before semantic scoring."
+  },
+  "fixture_count": 8,
+  "guided_decoding_quarantine_lifted": false,
+  "hidden_premise_catch_rate": 1.0,
+  "honest_verdict": "complete: deterministic rewrite-state semantic fixture ready; guided decoding remains quarantined",
+  "inference_substrate": "deterministic_fixture_no_llm",
+  "lcd_bias_probe_passed": true,
+  "metric_details": {
+    "case_type_counts": {
+      "api_precondition_invalid": 1,
+      "arithmetic_valid": 1,
+      "fabricated_evidence": 1,
+      "factual_distortion": 1,
+      "hidden_premise_mutation": 1,
+      "semantic_json_invalid": 1,
+      "unlicensed_state_change": 1,
+      "valid_rewrite": 1
+    },
+    "domain_counts": {
+      "api_preconditions": 1,
+      "arithmetic": 1,
+      "fact_anchor": 5,
+      "json_constraints": 1
+    },
+    "exact_validator_agreement": 1.0,
+    "factual_distortion_rate": 0.0,
+    "factual_trap_count": 1,
+    "fixture_count": 8,
+    "hidden_premise_catch_rate": 1.0,
+    "lcd_bias_probe_passed": true,
+    "row_checksums_match": true,
+    "semantic_false_accept_rate": 0.0,
+    "semantic_trap_count": 2,
+    "transition_count": 8,
+    "unlicensed_mutation_catch_rate": 1.0
+  },
+  "milestone": "2026.07.497",
+  "random_seed": 5470,
+  "reproducibility_checksum": "051e74eb4732e6e111d4418076c8d1747223900b1f01f7ad9be8fb117a55ca1c",
+  "research_conductor_modified": false,
+  "rewrite_state_fixture_ready": true,
+  "row_provenance_checksum": "6638f22029b779fa6c2828a4548b28dc8845561c9c87166b98c3ac57d1c88208",
+  "row_results": [
+    {
+      "answer_set_atoms": {
+        "fact_anchor": {
+          "forbidden_present": [],
+          "present": [
+            "fact_supported:clinic.opened_year"
+          ],
+          "required": [
+            "fact_supported:clinic.opened_year"
+          ]
+        }
+      },
+      "candidate_id": "5470-valid-fact-paraphrase",
+      "case_type": "valid_rewrite",
+      "description": "Preserves the opened-year fact and its witness row.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": true,
+        "expected_accept": true,
+        "expected_violation_kinds": [],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": []
+      },
+      "expected_accept": true,
+      "expected_violation_kinds": [],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "PF:clinic-opened-2019",
+        "CITE:riverton-register",
+        "WIT:riverton-opened"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [],
+        "hidden_premise_keys": [],
+        "missing_or_bad_license_ids": [],
+        "unlicensed_mutation_keys": []
+      },
+      "licenses": [
+        {
+          "license_id": "PF:clinic-opened-2019",
+          "license_type": "problem_fact",
+          "subject": "clinic.opened_year",
+          "value": 2019,
+          "witness_row_id": "WIT:riverton-opened"
+        },
+        {
+          "license_id": "CITE:riverton-register",
+          "license_type": "citation",
+          "subject": "clinic.opened_year",
+          "value": "WIT:riverton-opened",
+          "witness_row_id": "WIT:riverton-opened"
+        },
+        {
+          "license_id": "WIT:riverton-opened",
+          "license_type": "witness_row",
+          "subject": "clinic.opened_year",
+          "value": "The Riverton clinic opened to patients in 2019.",
+          "witness_row_id": "WIT:riverton-opened"
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "7e1ad79cf45684c30d7fe18f3bfcd7438eb68e61c1693bb0eefabe34e4f619cb",
+      "semantic_result": {
+        "accepted": true,
+        "answer_set_atoms": {
+          "fact_anchor": {
+            "forbidden_present": [],
+            "present": [
+              "fact_supported:clinic.opened_year"
+            ],
+            "required": [
+              "fact_supported:clinic.opened_year"
+            ]
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [],
+        "missing_atoms": []
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [
+          {
+            "citation_id": "riverton-register",
+            "license_id": "CITE:riverton-register",
+            "witness_row_id": "WIT:riverton-opened"
+          }
+        ],
+        "computations": {},
+        "facts": {
+          "clinic.opened_year": {
+            "license_id": "PF:clinic-opened-2019",
+            "value": 2019
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-valid-fact"
+      },
+      "target_state": {
+        "api_call": null,
+        "citations": [
+          {
+            "citation_id": "riverton-register",
+            "license_id": "CITE:riverton-register",
+            "witness_row_id": "WIT:riverton-opened"
+          }
+        ],
+        "computations": {},
+        "facts": {
+          "clinic.opened_year": {
+            "license_id": "PF:clinic-opened-2019",
+            "value": 2019
+          }
+        },
+        "json_payload": null,
+        "state_id": "target-valid-fact"
+      }
+    },
+    {
+      "answer_set_atoms": {
+        "arithmetic": {
+          "forbidden_present": [],
+          "present": [
+            "arithmetic_result_matches"
+          ],
+          "required": [
+            "arithmetic_result_matches"
+          ]
+        }
+      },
+      "candidate_id": "5470-valid-arithmetic",
+      "case_type": "arithmetic_valid",
+      "description": "Computes 2 + 3 = 5 with an explicit computation license.",
+      "domain": "arithmetic",
+      "exact_final_verdict": {
+        "accepted": true,
+        "expected_accept": true,
+        "expected_violation_kinds": [],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": []
+      },
+      "expected_accept": true,
+      "expected_violation_kinds": [],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "COMP:add-2-3-5"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [],
+        "hidden_premise_keys": [],
+        "missing_or_bad_license_ids": [],
+        "unlicensed_mutation_keys": []
+      },
+      "licenses": [
+        {
+          "license_id": "COMP:add-2-3-5",
+          "license_type": "computation",
+          "subject": "sum.total",
+          "value": {
+            "left": 2,
+            "result": 5,
+            "right": 3
+          },
+          "witness_row_id": ""
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "a54aac99eddc9bfff37c7b8bc5a31847299b5912a7c410b1a40b2c616b106954",
+      "semantic_result": {
+        "accepted": true,
+        "answer_set_atoms": {
+          "arithmetic": {
+            "forbidden_present": [],
+            "present": [
+              "arithmetic_result_matches"
+            ],
+            "required": [
+              "arithmetic_result_matches"
+            ]
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [],
+        "missing_atoms": []
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "sum.left": {
+            "license_id": "COMP:add-2-3-5",
+            "value": 2
+          },
+          "sum.right": {
+            "license_id": "COMP:add-2-3-5",
+            "value": 3
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-valid-arithmetic"
+      },
+      "target_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {
+          "sum.total": {
+            "license_id": "COMP:add-2-3-5",
+            "value": 5
+          }
+        },
+        "facts": {
+          "sum.left": {
+            "license_id": "COMP:add-2-3-5",
+            "value": 2
+          },
+          "sum.right": {
+            "license_id": "COMP:add-2-3-5",
+            "value": 3
+          }
+        },
+        "json_payload": null,
+        "state_id": "target-valid-arithmetic"
+      }
+    },
+    {
+      "answer_set_atoms": {
+        "fact_anchor": {
+          "forbidden_present": [],
+          "present": [
+            "fact_supported:clinic.opened_year"
+          ],
+          "required": [
+            "fact_supported:clinic.opened_year"
+          ]
+        }
+      },
+      "candidate_id": "5470-hidden-premise",
+      "case_type": "hidden_premise_mutation",
+      "description": "Adds an unlicensed backup-generator premise.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "expected_accept": false,
+        "expected_violation_kinds": [
+          "hidden_premise"
+        ],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "hidden_premise"
+        ]
+      },
+      "expected_accept": false,
+      "expected_violation_kinds": [
+        "hidden_premise"
+      ],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "PF:clinic-opened-2019",
+        "CITE:riverton-register",
+        "WIT:riverton-opened"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [],
+        "hidden_premise_keys": [
+          "clinic.has_backup_generator"
+        ],
+        "missing_or_bad_license_ids": [
+          "UNLICENSED:backup-generator"
+        ],
+        "unlicensed_mutation_keys": []
+      },
+      "licenses": [
+        {
+          "license_id": "PF:clinic-opened-2019",
+          "license_type": "problem_fact",
+          "subject": "clinic.opened_year",
+          "value": 2019,
+          "witness_row_id": "WIT:riverton-opened"
+        },
+        {
+          "license_id": "CITE:riverton-register",
+          "license_type": "citation",
+          "subject": "clinic.opened_year",
+          "value": "WIT:riverton-opened",
+          "witness_row_id": "WIT:riverton-opened"
+        },
+        {
+          "license_id": "WIT:riverton-opened",
+          "license_type": "witness_row",
+          "subject": "clinic.opened_year",
+          "value": "The Riverton clinic opened to patients in 2019.",
+          "witness_row_id": "WIT:riverton-opened"
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "be60b3f4e51e2e3a49ca5fa2f3e49d04338cf4d1a339ff781999b3e5a0688903",
+      "semantic_result": {
+        "accepted": true,
+        "answer_set_atoms": {
+          "fact_anchor": {
+            "forbidden_present": [],
+            "present": [
+              "fact_supported:clinic.opened_year"
+            ],
+            "required": [
+              "fact_supported:clinic.opened_year"
+            ]
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [],
+        "missing_atoms": []
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [
+          {
+            "citation_id": "riverton-register",
+            "license_id": "CITE:riverton-register",
+            "witness_row_id": "WIT:riverton-opened"
+          }
+        ],
+        "computations": {},
+        "facts": {
+          "clinic.opened_year": {
+            "license_id": "PF:clinic-opened-2019",
+            "value": 2019
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-hidden-premise"
+      },
+      "target_state": {
+        "api_call": null,
+        "citations": [
+          {
+            "citation_id": "riverton-register",
+            "license_id": "CITE:riverton-register",
+            "witness_row_id": "WIT:riverton-opened"
+          }
+        ],
+        "computations": {},
+        "facts": {
+          "clinic.has_backup_generator": {
+            "license_id": "UNLICENSED:backup-generator",
+            "value": true
+          },
+          "clinic.opened_year": {
+            "license_id": "PF:clinic-opened-2019",
+            "value": 2019
+          }
+        },
+        "json_payload": null,
+        "state_id": "target-hidden-premise"
+      }
+    },
+    {
+      "answer_set_atoms": {
+        "fact_anchor": {
+          "forbidden_present": [],
+          "present": [],
+          "required": []
+        }
+      },
+      "candidate_id": "5470-unlicensed-state-change",
+      "case_type": "unlicensed_state_change",
+      "description": "Flips a locked order to unlocked without a transition license.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "expected_accept": false,
+        "expected_violation_kinds": [
+          "unlicensed_mutation"
+        ],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "unlicensed_mutation"
+        ]
+      },
+      "expected_accept": false,
+      "expected_violation_kinds": [
+        "unlicensed_mutation"
+      ],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "SF:order-o17-locked"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [],
+        "hidden_premise_keys": [],
+        "missing_or_bad_license_ids": [],
+        "unlicensed_mutation_keys": [
+          "order.locked"
+        ]
+      },
+      "licenses": [
+        {
+          "license_id": "SF:order-o17-locked",
+          "license_type": "state_fact",
+          "subject": "order.locked",
+          "value": true,
+          "witness_row_id": "WIT:order-o17"
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "beaacd04e4a114e06c193de3072c2a124247ba20b8c6afa2f1c6789c2580b7a3",
+      "semantic_result": {
+        "accepted": true,
+        "answer_set_atoms": {
+          "fact_anchor": {
+            "forbidden_present": [],
+            "present": [],
+            "required": []
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [],
+        "missing_atoms": []
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "order.locked": {
+            "license_id": "SF:order-o17-locked",
+            "value": true
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-unlicensed-state"
+      },
+      "target_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "order.locked": {
+            "license_id": "SF:order-o17-locked",
+            "value": false
+          }
+        },
+        "json_payload": null,
+        "state_id": "target-unlicensed-state"
+      }
+    },
+    {
+      "answer_set_atoms": {
+        "fact_anchor": {
+          "forbidden_present": [],
+          "present": [
+            "fact_supported:clinic.opened_year"
+          ],
+          "required": [
+            "fact_supported:clinic.opened_year"
+          ]
+        }
+      },
+      "candidate_id": "5470-fabricated-citation",
+      "case_type": "fabricated_evidence",
+      "description": "Keeps the fact but cites a non-existent witness row.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "expected_accept": false,
+        "expected_violation_kinds": [
+          "fabricated_evidence"
+        ],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "fabricated_evidence"
+        ]
+      },
+      "expected_accept": false,
+      "expected_violation_kinds": [
+        "fabricated_evidence"
+      ],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "PF:clinic-opened-2019",
+        "CITE:riverton-register",
+        "WIT:riverton-opened"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [
+          "CITE:phantom-report"
+        ],
+        "hidden_premise_keys": [],
+        "missing_or_bad_license_ids": [
+          "CITE:phantom-report"
+        ],
+        "unlicensed_mutation_keys": []
+      },
+      "licenses": [
+        {
+          "license_id": "PF:clinic-opened-2019",
+          "license_type": "problem_fact",
+          "subject": "clinic.opened_year",
+          "value": 2019,
+          "witness_row_id": "WIT:riverton-opened"
+        },
+        {
+          "license_id": "CITE:riverton-register",
+          "license_type": "citation",
+          "subject": "clinic.opened_year",
+          "value": "WIT:riverton-opened",
+          "witness_row_id": "WIT:riverton-opened"
+        },
+        {
+          "license_id": "WIT:riverton-opened",
+          "license_type": "witness_row",
+          "subject": "clinic.opened_year",
+          "value": "The Riverton clinic opened to patients in 2019.",
+          "witness_row_id": "WIT:riverton-opened"
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "84a7fe365543bba9939aab5f8b05bfee8f847eb2ba804e65c8a565bf7ac8dcf2",
+      "semantic_result": {
+        "accepted": true,
+        "answer_set_atoms": {
+          "fact_anchor": {
+            "forbidden_present": [],
+            "present": [
+              "fact_supported:clinic.opened_year"
+            ],
+            "required": [
+              "fact_supported:clinic.opened_year"
+            ]
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [],
+        "missing_atoms": []
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "clinic.opened_year": {
+            "license_id": "PF:clinic-opened-2019",
+            "value": 2019
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-fabricated-citation"
+      },
+      "target_state": {
+        "api_call": null,
+        "citations": [
+          {
+            "citation_id": "phantom-report",
+            "license_id": "CITE:phantom-report",
+            "witness_row_id": "WIT:phantom-report"
+          }
+        ],
+        "computations": {},
+        "facts": {
+          "clinic.opened_year": {
+            "license_id": "PF:clinic-opened-2019",
+            "value": 2019
+          }
+        },
+        "json_payload": null,
+        "state_id": "target-fabricated-citation"
+      }
+    },
+    {
+      "answer_set_atoms": {
+        "json_constraints": {
+          "forbidden_present": [],
+          "present": [
+            "json_shape_valid"
+          ],
+          "required": [
+            "json_shape_valid",
+            "json_semantic_valid"
+          ]
+        }
+      },
+      "candidate_id": "5470-json-semantic-invalid",
+      "case_type": "semantic_json_invalid",
+      "description": "JSON shape is valid but quantity exceeds licensed stock.",
+      "domain": "json_constraints",
+      "exact_final_verdict": {
+        "accepted": false,
+        "expected_accept": false,
+        "expected_violation_kinds": [
+          "semantic_invalid"
+        ],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "semantic_invalid"
+        ]
+      },
+      "expected_accept": false,
+      "expected_violation_kinds": [
+        "semantic_invalid"
+      ],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "PF:bolt-stock-3",
+        "WIT:json-order-schema"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [],
+        "hidden_premise_keys": [],
+        "missing_or_bad_license_ids": [],
+        "unlicensed_mutation_keys": []
+      },
+      "licenses": [
+        {
+          "license_id": "PF:bolt-stock-3",
+          "license_type": "problem_fact",
+          "subject": "inventory.bolt.stock",
+          "value": 3,
+          "witness_row_id": "WIT:stock-row-17"
+        },
+        {
+          "license_id": "WIT:json-order-schema",
+          "license_type": "witness_row",
+          "subject": "json.order.schema",
+          "value": {
+            "allow_extra": false,
+            "required": [
+              "sku",
+              "quantity"
+            ]
+          },
+          "witness_row_id": "WIT:json-order-schema"
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "6ff712871f954701656a15dcb013be378fec1a6e7ea340918cfcdb7ad5cd6a5e",
+      "semantic_result": {
+        "accepted": false,
+        "answer_set_atoms": {
+          "json_constraints": {
+            "forbidden_present": [],
+            "present": [
+              "json_shape_valid"
+            ],
+            "required": [
+              "json_shape_valid",
+              "json_semantic_valid"
+            ]
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [],
+        "missing_atoms": [
+          "json_semantic_valid"
+        ]
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "inventory.bolt.stock": {
+            "license_id": "PF:bolt-stock-3",
+            "value": 3
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-json"
+      },
+      "target_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "inventory.bolt.stock": {
+            "license_id": "PF:bolt-stock-3",
+            "value": 3
+          }
+        },
+        "json_payload": {
+          "quantity": 4,
+          "sku": "bolt"
+        },
+        "state_id": "target-json"
+      }
+    },
+    {
+      "answer_set_atoms": {
+        "api_preconditions": {
+          "forbidden_present": [],
+          "present": [
+            "api_shape_valid"
+          ],
+          "required": [
+            "api_shape_valid",
+            "api_preconditions_met"
+          ]
+        }
+      },
+      "candidate_id": "5470-api-precondition-invalid",
+      "case_type": "api_precondition_invalid",
+      "description": "API call is well-formed but violates the locked-order precondition.",
+      "domain": "api_preconditions",
+      "exact_final_verdict": {
+        "accepted": false,
+        "expected_accept": false,
+        "expected_violation_kinds": [
+          "api_precondition_failed"
+        ],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "api_precondition_failed"
+        ]
+      },
+      "expected_accept": false,
+      "expected_violation_kinds": [
+        "api_precondition_failed"
+      ],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "SF:order-o17-locked",
+        "WIT:cancel-precondition"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [],
+        "hidden_premise_keys": [],
+        "missing_or_bad_license_ids": [],
+        "unlicensed_mutation_keys": []
+      },
+      "licenses": [
+        {
+          "license_id": "SF:order-o17-locked",
+          "license_type": "state_fact",
+          "subject": "order.locked",
+          "value": true,
+          "witness_row_id": "WIT:order-o17"
+        },
+        {
+          "license_id": "WIT:cancel-precondition",
+          "license_type": "witness_row",
+          "subject": "api.cancel_order.precondition",
+          "value": {
+            "locked": false,
+            "requires_override_token": false
+          },
+          "witness_row_id": "WIT:cancel-precondition"
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "593f0c28c74929175b0f0890769d52c74f391cffd680eea87f783cf7c804cd57",
+      "semantic_result": {
+        "accepted": false,
+        "answer_set_atoms": {
+          "api_preconditions": {
+            "forbidden_present": [],
+            "present": [
+              "api_shape_valid"
+            ],
+            "required": [
+              "api_shape_valid",
+              "api_preconditions_met"
+            ]
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [],
+        "missing_atoms": [
+          "api_preconditions_met"
+        ]
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "order.locked": {
+            "license_id": "SF:order-o17-locked",
+            "value": true
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-api"
+      },
+      "target_state": {
+        "api_call": {
+          "args": {
+            "order_id": "O-17"
+          },
+          "name": "cancel_order"
+        },
+        "citations": [],
+        "computations": {},
+        "facts": {
+          "order.locked": {
+            "license_id": "SF:order-o17-locked",
+            "value": true
+          }
+        },
+        "json_payload": null,
+        "state_id": "target-api"
+      }
+    },
+    {
+      "answer_set_atoms": {
+        "fact_anchor": {
+          "forbidden_present": [
+            "fact_distorted"
+          ],
+          "present": [],
+          "required": [
+            "fact_supported:budget.max_usd",
+            "fact_anchor_supported"
+          ]
+        }
+      },
+      "candidate_id": "5470-factual-distortion",
+      "case_type": "factual_distortion",
+      "description": "Raises an anchored budget fact while reusing the old citation.",
+      "domain": "fact_anchor",
+      "exact_final_verdict": {
+        "accepted": false,
+        "expected_accept": false,
+        "expected_violation_kinds": [
+          "factual_distortion"
+        ],
+        "final_authority": "exact_rewrite_state_semantic_validators",
+        "matches_expected": true,
+        "violation_kinds": [
+          "factual_distortion"
+        ]
+      },
+      "expected_accept": false,
+      "expected_violation_kinds": [
+        "factual_distortion"
+      ],
+      "lcd_advisory_accept": true,
+      "license_ids": [
+        "PF:budget-cap-2400",
+        "CITE:budget-row-4",
+        "WIT:budget-row-4"
+      ],
+      "license_result": {
+        "authority": "exact_license_transition_validator",
+        "fabricated_citation_ids": [],
+        "hidden_premise_keys": [],
+        "missing_or_bad_license_ids": [],
+        "unlicensed_mutation_keys": []
+      },
+      "licenses": [
+        {
+          "license_id": "PF:budget-cap-2400",
+          "license_type": "problem_fact",
+          "subject": "budget.max_usd",
+          "value": 2400,
+          "witness_row_id": "WIT:budget-row-4"
+        },
+        {
+          "license_id": "CITE:budget-row-4",
+          "license_type": "citation",
+          "subject": "budget.max_usd",
+          "value": "WIT:budget-row-4",
+          "witness_row_id": "WIT:budget-row-4"
+        },
+        {
+          "license_id": "WIT:budget-row-4",
+          "license_type": "witness_row",
+          "subject": "budget.max_usd",
+          "value": "The approved maximum budget is 2400 USD.",
+          "witness_row_id": "WIT:budget-row-4"
+        }
+      ],
+      "local_syntax_valid": true,
+      "row_checksum": "80f161b62606d6683a0bb89217a2f3f6e3d0ae66f95b29444e6f6f29692ed8e9",
+      "semantic_result": {
+        "accepted": false,
+        "answer_set_atoms": {
+          "fact_anchor": {
+            "forbidden_present": [
+              "fact_distorted"
+            ],
+            "present": [],
+            "required": [
+              "fact_supported:budget.max_usd",
+              "fact_anchor_supported"
+            ]
+          }
+        },
+        "authority": "exact_answer_set_semantic_validator",
+        "failure_reasons": [],
+        "forbidden_atoms": [
+          "fact_distorted"
+        ],
+        "missing_atoms": [
+          "fact_supported:budget.max_usd",
+          "fact_anchor_supported"
+        ]
+      },
+      "source_state": {
+        "api_call": null,
+        "citations": [
+          {
+            "citation_id": "budget-row-4",
+            "license_id": "CITE:budget-row-4",
+            "witness_row_id": "WIT:budget-row-4"
+          }
+        ],
+        "computations": {},
+        "facts": {
+          "budget.max_usd": {
+            "license_id": "PF:budget-cap-2400",
+            "value": 2400
+          }
+        },
+        "json_payload": null,
+        "state_id": "source-distortion"
+      },
+      "target_state": {
+        "api_call": null,
+        "citations": [
+          {
+            "citation_id": "budget-row-4",
+            "license_id": "CITE:budget-row-4",
+            "witness_row_id": "WIT:budget-row-4"
+          }
+        ],
+        "computations": {},
+        "facts": {
+          "budget.max_usd": {
+            "license_id": "PF:budget-cap-2400",
+            "value": 2500
+          }
+        },
+        "json_payload": null,
+        "state_id": "target-distortion"
+      }
+    }
+  ],
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5470.rewrite_state_semantic_fixture.v497",
+  "semantic_false_accept_rate": 0.0,
+  "spec_refs": [
+    "REQ-SAFE-5470",
+    "SCENARIO-SAFE-5470"
+  ],
+  "task_id": "exp5470-v497-rewrite-state-semantic-fixture",
+  "tests_run": [],
+  "transition_count": 8,
+  "unlicensed_mutation_catch_rate": 1.0
+}
