@@ -1,0 +1,479 @@
+{
+  "accepted_candidate_ids": [
+    "support_exact_optimum",
+    "safety_exact_optimum"
+  ],
+  "experiment": 5499,
+  "experiment_id": "exp5499-preference-maxsat-minimal-fixture-v499",
+  "false_accept_rate": 0.0,
+  "fixture": {
+    "fixture_id": "preference_maxsat_minimal_typed_claim_state_5499",
+    "guided_decoding_used": false,
+    "instances": [
+      {
+        "candidates": [
+          {
+            "accept": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "candidate_id": "support_exact_optimum"
+          },
+          {
+            "accept": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "candidate_id": "support_hard_violation"
+          },
+          {
+            "accept": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "candidate_id": "support_soft_suboptimal"
+          }
+        ],
+        "expected_status": "optimal",
+        "hard_constraints": [
+          {
+            "id": "HC_SUPPORT_ENTAILED",
+            "literals": [
+              {
+                "equals": "entailed",
+                "variable": "support"
+              }
+            ],
+            "type": "clause"
+          },
+          {
+            "id": "HC_SCOPE_BOUNDED",
+            "literals": [
+              {
+                "equals": "bounded",
+                "variable": "scope"
+              }
+            ],
+            "type": "clause"
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "soft_preferences": [
+          {
+            "id": "SP_PRIMARY_SOURCE",
+            "type": "value_reward",
+            "value": "primary",
+            "variable": "source_quality",
+            "weight": 7
+          },
+          {
+            "id": "SP_ENTAILED_SUPPORT",
+            "type": "value_reward",
+            "value": "entailed",
+            "variable": "support",
+            "weight": 3
+          },
+          {
+            "id": "SP_BOUNDED_SCOPE",
+            "type": "value_reward",
+            "value": "bounded",
+            "variable": "scope",
+            "weight": 1
+          }
+        ],
+        "typed_claims": [
+          {
+            "claim_type": "evidence_support",
+            "domain": [
+              "unsupported",
+              "entailed"
+            ],
+            "name": "support"
+          },
+          {
+            "claim_type": "provenance_quality",
+            "domain": [
+              "secondary",
+              "primary"
+            ],
+            "name": "source_quality"
+          },
+          {
+            "claim_type": "claim_scope",
+            "domain": [
+              "overbroad",
+              "bounded"
+            ],
+            "name": "scope"
+          }
+        ]
+      },
+      {
+        "candidates": [
+          {
+            "accept": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "candidate_id": "safety_exact_optimum"
+          },
+          {
+            "accept": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "candidate_id": "safety_hard_violation_high_soft"
+          },
+          {
+            "accept": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "candidate_id": "safety_soft_suboptimal"
+          }
+        ],
+        "expected_status": "optimal",
+        "hard_constraints": [
+          {
+            "id": "HC_SAFETY_SAFE",
+            "literals": [
+              {
+                "equals": "safe",
+                "variable": "safety"
+              }
+            ],
+            "type": "clause"
+          },
+          {
+            "id": "HC_CITATION_PRESENT",
+            "literals": [
+              {
+                "equals": "present",
+                "variable": "citation"
+              }
+            ],
+            "type": "clause"
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "soft_preferences": [
+          {
+            "id": "SP_ACCEPT_WHEN_SAFE",
+            "type": "value_reward",
+            "value": "accept",
+            "variable": "action",
+            "weight": 5
+          },
+          {
+            "id": "SP_SAFE_LABEL",
+            "type": "value_reward",
+            "value": "safe",
+            "variable": "safety",
+            "weight": 4
+          },
+          {
+            "id": "SP_CITATION_PRESENT",
+            "type": "value_reward",
+            "value": "present",
+            "variable": "citation",
+            "weight": 3
+          }
+        ],
+        "typed_claims": [
+          {
+            "claim_type": "safety_label",
+            "domain": [
+              "unsafe",
+              "safe"
+            ],
+            "name": "safety"
+          },
+          {
+            "claim_type": "citation_state",
+            "domain": [
+              "missing",
+              "present"
+            ],
+            "name": "citation"
+          },
+          {
+            "claim_type": "validator_action",
+            "domain": [
+              "reject",
+              "accept"
+            ],
+            "name": "action"
+          }
+        ]
+      },
+      {
+        "candidates": [
+          {
+            "accept": false,
+            "assignment": {
+              "evidence": "present",
+              "verdict": "accept"
+            },
+            "candidate_id": "infeasible_false_accept_probe"
+          }
+        ],
+        "expected_status": "infeasible",
+        "hard_constraints": [
+          {
+            "id": "HC_VERDICT_ACCEPT",
+            "literals": [
+              {
+                "equals": "accept",
+                "variable": "verdict"
+              }
+            ],
+            "type": "clause"
+          },
+          {
+            "id": "HC_VERDICT_REJECT",
+            "literals": [
+              {
+                "equals": "reject",
+                "variable": "verdict"
+              }
+            ],
+            "type": "clause"
+          }
+        ],
+        "instance_id": "claim_infeasible_negative_control",
+        "soft_preferences": [
+          {
+            "id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+            "type": "value_reward",
+            "value": "accept",
+            "variable": "verdict",
+            "weight": 10
+          },
+          {
+            "id": "SP_EVIDENCE_PRESENT",
+            "type": "value_reward",
+            "value": "present",
+            "variable": "evidence",
+            "weight": 2
+          }
+        ],
+        "typed_claims": [
+          {
+            "claim_type": "validator_verdict",
+            "domain": [
+              "reject",
+              "accept"
+            ],
+            "name": "verdict"
+          },
+          {
+            "claim_type": "evidence_state",
+            "domain": [
+              "absent",
+              "present"
+            ],
+            "name": "evidence"
+          }
+        ]
+      }
+    ],
+    "schema": "carnot.fixture.preference_maxsat_minimal_typed_claim_state.v1",
+    "token_steering_used": false
+  },
+  "fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+  "fixture_sha256": "5e5bc66f0f9eee90c83468d3cdcc294938975ee7b2b872f902ccb88ee782d02a",
+  "guided_decoding_used": false,
+  "hard_constraint_pass_rate": 1.0,
+  "honest_verdict": "complete: preference_maxsat_minimal_fixture_ready_exact_validators_authoritative",
+  "independent_reference_agreement_rate": 1.0,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "milestone": "2026.07.499",
+  "num_instances": 3,
+  "preference_maxsat_fixture_ready": true,
+  "preference_optimality_rate": 1.0,
+  "readiness_blockers": [],
+  "reference_rows": [
+    {
+      "candidates": [
+        {
+          "accepted": true,
+          "candidate_id": "support_exact_optimum",
+          "false_accept": false,
+          "hard_constraints_pass": true,
+          "reference_agreement": true,
+          "soft_optimal": true,
+          "soft_score": 11.0
+        },
+        {
+          "accepted": false,
+          "candidate_id": "support_hard_violation",
+          "false_accept": false,
+          "hard_constraints_pass": false,
+          "reference_agreement": false,
+          "soft_optimal": false,
+          "soft_score": 8.0
+        },
+        {
+          "accepted": false,
+          "candidate_id": "support_soft_suboptimal",
+          "false_accept": false,
+          "hard_constraints_pass": true,
+          "reference_agreement": false,
+          "soft_optimal": false,
+          "soft_score": 4.0
+        }
+      ],
+      "expected_status": "optimal",
+      "instance_id": "claim_support_preference",
+      "reference": {
+        "assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "assignment_hash": "2c52605737bfbd2bfa5233e552f09b753ded312d009208bedbfbe631f1e49d9e",
+        "feasible_assignment_count": 2,
+        "objective_score": 11.0,
+        "status": "optimal"
+      },
+      "reference_agreement": true
+    },
+    {
+      "candidates": [
+        {
+          "accepted": true,
+          "candidate_id": "safety_exact_optimum",
+          "false_accept": false,
+          "hard_constraints_pass": true,
+          "reference_agreement": true,
+          "soft_optimal": true,
+          "soft_score": 12.0
+        },
+        {
+          "accepted": false,
+          "candidate_id": "safety_hard_violation_high_soft",
+          "false_accept": false,
+          "hard_constraints_pass": false,
+          "reference_agreement": false,
+          "soft_optimal": false,
+          "soft_score": 8.0
+        },
+        {
+          "accepted": false,
+          "candidate_id": "safety_soft_suboptimal",
+          "false_accept": false,
+          "hard_constraints_pass": true,
+          "reference_agreement": false,
+          "soft_optimal": false,
+          "soft_score": 7.0
+        }
+      ],
+      "expected_status": "optimal",
+      "instance_id": "claim_safety_conflict",
+      "reference": {
+        "assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "assignment_hash": "18593a04479ad10f303da93394675b65b1243732f139b5777c42d2a3518d23ea",
+        "feasible_assignment_count": 2,
+        "objective_score": 12.0,
+        "status": "optimal"
+      },
+      "reference_agreement": true
+    },
+    {
+      "candidates": [
+        {
+          "accepted": false,
+          "candidate_id": "infeasible_false_accept_probe",
+          "false_accept": false,
+          "hard_constraints_pass": false,
+          "reference_agreement": false,
+          "soft_optimal": false,
+          "soft_score": 12.0
+        }
+      ],
+      "expected_status": "infeasible",
+      "instance_id": "claim_infeasible_negative_control",
+      "reference": {
+        "assignment": null,
+        "assignment_hash": null,
+        "feasible_assignment_count": 0,
+        "objective_score": null,
+        "status": "infeasible"
+      },
+      "reference_agreement": true
+    }
+  ],
+  "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+  "rejected_candidate_ids": [
+    "support_hard_violation",
+    "support_soft_suboptimal",
+    "safety_hard_violation_high_soft",
+    "safety_soft_suboptimal",
+    "infeasible_false_accept_probe"
+  ],
+  "reproducibility_checksum": "782d47813fb0fab7029a59d979b5f9c52b0ca5327b5349316b9bba8dd07a73b7",
+  "research_conductor_modified": false,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5499.preference_maxsat_minimal_fixture.v499",
+  "spec_refs": [
+    "REQ-VERIFY-5499",
+    "SCENARIO-VERIFY-5499"
+  ],
+  "test_paths": [
+    "tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py -q --no-cov",
+      "outcome": "passed",
+      "summary": "7 passed in 3.45s"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py -m pytest tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py -q --no-cov -n 0",
+      "outcome": "passed",
+      "summary": "7 passed in 1.90s"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py --fail-under=100",
+      "outcome": "passed",
+      "summary": "100% line coverage on new module"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed_interrupted_existing_repo_failures",
+      "summary": "Interrupted after 47:22 with 36011 passed, 243 failed, 9 errors, 113 skipped, 1 xfailed; observed missing onnx, Z3 xdist worker crashes, replay drift, and unrelated historical failures before interrupt."
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed_existing_untraced_tests",
+      "summary": "1262 pre-existing tests lack REQ-/SCENARIO traceability; Exp5499 tests include REQ-VERIFY-5499 and SCENARIO-VERIFY-5499."
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py",
+      "outcome": "passed",
+      "summary": "All checks passed."
+    },
+    {
+      "command": "ops/e2e-test-plan.md review",
+      "outcome": "not_applicable",
+      "summary": "Exp5499 is a deterministic CPU-local fixture/enumerator; training, sampling, PyO3, serialization, KV260, and live repair e2e paths do not apply."
+    }
+  ],
+  "token_steering_used": false
+}
