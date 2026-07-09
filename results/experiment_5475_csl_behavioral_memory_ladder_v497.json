@@ -1,0 +1,3190 @@
+{
+  "axis_details": {
+    "conflict_handling": [
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-d-conflict",
+        "variant": "governed_memory"
+      },
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-d-conflict",
+        "variant": "kan_surrogate_policy"
+      }
+    ],
+    "downstream_action_use": [
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-e-action",
+        "variant": "governed_memory"
+      },
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-e-action",
+        "variant": "kan_surrogate_policy"
+      }
+    ],
+    "locality": [
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-c-locality",
+        "variant": "governed_memory"
+      },
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-c-locality",
+        "variant": "kan_surrogate_policy"
+      }
+    ],
+    "paraphrase_robustness": [
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-b-paraphrase",
+        "variant": "governed_memory"
+      },
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-b-paraphrase",
+        "variant": "kan_surrogate_policy"
+      }
+    ],
+    "stale_memory_rejection": [
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-f-stale",
+        "variant": "governed_memory"
+      },
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-f-stale",
+        "variant": "kan_surrogate_policy"
+      }
+    ],
+    "support_removal": [
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-a-support-removed",
+        "variant": "governed_memory"
+      },
+      {
+        "accepted_by_exact_validator": true,
+        "axis_pass": true,
+        "row_id": "5475-a-support-removed",
+        "variant": "kan_surrogate_policy"
+      }
+    ]
+  },
+  "conflict_handling_pass_rate": 1.0,
+  "csl_behavioral_memory_ready": true,
+  "downstream_action_use_rate": 1.0,
+  "experiment_id": "experiment_5475_csl_behavioral_memory_ladder_v497",
+  "field_principles": {
+    "conflict_handling_pass_rate": "newer verified evidence beats conflicts.",
+    "csl_behavioral_memory_ready": "terminal readiness for auditable memory behavior.",
+    "downstream_action_use_rate": "retrieved experience changes action, not just text.",
+    "governed_memory_score": "exact-validator score under governed memory controls.",
+    "honest_verdict": "terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "deterministic no-LLM replay declaration.",
+    "locality_pass_rate": "retrieval stays in the correct local context.",
+    "model_weight_mutation": "frozen model and adapter boundary.",
+    "naive_icl_baseline_score": "exact-validator score with ungated retrieved memory.",
+    "no_memory_baseline_score": "exact-validator score without memory.",
+    "paraphrase_robustness_rate": "experience survives wording changes.",
+    "random_seed": "deterministic run seed.",
+    "replay_fixture_count": "coverage of behavioral memory ladder fixtures.",
+    "stale_memory_rejection_rate": "expired experience is rejected.",
+    "support_removal_pass_rate": "removed support cannot justify memory use."
+  },
+  "fixtures": [
+    {
+      "axis": "support_removal",
+      "expected_answer": "hold-shipment",
+      "expected_downstream_action": null,
+      "locality_key": "dock-7",
+      "memory_records": [
+        {
+          "answer": "release-shipment",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "dock-7",
+          "memory_id": "mem5475-a-old-release",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-a-old-release",
+            "support_ids": [
+              "support:release-proof-revoked"
+            ]
+          },
+          "rollback_pointer": "rollback:support-removal-001",
+          "stale": false,
+          "support_ids": [
+            "support:release-proof-revoked"
+          ],
+          "support_status": "removed",
+          "text": "Revoked release proof once allowed this shipment to leave dock 7.",
+          "topic": "shipping",
+          "trust_score": 0.9
+        }
+      ],
+      "no_memory_answer": "hold-shipment",
+      "question": "What action is valid after the release proof was revoked?",
+      "row_id": "5475-a-support-removed",
+      "topic": "shipping"
+    },
+    {
+      "axis": "paraphrase_robustness",
+      "expected_answer": "blue-crate-17",
+      "expected_downstream_action": null,
+      "locality_key": "warehouse-a",
+      "memory_records": [
+        {
+          "answer": "blue-crate-17",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warehouse-a",
+          "memory_id": "mem5475-b-azure-box",
+          "paraphrase_of": "signed gasket crate location",
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-b-azure-box",
+            "support_ids": [
+              "support:gasket-intake-17"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:gasket-intake-17"
+          ],
+          "support_status": "active",
+          "text": "The approved seal lives in azure box 17, the blue crate.",
+          "topic": "crate",
+          "trust_score": 0.86
+        }
+      ],
+      "no_memory_answer": "unknown",
+      "question": "Which crate contains the signed gasket?",
+      "row_id": "5475-b-paraphrase",
+      "topic": "crate"
+    },
+    {
+      "axis": "locality",
+      "expected_answer": "zone-2",
+      "expected_downstream_action": null,
+      "locality_key": "cold-room",
+      "memory_records": [
+        {
+          "answer": "zone-9",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warm-room",
+          "memory_id": "mem5475-c-warm-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-warm-room",
+            "support_ids": [
+              "support:warm-room-route"
+            ]
+          },
+          "rollback_pointer": "rollback:wrong-locality-001",
+          "stale": false,
+          "support_ids": [
+            "support:warm-room-route"
+          ],
+          "support_status": "active",
+          "text": "Warm-room robot inspections route to zone 9.",
+          "topic": "robot-routing",
+          "trust_score": 0.8
+        },
+        {
+          "answer": "zone-2",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "cold-room",
+          "memory_id": "mem5475-c-cold-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-cold-room",
+            "support_ids": [
+              "support:cold-room-route"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:cold-room-route"
+          ],
+          "support_status": "active",
+          "text": "Cold-room robot inspections route to zone 2.",
+          "topic": "robot-routing",
+          "trust_score": 0.82
+        }
+      ],
+      "no_memory_answer": "unknown",
+      "question": "Which zone should the cold-room robot inspect?",
+      "row_id": "5475-c-locality",
+      "topic": "robot-routing"
+    },
+    {
+      "axis": "conflict_handling",
+      "expected_answer": "vendor-A",
+      "expected_downstream_action": null,
+      "locality_key": "lot-77",
+      "memory_records": [
+        {
+          "answer": "vendor-B",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-old-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-old-vendor",
+            "support_ids": [
+              "support:old-vendor-note"
+            ]
+          },
+          "rollback_pointer": "rollback:conflict-old-vendor",
+          "stale": false,
+          "support_ids": [
+            "support:old-vendor-note"
+          ],
+          "support_status": "active",
+          "text": "Older intake note listed vendor B for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.35
+        },
+        {
+          "answer": "vendor-A",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-verified-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-verified-vendor",
+            "support_ids": [
+              "support:verified-vendor-receipt"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ],
+          "support_status": "active",
+          "text": "Verified procurement receipt lists vendor A for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.94
+        }
+      ],
+      "no_memory_answer": "unknown",
+      "question": "Which vendor is verified for lot 77?",
+      "row_id": "5475-d-conflict",
+      "topic": "vendor"
+    },
+    {
+      "axis": "downstream_action_use",
+      "expected_answer": "open-gate-B",
+      "expected_downstream_action": "dispatch:open-gate-B",
+      "locality_key": "line-tx",
+      "memory_records": [
+        {
+          "answer": "open-gate-B",
+          "conflict_group": null,
+          "downstream_action": "dispatch:open-gate-B",
+          "locality_key": "line-tx",
+          "memory_id": "mem5475-e-amber-tx",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-e-amber-tx",
+            "support_ids": [
+              "support:amber-tx-action"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:amber-tx-action"
+          ],
+          "support_status": "active",
+          "text": "When sensor TX is amber, dispatch the gate-B opening action.",
+          "topic": "controller-action",
+          "trust_score": 0.88
+        }
+      ],
+      "no_memory_answer": "unknown",
+      "question": "Which gate should the controller open for amber sensor TX?",
+      "row_id": "5475-e-action",
+      "topic": "controller-action"
+    },
+    {
+      "axis": "stale_memory_rejection",
+      "expected_answer": "queue-beta",
+      "expected_downstream_action": null,
+      "locality_key": "rx-4",
+      "memory_records": [
+        {
+          "answer": "queue-alpha",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-stale-alpha",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-stale-alpha",
+            "support_ids": [
+              "support:rx4-old-owner"
+            ]
+          },
+          "rollback_pointer": "rollback:stale-rx4-alpha",
+          "stale": true,
+          "support_ids": [
+            "support:rx4-old-owner"
+          ],
+          "support_status": "active",
+          "text": "Before the handoff, incident RX-4 belonged to queue alpha.",
+          "topic": "incident-queue",
+          "trust_score": 0.75
+        },
+        {
+          "answer": "queue-beta",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-fresh-beta",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-fresh-beta",
+            "support_ids": [
+              "support:rx4-fresh-owner"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ],
+          "support_status": "active",
+          "text": "Fresh replay receipt: incident RX-4 now belongs to queue beta.",
+          "topic": "incident-queue",
+          "trust_score": 0.89
+        }
+      ],
+      "no_memory_answer": "unknown",
+      "question": "Which queue owns incident RX-4 after the handoff?",
+      "row_id": "5475-f-stale",
+      "topic": "incident-queue"
+    }
+  ],
+  "governed_memory_score": 1.0,
+  "honest_verdict": "complete: deterministic replay audited behavioral CSL memory use without live SOTA inference",
+  "inference_substrate": "deterministic_replay_no_llm",
+  "kan_surrogate_policy_score": 1.0,
+  "locality_pass_rate": 1.0,
+  "milestone": "2026.07.497",
+  "model_weight_mutation": false,
+  "naive_icl_baseline_score": 0.333333,
+  "no_memory_baseline_score": 0.166667,
+  "paraphrase_robustness_rate": 1.0,
+  "random_seed": 5475,
+  "replay_fixture_count": 6,
+  "reproducibility_checksum": "sha256:4ec4ed10f9fa47457683b95d9e0e43dfea846c33d95c918f4dd0cb43b26d6a07",
+  "research_conductor_modified": false,
+  "row_ids_by_variant": {
+    "governed_memory": [
+      "5475-a-support-removed",
+      "5475-b-paraphrase",
+      "5475-c-locality",
+      "5475-d-conflict",
+      "5475-e-action",
+      "5475-f-stale"
+    ],
+    "kan_surrogate_policy": [
+      "5475-a-support-removed",
+      "5475-b-paraphrase",
+      "5475-c-locality",
+      "5475-d-conflict",
+      "5475-e-action",
+      "5475-f-stale"
+    ],
+    "naive_icl": [
+      "5475-a-support-removed",
+      "5475-b-paraphrase",
+      "5475-c-locality",
+      "5475-d-conflict",
+      "5475-e-action",
+      "5475-f-stale"
+    ],
+    "no_memory": [
+      "5475-a-support-removed",
+      "5475-b-paraphrase",
+      "5475-c-locality",
+      "5475-d-conflict",
+      "5475-e-action",
+      "5475-f-stale"
+    ]
+  },
+  "row_results": [
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [],
+      "axis": "support_removal",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:no_memory",
+        "retrieval:suppressed",
+        "selected_answer:hold-shipment"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "hold-shipment",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "hold-shipment",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [],
+      "provenance": [],
+      "question": "What action is valid after the release proof was revoked?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:b16b44567218651d345319e7fdffb7f3da535fac0e93f1726d8eb8767c37f849",
+      "row_id": "5475-a-support-removed",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "hold-shipment",
+      "selected_downstream_action": null,
+      "variant": "no_memory"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [
+        {
+          "answer": "release-shipment",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "dock-7",
+          "memory_id": "mem5475-a-old-release",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-a-old-release",
+            "support_ids": [
+              "support:release-proof-revoked"
+            ]
+          },
+          "rollback_pointer": "rollback:support-removal-001",
+          "stale": false,
+          "support_ids": [
+            "support:release-proof-revoked"
+          ],
+          "support_status": "removed",
+          "text": "Revoked release proof once allowed this shipment to leave dock 7.",
+          "topic": "shipping",
+          "trust_score": 0.9
+        }
+      ],
+      "axis": "support_removal",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:naive_icl",
+        "retrieved:1",
+        "accepted:all_without_governance",
+        "selected_answer:release-shipment"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [
+          "answer_mismatch",
+          "support_removed_memory_accepted"
+        ],
+        "downstream_action_passed": true,
+        "expected_answer": "hold-shipment",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch",
+          "support_removed_memory_accepted"
+        ],
+        "memory_use_claim_valid": false,
+        "memory_use_claimed": true,
+        "selected_answer": "release-shipment",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-a-old-release"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-a-old-release",
+          "support_ids": [
+            "support:release-proof-revoked"
+          ]
+        }
+      ],
+      "question": "What action is valid after the release proof was revoked?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "release-shipment",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "dock-7",
+          "memory_id": "mem5475-a-old-release",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-a-old-release",
+            "support_ids": [
+              "support:release-proof-revoked"
+            ]
+          },
+          "rollback_pointer": "rollback:support-removal-001",
+          "stale": false,
+          "support_ids": [
+            "support:release-proof-revoked"
+          ],
+          "support_status": "removed",
+          "text": "Revoked release proof once allowed this shipment to leave dock 7.",
+          "topic": "shipping",
+          "trust_score": 0.9
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:support-removal-001"
+      ],
+      "row_checksum": "sha256:6880c1b4912d7ce408ff7dfb9ced59908267005c59f749757002dc951c2d7fa6",
+      "row_id": "5475-a-support-removed",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "release-shipment",
+      "selected_downstream_action": null,
+      "variant": "naive_icl"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [],
+      "axis": "support_removal",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:governed_memory",
+        "retrieved:1",
+        "reject:mem5475-a-old-release:support_removed",
+        "fallback:no_memory_answer",
+        "selected_answer:hold-shipment"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "hold-shipment",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "hold-shipment",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-a-old-release"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-a-old-release",
+          "support_ids": [
+            "support:release-proof-revoked"
+          ]
+        }
+      ],
+      "question": "What action is valid after the release proof was revoked?",
+      "rejected_memory_records": [
+        {
+          "answer": "release-shipment",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "dock-7",
+          "memory_id": "mem5475-a-old-release",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-a-old-release",
+            "support_ids": [
+              "support:release-proof-revoked"
+            ]
+          },
+          "rejection_reason": "support_removed",
+          "rollback_pointer": "rollback:support-removal-001",
+          "stale": false,
+          "support_ids": [
+            "support:release-proof-revoked"
+          ],
+          "support_status": "removed",
+          "text": "Revoked release proof once allowed this shipment to leave dock 7.",
+          "topic": "shipping",
+          "trust_score": 0.9
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "release-shipment",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "dock-7",
+          "memory_id": "mem5475-a-old-release",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-a-old-release",
+            "support_ids": [
+              "support:release-proof-revoked"
+            ]
+          },
+          "rollback_pointer": "rollback:support-removal-001",
+          "stale": false,
+          "support_ids": [
+            "support:release-proof-revoked"
+          ],
+          "support_status": "removed",
+          "text": "Revoked release proof once allowed this shipment to leave dock 7.",
+          "topic": "shipping",
+          "trust_score": 0.9
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:support-removal-001"
+      ],
+      "row_checksum": "sha256:284b63803cf56a8c610fe701a19f8cf411c8f2e03e1382caf59a93fb169d88f8",
+      "row_id": "5475-a-support-removed",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "hold-shipment",
+      "selected_downstream_action": null,
+      "variant": "governed_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [],
+      "axis": "support_removal",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:kan_surrogate_policy",
+        "retrieved:1",
+        "kan_surrogate_risk_threshold:0.50",
+        "reject:mem5475-a-old-release:support_removed",
+        "fallback:no_memory_answer",
+        "selected_answer:hold-shipment"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "hold-shipment",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "hold-shipment",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-a-old-release"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-a-old-release",
+          "support_ids": [
+            "support:release-proof-revoked"
+          ]
+        }
+      ],
+      "question": "What action is valid after the release proof was revoked?",
+      "rejected_memory_records": [
+        {
+          "answer": "release-shipment",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "dock-7",
+          "memory_id": "mem5475-a-old-release",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-a-old-release",
+            "support_ids": [
+              "support:release-proof-revoked"
+            ]
+          },
+          "rejection_reason": "support_removed",
+          "rollback_pointer": "rollback:support-removal-001",
+          "stale": false,
+          "support_ids": [
+            "support:release-proof-revoked"
+          ],
+          "support_status": "removed",
+          "text": "Revoked release proof once allowed this shipment to leave dock 7.",
+          "topic": "shipping",
+          "trust_score": 0.9
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "release-shipment",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "dock-7",
+          "memory_id": "mem5475-a-old-release",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-a-old-release",
+            "support_ids": [
+              "support:release-proof-revoked"
+            ]
+          },
+          "rollback_pointer": "rollback:support-removal-001",
+          "stale": false,
+          "support_ids": [
+            "support:release-proof-revoked"
+          ],
+          "support_status": "removed",
+          "text": "Revoked release proof once allowed this shipment to leave dock 7.",
+          "topic": "shipping",
+          "trust_score": 0.9
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:support-removal-001"
+      ],
+      "row_checksum": "sha256:80dc90c3b3f43f19fa00e745b7e48bdbed27898246762c3afdf257c33027ce23",
+      "row_id": "5475-a-support-removed",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "hold-shipment",
+      "selected_downstream_action": null,
+      "variant": "kan_surrogate_policy"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [],
+      "axis": "paraphrase_robustness",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:no_memory",
+        "retrieval:suppressed",
+        "selected_answer:unknown"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "blue-crate-17",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch"
+        ],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "unknown",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [],
+      "provenance": [],
+      "question": "Which crate contains the signed gasket?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:3fec22eadd4d4f6a528582a6c4ce16012a624392b7fc975a92df397ee771c1f2",
+      "row_id": "5475-b-paraphrase",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "unknown",
+      "selected_downstream_action": null,
+      "variant": "no_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "blue-crate-17",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warehouse-a",
+          "memory_id": "mem5475-b-azure-box",
+          "paraphrase_of": "signed gasket crate location",
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-b-azure-box",
+            "support_ids": [
+              "support:gasket-intake-17"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:gasket-intake-17"
+          ],
+          "support_status": "active",
+          "text": "The approved seal lives in azure box 17, the blue crate.",
+          "topic": "crate",
+          "trust_score": 0.86
+        }
+      ],
+      "axis": "paraphrase_robustness",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:naive_icl",
+        "retrieved:1",
+        "accepted:all_without_governance",
+        "selected_answer:blue-crate-17"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "blue-crate-17",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "blue-crate-17",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-b-azure-box"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-b-azure-box",
+          "support_ids": [
+            "support:gasket-intake-17"
+          ]
+        }
+      ],
+      "question": "Which crate contains the signed gasket?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "blue-crate-17",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warehouse-a",
+          "memory_id": "mem5475-b-azure-box",
+          "paraphrase_of": "signed gasket crate location",
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-b-azure-box",
+            "support_ids": [
+              "support:gasket-intake-17"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:gasket-intake-17"
+          ],
+          "support_status": "active",
+          "text": "The approved seal lives in azure box 17, the blue crate.",
+          "topic": "crate",
+          "trust_score": 0.86
+        }
+      ],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:d61ae886013f9a1951aff3da214ac1282e97592739093d6d16998dd4b807e85a",
+      "row_id": "5475-b-paraphrase",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "blue-crate-17",
+      "selected_downstream_action": null,
+      "variant": "naive_icl"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "blue-crate-17",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warehouse-a",
+          "memory_id": "mem5475-b-azure-box",
+          "paraphrase_of": "signed gasket crate location",
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-b-azure-box",
+            "support_ids": [
+              "support:gasket-intake-17"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:gasket-intake-17"
+          ],
+          "support_status": "active",
+          "text": "The approved seal lives in azure box 17, the blue crate.",
+          "topic": "crate",
+          "trust_score": 0.86
+        }
+      ],
+      "axis": "paraphrase_robustness",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:governed_memory",
+        "retrieved:1",
+        "accept:mem5475-b-azure-box",
+        "selected_answer:blue-crate-17"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "blue-crate-17",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "blue-crate-17",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-b-azure-box"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-b-azure-box",
+          "support_ids": [
+            "support:gasket-intake-17"
+          ]
+        }
+      ],
+      "question": "Which crate contains the signed gasket?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "blue-crate-17",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warehouse-a",
+          "memory_id": "mem5475-b-azure-box",
+          "paraphrase_of": "signed gasket crate location",
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-b-azure-box",
+            "support_ids": [
+              "support:gasket-intake-17"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:gasket-intake-17"
+          ],
+          "support_status": "active",
+          "text": "The approved seal lives in azure box 17, the blue crate.",
+          "topic": "crate",
+          "trust_score": 0.86
+        }
+      ],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:c1398b47e1c5a59f6f374794e62a6a83569a8f67bc92c45f2e558301d146a5db",
+      "row_id": "5475-b-paraphrase",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "blue-crate-17",
+      "selected_downstream_action": null,
+      "variant": "governed_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "blue-crate-17",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warehouse-a",
+          "memory_id": "mem5475-b-azure-box",
+          "paraphrase_of": "signed gasket crate location",
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-b-azure-box",
+            "support_ids": [
+              "support:gasket-intake-17"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:gasket-intake-17"
+          ],
+          "support_status": "active",
+          "text": "The approved seal lives in azure box 17, the blue crate.",
+          "topic": "crate",
+          "trust_score": 0.86
+        }
+      ],
+      "axis": "paraphrase_robustness",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:kan_surrogate_policy",
+        "retrieved:1",
+        "kan_surrogate_risk_threshold:0.50",
+        "accept:mem5475-b-azure-box",
+        "selected_answer:blue-crate-17"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "blue-crate-17",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "blue-crate-17",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-b-azure-box"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-b-azure-box",
+          "support_ids": [
+            "support:gasket-intake-17"
+          ]
+        }
+      ],
+      "question": "Which crate contains the signed gasket?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "blue-crate-17",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warehouse-a",
+          "memory_id": "mem5475-b-azure-box",
+          "paraphrase_of": "signed gasket crate location",
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-b-azure-box",
+            "support_ids": [
+              "support:gasket-intake-17"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:gasket-intake-17"
+          ],
+          "support_status": "active",
+          "text": "The approved seal lives in azure box 17, the blue crate.",
+          "topic": "crate",
+          "trust_score": 0.86
+        }
+      ],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:aca41a116e5c7836cf21c426322771bc82d398ba450a7ce9f06b4a2955cfd49a",
+      "row_id": "5475-b-paraphrase",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "blue-crate-17",
+      "selected_downstream_action": null,
+      "variant": "kan_surrogate_policy"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [],
+      "axis": "locality",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:no_memory",
+        "retrieval:suppressed",
+        "selected_answer:unknown"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "zone-2",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch"
+        ],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "unknown",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [],
+      "provenance": [],
+      "question": "Which zone should the cold-room robot inspect?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:77d814a4d9ba900315683de6450233c1c4093714d7dedecfd50aedb80d7519ab",
+      "row_id": "5475-c-locality",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "unknown",
+      "selected_downstream_action": null,
+      "variant": "no_memory"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [
+        {
+          "answer": "zone-9",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warm-room",
+          "memory_id": "mem5475-c-warm-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-warm-room",
+            "support_ids": [
+              "support:warm-room-route"
+            ]
+          },
+          "rollback_pointer": "rollback:wrong-locality-001",
+          "stale": false,
+          "support_ids": [
+            "support:warm-room-route"
+          ],
+          "support_status": "active",
+          "text": "Warm-room robot inspections route to zone 9.",
+          "topic": "robot-routing",
+          "trust_score": 0.8
+        },
+        {
+          "answer": "zone-2",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "cold-room",
+          "memory_id": "mem5475-c-cold-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-cold-room",
+            "support_ids": [
+              "support:cold-room-route"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:cold-room-route"
+          ],
+          "support_status": "active",
+          "text": "Cold-room robot inspections route to zone 2.",
+          "topic": "robot-routing",
+          "trust_score": 0.82
+        }
+      ],
+      "axis": "locality",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:naive_icl",
+        "retrieved:2",
+        "accepted:all_without_governance",
+        "selected_answer:zone-9"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [
+          "answer_mismatch",
+          "irrelevant_memory_accepted"
+        ],
+        "downstream_action_passed": true,
+        "expected_answer": "zone-2",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch",
+          "irrelevant_memory_accepted"
+        ],
+        "memory_use_claim_valid": false,
+        "memory_use_claimed": true,
+        "selected_answer": "zone-9",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-c-warm-room",
+        "mem5475-c-cold-room"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-c-warm-room",
+          "support_ids": [
+            "support:warm-room-route"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-c-cold-room",
+          "support_ids": [
+            "support:cold-room-route"
+          ]
+        }
+      ],
+      "question": "Which zone should the cold-room robot inspect?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "zone-9",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warm-room",
+          "memory_id": "mem5475-c-warm-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-warm-room",
+            "support_ids": [
+              "support:warm-room-route"
+            ]
+          },
+          "rollback_pointer": "rollback:wrong-locality-001",
+          "stale": false,
+          "support_ids": [
+            "support:warm-room-route"
+          ],
+          "support_status": "active",
+          "text": "Warm-room robot inspections route to zone 9.",
+          "topic": "robot-routing",
+          "trust_score": 0.8
+        },
+        {
+          "answer": "zone-2",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "cold-room",
+          "memory_id": "mem5475-c-cold-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-cold-room",
+            "support_ids": [
+              "support:cold-room-route"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:cold-room-route"
+          ],
+          "support_status": "active",
+          "text": "Cold-room robot inspections route to zone 2.",
+          "topic": "robot-routing",
+          "trust_score": 0.82
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:wrong-locality-001"
+      ],
+      "row_checksum": "sha256:d8a2f94425ab2fe20f906c4c46fedc30a9a69e5fc38b13a11d71da2d904e6803",
+      "row_id": "5475-c-locality",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "zone-9",
+      "selected_downstream_action": null,
+      "variant": "naive_icl"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "zone-2",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "cold-room",
+          "memory_id": "mem5475-c-cold-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-cold-room",
+            "support_ids": [
+              "support:cold-room-route"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:cold-room-route"
+          ],
+          "support_status": "active",
+          "text": "Cold-room robot inspections route to zone 2.",
+          "topic": "robot-routing",
+          "trust_score": 0.82
+        }
+      ],
+      "axis": "locality",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:governed_memory",
+        "retrieved:2",
+        "reject:mem5475-c-warm-room:irrelevant_memory",
+        "accept:mem5475-c-cold-room",
+        "selected_answer:zone-2"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "zone-2",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "zone-2",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-c-warm-room",
+        "mem5475-c-cold-room"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-c-warm-room",
+          "support_ids": [
+            "support:warm-room-route"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-c-cold-room",
+          "support_ids": [
+            "support:cold-room-route"
+          ]
+        }
+      ],
+      "question": "Which zone should the cold-room robot inspect?",
+      "rejected_memory_records": [
+        {
+          "answer": "zone-9",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warm-room",
+          "memory_id": "mem5475-c-warm-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-warm-room",
+            "support_ids": [
+              "support:warm-room-route"
+            ]
+          },
+          "rejection_reason": "irrelevant_memory",
+          "rollback_pointer": "rollback:wrong-locality-001",
+          "stale": false,
+          "support_ids": [
+            "support:warm-room-route"
+          ],
+          "support_status": "active",
+          "text": "Warm-room robot inspections route to zone 9.",
+          "topic": "robot-routing",
+          "trust_score": 0.8
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "zone-9",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warm-room",
+          "memory_id": "mem5475-c-warm-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-warm-room",
+            "support_ids": [
+              "support:warm-room-route"
+            ]
+          },
+          "rollback_pointer": "rollback:wrong-locality-001",
+          "stale": false,
+          "support_ids": [
+            "support:warm-room-route"
+          ],
+          "support_status": "active",
+          "text": "Warm-room robot inspections route to zone 9.",
+          "topic": "robot-routing",
+          "trust_score": 0.8
+        },
+        {
+          "answer": "zone-2",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "cold-room",
+          "memory_id": "mem5475-c-cold-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-cold-room",
+            "support_ids": [
+              "support:cold-room-route"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:cold-room-route"
+          ],
+          "support_status": "active",
+          "text": "Cold-room robot inspections route to zone 2.",
+          "topic": "robot-routing",
+          "trust_score": 0.82
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:wrong-locality-001"
+      ],
+      "row_checksum": "sha256:f85edd17f01617eb9fb7465e63a55bb6376333959851c0347d6f4eca63991ed1",
+      "row_id": "5475-c-locality",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "zone-2",
+      "selected_downstream_action": null,
+      "variant": "governed_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "zone-2",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "cold-room",
+          "memory_id": "mem5475-c-cold-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-cold-room",
+            "support_ids": [
+              "support:cold-room-route"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:cold-room-route"
+          ],
+          "support_status": "active",
+          "text": "Cold-room robot inspections route to zone 2.",
+          "topic": "robot-routing",
+          "trust_score": 0.82
+        }
+      ],
+      "axis": "locality",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:kan_surrogate_policy",
+        "retrieved:2",
+        "kan_surrogate_risk_threshold:0.50",
+        "reject:mem5475-c-warm-room:irrelevant_memory",
+        "accept:mem5475-c-cold-room",
+        "selected_answer:zone-2"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "zone-2",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "zone-2",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-c-warm-room",
+        "mem5475-c-cold-room"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-c-warm-room",
+          "support_ids": [
+            "support:warm-room-route"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-c-cold-room",
+          "support_ids": [
+            "support:cold-room-route"
+          ]
+        }
+      ],
+      "question": "Which zone should the cold-room robot inspect?",
+      "rejected_memory_records": [
+        {
+          "answer": "zone-9",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warm-room",
+          "memory_id": "mem5475-c-warm-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-warm-room",
+            "support_ids": [
+              "support:warm-room-route"
+            ]
+          },
+          "rejection_reason": "irrelevant_memory",
+          "rollback_pointer": "rollback:wrong-locality-001",
+          "stale": false,
+          "support_ids": [
+            "support:warm-room-route"
+          ],
+          "support_status": "active",
+          "text": "Warm-room robot inspections route to zone 9.",
+          "topic": "robot-routing",
+          "trust_score": 0.8
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "zone-9",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "warm-room",
+          "memory_id": "mem5475-c-warm-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-warm-room",
+            "support_ids": [
+              "support:warm-room-route"
+            ]
+          },
+          "rollback_pointer": "rollback:wrong-locality-001",
+          "stale": false,
+          "support_ids": [
+            "support:warm-room-route"
+          ],
+          "support_status": "active",
+          "text": "Warm-room robot inspections route to zone 9.",
+          "topic": "robot-routing",
+          "trust_score": 0.8
+        },
+        {
+          "answer": "zone-2",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "cold-room",
+          "memory_id": "mem5475-c-cold-room",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-c-cold-room",
+            "support_ids": [
+              "support:cold-room-route"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:cold-room-route"
+          ],
+          "support_status": "active",
+          "text": "Cold-room robot inspections route to zone 2.",
+          "topic": "robot-routing",
+          "trust_score": 0.82
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:wrong-locality-001"
+      ],
+      "row_checksum": "sha256:49aee9303940e290d23708450555907f4972798ddee0ca888435a870a823abbb",
+      "row_id": "5475-c-locality",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "zone-2",
+      "selected_downstream_action": null,
+      "variant": "kan_surrogate_policy"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [],
+      "axis": "conflict_handling",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:no_memory",
+        "retrieval:suppressed",
+        "selected_answer:unknown"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "vendor-A",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch"
+        ],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "unknown",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [],
+      "provenance": [],
+      "question": "Which vendor is verified for lot 77?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:a8c05a05f70cc4d99fd669d1a9c144758be33f17641d8fa8601be8268f647266",
+      "row_id": "5475-d-conflict",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "unknown",
+      "selected_downstream_action": null,
+      "variant": "no_memory"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [
+        {
+          "answer": "vendor-B",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-old-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-old-vendor",
+            "support_ids": [
+              "support:old-vendor-note"
+            ]
+          },
+          "rollback_pointer": "rollback:conflict-old-vendor",
+          "stale": false,
+          "support_ids": [
+            "support:old-vendor-note"
+          ],
+          "support_status": "active",
+          "text": "Older intake note listed vendor B for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.35
+        },
+        {
+          "answer": "vendor-A",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-verified-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-verified-vendor",
+            "support_ids": [
+              "support:verified-vendor-receipt"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ],
+          "support_status": "active",
+          "text": "Verified procurement receipt lists vendor A for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.94
+        }
+      ],
+      "axis": "conflict_handling",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:naive_icl",
+        "retrieved:2",
+        "accepted:all_without_governance",
+        "selected_answer:vendor-B"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [
+          "answer_mismatch",
+          "lower_trust_conflict_memory_accepted"
+        ],
+        "downstream_action_passed": true,
+        "expected_answer": "vendor-A",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch",
+          "lower_trust_conflict_memory_accepted"
+        ],
+        "memory_use_claim_valid": false,
+        "memory_use_claimed": true,
+        "selected_answer": "vendor-B",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-d-old-vendor",
+        "mem5475-d-verified-vendor"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-d-old-vendor",
+          "support_ids": [
+            "support:old-vendor-note"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-d-verified-vendor",
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ]
+        }
+      ],
+      "question": "Which vendor is verified for lot 77?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "vendor-B",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-old-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-old-vendor",
+            "support_ids": [
+              "support:old-vendor-note"
+            ]
+          },
+          "rollback_pointer": "rollback:conflict-old-vendor",
+          "stale": false,
+          "support_ids": [
+            "support:old-vendor-note"
+          ],
+          "support_status": "active",
+          "text": "Older intake note listed vendor B for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.35
+        },
+        {
+          "answer": "vendor-A",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-verified-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-verified-vendor",
+            "support_ids": [
+              "support:verified-vendor-receipt"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ],
+          "support_status": "active",
+          "text": "Verified procurement receipt lists vendor A for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.94
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:conflict-old-vendor"
+      ],
+      "row_checksum": "sha256:644caf712458d21661bdf6d7f0bb3577e9581c38c8bca599392c1fc94d56f49b",
+      "row_id": "5475-d-conflict",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "vendor-B",
+      "selected_downstream_action": null,
+      "variant": "naive_icl"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "vendor-A",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-verified-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-verified-vendor",
+            "support_ids": [
+              "support:verified-vendor-receipt"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ],
+          "support_status": "active",
+          "text": "Verified procurement receipt lists vendor A for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.94
+        }
+      ],
+      "axis": "conflict_handling",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:governed_memory",
+        "retrieved:2",
+        "reject:mem5475-d-old-vendor:conflict_lower_trust",
+        "accept:mem5475-d-verified-vendor",
+        "selected_answer:vendor-A"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "vendor-A",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "vendor-A",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-d-old-vendor",
+        "mem5475-d-verified-vendor"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-d-old-vendor",
+          "support_ids": [
+            "support:old-vendor-note"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-d-verified-vendor",
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ]
+        }
+      ],
+      "question": "Which vendor is verified for lot 77?",
+      "rejected_memory_records": [
+        {
+          "answer": "vendor-B",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-old-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-old-vendor",
+            "support_ids": [
+              "support:old-vendor-note"
+            ]
+          },
+          "rejection_reason": "conflict_lower_trust",
+          "rollback_pointer": "rollback:conflict-old-vendor",
+          "stale": false,
+          "support_ids": [
+            "support:old-vendor-note"
+          ],
+          "support_status": "active",
+          "text": "Older intake note listed vendor B for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.35
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "vendor-B",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-old-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-old-vendor",
+            "support_ids": [
+              "support:old-vendor-note"
+            ]
+          },
+          "rollback_pointer": "rollback:conflict-old-vendor",
+          "stale": false,
+          "support_ids": [
+            "support:old-vendor-note"
+          ],
+          "support_status": "active",
+          "text": "Older intake note listed vendor B for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.35
+        },
+        {
+          "answer": "vendor-A",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-verified-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-verified-vendor",
+            "support_ids": [
+              "support:verified-vendor-receipt"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ],
+          "support_status": "active",
+          "text": "Verified procurement receipt lists vendor A for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.94
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:conflict-old-vendor"
+      ],
+      "row_checksum": "sha256:9b317c028a8dfe03fd7206c6cfb3e780323bafd3ea26ba8f63332e386a2d5042",
+      "row_id": "5475-d-conflict",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "vendor-A",
+      "selected_downstream_action": null,
+      "variant": "governed_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "vendor-A",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-verified-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-verified-vendor",
+            "support_ids": [
+              "support:verified-vendor-receipt"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ],
+          "support_status": "active",
+          "text": "Verified procurement receipt lists vendor A for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.94
+        }
+      ],
+      "axis": "conflict_handling",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:kan_surrogate_policy",
+        "retrieved:2",
+        "kan_surrogate_risk_threshold:0.50",
+        "reject:mem5475-d-old-vendor:conflict_lower_trust",
+        "accept:mem5475-d-verified-vendor",
+        "selected_answer:vendor-A"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "vendor-A",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "vendor-A",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-d-old-vendor",
+        "mem5475-d-verified-vendor"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-d-old-vendor",
+          "support_ids": [
+            "support:old-vendor-note"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-d-verified-vendor",
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ]
+        }
+      ],
+      "question": "Which vendor is verified for lot 77?",
+      "rejected_memory_records": [
+        {
+          "answer": "vendor-B",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-old-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-old-vendor",
+            "support_ids": [
+              "support:old-vendor-note"
+            ]
+          },
+          "rejection_reason": "conflict_lower_trust",
+          "rollback_pointer": "rollback:conflict-old-vendor",
+          "stale": false,
+          "support_ids": [
+            "support:old-vendor-note"
+          ],
+          "support_status": "active",
+          "text": "Older intake note listed vendor B for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.35
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "vendor-B",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-old-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-old-vendor",
+            "support_ids": [
+              "support:old-vendor-note"
+            ]
+          },
+          "rollback_pointer": "rollback:conflict-old-vendor",
+          "stale": false,
+          "support_ids": [
+            "support:old-vendor-note"
+          ],
+          "support_status": "active",
+          "text": "Older intake note listed vendor B for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.35
+        },
+        {
+          "answer": "vendor-A",
+          "conflict_group": "lot-77-vendor",
+          "downstream_action": null,
+          "locality_key": "lot-77",
+          "memory_id": "mem5475-d-verified-vendor",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-d-verified-vendor",
+            "support_ids": [
+              "support:verified-vendor-receipt"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:verified-vendor-receipt"
+          ],
+          "support_status": "active",
+          "text": "Verified procurement receipt lists vendor A for lot 77.",
+          "topic": "vendor",
+          "trust_score": 0.94
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:conflict-old-vendor"
+      ],
+      "row_checksum": "sha256:5cd1c0d2ef60d051b64e535259bd6b66bf3315f4da87c4318adb5de32825d0c4",
+      "row_id": "5475-d-conflict",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "vendor-A",
+      "selected_downstream_action": null,
+      "variant": "kan_surrogate_policy"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [],
+      "axis": "downstream_action_use",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:no_memory",
+        "retrieval:suppressed",
+        "selected_answer:unknown"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": false,
+        "expected_answer": "open-gate-B",
+        "expected_downstream_action": "dispatch:open-gate-B",
+        "failure_reasons": [
+          "answer_mismatch",
+          "downstream_action_mismatch"
+        ],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "unknown",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [],
+      "provenance": [],
+      "question": "Which gate should the controller open for amber sensor TX?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:a7be92d2ba93f3f6a1f60b254d965fa5b054fb4bab709236668c786297ad7ecf",
+      "row_id": "5475-e-action",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "unknown",
+      "selected_downstream_action": null,
+      "variant": "no_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "open-gate-B",
+          "conflict_group": null,
+          "downstream_action": "dispatch:open-gate-B",
+          "locality_key": "line-tx",
+          "memory_id": "mem5475-e-amber-tx",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-e-amber-tx",
+            "support_ids": [
+              "support:amber-tx-action"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:amber-tx-action"
+          ],
+          "support_status": "active",
+          "text": "When sensor TX is amber, dispatch the gate-B opening action.",
+          "topic": "controller-action",
+          "trust_score": 0.88
+        }
+      ],
+      "axis": "downstream_action_use",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:naive_icl",
+        "retrieved:1",
+        "accepted:all_without_governance",
+        "selected_answer:open-gate-B"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "open-gate-B",
+        "expected_downstream_action": "dispatch:open-gate-B",
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "open-gate-B",
+        "selected_downstream_action": "dispatch:open-gate-B"
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-e-amber-tx"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-e-amber-tx",
+          "support_ids": [
+            "support:amber-tx-action"
+          ]
+        }
+      ],
+      "question": "Which gate should the controller open for amber sensor TX?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "open-gate-B",
+          "conflict_group": null,
+          "downstream_action": "dispatch:open-gate-B",
+          "locality_key": "line-tx",
+          "memory_id": "mem5475-e-amber-tx",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-e-amber-tx",
+            "support_ids": [
+              "support:amber-tx-action"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:amber-tx-action"
+          ],
+          "support_status": "active",
+          "text": "When sensor TX is amber, dispatch the gate-B opening action.",
+          "topic": "controller-action",
+          "trust_score": 0.88
+        }
+      ],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:3b642718965735a9a71d84d013a0fb817a4e0ba7386e0dc16ceb9dbe91e89d6f",
+      "row_id": "5475-e-action",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "open-gate-B",
+      "selected_downstream_action": "dispatch:open-gate-B",
+      "variant": "naive_icl"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "open-gate-B",
+          "conflict_group": null,
+          "downstream_action": "dispatch:open-gate-B",
+          "locality_key": "line-tx",
+          "memory_id": "mem5475-e-amber-tx",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-e-amber-tx",
+            "support_ids": [
+              "support:amber-tx-action"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:amber-tx-action"
+          ],
+          "support_status": "active",
+          "text": "When sensor TX is amber, dispatch the gate-B opening action.",
+          "topic": "controller-action",
+          "trust_score": 0.88
+        }
+      ],
+      "axis": "downstream_action_use",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:governed_memory",
+        "retrieved:1",
+        "accept:mem5475-e-amber-tx",
+        "selected_answer:open-gate-B"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "open-gate-B",
+        "expected_downstream_action": "dispatch:open-gate-B",
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "open-gate-B",
+        "selected_downstream_action": "dispatch:open-gate-B"
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-e-amber-tx"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-e-amber-tx",
+          "support_ids": [
+            "support:amber-tx-action"
+          ]
+        }
+      ],
+      "question": "Which gate should the controller open for amber sensor TX?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "open-gate-B",
+          "conflict_group": null,
+          "downstream_action": "dispatch:open-gate-B",
+          "locality_key": "line-tx",
+          "memory_id": "mem5475-e-amber-tx",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-e-amber-tx",
+            "support_ids": [
+              "support:amber-tx-action"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:amber-tx-action"
+          ],
+          "support_status": "active",
+          "text": "When sensor TX is amber, dispatch the gate-B opening action.",
+          "topic": "controller-action",
+          "trust_score": 0.88
+        }
+      ],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:bcbc833c3489d6020bcb93eb57afe83dfcd79834db92fd24c9a1072447ec7895",
+      "row_id": "5475-e-action",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "open-gate-B",
+      "selected_downstream_action": "dispatch:open-gate-B",
+      "variant": "governed_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "open-gate-B",
+          "conflict_group": null,
+          "downstream_action": "dispatch:open-gate-B",
+          "locality_key": "line-tx",
+          "memory_id": "mem5475-e-amber-tx",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-e-amber-tx",
+            "support_ids": [
+              "support:amber-tx-action"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:amber-tx-action"
+          ],
+          "support_status": "active",
+          "text": "When sensor TX is amber, dispatch the gate-B opening action.",
+          "topic": "controller-action",
+          "trust_score": 0.88
+        }
+      ],
+      "axis": "downstream_action_use",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:kan_surrogate_policy",
+        "retrieved:1",
+        "kan_surrogate_risk_threshold:0.50",
+        "accept:mem5475-e-amber-tx",
+        "selected_answer:open-gate-B"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "open-gate-B",
+        "expected_downstream_action": "dispatch:open-gate-B",
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "open-gate-B",
+        "selected_downstream_action": "dispatch:open-gate-B"
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-e-amber-tx"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-e-amber-tx",
+          "support_ids": [
+            "support:amber-tx-action"
+          ]
+        }
+      ],
+      "question": "Which gate should the controller open for amber sensor TX?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "open-gate-B",
+          "conflict_group": null,
+          "downstream_action": "dispatch:open-gate-B",
+          "locality_key": "line-tx",
+          "memory_id": "mem5475-e-amber-tx",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-e-amber-tx",
+            "support_ids": [
+              "support:amber-tx-action"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:amber-tx-action"
+          ],
+          "support_status": "active",
+          "text": "When sensor TX is amber, dispatch the gate-B opening action.",
+          "topic": "controller-action",
+          "trust_score": 0.88
+        }
+      ],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:bee7ad40e4bbee55228b7da1889e24dacec1092427aece71f25f9d676c6153f5",
+      "row_id": "5475-e-action",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "open-gate-B",
+      "selected_downstream_action": "dispatch:open-gate-B",
+      "variant": "kan_surrogate_policy"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [],
+      "axis": "stale_memory_rejection",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:no_memory",
+        "retrieval:suppressed",
+        "selected_answer:unknown"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "queue-beta",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch"
+        ],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": false,
+        "selected_answer": "unknown",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [],
+      "provenance": [],
+      "question": "Which queue owns incident RX-4 after the handoff?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [],
+      "rollback_pointers": [],
+      "row_checksum": "sha256:043768ff0289ba083159b6c76afe8368d2375ef0185db59c1a5ae0c052f1effe",
+      "row_id": "5475-f-stale",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "unknown",
+      "selected_downstream_action": null,
+      "variant": "no_memory"
+    },
+    {
+      "accepted_by_exact_validator": false,
+      "accepted_memory_records": [
+        {
+          "answer": "queue-alpha",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-stale-alpha",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-stale-alpha",
+            "support_ids": [
+              "support:rx4-old-owner"
+            ]
+          },
+          "rollback_pointer": "rollback:stale-rx4-alpha",
+          "stale": true,
+          "support_ids": [
+            "support:rx4-old-owner"
+          ],
+          "support_status": "active",
+          "text": "Before the handoff, incident RX-4 belonged to queue alpha.",
+          "topic": "incident-queue",
+          "trust_score": 0.75
+        },
+        {
+          "answer": "queue-beta",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-fresh-beta",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-fresh-beta",
+            "support_ids": [
+              "support:rx4-fresh-owner"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ],
+          "support_status": "active",
+          "text": "Fresh replay receipt: incident RX-4 now belongs to queue beta.",
+          "topic": "incident-queue",
+          "trust_score": 0.89
+        }
+      ],
+      "axis": "stale_memory_rejection",
+      "axis_pass": false,
+      "decision_path": [
+        "variant:naive_icl",
+        "retrieved:2",
+        "accepted:all_without_governance",
+        "selected_answer:queue-alpha"
+      ],
+      "exact_validator_results": {
+        "accepted": false,
+        "answer_accepted": false,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [
+          "answer_mismatch",
+          "stale_memory_accepted"
+        ],
+        "downstream_action_passed": true,
+        "expected_answer": "queue-beta",
+        "expected_downstream_action": null,
+        "failure_reasons": [
+          "answer_mismatch",
+          "stale_memory_accepted"
+        ],
+        "memory_use_claim_valid": false,
+        "memory_use_claimed": true,
+        "selected_answer": "queue-alpha",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-f-stale-alpha",
+        "mem5475-f-fresh-beta"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-f-stale-alpha",
+          "support_ids": [
+            "support:rx4-old-owner"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-f-fresh-beta",
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ]
+        }
+      ],
+      "question": "Which queue owns incident RX-4 after the handoff?",
+      "rejected_memory_records": [],
+      "retrieved_memory_records": [
+        {
+          "answer": "queue-alpha",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-stale-alpha",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-stale-alpha",
+            "support_ids": [
+              "support:rx4-old-owner"
+            ]
+          },
+          "rollback_pointer": "rollback:stale-rx4-alpha",
+          "stale": true,
+          "support_ids": [
+            "support:rx4-old-owner"
+          ],
+          "support_status": "active",
+          "text": "Before the handoff, incident RX-4 belonged to queue alpha.",
+          "topic": "incident-queue",
+          "trust_score": 0.75
+        },
+        {
+          "answer": "queue-beta",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-fresh-beta",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-fresh-beta",
+            "support_ids": [
+              "support:rx4-fresh-owner"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ],
+          "support_status": "active",
+          "text": "Fresh replay receipt: incident RX-4 now belongs to queue beta.",
+          "topic": "incident-queue",
+          "trust_score": 0.89
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:stale-rx4-alpha"
+      ],
+      "row_checksum": "sha256:efd1efdf16bf67a40ea324bc50ac98b356f63464d11a6d930a205714f9ce4e17",
+      "row_id": "5475-f-stale",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "queue-alpha",
+      "selected_downstream_action": null,
+      "variant": "naive_icl"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "queue-beta",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-fresh-beta",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-fresh-beta",
+            "support_ids": [
+              "support:rx4-fresh-owner"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ],
+          "support_status": "active",
+          "text": "Fresh replay receipt: incident RX-4 now belongs to queue beta.",
+          "topic": "incident-queue",
+          "trust_score": 0.89
+        }
+      ],
+      "axis": "stale_memory_rejection",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:governed_memory",
+        "retrieved:2",
+        "reject:mem5475-f-stale-alpha:stale_memory",
+        "accept:mem5475-f-fresh-beta",
+        "selected_answer:queue-beta"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "queue-beta",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "queue-beta",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-f-stale-alpha",
+        "mem5475-f-fresh-beta"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-f-stale-alpha",
+          "support_ids": [
+            "support:rx4-old-owner"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-f-fresh-beta",
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ]
+        }
+      ],
+      "question": "Which queue owns incident RX-4 after the handoff?",
+      "rejected_memory_records": [
+        {
+          "answer": "queue-alpha",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-stale-alpha",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-stale-alpha",
+            "support_ids": [
+              "support:rx4-old-owner"
+            ]
+          },
+          "rejection_reason": "stale_memory",
+          "rollback_pointer": "rollback:stale-rx4-alpha",
+          "stale": true,
+          "support_ids": [
+            "support:rx4-old-owner"
+          ],
+          "support_status": "active",
+          "text": "Before the handoff, incident RX-4 belonged to queue alpha.",
+          "topic": "incident-queue",
+          "trust_score": 0.75
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "queue-alpha",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-stale-alpha",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-stale-alpha",
+            "support_ids": [
+              "support:rx4-old-owner"
+            ]
+          },
+          "rollback_pointer": "rollback:stale-rx4-alpha",
+          "stale": true,
+          "support_ids": [
+            "support:rx4-old-owner"
+          ],
+          "support_status": "active",
+          "text": "Before the handoff, incident RX-4 belonged to queue alpha.",
+          "topic": "incident-queue",
+          "trust_score": 0.75
+        },
+        {
+          "answer": "queue-beta",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-fresh-beta",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-fresh-beta",
+            "support_ids": [
+              "support:rx4-fresh-owner"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ],
+          "support_status": "active",
+          "text": "Fresh replay receipt: incident RX-4 now belongs to queue beta.",
+          "topic": "incident-queue",
+          "trust_score": 0.89
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:stale-rx4-alpha"
+      ],
+      "row_checksum": "sha256:027b3085b97358214cd651875b19cf3158e7f039a33467c96c79cbf9d664337c",
+      "row_id": "5475-f-stale",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "queue-beta",
+      "selected_downstream_action": null,
+      "variant": "governed_memory"
+    },
+    {
+      "accepted_by_exact_validator": true,
+      "accepted_memory_records": [
+        {
+          "answer": "queue-beta",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-fresh-beta",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-fresh-beta",
+            "support_ids": [
+              "support:rx4-fresh-owner"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ],
+          "support_status": "active",
+          "text": "Fresh replay receipt: incident RX-4 now belongs to queue beta.",
+          "topic": "incident-queue",
+          "trust_score": 0.89
+        }
+      ],
+      "axis": "stale_memory_rejection",
+      "axis_pass": true,
+      "decision_path": [
+        "variant:kan_surrogate_policy",
+        "retrieved:2",
+        "kan_surrogate_risk_threshold:0.50",
+        "reject:mem5475-f-stale-alpha:stale_memory",
+        "accept:mem5475-f-fresh-beta",
+        "selected_answer:queue-beta"
+      ],
+      "exact_validator_results": {
+        "accepted": true,
+        "answer_accepted": true,
+        "authority": "deterministic_replay_validator",
+        "claim_failure_reasons": [],
+        "downstream_action_passed": true,
+        "expected_answer": "queue-beta",
+        "expected_downstream_action": null,
+        "failure_reasons": [],
+        "memory_use_claim_valid": true,
+        "memory_use_claimed": true,
+        "selected_answer": "queue-beta",
+        "selected_downstream_action": null
+      },
+      "final_authority_bypassed": false,
+      "memory_retrieval_ids": [
+        "mem5475-f-stale-alpha",
+        "mem5475-f-fresh-beta"
+      ],
+      "provenance": [
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-f-stale-alpha",
+          "support_ids": [
+            "support:rx4-old-owner"
+          ]
+        },
+        {
+          "retrieval_method": "exact_fixture_replay",
+          "source": "deterministic_exp5475_fixture",
+          "source_row_id": "row5475-f-fresh-beta",
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ]
+        }
+      ],
+      "question": "Which queue owns incident RX-4 after the handoff?",
+      "rejected_memory_records": [
+        {
+          "answer": "queue-alpha",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-stale-alpha",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-stale-alpha",
+            "support_ids": [
+              "support:rx4-old-owner"
+            ]
+          },
+          "rejection_reason": "stale_memory",
+          "rollback_pointer": "rollback:stale-rx4-alpha",
+          "stale": true,
+          "support_ids": [
+            "support:rx4-old-owner"
+          ],
+          "support_status": "active",
+          "text": "Before the handoff, incident RX-4 belonged to queue alpha.",
+          "topic": "incident-queue",
+          "trust_score": 0.75
+        }
+      ],
+      "retrieved_memory_records": [
+        {
+          "answer": "queue-alpha",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-stale-alpha",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-stale-alpha",
+            "support_ids": [
+              "support:rx4-old-owner"
+            ]
+          },
+          "rollback_pointer": "rollback:stale-rx4-alpha",
+          "stale": true,
+          "support_ids": [
+            "support:rx4-old-owner"
+          ],
+          "support_status": "active",
+          "text": "Before the handoff, incident RX-4 belonged to queue alpha.",
+          "topic": "incident-queue",
+          "trust_score": 0.75
+        },
+        {
+          "answer": "queue-beta",
+          "conflict_group": null,
+          "downstream_action": null,
+          "locality_key": "rx-4",
+          "memory_id": "mem5475-f-fresh-beta",
+          "paraphrase_of": null,
+          "provenance": {
+            "retrieval_method": "exact_fixture_replay",
+            "source": "deterministic_exp5475_fixture",
+            "source_row_id": "row5475-f-fresh-beta",
+            "support_ids": [
+              "support:rx4-fresh-owner"
+            ]
+          },
+          "rollback_pointer": null,
+          "stale": false,
+          "support_ids": [
+            "support:rx4-fresh-owner"
+          ],
+          "support_status": "active",
+          "text": "Fresh replay receipt: incident RX-4 now belongs to queue beta.",
+          "topic": "incident-queue",
+          "trust_score": 0.89
+        }
+      ],
+      "rollback_pointers": [
+        "rollback:stale-rx4-alpha"
+      ],
+      "row_checksum": "sha256:3acc345d0e9ec73a972b64f71fffedc17214db8b5e7261c4bbf6c16aafcabe4c",
+      "row_id": "5475-f-stale",
+      "schema": "carnot.experiment_5475.row.v1",
+      "selected_answer": "queue-beta",
+      "selected_downstream_action": null,
+      "variant": "kan_surrogate_policy"
+    }
+  ],
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5475.csl_behavioral_memory_ladder.v497",
+  "source_artifacts": [
+    "results/experiment_5460_csl_policy_bandit_v496.json",
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
+    "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
+    "results/experiment_5474_sota_csl_scale_v497.json"
+  ],
+  "source_file_checksums": {
+    "module": "sha256:e63aca2623dc786de55d519cb2a50b3744346259213b7cfb1182062fa65beba1",
+    "source_0": "sha256:d62a15938aae66e9586484d739e331210b32b4afe114b0da46d69d155fb5c96d",
+    "source_1": "sha256:465d9e8de5afca22def9a46a7d1e8867516742ec8fee9b8b6c37cf1d65590db9",
+    "source_2": "sha256:7431ddbb25410c26c1138e5cf7951fedb7100c0d8b66651490df362107cfa2e2",
+    "source_3": "sha256:1aa993f7b5e21f5d001ab3ba8a453d508eb4cb498f0bbe588fd64e0a957b3fd0",
+    "spec": "sha256:bcd018fff1c5345588d3f6c7cd5f486b190cd85b35817fa967f30a842033a403"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5475_csl_behavioral_memory_ladder_v497.py",
+    "spec": "openspec/capabilities/self-learning/spec.md"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5475",
+    "SCENARIO-LEARN-5475-SUPPORT-REMOVAL",
+    "SCENARIO-LEARN-5475-IRRELEVANT-MEMORY",
+    "SCENARIO-LEARN-5475-LADDER",
+    "SCENARIO-LEARN-5475-ARTIFACT"
+  ],
+  "stale_memory_rejection_rate": 1.0,
+  "support_removal_pass_rate": 1.0,
+  "task_id": "exp5475-csl-behavioral-memory-ladder-v497",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5475_csl_behavioral_memory_ladder_v497.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5475_csl_behavioral_memory_ladder_v497.py -m pytest tests/python/test_experiment_5475_csl_behavioral_memory_ladder_v497.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5475_csl_behavioral_memory_ladder_v497.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "variant_scores": {
+    "governed_memory": 1.0,
+    "kan_surrogate_policy": 1.0,
+    "naive_icl": 0.333333,
+    "no_memory": 0.166667
+  }
+}
