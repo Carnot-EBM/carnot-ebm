@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-07-09 (Milestone 2026.07.500 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V500 planner refresh to `research-references.md`, incorporating
+  distributional EBMs for structured LLM reasoning, PCRLLM proof-carrying
+  reasoning, reason-then-constrain decoding, XGrammar-2/llguidance structured
+  generation, sidecar-only spilled-energy diagnostics, blocked-Gibbs sparse
+  repair, KAN verification/online-learning work, p-bit/thermodynamic hardware
+  context, Extropic/Logical Intelligence watch-only status, and graph/agent
+  memory work.
+- The `.500` plan contains 13 conductor tasks across transition/source refresh,
+  structured-output positive control, gated local SOTA GGUF hard/soft evidence,
+  logits-energy sidecars, independent continuous self-learning graph replay,
+  gated SOTA CSL memory, memory-residue stress, sparse repair descriptors,
+  hardware methodology receipts, ARC action-diversity precheck, one gated ARC
+  live level-up attempt, and capstone reconciliation.
+- Validation passed for YAML parsing, prompt-shape audit, SOTA model-spec audit,
+  prior-failure validation, gate audit, exclusion-manifest lint, ARC level-up
+  guarantee lint, overdue-priority lint, touched-file whitespace checks,
+  protected-file diff checks, and operator-curated docs lint. Repo-wide spec
+  coverage remains blocked by the pre-existing traceability backlog (`1262
+  test(s) missing spec traceability`).
+
 ## 2026-07-09 (Milestone 2026.07.499 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`

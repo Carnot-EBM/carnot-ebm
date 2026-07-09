@@ -1,0 +1,862 @@
+milestone: "2026.07.500"
+milestone_title: "Structured SOTA Evidence, Non-Tautological CSL, Receipt-Only Hardware, and Action-Diverse ARC"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+overdue_priority_override: "Operator request for this planning turn explicitly says Do NOT modify scripts/research_conductor.py, so the stale retro_timing_fallback_wiring priority is not included in this research roadmap."
+operator_override: "2026-07-09 operator request explicitly says Do NOT modify scripts/research_conductor.py; conductor-fix overdue priorities are therefore excluded from the .500 research roadmap."
+tasks:
+  - id: exp5510-transition-v500
+    milestone: "2026.07.500"
+    title: "Transition .499 outcomes into .500 execution context"
+    priority: critical
+    track: planning
+    deliverable: results/experiment_5510_transition_v500.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 30
+    estimated_wall_time_min: 20
+    prior_failures:
+      - experiment_id: exp5509-capstone-v499
+        verdict: "complete: .499 capstone recorded bounded hard/soft core, SOTA abstention panel, CSL gate block, hardware speedup false, and arc_registry_delta=0."
+        addressed_by: "This is the routine next-milestone transition from .499 to .500 and carries terminal facts forward rather than rerunning the capstone."
+        retire_if_same_verdict: true
+      - experiment_id: exp5496-transition-v499
+        verdict: "complete: archived .498 terminal evidence into .499 transition receipt with next_task_range exp5496-exp5509."
+        addressed_by: "This transition targets the newer .499 artifact set and increments the CalVer sequence to 2026.07.500."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      You are starting milestone 2026.07.500 on {date} after all 2026.07.499 tasks completed. The planner has staged {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml. Your job is to archive prior milestone facts into a transition receipt, not to re-plan the milestone.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/results/experiment_5509_capstone_v499.json
+      - {project_root}/results/experiment_5500_sota_concept_claim_panel_v499.json
+      - {project_root}/results/experiment_5502_csl_tautology_corrigendum_v499.json
+      - {project_root}/results/experiment_5503_csl_experience_graph_replay_v499.json
+      - {project_root}/results/experiment_5504_sota_csl_memory_panel_v499.json
+      - {project_root}/results/experiment_5506_hardware_receipts_v499.json
+      - {project_root}/results/experiment_5508_arc_live_perception_generation_v499.json
+
+      TASK:
+      Emit results/experiment_5510_transition_v500.json summarizing exact .499 terminal evidence and .500 execution gates.
+
+      CONCRETE STEPS:
+      1. Read the listed files and extract .499 facts from real artifacts and conductor log entries.
+      2. Record the CalVer transition to 2026.07.500 and the expected task range exp5510-exp5522.
+      3. Summarize clean lanes: transition, pretest cascade repair, source delta, Preference-MaxSAT fixture, helper-contract fixture, and experience-graph replay readiness.
+      4. Explicitly record bounded or blocked lanes: SOTA missing-candidate panel, CSL metric-independence block, CSL gate-field mismatch, active-constraint exact fallback, hardware timing/methodology flags, and ARC no-bank.
+      5. Record the .500 gates: structured-output positive control before SOTA panel, independent CSL metrics before SOTA memory panel, ARC action-diversity precheck before live level-up, and hardware receipt-only posture.
+      6. Confirm that research-roadmap.yaml and scripts/research_conductor.py were not modified.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.500
+         - previous_milestone: 2026.07.499
+         - prior_capstone_path: results/experiment_5509_capstone_v499.json
+         - previous_task_range: exp5496-exp5509
+         - clean_lanes: list
+         - bounded_lanes: list
+         - blocked_lanes: list
+         - honest_null_lanes: list
+         - flagged_lanes: list
+         - next_task_range: exp5510-exp5522
+         - structured_sota_gate_required: bool
+         - csl_independent_metric_gate_required: bool
+         - arc_live_levelup_gate_required: bool
+         - hardware_receipt_only: bool
+         - roadmap_yaml_unchanged: bool
+         - conductor_unchanged: bool
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5511-v500-sota-source-delta-ingestion
+    milestone: "2026.07.500"
+    title: "Execution-time V500 source delta and experiment mapping"
+    priority: high
+    track: literature
+    deliverable: results/experiment_5511_v500_source_delta_ingestion.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 35
+    estimated_wall_time_min: 35
+    prior_failures:
+      - experiment_id: exp5498-source-delta-v499
+        verdict: "complete: V499 source delta appended actionable deltas and kept watch-only external hardware/vendor claims out of local experiments."
+        addressed_by: "This refresh targets only new or newly actionable 2025-2026 deltas after the V500 planner block and maps each accepted item to .500 tasks."
+        retire_if_same_verdict: true
+      - experiment_id: exp5483-source-delta-v498
+        verdict: "skipped_pretest_failed: no execution-time source-delta artifact was emitted."
+        addressed_by: "The pretest cascade was repaired in .499; this task now performs a bounded execution-time freshness pass."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The planner appended a V500 Planner Refresh to research-references.md on {date}. This task is the execution-time freshness check before science experiments run. It must add only non-duplicate actionable findings and must map each accepted finding to a planned .500 experiment.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/changelog.md
+      - {project_root}/research-roadmap-next.yaml
+
+      TASK:
+      Search arXiv and secondary sources for 2025-2026 work relevant to Carnot since the V500 planner refresh, append only non-duplicate actionable findings to research-references.md, and emit a source-delta receipt.
+
+      CONCRETE STEPS:
+      1. Search arXiv for EBMs for verification/reasoning, neural constraint satisfaction, Ising applications, hallucination mitigation, KANs, energy-guided decoding, hardware-accelerated sampling, and continual/online learning.
+      2. Check OpenReview, Extropic writing, Semantic Scholar routes for EBT 2507.02092 and ARM-EBM 2512.15605, HuggingFace Papers, GitHub, and Logical Intelligence public pages.
+      3. Dedupe against research-references.md, especially the V500 Planner Refresh block.
+      4. Append a short "V500 Execution Refresh - {date}" block only if new actionable deltas exist. If none exist, append nothing and explain the no-op in the artifact.
+      5. Explicitly classify closed-scope or non-executable items as watch-only or excluded.
+      6. Map accepted findings to .500 experiments: structured SOTA control, CSL independence, sparse repair, hardware receipts, or ARC live-path improvement.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - sources_checked: list
+         - new_references_added: list
+         - duplicates_suppressed: list
+         - closed_scopes_reopened: false
+         - research_references_updated: bool
+         - prior_refresh_marker_found: bool
+         - experiment_mappings: list
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5512-structured-output-positive-control
+    milestone: "2026.07.500"
+    title: "Structured-output positive control for SOTA hard/soft panels"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5512_structured_output_positive_control.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp5500-sota-concept-claim-panel-v499
+        verdict: "complete: live_sota_claim_panel_measured_accuracy_0.333333 with all candidate rows missing or abstained."
+        addressed_by: "This task proves local structured-output parsing and schema validity before any flagship SOTA panel is run."
+        retire_if_same_verdict: true
+      - experiment_id: exp5366-live-grammar-budgeted-structured-protocol
+        verdict: "blocked_or_bounded: structured protocol scope did not establish a clean local SOTA candidate-output path."
+        addressed_by: "This attempt is a smaller positive control over the existing Preference-MaxSAT fixture and can fall back to parser-only fixtures if grammar masks are unavailable."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5500 spent SOTA GGUF effort but emitted missing-candidate rows. Before another SOTA hard/soft panel runs, prove that Carnot can obtain parseable proof/claim structures from the local inference path or a documented structured-output fallback. Exact validators remain the authority.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5499_preference_maxsat_minimal_fixture_v499.json
+      - {project_root}/results/experiment_5500_sota_concept_claim_panel_v499.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Build and test a structured-output positive control for hard/soft claim candidates and emit results/experiment_5512_structured_output_positive_control.json.
+
+      CONCRETE STEPS:
+      1. Define the expected candidate schema for hard/soft claim states, including premises, rules or constraints, conclusions, abstention reason, and validator target fields.
+      2. Test the schema on deterministic fixture rows from Exp5499 before invoking any LLM.
+      3. Check whether a local grammar/JSON-schema constrained path is available through existing llama.cpp, llguidance, XGrammar, or repository helpers. If unavailable, document the parser-only fallback and keep SOTA panel gating false.
+      4. If a mandated local GGUF model is cached, run a tiny smoke sample through the same schema path. Use MODEL_SPECS with these headline-eligible models, but do not require all to be present:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      5. Use cached_sota_pair() or the repository's current local-GGUF helper pattern if available. Never call AutoTokenizer.from_pretrained on a GGUF repository.
+      6. Add focused tests for schema validation, parse failure classification, and exact-validator handoff if new code is introduced.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - schema_path: string
+         - parser_path: string
+         - tests_added_or_reused: list
+         - model_specs: list
+         - smoke_models_used: list
+         - grammar_runtime_available: bool
+         - parser_only_fallback_used: bool
+         - schema_validity_rate: float
+         - parseable_candidate_rows: int
+         - missing_candidate_rows: int
+         - exact_validator_handoff_ready: bool
+         - structured_output_positive_control_ready: bool
+         - llama_cpp_cuda_available: bool
+         - inference_substrate: structured_output_fixture_or_live_llm_smoke
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5513-sota-hard-soft-structured-panel
+    milestone: "2026.07.500"
+    title: "Gated SOTA GGUF hard/soft structured evidence panel"
+    priority: critical
+    track: verification
+    deliverable: results/experiment_5513_sota_hard_soft_structured_panel.json
+    agent_type: codex
+    model: "gpt-5.5"
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 80
+    gated_on:
+      - upstream: exp5512-structured-output-positive-control
+        artifact_field: structured_output_positive_control_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5500-sota-concept-claim-panel-v499
+        verdict: "complete: live_sota_claim_panel_measured_accuracy_0.333333 with all candidate rows missing or abstained."
+        addressed_by: "This rerun is gated on a structured-output positive control and must emit parseable proof/claim rows before scoring."
+        retire_if_same_verdict: true
+      - experiment_id: exp5486-gated-sota-concept-telemetry-v498
+        verdict: "skipped_or_gate_blocked: no concept telemetry artifact was emitted because the Preference-MaxSAT prerequisite did not exist."
+        addressed_by: "The exact hard/soft fixture now exists and this task requires structured candidate rows before exact validation."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This task reruns the local SOTA hard/soft evidence panel only after Exp5512 proves structured-output readiness. It must use mandated local GGUF models as headline candidates and exact validators as final authority. Missing rows and abstentions are evidence, not silent failures.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5499_preference_maxsat_minimal_fixture_v499.json
+      - {project_root}/results/experiment_5512_structured_output_positive_control.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run a bounded local SOTA GGUF hard/soft structured evidence panel and emit results/experiment_5513_sota_hard_soft_structured_panel.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify Exp5512 structured_output_positive_control_ready is true, verify cached local GGUF files, and verify llama.cpp CUDA/GPU offload before headline inference. If no mandated model is cached or GPU offload is unavailable, emit a blocked artifact with exact model/offload diagnostics.
+      1. Use MODEL_SPECS with these mandated headline-eligible models:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      2. Use cached_sota_pair() or the repository's current local-GGUF helper pattern if available. Never call AutoTokenizer.from_pretrained on a GGUF repository.
+      3. Run at least one cached mandated model; run the pair/panel if cache and GPU memory allow. Legacy small models may appear only as CPU smoke tests.
+      4. Use a reason-then-structure prompt: allow brief free-form reasoning, then require the Exp5512 schema for final answer rows.
+      5. Score every row with exact hard constraints, soft preferences, parse validity, abstention classification, and proof/claim consistency checks.
+      6. Record model file, quant, llama.cpp command or binding, n_gpu_layers, GPU memory delta, wall time, token counts, exact-validator verdicts, abstentions, and parse failures.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - model_specs: list
+         - headline_models_used: list
+         - legacy_smoke_models_used: list
+         - cached_models_missing: list
+         - llama_cpp_cuda_available: bool
+         - gpu_offload_verified: bool
+         - gpu_memory_delta_mb: float
+         - structured_positive_control_artifact: results/experiment_5512_structured_output_positive_control.json
+         - exact_validator_accuracy: float
+         - hard_constraint_violation_rate: float
+         - preference_optimality_rate: float
+         - schema_validity_rate: float
+         - abstention_rate: float
+         - missing_candidate_rows: int
+         - sota_rows_emitted: int
+         - sota_structured_panel_ready: bool
+         - inference_substrate: live_llm_inference
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5514-energy-spill-sidecar-diagnostic
+    milestone: "2026.07.500"
+    title: "Gated logits-energy sidecar on parsed SOTA rows"
+    priority: medium
+    track: hallucination
+    deliverable: results/experiment_5514_energy_spill_sidecar_diagnostic.json
+    agent_type: codex
+    model: "gpt-5.5"
+    requires_gpu: true
+    max_turns: 45
+    estimated_wall_time_min: 55
+    gated_on:
+      - upstream: exp5513-sota-hard-soft-structured-panel
+        artifact_field: sota_structured_panel_ready
+        op: "=="
+        value: true
+      - upstream: exp5513-sota-hard-soft-structured-panel
+        artifact_field: sota_rows_emitted
+        op: ">"
+        value: 0
+    prior_failures:
+      - experiment_id: exp2497-spilled-energy-hallucination-probe
+        verdict: "complete_bounded: spilled-energy metrics were near noise floor and not headline-quality."
+        addressed_by: "This attempt is a sidecar-only diagnostic on already parsed exact-labeled rows and cannot claim standalone hallucination detection."
+        retire_if_same_verdict: true
+      - experiment_id: exp1881-low-cost-hallucination-telemetry
+        verdict: "failed_or_retired: low-cost hallucination telemetry did not produce reliable independent lift."
+        addressed_by: "This task does not reuse telemetry as a headline detector; it measures calibration correlation only after exact labels exist."
+        retire_if_same_verdict: true
+      - experiment_id: exp5500-sota-concept-claim-panel-v499
+        verdict: "complete: SOTA panel rows were missing or abstained, so logits sidecars had no clean parsed-row substrate."
+        addressed_by: "This task is gated on Exp5513 parsed rows and skips entirely when no rows exist."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Recent spilled-energy work suggests logits-derived energy can help flag hallucination, but Carnot's prior runs were noise-floor. This task may only attach diagnostics to parsed SOTA rows from Exp5513 and must not make a headline hallucination claim.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5513_sota_hard_soft_structured_panel.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Compute logits-energy or entropy sidecars for parsed SOTA rows and emit results/experiment_5514_energy_spill_sidecar_diagnostic.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify Exp5513 emitted at least one parsed row and that the local backend can expose token logits or equivalent probabilities for a mandated GGUF model. If not, emit a blocked sidecar artifact.
+      1. Use MODEL_SPECS with these headline-eligible models as applicable to the rows inherited from Exp5513:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      2. Use cached_sota_pair() or the repository's current local-GGUF helper pattern if model calls are required. Never call AutoTokenizer.from_pretrained on a GGUF repository.
+      3. For each parsed row, compute available logits-energy, entropy, margin, or spill features without changing the candidate answer.
+      4. Compare sidecar features to exact validator labels, abstentions, and parse validity. Report AUROC or rank correlation only when sample size supports it; otherwise report descriptive statistics.
+      5. Mark sidecar_headline_allowed false unless there is a predeclared independent lift with adequate sample size.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - model_specs: list
+         - sidecar_models_used: list
+         - logits_available: bool
+         - parsed_rows_input: int
+         - sidecar_rows_emitted: int
+         - exact_label_source: results/experiment_5513_sota_hard_soft_structured_panel.json
+         - energy_features: list
+         - auroc_if_defined: float_or_null
+         - rank_correlation_if_defined: float_or_null
+         - sample_size: int
+         - sidecar_headline_allowed: false
+         - inference_substrate: sidecar_on_live_llm_rows
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5515-csl-independent-outcome-gate-repair
+    milestone: "2026.07.500"
+    title: "CSL independent-outcome graph replay and gate-field repair"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_5515_csl_independent_outcome_gate_repair.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 65
+    prior_failures:
+      - experiment_id: exp5502-csl-tautology-corrigendum-v499
+        verdict: "complete_bounded: metric_independence_clean=false and CSL scale headline remained blocked."
+        addressed_by: "This task rebuilds the CSL replay around independent heldout outcomes instead of reinterpreting the prior tautological metric."
+        retire_if_same_verdict: true
+      - experiment_id: exp5503-csl-experience-graph-replay-v499
+        verdict: "complete: experience_graph_replay_ready_delta_+1.000000 but downstream gate lookup did not see csl_experience_graph_ready."
+        addressed_by: "This task emits conductor-visible gate fields and sidecar-compatible names in one artifact."
+        retire_if_same_verdict: true
+      - experiment_id: exp5504-sota-csl-memory-panel-v499
+        verdict: "blocked_precondition: metric_independence_clean was false and csl_experience_graph_ready was unresolved by the gate."
+        addressed_by: "This task directly addresses both gate blockers before any SOTA memory panel can run."
+        retire_if_same_verdict: true
+      - experiment_id: exp5474-sota-csl-scale-v497
+        verdict: "quarantined_or_bounded: CSL scale headline was blocked by tautology/metric leakage concerns."
+        addressed_by: "This task uses independent labels, pre/post memory hashes, stale-evidence checks, and negative-transfer accounting."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the milestone's required continuous self-learning experiment. Exp5503 suggested graph-memory replay can help, but Exp5502 blocked CSL headlines because the metric was not cleanly independent and Exp5504 could not resolve the gate field. Repair both issues before any SOTA memory panel.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5502_csl_tautology_corrigendum_v499.json
+      - {project_root}/results/experiment_5503_csl_experience_graph_replay_v499.json
+      - {project_root}/results/experiment_5504_sota_csl_memory_panel_v499.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run an independent-outcome graph-memory replay experiment and emit results/experiment_5515_csl_independent_outcome_gate_repair.json.
+
+      CONCRETE STEPS:
+      1. Define an experience stream with pre-memory tasks, memory updates, and heldout tasks whose outcome labels are independent of memory retrieval scores.
+      2. Record pre-memory and post-memory graph hashes, retrieval traces, stale-evidence rejection, and negative-transfer cases.
+      3. Compare no-memory, stale-memory, and graph-memory conditions using the same heldout labels.
+      4. Ensure the artifact uses exact gate-field names that downstream conductor checks can read.
+      5. Add or update focused tests only if new source code is introduced.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - stream_fixture_path: string
+         - independent_label_source: string
+         - pre_memory_hash: string
+         - post_memory_hash: string
+         - no_memory_score: float
+         - graph_memory_score: float
+         - stale_memory_score: float
+         - heldout_delta: float
+         - negative_transfer_rate: float
+         - stale_evidence_rejection_rate: float
+         - metric_independence_clean: bool
+         - csl_experience_graph_ready: bool
+         - csl_gate_fields_resolvable: bool
+         - continuous_self_learning_evidence: bool
+         - inference_substrate: graph_memory_replay_with_independent_labels
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5516-sota-csl-memory-panel
+    milestone: "2026.07.500"
+    title: "Gated SOTA GGUF CSL memory panel on clean independent metrics"
+    priority: high
+    track: continuous-self-learning
+    deliverable: results/experiment_5516_sota_csl_memory_panel.json
+    agent_type: codex
+    model: "gpt-5.5"
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 80
+    gated_on:
+      - upstream: exp5515-csl-independent-outcome-gate-repair
+        artifact_field: metric_independence_clean
+        op: "=="
+        value: true
+      - upstream: exp5515-csl-independent-outcome-gate-repair
+        artifact_field: csl_gate_fields_resolvable
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5504-sota-csl-memory-panel-v499
+        verdict: "blocked_precondition: CSL panel skipped because metric_independence_clean=false and csl_experience_graph_ready was unresolved."
+        addressed_by: "This task is structurally gated on clean independent metrics and conductor-visible fields from Exp5515."
+        retire_if_same_verdict: true
+      - experiment_id: exp5474-sota-csl-scale-v497
+        verdict: "quarantined_or_bounded: SOTA CSL scale headline was blocked by tautology concerns."
+        addressed_by: "This panel can only measure clean independent heldout outcomes and must preserve no-memory/stale-memory baselines."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Run a SOTA GGUF memory panel only if Exp5515 proves independent metrics and conductor-visible gate fields. This is not a weight-training experiment; the executor remains frozen and memory state is external/auditable.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5515_csl_independent_outcome_gate_repair.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run a bounded local SOTA GGUF CSL memory panel and emit results/experiment_5516_sota_csl_memory_panel.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify Exp5515 metric_independence_clean and csl_gate_fields_resolvable are true. Verify cached mandated GGUF files and llama.cpp CUDA/GPU offload before headline inference. If unavailable, emit a blocked artifact with exact diagnostics.
+      1. Use MODEL_SPECS with these mandated headline-eligible models:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      2. Use cached_sota_pair() or the repository's current local-GGUF helper pattern if available. Never call AutoTokenizer.from_pretrained on a GGUF repository.
+      3. Run at least one cached mandated model across no-memory, stale-memory, and graph-memory conditions. Legacy small models may appear only as CPU smoke tests.
+      4. Keep the model weights fixed. Record memory hashes, retrieval traces, and exact heldout labels.
+      5. Measure heldout delta, negative transfer, stale evidence rejection, and abstention behavior.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - model_specs: list
+         - headline_models_used: list
+         - legacy_smoke_models_used: list
+         - cached_models_missing: list
+         - llama_cpp_cuda_available: bool
+         - gpu_offload_verified: bool
+         - memory_state_hashes: list
+         - no_memory_score: float
+         - stale_memory_score: float
+         - graph_memory_score: float
+         - heldout_delta: float
+         - negative_transfer_rate: float
+         - stale_evidence_rejection_rate: float
+         - csl_sota_panel_ready: bool
+         - weights_modified: false
+         - inference_substrate: live_llm_inference_with_external_memory
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5517-csl-memory-residue-stress
+    milestone: "2026.07.500"
+    title: "Gated CSL memory residue and stale-evidence stress test"
+    priority: medium
+    track: continuous-self-learning
+    deliverable: results/experiment_5517_csl_memory_residue_stress.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 45
+    gated_on:
+      - upstream: exp5515-csl-independent-outcome-gate-repair
+        artifact_field: csl_experience_graph_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5503-csl-experience-graph-replay-v499
+        verdict: "complete: graph replay was ready but bounded by downstream gate mismatch and residual metric concerns."
+        addressed_by: "This task stress-tests residue, stale evidence, and negative transfer on the repaired graph-memory artifact."
+        retire_if_same_verdict: true
+      - experiment_id: exp5504-sota-csl-memory-panel-v499
+        verdict: "blocked_precondition: downstream CSL memory panel did not run due unresolved/unclean prerequisites."
+        addressed_by: "This task is independent of SOTA runtime and validates memory hygiene after Exp5515."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Even if graph memory improves heldout scores, Carnot needs to know whether stale or residual memory contaminates future evaluations. This task stress-tests memory hygiene without requiring SOTA inference.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5515_csl_independent_outcome_gate_repair.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run stale-evidence and memory-residue stress tests and emit results/experiment_5517_csl_memory_residue_stress.json.
+
+      CONCRETE STEPS:
+      1. Load the Exp5515 graph-memory fixture and identify at least three perturbations: stale evidence, conflicting memory, and irrelevant high-similarity memory.
+      2. Run the same heldout labels under clean memory, perturbed memory, and memory-disabled conditions.
+      3. Measure rejection, override, false-transfer, and recovery behavior.
+      4. If new memory hygiene utilities are added, include focused tests.
+      5. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - source_graph_artifact: results/experiment_5515_csl_independent_outcome_gate_repair.json
+         - perturbation_types: list
+         - clean_memory_score: float
+         - perturbed_memory_score: float
+         - memory_disabled_score: float
+         - residue_false_positive_rate: float
+         - stale_evidence_rejection_rate: float
+         - negative_transfer_rate: float
+         - memory_hygiene_pass: bool
+         - inference_substrate: graph_memory_replay_with_perturbations
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5518-block-gibbs-sparse-repair-descriptors
+    milestone: "2026.07.500"
+    title: "Block-Gibbs sparse repair descriptors with exact fallback"
+    priority: high
+    track: active-constraints
+    deliverable: results/experiment_5518_block_gibbs_sparse_repair_descriptors.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 55
+    prior_failures:
+      - experiment_id: exp5505-active-constraint-descriptor-eval-v499
+        verdict: "complete_bounded: descriptor path worked but fell back to exact solving and showed no speedup."
+        addressed_by: "This task changes the technique to sparse block-repair descriptors inspired by blocked Gibbs and still uses exact fallback as authority."
+        retire_if_same_verdict: true
+      - experiment_id: exp5491-active-constraint-subproblem-descriptors-v498
+        verdict: "complete: active-constraint descriptors shipped with exact fallback descriptors."
+        addressed_by: "This task builds on that descriptor substrate but tests a new sparse repair candidate mechanism."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5505 proved descriptor plumbing but not a useful candidate mechanism. Recent blocked-Gibbs/diffusion-transformer work suggests repairing sparse variable blocks. Implement a small exact-checkable version for Carnot descriptors; do not claim speedup unless measured.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5505_active_constraint_descriptor_eval_v499.json
+      - {project_root}/results/experiment_5499_preference_maxsat_minimal_fixture_v499.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Prototype sparse block-repair descriptors over exact-checkable hard/soft fixtures and emit results/experiment_5518_block_gibbs_sparse_repair_descriptors.json.
+
+      CONCRETE STEPS:
+      1. Select small hard/soft fixtures where exact fallback can certify every candidate.
+      2. Add or reuse a sparse block descriptor that identifies a subset of variables/claims to repair after a violation.
+      3. Generate candidate repairs with deterministic seeds; exact validators must accept or reject every result.
+      4. Compare exact-only baseline, descriptor-guided sparse repair, and random block repair on acceptance rate, iteration count, and wall time.
+      5. Avoid training a diffusion model. The goal is the sparse repair descriptor interface and evidence, not model scale.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - descriptor_path: string
+         - fixture_paths: list
+         - exact_fallback_used: bool
+         - sparse_block_policy: string
+         - seeds: list
+         - exact_only_success_rate: float
+         - sparse_repair_success_rate: float
+         - random_block_success_rate: float
+         - mean_iterations_exact_only: float
+         - mean_iterations_sparse_repair: float
+         - speedup_claim_allowed: bool
+         - active_constraint_sparse_repair_ready: bool
+         - inference_substrate: exact_checked_sparse_repair
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5519-hardware-continuity-methodology-receipts
+    milestone: "2026.07.500"
+    title: "Hardware continuity and timing-methodology receipts"
+    priority: high
+    track: hardware
+    deliverable: results/experiment_5519_hardware_continuity_methodology_receipts.json
+    model: "opus"
+    max_turns: 100
+    estimated_wall_time_min: 90
+    prior_failures:
+      - experiment_id: exp5506-hardware-receipts-v499
+        verdict: "complete_bounded_flagged: CPU/CUDA/PolarFire reachable, KV260/GateMate identity blocked, matched timing unavailable, hardware_speedup_claim=false."
+        addressed_by: "This task is receipt-only, adds explicit timing-methodology fields, and does not attempt a speedup claim without matched timing."
+        retire_if_same_verdict: true
+      - experiment_id: exp5492-hardware-receipts-v498
+        verdict: "complete_bounded: PolarFire hash receipt landed but KV260/GateMate remained blocked and no speedup was claimed."
+        addressed_by: "This task preserves the clean receipt discipline and tests whether identity/methodology state changed."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Hardware remains receipt-only. Exp5506 verified CPU/CUDA/PolarFire reachability but flagged timing methodology and blocked KV260/GateMate identity. Do not use KV260 host SD-card paths or /dev/mmcblk*. Use SSH/xmutil/UIO only for KV260 if reachable.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5506_hardware_receipts_v499.json
+      - {project_root}/python/carnot
+      - {project_root}/scripts
+
+      TASK:
+      Emit hardware continuity and timing-methodology receipts in results/experiment_5519_hardware_continuity_methodology_receipts.json.
+
+      CONCRETE STEPS:
+      1. Check CPU and CUDA reachability with authenticated commands. Record device names, driver/runtime versions, and command receipts.
+      2. Check PolarFire SSH reachability and bitstream/hash identity if available.
+      3. Check KV260 only through allowed SSH/xmutil/UIO paths if credentials and routing are present. Do not inspect host /dev/mmcblk* devices.
+      4. Check GateMate identity/toolchain only through safe host/toolchain commands if available.
+      5. Record timing methodology explicitly: workload, warmup, repetitions, clock source, host/device separation, and whether matched CPU/GPU/FPGA timing exists.
+      6. If matched timing is absent, set hardware_speedup_claim false and explain why.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - cpu_receipt: object
+         - cuda_receipt: object
+         - polar_fire_receipt: object
+         - kv260_receipt: object
+         - gatemate_receipt: object
+         - forbidden_kv260_host_sdcard_used: false
+         - timing_methodology: object
+         - matched_timing_available: bool
+         - hardware_speedup_claim: bool
+         - hardware_speedup_claim_allowed: bool
+         - blocked_devices: list
+         - receipt_commands: list
+         - inference_substrate: hardware_receipts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5520-arc-action-diversity-target-precheck
+    milestone: "2026.07.500"
+    title: "ARC live target precheck with action-diversity guard"
+    priority: critical
+    track: arc
+    deliverable: results/experiment_5520_arc_action_diversity_target_precheck.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp5507-arc-target-precheck-v499
+        verdict: "complete: dc22 L3 was selected as ready but no solve was attempted in the precheck."
+        addressed_by: "This precheck adds action-diversity and repeated-coordinate guards before selecting the live attempt target."
+        retire_if_same_verdict: true
+      - experiment_id: exp5508-arc-live-perception-generation-v499
+        verdict: "honest_null: live dc22 L3 attempt banked no level and repeated a small coordinate/action pattern."
+        addressed_by: "This task changes the pre-solve mechanism to salience/perception routing, target rotation, and explicit action entropy thresholds."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Carnot must include an ARC level-up attempt this milestone, but Exp5508 showed repeated coordinate/action patterns and no banked solve. This precheck must avoid duplicate registry solves and select a target only if the live mechanism has a changed, measurable action-diversity path.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5507_arc_target_precheck_v499.json
+      - {project_root}/results/experiment_5508_arc_live_perception_generation_v499.json
+      - {project_root}/arc_loop_solve
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Select a registry-safe ARC target and verify action-diversity readiness before the live level-up attempt. Emit results/experiment_5520_arc_action_diversity_target_precheck.json.
+
+      CONCRETE STEPS:
+      1. Read the ARC solve registry and do not select a level already reproduced by the live mechanism.
+      2. Compare candidate games/levels against Exp5508's repeated coordinate/action pattern.
+      3. Add or configure a live-path candidate generator change based on connected-component/color-blob salience, perception-grounding audit, target rotation, action entropy, or repeated-coordinate suppression. Do not use offline BFS, per-game hand adapters, or outer-loop reverse engineering as solve credit.
+      4. Run a dry-run or limited no-credit probe to measure action entropy, coordinate repetition, and salience coverage without claiming a solve.
+      5. Select one target level only if the mechanism is meaningfully different from Exp5508.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - registry_precheck_done: bool
+         - selected_game: string
+         - selected_level: string_or_int
+         - already_reproduced: false
+         - exp5508_pattern_reused: false
+         - candidate_generator_changes: list
+         - action_entropy: float
+         - repeated_coordinate_rate: float
+         - salience_coverage_rate: float
+         - no_credit_probe_attempts: int
+         - arc_levelup_candidate_ready: bool
+         - solve_provenance: live_agent_self_discovery
+         - inference_substrate: arc_live_precheck
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5521-arc-live-action-diverse-levelup
+    milestone: "2026.07.500"
+    title: "Gated ARC live action-diverse level-up attempt"
+    priority: critical
+    track: arc
+    deliverable: results/experiment_5521_arc_live_action_diverse_levelup.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 75
+    gated_on:
+      - upstream: exp5520-arc-action-diversity-target-precheck
+        artifact_field: arc_levelup_candidate_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5508-arc-live-perception-generation-v499
+        verdict: "honest_null: 47 live attempts on dc22 L3 produced no registry delta and repeated coordinate/action patterns."
+        addressed_by: "This attempt is gated on a changed target/action-diversity precheck and uses repeated-coordinate suppression plus salience routing."
+        retire_if_same_verdict: true
+      - experiment_id: exp4738-arc-energy-qd-levelup
+        verdict: "retired_or_bounded: energy-as-fitness/generic QD candidate generation did not deliver durable ARC level-up progress."
+        addressed_by: "This task avoids the retired generation-axis scope and focuses on live perception/action routing with registry-safe target selection."
+        retire_if_same_verdict: true
+      - experiment_id: exp4653-arc-qd-candidate-generator
+        verdict: "bounded_or_null: generic QD candidate generation did not produce a bankable live solve."
+        addressed_by: "This attempt changes mechanism to salience/perception and action entropy controls rather than generic novelty search."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the required ARC level-up attempt for milestone 2026.07.500. Solve credit must come from the live agent's own attempts and runtime observations. The banking target is a live-discovered trajectory that subsequently reproduces with offline_reproduced=true and reproduced_levels>=1; that reproduction is a replay/receipt of the live path, not offline ground-truth BFS or hand reverse engineering. Do not read game source for the solution, do not run offline ground-truth BFS, and do not build a per-game hand adapter as the deliverable.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5520_arc_action_diversity_target_precheck.json
+      - {project_root}/results/experiment_5508_arc_live_perception_generation_v499.json
+      - {project_root}/arc_loop_solve
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Run the gated live ARC action-diverse level-up attempt and emit results/experiment_5521_arc_live_action_diverse_levelup.json.
+
+      CONCRETE STEPS:
+      1. Verify Exp5520 selected a registry-safe target and arc_levelup_candidate_ready is true.
+      2. Run the live agent against the selected target using the changed action generator. Keep logs of observations, proposed actions, verifier feedback, action entropy, repeated-coordinate rate, and salience coverage.
+      3. If a level is solved, bank it only when the live-discovered trajectory reproduces according to existing project conventions with offline_reproduced=true and reproduced_levels>=1. Record the exact reproduction command.
+      4. If no level is solved, emit an honest null with enough trajectory detail to distinguish it from Exp5508.
+      5. Do not credit outer-loop reverse engineering, offline BFS, or development proxy solves as the deliverable.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - selected_game: string
+         - selected_level: string_or_int
+         - offline_reproduced: bool
+         - reproduced_levels: int
+         - banking_gate: offline_reproduced=true and reproduced_levels>=1 for a live_agent_self_discovery trajectory
+         - registry_delta: int
+         - solve_provenance: live_agent_self_discovery
+         - live_attempts: int
+         - action_entropy: float
+         - repeated_coordinate_rate: float
+         - salience_coverage_rate: float
+         - trajectory_log_path: string
+         - reproduction_command: string_or_null
+         - arc_live_levelup_ready: bool
+         - inference_substrate: arc_live_agent_self_discovery
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5522-v500-capstone-reconciliation
+    milestone: "2026.07.500"
+    title: "Capstone reconciliation for milestone .500"
+    priority: critical
+    track: planning
+    deliverable: results/experiment_5522_capstone_v500.json
+    model: "opus"
+    max_turns: 100
+    estimated_wall_time_min: 90
+    prior_failures:
+      - experiment_id: exp5509-capstone-v499
+        verdict: "complete: .499 capstone honestly closed with SOTA abstentions, CSL blocked, hardware speedup false, and ARC registry delta zero."
+        addressed_by: "This capstone reconciles the new .500 task chain and does not re-evaluate .499 beyond carry-forward comparison."
+        retire_if_same_verdict: true
+      - experiment_id: exp5495-capstone-v498
+        verdict: "complete_bounded: .498 capstone recorded skipped science lanes and blocked downstream claims."
+        addressed_by: "The .500 capstone evaluates a different milestone after the .499 pretest recovery and .500 gates."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      All .500 experiments should have run or honestly blocked. This capstone reconciles artifacts, specs, ops docs, and claims. Do not overclaim SOTA, CSL, hardware speedup, or ARC progress beyond artifact evidence.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5510_transition_v500.json
+      - {project_root}/results/experiment_5511_v500_source_delta_ingestion.json
+      - {project_root}/results/experiment_5512_structured_output_positive_control.json
+      - {project_root}/results/experiment_5513_sota_hard_soft_structured_panel.json
+      - {project_root}/results/experiment_5514_energy_spill_sidecar_diagnostic.json
+      - {project_root}/results/experiment_5515_csl_independent_outcome_gate_repair.json
+      - {project_root}/results/experiment_5516_sota_csl_memory_panel.json
+      - {project_root}/results/experiment_5517_csl_memory_residue_stress.json
+      - {project_root}/results/experiment_5518_block_gibbs_sparse_repair_descriptors.json
+      - {project_root}/results/experiment_5519_hardware_continuity_methodology_receipts.json
+      - {project_root}/results/experiment_5520_arc_action_diversity_target_precheck.json
+      - {project_root}/results/experiment_5521_arc_live_action_diverse_levelup.json
+
+      TASK:
+      Emit results/experiment_5522_capstone_v500.json and update ops/status.md, ops/changelog.md, _bmad/traceability.md, and relevant openspec docs if the completed artifacts require claim or requirement reconciliation.
+
+      CONCRETE STEPS:
+      1. Read every available .500 artifact. If a gated artifact is missing because the conductor skipped it, record the upstream gate and do not fabricate results.
+      2. Summarize terminal evidence for structured SOTA, energy sidecar, CSL, sparse constraints, hardware, and ARC.
+      3. Compute and record the final gates: structured_sota_claim_allowed, energy_sidecar_headline_allowed, csl_claim_allowed, hardware_speedup_claim, arc_registry_delta, and continuous_self_learning_evidence.
+      4. Update ops/status.md and ops/changelog.md with exact milestone outcomes and bounded/null claims.
+      5. Update _bmad/traceability.md or openspec capability docs only if the artifact evidence changes requirement status.
+      6. Run the relevant validation commands from ops/e2e-test-plan.md plus roadmap/gate/spec checks that apply to touched files.
+      7. Confirm that scripts/research_conductor.py was not modified.
+      8. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.500
+         - artifact_paths_read: list
+         - missing_artifacts: list
+         - skipped_by_gates: list
+         - structured_sota_claim_allowed: bool
+         - energy_sidecar_headline_allowed: bool
+         - csl_claim_allowed: bool
+         - continuous_self_learning_evidence: bool
+         - sparse_repair_claim_allowed: bool
+         - hardware_speedup_claim: bool
+         - arc_registry_delta: int
+         - reproduced_levels: int
+         - solve_provenance_summary: list
+         - docs_updated: list
+         - commands_run: list
+         - conductor_unchanged: bool
+         - inference_substrate: capstone_aggregation_from_upstream_artifacts
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

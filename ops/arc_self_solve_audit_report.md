@@ -16,19 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (48 modul
 
 ## Hostile LLM review
 
-TL;DR: **No recent ARC solve artifacts to credit. Verdict: no SELF_DISCOVERY_ADVANCE demonstrated.**
+TL;DR: **No recent ARC solve artifacts means no credited SELF_DISCOVERY_ADVANCE.** Reachability lint is clean, but there is nothing to classify or celebrate.
 
 **Per-Artifact Review**
 
-No artifacts provided.
+None. `RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
 
-`RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
-
-Evidence: empty artifact list `[]`.
-
-Recommended action: produce a solve artifact that proves the live entrypoint agent reached the solve through its own attempts/runtime reverse-engineering. Include provenance from `scripts/arc_loop_solve.py` or `python/carnot/agentic/arc_competition_agent.py`, attempt logs, observations, learned hypothesis/model, and final successful action trace.
+Verdict: **UNCLEAR / no artifact**
+Evidence: Empty artifact list. No solve claim, provenance, attempts, runtime traces, or live-agent discovery record exists.
+Recommended action: Do not record any new capability. Require future solve artifacts to show live entrypoint execution plus agent-derived attempts/runtime reverse-engineering evidence.
 
 **Pattern Watch**
 
-Reachability lint is clean, which only proves solver modules are on the live path. It does **not** prove live self-discovery. With zero recent artifacts, there is no evidence of progress, and no basis to accept any hidden-game capability advance.
+Reachability is currently healthy: all solver-like ARC modules are reachable from the live path. The risk remains provenance drift: any future “solve” without clear live-agent attempt history should be treated as **OUTER_LOOP_RE** or **OFF_PATH** until proven otherwise.
 

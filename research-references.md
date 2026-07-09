@@ -1,3 +1,131 @@
+## V500 Planner Refresh - 2026-07-09
+
+Planning sweep for milestone `2026.07.500` after the operator reported `.499` complete. Sources checked:
+arXiv primary pages, OpenReview public pages where reachable, Hugging Face Papers, GitHub repository
+discovery, Semantic Scholar-style public citation lookups for EBT `2507.02092` and ARM-EBM
+`2512.15605`, Extropic writing, Logical Intelligence public pages, and Carnot's existing reference
+history. Existing entries already cover Trajel, RT4CHART, ExpGraph, Evo-Memory, MILP-Evolve, Hamon,
+ConsFormer-LNS, constrained decoding bias mitigation, CASCADE, ProcMEM, Sortify, and earlier KAN
+verification papers; this block adds missing or newly-actionable 2025-2026 deltas.
+
+### Structured verification and SOTA output control
+
+- **Distributional EBMs for Uncertainty-Aware Structured LLM Reasoning** - arXiv:2605.18871,
+  https://arxiv.org/abs/2605.18871. The paper decomposes reasoning energy into a learned quality scorer
+  plus deterministic analytical constraint penalties, then uses ensemble uncertainty for regenerate or
+  abstain decisions. Carnot hook: the hard/soft exact-verifier lane should pair exact constraint checks
+  with uncertainty-aware abstention and should record abstentions as first-class evidence, not missing rows.
+- **PCRLLM: Training LLMs to Generate Proof-Carrying Reasoning and Verifying Them at Runtime** -
+  arXiv:2511.08392, https://arxiv.org/abs/2511.08392. PCRLLM attaches premises, inference rules, and
+  conclusions to each reasoning step so a runtime verifier can check the chain. Carnot hook: SOTA panels
+  should require parseable proof/claim structure before scoring model quality.
+- **Thinking Before Constraining: Enforcing User Constraints through Reasoning in LLMs** -
+  arXiv:2601.07525 and OpenReview https://openreview.net/forum?id=fsgYB42b1V. The unified decoding
+  result reports that constrained generation helps most when the model reasons freely first and switches
+  to structure only at the right trigger. Carnot hook: avoid applying grammar masks too early; test
+  reason-then-structure prompts for the SOTA hard/soft panel.
+- **XGrammar-2: Efficient Structured Generation for Large Reasoning Models** - arXiv:2601.04426,
+  https://arxiv.org/html/2601.04426v2. The system reports dynamic structured generation with strong schema
+  validity and speed improvements. Carnot hook: use a structured-output positive control before another
+  expensive SOTA GGUF panel; if local runtime supports XGrammar or equivalent grammar masks, prefer it.
+- **llguidance** - GitHub https://github.com/guidance-ai/llguidance. The project provides CFG/JSON-schema
+  constrained decoding and is integrated with llama.cpp, vLLM, and SGLang. Carnot hook: useful local
+  fallback for GGUF schema validity, but the experiment must prove the runtime path is available before
+  counting it.
+- **Constrained Decoding for Diffusion LMs via Finite Automata** - arXiv:2607.07026,
+  https://arxiv.org/abs/2607.07026. The finite-automata approach is promising for exact constraints in
+  diffusion language models, but Carnot does not currently have a local diffusion-LM inference path. Carnot
+  hook: watch-only unless a local diffusion backend lands.
+
+### Energy diagnostics and hallucination sidecars
+
+- **Spilled Energy in LLMs: Using Logits as Energy to Quantify Hallucination** - arXiv:2602.18671,
+  https://arxiv.org/abs/2602.18671; Hugging Face page https://huggingface.co/papers/2602.18671. The
+  paper derives training-free energy and entropy diagnostics from final logits. Carnot hook: prior Carnot
+  spilled-energy attempts hit noise-floor behavior, so `.500` should only use this as a sidecar on rows
+  already parsed by the structured SOTA panel; it must not be a headline hallucination detector.
+- **Semantic Energy: Discriminative Sentence Representations via Boltzmann-Inspired Semantic Clustering** -
+  arXiv:2508.14496, https://arxiv.org/abs/2508.14496. Semantic clustering from penultimate logits is
+  relevant to answer-equivalence grouping. Carnot hook: possible future calibration signal, but `.500`
+  should keep it diagnostic unless exact labels show independent lift.
+
+### Constraint repair, KANs, and sparse inference
+
+- **Blocked Gibbs meets Diffusion Transformers for Neural Combinatorial Optimization** -
+  arXiv:2605.25129, https://arxiv.org/html/2605.25129. BloGDiT uses blockwise Gibbs-style repair over
+  sparse subsets for CSP/COP benchmarks including Sudoku, graph coloring, MIS, and MaxCut. Carnot hook:
+  `.500` active-constraint work should test sparse repair descriptors with exact fallback instead of
+  claiming speedup from descriptor selection alone.
+- **GRS-KAN: Geometric and Logical Constraints via R-functions and Kolmogorov-Arnold Networks** -
+  arXiv:2607.01449, https://arxiv.org/abs/2607.01449. The paper combines KANs with R-function constraint
+  composition. Carnot hook: useful for future symbolic/learned constraint landscapes, especially where
+  exact constraints can supply labels.
+- **Optimal Abstractions for Verifying Kolmogorov-Arnold Networks** - arXiv:2602.06737,
+  https://arxiv.org/abs/2602.06737. Carnot hook: KAN surrogates need verification-aware abstractions
+  before they become trusted verifiers.
+- **Ultrafast On-Chip Online Learning via Spline Locality in Kolmogorov-Arnold Networks** -
+  arXiv:2602.02056, https://arxiv.org/abs/2602.02056. Carnot hook: relevant to long-term hardware-backed
+  continuous learning, but `.500` should first prove software-side non-tautological memory updates.
+
+### Hardware and thermodynamic computing
+
+- **Programmable Probabilistic Computer with 1,000,000 p-bits** - arXiv:2606.25313,
+  https://arxiv.org/abs/2606.25313. The FPGA-networked p-bit machine reports massive flip throughput and
+  makes the communication/compute ratio a first-class accuracy and speed variable. Carnot hook: hardware
+  tasks should emit partition, communication, and timing-methodology receipts even when no local speedup is
+  claimed.
+- **Scaling Up Thermodynamic AI Models** - arXiv:2607.00170, https://arxiv.org/abs/2607.00170. Carnot
+  hook: keep as architecture context for thermodynamic EBM direction; no local executable path yet.
+- **A Fully Parallel Densely Connected Probabilistic Ising Machine** - arXiv:2604.17109,
+  https://arxiv.org/abs/2604.17109. Carnot hook: reinforces the need to separate sampler topology,
+  connectivity, and timing receipts from high-level EBM claims.
+- **Probabilistic-bit Guided CDCL for SAT** - arXiv:2605.04033, https://arxiv.org/abs/2605.04033. Carnot
+  hook: possible future SAT hybrid, but `.500` should avoid adding hardware claims until the existing
+  receipt path is stable.
+- **Extropic TSU/XTR-0/Z1 official writing** - https://extropic.ai/writing,
+  https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware,
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one, and
+  https://extropic.ai/writing/inside-x0-and-xtr-0. Public materials describe X0, XTR-0, and Z1 access
+  timelines, but Carnot still has no SDK or local execution path. Carnot hook: watch-only.
+- **Logical Intelligence Kona EBM public pages** -
+  https://logicalintelligence.com/kona-ebms-energy-based-models,
+  https://logicalintelligence.com/blog/energy-based-model-sudoku-demo, and
+  https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation. Kona remains a
+  proprietary verifier-first EBM signal. Carnot hook: strategy context only; local claims need executable
+  artifacts.
+
+### Continuous memory and self-learning
+
+- **Deployment-Time Memorization in Foundation-Model Agents** - arXiv:2606.10062,
+  https://arxiv.org/abs/2606.10062. Carnot hook: use deployment-time memory tests with independent
+  outcomes and negative-transfer accounting.
+- **Are We Ready For An Agent-Native Memory System?** - arXiv:2606.24775,
+  https://arxiv.org/abs/2606.24775. Carnot hook: memory systems need explicit read/write/update contracts
+  and auditability before being credited as learning.
+- **Graph-based Agent Memory: A Survey** - arXiv:2602.05665, https://arxiv.org/abs/2602.05665. Carnot
+  hook: supports graph memory as the near-term CSL substrate, but `.500` must avoid conflating graph
+  retrieval with metric leakage.
+- **Energy-Structured Low-Rank Adaptation for Continual Learning** - arXiv:2605.27482,
+  https://arxiv.org/abs/2605.27482. Carnot hook: promising future weight-adaptation lane after external
+  memory and independent metrics are clean.
+- **User as Code: Behavioural Adaptation of LLMs through Static Personal Memory** - arXiv:2606.16707,
+  https://arxiv.org/abs/2606.16707. Carnot hook: memory should be represented as inspectable executable
+  or declarative state where possible.
+
+### Planning impact
+
+- `.500` should not spend more SOTA GGUF runtime until a local structured-output positive control turns
+  missing-candidate rows into parseable candidate rows.
+- The SOTA hard/soft lane should combine exact constraints, proof/claim structure, uncertainty-aware
+  abstention, and sidecar-only energy diagnostics.
+- Continuous self-learning should rerun with independent outcome labels and conductor-resolvable gate
+  fields before any SOTA CSL panel.
+- Hardware work should be receipt-only: CPU/CUDA/PolarFire/KV260/GateMate reachability and timing
+  methodology, no speedup headline unless matched timing exists.
+- ARC should satisfy the standing floor through live-agent self-discovery with a changed mechanism:
+  perception/salience routing, action entropy, repeated-coordinate guards, and target rotation rather than
+  another generic novelty or energy-as-fitness generator rerun.
+
 ## V499 Planner Refresh - 2026-07-09
 
 Planning sweep for milestone `2026.07.499` after the operator reported `.498` complete. Sources checked:

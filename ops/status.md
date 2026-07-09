@@ -1,6 +1,50 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-09 (Milestone 2026.07.499 Operational Retro)
+**Last Updated:** 2026-07-09 (Milestone 2026.07.500 Planning Staged)
+
+## Session 2026-07-09 - Milestone 2026.07.500 Planning Staged
+
+Planned the next research milestone after the operator reported `.499`
+complete. The staged `.500` roadmap focuses on converting the `.499` SOTA
+missing-candidate failure into parseable structured evidence before spending
+more flagship GGUF runtime; repairing continuous self-learning with
+independent outcome labels and conductor-visible gate fields; keeping hardware
+receipt-only until matched timing exists; and satisfying the ARC standing floor
+with a live-agent self-discovery level-up attempt that changes the repeated
+coordinate/action pattern from Exp5508.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`, including
+distributional EBMs for structured LLM reasoning, PCRLLM proof-carrying
+reasoning, reason-then-constrain decoding, XGrammar-2/llguidance structured
+generation, sidecar-only spilled-energy diagnostics, blocked-Gibbs sparse
+repair, recent KAN verification/online-learning work, p-bit/thermodynamic
+hardware context, and graph/agent memory work.
+
+The `.500` plan contains 13 conductor tasks across transition/source refresh,
+structured-output positive control, gated local SOTA GGUF hard/soft evidence,
+sidecar-only logits-energy diagnostics, independent CSL graph replay, gated
+SOTA CSL memory, CSL residue stress, block-Gibbs sparse repair descriptors,
+hardware continuity/methodology receipts, ARC target/action-diversity precheck,
+one gated ARC live level-up attempt, and capstone reconciliation. All
+LLM-bearing prompts include the mandated local SOTA GGUF model specs, and the
+ARC solve task records `solve_provenance: live_agent_self_discovery` with
+post-solve banking through `offline_reproduced=true` and
+`reproduced_levels>=1`.
+
+Validation for this planning task: YAML parsing, prompt-shape checks,
+SOTA model-spec checks, `scripts/validate_prior_failures.py`,
+`scripts/audit_roadmap_gates.py`, `scripts/exclusion_manifest_lint.py`,
+`scripts/arc_levelup_guarantee_lint.py --min 1 research-roadmap-next.yaml`,
+`scripts/overdue_priority_lint.py`, touched-file `git diff --check`,
+protected-file diff checks, and `scripts/operator_curated_docs_lint.py`
+passed. The protected-file diff confirmed `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified. Repo-wide
+`scripts/check_spec_coverage.py` still fails on the pre-existing traceability
+backlog (`1262 test(s) missing spec traceability`). No implementation code,
+active roadmap, conductor, model-training run, or hardware workload was
+changed.
 
 ## Session 2026-07-09 - Milestone 2026.07.499 Operational Retro
 
