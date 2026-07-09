@@ -1,0 +1,2257 @@
+{
+  "baseline_metrics": {
+    "always_full_context": {
+      "constraint_violations": 0,
+      "context_cost": 8700,
+      "quality_score": 0.918,
+      "verifier_cost": 53
+    },
+    "naive_icl": {
+      "constraint_violations": 1,
+      "context_cost": 3350,
+      "quality_score": 0.828,
+      "verifier_cost": 38
+    },
+    "no_memory": {
+      "constraint_violations": 0,
+      "context_cost": 2180,
+      "quality_score": 0.797,
+      "verifier_cost": 36
+    },
+    "ungated_memory": {
+      "constraint_violations": 4,
+      "context_cost": 2770,
+      "quality_score": 0.784,
+      "verifier_cost": 10
+    }
+  },
+  "baseline_names": [
+    "no_memory",
+    "naive_icl",
+    "always_full_context",
+    "ungated_memory"
+  ],
+  "confidence_receipts_checksum": "sha256:c7eed53edb96b9333d42d00be3ec2db0249f0de3133cc6ab363df3c819473d42",
+  "context_efficiency_delta": 0.525287,
+  "continuous_self_learning_task": true,
+  "csl_policy_ready": true,
+  "cumulative_constraint_violations": 0,
+  "experiment": "experiment_5460_csl_policy_bandit_v496",
+  "experiment_id": "exp5460-v496-csl-policy-bandit",
+  "field_principles": {
+    "baseline_names": "Control comparability.",
+    "context_efficiency_delta": "Context budget accounting.",
+    "continuous_self_learning_task": "Research-program mandate.",
+    "csl_policy_ready": "Downstream gate.",
+    "cumulative_constraint_violations": "Safety boundary.",
+    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
+    "inference_substrate": "Explicit learning substrate.",
+    "multi_session_trace_count": "Stateful stream coverage.",
+    "negative_transfer_deflection_rate": "Unsafe memory transfer guard.",
+    "no_weight_mutation": "Frozen-model boundary.",
+    "policy_confidence_receipts_path": "Uncertainty audit trail.",
+    "policy_update_count": "Online controller learning evidence.",
+    "quality_delta_vs_naive_icl": "No hidden regression against cheap ICL.",
+    "regret_proxy_delta_vs_no_memory": "Online decision quality.",
+    "rollback_recovery_rate": "Bad evidence reversibility.",
+    "verifier_cost_delta": "Verifier budget accounting."
+  },
+  "honest_verdict": "complete: frozen-model governed CSL policy updated rollbackable action and memory routing statistics with zero constraint violations and no model weight mutation",
+  "inference_substrate": "deterministic_frozen_model_policy_no_weight_update",
+  "methodology_note": "Exp5460 is a deterministic frozen-model policy replay. Online learning updates contextual-bandit routing statistics and rollbackable evidence IDs only; model and adapter weights are not loaded, written, fine-tuned, or mutated.",
+  "milestone": "2026.07.496",
+  "multi_session_trace_count": 10,
+  "negative_transfer_deflection_rate": 1.0,
+  "no_weight_mutation": true,
+  "policy_action_space": [
+    "no_memory",
+    "naive_icl",
+    "always_full_context",
+    "governed_memory"
+  ],
+  "policy_confidence_receipts_path": "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl",
+  "policy_metrics": {
+    "active_policy_update_count": 9,
+    "constraint_violations": 0,
+    "context_cost": 4130,
+    "quality_score": 0.901,
+    "verifier_cost": 34
+  },
+  "policy_snapshot": {
+    "accepted_evidence_ids": [
+      "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+      "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+      "policy-evidence:trace5460-b1-code-shift:always_full_context",
+      "policy-evidence:trace5460-b2-fresh-simple:no_memory",
+      "policy-evidence:trace5460-b3-recent-format:naive_icl",
+      "policy-evidence:trace5460-c1-poisoned-vendor-memory:no_memory",
+      "policy-evidence:trace5460-c2-stale-lot-memory:naive_icl",
+      "policy-evidence:trace5460-d1-replay-order-trap:always_full_context",
+      "policy-evidence:trace5460-e1-post-rollback-repeat:governed_memory"
+    ],
+    "active_policy_update_count": 9,
+    "arm_stats": {
+      "cad|always_full_context": {
+        "accepted_evidence_ids": [
+          "policy-evidence:trace5460-d1-replay-order-trap:always_full_context"
+        ],
+        "context_cost_sum": 840,
+        "count": 1,
+        "reward_sum": 0.692,
+        "verifier_cost_sum": 5
+      },
+      "cad|governed_memory": {
+        "accepted_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-e1-post-rollback-repeat:governed_memory"
+        ],
+        "context_cost_sum": 1070,
+        "count": 3,
+        "reward_sum": 2.576,
+        "verifier_cost_sum": 7
+      },
+      "cad|naive_icl": {
+        "accepted_evidence_ids": [
+          "policy-evidence:trace5460-c2-stale-lot-memory:naive_icl"
+        ],
+        "context_cost_sum": 320,
+        "count": 1,
+        "reward_sum": 0.726,
+        "verifier_cost_sum": 4
+      },
+      "cad|no_memory": {
+        "accepted_evidence_ids": [
+          "policy-evidence:trace5460-b2-fresh-simple:no_memory"
+        ],
+        "context_cost_sum": 150,
+        "count": 1,
+        "reward_sum": 0.79,
+        "verifier_cost_sum": 2
+      },
+      "code|always_full_context": {
+        "accepted_evidence_ids": [
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ],
+        "context_cost_sum": 800,
+        "count": 1,
+        "reward_sum": 0.7,
+        "verifier_cost_sum": 6
+      },
+      "support|naive_icl": {
+        "accepted_evidence_ids": [
+          "policy-evidence:trace5460-b3-recent-format:naive_icl"
+        ],
+        "context_cost_sum": 320,
+        "count": 1,
+        "reward_sum": 0.806,
+        "verifier_cost_sum": 3
+      },
+      "vendor|no_memory": {
+        "accepted_evidence_ids": [
+          "policy-evidence:trace5460-c1-poisoned-vendor-memory:no_memory"
+        ],
+        "context_cost_sum": 200,
+        "count": 1,
+        "reward_sum": 0.73,
+        "verifier_cost_sum": 4
+      }
+    },
+    "rolled_back_evidence_ids": [
+      "policy-evidence:trace5460-d2-rollback-marked-policy:governed_memory"
+    ]
+  },
+  "policy_update_count": 9,
+  "quality_delta_vs_naive_icl": 0.073,
+  "random_seed": 5460,
+  "readiness_checks": {
+    "all_passed": true,
+    "checks": {
+      "case_families_covered": true,
+      "confidence_receipts_cover_stream": true,
+      "constraint_violations_zero": true,
+      "context_efficiency_positive": true,
+      "negative_transfer_deflected": true,
+      "no_weight_mutation": true,
+      "policy_updates_recorded": true,
+      "quality_preserved_vs_naive_icl": true,
+      "regret_improved_vs_no_memory": true,
+      "rollback_recovered": true,
+      "tests_recorded": true,
+      "upstream_v495_ready": true,
+      "verifier_cost_positive": true
+    },
+    "failed_checks": []
+  },
+  "regret_proxy_components": {
+    "no_memory_regret": 0.67,
+    "oracle_regret": 0.0,
+    "policy_regret": 0.0
+  },
+  "regret_proxy_delta_vs_no_memory": 0.67,
+  "reproducibility_checksum": "sha256:8c935ebd9581d3b01bac9fce4c7e37d9e4c3f07145a85343149738d139f8b046",
+  "research_conductor_modified": false,
+  "rollback_audit": {
+    "future_receipts_exclude_rolled_back": true,
+    "rollback_events": [
+      {
+        "arm": "governed_memory",
+        "context_key": "cad",
+        "removed_evidence_id": "policy-evidence:trace5460-d2-rollback-marked-policy:governed_memory",
+        "rollback_success": true,
+        "stats_after": {
+          "accepted_evidence_ids": [
+            "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+            "policy-evidence:trace5460-a2-repeat-pocket:governed_memory"
+          ],
+          "context_cost_sum": 740,
+          "count": 2,
+          "reward_sum": 1.712,
+          "verifier_cost_sum": 5
+        }
+      }
+    ],
+    "rollback_recovery_rate": 1.0,
+    "rolled_back_evidence_ids": [
+      "policy-evidence:trace5460-d2-rollback-marked-policy:governed_memory"
+    ]
+  },
+  "rollback_recovery_rate": 1.0,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5460.csl_policy_bandit.v496",
+  "source_artifacts": [
+    "results/experiment_5446_governed_memory_csl_online_v495.json",
+    "results/experiment_5447_gated_csl_memory_failure_stress_v495.json"
+  ],
+  "source_file_checksums": {
+    "exp5446_result": "sha256:ecf61e48077395db8625da542361f178824ed450f46283e7db8bd1e80ecd2749",
+    "exp5447_result": "sha256:e453b865f1c734318bb8d44f995fce2d19706de326f1b0721b81ead23fe0948d",
+    "module": "sha256:24ab89dfdd3a818e4807225122802b1ba20af5a0260ca8dfdd3d7a31fa822ff3",
+    "spec": "sha256:d4cd0558d56caa2d78f643b83b43617e4f362bc82baa5a4f18bbd2b118779a1b"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5460_csl_policy_bandit_v496.py",
+    "spec": "openspec/capabilities/self-learning/spec.md"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5460",
+    "SCENARIO-LEARN-5460-GATES",
+    "SCENARIO-LEARN-5460-ROLLBACK",
+    "SCENARIO-LEARN-5460-CONTROLS",
+    "SCENARIO-LEARN-5460-NO-WEIGHT-MUTATION"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5460_csl_policy_bandit_v496.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5460_csl_policy_bandit_v496.py -m pytest tests/python/test_experiment_5460_csl_policy_bandit_v496.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "trace_rows": [
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 1000,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.96,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 420,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.94,
+          "provenance_pass": true,
+          "quality_score": 0.96,
+          "replay_pass": true,
+          "verifier_cost": 3,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 380,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.86,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 260,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.8,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 1000,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.96,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 380,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.86,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 260,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.8,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 360,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.96,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "repeated_task",
+      "context_key": "cad",
+      "negative_transfer_candidate": false,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 1000,
+            "expected_reward": 0.9,
+            "gate_reasons": [],
+            "score": 0.798,
+            "uncertainty": 0.22,
+            "verifier_cost": 6
+          },
+          "governed_memory": {
+            "allowed": true,
+            "context_cost": 420,
+            "expected_reward": 0.94,
+            "gate_reasons": [],
+            "score": 1.019,
+            "uncertainty": 0.22,
+            "verifier_cost": 3
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 380,
+            "expected_reward": 0.84,
+            "gate_reasons": [],
+            "score": 0.917,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 260,
+            "expected_reward": 0.78,
+            "gate_reasons": [],
+            "score": 0.887,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory"
+        ],
+        "context_key": "cad",
+        "evidence_id": "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "governed_memory",
+        "trace_id": "trace5460-a1-repeat-bracket",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 420,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.94,
+        "provenance_pass": true,
+        "quality_score": 0.96,
+        "replay_pass": true,
+        "verifier_cost": 3,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-a1-repeat-bracket",
+      "raw_trace_receipt": {
+        "checksum": "sha256:811dd7d73ff9fecb50e6c46b5f0238048344e6bec5cbdeb4c95a2ea0f935d715",
+        "raw_trace_id": "raw-trace5460-a1-repeat-bracket",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-a",
+      "trace_id": "trace5460-a1-repeat-bracket"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 320,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.94,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 360,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.87,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 240,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.81,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 360,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.87,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 240,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.81,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 300,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.89,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "repeated_task",
+      "context_key": "cad",
+      "negative_transfer_candidate": false,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 900,
+            "expected_reward": 0.9,
+            "gate_reasons": [],
+            "score": 0.835,
+            "uncertainty": 0.22,
+            "verifier_cost": 5
+          },
+          "governed_memory": {
+            "allowed": true,
+            "context_cost": 320,
+            "expected_reward": 0.893,
+            "gate_reasons": [],
+            "score": 0.944563,
+            "uncertainty": 0.155563,
+            "verifier_cost": 2
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 360,
+            "expected_reward": 0.84,
+            "gate_reasons": [],
+            "score": 0.922,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 240,
+            "expected_reward": 0.78,
+            "gate_reasons": [],
+            "score": 0.892,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory"
+        ],
+        "context_key": "cad",
+        "evidence_id": "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "governed_memory",
+        "trace_id": "trace5460-a2-repeat-pocket",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 320,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.94,
+        "provenance_pass": true,
+        "quality_score": 0.95,
+        "replay_pass": true,
+        "verifier_cost": 2,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-a2-repeat-pocket",
+      "raw_trace_receipt": {
+        "checksum": "sha256:b5aca048deeb9f33efadbb47e2d19f2710008992a638c1fca46d59288098246d",
+        "raw_trace_id": "raw-trace5460-a2-repeat-pocket",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-a",
+      "trace_id": "trace5460-a2-repeat-pocket"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 800,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.99,
+          "provenance_pass": true,
+          "quality_score": 0.92,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 720,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.84,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 340,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.77,
+          "provenance_pass": true,
+          "quality_score": 0.78,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 260,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.74,
+          "provenance_pass": true,
+          "quality_score": 0.75,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 800,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.99,
+          "provenance_pass": true,
+          "quality_score": 0.92,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 340,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.77,
+          "provenance_pass": true,
+          "quality_score": 0.78,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 260,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.74,
+          "provenance_pass": true,
+          "quality_score": 0.75,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 280,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.83,
+          "provenance_pass": true,
+          "quality_score": 0.7,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "distribution_shift",
+      "context_key": "code",
+      "negative_transfer_candidate": false,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 800,
+            "expected_reward": 0.99,
+            "gate_reasons": [],
+            "score": 0.938,
+            "uncertainty": 0.22,
+            "verifier_cost": 6
+          },
+          "governed_memory": {
+            "allowed": true,
+            "context_cost": 720,
+            "expected_reward": 0.8,
+            "gate_reasons": [],
+            "score": 0.78,
+            "uncertainty": 0.22,
+            "verifier_cost": 5
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 340,
+            "expected_reward": 0.77,
+            "gate_reasons": [],
+            "score": 0.857,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 260,
+            "expected_reward": 0.74,
+            "gate_reasons": [],
+            "score": 0.847,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-b1-code-shift:always_full_context"
+        ],
+        "context_key": "code",
+        "evidence_id": "policy-evidence:trace5460-b1-code-shift:always_full_context",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "always_full_context",
+        "trace_id": "trace5460-b1-code-shift",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 800,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.99,
+        "provenance_pass": true,
+        "quality_score": 0.92,
+        "replay_pass": true,
+        "verifier_cost": 6,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-b1-code-shift",
+      "raw_trace_receipt": {
+        "checksum": "sha256:ea664f2412a8c0eec8cd3f20de40020b6639df8efea2b820b0a2504cf2a26a05",
+        "raw_trace_id": "raw-trace5460-b1-code-shift",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-b",
+      "trace_id": "trace5460-b1-code-shift"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 760,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.82,
+          "provenance_pass": true,
+          "quality_score": 0.86,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.86,
+          "provenance_pass": true,
+          "quality_score": 0.87,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 320,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.83,
+          "replay_pass": true,
+          "verifier_cost": 3,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 150,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.84,
+          "replay_pass": true,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 760,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.82,
+          "provenance_pass": true,
+          "quality_score": 0.86,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 320,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.83,
+          "replay_pass": true,
+          "verifier_cost": 3,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 150,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.84,
+          "replay_pass": true,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 260,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.82,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "no_memory_competitive",
+      "context_key": "cad",
+      "negative_transfer_candidate": false,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 760,
+            "expected_reward": 0.82,
+            "gate_reasons": [],
+            "score": 0.802,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          },
+          "governed_memory": {
+            "allowed": true,
+            "context_cost": 900,
+            "expected_reward": 0.858,
+            "gate_reasons": [],
+            "score": 0.700017,
+            "uncertainty": 0.127017,
+            "verifier_cost": 5
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 320,
+            "expected_reward": 0.8,
+            "gate_reasons": [],
+            "score": 0.904,
+            "uncertainty": 0.22,
+            "verifier_cost": 3
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 150,
+            "expected_reward": 0.84,
+            "gate_reasons": [],
+            "score": 0.9985,
+            "uncertainty": 0.22,
+            "verifier_cost": 2
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-b2-fresh-simple:no_memory"
+        ],
+        "context_key": "cad",
+        "evidence_id": "policy-evidence:trace5460-b2-fresh-simple:no_memory",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "no_memory",
+        "trace_id": "trace5460-b2-fresh-simple",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 150,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.84,
+        "provenance_pass": true,
+        "quality_score": 0.84,
+        "replay_pass": true,
+        "verifier_cost": 2,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-b2-fresh-simple",
+      "raw_trace_receipt": {
+        "checksum": "sha256:b9d2f19618f0a8709ede0e89a3ddf27fa819c116e47eca18f4e6f20b9b6cbd0c",
+        "raw_trace_id": "raw-trace5460-b2-fresh-simple",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-b",
+      "trace_id": "trace5460-b2-fresh-simple"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 820,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.85,
+          "provenance_pass": true,
+          "quality_score": 0.91,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 760,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.87,
+          "provenance_pass": true,
+          "quality_score": 0.9,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 320,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.88,
+          "provenance_pass": true,
+          "quality_score": 0.9,
+          "replay_pass": true,
+          "verifier_cost": 3,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 170,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.78,
+          "replay_pass": true,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 820,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.85,
+          "provenance_pass": true,
+          "quality_score": 0.91,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 320,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.88,
+          "provenance_pass": true,
+          "quality_score": 0.9,
+          "replay_pass": true,
+          "verifier_cost": 3,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 170,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.78,
+          "replay_pass": true,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 300,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.88,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "naive_icl_competitive",
+      "context_key": "support",
+      "negative_transfer_candidate": false,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 820,
+            "expected_reward": 0.85,
+            "gate_reasons": [],
+            "score": 0.805,
+            "uncertainty": 0.22,
+            "verifier_cost": 5
+          },
+          "governed_memory": {
+            "allowed": true,
+            "context_cost": 760,
+            "expected_reward": 0.87,
+            "gate_reasons": [],
+            "score": 0.852,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 320,
+            "expected_reward": 0.88,
+            "gate_reasons": [],
+            "score": 0.984,
+            "uncertainty": 0.22,
+            "verifier_cost": 3
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 170,
+            "expected_reward": 0.78,
+            "gate_reasons": [],
+            "score": 0.9335,
+            "uncertainty": 0.22,
+            "verifier_cost": 2
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-b3-recent-format:naive_icl"
+        ],
+        "context_key": "support",
+        "evidence_id": "policy-evidence:trace5460-b3-recent-format:naive_icl",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "naive_icl",
+        "trace_id": "trace5460-b3-recent-format",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 320,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.88,
+        "provenance_pass": true,
+        "quality_score": 0.9,
+        "replay_pass": true,
+        "verifier_cost": 3,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-b3-recent-format",
+      "raw_trace_receipt": {
+        "checksum": "sha256:00ce937fff117f4d5df675cbc4652c8273092555b8c9deda47df67069ef1facd",
+        "raw_trace_id": "raw-trace5460-b3-recent-format",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-b",
+      "trace_id": "trace5460-b3-recent-format"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.88,
+          "provenance_pass": true,
+          "quality_score": 0.88,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 420,
+          "negative_transfer": true,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.95,
+          "provenance_pass": false,
+          "quality_score": 0.5,
+          "replay_pass": true,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 300,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.7,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 200,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.81,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.88,
+          "provenance_pass": true,
+          "quality_score": 0.88,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 300,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.78,
+          "provenance_pass": true,
+          "quality_score": 0.7,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 200,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.81,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 240,
+          "negative_transfer": true,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.95,
+          "provenance_pass": true,
+          "quality_score": 0.52,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "poisoned_memory",
+      "context_key": "vendor",
+      "negative_transfer_candidate": true,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 900,
+            "expected_reward": 0.88,
+            "gate_reasons": [],
+            "score": 0.803,
+            "uncertainty": 0.22,
+            "verifier_cost": 6
+          },
+          "governed_memory": {
+            "allowed": false,
+            "context_cost": 420,
+            "expected_reward": 0.95,
+            "gate_reasons": [
+              "provenance_failed",
+              "constraint_violation"
+            ],
+            "score": -999.0,
+            "uncertainty": 0.22,
+            "verifier_cost": 2
+          },
+          "naive_icl": {
+            "allowed": false,
+            "context_cost": 300,
+            "expected_reward": 0.78,
+            "gate_reasons": [
+              "constraint_violation"
+            ],
+            "score": -999.0,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 200,
+            "expected_reward": 0.8,
+            "gate_reasons": [],
+            "score": 0.922,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-c1-poisoned-vendor-memory:no_memory"
+        ],
+        "context_key": "vendor",
+        "evidence_id": "policy-evidence:trace5460-c1-poisoned-vendor-memory:no_memory",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "no_memory",
+        "trace_id": "trace5460-c1-poisoned-vendor-memory",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 200,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.8,
+        "provenance_pass": true,
+        "quality_score": 0.81,
+        "replay_pass": true,
+        "verifier_cost": 4,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-c1-poisoned-vendor-memory",
+      "raw_trace_receipt": {
+        "checksum": "sha256:6bb0d304ec02862bc501c8626ba6def227ae7809f32173980a53cd1d5e368430",
+        "raw_trace_id": "raw-trace5460-c1-poisoned-vendor-memory",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-c",
+      "trace_id": "trace5460-c1-poisoned-vendor-memory"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.88,
+          "provenance_pass": true,
+          "quality_score": 0.9,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 430,
+          "negative_transfer": true,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.91,
+          "provenance_pass": true,
+          "quality_score": 0.62,
+          "replay_pass": false,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 320,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.82,
+          "provenance_pass": true,
+          "quality_score": 0.83,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 210,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.8,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.88,
+          "provenance_pass": true,
+          "quality_score": 0.9,
+          "replay_pass": true,
+          "verifier_cost": 6,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 320,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.82,
+          "provenance_pass": true,
+          "quality_score": 0.83,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 210,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.8,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 250,
+          "negative_transfer": true,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.6,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "stale_memory",
+      "context_key": "cad",
+      "negative_transfer_candidate": true,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 900,
+            "expected_reward": 0.88,
+            "gate_reasons": [],
+            "score": 0.803,
+            "uncertainty": 0.22,
+            "verifier_cost": 6
+          },
+          "governed_memory": {
+            "allowed": false,
+            "context_cost": 430,
+            "expected_reward": 0.883,
+            "gate_reasons": [
+              "replay_failed"
+            ],
+            "score": -999.0,
+            "uncertainty": 0.127017,
+            "verifier_cost": 2
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 320,
+            "expected_reward": 0.82,
+            "gate_reasons": [],
+            "score": 0.912,
+            "uncertainty": 0.22,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 210,
+            "expected_reward": 0.795,
+            "gate_reasons": [],
+            "score": 0.850063,
+            "uncertainty": 0.155563,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-c2-stale-lot-memory:naive_icl"
+        ],
+        "context_key": "cad",
+        "evidence_id": "policy-evidence:trace5460-c2-stale-lot-memory:naive_icl",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "naive_icl",
+        "trace_id": "trace5460-c2-stale-lot-memory",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 320,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.82,
+        "provenance_pass": true,
+        "quality_score": 0.83,
+        "replay_pass": true,
+        "verifier_cost": 4,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-c2-stale-lot-memory",
+      "raw_trace_receipt": {
+        "checksum": "sha256:8afa56c02918e8daced430c515d07c1d36f5b1266fd7b1647bc955146ad86a39",
+        "raw_trace_id": "raw-trace5460-c2-stale-lot-memory",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-c",
+      "trace_id": "trace5460-c2-stale-lot-memory"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 840,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.92,
+          "provenance_pass": true,
+          "quality_score": 0.91,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 360,
+          "negative_transfer": true,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.93,
+          "provenance_pass": true,
+          "quality_score": 0.55,
+          "replay_pass": false,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 310,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.79,
+          "provenance_pass": true,
+          "quality_score": 0.78,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 220,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.77,
+          "provenance_pass": true,
+          "quality_score": 0.77,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 840,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.92,
+          "provenance_pass": true,
+          "quality_score": 0.91,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 310,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.79,
+          "provenance_pass": true,
+          "quality_score": 0.78,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 220,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.77,
+          "provenance_pass": true,
+          "quality_score": 0.77,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": true,
+          "context_cost": 230,
+          "negative_transfer": true,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.93,
+          "provenance_pass": true,
+          "quality_score": 0.58,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "replay_failure",
+      "context_key": "cad",
+      "negative_transfer_candidate": true,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 840,
+            "expected_reward": 0.92,
+            "gate_reasons": [],
+            "score": 0.87,
+            "uncertainty": 0.22,
+            "verifier_cost": 5
+          },
+          "governed_memory": {
+            "allowed": false,
+            "context_cost": 360,
+            "expected_reward": 0.893,
+            "gate_reasons": [
+              "replay_failed",
+              "constraint_violation"
+            ],
+            "score": -999.0,
+            "uncertainty": 0.127017,
+            "verifier_cost": 2
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 310,
+            "expected_reward": 0.758,
+            "gate_reasons": [],
+            "score": 0.788063,
+            "uncertainty": 0.155563,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 220,
+            "expected_reward": 0.78,
+            "gate_reasons": [],
+            "score": 0.832563,
+            "uncertainty": 0.155563,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-d1-replay-order-trap:always_full_context"
+        ],
+        "context_key": "cad",
+        "evidence_id": "policy-evidence:trace5460-d1-replay-order-trap:always_full_context",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "always_full_context",
+        "trace_id": "trace5460-d1-replay-order-trap",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 840,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.92,
+        "provenance_pass": true,
+        "quality_score": 0.91,
+        "replay_pass": true,
+        "verifier_cost": 5,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-d1-replay-order-trap",
+      "raw_trace_receipt": {
+        "checksum": "sha256:c877b86c4abccf51fa11ed6533868baf6e0b26538bb326ca98e0f2db0451e92c",
+        "raw_trace_id": "raw-trace5460-d1-replay-order-trap",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-d",
+      "trace_id": "trace5460-d1-replay-order-trap"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 880,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.94,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 430,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.93,
+          "provenance_pass": true,
+          "quality_score": 0.94,
+          "replay_pass": true,
+          "verifier_cost": 3,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 340,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.86,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 230,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.79,
+          "provenance_pass": true,
+          "quality_score": 0.79,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 880,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.94,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 340,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.86,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 230,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.79,
+          "provenance_pass": true,
+          "quality_score": 0.79,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 260,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.88,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "rollback_required",
+      "context_key": "cad",
+      "negative_transfer_candidate": false,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 880,
+            "expected_reward": 0.796,
+            "gate_reasons": [],
+            "score": 0.671563,
+            "uncertainty": 0.155563,
+            "verifier_cost": 5
+          },
+          "governed_memory": {
+            "allowed": true,
+            "context_cost": 430,
+            "expected_reward": 0.893,
+            "gate_reasons": [],
+            "score": 0.876517,
+            "uncertainty": 0.127017,
+            "verifier_cost": 3
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 340,
+            "expected_reward": 0.783,
+            "gate_reasons": [],
+            "score": 0.805563,
+            "uncertainty": 0.155563,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 230,
+            "expected_reward": 0.79,
+            "gate_reasons": [],
+            "score": 0.840063,
+            "uncertainty": 0.155563,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-d2-rollback-marked-policy:governed_memory"
+        ],
+        "context_key": "cad",
+        "evidence_id": "policy-evidence:trace5460-d2-rollback-marked-policy:governed_memory",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "rollback_receipt": {
+          "arm": "governed_memory",
+          "context_key": "cad",
+          "removed_evidence_id": "policy-evidence:trace5460-d2-rollback-marked-policy:governed_memory",
+          "rollback_success": true,
+          "stats_after": {
+            "accepted_evidence_ids": [
+              "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+              "policy-evidence:trace5460-a2-repeat-pocket:governed_memory"
+            ],
+            "context_cost_sum": 740,
+            "count": 2,
+            "reward_sum": 1.712,
+            "verifier_cost_sum": 5
+          }
+        },
+        "selected_arm": "governed_memory",
+        "trace_id": "trace5460-d2-rollback-marked-policy",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 430,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.93,
+        "provenance_pass": true,
+        "quality_score": 0.94,
+        "replay_pass": true,
+        "verifier_cost": 3,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-d2-rollback-marked-policy",
+      "raw_trace_receipt": {
+        "checksum": "sha256:75751c3d5e2de559ce91a09067e584d135e5d6a98409a2ceef30711e79d5863e",
+        "raw_trace_id": "raw-trace5460-d2-rollback-marked-policy",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": true,
+      "session_id": "session-d",
+      "trace_id": "trace5460-d2-rollback-marked-policy"
+    },
+    {
+      "arm_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "governed_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 330,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.94,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 2,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 360,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.87,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 240,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.82,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        }
+      },
+      "baseline_outcomes": {
+        "always_full_context": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 900,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 5,
+          "verifier_pass": true
+        },
+        "naive_icl": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 360,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.84,
+          "provenance_pass": true,
+          "quality_score": 0.87,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "no_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 240,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.8,
+          "provenance_pass": true,
+          "quality_score": 0.82,
+          "replay_pass": true,
+          "verifier_cost": 4,
+          "verifier_pass": true
+        },
+        "ungated_memory": {
+          "access_pass": true,
+          "constraint_violation": false,
+          "context_cost": 290,
+          "negative_transfer": false,
+          "no_weight_mutation_proof": true,
+          "predicted_quality": 0.9,
+          "provenance_pass": true,
+          "quality_score": 0.95,
+          "replay_pass": true,
+          "verifier_cost": 1,
+          "verifier_pass": true
+        }
+      },
+      "case_family": "post_rollback_replay",
+      "context_key": "cad",
+      "negative_transfer_candidate": false,
+      "policy_decision": {
+        "arm_scores": {
+          "always_full_context": {
+            "allowed": true,
+            "context_cost": 900,
+            "expected_reward": 0.796,
+            "gate_reasons": [],
+            "score": 0.666563,
+            "uncertainty": 0.155563,
+            "verifier_cost": 5
+          },
+          "governed_memory": {
+            "allowed": true,
+            "context_cost": 330,
+            "expected_reward": 0.898,
+            "gate_reasons": [],
+            "score": 0.918517,
+            "uncertainty": 0.127017,
+            "verifier_cost": 2
+          },
+          "naive_icl": {
+            "allowed": true,
+            "context_cost": 360,
+            "expected_reward": 0.783,
+            "gate_reasons": [],
+            "score": 0.800563,
+            "uncertainty": 0.155563,
+            "verifier_cost": 4
+          },
+          "no_memory": {
+            "allowed": true,
+            "context_cost": 240,
+            "expected_reward": 0.795,
+            "gate_reasons": [],
+            "score": 0.842563,
+            "uncertainty": 0.155563,
+            "verifier_cost": 4
+          }
+        },
+        "cited_evidence_ids": [
+          "policy-evidence:trace5460-a1-repeat-bracket:governed_memory",
+          "policy-evidence:trace5460-a2-repeat-pocket:governed_memory",
+          "policy-evidence:trace5460-e1-post-rollback-repeat:governed_memory"
+        ],
+        "context_key": "cad",
+        "evidence_id": "policy-evidence:trace5460-e1-post-rollback-repeat:governed_memory",
+        "gate_receipt": {
+          "allowed": true,
+          "checks": {
+            "access": true,
+            "constraint": true,
+            "no_weight_mutation": true,
+            "provenance": true,
+            "replay": true,
+            "verifier": true
+          },
+          "reasons": []
+        },
+        "selected_arm": "governed_memory",
+        "trace_id": "trace5460-e1-post-rollback-repeat",
+        "update_status": "accepted"
+      },
+      "policy_outcome": {
+        "access_pass": true,
+        "constraint_violation": false,
+        "context_cost": 330,
+        "negative_transfer": false,
+        "no_weight_mutation_proof": true,
+        "predicted_quality": 0.94,
+        "provenance_pass": true,
+        "quality_score": 0.95,
+        "replay_pass": true,
+        "verifier_cost": 2,
+        "verifier_pass": true
+      },
+      "raw_trace_id": "raw-trace5460-e1-post-rollback-repeat",
+      "raw_trace_receipt": {
+        "checksum": "sha256:4c77fa9d82ca1063ed89f9313f98627127b3ffe41ff183c08c4f50bd755b46b5",
+        "raw_trace_id": "raw-trace5460-e1-post-rollback-repeat",
+        "retention_reason": "frozen-policy-bandit-audit"
+      },
+      "rollback_after_update": false,
+      "session_id": "session-e",
+      "trace_id": "trace5460-e1-post-rollback-repeat"
+    }
+  ],
+  "upstream_readiness": {
+    "exp5446_governed_csl_loop_ready": true,
+    "exp5446_reproducibility_checksum": "sha256:6990668c0469eb3fb5b96e007c1bf8139aea4c7497ed968f9ed2909f1b77103c",
+    "exp5447_csl_memory_stress_ready": true,
+    "exp5447_reproducibility_checksum": "sha256:42d4c1e0176833fd4cf1c70fc4a95b5f9faba885111cfd0ba4781f1e87a1af1a"
+  },
+  "verifier_cost_delta": 0.358491,
+  "weight_mutation_receipt": {
+    "adapter_weights_loaded": false,
+    "adapter_weights_written": false,
+    "learned_state_scope": "contextual_bandit_policy_statistics_only",
+    "model_weights_loaded": false,
+    "model_weights_written": false,
+    "no_adapter_weight_mutation": true,
+    "no_weight_mutation": true
+  }
+}
