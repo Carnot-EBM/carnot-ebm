@@ -1,3 +1,81 @@
+## V499 Planner Refresh - 2026-07-09
+
+Planning sweep for milestone `2026.07.499` after the operator reported `.498` complete. Sources checked:
+arXiv primary pages, OpenReview public pages where reachable, Hugging Face Papers pages, GitHub repository
+discovery, Semantic Scholar-style public citation lookups for EBT/ARM-EBM, Extropic writing, Logical
+Intelligence public pages, and Carnot's existing reference history. Existing entries already cover
+ConsFormer-LNS, constrained decoding bias mitigation, CASCADE, ProcMEM, Sortify, KAN verification, and
+HalluHard; this block only adds missing or newly-actionable deltas.
+
+### Trajectory and claim-level verification
+- **Trajel: Beyond Final Answers: Auditing Trajectory-Level Hallucinations in Multi-Agent Industrial
+  Workflows** - arXiv:2605.24219, https://arxiv.org/abs/2605.24219; Hugging Face page
+  https://huggingface.co/papers/2605.24219. Trajel evaluates hallucinations inside multi-step
+  Thought-Action-Observation trajectories, not just final answers, using factual, referential, logical,
+  procedural, and scope-based labels. Carnot hook: `.499` should make the `.498` pretest skip cascade and
+  any SOTA/CSL agent runs emit step-level failure taxonomy, so capstones can distinguish source-delta,
+  precondition, gate, procedural, and final-answer failures instead of only recording a terminal verdict.
+- **RT4CHART: Retromorphic Testing with Hierarchical Verification for Hallucination Detection in RAG** -
+  arXiv:2603.27752, https://arxiv.org/abs/2603.27752. The paper decomposes answers into independently
+  verifiable claims, checks each against context evidence, then rolls local labels back up to the answer.
+  Carnot hook: the recovered helper-contract and Preference-MaxSAT fixtures should include
+  claim-to-evidence/span mappings and local-to-global hard/soft labels rather than a single coarse score.
+
+### Continuous self-learning and experience memory
+- **ExpGraph: Model-Agnostic Experience Learning with Graph-Structured Memory for LLM Agents** -
+  arXiv:2605.30712, https://arxiv.org/abs/2605.30712. ExpGraph keeps the executor frozen and replaceable,
+  stores skills and failure lessons as a self-evolving graph, and retrieves experiences with graph
+  diffusion plus utility-aware ranking. Carnot hook: FR-11 experiments should test external experience
+  reuse against a no-memory baseline with explicit negative-transfer accounting, not mutate model weights
+  or conflate memory access with the measured outcome.
+- **Evo-Memory: Benchmarking LLM Agent Test-time Learning with Self-Evolving Memory** -
+  arXiv:2511.20857, https://arxiv.org/abs/2511.20857; OpenReview revisions
+  https://openreview.net/revisions?id=iaAX2TFzRP. Evo-Memory turns tasks into streams that require memory
+  search, use, and update after each interaction. Carnot hook: `.499` CSL should run a streaming replay
+  fixture with pre/post memory state hashes, stale-evidence checks, and held-out policy deltas.
+
+### Constraint fixtures and sampler substrate
+- **MILP-Evolve / Towards Foundation Models for Mixed Integer Linear Programming** -
+  GitHub https://github.com/microsoft/MILP-Evolve; Hugging Face dataset
+  https://huggingface.co/datasets/microsoft/MILP-Evolve; Microsoft Research page
+  https://www.microsoft.com/en-us/research/publication/towards-foundation-models-for-mixed-integer-linear-programming/.
+  MILP-Evolve provides diverse generated MILP classes and instances intended to stress generalization
+  across problem families. Carnot hook: use it as a source of varied hard/soft constraint descriptors and
+  exact-solver fixtures, not as an unverified heuristic-solver dependency.
+- **Crystal structure prediction using graph neural combinatorial optimization** - arXiv:2604.23921,
+  https://arxiv.org/abs/2604.23921. The work uses graph neural combinatorial optimization over discrete
+  allocation variables with Gumbel-Sinkhorn stoichiometry constraints. Carnot hook: the active-constraint
+  lane can borrow the pattern of feasible-discrete sampling plus exact fallback checks for descriptor
+  synthesis, while avoiding domain-specific material-science claims.
+- **Hamon: JAX-native thermal sampling for discrete EBMs** - GitHub https://github.com/dek3rr/hamon.
+  Hamon advertises GPU block Gibbs sampling and adaptive non-reversible parallel tempering for Ising/RBM
+  style models. Carnot hook: keep it as a local-reference comparator for sampler APIs and GPU receipt
+  fields; do not make a headline speedup claim unless Carnot obtains authenticated matched-timing runs.
+
+### External hardware and EBM vendors
+- **Extropic TSU / XTR-0 writing** - https://extropic.ai/writing,
+  https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware,
+  https://extropic.ai/writing/inside-x0-and-xtr-0. Public materials still describe TSUs/XTR-0 as
+  thermodynamic sampling hardware, but no Carnot-local execution path or SDK is available. Carnot hook:
+  keep TSU as watch-only architecture context; `.499` hardware claims must come from KV260, GateMate,
+  PolarFire, CPU, or CUDA receipts.
+- **Logical Intelligence Kona public pages** -
+  https://logicalintelligence.com/kona-ebms-energy-based-models and
+  https://logicalintelligence.com/blog/energy-based-model-sudoku-demo. Kona remains a proprietary
+  verifier/constraint-reasoning signal, including the public Sudoku benchmark narrative, but exposes no
+  reproducible local internals. Carnot hook: use Kona only as strategic context for verifier-first EBMs;
+  local `.499` experiments need executable fixtures and artifacts.
+
+### Planning impact
+- `.499` should begin by repairing the `.498` pretest skip cascade, because seven planned science artifacts
+  never executed and downstream gates then behaved correctly by blocking.
+- The hard/soft verification core should be rebuilt from a minimal exact fixture before any SOTA GGUF
+  concept telemetry panel runs.
+- Continuous self-learning should be graph/stream based, executor-frozen, and independently measured before
+  any headline CSL panel is allowed.
+- ARC should use a changed live-path mechanism from the retired novelty/program-synthesis/energy-as-fitness
+  attempts: perception grounding, null-coordinate audit, and salience-tiered action generation.
+
 ## V484 Research Update - 2026-07-06
 
 Planning sweep for milestone `2026.07.484` after `.483` completed. Sources checked: arXiv primary pages,
