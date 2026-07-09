@@ -28767,6 +28767,99 @@ required artifact fields with
 |---|---|---|
 | REQ-VERIFY-5501 | Implemented (`python/carnot/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py`, `results/experiment_5501_helper_contract_hierarchical_claim_fixture_v499.json`) | Implemented (`tests/python/test_experiment_5501_helper_contract_hierarchical_claim_fixture_v499.py`) |
 
+### REQ-VERIFY-5505: Active-Constraint MILP/MaxSAT/CSP Descriptor Rows V499
+
+The repository SHALL provide Exp 5505 at
+`python/carnot/experiment_5505_active_constraint_milp_descriptor_v499.py` and
+write `results/experiment_5505_active_constraint_milp_descriptor_v499.json`
+plus descriptor and schema payloads under
+`results/active_constraint_milp_descriptor_5505/descriptors.json` and
+`results/active_constraint_milp_descriptor_5505/schema.json` without modifying
+`scripts/research_conductor.py`, without invoking a live LLM, without running
+hardware, without claiming solver speed, and without any hardware speedup
+claim. The descriptor payload SHALL reuse the Exp 5491 portable descriptor
+shape where possible while extending it with executable MILP-style,
+MaxSAT-style, and CSP-style rows that downstream hardware receipt tasks can
+consume as bounded workloads.
+
+Every descriptor row SHALL include typed variables with finite domains, hard
+constraint rows, soft preferences, objective weights, exact fallback semantics,
+and expected exact outputs. MILP-style rows SHALL use finite-domain linear
+integer constraints and weighted objectives. MaxSAT-style rows SHALL be derived
+from the Exp 5499 Preference-MaxSAT typed claim-state fixture and SHALL compare
+their exact fallback result against
+`python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference`.
+CSP-style rows SHALL use finite-domain relational constraints such as
+all-different or not-equal plus advisory soft preferences. The exact fallback
+enumerator SHALL be the final authority for optimal and infeasible rows; soft
+preferences and objective weights MAY rank hard-feasible assignments but SHALL
+NOT override hard infeasibility.
+
+Each descriptor row SHALL include board-neutral partition/update telemetry
+fields suitable for CPU, CUDA, KV260, GateMate, and PolarFire receipt tasks.
+Those fields SHALL identify partition ID, partition scope, boundary variables,
+update schedule type, update count, descriptor input hash, expected output
+hash, and target receipt names (`cpu`, `cuda`, `kv260`, `gatemate`,
+`polarfire`) without recording board timing or authorizing performance
+comparison. `admissible_hardware_mapping` SHALL remain
+advisory-only for every descriptor row, SHALL record
+`speedup_claim_allowed=false`, and SHALL NOT imply solver or hardware speedup.
+
+The artifact SHALL include at minimum these top-level fields:
+`descriptor_paths`, `schema_paths`, `test_paths`, `num_descriptor_rows`,
+`milp_style_rows`, `maxsat_style_rows`, `csp_style_rows`,
+`exact_fallback_agreement_rate`, `partition_update_fields_present`,
+`descriptor_ready_for_hardware`, `hardware_speedup_claim`,
+`inference_substrate`, and `honest_verdict`. `inference_substrate` SHALL equal
+`verifier_ensemble_against_cached_candidates`. `hardware_speedup_claim` SHALL be false.
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+`descriptor_ready_for_hardware` SHALL be true only when the descriptor and
+schema payloads exist, all MILP/MaxSAT/CSP row counts are nonzero, every exact
+fallback agrees with its expected output and Exp 5499 reference where
+applicable, every descriptor has the board-neutral partition/update fields,
+and no hardware speedup claim is present.
+
+Required field principles:
+
+- `descriptor_paths`: principle "points to executable descriptor payloads rather than relying on embedded prose."
+- `schema_paths`: principle "points to the schema contract hardware receipt tasks should validate."
+- `test_paths`: principle "identifies the REQ/SCENARIO tests for this descriptor lane."
+- `num_descriptor_rows`: principle "bounds row coverage and prevents silent descriptor loss."
+- `milp_style_rows`: principle "confirms finite-domain MILP-style rows are present."
+- `maxsat_style_rows`: principle "confirms Exp5499-derived hard/soft Preference-MaxSAT rows are present."
+- `csp_style_rows`: principle "confirms relational finite-domain CSP rows are present."
+- `exact_fallback_agreement_rate`: principle "keeps exact fallback as final authority."
+- `partition_update_fields_present`: principle "guards downstream board receipt compatibility."
+- `descriptor_ready_for_hardware`: principle "downstream gate for CPU/CUDA/KV260/GateMate/PolarFire receipt tasks."
+- `hardware_speedup_claim`: principle "must remain false without authenticated matched timing evidence."
+- `inference_substrate`: principle "declares verifier checks over cached/exact candidates rather than live model inference."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked: and avoid solver or hardware overclaim."
+
+### SCENARIO-VERIFY-5505: MILP/MaxSAT/CSP Descriptors Preserve Exact Fallback Authority
+
+Given the Exp 5499 Preference-MaxSAT fixture and deterministic local
+finite-domain MILP and CSP rows, when Exp 5505 builds the active-constraint
+descriptor payload, then every row exposes typed variables, hard constraints,
+soft preferences, objective weights, expected exact output, exact fallback,
+advisory hardware mapping, and board-neutral partition/update fields for CPU,
+CUDA, KV260, GateMate, and PolarFire. The exact fallback result agrees with the
+expected output for every row, and the MaxSAT rows also agree with the Exp 5499
+reference solver for optimal and infeasible instances.
+
+If any style count is zero, if an exact fallback disagrees with expected output
+or with the Exp 5499 reference, if partition/update telemetry is missing for
+any target receipt, if `inference_substrate` differs from
+`verifier_ensemble_against_cached_candidates`, or if `hardware_speedup_claim`
+is true, then Exp 5505 SHALL write the same result path with
+`descriptor_ready_for_hardware=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5505)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5505 | Implemented (`python/carnot/experiment_5505_active_constraint_milp_descriptor_v499.py`, `results/experiment_5505_active_constraint_milp_descriptor_v499.json`) | Implemented (`tests/python/test_experiment_5505_active_constraint_milp_descriptor_v499.py`) |
+
 ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
 
 The repository SHALL provide Exp 5462 at
