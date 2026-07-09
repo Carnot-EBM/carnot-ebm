@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.497",
+  "generated_at": "2026-07-09T11:33:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "No data available this milestone: the locked timing fields record 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. The idle GPU snapshot is therefore not evidence of a compute-bound utilization problem, and no slowest experiment or parallel-model runner issue can be inferred.",
+  "bottlenecks_identified": [
+    "No experiment-level timing rows were available for this milestone, so compute-bound duration ranking, GPU-efficiency assessment, and DualGPURunner assessment could not be measured."
+  ],
+  "improvements_suggested": [
+    "Persist a milestone-scoped timing manifest at activation and append each experiment receipt to it as the conductor commits results, so the retrospective does not depend on reconstructing timing after the fact.",
+    "Add a closeout guard that emits an explicit no-data retrospective when the activation window has 0 experiment commits, with GPU-idle claims automatically gated off unless compute-bound rows exist.",
+    "Record model-count and compute-bound tags in the timing manifest so DualGPURunner eligibility can be checked directly in the next milestone."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make the conductor write authoritative per-experiment timing rows during execution.",
+    "Add a regression check for empty milestone timing windows before retrospective generation.",
+    "Include compute-bound and parallel-model metadata in timing rows for automatic GPU-runner gating."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The useful lesson is procedural rather than performance-related: with 0 milestone-scoped experiment rows, operational analysis must stop at the evidence boundary. The next improvement should make missing timing data explicit at capture time instead of asking the retrospective step to recover it later."
+}

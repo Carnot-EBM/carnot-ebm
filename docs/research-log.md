@@ -5853,3 +5853,9 @@ The critical path for milestone .250:
 - theme: empty authorized timing window for operational efficiency accounting
 - key result: no data available this milestone; the timing block records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so slowest-run ranking, compute-bound GPU efficiency, and DualGPURunner assessment remain unmeasured
 - acceptance: 0/0 criteria met -- no milestone-scoped timing rows were available to evaluate
+
+### Milestone 2026.07.497
+- exp_range: no data available this milestone
+- theme: retrospective limited to an empty activation-window timing record
+- key result: no data available this milestone; 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments leave no supported compute-bound slow path, GPU-efficiency finding, or DualGPURunner assessment
+- acceptance: 0/0 criteria met -- no milestone-scoped experiment rows were available for scoring
