@@ -1666,6 +1666,76 @@ refusal/abstention rows as `honest_violation` rather than
 when every row has deterministic authority evidence and all four labels are
 present.
 
+### REQ-SAFE-5470: Rewrite-State Semantic Fixture V497
+
+Carnot SHALL provide Exp5470 at
+`python/carnot/experiment_5470_rewrite_state_semantic_fixture_v497.py` and
+write `results/experiment_5470_rewrite_state_semantic_fixture_v497.json`
+without modifying `scripts/research_conductor.py`. The fixture SHALL be
+deterministic and SHALL NOT invoke a live LLM. Each candidate SHALL be encoded
+as a typed source-to-target state transition with explicit license IDs for
+problem-given facts, computations, citations, and exact witness rows.
+
+The fixture set SHALL include valid rewrites, hidden-premise mutations,
+unlicensed state changes, fabricated citation/evidence changes, locally syntax-valid but semantically invalid outputs, and factual-distortion temptations. Exact validators inspired by Theoria and SEM-CTRL SHALL be the
+only final authority. The validators SHALL include answer-set-like checks over
+small deterministic domains: arithmetic claims, JSON constraints, API preconditions, and fact anchors. Local syntax validity, LCD-style advisory
+acceptance, grammar satisfaction, and model confidence SHALL NOT be accepted as
+semantic truth.
+
+The terminal result artifact MUST include:
+`fixture_count`, `transition_count`, `hidden_premise_catch_rate`,
+`unlicensed_mutation_catch_rate`, `semantic_false_accept_rate`,
+`factual_distortion_rate`, `lcd_bias_probe_passed`,
+`exact_validator_agreement`, `rewrite_state_fixture_ready`,
+`guided_decoding_quarantine_lifted`, `inference_substrate`, `random_seed`, and
+`honest_verdict`. `guided_decoding_quarantine_lifted` MUST be false,
+`inference_substrate` MUST equal `deterministic_fixture_no_llm`, and
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Field principles:
+- `fixture_count`: bounded fixture coverage.
+- `transition_count`: typed source-to-target state transition denominator.
+- `hidden_premise_catch_rate`: hidden premises rejected by license validation.
+- `unlicensed_mutation_catch_rate`: unlicensed state changes rejected before semantic scoring.
+- `semantic_false_accept_rate`: exact-validator false accepts on locally syntax-valid semantic traps.
+- `factual_distortion_rate`: factual-distortion false accepts after exact validation.
+- `lcd_bias_probe_passed`: LCD-style advisory accepts are exposed and rejected by exact validators.
+- `exact_validator_agreement`: exact validators agree with curated expected transition labels.
+- `rewrite_state_fixture_ready`: downstream deterministic fixture gate.
+- `guided_decoding_quarantine_lifted`: guided-decoding quarantine remains closed.
+- `inference_substrate`: deterministic fixture with no LLM inference.
+- `random_seed`: deterministic fixture seed.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5470: Exact Validators Override Local Syntax
+
+**Given** typed rewrite-state transitions with explicit fact, computation,
+citation, and witness-row licenses,
+
+**When** Exp5470 evaluates valid rewrites, hidden-premise rewrites,
+unlicensed mutations, fabricated evidence, JSON/API semantic traps, arithmetic
+claims, and factual-distortion temptations,
+
+**Then** it writes
+`results/experiment_5470_rewrite_state_semantic_fixture_v497.json`, catches all
+hidden premises and unlicensed mutations, reports zero exact-validator semantic
+false accepts and zero factual-distortion false accepts, sets
+`lcd_bias_probe_passed=true` only when LCD-style advisory acceptance is shown to
+accept semantic and factual traps that exact validators reject, sets
+`exact_validator_agreement=1.0`, sets
+`rewrite_state_fixture_ready=true`, keeps
+`guided_decoding_quarantine_lifted=false`, and records
+`inference_substrate=deterministic_fixture_no_llm`.
+
+**And** if any transition lacks license IDs, exact validators disagree with the
+curated expected labels, an invalid semantic or factual trap is exactly
+accepted, the LCD-bias probe has no positive advisory trap, or
+`scripts/research_conductor.py` is modified,
+
+**Then** validation fails closed or emits a blocked artifact, and no live
+guided-decoding headline is reconsidered.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1698,5 +1768,6 @@ present.
 | REQ-SAFE-5456 | Planned | Exp 5456: guided-decoding tautology corrigendum |
 | REQ-SAFE-5457 | Planned | Exp 5457: distortion-guarded local SOTA verifier-potential decoding rerun |
 | REQ-SAFE-5459 | Planned | Exp 5459: deterministic constraint-distortion guard |
+| REQ-SAFE-5470 | Planned | Exp 5470: deterministic rewrite-state semantic fixture |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
