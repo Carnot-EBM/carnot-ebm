@@ -1,0 +1,409 @@
+{
+  "audited_artifacts": [
+    "results/experiment_5474_sota_csl_scale_v497.json",
+    "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
+    "results/experiment_5475_csl_behavioral_memory_ladder_v497.json",
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
+  ],
+  "cross_check_summary": {
+    "exp5473": {
+      "bounded_validator_support": true,
+      "csl_kan_surrogate_ready": true,
+      "independent_for_scale_headline": false,
+      "negative_transfer_deflection_rate": 1.0,
+      "policy_quality_score_reused_as_prior_success": true
+    },
+    "exp5474": {
+      "adversarial_tautology_fields": [
+        "delta_vs_naive_icl",
+        "naive_icl_score"
+      ],
+      "exact_validator_authority_ok": true,
+      "final_authority_bypassed_count": 0,
+      "prior_flagged_adversarial": true
+    },
+    "exp5475": {
+      "bounded_behavioral_memory_support": true,
+      "csl_behavioral_memory_ready": true,
+      "headline_permission": false,
+      "independent_axes_present": [
+        "conflict_handling",
+        "downstream_action_use",
+        "exact_validator",
+        "locality",
+        "paraphrase_robustness",
+        "stale_memory_rejection",
+        "support_removal"
+      ]
+    }
+  },
+  "csl_scale_headline_allowed": false,
+  "downstream_recommendation": "bounded_requires_rerun",
+  "experiment_id": "experiment_5502_csl_tautology_static_corrigendum_v499",
+  "field_principles": {
+    "audited_artifacts": "Exact upstream artifacts read by the static corrigendum.",
+    "csl_scale_headline_allowed": "False unless Exp5474 can be cited as clean scale evidence.",
+    "downstream_recommendation": "clean, bounded_requires_rerun, or retire_same_scope_if_repeated.",
+    "honest_verdict": "Terminal summary starting with complete: or blocked:.",
+    "independence_violations": "Reasons Exp5474 cannot be clean headline evidence.",
+    "inference_substrate": "Aggregation-only audit; no local SOTA inference is run.",
+    "metric_graph_nodes": "Classified policy, outcome, baseline, and summary dependency graph.",
+    "metric_independence_clean": "False when policy-score inputs overlap headline outcomes.",
+    "outcome_metric_fields": "Fields that report exact-validator, baseline, or derived outcomes.",
+    "policy_score_fields": "Fields that can affect action or memory-route acceptance.",
+    "retire_same_scope_if_repeated": "Whether a repeated same-scope coupling should retire the lane.",
+    "tautology_flag_resolved": "True only when the prior TAUTOLOGY is adjudicated downstream."
+  },
+  "honest_verdict": "complete: Exp5474 CSL scale headline is bounded, not clean; recommendation=bounded_requires_rerun after policy-score/outcome overlap audit",
+  "independence_violations": [
+    {
+      "detail": "Exp5473 prior_success is populated from Exp5461 condition quality scores, and Exp5474 headline quality/pass-rate fields are computed from the same exact-validator acceptance surface.",
+      "headline_outcome_fields": [
+        "experiment_5474.kan_assured_csl_score",
+        "experiment_5474.exact_validator_pass_rate",
+        "experiment_5474.csl_scale_ready"
+      ],
+      "kind": "policy_outcome_scalar_overlap",
+      "policy_decision_field": "experiment_5473.surrogate_rows.surrogate_accept",
+      "policy_score_field": "experiment_5473.surrogate_rows.features.prior_success",
+      "shared_scalar_family": "condition_metrics.*.quality_score / row.accepted_by_final_authority",
+      "source_artifacts": [
+        "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
+        "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
+      ]
+    },
+    {
+      "detail": "The adversarial backfill observed delta_vs_naive_icl and naive_icl_score at the same scalar value, so the summary must not be treated as clean headline evidence.",
+      "headline_outcome_fields": [
+        "experiment_5474.delta_vs_naive_icl",
+        "experiment_5474.naive_icl_score"
+      ],
+      "kind": "top_level_summary_collision",
+      "policy_score_field": null,
+      "shared_scalar_family": "reported_top_level_scalar_equality",
+      "source_artifacts": [
+        "results/experiment_5474_sota_csl_scale_v497.json"
+      ]
+    }
+  ],
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "metric_graph_nodes": [
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5473.surrogate_rows.surrogate_score",
+        "experiment_5473.surrogate_rows.acceptance_threshold"
+      ],
+      "field": "experiment_5473.surrogate_rows.acceptance_margin",
+      "note": "Score minus threshold.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5473.surrogate_rows.features.conflict_risk",
+        "experiment_5473.surrogate_rows.features.memory_age",
+        "experiment_5473.surrogate_rows.features.constraint_violation_history"
+      ],
+      "field": "experiment_5473.surrogate_rows.acceptance_threshold",
+      "note": "Risk-adjusted policy threshold.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "upstream feature",
+      "depends_on": [
+        "experiment_5461.memory_receipt.negative_transfer_candidate"
+      ],
+      "field": "experiment_5473.surrogate_rows.features.conflict_risk",
+      "note": "Conflict-risk input for memory-route scoring.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "upstream feature",
+      "depends_on": [
+        "experiment_5461.row_results.negative_transfer_detected"
+      ],
+      "field": "experiment_5473.surrogate_rows.features.constraint_violation_history",
+      "note": "Risk input derived from prior unsafe memory behavior.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "upstream feature",
+      "depends_on": [
+        "experiment_5461.row_results.context_cost"
+      ],
+      "field": "experiment_5473.surrogate_rows.features.context_cost",
+      "note": "KAN surrogate cost input.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "upstream feature",
+      "depends_on": [
+        "experiment_5461.memory_receipt.stale_memory_candidate"
+      ],
+      "field": "experiment_5473.surrogate_rows.features.memory_age",
+      "note": "Stale-memory input for memory-route scoring.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "upstream feature",
+      "depends_on": [
+        "experiment_5461.condition_metrics.*.quality_score"
+      ],
+      "field": "experiment_5473.surrogate_rows.features.prior_success",
+      "note": "Policy-score input copied from exact-validator quality score.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "upstream feature",
+      "depends_on": [
+        "experiment_5461.row_results.verifier_cost"
+      ],
+      "field": "experiment_5473.surrogate_rows.features.verifier_cost",
+      "note": "KAN surrogate verifier-cost input.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5473.surrogate_rows.acceptance_margin"
+      ],
+      "field": "experiment_5473.surrogate_rows.surrogate_accept",
+      "note": "Boolean route acceptance from surrogate margin.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5473.surrogate_rows.features.context_cost",
+        "experiment_5473.surrogate_rows.features.verifier_cost",
+        "experiment_5473.surrogate_rows.features.prior_success",
+        "experiment_5473.surrogate_rows.features.conflict_risk",
+        "experiment_5473.surrogate_rows.features.memory_age",
+        "experiment_5473.surrogate_rows.features.constraint_violation_history"
+      ],
+      "field": "experiment_5473.surrogate_rows.surrogate_score",
+      "note": "Additive KAN-style score used for acceptance.",
+      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
+    },
+    {
+      "classification": "derived summary",
+      "depends_on": [
+        "experiment_5474.kan_assured_csl_score",
+        "experiment_5474.exact_validator_pass_rate",
+        "experiment_5474.negative_transfer_deflection_rate"
+      ],
+      "field": "experiment_5474.csl_scale_ready",
+      "note": "Headline readiness gate.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "derived summary",
+      "depends_on": [
+        "experiment_5474.kan_assured_csl_score",
+        "experiment_5474.naive_icl_score"
+      ],
+      "field": "experiment_5474.delta_vs_naive_icl",
+      "note": "Reported KAN minus naive-ICL delta.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "derived summary",
+      "depends_on": [
+        "experiment_5474.kan_assured_csl_score",
+        "experiment_5474.no_memory_score"
+      ],
+      "field": "experiment_5474.delta_vs_no_memory",
+      "note": "Reported KAN minus no-memory delta.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5474.kan_assured_csl_score"
+      ],
+      "field": "experiment_5474.exact_validator_pass_rate",
+      "note": "Alias of the KAN condition exact-validator score.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5474.panel_rows.accepted_by_final_authority"
+      ],
+      "field": "experiment_5474.kan_assured_csl_score",
+      "note": "Exact-validator KAN-assured CSL score.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "baseline outcome",
+      "depends_on": [
+        "experiment_5474.panel_rows.accepted_by_final_authority"
+      ],
+      "field": "experiment_5474.naive_icl_score",
+      "note": "Exact-validator naive-ICL baseline.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5473.negative_transfer_deflection_rate"
+      ],
+      "field": "experiment_5474.negative_transfer_deflection_rate",
+      "note": "Risky memory rows deflected according to exact-validator outcomes.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "baseline outcome",
+      "depends_on": [
+        "experiment_5474.panel_rows.accepted_by_final_authority"
+      ],
+      "field": "experiment_5474.no_memory_score",
+      "note": "Exact-validator no-memory baseline.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5461.row_results.exact_verifier_witness.accepted"
+      ],
+      "field": "experiment_5474.panel_rows.accepted_by_final_authority",
+      "note": "Exact task verifier outcome copied per row.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5474.panel_rows.accepted_by_final_authority"
+      ],
+      "field": "experiment_5474.panel_rows.action_decision.downstream_action_passed",
+      "note": "Downstream action pass derived from exact row acceptance.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5474.panel_rows.memory_decision"
+      ],
+      "field": "experiment_5474.panel_rows.action_decision.selected_answer",
+      "note": "Selected action/answer before final validator aggregation.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5473.surrogate_rows.surrogate_accept",
+        "experiment_5461.row_results.memory_receipt"
+      ],
+      "field": "experiment_5474.panel_rows.memory_decision",
+      "note": "Effective no-memory, naive, or governed-memory route.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5473.surrogate_rows.acceptance_margin"
+      ],
+      "field": "experiment_5474.panel_rows.surrogate_acceptance_margin",
+      "note": "KAN margin copied into Exp5474 rows.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "policy decision",
+      "depends_on": [
+        "experiment_5473.surrogate_rows.acceptance_threshold"
+      ],
+      "field": "experiment_5474.panel_rows.threshold_offset",
+      "note": "Conservative KAN threshold offset copied into Exp5474 rows.",
+      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5475.row_results.exact_validator_results.accepted"
+      ],
+      "field": "experiment_5475.axis_details.conflict_handling.accepted_by_exact_validator",
+      "note": "Independent deterministic replay conflict validator.",
+      "source_artifact": "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5475.row_results.exact_validator_results.accepted"
+      ],
+      "field": "experiment_5475.axis_details.downstream_action_use.accepted_by_exact_validator",
+      "note": "Independent deterministic replay downstream-action validator.",
+      "source_artifact": "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
+    },
+    {
+      "classification": "evaluator outcome",
+      "depends_on": [
+        "experiment_5475.row_results.exact_validator_results.accepted"
+      ],
+      "field": "experiment_5475.axis_details.support_removal.accepted_by_exact_validator",
+      "note": "Independent deterministic replay support-removal validator.",
+      "source_artifact": "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
+    }
+  ],
+  "metric_independence_clean": false,
+  "milestone": "2026.07.499",
+  "outcome_metric_fields": [
+    "experiment_5474.csl_scale_ready",
+    "experiment_5474.delta_vs_naive_icl",
+    "experiment_5474.delta_vs_no_memory",
+    "experiment_5474.exact_validator_pass_rate",
+    "experiment_5474.kan_assured_csl_score",
+    "experiment_5474.naive_icl_score",
+    "experiment_5474.negative_transfer_deflection_rate",
+    "experiment_5474.no_memory_score",
+    "experiment_5474.panel_rows.accepted_by_final_authority",
+    "experiment_5474.panel_rows.action_decision.downstream_action_passed",
+    "experiment_5475.axis_details.conflict_handling.accepted_by_exact_validator",
+    "experiment_5475.axis_details.downstream_action_use.accepted_by_exact_validator",
+    "experiment_5475.axis_details.support_removal.accepted_by_exact_validator"
+  ],
+  "policy_score_fields": [
+    "experiment_5473.surrogate_rows.acceptance_margin",
+    "experiment_5473.surrogate_rows.acceptance_threshold",
+    "experiment_5473.surrogate_rows.features.conflict_risk",
+    "experiment_5473.surrogate_rows.features.constraint_violation_history",
+    "experiment_5473.surrogate_rows.features.context_cost",
+    "experiment_5473.surrogate_rows.features.memory_age",
+    "experiment_5473.surrogate_rows.features.prior_success",
+    "experiment_5473.surrogate_rows.features.verifier_cost",
+    "experiment_5473.surrogate_rows.surrogate_accept",
+    "experiment_5473.surrogate_rows.surrogate_score",
+    "experiment_5474.panel_rows.action_decision.selected_answer",
+    "experiment_5474.panel_rows.memory_decision",
+    "experiment_5474.panel_rows.surrogate_acceptance_margin",
+    "experiment_5474.panel_rows.threshold_offset"
+  ],
+  "random_seed": 5502,
+  "reproducibility_checksum": "sha256:6cd0330e411810353270e29b9e56513c536401e029c03b0ab693a8ef320a8bf2",
+  "research_conductor_modified": false,
+  "retire_same_scope_if_repeated": true,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5502.csl_tautology_static_corrigendum.v499",
+  "source_file_checksums": {
+    "exp5461": "sha256:465d9e8de5afca22def9a46a7d1e8867516742ec8fee9b8b6c37cf1d65590db9",
+    "exp5473": "sha256:7431ddbb25410c26c1138e5cf7951fedb7100c0d8b66651490df362107cfa2e2",
+    "exp5474": "sha256:1aabd00e661d836e36d588d81510a573a61f19e0528412358fb0d8c8312717af",
+    "exp5475": "sha256:198636ba25a725e24aef7fe115ad25d2f82e58886d510b05038b900fb105a7f6",
+    "module": "sha256:db613bb15b91c2ab5f88c5d2c64555efab99f3fcb47e06441b7eed358ed42f83",
+    "spec": "sha256:75d43da219f4ae6086d5643ea65f951b3db54d56d8cff3445a883f13c94afe6d"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py",
+    "spec": "openspec/capabilities/self-learning/spec.md"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5502",
+    "SCENARIO-LEARN-5502-METRIC-GRAPH",
+    "SCENARIO-LEARN-5502-CROSS-CHECK",
+    "SCENARIO-LEARN-5502-ARTIFACT"
+  ],
+  "status": "complete",
+  "task_id": "exp5502-csl-tautology-static-corrigendum-v499",
+  "tautology_flag_resolved": true,
+  "tests_run": []
+}
