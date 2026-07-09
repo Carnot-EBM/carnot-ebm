@@ -20849,3 +20849,122 @@ results and per-row decision-path evidence.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5475 | Planned (`python/carnot/experiment_5475_csl_behavioral_memory_ladder_v497.py`, `results/experiment_5475_csl_behavioral_memory_ladder_v497.json`) | Planned (`tests/python/test_experiment_5475_csl_behavioral_memory_ladder_v497.py`) |
+
+---
+
+## REQ-LEARN-5502: CSL Tautology Static Corrigendum v499
+
+Experiment 5502 SHALL emit a deterministic, aggregation-only corrigendum for
+the Exp5474 CSL scale-up artifact that was backfilled with a critical
+TAUTOLOGY flag. The audit SHALL NOT run local SOTA GGUF inference. It SHALL
+read the upstream Exp5474, Exp5473, Exp5475, and Exp5461 artifacts, reconstruct
+the metric graph, and decide whether Exp5474 is clean prior evidence, bounded
+evidence requiring a same-scope rerun, or evidence that must be retired if the
+same metric coupling repeats.
+
+The metric graph SHALL classify every relevant Exp5474 and upstream metric as
+one of: upstream feature, policy decision, evaluator outcome, baseline outcome,
+or derived summary. Policy-score inputs SHALL include the Exp5473 surrogate
+feature fields, surrogate scores, acceptance thresholds, acceptance margins,
+threshold offsets, and surrogate accept decisions. Outcome fields SHALL include
+Exp5474 exact-validator row outcomes, downstream action outcomes, no-memory and
+naive-ICL baseline scores, KAN-assured CSL score, exact-validator pass rate,
+negative-transfer deflection, and reported deltas.
+
+The audit SHALL fail metric independence if any Exp5474 headline outcome is
+computed from the same scalar family used to select or accept the action or
+memory route. In particular, the audit SHALL detect that Exp5473
+`surrogate_rows.features.prior_success` is sourced from Exp5461
+`condition_metrics.*.quality_score`, while Exp5474 headline quality fields are
+computed from the same exact-validator quality-score surface. The corrigendum
+SHALL also record the adversarial TAUTOLOGY equality between
+`delta_vs_naive_icl` and `naive_icl_score` as an already adjudicated top-level
+summary collision, not as clean headline evidence.
+
+The Exp5473 and Exp5475 cross-check SHALL be explicit. Exp5473 may support a
+bounded statement that exact validators and negative-transfer controls are
+present, but it SHALL NOT independently clean the Exp5474 CSL scale headline
+when its policy-score input reuses quality-score information. Exp5475 may
+support bounded behavioral-memory evidence when support-removal, conflict,
+downstream-action, stale-memory, and exact-validator fields are present and
+final authority is not bypassed.
+
+The result artifact SHALL be
+`results/experiment_5502_csl_tautology_static_corrigendum_v499.json` and SHALL
+include `audited_artifacts`, `metric_graph_nodes`, `policy_score_fields`,
+`outcome_metric_fields`, `independence_violations`,
+`metric_independence_clean`, `tautology_flag_resolved`,
+`csl_scale_headline_allowed`, `downstream_recommendation`,
+`retire_same_scope_if_repeated`, `inference_substrate`, and `honest_verdict`.
+The artifact SHALL set
+`inference_substrate="aggregation_from_upstream_artifacts"`. A non-clean audit
+SHALL set `csl_scale_headline_allowed=false`; when independent behavioral
+support exists but the Exp5474 scale headline is not independent, it SHALL set
+`downstream_recommendation="bounded_requires_rerun"` and
+`retire_same_scope_if_repeated=true`.
+
+The required field principles SHALL be:
+
+- `audited_artifacts`: Exact upstream artifacts read by the static corrigendum.
+- `metric_graph_nodes`: Classified policy, outcome, baseline, and summary dependency graph.
+- `policy_score_fields`: Fields that can affect action or memory-route acceptance.
+- `outcome_metric_fields`: Fields that report exact-validator, baseline, or derived outcomes.
+- `independence_violations`: Reasons Exp5474 cannot be clean headline evidence.
+- `metric_independence_clean`: False when policy-score inputs overlap headline outcomes.
+- `tautology_flag_resolved`: True only when the prior TAUTOLOGY is adjudicated downstream.
+- `csl_scale_headline_allowed`: False unless Exp5474 can be cited as clean scale evidence.
+- `downstream_recommendation`: clean, bounded_requires_rerun, or retire_same_scope_if_repeated.
+- `retire_same_scope_if_repeated`: Whether a repeated same-scope coupling should retire the lane.
+- `inference_substrate`: Aggregation-only audit; no local SOTA inference is run.
+- `honest_verdict`: Terminal summary starting with complete: or blocked:.
+
+### REQ-LEARN-5502 Sub-requirements
+
+- REQ-LEARN-5502-1: The audit SHALL reconstruct and emit metric graph nodes
+  for policy-score inputs, memory/action decisions, exact-validator outcomes,
+  baseline outcomes, and derived summary fields.
+- REQ-LEARN-5502-2: The audit SHALL mark each metric graph node with exactly
+  one classification from upstream feature, policy decision, evaluator
+  outcome, baseline outcome, or derived summary.
+- REQ-LEARN-5502-3: The audit SHALL fail `metric_independence_clean` when a
+  headline outcome depends on the same quality-score scalar family as a
+  policy-score input used in action or memory-route acceptance.
+- REQ-LEARN-5502-4: The Exp5473 and Exp5475 cross-check SHALL distinguish
+  bounded independent behavioral-memory evidence from the blocked Exp5474
+  local SOTA CSL scale headline.
+- REQ-LEARN-5502-5: The artifact SHALL resolve the pending tautology flag by
+  issuing a downstream recommendation without permitting the Exp5474 CSL scale
+  headline.
+
+### SCENARIO-LEARN-5502-METRIC-GRAPH: Policy Scores Stay Separate From Outcomes
+
+**Given** Exp5474 and its Exp5473 assurance source are present
+**When** the static corrigendum reconstructs metric dependencies
+**Then** policy-score fields and outcome metric fields SHALL be listed
+separately
+**And** reuse of `condition_metrics.*.quality_score` through
+`surrogate_rows.features.prior_success` SHALL be reported as an independence
+violation for Exp5474 headline quality outcomes.
+
+### SCENARIO-LEARN-5502-CROSS-CHECK: Behavioral Memory Evidence Is Bounded
+
+**Given** Exp5475 contains support-removal, conflict-handling,
+downstream-action, stale-memory, and exact-validator replay fields
+**When** Exp5502 cross-checks the CSL evidence
+**Then** those fields SHALL count as bounded independent behavioral-memory
+support
+**And** they SHALL NOT permit the Exp5474 CSL scale headline.
+
+### SCENARIO-LEARN-5502-ARTIFACT: Corrigendum Recommendation Is Deterministic
+
+**Given** the audited upstream artifacts are unchanged
+**When** Exp5502 writes its deliverable JSON
+**Then** the required fields SHALL be stable under replay
+**And** the terminal recommendation SHALL be `bounded_requires_rerun` with
+`retire_same_scope_if_repeated=true`.
+
+## Implementation Status (Exp 5502)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5502 | Planned (`python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py`, `results/experiment_5502_csl_tautology_static_corrigendum_v499.json`) | Planned (`tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py`) |
