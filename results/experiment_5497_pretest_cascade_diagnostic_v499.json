@@ -1,0 +1,346 @@
+{
+  "commands_run": [
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "interrupted_after_reproducing_unrelated_full_suite_failures",
+      "summary": "7 failed, 7922 passed, 7 skipped, 114 warnings in 300.17s before KeyboardInterrupt; native Z3 worker crash observed; this is broader than the conductor smart-subset pretest"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py tests/python/test_experiment_5496_transition_v499.py -q --no-header -n 0 --no-cov -o addopts=",
+      "outcome": "passed",
+      "summary": "86 passed, 1 warning in 8.73s"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py -q --no-cov",
+      "outcome": "failed_before_module",
+      "summary": "ImportError: cannot import name experiment_5497_pretest_cascade_diagnostic_v499 from carnot"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py -q --no-cov",
+      "outcome": "passed",
+      "summary": "5 passed in 4.10s"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5497_pretest_cascade_diagnostic_v499.py -m pytest tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py -q --no-cov -n 0",
+      "outcome": "passed",
+      "summary": "5 passed; coverage data collected for new module only"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5497_pretest_cascade_diagnostic_v499.py --fail-under=100",
+      "outcome": "passed",
+      "summary": "119 statements, 0 missing, 100% coverage"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5497_pretest_cascade_diagnostic_v499.py tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py",
+      "outcome": "passed",
+      "summary": "All checks passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_5497_pretest_cascade_diagnostic_v499.py tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py",
+      "outcome": "passed",
+      "summary": "2 files already formatted"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py tests/python/test_experiment_5496_transition_v499.py tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py -q --no-header -n 0 --no-cov -o addopts=",
+      "outcome": "passed",
+      "summary": "91 passed, 1 warning in 9.25s"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed_pre_existing_backlog",
+      "summary": "1262 test(s) missing spec traceability; new Exp5497 tests include REQ/SCENARIO refs"
+    }
+  ],
+  "conductor_unchanged": true,
+  "direct_pretest_skip_count": 4,
+  "downstream_gate_block_count": 4,
+  "downstream_gate_recommendation": "open_downstream_pretest_gate: current conductor smart subset is green; do not treat the unrelated expanded full-suite failures as this .498 cascade",
+  "experiment": "experiment_5497_pretest_cascade_diagnostic_v499",
+  "experiment_id": "exp5497-pretest-cascade-diagnostic-v499",
+  "failure_class": "historical_smart_subset_single_test_failure_unreproducible_current_green_node_not_logged",
+  "failure_taxonomy": [
+    "test_isolation_or_environment_state",
+    "historical_unreproducible_on_current_smart_subset",
+    "no_op_repair_current_gate_green",
+    "historical_pretest_skip_cascade",
+    "conductor_observability_gap_missing_failing_node",
+    "downstream_gate_blocked_by_missing_upstream_artifacts",
+    "not_conductor_code_change"
+  ],
+  "field_principles": {
+    "commands_run": "Commands actually run to reproduce or clear the pretest surface.",
+    "conductor_unchanged": "Protected-file check for scripts/research_conductor.py.",
+    "downstream_gate_recommendation": "Machine-readable recommendation for tasks gated on Exp5497.",
+    "failure_class": "Compact class for the observed historical/current pretest state.",
+    "failure_taxonomy": "List of root-cause buckets supported by local evidence.",
+    "files_changed": "Files intentionally changed by the Exp5497 diagnostic task.",
+    "honest_verdict": "Terminal summary starting with complete: or blocked:.",
+    "inference_substrate": "Aggregation only; no hidden live model, solver, or hardware run.",
+    "pretest_cascade_resolved": "Boolean gate consumed by downstream .499 tasks.",
+    "reproduced_pretest_failure": "Whether the relevant pretest command still fails in this checkout.",
+    "roadmap_yaml_unchanged": "Protected-file check for research-roadmap.yaml.",
+    "skipped_tasks_audited": "Every .498 task row tied to the pretest cascade or direct downstream gate block."
+  },
+  "files_changed": [
+    "openspec/capabilities/research-reporting/spec.md",
+    "python/carnot/experiment_5497_pretest_cascade_diagnostic_v499.py",
+    "tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py",
+    "results/experiment_5497_pretest_cascade_diagnostic_v499.json"
+  ],
+  "honest_verdict": "complete: .498 pretest cascade audited; historical single-test smart-subset failure no longer reproduces, no conductor edit was made, and downstream pretest gate may open with full-suite caveats.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "last_visible_failing_test_summary": "1 failed, 86 passed, 1 warning in 8.95s",
+  "milestone": "2026.07.499",
+  "minimal_repair_or_noop_rationale": "No non-conductor source/test repair was applied because the exact conductor smart subset is currently green and the .498 log does not preserve a failing node id.",
+  "pretest_cascade_resolved": true,
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:52045d4075d23dde89d27d1b05a41be4c63cc04e65189fbc527f477995fe9914"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "random_seed": 5497,
+  "reproduced_pretest_failure": false,
+  "reproducibility_checksum": "sha256:d088056687740c0959924022eebe3497eabfb49b8d75231019b321cf66a2cd2d",
+  "result_path": "results/experiment_5497_pretest_cascade_diagnostic_v499.json",
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5497.pretest_cascade_diagnostic_v499.v1",
+  "skipped_tasks_audited": [
+    {
+      "attempt_count": 3,
+      "cascade_role": "direct_pretest_skip",
+      "evidence": [
+        "| 2026-07-09 13:24 UTC | Execution-time 2025-2026 source delta for .498 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 13.09s |",
+        "| 2026-07-09 13:27 UTC | Execution-time 2025-2026 source delta for .498 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 9.51s |",
+        "| 2026-07-09 13:29 UTC | Execution-time 2025-2026 source delta for .498 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 9.02s |"
+      ],
+      "expected_artifact": "results/experiment_5483_source_delta_v498.json",
+      "experiment_id": "exp5483-source-delta-v498",
+      "last_detail": "Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 9.02s",
+      "statuses": [
+        "SKIP",
+        "SKIP",
+        "SKIP"
+      ],
+      "title_fragment": "source delta for .498"
+    },
+    {
+      "attempt_count": 3,
+      "cascade_role": "direct_pretest_skip",
+      "evidence": [
+        "| 2026-07-09 13:32 UTC | CSL tautology corrigendum and metric-independence  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.87s |",
+        "| 2026-07-09 13:34 UTC | CSL tautology corrigendum and metric-independence  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.78s |",
+        "| 2026-07-09 13:36 UTC | CSL tautology corrigendum and metric-independence  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.27s |"
+      ],
+      "expected_artifact": "results/experiment_5484_csl_tautology_corrigendum_v498.json",
+      "experiment_id": "exp5484-csl-tautology-corrigendum-v498",
+      "last_detail": "Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.27s",
+      "statuses": [
+        "SKIP",
+        "SKIP",
+        "SKIP"
+      ],
+      "title_fragment": "csl tautology corrigendum"
+    },
+    {
+      "attempt_count": 3,
+      "cascade_role": "direct_pretest_skip",
+      "evidence": [
+        "| 2026-07-09 13:38 UTC | Preference-MaxSAT typed claim-state fixture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.26s |",
+        "| 2026-07-09 13:41 UTC | Preference-MaxSAT typed claim-state fixture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.71s |",
+        "| 2026-07-09 13:43 UTC | Preference-MaxSAT typed claim-state fixture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.55s |"
+      ],
+      "expected_artifact": "results/experiment_5485_preference_maxsat_claim_fixture_v498.json",
+      "experiment_id": "exp5485-preference-maxsat-claim-fixture-v498",
+      "last_detail": "Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.55s",
+      "statuses": [
+        "SKIP",
+        "SKIP",
+        "SKIP"
+      ],
+      "title_fragment": "preference-maxsat typed claim-state fixture"
+    },
+    {
+      "attempt_count": 3,
+      "cascade_role": "downstream_retired_upstream_gate",
+      "evidence": [
+        "| 2026-07-09 13:45 UTC | Gated local SOTA concept evidence telemetry panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+        "| 2026-07-09 13:47 UTC | Gated local SOTA concept evidence telemetry panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |",
+        "| 2026-07-09 13:50 UTC | Gated local SOTA concept evidence telemetry panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498 |"
+      ],
+      "expected_artifact": "results/experiment_5486_sota_concept_evidence_panel_v498.json",
+      "experiment_id": "exp5486-gated-sota-concept-evidence-panel-v498",
+      "last_detail": "Pre-emptive skip: upstream retired (exp5485-preference-maxsat-claim-fixture-v498",
+      "statuses": [
+        "GATE_BLOCK",
+        "GATE_BLOCK",
+        "GATE_BLOCK"
+      ],
+      "title_fragment": "gated local sota concept evidence telemetry panel"
+    },
+    {
+      "attempt_count": 3,
+      "cascade_role": "direct_pretest_skip",
+      "evidence": [
+        "| 2026-07-09 13:45 UTC | Natural-language helper-contract repair for determ | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 7.94s |",
+        "| 2026-07-09 13:48 UTC | Natural-language helper-contract repair for determ | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.73s |",
+        "| 2026-07-09 13:50 UTC | Natural-language helper-contract repair for determ | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.95s |"
+      ],
+      "expected_artifact": "results/experiment_5487_helper_contract_nl_spec_repair_v498.json",
+      "experiment_id": "exp5487-helper-contract-nl-spec-repair-v498",
+      "last_detail": "Pre-tests failing, self-heal failed: 1 failed, 86 passed, 1 warning in 8.95s",
+      "statuses": [
+        "SKIP",
+        "SKIP",
+        "SKIP"
+      ],
+      "title_fragment": "natural-language helper-contract repair"
+    },
+    {
+      "attempt_count": 3,
+      "cascade_role": "downstream_retired_upstream_gate",
+      "evidence": [
+        "| 2026-07-09 13:52 UTC | Gated CSL latent exploration replay with independe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:54 UTC | Gated CSL latent exploration replay with independe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:56 UTC | Gated CSL latent exploration replay with independe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |"
+      ],
+      "expected_artifact": "results/experiment_5488_csl_latent_exploration_replay_v498.json",
+      "experiment_id": "exp5488-csl-latent-exploration-replay-v498",
+      "last_detail": "Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498)",
+      "statuses": [
+        "GATE_BLOCK",
+        "GATE_BLOCK",
+        "GATE_BLOCK"
+      ],
+      "title_fragment": "gated csl latent exploration replay"
+    },
+    {
+      "attempt_count": 3,
+      "cascade_role": "downstream_retired_upstream_gate",
+      "evidence": [
+        "| 2026-07-09 13:52 UTC | Gated local SOTA CSL scale-up with independent met | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:54 UTC | Gated local SOTA CSL scale-up with independent met | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |",
+        "| 2026-07-09 13:56 UTC | Gated local SOTA CSL scale-up with independent met | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |"
+      ],
+      "expected_artifact": "results/experiment_5489_sota_csl_independent_metrics_v498.json",
+      "experiment_id": "exp5489-gated-sota-csl-independent-metrics-v498",
+      "last_detail": "Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498)",
+      "statuses": [
+        "GATE_BLOCK",
+        "GATE_BLOCK",
+        "GATE_BLOCK"
+      ],
+      "title_fragment": "gated local sota csl scale-up"
+    },
+    {
+      "attempt_count": 3,
+      "cascade_role": "downstream_missing_upstream_gate",
+      "evidence": [
+        "| 2026-07-09 13:52 UTC | CSL KAN fixed-point update ledger for hardware-com | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+        "| 2026-07-09 13:54 UTC | CSL KAN fixed-point update ledger for hardware-com | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |",
+        "| 2026-07-09 13:56 UTC | CSL KAN fixed-point update ledger for hardware-com | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |"
+      ],
+      "expected_artifact": "results/experiment_5490_csl_kan_fixed_point_update_ledger_v498.json",
+      "experiment_id": "exp5490-csl-kan-fixed-point-update-ledger-v498",
+      "last_detail": "1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498",
+      "statuses": [
+        "GATE_BLOCK",
+        "GATE_BLOCK",
+        "GATE_BLOCK"
+      ],
+      "title_fragment": "csl kan fixed-point update ledger"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:d515f65a98ff801f0e065583b9da90aa6355dfa1425086a85d45cec52bf2b4d2"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:4bc8614cbbdd007c64dc7c423f135e8a1bd017aadb9af7e5ae43e72449497d36"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:758ad7dcace806c82e49d4baec525754eff45f0263ce0980070001d57de8d110"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:52045d4075d23dde89d27d1b05a41be4c63cc04e65189fbc527f477995fe9914"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "scripts/conductor_gates.py",
+      "read_only": true,
+      "sha256": "sha256:e7e1a1e848e59530439809517f6772a85dcfa53c14592bf9906f5cbff01014d7"
+    },
+    {
+      "exists": true,
+      "path": "tests/python",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "python/carnot",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5497",
+    "SCENARIO-REPORT-5497",
+    "SCENARIO-REPORT-5497-BLOCKED-CURRENT-PRETEST"
+  ],
+  "status": "complete"
+}

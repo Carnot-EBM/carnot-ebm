@@ -38861,3 +38861,64 @@ available evidence visible, keeps `roadmap_yaml_unchanged` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5496 | Planned (`python/carnot/experiment_5496_transition_v499.py`, `results/experiment_5496_transition_v499.json`) | Planned (`tests/python/test_experiment_5496_transition_v499.py`) |
+
+### REQ-REPORT-5497: Diagnose .498 Pretest Cascade And Emit Downstream Gate Receipt
+
+The Exp5497 workflow SHALL write
+`results/experiment_5497_pretest_cascade_diagnostic_v499.json` from local
+conductor, roadmap, source, and test evidence only. It SHALL read
+`AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `ops/conductor-log.md`,
+`ops/changelog.md`, `ops/status.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present, `scripts/conductor_gates.py`,
+`tests/python`, and `python/carnot`. It SHALL NOT modify
+`scripts/research_conductor.py` and SHALL NOT modify `research-roadmap.yaml`.
+
+The workflow SHALL parse the `.498` conductor log rows that contain
+`Pre-tests failing, self-heal failed` or direct downstream gate blocks caused by
+the same missing upstream artifacts. It SHALL list every audited skipped or
+gate-blocked `.498` task, including direct pretest-skipped tasks and downstream
+tasks skipped by retired or missing upstream artifacts. It SHALL record the last
+visible failing test summary from the conductor log and SHALL distinguish a
+currently reproduced failure from a historical failure that no longer
+reproduces on the conductor smart-subset command. When the historical failure
+does not reproduce and the relevant smart subset is green, the workflow SHALL
+emit a no-op diagnostic receipt rather than changing conductor code.
+
+The artifact SHALL include required fields `skipped_tasks_audited`,
+`reproduced_pretest_failure`, `failure_class`, `failure_taxonomy`,
+`files_changed`, `commands_run`, `pretest_cascade_resolved`,
+`downstream_gate_recommendation`, `roadmap_yaml_unchanged`,
+`conductor_unchanged`, `inference_substrate`, and `honest_verdict`.
+
+#### SCENARIO-REPORT-5497: Current Smart Subset Clears Historical .498 Cascade
+
+**Given** the `.498` conductor log contains repeated direct pretest SKIPs and
+downstream gate-blocked rows
+**And** the same conductor smart-subset pretest surface is currently green
+**When** the Exp5497 diagnostic workflow runs
+**Then** it writes
+`results/experiment_5497_pretest_cascade_diagnostic_v499.json`, lists every
+audited `.498` skipped or gate-blocked task, records
+`reproduced_pretest_failure=false`, classifies the failure as a historical
+unreproduced smart-subset failure with no persisted failing node, sets
+`pretest_cascade_resolved=true`, recommends opening downstream gates with a
+full-suite caveat, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and leaves
+`research-roadmap.yaml` and `scripts/research_conductor.py` unchanged.
+
+#### SCENARIO-REPORT-5497-BLOCKED-CURRENT-PRETEST: Current Smart Subset Still Fails
+
+**Given** the `.498` conductor log contains repeated direct pretest SKIPs
+**And** the reproduced conductor smart-subset command still fails
+**When** the Exp5497 diagnostic workflow runs
+**Then** it writes a terminal diagnostic artifact with
+`reproduced_pretest_failure=true`, sets `pretest_cascade_resolved=false`,
+records the current command result in `commands_run`, keeps
+`roadmap_yaml_unchanged` and `conductor_unchanged` truthful, and does not edit
+`scripts/research_conductor.py` or `research-roadmap.yaml`.
+
+## Implementation Status (REQ-REPORT-5497)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5497 | Planned (`python/carnot/experiment_5497_pretest_cascade_diagnostic_v499.py`, `results/experiment_5497_pretest_cascade_diagnostic_v499.json`) | Planned (`tests/python/test_experiment_5497_pretest_cascade_diagnostic_v499.py`) |
