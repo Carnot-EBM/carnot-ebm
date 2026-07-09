@@ -208,7 +208,9 @@ def encoder_forward_with_h(
     for r in range(GRID_SIZE):
         for c in range(GRID_SIZE):
             patch = padded[:, r : r + 3, c : c + 3]
-            out[:, r, c] = (encoder.conv_W * patch[None, :, :, :]).sum(axis=(1, 2, 3)) + encoder.conv_b
+            out[:, r, c] = (encoder.conv_W * patch[None, :, :, :]).sum(
+                axis=(1, 2, 3)
+            ) + encoder.conv_b
     out = np.tanh(out)
     flat = out.reshape(-1)  # (400,)
     h = np.tanh(encoder.fc1_W @ flat + encoder.fc1_b)  # (24,)
@@ -321,20 +323,16 @@ def cd1_update(
 
     z_pos_arr = np.asarray(z_pos, dtype=np.float32).flatten()
     z_neg_arr = np.asarray(z_neg, dtype=np.float32).flatten()
-    grad_fc2_W_pos = np.outer(
-        dL_dz_pos * (1.0 - z_pos_arr ** 2), encoder_h_pos
-    ).astype(np.float32)
-    grad_fc2_W_neg = np.outer(
-        dL_dz_neg * (1.0 - z_neg_arr ** 2), encoder_h_neg
-    ).astype(np.float32)
-    grad_fc2_b_pos = (dL_dz_pos * (1.0 - z_pos_arr ** 2)).astype(np.float32)
-    grad_fc2_b_neg = (dL_dz_neg * (1.0 - z_neg_arr ** 2)).astype(np.float32)
-    encoder.fc2_W = (
-        encoder.fc2_W - learning_rate * (grad_fc2_W_pos + grad_fc2_W_neg)
-    ).astype(np.float32)
-    encoder.fc2_b = (
-        encoder.fc2_b - learning_rate * (grad_fc2_b_pos + grad_fc2_b_neg)
-    ).astype(np.float32)
+    grad_fc2_W_pos = np.outer(dL_dz_pos * (1.0 - z_pos_arr**2), encoder_h_pos).astype(np.float32)
+    grad_fc2_W_neg = np.outer(dL_dz_neg * (1.0 - z_neg_arr**2), encoder_h_neg).astype(np.float32)
+    grad_fc2_b_pos = (dL_dz_pos * (1.0 - z_pos_arr**2)).astype(np.float32)
+    grad_fc2_b_neg = (dL_dz_neg * (1.0 - z_neg_arr**2)).astype(np.float32)
+    encoder.fc2_W = (encoder.fc2_W - learning_rate * (grad_fc2_W_pos + grad_fc2_W_neg)).astype(
+        np.float32
+    )
+    encoder.fc2_b = (encoder.fc2_b - learning_rate * (grad_fc2_b_pos + grad_fc2_b_neg)).astype(
+        np.float32
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -440,7 +438,7 @@ def _acceptance_rate_sublinear(rates: Sequence[float]) -> bool:
     slope_second = np.polyfit(x_second, second, 1)[0]
     if slope_first <= 0.0:
         # No growth in the first half — second half must not grow much either.
-        return slope_second <= GATE3_AUTOCATALYTIC_SLOPE_RATIO * 1e-3
+        return bool(slope_second <= GATE3_AUTOCATALYTIC_SLOPE_RATIO * 1e-3)
     return bool(slope_second <= GATE3_AUTOCATALYTIC_SLOPE_RATIO * slope_first)
 
 
@@ -466,9 +464,7 @@ def _energy_decrease_pct(energies_accepted: Sequence[float]) -> float:
     return float((e_start - e_end) / abs(e_start))
 
 
-def _spectral_norm_growth_rate(
-    spectral_norms: Sequence[tuple[int, float]]
-) -> float:
+def _spectral_norm_growth_rate(spectral_norms: Sequence[tuple[int, float]]) -> float:
     """Linear-fit slope of spectral norm vs query index.
 
     Phase 5-B records ``(query_index, spectral_norm)`` every 50 queries.
@@ -523,9 +519,7 @@ def run_phase5b_training_loop(
     # Frozen oracle set, sampled BEFORE training begins so that the
     # gate-5 measurement compares apples to apples.
     oracle_rng = np.random.default_rng(seed + 99)
-    oracle_puzzles = [
-        generate_random_5x5_puzzle(oracle_rng) for _ in range(oracle_puzzle_count)
-    ]
+    oracle_puzzles = [generate_random_5x5_puzzle(oracle_rng) for _ in range(oracle_puzzle_count)]
     oracle_accuracy_initial = evaluate_oracle(encoder, refiner, oracle_puzzles)
 
     diag = TrajectoryDiagnostics()
@@ -682,7 +676,7 @@ def build_phase5b_artifact(
         return {
             "experiment": "1223_phase5b_insitu_training_loop",
             "schema_version": SCHEMA_VERSION,
-            "run_date": _dt.datetime.now(_dt.timezone.utc).isoformat(),
+            "run_date": _dt.datetime.now(_dt.UTC).isoformat(),
             "seed": int(seed),
             "learning_rate_used": float(learning_rate_used),
             "proposal_learning_rate": float(PROPOSAL_LEARNING_RATE),
@@ -714,7 +708,7 @@ def build_phase5b_artifact(
     artifact = {
         "experiment": "1223_phase5b_insitu_training_loop",
         "schema_version": SCHEMA_VERSION,
-        "run_date": _dt.datetime.now(_dt.timezone.utc).isoformat(),
+        "run_date": _dt.datetime.now(_dt.UTC).isoformat(),
         "seed": int(seed),
         "learning_rate_used": float(learning_rate_used),
         "proposal_learning_rate": float(PROPOSAL_LEARNING_RATE),

@@ -38636,3 +38636,91 @@ the honest verdict remains terminal without manufacturing a headline win.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5481 | Implemented (`python/carnot/experiment_5481_capstone_v497.py`, `results/experiment_5481_capstone_v497.json`) | Implemented (`tests/python/test_experiment_5481_capstone_v497.py`) |
+
+### REQ-REPORT-5482: Archive .497 Facts And Emit .498 Transition Receipt
+
+The Exp5482 workflow SHALL write
+`results/experiment_5482_transition_v498.json` from prior milestone artifacts
+only. It SHALL read `CLAUDE.md`, `CODEX.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/changelog.md`,
+`ops/status.md`, `ops/conductor-log.md`,
+`results/experiment_5481_capstone_v497.json`,
+`results/experiment_5474_sota_csl_scale_v497.json`, and
+`results/experiment_5480_arc_live_salience_levelup_v497.json`. It SHALL record
+the CalVer transition from `2026.07.497` to `2026.07.498`, SHALL record prior
+task range `exp5468-exp5481`, SHALL record next task range
+`exp5482-exp5495`, SHALL NOT modify `research-roadmap.yaml`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The workflow SHALL summarize only facts present in the upstream artifacts. It
+SHALL carry forward clean or bounded-clean lanes for rewrite-state guards,
+guard composition, SOTA evidence telemetry, KAN assurance, behavioral memory,
+helper repair, p-bit/p-dit boundary exchange, and hardware receipts. It SHALL
+separately preserve blocked lanes, bounded lanes, honest-null lanes, and
+flagged lanes. It SHALL explicitly record that Exp5474 was adversarially
+flagged with critical `TAUTOLOGY` even though that artifact reported
+`csl_scale_ready=true`, and SHALL set
+`exp5474_tautology_flag_recorded=true` only when both sides of that fact are
+observed. It SHALL keep guided decoding quarantined, SHALL record ARC `sb26`
+L3 as no-bank when Exp5480 reports no reproduction, SHALL record KV260 and
+GateMate board blocks from hardware receipt evidence, and SHALL preserve
+`hardware_speedup_claim=false` without making a speedup claim.
+
+The artifact SHALL include required fields `milestone`,
+`previous_milestone`, `prior_capstone_path`, `previous_task_range`,
+`clean_lanes`, `bounded_lanes`, `blocked_lanes`, `honest_null_lanes`,
+`flagged_lanes`, `exp5474_tautology_flag_recorded`, `next_task_range`,
+`roadmap_yaml_unchanged`, `conductor_unchanged`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `milestone`: principle "route key for the new .498 transition receipt."
+- `previous_milestone`: principle "source milestone whose terminal facts are being archived."
+- `prior_capstone_path`: principle "exact .497 capstone artifact used as the main source of truth."
+- `previous_task_range`: principle "closed .497 conductor range."
+- `clean_lanes`: principle "prior lanes that can be carried forward with their stated boundaries."
+- `bounded_lanes`: principle "useful evidence that remains claim-limited in the .497 capstone."
+- `blocked_lanes`: principle "quarantined or unreachable lanes that must not be promoted."
+- `honest_null_lanes`: principle "executed lanes that produced no positive bankable result."
+- `flagged_lanes`: principle "adversarially flagged evidence that must be repaired before headline use."
+- `exp5474_tautology_flag_recorded`: principle "bare boolean proving the CSL scale tautology caveat was seen."
+- `next_task_range`: principle "planned .498 conductor range."
+- `roadmap_yaml_unchanged`: principle "protected-file check for research-roadmap.yaml."
+- `conductor_unchanged`: principle "protected-file check for scripts/research_conductor.py."
+- `inference_substrate`: principle "aggregation only; no hidden live inference or hardware run."
+- `honest_verdict`: principle "terminal summary starting with complete: or blocked:."
+
+#### SCENARIO-REPORT-5482: Complete .498 Transition Uses .497 Terminal Evidence
+
+**Given** the Exp5481 capstone, Exp5474 CSL scale artifact, and Exp5480 ARC
+artifact are readable
+**And** the active roadmap or vNEXT document names milestone `2026.07.498`
+**When** the Exp5482 transition workflow runs
+**Then** it writes `results/experiment_5482_transition_v498.json`, records
+`previous_milestone=2026.07.497`, records
+`prior_capstone_path=results/experiment_5481_capstone_v497.json`, records
+`previous_task_range=exp5468-exp5481`, records
+`next_task_range=exp5482-exp5495`, preserves the requested clean, bounded,
+blocked, honest-null, and flagged lanes, records the Exp5474 critical
+`TAUTOLOGY` flag alongside `csl_scale_ready=true`, declares
+`aggregation_from_upstream_artifacts`, and leaves the active roadmap and
+conductor unchanged.
+
+#### SCENARIO-REPORT-5482-BLOCKED-INPUT: Missing Or Dirty Inputs Fail Closed
+
+**Given** a required upstream artifact is missing or mismatched, Exp5474 no
+longer exposes the critical `TAUTOLOGY` flag while still reporting CSL scale
+readiness, the `.498` roadmap context is missing, or a protected file is dirty
+**When** the Exp5482 transition workflow runs
+**Then** it writes a terminal `blocked:` transition artifact, records the failed
+preconditions, keeps flagged and honest-null evidence visible, keeps
+`roadmap_yaml_unchanged` and `conductor_unchanged` truthful, and does not repair
+or edit `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5482)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5482 | Planned (`python/carnot/experiment_5482_transition_v498.py`, `results/experiment_5482_transition_v498.json`) | Planned (`tests/python/test_experiment_5482_transition_v498.py`) |
