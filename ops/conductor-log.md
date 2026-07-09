@@ -10655,3 +10655,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 13:56 UTC | Gated local SOTA CSL scale-up with independent met | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5484-csl-tautology-corrigendum-v498) |
 | 2026-07-09 13:56 UTC | CSL KAN fixed-point update ledger for hardware-com | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5488-csl-latent-exploration-replay-v498 |
 | 2026-07-09 14:10 UTC | Active-constraint subproblem descriptors for p-bit | OK | 88 passed, 1 warning in 10.87s |
+| 2026-07-09 14:27 UTC | Gated hardware receipt continuation after Exp5491 | OK | 88 passed, 1 warning in 11.09s |
