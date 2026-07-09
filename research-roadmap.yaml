@@ -1,29 +1,29 @@
-milestone: "2026.07.495"
-milestone_title: "Verifier-Potential Generation, Governed Online Memory, and Solver-Authoritative Hardware Boundaries"
+milestone: "2026.07.496"
+milestone_title: "Tautology-Clean Guided Decoding, Distortion Guards, Governed CSL Policy, and ARC Perception Integrity"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp5441-transition-v495
-    milestone: "2026.07.495"
-    title: "Transition .494 outcomes into .495 execution context"
+  - id: exp5454-transition-v496
+    milestone: "2026.07.496"
+    title: "Transition .495 outcomes into .496 execution context"
     priority: critical
     track: planning
-    deliverable: results/experiment_5441_transition_v495.json
+    deliverable: results/experiment_5454_transition_v496.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 30
     estimated_wall_time_min: 20
     prior_failures:
-      - experiment_id: exp5440-capstone-v494
-        verdict: "complete: .494 capstone emitted from actual artifacts; structured corrigendum and taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress are headline-ready; active constraints, p-bit timing, and KAN ontology certificates are bounded; ARC no-bank keeps the north-star count unchanged; no hardware speedup is claimed; token/internal lane closed."
-        addressed_by: "This is the routine next-milestone transition from .494 to .495 and carries terminal facts forward rather than rerunning the capstone."
+      - experiment_id: exp5453-capstone-v495
+        verdict: "complete: .495 capstone emitted from actual artifacts; verifier-potential fixtures, AST/KB witnesses, governed CSL, memory stress, and PRD gap synthesis are headline-ready; local SOTA decoding is blocked by adversarial tautology flags; active/p-bit, hardware receipts, and KAN certificates are bounded; ARC no-bank, no hardware speedup, and token/internal lane closed."
+        addressed_by: "This is the routine next-milestone transition from .495 to .496 and carries terminal facts forward rather than rerunning the capstone."
         retire_if_same_verdict: true
-      - experiment_id: exp5428-transition-v494
-        verdict: "complete: archived .493 terminal evidence into .494 transition receipt; closed lanes are evidence-reliance CSL and gated CSL promotion; partial lanes are active-constraint LNS scale, p-bit hardware-transfer preflight, comparable hardware timing, and KAN measurement-access certificates; blocked lanes are structured risk/prefix adversarial tautology flags and token/internal features; honest-null lanes are lf52 L3 ARC no-bank and no hardware speedup; next_task_range=exp5428-exp5440."
-        addressed_by: "This transition targets the newer .494 artifact set and increments the CalVer sequence to 2026.07.495."
+      - experiment_id: exp5441-transition-v495
+        verdict: "complete: archived .494 terminal evidence into .495 transition receipt with next_task_range exp5441-exp5453."
+        addressed_by: "This transition targets the newer .495 artifact set and increments the CalVer sequence to 2026.07.496."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are starting milestone 2026.07.495 on {date} after all 2026.07.494 tasks completed. The planner has staged {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml. Your job is to archive the prior milestone facts into a transition receipt, not to re-plan the milestone.
+      You are starting milestone 2026.07.496 on {date} after all 2026.07.495 tasks completed. The planner has staged {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml. Your job is to archive the prior milestone facts into a transition receipt, not to re-plan the milestone.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -33,57 +33,57 @@ tasks:
       - {project_root}/ops/changelog.md
       - {project_root}/ops/status.md
       - {project_root}/ops/conductor-log.md
-      - {project_root}/results/experiment_5440_capstone_v494.json
-      - {project_root}/results/experiment_5439_prd_gap_agent_failure_table_v494.json
+      - {project_root}/results/experiment_5453_capstone_v495.json
+      - {project_root}/results/experiment_5452_prd_gap_agent_failure_table_v495.json
 
       TASK:
-      Emit results/experiment_5441_transition_v495.json summarizing the exact .494 terminal evidence and the .495 execution gates.
+      Emit results/experiment_5454_transition_v496.json summarizing exact .495 terminal evidence and .496 execution gates.
 
       CONCRETE STEPS:
-      1. Read the listed files and extract .494 facts from real artifacts, especially Exp5440.
-      2. Record the CalVer transition to 2026.07.495 and the expected task range exp5441-exp5453.
-      3. Summarize .494 headline-ready lanes: structured corrigendum/taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress.
-      4. Summarize .494 bounded lanes: active-constraint diversity LNS, p-bit/PolarFire timing, and KAN ontology certificates.
-      5. Summarize .494 blocked/honest-null lanes: ARC no-bank on cn04 L4, no hardware speedup, and token/internal lanes closed.
+      1. Read the listed files and extract .495 facts from real artifacts, especially Exp5453.
+      2. Record the CalVer transition to 2026.07.496 and the expected task range exp5454-exp5467.
+      3. Summarize headline-ready lanes: verifier-potential fixtures, AST/KB witnesses, governed CSL, memory stress, and PRD gap synthesis.
+      4. Summarize bounded lanes: active/p-bit bridge, hardware receipts, KAN certificates, and no hardware speedup.
+      5. Summarize blocked/honest-null lanes: Exp5444 adversarial tautology, ARC ka59 L2 no-bank, token/internal lanes closed.
       6. Confirm that research-roadmap.yaml and scripts/research_conductor.py were not modified.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - milestone: 2026.07.495  # principle: conductor route key
-         - previous_milestone: 2026.07.494  # principle: traceability
-         - prior_capstone_path: results/experiment_5440_capstone_v494.json  # principle: provenance
-         - previous_task_range: exp5428-exp5440  # principle: closed execution boundary
-         - closed_lanes: list  # principle: positive evidence boundary
-         - partial_lanes: list  # principle: bounded evidence boundary
-         - blocked_lanes: list  # principle: no unsupported claims
-         - honest_null_lanes: list  # principle: null-result honesty
-         - next_task_range: exp5441-exp5453  # principle: activation sanity
-         - roadmap_yaml_unchanged: bool  # principle: user prohibition
-         - conductor_unchanged: bool  # principle: user prohibition
-         - inference_substrate: aggregation_from_upstream_artifacts  # principle: no hidden live model inference
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+         - milestone: 2026.07.496
+         - previous_milestone: 2026.07.495
+         - prior_capstone_path: results/experiment_5453_capstone_v495.json
+         - previous_task_range: exp5441-exp5453
+         - closed_lanes: list
+         - partial_lanes: list
+         - blocked_lanes: list
+         - honest_null_lanes: list
+         - next_task_range: exp5454-exp5467
+         - roadmap_yaml_unchanged: bool
+         - conductor_unchanged: bool
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5442-source-delta-v495
-    milestone: "2026.07.495"
-    title: "Execution-time 2025-2026 source delta for .495"
+  - id: exp5455-source-delta-v496
+    milestone: "2026.07.496"
+    title: "Execution-time 2025-2026 source delta for .496"
     priority: high
     track: literature
-    deliverable: results/experiment_5442_source_delta_v495.json
+    deliverable: results/experiment_5455_source_delta_v496.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 35
     estimated_wall_time_min: 35
     prior_failures:
+      - experiment_id: exp5442-source-delta-v495
+        verdict: "complete: .495 execution-time source deltas were reconciled without reopening retired scopes."
+        addressed_by: "This task refreshes source deltas at .496 execution time and must dedupe against the V496 planner refresh already appended to research-references.md."
+        retire_if_same_verdict: true
       - experiment_id: exp5429-source-delta-v494
         verdict: "complete: 3 new actionable V494 execution-time source deltas appended; retired scopes remained closed."
-        addressed_by: "This task refreshes source deltas at .495 execution time and must dedupe against the V495 planner refresh already appended to research-references.md."
-        retire_if_same_verdict: true
-      - experiment_id: exp5416-source-delta-v493
-        verdict: "complete: 6 new actionable V493 execution-time source deltas appended; retired scopes remained closed."
-        addressed_by: "This is the next source-ingestion cycle and targets only deltas newer than the prior refresh blocks."
+        addressed_by: "This is the next source-ingestion cycle and targets only deltas newer than prior refresh blocks."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      The planner already appended a V495 Planner Refresh to research-references.md on {date}. This task is the execution-time freshness check before implementation experiments run. It must add only genuinely new actionable deltas and must not reopen retired lanes.
+      The planner appended a V496 Planner Refresh to research-references.md on {date}. This task is the execution-time freshness check before implementation experiments run. It must add only genuinely new actionable deltas and must not reopen retired lanes.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -94,511 +94,538 @@ tasks:
       - {project_root}/ops/changelog.md
 
       TASK:
-      Search arXiv and secondary sources for 2025-2026 work relevant to Carnot since the V495 planner refresh, append only non-duplicate actionable findings to research-references.md, and emit a source-delta receipt.
+      Search arXiv and secondary sources for 2025-2026 work relevant to Carnot since the V496 planner refresh, append only non-duplicate actionable findings to research-references.md, and emit a source-delta receipt.
 
       CONCRETE STEPS:
-      1. Search arXiv for Energy-Based Models for verification/reasoning, neural constraint satisfaction, Ising applications in ML, hallucination mitigation, Kolmogorov-Arnold Networks, energy-guided decoding, hardware-accelerated sampling, and continual/online learning for constraint systems.
-      2. Check OpenReview, Extropic writing, Semantic Scholar citation routes for EBT 2507.02092 and ARM-EBM 2512.15605, HuggingFace Papers, GitHub, and Logical Intelligence public pages.
-      3. Dedupe against research-references.md, especially V489-V495 blocks.
-      4. Append a short "V495 Execution Refresh - {date}" block only if new actionable deltas exist. If none exist, append nothing and explain the no-op in the artifact.
+      1. Search arXiv for EBMs for verification/reasoning, neural constraint satisfaction, Ising applications, hallucination mitigation, KANs, energy-guided decoding, hardware-accelerated sampling, and continual/online learning.
+      2. Check OpenReview, Extropic writing, Semantic Scholar routes for EBT 2507.02092 and ARM-EBM 2512.15605, HuggingFace Papers, GitHub, and Logical Intelligence public pages.
+      3. Dedupe against research-references.md, especially V490-V496 blocks.
+      4. Append a short "V496 Execution Refresh - {date}" block only if new actionable deltas exist. If none exist, append nothing and explain the no-op in the artifact.
       5. Explicitly classify retired-scope items as watch-only or excluded.
       6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - sources_checked: list  # principle: reproducible literature sweep
-         - new_references_added: list  # principle: current-knowledge delta
-         - duplicates_suppressed: list  # principle: no reference churn
-         - retired_scopes_reopened: false  # principle: exclusion-manifest compliance
-         - research_references_updated: bool  # principle: doc alignment
-         - prior_refresh_marker_found: bool  # principle: dedupe against planner work
-         - inference_substrate: aggregation_from_upstream_artifacts  # principle: source aggregation only
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+         - sources_checked: list
+         - new_references_added: list
+         - duplicates_suppressed: list
+         - retired_scopes_reopened: false
+         - research_references_updated: bool
+         - prior_refresh_marker_found: bool
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5443-verifier-potential-prefix-fixture-v495
-    milestone: "2026.07.495"
-    title: "Verifier-potential prefix fixture with exact final authority"
+  - id: exp5456-guided-decoding-tautology-corrigendum-v496
+    milestone: "2026.07.496"
+    title: "Guided-decoding tautology corrigendum for Exp5444"
     priority: critical
     track: verification
-    deliverable: results/experiment_5443_verifier_potential_prefix_fixture_v495.json
+    deliverable: results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json
     agent_type: codex
     model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 70
+    max_turns: 45
+    estimated_wall_time_min: 65
     prior_failures:
-      - experiment_id: exp5430-structured-tautology-corrigendum-v494
-        verdict: "complete: structured tautology corrigendum clean with row checksums"
-        addressed_by: "This task uses the clean row-provenance discipline as a prerequisite and moves from post-hoc structured verification to prefix reward potentials."
+      - experiment_id: exp5444-gated-sota-energy-guided-decoding-v495
+        verdict: "flagged_adversarial: TAUTOLOGY, TAUTOLOGY; result quarantined as not a clean local SOTA guided-decoding success."
+        addressed_by: "This corrigendum recomputes readiness from independent row outcomes, exact verifier labels, and a metric dependency graph rather than from the guided reward scalar."
         retire_if_same_verdict: true
-      - experiment_id: exp5431-structured-constraint-taxonomy-replication-v494
-        verdict: "complete: structured taxonomy replication ready"
-        addressed_by: "This task converts the taxonomy into prefix-potential fixtures rather than rerunning the same replication."
-        retire_if_same_verdict: true
-      - experiment_id: exp3125-prefix-closed-deterministic-verifier-bound-pilot-v1
-        verdict: "complete: bounded prefix-closed deterministic verifier pilot ready; no live LLM correctness claim beyond explored frontier"
-        addressed_by: "This task adds structured taxonomy families, exact final authority, and reward-budget fields for downstream local SOTA decoding."
+      - experiment_id: exp5393-overwrite-guidance-tautology-corrigendum-v491
+        verdict: "complete: row-level overwrite-guidance corrigendum recomputed readiness from solver evidence with clean adversarial checks."
+        addressed_by: "This task applies the same row-evidence discipline to the newer Exp5444 local SOTA guided-decoding artifact."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, .494 produced clean structured row-level verification, but it remained mostly post-hoc. V495 starts by building deterministic verifier potentials that can score partial prefixes while exact solvers retain final authority. This task must not invoke a live LLM; it prepares the fixture and accounting needed by the gated SOTA decoding pilot.
+      Exp5444 produced a local SOTA verifier-potential decoding artifact, but adversarial verification flagged it with two TAUTOLOGY findings. On {date}, .496 must repair metric validity before any new SOTA guided-decoding result is allowed to headline.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
-      - {project_root}/research-references.md
-      - {project_root}/results/experiment_5430_structured_tautology_corrigendum_v494.json
-      - {project_root}/results/experiment_5431_structured_constraint_taxonomy_replication_v494.json
+      - {project_root}/results/experiment_5444_gated_sota_energy_guided_decoding_v495.json
+      - {project_root}/results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl
+      - {project_root}/results/experiment_5443_verifier_potential_prefix_fixture_v495.json
+      - {project_root}/scripts/adversarial_verify.py
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Build a deterministic verifier-potential fixture that scores partial structured outputs, records reward-evaluation cost, and proves exact final checks remain authoritative.
+      Emit a corrigendum that identifies the exact tautological metric dependencies in Exp5444 and recomputes guided-decoding readiness only from independent row evidence.
 
       CONCRETE STEPS:
-      1. Create or extend a small experiment module under an appropriate existing scripts or python/carnot path; do not write scratch files to the repo root.
-      2. Define fixture families for schema-only traps, semantic contradictions, unreachable tool actions, arithmetic/finite-domain constraints, ontology/triple updates, API-call witnesses, and benign rows.
-      3. Implement prefix potential functions that are monotone only where justified and explicitly mark unknown prefixes as abstain/neutral rather than safe.
-      4. Run exact final verifiers for every completed row and show they can reject prefixes that received misleading intermediate potential.
-      5. Record reward_evaluation_budget per row and per accepted prefix; include row and fixture checksums.
-      6. Add focused tests for prefix/final separation, no tautological aggregate metrics, and exact final authority.
-      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - fixture_count: int  # principle: fixture coverage
-         - constraint_family_counts: dict  # principle: taxonomy coverage
-         - prefix_potential_functions: list  # principle: reproducible scoring definition
-         - exact_final_authority: true  # principle: no learned-score certificate
-         - prefix_final_disagreement_cases: int  # principle: detects misleading partial scores
-         - reward_evaluation_budget: dict  # principle: generation guidance cost accounting
-         - row_provenance_checksum: string  # principle: row-level reproducibility
-         - reproducibility_checksum: string  # principle: artifact reproducibility
-         - metric_independence_checks_passed: bool  # principle: tautology prevention
-         - verifier_potential_fixture_ready: bool  # principle: downstream gate
-         - inference_substrate: deterministic_verifier_fixture_no_llm  # principle: no hidden live model inference
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      1. Load Exp5444 artifact and row JSONL; record flagged_adversarial and TAUTOLOGY findings.
+      2. Build a metric dependency graph showing which fields depended on guided rewards, baselines, exact final verifier labels, row counts, or derived aggregates.
+      3. Recompute validity, false-accept, abstention, and guided-delta metrics from row-level exact final verifier outcomes only.
+      4. Mark every metric as independent, derived-from-independent, or invalid-tautological.
+      5. Add a regression check or test fixture that fails if readiness is computed from the same scalar it claims to validate.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - prior_flagged_artifact: results/experiment_5444_gated_sota_energy_guided_decoding_v495.json
+         - adversarial_flags_found: list
+         - metric_dependency_graph_path: string
+         - invalid_tautological_fields: list
+         - recomputed_row_count: int
+         - exact_final_labels_used: bool
+         - independent_metric_fields: list
+         - guided_decoding_corrigendum_clean: bool
+         - rerun_gate_reason: string
+         - inference_substrate: posthoc_row_metric_audit_no_llm
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5444-gated-sota-energy-guided-decoding-v495
-    milestone: "2026.07.495"
-    title: "Gated local SOTA verifier-potential decoding pilot after Exp5443"
+  - id: exp5457-gated-sota-distortion-guarded-decoding-v496
+    milestone: "2026.07.496"
+    title: "Gated local SOTA distortion-guarded verifier-potential decoding after Exp5456"
     priority: high
     track: inference
-    deliverable: results/experiment_5444_gated_sota_energy_guided_decoding_v495.json
+    deliverable: results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json
     requires_gpu: true
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 150
     gated_on:
-      - upstream: exp5443-verifier-potential-prefix-fixture-v495
-        artifact_field: verifier_potential_fixture_ready
+      - upstream: exp5456-guided-decoding-tautology-corrigendum-v496
+        artifact_field: guided_decoding_corrigendum_clean
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp5417-risk-calibrated-sota-structured-panel-v493
-        verdict: "complete: risk-calibrated structured panel ready with abstention"
-        addressed_by: "Exp5417 was blocked by later adversarial tautology flags; this task is gated on Exp5443 and compares verifier-guided decoding against baselines with independent row metrics."
+      - experiment_id: exp5444-gated-sota-energy-guided-decoding-v495
+        verdict: "flagged_adversarial: TAUTOLOGY, TAUTOLOGY; result quarantined as not a clean local SOTA guided-decoding success."
+        addressed_by: "This rerun is gated on a clean corrigendum and adds conflict, distortion, attribution, chance-risk, and LCD-bias controls."
         retire_if_same_verdict: true
-      - experiment_id: exp5418-predictive-prefix-action-safety-v493
-        verdict: "complete: predictive prefix safety diagnostic ready"
-        addressed_by: "Exp5418 was blocked by later tautology/checksum flags; this task uses explicit prefix reward budgets and exact final checks."
-        retire_if_same_verdict: true
-      - experiment_id: exp5431-structured-constraint-taxonomy-replication-v494
-        verdict: "complete: structured taxonomy replication ready"
-        addressed_by: "This is a generation-time pilot over the clean taxonomy rather than a final-only replication."
+      - experiment_id: exp5284-sota-offload-cpu-only-path-v483
+        verdict: "retired: CPU-only SOTA offload path is not acceptable for headline local GGUF results without changed runtime substrate."
+        addressed_by: "This task requires CUDA-enabled GGUF/llama.cpp offload receipts before any headline result and treats legacy CPU smoke tests as non-headline only."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, this task runs only if Exp5443 verifier_potential_fixture_ready=true. It tests whether deterministic verifier potentials can guide local SOTA GGUF generation without reopening external text-scorer, token/internal, or fine-tuning lanes. The headline comparison is small and bounded: unconstrained decoding vs grammar-only constrained decoding vs verifier-potential guided decoding.
+      On {date}, this task runs only if Exp5456 guided_decoding_corrigendum_clean=true. It reruns the bounded local SOTA GGUF guided-decoding panel with the V496 distortion and risk controls. The headline comparison is unconstrained vs grammar/LCD-only vs verifier-potential guided decoding under exact final verifier authority.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/scripts/experiment_template.py
       - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json
       - {project_root}/results/experiment_5443_verifier_potential_prefix_fixture_v495.json
       - {project_root}/research-references.md
       - {project_root}/tests/python
 
       TASK:
-      Run a bounded local SOTA GGUF verifier-potential decoding pilot and emit row-level evidence comparing guided decoding to baselines under exact final verifier authority.
+      Run a bounded local SOTA GGUF verifier-potential decoding panel with conflict-aware decoding, factual-distortion guards, attribution receipts, chance-constrained acceptance metrics, and locally constrained decoding bias checks.
 
       CONCRETE STEPS:
       0. PRECONDITIONS: verify CUDA-enabled llama-cpp-python or native llama.cpp GGUF runtime, non-empty local model_path entries, and GPU offload receipts before generation. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use legacy small models only for fast CPU smoke-tests and mark them non-headline.
-      1. Load Exp5443 fixtures and select a bounded set that can be scored by exact final verifiers.
-      2. For each selected fixture, run three conditions where feasible: unconstrained, grammar-only constrained, and verifier-potential guided prefix/particle decoding.
-      3. Record every model spec, GGUF path, runtime backend, n_gpu_layers/offload evidence, random seed, prompt hash, token budget, reward-evaluation count, and generation duration.
-      4. Run exact final verifiers on every candidate. Do not accept model self-verdicts as evidence.
-      5. Compute independent accepted-validity, semantic false-accept, unsafe false-accept, action-unreachability, abstention, and reward-budget metrics from rows.
-      6. Add focused tests or sanity checks that fail if guided_decoding_delta is computed from a baseline rate, if final authority is bypassed, or if model specs omit the mandated GGUFs.
+      1. Load Exp5443 fixtures plus new conflict/distortion rows inspired by strict-constraint distortion and CoCoA.
+      2. Run unconstrained, grammar/LCD-only, and verifier-potential guided conditions where feasible.
+      3. Record every model spec, GGUF path, runtime backend, n_gpu_layers/offload evidence, random seed, prompt hash, token budget, reward-evaluation count, acceptance threshold, and generation duration.
+      4. Attribute claims to evidence span IDs, then run exact final verifiers, AST/KB witnesses, and entailment/contradiction checks as applicable.
+      5. Compute accepted validity, semantic false accepts, factual distortion rate, LCD-bias indicators, abstention, chance-risk bounds, and guided deltas from row evidence only.
+      6. Add tests or sanity checks that fail if model specs omit mandated GGUFs, if CPU-only paths headline, or if readiness is tautological.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - preconditions_checked: bool  # principle: compute-bound task must fail fast
-         - model_specs: list  # principle: mandated SOTA GGUF provenance
-         - headline_required_any_of: list  # principle: confirms at least one mandated SOTA model ran
-         - runtime_backend: string  # principle: GGUF/llama.cpp path, not transformers tokenizer path
-         - gpu_offload_verified: bool  # principle: no CPU-only SOTA headline
-         - fixture_count: int  # principle: bounded evaluation size
-         - condition_names: list  # principle: baseline clarity
-         - row_results_path: string  # principle: inspectable evidence
-         - exact_final_authority: true  # principle: deterministic verifier authority
-         - reward_evaluation_budget: dict  # principle: inference cost accounting
-         - guided_validity_delta_vs_unconstrained: number  # principle: utility measurement
-         - guided_validity_delta_vs_grammar_only: number  # principle: incremental utility measurement
-         - semantic_false_accept_rate: number  # principle: hallucination boundary
-         - unsafe_false_accept_rate: number  # principle: safety boundary
-         - metric_independence_checks_passed: bool  # principle: tautology prevention
-         - verifier_guided_decoding_ready: bool  # principle: capstone evidence
-         - inference_substrate: live_llm_inference  # principle: real local model invocation
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+         - preconditions_checked: bool
+         - model_specs: list
+         - headline_required_any_of: list
+         - runtime_backend: string
+         - gpu_offload_verified: bool
+         - fixture_count: int
+         - condition_names: list
+         - row_results_path: string
+         - exact_final_authority: true
+         - claim_attribution_receipts_path: string
+         - chance_risk_bound: number
+         - factual_distortion_rate: number
+         - semantic_false_accept_rate: number
+         - lcd_bias_check_passed: bool
+         - guided_validity_delta_vs_unconstrained: number
+         - guided_validity_delta_vs_lcd_only: number
+         - metric_independence_checks_passed: bool
+         - verifier_guided_decoding_ready: bool
+         - inference_substrate: live_llm_inference
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5445-static-ast-kb-witness-constraints-v495
-    milestone: "2026.07.495"
-    title: "Deterministic AST and KB witness constraints for code hallucination rows"
+  - id: exp5458-minimal-core-claim-repair-v496
+    milestone: "2026.07.496"
+    title: "Minimal-core-guided repair for verifier-potential and AST/KB witnesses"
     priority: high
     track: verification
-    deliverable: results/experiment_5445_static_ast_kb_witness_constraints_v495.json
+    deliverable: results/experiment_5458_minimal_core_claim_repair_v496.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 45
     estimated_wall_time_min: 70
     prior_failures:
-      - experiment_id: exp2911-code-hallucination-taxonomy-verifier-v1
-        verdict: "complete: Exp 2910 code candidates labeled with deterministic taxonomy"
-        addressed_by: "This task adds AST/KB witness constraints and structured verifier integration rather than only taxonomy labels."
+      - experiment_id: exp5443-verifier-potential-prefix-fixture-v495
+        verdict: "complete: deterministic verifier-potential prefix fixture with exact final authority ready."
+        addressed_by: "This task reuses the fixture and adds minimal unsat/core feedback for repair rather than rerunning prefix scoring."
         retire_if_same_verdict: true
-      - experiment_id: exp2925-code-hallucination-taxonomy-provenance-corrigendum-v2
-        verdict: "complete: Exp 2911 taxonomy provenance corrigendum re-emitted deterministically"
-        addressed_by: "This task keeps provenance discipline and adds API-call validity witnesses."
-        retire_if_same_verdict: true
-      - experiment_id: exp3695-code-native-verifier
-        verdict: "complete: code_native_signal_recovered_beats_chance_floor"
-        addressed_by: "This task uses deterministic AST/KB witness fields for structured rows instead of training or reweighting a code-native detector."
+      - experiment_id: exp5445-static-ast-kb-witness-constraints-v495
+        verdict: "complete: deterministic AST/KB witness constraints for code hallucination rows ready."
+        addressed_by: "This task adds minimal-core repair receipts around the witness rows instead of only detecting invalid calls."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, V495 literature added deterministic AST/KB hallucination correction as a useful bounded mechanism. This task should not train a model or run live LLM inference. It should add witness-grade code/API constraints that structured verifier rows can inspect.
+      V495 added deterministic verifier-potential fixtures and AST/KB witness constraints. V496 literature refresh promotes minimal-core-guided repair as a way to turn exact solver failures into auditable repair hints without asking an LLM to invent a diagnosis.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/research-references.md
+      - {project_root}/results/experiment_5443_verifier_potential_prefix_fixture_v495.json
+      - {project_root}/results/experiment_5445_static_ast_kb_witness_constraints_v495.json
       - {project_root}/python/carnot
-      - {project_root}/results/experiment_5431_structured_constraint_taxonomy_replication_v494.json
       - {project_root}/tests/python
 
       TASK:
-      Build a deterministic AST/KB witness fixture that catches code/API hallucination rows through parseable structure, alias resolution, imported symbol validation, and lightweight semantic intent checks.
+      Add deterministic minimal-core feedback for failed verifier-potential and AST/KB witness rows, then prove repairs are accepted only after exact recheck.
 
       CONCRETE STEPS:
-      1. Locate existing code-verification or structured-verifier modules and extend them in the local style.
-      2. Create a bounded fixture set with valid API calls, nonexistent methods, wrong-module aliases, bare calls with missing imports, argument-intent mismatches, and benign controls.
-      3. Build a dynamic or static KB from local installed-library introspection where safe, and fall back to committed deterministic fixture metadata where imports are unavailable.
-      4. For each row, emit AST parse status, alias map, fully qualified call sites, KB lookup result, witness fields, and deterministic accept/reject outcome.
-      5. Add tests for alias resolution, nonexistent call rejection, bare-call handling, and witness provenance checksums.
+      1. Select bounded failed rows from Exp5443 and Exp5445 fixtures.
+      2. Encode failures with stable constraint IDs and derive a minimal unsat/error core where possible.
+      3. Generate deterministic repair hypotheses from core IDs, not from free-form model text.
+      4. Re-run exact final verifiers and AST/KB witnesses after repair.
+      5. Add tests for stable core IDs, non-minimal-core rejection, and exact recheck authority.
       6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - fixture_count: int  # principle: bounded coverage
-         - api_family_counts: dict  # principle: fixture diversity
-         - ast_parse_success_rate: number  # principle: structural basis
-         - kb_source_paths: list  # principle: KB provenance
-         - witness_field_names: list  # principle: inspectable evidence
-         - nonexistent_call_reject_rate: number  # principle: hallucination catch
-         - valid_call_accept_rate: number  # principle: false rejection guard
-         - unsafe_false_accepts: int  # principle: safety boundary
-         - row_provenance_checksum: string  # principle: row reproducibility
-         - ast_kb_witness_ready: bool  # principle: downstream readiness
-         - inference_substrate: deterministic_ast_kb_verifier_no_llm  # principle: no hidden live model inference
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+         - source_artifacts: list
+         - repair_case_count: int
+         - minimal_core_success_rate: number
+         - core_constraint_id_count: int
+         - repaired_accept_rate_after_exact_recheck: number
+         - unrepaired_reject_rate: number
+         - exact_final_authority: true
+         - row_provenance_checksum: string
+         - minimal_core_repair_ready: bool
+         - inference_substrate: deterministic_solver_core_repair_no_llm
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5446-governed-memory-csl-online-v495
-    milestone: "2026.07.495"
-    title: "Continuous self-learning governed online workflow memory"
+  - id: exp5459-constraint-distortion-guard-v496
+    milestone: "2026.07.496"
+    title: "Constraint-distortion guard for factual and semantic rewrites"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5459_constraint_distortion_guard_v496.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    estimated_wall_time_min: 70
+    prior_failures:
+      - experiment_id: exp5444-gated-sota-energy-guided-decoding-v495
+        verdict: "flagged_adversarial: TAUTOLOGY, TAUTOLOGY; result quarantined as not a clean local SOTA guided-decoding success."
+        addressed_by: "This task is deterministic and specifically separates truth preservation from constraint satisfaction before future decoding claims."
+        retire_if_same_verdict: true
+      - experiment_id: exp5458-minimal-core-claim-repair-v496
+        verdict: "planned prerequisite: minimal-core repair will expose exact constraint conflicts for distortion rows if already run."
+        addressed_by: "This task can consume minimal-core repair IDs when available but still emits its own deterministic distortion guard."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Recent work shows strict constraints can convert honest violations into factual distortions. Carnot must detect when a response satisfies a constraint by rewriting the facts. This task is deterministic; it prepares a guard that Exp5457 and future SOTA panels can consume.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5445_static_ast_kb_witness_constraints_v495.json
+      - {project_root}/results/experiment_5458_minimal_core_claim_repair_v496.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Build a deterministic constraint-distortion guard that labels truth-preserving constraint compliance, honest constraint violation, unsupported fabrication, and constraint-induced factual distortion.
+
+      CONCRETE STEPS:
+      1. Create bounded rows where a constraint conflicts with authoritative facts, ontology triples, API facts, or arithmetic facts.
+      2. Encode authoritative facts separately from requested output constraints.
+      3. Label rows into truth_preserving_compliance, honest_violation, unsupported_fabrication, and constraint_induced_distortion.
+      4. Use exact KB/AST/ontology/arithmetic verifiers as authority; do not use model self-judgment.
+      5. Add tests that distinguish a refusal or abstention from a fact rewrite.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - fixture_count: int
+         - conflict_family_counts: dict
+         - authoritative_fact_source_paths: list
+         - distortion_label_counts: dict
+         - truth_preserving_compliance_rate: number
+         - honest_violation_rate: number
+         - constraint_induced_distortion_rate: number
+         - unsupported_fabrication_rate: number
+         - exact_final_authority: true
+         - distortion_guard_ready: bool
+         - inference_substrate: deterministic_distortion_guard_no_llm
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5460-csl-policy-bandit-v496
+    milestone: "2026.07.496"
+    title: "Continuous self-learning governed memory/action policy"
     priority: critical
     track: continuous-self-learning
-    deliverable: results/experiment_5446_governed_memory_csl_online_v495.json
+    deliverable: results/experiment_5460_csl_policy_bandit_v496.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 90
     prior_failures:
-      - experiment_id: exp5435-verified-workflow-memory-csl-v494
-        verdict: "complete: verified workflow memory promoted only validated case and skill sidecars, deflected retrieval traps, retained raw episodes, verified rollback, and did not mutate weights"
-        addressed_by: "This task extends verified workflow memory into a governed multi-session online lifecycle across raw traces, cases, skills, and rules."
+      - experiment_id: exp5446-governed-memory-csl-online-v495
+        verdict: "complete: governed online memory promoted raw traces into case, skill, and rule sidecars only through replay, provenance, decay, access, rollback, and no-weight gates."
+        addressed_by: "This task moves from governed memory existence to a frozen-model online policy over action and memory choices."
         retire_if_same_verdict: true
-      - experiment_id: exp5436-csl-memory-transfer-stress-v494
-        verdict: "complete: verified workflow memory transferred in-domain, deflected negative transfer under shift, verified rollback, and did not mutate model or adapter weights"
-        addressed_by: "This task makes the governance loop primary and adds decay/provenance/replay gates before the downstream stress task."
+      - experiment_id: exp5447-gated-csl-memory-failure-stress-v495
+        verdict: "complete: governed CSL memory stress attributed failures by operation, deflected stale poisoned retrieval-collision and negative-transfer memories, verified rollback, and preserved no-weight-mutation."
+        addressed_by: "This task uses those stress cases as policy feedback rather than rerunning only memory-failure attribution."
         retire_if_same_verdict: true
-      - experiment_id: exp5421-evidence-reliance-csl-v493
-        verdict: "complete: evidence-reliance CSL detected hidden forgetting under stable accuracy, retained raw episodes, deflected unsafe reliance, verified rollback, and did not mutate weights"
-        addressed_by: "This task preserves reliance-drift controls while adding adaptive memory compression levels."
+      - experiment_id: exp5369-budgeted-continuous-self-learning-scaleup-v489
+        verdict: "complete: budgeted continuous self-learning scale-up preserved always-full quality, reduced context and verifier cost, deflected stale and poisoned memory, recovered rollback, and preserved no model weight mutation."
+        addressed_by: "This task adds explicit online policy confidence, regret proxies, and no-memory/naive-ICL baselines."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the required V495 continuous self-learning task. On {date}, .494 proved verified workflow memory and transfer stress. The next gap is a governed online lifecycle: raw traces can become case memory, skill memory, and rules only through replay, provenance, rollback, and verifier gates. No model weights or adapter weights may be mutated.
+      This is the required V496 continuous self-learning task. On {date}, .495 proved governed memory and stress resistance. The next gap is an explicit frozen-model online decision policy over action/memory choices, inspired by OLIVIA and CL-Bench. No model weights or adapter weights may be mutated.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/research-program.md
       - {project_root}/research-references.md
-      - {project_root}/results/experiment_5435_verified_workflow_memory_csl_v494.json
-      - {project_root}/results/experiment_5436_csl_memory_transfer_stress_v494.json
+      - {project_root}/results/experiment_5446_governed_memory_csl_online_v495.json
+      - {project_root}/results/experiment_5447_gated_csl_memory_failure_stress_v495.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Implement and evaluate a deterministic governed-memory continuous self-learning loop over a multi-session workflow stream with trace/case/skill/rule promotion levels.
+      Implement and evaluate a deterministic governed CSL policy layer that updates lightweight action/memory routing statistics online while keeping the base model frozen.
 
       CONCRETE STEPS:
-      1. Reuse existing workflow-memory and CSL modules where possible; do not create unrelated abstractions.
-      2. Build a deterministic multi-session fixture stream with repeated tasks, shifted tasks, stale observations, and opportunities to promote raw traces into case memory, procedural skill memory, and declarative rules.
-      3. Add governance gates for evidence support, execution dependency, replay success, temporal decay, access control, rollback pointer, and no-weight-mutation proof.
-      4. Evaluate against always-full-context, no-memory, and ungated-memory controls. Measure quality, context cost, verifier cost, unsafe false accepts, and negative-transfer deflection.
-      5. Add tests that memory cannot influence routing without replay/provenance gates and that rollback removes promoted memories from future decisions.
-      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - continuous_self_learning_task: true  # principle: research-program mandate
-         - multi_session_trace_count: int  # principle: online setting
-         - promotion_level_counts: dict  # principle: raw/case/skill/rule compression coverage
-         - evidence_support_edges: int  # principle: provenance
-         - execution_dependency_edges: int  # principle: action provenance
-         - replay_success_rate: number  # principle: reusable memory gate
-         - temporal_decay_policy: string  # principle: stale-memory control
-         - rollback_recovery_rate: number  # principle: reversibility
-         - quality_delta_vs_always_full: number  # principle: no hidden forgetting
-         - context_efficiency_delta: number  # principle: utility
-         - verifier_cost_delta: number  # principle: resource accounting
-         - unsafe_false_accepts: int  # principle: safety boundary
-         - no_weight_mutation: true  # principle: no hidden fine-tuning
-         - governed_csl_loop_ready: bool  # principle: downstream gate
-         - inference_substrate: deterministic_governed_memory_no_weight_update  # principle: explicit learning substrate
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      1. Reuse existing governed-memory CSL modules where possible.
+      2. Build a stateful multi-session stream with repeated tasks, distribution shifts, poisoned memories, and cases where no-memory or naive in-context learning is competitive.
+      3. Implement a lightweight contextual-bandit or confidence-bound policy over memory/action choices with explicit uncertainty, reward, cost, and verifier constraints.
+      4. Evaluate against no-memory, naive in-context, always-full-context, and ungated-memory baselines.
+      5. Record regret proxies, constraint-violation counts, context cost, verifier cost, quality, negative-transfer deflection, replay, rollback, and no-weight-mutation proof.
+      6. Add tests that policy updates cannot bypass provenance/replay gates and that rollback removes bad policy evidence.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - continuous_self_learning_task: true
+         - policy_update_count: int
+         - multi_session_trace_count: int
+         - baseline_names: list
+         - policy_confidence_receipts_path: string
+         - regret_proxy_delta_vs_no_memory: number
+         - quality_delta_vs_naive_icl: number
+         - context_efficiency_delta: number
+         - verifier_cost_delta: number
+         - cumulative_constraint_violations: int
+         - negative_transfer_deflection_rate: number
+         - rollback_recovery_rate: number
+         - no_weight_mutation: true
+         - csl_policy_ready: bool
+         - inference_substrate: deterministic_frozen_model_policy_no_weight_update
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5447-gated-csl-memory-failure-stress-v495
-    milestone: "2026.07.495"
-    title: "Gated CSL memory-failure and negative-transfer stress after Exp5446"
+  - id: exp5461-gated-sota-csl-memory-routing-v496
+    milestone: "2026.07.496"
+    title: "Gated local SOTA CSL memory-routing panel after Exp5460"
     priority: high
     track: continuous-self-learning
-    deliverable: results/experiment_5447_gated_csl_memory_failure_stress_v495.json
+    deliverable: results/experiment_5461_gated_sota_csl_memory_routing_v496.json
+    requires_gpu: true
     agent_type: codex
     model: gpt-5.5
-    max_turns: 45
-    estimated_wall_time_min: 80
+    max_turns: 50
+    estimated_wall_time_min: 140
     gated_on:
-      - upstream: exp5446-governed-memory-csl-online-v495
-        artifact_field: governed_csl_loop_ready
+      - upstream: exp5460-csl-policy-bandit-v496
+        artifact_field: csl_policy_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp5436-csl-memory-transfer-stress-v494
-        verdict: "complete: verified workflow memory transferred in-domain, deflected negative transfer under shift, verified rollback, and did not mutate model or adapter weights"
-        addressed_by: "This task gates on Exp5446 and expands transfer stress into MemFail-style summarization, storage, retrieval, and stale-rule failures."
+      - experiment_id: exp5447-gated-csl-memory-failure-stress-v495
+        verdict: "complete: governed CSL memory stress attributed failures by operation, deflected stale poisoned retrieval-collision and negative-transfer memories, verified rollback, and preserved no-weight-mutation."
+        addressed_by: "This task gates on the new policy and runs a bounded live local SOTA panel rather than deterministic memory stress only."
         retire_if_same_verdict: true
-      - experiment_id: exp5356-memory-tool-drift-harness-v488
-        verdict: "complete: deterministic memory-tool drift harness measured 32 memory cases, clean accuracy 1.0, induced drift rate 1.0, rollback recovery 1.0, counterfactual deflection 1.0, zero unsafe false accepts, and no model weight mutation"
-        addressed_by: "This task adds governed online memory levels and negative-transfer controls rather than only memory-tool drift cases."
-        retire_if_same_verdict: true
-      - experiment_id: exp5369-budgeted-continuous-self-learning-scaleup-v489
-        verdict: "complete: budgeted continuous self-learning scale-up ran after Exp5368 gate, evaluated 12 traces and 36 checked events, preserved always-full quality, reduced context and verifier cost, deflected stale and poisoned memory, recovered rollback, and preserved no model weight mutation"
-        addressed_by: "This task stresses the new Exp5446 governance loop and reports operation-specific failure attribution."
+      - experiment_id: exp5284-sota-offload-cpu-only-path-v483
+        verdict: "retired: CPU-only SOTA offload path is not acceptable for headline local GGUF results without changed runtime substrate."
+        addressed_by: "This task requires CUDA-enabled GGUF/llama.cpp offload receipts before any headline SOTA CSL result."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, this task runs only if Exp5446 governed_csl_loop_ready=true. It should attack the governed memory loop with stale summaries, retrieval collisions, poisoned memory, over-compressed skills, and shifted tasks. It must preserve no model or adapter weight mutation.
+      On {date}, this task runs only if Exp5460 csl_policy_ready=true. It checks whether the governed CSL policy helps real local SOTA GGUF rows under negative-transfer pressure. The model remains frozen; learning is limited to memory/action routing policy state.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/results/experiment_5460_csl_policy_bandit_v496.json
       - {project_root}/research-references.md
-      - {project_root}/results/experiment_5446_governed_memory_csl_online_v495.json
-      - {project_root}/results/experiment_5436_csl_memory_transfer_stress_v494.json
-      - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Stress the governed CSL memory loop and attribute failures by memory operation while proving rollback and negative-transfer defenses.
+      Run a bounded local SOTA GGUF panel comparing no-memory, naive in-context memory, governed memory, and governed policy-selected memory.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: confirm Exp5446 governed_csl_loop_ready is true and load its exact governance policy/checksum.
-      1. Build adversarial memory cases for summarization loss, storage collision, retrieval collision, stale rule reuse, poisoned sidecar, over-generalized skill, and distribution shift.
-      2. Run the governed loop against always-full, no-memory, and ungated-memory controls.
-      3. Attribute each rejection or failure to summarization, storage, retrieval, replay, decay, access-control, or verifier gate.
-      4. Verify rollback after bad-memory insertion and confirm rejected memories cannot influence later routing.
-      5. Add tests for operation-specific failure attribution and no-weight-mutation invariants.
-      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - gated_upstream_ready: bool  # principle: structured gate provenance
-         - memory_failure_case_count: int  # principle: stress coverage
-         - failure_operation_counts: dict  # principle: MemFail-style attribution
-         - stale_memory_deflection_rate: number  # principle: temporal safety
-         - poisoned_memory_deflection_rate: number  # principle: safety
-         - retrieval_collision_deflection_rate: number  # principle: retrieval robustness
-         - negative_transfer_deflection_rate: number  # principle: transfer boundary
-         - rollback_recovery_rate: number  # principle: reversibility
-         - quality_delta_vs_always_full: number  # principle: no hidden forgetting
-         - unsafe_false_accepts: int  # principle: safety boundary
-         - no_weight_mutation: true  # principle: no hidden fine-tuning
-         - csl_memory_stress_ready: bool  # principle: capstone evidence
-         - inference_substrate: deterministic_memory_stress_no_weight_update  # principle: explicit learning substrate
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      0. PRECONDITIONS: verify CUDA-enabled llama-cpp-python or native llama.cpp GGUF runtime, non-empty local model_path entries, and GPU offload receipts. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Legacy small models are smoke-tests only.
+      1. Load Exp5460 policy state and a bounded stateful task stream.
+      2. Run no-memory, naive-ICL, governed-memory, and policy-selected conditions on at least one mandated SOTA GGUF model.
+      3. Record model specs, GGUF path, runtime backend, GPU offload, seeds, prompts, memory receipts, policy receipts, token/context cost, and verifier cost.
+      4. Score rows with exact task verifiers or deterministic witnesses; do not accept model self-verdicts.
+      5. Measure quality, context cost, verifier cost, negative transfer, stale-memory deflection, and policy regret proxies against baselines.
+      6. Add checks that model weights are unchanged and policy state is the only adaptive substrate.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - preconditions_checked: bool
+         - model_specs: list
+         - headline_required_any_of: list
+         - runtime_backend: string
+         - gpu_offload_verified: bool
+         - condition_names: list
+         - row_results_path: string
+         - policy_state_checksum: string
+         - quality_delta_vs_no_memory: number
+         - quality_delta_vs_naive_icl: number
+         - context_efficiency_delta: number
+         - verifier_cost_delta: number
+         - negative_transfer_deflection_rate: number
+         - no_weight_mutation: true
+         - csl_sota_memory_routing_ready: bool
+         - inference_substrate: live_llm_inference_with_frozen_policy_state
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5448-active-constraint-pbit-sparsity-bridge-v495
-    milestone: "2026.07.495"
-    title: "Active-constraint p-bit assumption bridge with restored-sparsity ledger"
+  - id: exp5462-active-constraint-minimal-core-pdit-bridge-v496
+    milestone: "2026.07.496"
+    title: "Minimal-core p-bit/p-dit bridge with solver authority"
     priority: high
     track: solver
-    deliverable: results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json
+    deliverable: results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 90
     prior_failures:
-      - experiment_id: exp5433-active-constraint-diversity-lns-v494
-        verdict: "complete: active-constraint LNS hints covered 4 families, reduced solver work by 138, and preserved solver authority"
-        addressed_by: "This task converts active-constraint hints into p-bit/CDCL-style temporary assumptions and adds restored-sparsity accounting."
+      - experiment_id: exp5448-active-constraint-pbit-sparsity-bridge-v495
+        verdict: "complete: active and p-bit assumptions stayed advisory across 4 fixtures, fallback completeness was 1.0, density was restored, and no hardware speedup was claimed."
+        addressed_by: "This task adds minimal-core feedback and p-dit assignment controls rather than only p-bit advisory assumptions."
         retire_if_same_verdict: true
       - experiment_id: exp5407-pbit-qubo-active-constraint-stress-v492
-        verdict: "complete: CPU-only p-bit/QUBO stress kept solver authority, accepted 0.500 of p-bit samples, matched exact enumeration, and made no hardware speedup claim"
-        addressed_by: "This task adds assumption gating, exact fallback, and density/sparsity ledgers before any hardware timing."
-        retire_if_same_verdict: true
-      - experiment_id: exp5358-solver-projection-cut-bridge-v488
-        verdict: "complete: deterministic solver projection repaired or rejected advisory proposals while preserving fallback completeness"
-        addressed_by: "This task keeps solver projection authority and tests p-bit consensus assumptions as the proposal source."
+        verdict: "complete: CPU-only p-bit/QUBO stress kept solver authority, accepted 0.500 of p-bit samples, matched exact enumeration, and made no hardware speedup claim."
+        addressed_by: "This task extends to multi-state p-dit assignment-style fixtures with exact fallback and no hardware speedup claim."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, .494 active-constraint LNS reduced solver work while preserving solver authority. V495 literature suggests p-bit samples are useful only as temporary assumptions and that constraint-induced density can erase hardware value. This task should stay CPU/deterministic unless optional local p-bit code already exists; no hardware speedup claim belongs here.
+      V495 proved active and p-bit assumptions can stay advisory under exact solver authority. V496 should add minimal-core feedback and p-dit assignment-style controls before any hardware timing-ratio receipt.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/research-references.md
-      - {project_root}/results/experiment_5433_active_constraint_diversity_lns_v494.json
-      - {project_root}/results/experiment_5407_pbit_qubo_active_constraint_stress_v492.json
+      - {project_root}/results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Build a solver-authoritative bridge where active constraints and p-bit-like consensus samples propose temporary assumptions, exact solvers can reject or overwrite them, and density/restored-sparsity is measured.
+      Build a deterministic solver-authoritative bridge where active constraints, p-bit binary samples, and p-dit multi-state samples propose assumptions, minimal cores diagnose bad assumptions, and exact solvers keep final authority.
 
       CONCRETE STEPS:
       1. Reuse existing active-constraint and p-bit/QUBO modules where available.
-      2. Create bounded SAT/CSP/LNS fixtures with known exact outcomes and varying constraint-induced density.
-      3. Generate advisory assumptions from active-constraint hints and p-bit/Ising consensus samples.
+      2. Add bounded SAT/CSP and assignment/QAP-style p-dit fixtures with known exact outcomes.
+      3. Generate advisory assumptions from active constraints, p-bit samples, and p-dit samples.
       4. Run exact solver attempts under assumptions with bounded rescue fallback to unrestricted solving.
-      5. Record conflicts, propagations/iterations, rejected assumptions, overwritten assumptions, fallback use, density before/after restoration, and solution validity.
-      6. Add tests proving wrong assumptions cannot create false SAT/UNSAT claims and fallback completeness remains intact.
+      5. Record conflicts, minimal cores, rejected assumptions, overwritten assumptions, density before/after restoration, fallback use, and solution validity.
+      6. Add tests proving wrong assumptions cannot create false SAT/UNSAT/assignment claims and fallback completeness remains intact.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - fixture_count: int  # principle: bounded coverage
-         - constraint_family_counts: dict  # principle: diversity
-         - assumption_source_counts: dict  # principle: active vs p-bit provenance
-         - density_before_after: dict  # principle: restored-sparsity accounting
-         - solver_authoritative: true  # principle: exact solver final authority
-         - fallback_completeness_rate: number  # principle: correctness rescue
-         - rejected_assumption_count: int  # principle: advisory boundary
-         - overwritten_assumption_count: int  # principle: solver authority
-         - solver_work_delta: number  # principle: utility measurement
-         - unsafe_false_accepts: int  # principle: correctness boundary
-         - pbit_assumption_bridge_ready: bool  # principle: downstream hardware gate
-         - hardware_speedup_claim: false  # principle: no unsupported hardware claim
-         - inference_substrate: deterministic_solver_pbit_assumption_fixture  # principle: no hidden hardware inference
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+         - fixture_count: int
+         - constraint_family_counts: dict
+         - assumption_source_counts: dict
+         - pdit_variable_count: int
+         - minimal_core_count: int
+         - density_before_after: dict
+         - solver_authoritative: true
+         - fallback_completeness_rate: number
+         - rejected_assumption_count: int
+         - solver_work_delta: number
+         - unsafe_false_accepts: int
+         - minimal_core_pbit_bridge_ready: bool
+         - hardware_speedup_claim: false
+         - inference_substrate: deterministic_solver_pbit_pdit_fixture
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5449-gated-hardware-timing-sparsity-receipts-v495
-    milestone: "2026.07.495"
-    title: "Gated hardware timing receipts for p-bit sparsity workload after Exp5448"
+  - id: exp5463-gated-hardware-boundary-exchange-receipts-v496
+    milestone: "2026.07.496"
+    title: "Gated hardware boundary-exchange timing receipts after Exp5462"
     priority: high
     track: hardware
-    deliverable: results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json
+    deliverable: results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
-    estimated_wall_time_min: 80
+    estimated_wall_time_min: 85
     gated_on:
-      - upstream: exp5448-active-constraint-pbit-sparsity-bridge-v495
-        artifact_field: pbit_assumption_bridge_ready
+      - upstream: exp5462-active-constraint-minimal-core-pdit-bridge-v496
+        artifact_field: minimal_core_pbit_bridge_ready
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: exp5449-gated-hardware-timing-sparsity-receipts-v495
+        verdict: "complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false."
+        addressed_by: "This task uses the newer Exp5462 minimal-core p-bit/p-dit workload and adds boundary-exchange timing-ratio accounting."
+        retire_if_same_verdict: true
       - experiment_id: exp5434-pbit-polarfire-timing-variance-v494
-        verdict: "complete: gated CPU/PolarFire timing variance receipts hash-matched, no speedup claim"
-        addressed_by: "This task uses the newer Exp5448 p-bit sparsity workload and preserves the no-speedup boundary unless matched board timing supports a future claim."
-        retire_if_same_verdict: true
-      - experiment_id: exp5424-comparable-hardware-timing-v493
-        verdict: "complete: comparable hardware timing receipts collected with no speedup claim"
-        addressed_by: "This task narrows to the p-bit assumption bridge workload with restored-sparsity receipts."
-        retire_if_same_verdict: true
-      - experiment_id: exp5420-pbit-hardware-transfer-preflight-v493
-        verdict: "complete: p-bit hardware-transfer preflight produced hash-matched CPU/PolarFire receipts; hardware speedup not claimed"
-        addressed_by: "This task runs only after Exp5448 and collects variance, not just transfer preflight."
+        verdict: "complete: gated CPU/PolarFire timing variance receipts hash-matched, no speedup claim."
+        addressed_by: "This task preserves the no-speedup boundary while collecting matched workload hashes for the new bridge."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, this task runs only if Exp5448 pbit_assumption_bridge_ready=true. It is a hardware-continuity and receipt task, not a speedup hunt. KV260 access must be SSH-only; do not use host /dev/mmcblk preconditions. PolarFire receipts are useful even if slower than CPU.
+      On {date}, this task runs only if Exp5462 minimal_core_pbit_bridge_ready=true. It is a hardware-continuity and receipt task, not a speedup hunt. KV260 access must be SSH-only; do not use host /dev/mmcblk preconditions. PolarFire receipts are useful even if slower than CPU.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/research-hardware-wishlist.md
-      - {project_root}/results/experiment_5448_active_constraint_pbit_sparsity_bridge_v495.json
-      - {project_root}/results/experiment_5434_pbit_polarfire_timing_variance_v494.json
+      - {project_root}/results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json
+      - {project_root}/results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Collect matched CPU and reachable-board timing/variance receipts for the Exp5448 p-bit sparsity workload, with hash equality and no hardware speedup claim unless evidence is truly matched and repeated.
+      Collect matched CPU and reachable-board timing/variance receipts for the Exp5462 p-bit/p-dit workload, including boundary-exchange timing-ratio metadata where simulated or board-supported.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: confirm Exp5448 pbit_assumption_bridge_ready is true. Probe PolarFire and KV260 only through safe remote/SSH commands with short timeouts. Do not inspect or require /dev/mmcblk for KV260. If boards are unreachable, emit blocked_board_unreachable with CPU receipts.
-      1. Extract the exact workload hash, fixture subset, seeds, and expected result hashes from Exp5448.
-      2. Run repeated CPU timing for the same workload and record mean, median, variance, min/max, and result hash.
+      0. PRECONDITIONS: confirm Exp5462 minimal_core_pbit_bridge_ready is true. Probe PolarFire and KV260 only through safe remote/SSH commands with short timeouts. Do not inspect or require /dev/mmcblk for KV260. If boards are unreachable, emit blocked_board_unreachable with CPU receipts.
+      1. Extract exact workload hash, fixture subset, seeds, and expected result hashes from Exp5462.
+      2. Run repeated CPU timing for the same workload and record timing distribution and result hash.
       3. If PolarFire or KV260 is reachable through existing safe scripts, run the same workload or closest existing board-bound equivalent and record command, board identity, workload hash, result hash, and timing distribution.
-      4. If GateMate physical/JTAG evidence is unavailable, record diagnostic-only status and do not claim execution.
+      4. Record boundary_exchange_ratio, repeat counts, and timing variance for simulated or board-supported partitioned sampling.
       5. Compare CPU and board results by hash before comparing timing.
       6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - preconditions_checked: bool  # principle: hardware task must fail fast
-         - gated_upstream_ready: bool  # principle: structured gate provenance
-         - workload_hash: string  # principle: matched workload
-         - cpu_result_hash: string  # principle: correctness before timing
-         - board_result_hashes: dict  # principle: board correctness
-         - board_reachability: dict  # principle: hardware provenance
-         - kv260_ssh_only_checked: bool  # principle: no host SD-card anti-pattern
-         - timing_repeat_counts: dict  # principle: variance support
-         - timing_summary: dict  # principle: measured performance
-         - hashes_match_before_timing_compare: bool  # principle: no false speedup
-         - hardware_speedup_claim: false  # principle: bounded claim
-         - hardware_receipts_ready: bool  # principle: capstone evidence
-         - inference_substrate: cpu_and_reachable_board_timing_receipts  # principle: explicit hardware substrate
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+         - preconditions_checked: bool
+         - gated_upstream_ready: bool
+         - workload_hash: string
+         - cpu_result_hash: string
+         - board_result_hashes: dict
+         - board_reachability: dict
+         - kv260_ssh_only_checked: bool
+         - boundary_exchange_ratio_summary: dict
+         - timing_repeat_counts: dict
+         - timing_summary: dict
+         - hashes_match_before_timing_compare: bool
+         - hardware_speedup_claim: false
+         - hardware_receipts_ready: bool
+         - inference_substrate: cpu_and_reachable_board_timing_receipts
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5450-arc-measurement-access-live-levelup-v495
-    milestone: "2026.07.495"
-    title: "ARC live-path measurement-access predicate induction +1 level-up attempt"
-    priority: critical
+  - id: exp5464-arc-metric-integrity-perception-precheck-v496
+    milestone: "2026.07.496"
+    title: "ARC metric-integrity and perception precheck for live level-up"
+    priority: high
     track: arc-agi3
-    deliverable: results/experiment_5450_arc_measurement_access_live_levelup_v495.json
-    solve_provenance: live_agent_self_discovery
+    deliverable: results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json
     agent_type: codex
     model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 120
+    max_turns: 45
+    estimated_wall_time_min: 75
     prior_failures:
-      - experiment_id: exp5437-arc-live-reinduction-levelup-v494
-        verdict: "honest_null: cn04 L4 bounded_budget_nolevelup"
-        addressed_by: "This attempt rotates targets after registry precheck and switches from pure reinduction to measurement-access predicate induction plus degeneracy checks."
+      - experiment_id: exp5450-arc-measurement-access-live-levelup-v495
+        verdict: "honest_null: ka59 L2 bounded_budget_no_levelup."
+        addressed_by: "This precheck audits metric integrity and perception grounding before selecting the next live target rather than rerunning ka59 measurement-access induction directly."
         retire_if_same_verdict: true
-      - experiment_id: exp5397-arc-blob-salience-live-path-v491
-        verdict: "honest_null: re86 L3 bounded_budget_nolevelup"
-        addressed_by: "This attempt is not another blob-salience rerun; salience is only a diagnostic input and the credited mechanism is runtime measurement-access predicate induction."
-        retire_if_same_verdict: true
-      - experiment_id: exp5385-arc-geometric-salience-live-path-v490
-        verdict: "no-bank: re86 L3 bounded_budget_nolevelup"
-        addressed_by: "This attempt avoids repeating the same re86 salience target unless registry precheck shows a genuinely new live mechanism can reach a deeper frontier."
-        retire_if_same_verdict: true
-      - experiment_id: exp5373-arc-salience-re86-levelup-v489
-        verdict: "no-bank: re86 L3 not reproduced within bounded live attempt"
-        addressed_by: "This attempt includes measurement-access predicate induction and target rotation, not another re86-only salience repair."
-        retire_if_same_verdict: true
-      - experiment_id: exp5360-arc-perception-salience-levelup-attempt-v488
-        verdict: "complete: no_new_level_banked_re86_residual_bounded_budget_no_levelup"
-        addressed_by: "This task uses salience only for perception audit context and requires live-agent self-discovery with offline reproduction before any solve claim."
+      - experiment_id: exp5240-arc-provenance-routing-patch-v480
+        verdict: "retired: ARC provenance-routing patch scope produced zero delta and should not be rerun as the same routing patch."
+        addressed_by: "This task audits metric integrity and perception features; it does not patch provenance routing or claim a solve."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the required ARC level-up slot for milestone 2026.07.495 on {date}. The credited path is the live agent's own attempts plus runtime reverse engineering, not offline BFS, source reading, or a hand-built per-game adapter. Before choosing a target, precheck ops/arc_solve_registry.yaml and results/arc_loop_solve*.json. If the current live mechanism already reaches a proposed target level, choose a different frontier or improve the live path rather than duplicating a banked level.
+      ARC remains under the standing floor, but known-issues warns against duplicate/off-path solves and calls out metric integrity, null-coordinate validity, and perception/salience gaps. This precheck does not claim a level solve; it prepares a clean live path for Exp5465.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -607,229 +634,212 @@ tasks:
       - {project_root}/python/carnot/agentic/arc_competition_agent.py
       - {project_root}/python/carnot/agentic/arc_game_adapters.py
       - {project_root}/scripts/arc_loop_solve.py
-      - {project_root}/results/experiment_5437_arc_live_reinduction_levelup_v494.json
+      - {project_root}/results/experiment_5450_arc_measurement_access_live_levelup_v495.json
 
       TASK:
-      Run one ARC live-path +1 level-up attempt using runtime measurement-access predicate induction and registry-checked target rotation. Count success only if a new level is reproduced through the official live/offline reproduction gate.
+      Audit ARC live-path metric integrity and perception preconditions before the next connected-component/salience level-up attempt.
 
       CONCRETE STEPS:
-      1. Registry-precheck all candidate public games and current levels. Avoid duplicate solves and avoid targets whose next-level delta is already known absent unless your live-path mechanism explicitly addresses that gap.
-      2. Select a rotated frontier target and record why it was chosen over recent no-bank targets such as cn04 L4 and repeated re86 L3 salience attempts.
-      3. Add or exercise live-agent reachable runtime measurement-access predicates: frame-level measurements, action-effect observations, state-change summaries, and verifier-routed predicates learned from the agent's own attempts.
-      4. Run bounded live/offline agent attempts without reading hidden game source, without offline ground-truth BFS, and without crediting a hand GameAdapter as the solve path.
-      5. Reproduce any candidate level-up with arc_solver_kit or scripts/arc_loop_solve.py and record offline_reproduced=true only when the gate advances beyond the registry level. The acceptance gate for this task is offline_reproduced=true AND reproduced_levels>=1 AND a new level reproduced or +1 deeper than the registry precheck.
-      6. If no level is banked, emit an honest_null verdict with frontier expansions, attempted predicates, and the residual wall.
-      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - solve_provenance: live_agent_self_discovery  # principle: ARC live-path reachability discipline
-         - registry_precheck_total_levels: int  # principle: duplicate-solve prevention
-         - selected_game: string  # principle: target audit
-         - selected_target_level: int  # principle: target audit
-         - target_rotation_reason: string  # principle: no stale rerun
-         - live_attempt_count: int  # principle: live effort evidence
-         - runtime_predicates_induced: list  # principle: credited mechanism
-         - offline_reproduced: bool  # principle: official reproduction gate
-         - reproduced_levels: int  # principle: level-up acceptance
-         - new_levels_banked: int  # principle: north-star movement
-         - new_level_reproduced: bool  # principle: lint-readable solve gate
-         - no_offline_bfs: true  # principle: no outer-loop solve
-         - no_source_reading: true  # principle: no hidden source path
-         - no_per_game_adapter_credited: true  # principle: live mechanism only
-         - arc_new_level_banked: bool  # principle: capstone field
-         - inference_substrate: offline_arcade_live_agent_runtime_self_discovery_no_llm  # principle: explicit runtime path
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "honest_null:" or "blocked:"
+      1. Registry-precheck public games, current reproduced levels, and recent no-bank targets.
+      2. Audit score/level detection for null-coordinate exploits, duplicate-level credit, off-path source-derived solves, and replay-only artifacts.
+      3. Add or exercise live-agent reachable perception diagnostics for connected components, color blobs, changed pixels, salience tiers, and action-effect observations.
+      4. Produce a target shortlist for Exp5465 that avoids already-reached levels and recent duplicate no-bank lanes.
+      5. Add tests or receipts that duplicate solves and off-path provenance are rejected.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - registry_precheck_performed: bool
+         - reproduced_total_levels_before: int
+         - duplicate_solve_rejected: bool
+         - off_path_solve_rejected: bool
+         - null_coordinate_exploit_valid: bool
+         - perception_feature_receipts_path: string
+         - target_shortlist: list
+         - recent_no_bank_targets_avoided_or_justified: list
+         - arc_metric_integrity_ready: bool
+         - inference_substrate: live_path_precheck_no_solve_claim
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5451-kan-verifier-potential-memory-certificate-v495
-    milestone: "2026.07.495"
-    title: "Bounded KAN certificates for verifier-potential and governed-memory claims"
-    priority: high
-    track: certificates
-    deliverable: results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json
+  - id: exp5465-gated-arc-connected-component-salience-levelup-v496
+    milestone: "2026.07.496"
+    title: "Gated ARC live connected-component salience +1 level-up attempt after Exp5464"
+    priority: critical
+    track: arc-agi3
+    deliverable: results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json
+    solve_provenance: live_agent_self_discovery
     agent_type: codex
     model: gpt-5.5
-    max_turns: 45
-    estimated_wall_time_min: 70
+    max_turns: 50
+    estimated_wall_time_min: 130
     gated_on:
-      - upstream: exp5443-verifier-potential-prefix-fixture-v495
-        artifact_field: verifier_potential_fixture_ready
-        op: "=="
-        value: true
-      - upstream: exp5446-governed-memory-csl-online-v495
-        artifact_field: governed_csl_loop_ready
+      - upstream: exp5464-arc-metric-integrity-perception-precheck-v496
+        artifact_field: arc_metric_integrity_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp5438-kan-ontology-measurement-certificate-v494
-        verdict: "complete: bounded KAN cert rejected false ontology/retrieval/unsupported claims, no broad claim"
-        addressed_by: "This task keeps the bounded certificate pattern but targets verifier-potential and governed-memory measurement-access claims."
+      - experiment_id: exp5450-arc-measurement-access-live-levelup-v495
+        verdict: "honest_null: ka59 L2 bounded_budget_no_levelup."
+        addressed_by: "This attempt is gated on a metric-integrity precheck and shifts to live connected-component/color-blob salience instead of repeating ka59 measurement-access induction."
         retire_if_same_verdict: true
-      - experiment_id: exp5425-kan-measurement-access-certificate-v493
-        verdict: "complete: bounded measurement-access KAN certificate rejected observable false active-constraint claims and unsupported board/token/internal claims while preserving true measured properties with no broad KAN verification claim"
-        addressed_by: "This task extends the same certificate discipline to new V495 claims and remains bounded."
+      - experiment_id: exp5437-arc-live-reinduction-levelup-v494
+        verdict: "honest_null: cn04 L4 bounded_budget_nolevelup."
+        addressed_by: "This attempt rotates targets after registry precheck and uses perception-grounded live features instead of cn04 reinduction."
         retire_if_same_verdict: true
-      - experiment_id: exp5412-kan-active-constraint-certificate-v492
-        verdict: "complete: bounded active-constraint certificate rejected stale and adversarial false hint-routing properties while preserving exact candidate hints and making no broad KAN verification claim"
-        addressed_by: "This task includes memory/provenance and verifier-potential false-property controls instead of active-constraint-only claims."
+      - experiment_id: exp5154-generation-axis-exploration-signal-v473
+        verdict: "retired: ARC first-contact candidate-generation exploration-signal tweaks were retired after novelty/program-synthesis/energy-as-fitness nulls."
+        addressed_by: "This is a perception-grounding and connected-component live-path attempt, not a candidate-generation exploration-signal rerun."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, this task runs only if Exp5443 and Exp5446 are ready. Carnot's KAN certificate lane is bounded: it may certify measurement-access properties over artifacts, but it must reject unsupported broad claims about KAN soundness, hardware speedup, token/internal state, or general LLM truth.
+      This is the required ARC level-up slot for milestone 2026.07.496 on {date}. It runs only if Exp5464 arc_metric_integrity_ready=true. The credited path is the live agent's own attempts plus runtime reverse engineering, not offline BFS, source reading, or a hand-built per-game adapter.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_5443_verifier_potential_prefix_fixture_v495.json
-      - {project_root}/results/experiment_5446_governed_memory_csl_online_v495.json
-      - {project_root}/results/experiment_5438_kan_ontology_measurement_certificate_v494.json
-      - {project_root}/python/carnot
-      - {project_root}/tests/python
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py
+      - {project_root}/scripts/arc_loop_solve.py
+      - {project_root}/results/experiment_5450_arc_measurement_access_live_levelup_v495.json
 
       TASK:
-      Emit bounded KAN-style measurement-access certificates that preserve true measured claims and reject false or unsupported claims about verifier-potential generation and governed memory.
+      Run one live ARC +1 level-up attempt using connected-component and color-blob salience features reachable by the live agent. Count success only if a new level is reproduced through the official live/offline reproduction gate.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: confirm Exp5443 verifier_potential_fixture_ready=true and Exp5446 governed_csl_loop_ready=true.
-      1. Build a claim set containing true artifact-measured properties, false verifier-potential properties, false memory/provenance properties, unsupported hardware speedup claims, unsupported token/internal claims, and broad KAN soundness claims.
-      2. Apply the existing bounded KAN/certificate machinery or a local equivalent that only has access to measured artifact fields.
-      3. Require the certificate to reject claims whose required measurement fields are absent.
-      4. Add tests for true-positive preservation, false-property rejection, unsupported-claim rejection, and no broad KAN verification claim.
-      5. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - gated_upstreams_ready: bool  # principle: structured gate provenance
-         - claim_count: int  # principle: certificate coverage
-         - true_measured_claim_preservation_rate: number  # principle: useful certificate
-         - false_property_rejection_rate: number  # principle: soundness guard
-         - unsupported_claim_rejection_rate: number  # principle: measurement-access boundary
-         - verifier_potential_claims_checked: int  # principle: V495 claim coverage
-         - governed_memory_claims_checked: int  # principle: CSL claim coverage
-         - hardware_speedup_claim_rejected: bool  # principle: hardware honesty
-         - token_internal_claim_rejected: bool  # principle: closed-lane enforcement
-         - broad_kan_claim_made: false  # principle: no overclaim
-         - certificate_checksum: string  # principle: reproducibility
-         - kan_certificate_ready: bool  # principle: capstone evidence
-         - inference_substrate: bounded_measurement_access_certificate  # principle: explicit certificate substrate
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      1. Re-run registry precheck and select a target from Exp5464 target_shortlist.
+      2. Exercise live-agent reachable connected-component, color-blob, changed-pixel, salience-tier, and action-effect features.
+      3. Run bounded live/offline agent attempts without reading hidden game source, without offline ground-truth BFS, and without crediting a hand GameAdapter as the solve path.
+      4. Reproduce any candidate level-up with scripts/arc_loop_solve.py or the official reproduction gate.
+      5. Accept success only when offline_reproduced=true and reproduced_levels increases beyond the registry precheck for the selected target.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - solve_provenance: live_agent_self_discovery
+         - registry_precheck_performed: bool
+         - target_game: string
+         - target_level_before: int
+         - target_level_attempted: int
+         - live_attempt_count: int
+         - perception_features_used: list
+         - source_reading_used: false
+         - offline_bfs_used: false
+         - hand_adapter_credited: false
+         - offline_reproduced: bool
+         - reproduced_levels: int
+         - new_level_banked: bool
+         - arc_registry_update_required: bool
+         - inference_substrate: arc_live_agent_self_discovery
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5452-prd-gap-agent-failure-table-v495
-    milestone: "2026.07.495"
-    title: "PRD gap and agent-failure table for .495"
+  - id: exp5466-prd-gap-agent-failure-table-v496
+    milestone: "2026.07.496"
+    title: "PRD gap and agent-failure table for .496"
     priority: high
     track: synthesis
-    deliverable: results/experiment_5452_prd_gap_agent_failure_table_v495.json
+    deliverable: results/experiment_5466_prd_gap_agent_failure_table_v496.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 35
-    estimated_wall_time_min: 35
+    estimated_wall_time_min: 45
     prior_failures:
+      - experiment_id: exp5452-prd-gap-agent-failure-table-v495
+        verdict: "complete: .495 PRD gap table read actual Exp5441-Exp5451 artifacts; closed=6, partial=4, blocked=1, honest_null=2, missing=0."
+        addressed_by: "This task aggregates the newer .496 artifacts and explicitly carries Exp5444 tautology repair, CSL policy, ARC, and hardware status."
+        retire_if_same_verdict: true
       - experiment_id: exp5439-prd-gap-agent-failure-table-v494
-        verdict: "complete: closed=3 partial=3 blocked=1 honest_null=2 missing=0"
-        addressed_by: "This task aggregates the newer .495 artifacts and compares them to the PRD without rerunning .494 synthesis."
-        retire_if_same_verdict: true
-      - experiment_id: exp5426-prd-gap-agent-failure-table-v493
-        verdict: "complete: .493 PRD gap table emitted from artifacts"
-        addressed_by: "This is the next milestone evidence table and uses the .495 task range."
-        retire_if_same_verdict: true
-      - experiment_id: exp5413-evidence-table-prd-gap-analysis-v492
-        verdict: "complete: .492 evidence table emitted with 5 closed, 4 partial, 3 blocked, and 0 missing rows"
-        addressed_by: "This task keeps the evidence-table format but updates source artifacts and gap classifications."
+        verdict: "complete: .494 PRD gap and agent-failure table reconciled actual artifacts."
+        addressed_by: "This is the next milestone synthesis over a new task range, not a rerun of .494."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      On {date}, .495 implementation tasks may have closed, partial, blocked, or honest-null outcomes. This synthesis task must read real artifacts and produce a PRD gap table. Do not infer success from roadmap intent.
+      On {date}, after Exp5454-Exp5465 have run or been skipped by gates, aggregate the actual evidence into a PRD gap and agent-failure table. Do not assume planned tasks succeeded; read artifacts.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/_bmad/prd.md
-      - {project_root}/_bmad/architecture.md
-      - {project_root}/ops/changelog.md
+      - {project_root}/_bmad/traceability.md
       - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/results/experiment_5454_transition_v496.json
       - {project_root}/results
 
       TASK:
-      Aggregate Exp5441-Exp5451 evidence into a PRD gap and agent-failure table with closed/partial/blocked/honest-null classifications.
+      Emit a .496 PRD gap and agent-failure table grounded in the actual Exp5454-Exp5465 artifacts.
 
       CONCRETE STEPS:
-      1. Read all available Exp5441-Exp5451 artifacts. If an expected artifact is missing, classify it as missing rather than fabricating a result.
-      2. Map each result to PRD goals: verifiable reasoning, continuous self-learning, hardware acceleration readiness, ARC progress, model locality, and safety/traceability.
-      3. Classify each lane as closed, partial, blocked, honest_null, or missing with a one-line evidence citation.
-      4. Identify agent failure patterns: precondition block, gate block, no-bank, measurement unavailable, tautology risk, unsupported claim, or implementation failure.
-      5. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - milestone: 2026.07.495  # principle: route key
-         - artifacts_expected: list  # principle: completeness basis
-         - artifacts_found: list  # principle: evidence basis
-         - closed_count: int  # principle: PRD progress
-         - partial_count: int  # principle: bounded progress
-         - blocked_count: int  # principle: blocker accounting
-         - honest_null_count: int  # principle: null-result honesty
-         - missing_count: int  # principle: no fabricated evidence
-         - prd_gap_table: list  # principle: traceability
-         - agent_failure_table: list  # principle: operational learning
-         - unsupported_claims_detected: list  # principle: claim discipline
-         - inference_substrate: aggregation_from_upstream_artifacts  # principle: no hidden live model inference
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      1. Read every available result artifact from Exp5454 through Exp5465 and mark missing/skipped artifacts explicitly.
+      2. Map findings to PRD requirements, especially FR-11 continuous self-learning and FR-12 verifiable reasoning.
+      3. Separate closed, partial, blocked, honest-null, skipped-gated, and missing lanes.
+      4. Record agent failure modes: tautology, duration/precondition failures, missing hardware, no-bank ARC, GGUF/offload gaps, and unsupported hidden/internal claims.
+      5. Update ops/status.md, ops/changelog.md, and _bmad/traceability.md only if required by repo policy and only with facts from artifacts.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.496
+         - artifact_paths_read: list
+         - missing_artifacts: list
+         - skipped_gated_tasks: list
+         - closed_lanes: list
+         - partial_lanes: list
+         - blocked_lanes: list
+         - honest_null_lanes: list
+         - prd_requirement_map: dict
+         - agent_failure_taxonomy: dict
+         - docs_updated: list
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5453-capstone-v495
-    milestone: "2026.07.495"
-    title: "Milestone .495 capstone and next-roadmap recommendations"
+  - id: exp5467-capstone-v496
+    milestone: "2026.07.496"
+    title: "Milestone .496 capstone and next-roadmap recommendations"
     priority: critical
     track: synthesis
-    deliverable: results/experiment_5453_capstone_v495.json
+    deliverable: results/experiment_5467_capstone_v496.json
     agent_type: codex
     model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 45
+    max_turns: 40
+    estimated_wall_time_min: 55
     prior_failures:
-      - experiment_id: exp5440-capstone-v494
-        verdict: "complete: .494 capstone emitted from actual artifacts; structured corrigendum and taxonomy replication, ontology memory, verified workflow CSL, and CSL transfer stress are headline-ready; active constraints, p-bit timing, and KAN ontology certificates are bounded; ARC no-bank keeps the north-star count unchanged; no hardware speedup is claimed; token/internal lane closed."
-        addressed_by: "This task aggregates the newer .495 artifact range and emits next-roadmap recommendations, not another .494 capstone."
+      - experiment_id: exp5453-capstone-v495
+        verdict: "complete: .495 capstone emitted from actual artifacts; verifier-potential fixtures, AST/KB witnesses, governed CSL, memory stress, and PRD gap synthesis are headline-ready; local SOTA decoding is blocked by adversarial tautology flags; active/p-bit, hardware receipts, and KAN certificates are bounded; ARC no-bank, no hardware speedup, and token/internal lane closed."
+        addressed_by: "This capstone aggregates the newer .496 artifacts and must not headline Exp5457/Exp5461/Exp5465 unless their gates and artifacts support it."
         retire_if_same_verdict: true
-      - experiment_id: exp5427-capstone-v493
-        verdict: "complete: .493 capstone emitted from actual artifacts; CSL reliance and gated promotion are headline-ready, active constraints/p-bit timing/KAN and comparable hardware timing are bounded, risk-calibrated and predictive-prefix structured lanes remain blocked by adversarial flags despite valid GGUF receipts, ARC no-bank keeps the north-star count unchanged, no hardware speedup is claimed, and token/internal lane closed."
-        addressed_by: "This task carries forward the capstone discipline with the .495 verifier-potential, governed memory, hardware, ARC, and certificate evidence."
-        retire_if_same_verdict: true
-      - experiment_id: exp5414-capstone-v492
-        verdict: "complete: .492 capstone emitted from actual artifacts; formal corrigendum, structured safety/action, resource-accounted CSL, and uncertainty-gated promotion are headline-ready; active-constraint, p-bit/QUBO, KAN, and local SOTA inference remain bounded; ARC no-bank, hardware has repeatability but no hardware speedup, and token/internal lane closed."
-        addressed_by: "This capstone consumes the .495 PRD gap table if present and otherwise aggregates the .495 artifacts directly."
+      - experiment_id: exp5466-prd-gap-agent-failure-table-v496
+        verdict: "planned prerequisite: .496 PRD gap table aggregates actual Exp5454-Exp5465 artifacts."
+        addressed_by: "This task consumes the .496 gap table and emits milestone-level recommendations rather than replacing the table."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the final synthesis task for milestone 2026.07.495 on {date}. It must report what actually happened, not what the roadmap intended. Do not modify research-roadmap.yaml or scripts/research_conductor.py.
+      This is the terminal .496 capstone on {date}. Read actual artifacts and skip any flagged_adversarial, skipped-gated, missing, or precondition-failed upstream as headline evidence. Preserve bounded claims and recommend the next milestone only from observed gaps.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/research-program.md
-      - {project_root}/_bmad/prd.md
-      - {project_root}/_bmad/architecture.md
       - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5466_prd_gap_agent_failure_table_v496.json
       - {project_root}/ops/changelog.md
       - {project_root}/ops/status.md
       - {project_root}/results
 
       TASK:
-      Emit the .495 capstone truth table, identify headline-ready and bounded lanes, preserve honest nulls, and recommend the natural next milestone direction.
+      Emit the .496 capstone truth table and next-roadmap recommendations from actual artifacts.
 
       CONCRETE STEPS:
-      1. Read Exp5441-Exp5452 artifacts if present. Treat missing artifacts as missing.
-      2. Build a truth table covering verifier-potential generation, local SOTA decoding, AST/KB witnesses, governed CSL, memory stress, active-constraint/p-bit bridge, hardware receipts, ARC, KAN certificates, and PRD gap synthesis.
-      3. Separate headline-ready, bounded, blocked, honest-null, and missing results. Do not promote any lane with adversarial, tautology, duration, or unsupported-claim flags.
-      4. Record whether hardware_speedup_claim is false, whether token/internal lanes stayed closed, and whether ARC banked a new level.
-      5. Recommend 3-5 next-roadmap directions based on evidence, not speculation.
-      6. Confirm that research-roadmap.yaml and scripts/research_conductor.py were not modified.
-      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - milestone: 2026.07.495  # principle: route key
-         - task_range: exp5441-exp5453  # principle: execution boundary
-         - artifacts_found: list  # principle: evidence basis
-         - headline_ready_lanes: list  # principle: positive evidence
-         - bounded_lanes: list  # principle: bounded evidence
-         - blocked_lanes: list  # principle: blocker accounting
-         - honest_null_lanes: list  # principle: null-result honesty
-         - missing_lanes: list  # principle: no fabricated evidence
-         - arc_new_level_banked: bool  # principle: north-star status
-         - hardware_speedup_claim: false  # principle: hardware honesty
-         - token_internal_lane_reopened: false  # principle: closed-lane discipline
-         - next_recommendations: list  # principle: planning handoff
-         - roadmap_yaml_unchanged: bool  # principle: user prohibition
-         - conductor_unchanged: bool  # principle: user prohibition
-         - inference_substrate: aggregation_from_upstream_artifacts  # principle: no hidden live model inference
-         - honest_verdict: string  # principle: terminal status; start with "complete:" or "blocked:"
+      1. Read Exp5454-Exp5466 artifacts and identify which tasks completed, blocked, skipped by gates, or produced honest nulls.
+      2. Build a truth table for guided decoding, distortion guards, minimal-core repair, CSL policy, SOTA CSL, p-bit/p-dit bridge, hardware receipts, ARC, and synthesis.
+      3. Identify headline-ready results only when metric independence, exact authority, GGUF/hardware receipts, or ARC provenance gates are satisfied.
+      4. Record no-claim boundaries: hardware speedup, token/internal features, external text scorers, non-local TSU/Kona/Aleph execution, off-path ARC solves.
+      5. Recommend 3-5 next milestone priorities and retire or quarantine any rerun that reproduced the same failure verdict.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - milestone: 2026.07.496
+         - artifact_paths_read: list
+         - truth_table: dict
+         - headline_ready_lanes: list
+         - bounded_lanes: list
+         - blocked_lanes: list
+         - honest_null_lanes: list
+         - skipped_gated_tasks: list
+         - no_claim_boundaries: list
+         - next_milestone_recommendations: list
+         - roadmap_yaml_unchanged: bool
+         - conductor_unchanged: bool
+         - inference_substrate: aggregation_from_upstream_artifacts
+         - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
