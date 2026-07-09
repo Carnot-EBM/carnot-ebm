@@ -28540,3 +28540,22 @@ additional executable hooks for `.496`.
   retired exploration-signal or off-path solve lane.
 
 <!-- V496-PLANNER-REFRESH-20260709-END -->
+
+
+### V496 Execution Refresh - 20260709
+
+Execution-time sweep after the `.496` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V490/V491/V492/V493/V494/V495/V496 duplicate history, and the exclusion manifest. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **Projectional Decoding: Towards Semantic-Aware LLM Generation** (https://arxiv.org/abs/2605.30054): For Exp5459 and guided-decoding distortion guards, keep a partial semantic artifact graph beside token text, attach uncertainty and error nodes, and run incremental semantic validators before accepting locally valid but semantically wrong continuations. Exact final verifiers and solvers remain authority.
+- **Guiding Human Validation of LLM-Generated Code via Verifiable Literate Programming** (https://arxiv.org/abs/2607.02333): For Exp5458 and AST/KB witness rows, add a doc-to-code trace-link fixture where unambiguous semantic documentation yields API-usage checks, formal-property checks, and suspicious documentation line IDs. Treat human validation as optional annotation, not a headline automation claim.
+- **Safe and Adaptive Cloud Healing: Verifying LLM-Generated Recovery Plans with a Neural-Symbolic World Model** (https://arxiv.org/abs/2607.01595): For Exp5460 action/memory policy and tool-state validity, model recovery or tool plans as semantic primitive sequences, simulate feasibility in a deterministic world model before execution, and log failed primitive or precondition IDs. Do not import the DRL meta-prompt optimizer into V496.
+- **Beyond Perplexity: A Behavioral Evaluation Framework for Deployment-Memory Claims in LLM Test-Time Training** (https://arxiv.org/abs/2607.00368): For Exp5460 and Exp5461 continuous self-learning, require a behavioral memory evidence ladder: recall after support removal, paraphrase robustness, locality, conflict handling, downstream action use, and matched explicit-memory/no-memory baselines before crediting online learning. Do not reopen LoRA or broad TTT fine-tuning.
+
+### Execution impact
+- **Plan impact:** No active `.496` roadmap edit is required. The deltas sharpen Exp5458/Exp5459 semantic graph, doc/code witness, and distortion-guard receipts; Exp5460/Exp5461 tool-state and CSL behavioral-memory evidence; and later guided-decoding acceptance checks without expanding scope.
+- **Duplicates suppressed:** V496 planner sources, AgentLTL, LLM-as-a-Verifier, Harnessing Code Agents, Formal Disco, HCRC, Benchmarking Continual Agent Memory, DCCD, STATIC, llguidance, million-p-bit, p-dit, p-bit guided CDCL, KAN PWA/MILP, EBT, ARM-EBM, NRGPT, LCAD, and prior Extropic/Logical Intelligence context were already covered or stayed watch-only and are not re-added.
+- **Retired scope:** No retired scope was reopened. LLM-as-a-Verifier logit scorers, PASE DRL optimization, LoRA/TTT fine-tuning, broad GRPO/RL reruns, external generated-text/logprob scorers, token/internal feature claims without backend receipts, non-local TSU/Kona/Aleph execution claims, duplicate ARC lanes, and hardware speedup claims without matched board timing remain closed.
+- **Watch-only/excluded:** Extropic TSU/XTR-0/THRML writing, Logical Intelligence Aleph/Kona pages, OpenReview EBT/LCAD/continual-memory surfaces, Formal Disco fine-tuning, HCRC, defeater-quality meta-classifiers, and Semantic Scholar citation-route material were checked but not promoted as executable `.496` dependencies.
+
+<!-- V496-EXECUTION-REFRESH-20260709-END -->
