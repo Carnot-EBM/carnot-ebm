@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.496",
+  "generated_at": "2026-07-09T05:52:01Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "No data available this milestone for operational throughput: the locked fields show 0 total wall-time minutes, 0 completed experiments, 0 compute-bound experiments, and no slowest-experiment entries. With gpu_idle_on_compute_bound_tasks=null, compute-bound GPU efficiency and DualGPURunner engagement have no measurable basis.",
+  "bottlenecks_identified": [
+    "no data available this milestone for experiment-level bottlenecks; the authoritative timing block contains 0 completed experiments and 0 compute-bound experiments.",
+    "GPU-idle behavior is not flagged as a bottleneck because gpu_idle_on_compute_bound_tasks is null and no compute-bound timing row is present."
+  ],
+  "improvements_suggested": [
+    "Emit an explicit empty-window timing receipt before retrospective generation when live git-log and disk-mtime reconstruction find no experiment commits since activation.",
+    "Render fixed no-data text for slowest-experiment, compute-bound GPU, and parallel-runner sections whenever experiments_completed is 0.",
+    "Keep GPU-utilization advice gated on compute-bound timing rows instead of acting on an idle synthesis-only snapshot."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a pre-retro timing receipt that records the milestone activation boundary and both reconstruction paths.",
+    "Make zero-experiment milestones short-circuit slowest-run and GPU-efficiency ranking into explicit no-data output.",
+    "Require timing-row evidence of parallel model loading before producing any DualGPURunner recommendation."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is a measurement-boundary record rather than a throughput diagnosis: with no milestone-scoped timing rows, ranking slow paths would fabricate precision. The next milestone should make the empty-window case explicit before narrative generation so operators do not spend time interpreting absent measurements as runtime behavior."
+}
