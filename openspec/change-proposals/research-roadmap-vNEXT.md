@@ -1,10 +1,10 @@
-# Research Roadmap vNEXT - Milestone 2026.07.495
+# Research Roadmap vNEXT - Milestone 2026.07.496
 
-**Milestone title:** Verifier-Potential Generation, Governed Online Memory, and Solver-Authoritative Hardware Boundaries
+**Milestone title:** Tautology-Clean Guided Decoding, Distortion Guards, Governed CSL Policy, and ARC Perception Integrity
 
-**Planner date:** 2026-07-08
-**Previous milestone:** 2026.07.494
-**Task range:** Exp 5441-5453
+**Planner date:** 2026-07-09
+**Previous milestone:** 2026.07.495
+**Task range:** Exp 5454-5467
 **Pre-staged roadmap:** `research-roadmap-next.yaml`
 
 ## Inputs Read
@@ -42,81 +42,85 @@ Additional guardrails checked before writing the roadmap:
 The planner performed a 2025-2026 refresh across arXiv, OpenReview,
 Extropic writing, Semantic Scholar citation routes for EBT `2507.02092` and
 ARM-EBM `2512.15605`, HuggingFace Papers, GitHub repositories, and Logical
-Intelligence public pages before designing experiments. Actionable findings
-were appended to `research-references.md` under
-`### V495 Planner Refresh - 2026-07-08`.
+Intelligence public pages before designing experiments. Actionable deltas were
+appended to `research-references.md` under
+`### V496 Planner Refresh - 20260709`.
 
-Promoted sources and planning consequences:
+New planning consequences:
 
-- **Score x Decoder** (`arXiv:2606.00739`): motivates prefix/particle
-  decoding as a sampler-guidance problem, but `.495` uses only deterministic
-  verifier potentials with reward-budget accounting.
-- **Stratified Scaling Search** (`arXiv:2604.06260`) and **DTV meta-step
-  decoding** (`arXiv:2605.17626`): motivate verifier calls during generation,
-  not just final-output filtering. `.495` tests structural checkpoints and
-  rollback on bounded local SOTA GGUF rows.
-- **p-bit guided CDCL** (`arXiv:2605.04033`) and **Potts mean-field
-  constraints** (`arXiv:2602.04200`): motivate stochastic hints as temporary
-  assumptions while exact solvers keep correctness authority.
-- **SSGM memory governance** (`arXiv:2603.11768`), **execution provenance**
-  (`arXiv:2606.04990`), **Execute-Distill-Verify**
-  (`arXiv:2606.24428`), **MemFail** (`arXiv:2605.26667`), and the
-  **Experience Compression Spectrum** (`arXiv:2604.15877`): motivate a
-  continuous self-learning loop with raw traces, case memory, skill memory,
-  rules, provenance, replay, rollback, and trap-memory stress.
-- **Deterministic AST hallucination correction** (`arXiv:2601.19106`):
-  motivates adding static AST/KB witness constraints to structured verifier
-  rows before crediting any code/API claim.
+- **Chance-Constrained Inference** (`arXiv:2602.01637`) turns hallucination
+  mitigation into deployment-time risk control. V496 guided decoding must
+  report accepted-generation risk, abstention, finite-sample confidence, and
+  infeasible-input detection.
+- **CoCoA conflict-aware adaptive decoding** (`arXiv:2508.17670`) and
+  **strict-constraint distortion** (`arXiv:2601.01490`) make factual
+  distortion a first-class failure mode. V496 should not credit constraint
+  satisfaction when the model silently rewrites known facts to satisfy the
+  constraint.
+- **DAVinCI dual attribution and verification** (`arXiv:2604.21193`) motivates
+  row-level claim attribution, evidence-span IDs, and calibrated entailment or
+  contradiction receipts for SOTA GGUF factuality rows.
+- **OLIVIA** (`arXiv:2605.11169`) and **CL-Bench** (`arXiv:2606.05661`) push
+  CSL from static memory presence to frozen-model online decision policies
+  tested against no-memory and naive in-context baselines.
+- **LCAD** (OpenReview `rbl8fHjLuF`) motivates monotone verifier-potential
+  accounting, but V496 keeps exact final verifiers as authority and rejects
+  metrics that prove success using the same scalar they are evaluating.
+
+Already-indexed sources remain active constraints on the design: tractable
+locally constrained decoding (`arXiv:2606.01926` / OpenReview `LYBs6f3jlK`),
+KAN PWA/MILP verification (`arXiv:2602.06737`), STATIC trie decoding
+(`arXiv:2602.22647`), million-p-bit FPGA sampling (`arXiv:2606.25313`),
+governed evolving memory (`arXiv:2603.11768`), and minimal-core-guided repair.
 
 Secondary-source status:
 
-- OpenReview reinforced verifier-guided sampling, certified neural constraint
-  solving, and KAN variants, but no page displaced Carnot's exact-solver
-  authority.
-- HuggingFace Papers reinforced EBT-style energy minimization and constrained
-  decoding, but no source changed local GGUF runtime requirements.
+- OpenReview reinforced local-constrained-decoding bias, Lyapunov-style
+  constraint control, verifier-guided sampling, and certified neural
+  constraint solving.
+- HuggingFace Papers surfaced DAVinCI, verification-guided reasoning, and
+  constrained-decoding pages, but none displaced local GGUF runtime
+  requirements.
 - Semantic Scholar public routes for EBT and ARM-EBM did not reveal a stronger
   citation-derived task than the source-paper hooks already tracked.
-- GitHub constrained-decoding, type-constrained generation, KAN, and
-  p-bit/Ising repositories remain implementation watch references.
+- GitHub constrained-decoding, CL-Bench, KAN, p-bit, and Ising repositories
+  remain implementation watch references.
 - Extropic TSU/XTR-0 and Logical Intelligence Aleph/Kona posts remain
   architecture context only; Carnot has no local authenticated TSU, Kona, or
   Aleph execution path.
 
-## What 2026.07.494 Proved
+## What 2026.07.495 Proved
 
-The `.494` capstone is the immediate planning source of truth:
+The `.495` capstone and changelog are the immediate planning source of truth:
 
 | Lane | Experiments | Finding |
 |------|-------------|---------|
-| Structured verification | 5430, 5431 | The structured tautology corrigendum and taxonomy replication are clean, row-derived, and headline-ready under local SOTA GGUF receipts. |
-| Ontology constraint memory | 5432 | Ontology and soft-logic memory can be made deterministic with solver authority and trap rejection. |
-| Active constraints | 5433 | Diverse LNS hints covered four families, reduced solver work by 138, and preserved solver authority. |
-| Hardware timing | 5434 | CPU/PolarFire receipts were hash-matched and useful, but no speedup claim is justified. |
-| Continuous self-learning | 5435, 5436 | Verified workflow memory promoted only validated case/skill sidecars, transferred in-domain, rejected shifted negative transfer, retained raw episodes, preserved rollback, and mutated no weights. |
-| ARC | 5437 | The live ARC attempt was an honest null on `cn04` L4; registry count remains 69. |
-| KAN certificates | 5438 | Bounded certificates rejected false ontology/retrieval/unsupported claims without making broad KAN claims. |
-| Synthesis | 5439, 5440 | Closed/partial/blocked lanes were reconciled; token/internal lanes remain closed without backend receipts. |
+| Transition and source freshness | 5441, 5442 | `.495` activated cleanly and source deltas were reconciled. |
+| Verifier-potential fixtures | 5443 | Deterministic prefix-potential fixtures with exact final authority are usable. |
+| Local SOTA guided decoding | 5444 | The live SOTA verifier-potential pilot ran but was adversarially flagged for `TAUTOLOGY`; it is not a headline result. |
+| Deterministic witnesses | 5445 | AST/KB witness constraints for code/API-like claims are complete and usable as exact evidence. |
+| Continuous self-learning | 5446, 5447 | Governed memory and memory-failure stress are complete, with no weight mutation and negative-transfer controls. |
+| Active constraints and hardware | 5448, 5449 | P-bit sparsity bridge and hardware timing receipts are complete; no hardware speedup is claimed. |
+| ARC | 5450 | Measurement-access predicate induction produced an honest null/no-bank on `ka59` L2; registry count remains 69. |
+| Certificates and synthesis | 5451-5453 | Bounded KAN certificates, PRD gap synthesis, and capstone truth table are complete; token/internal lanes remain closed without backend receipts. |
 
 ## Three Biggest Gaps
 
-1. **Verified reasoning is still mostly post-hoc.** `.494` made structured
-   verification clean, but the PRD vision needs constraints to shape
-   generation before the model commits to invalid prefixes. `.495` introduces
-   verifier-potential fixtures and a gated local SOTA GGUF decoding pilot.
+1. **Generation-time verification is blocked by metric validity.** `.495`
+   proved deterministic verifier-potential fixtures, but the first local SOTA
+   pilot was flagged as tautological. V496 must repair the accounting before
+   any new guided-decoding headline.
 
-2. **Continuous self-learning has safe memory units but not a governed online
-   lifecycle.** `.494` proved verified workflow memory and transfer stress.
-   The next gap is multi-session promotion across raw traces, case memory,
-   skills, and rules with provenance, replay, decay, rollback, and
-   memory-failure attribution.
+2. **Constraint satisfaction can hide factual distortion and biased sampling.**
+   The PRD wants trustworthy reasoning, not just schema-conformant output.
+   V496 adds conflict-aware decoding controls, chance-constrained acceptance,
+   attribution receipts, and locally constrained decoding bias checks.
 
-3. **Hardware and ARC remain north-star weak.** Active constraints and
-   p-bit receipts are bounded but not yet integrated with restored-sparsity
-   ledgers or repeatable board timing. ARC still has repeated no-bank attempts.
-   `.495` keeps hardware honest and includes one live-path, registry-checked
-   ARC level-up attempt using a mechanism distinct from retired first-contact
-   exploration reruns.
+3. **Learning and physical grounding are still bounded.** CSL has safe memory
+   units but not an online policy evaluated against realistic baselines and
+   SOTA rows. ARC remains at no-bank, and hardware remains receipt-only without
+   speedup. V496 advances policy, perception integrity, and p-bit timing-ratio
+   evidence while keeping exact authorities in charge.
 
 ## Target Architecture
 
@@ -127,29 +131,29 @@ The `.494` capstone is the immediate planning source of truth:
                          | Gemma-4-26B-A4B-it via llama.cpp     |
                          +-------------------+------------------+
                                              |
-                     partial candidates + structural checkpoints
+                              prompts, candidates, row receipts
                                              |
         +------------------------------------v----------------------------------+
-        | Verifier-potential generation layer                                  |
-        | prefix rewards, SMC/rollback accounting, AST/KB witnesses,           |
-        | exact schema/semantic/tool-state solvers as final authority           |
+        | Tautology-clean verifier-potential layer                             |
+        | independent row metrics, exact final verifiers, attribution spans,    |
+        | chance-constrained acceptance, distortion and LCD-bias guards         |
         +-------------------+--------------------------+------------------------+
                             |                          |
-            governed experience stream                 | solver hint stream
+           governed experience stream                  | solver hint stream
                             |                          |
         +-------------------v----------------+   +-----v------------------------+
-        | Continuous self-learning memory    |   | Active constraints and p-bit |
-        | raw traces -> cases -> skills ->   |   | assumptions, restored        |
-        | rules, provenance, replay, decay,  |   | sparsity, exact fallback,    |
-        | rollback, trap-memory stress       |   | CPU/board timing receipts    |
+        | Continuous self-learning policy    |   | Active constraints and p-bit |
+        | frozen-model action/memory routing |   | assumptions with minimal     |
+        | UCB/confidence, replay, rollback,  |   | cores, restored sparsity,    |
+        | no-memory and ICL baselines        |   | exact fallback, timing ratios|
         +-------------------+----------------+   +-----+------------------------+
                             |                          |
                             +------------+-------------+
                                          |
         +--------------------------------v--------------------------------------+
         | Live evidence and bounded certificates                                |
-        | ARC live self-discovery level-up attempt, KAN measurement certificates,|
-        | PRD gap table, capstone; token/internal lanes stay closed             |
+        | ARC perception/metric integrity, live self-discovery level-up attempt, |
+        | KAN measurement certificates, PRD gap table, capstone                 |
         +-----------------------------------------------------------------------+
 ```
 
@@ -157,97 +161,104 @@ The `.494` capstone is the immediate planning source of truth:
 
 ### Phase 0 - Transition and Source Delta
 
-- **Exp5441:** archive `.494` terminal evidence and stage `.495` task range.
-- **Exp5442:** run execution-time source delta against the V495 planner
+- **Exp5454:** archive `.495` terminal evidence and stage `.496` task range.
+- **Exp5455:** run execution-time source delta against the V496 planner
   refresh and append only non-duplicate actionable references.
 
-### Phase 1 - Verifier-Potential Generation and Deterministic Witnesses
+### Phase 1 - Tautology-Clean Guided Decoding and Distortion Guards
 
-- **Exp5443:** build a deterministic verifier-potential fixture with prefix
-  reward accounting, exact final checks, and row checksums.
-- **Exp5444:** if Exp5443 is ready, run a small local SOTA GGUF energy-guided
-  constrained-decoding pilot against unconstrained and grammar-only baselines.
-- **Exp5445:** add deterministic AST/KB witness constraints for code/API-like
-  hallucination rows and wire them into structured verifier evidence.
+- **Exp5456:** repair the Exp5444 tautology finding with row-independent
+  metric accounting and an adversarially checkable dependency graph.
+- **Exp5457:** if Exp5456 is clean, rerun a bounded local SOTA GGUF guided
+  decoding panel with conflict, distortion, attribution, chance-risk, and
+  locally constrained decoding bias controls.
+- **Exp5458:** apply minimal-core-guided repair to deterministic
+  verifier-potential and AST/KB witness rows.
+- **Exp5459:** build a constraint-distortion guard that distinguishes honest
+  constraint violation from false factual rewrites.
 
-### Phase 2 - Governed Continuous Self-Learning and Solver Hints
+### Phase 2 - Governed Continuous Self-Learning Policy
 
-- **Exp5446:** required CSL task: run governed multi-session workflow memory
-  across trace, case, skill, and rule promotion levels with replay and rollback.
-- **Exp5447:** if Exp5446 is ready, stress memory failure modes, stale
-  summaries, retrieval collisions, and negative transfer.
-- **Exp5448:** extend active-constraint hints into p-bit/CDCL-style temporary
-  assumptions with restored-sparsity and solver-authority ledgers.
-- **Exp5449:** if Exp5448 is ready, collect CPU/PolarFire/KV260 timing and
-  variance receipts for the exact same workload hashes, with no speedup claim.
+- **Exp5460:** required CSL task: convert governed memory into a frozen-model
+  online action/memory policy with no-memory and naive in-context baselines.
+- **Exp5461:** if Exp5460 is ready, run a bounded local SOTA GGUF CSL memory
+  routing panel and measure negative transfer, context cost, and verifier cost.
 
-### Phase 3 - ARC, Certificates, and Synthesis
+### Phase 3 - Solver, Hardware, ARC, and Synthesis
 
-- **Exp5450:** run one ARC live-path level-up attempt with registry precheck,
-  measurement-access predicate induction, and live-agent self-discovery only.
-- **Exp5451:** issue bounded KAN measurement-access certificates for
-  verifier-potential and governed-memory claims.
-- **Exp5452:** aggregate `.495` evidence into a PRD gap and failure-taxonomy
+- **Exp5462:** extend the active-constraint p-bit bridge with minimal-core and
+  p-dit assignment controls while exact solvers keep final authority.
+- **Exp5463:** if Exp5462 is ready, collect CPU and reachable-board timing
+  receipts for the same workload hashes; no speedup claim.
+- **Exp5464:** run ARC metric-integrity and perception precheck for
+  null-coordinate and salience failure modes.
+- **Exp5465:** if Exp5464 is clean, run one live ARC connected-component
+  salience level-up attempt with live-agent self-discovery provenance.
+- **Exp5466:** aggregate `.496` evidence into a PRD gap and failure-taxonomy
   table.
-- **Exp5453:** emit the `.495` capstone truth table and recommendations.
+- **Exp5467:** emit the `.496` capstone truth table and recommendations.
 
 ## Natural Next-Experiment Chain
 
 ```text
-Exp5430/5431 clean structured verification
-  -> Exp5443 verifier-potential fixture
-      -> Exp5444 local SOTA energy-guided decoding pilot
-      -> Exp5451 bounded KAN verifier-potential certificates
+Exp5444 TAUTOLOGY finding
+  -> Exp5456 guided-decoding metric corrigendum
+      -> Exp5457 gated local SOTA distortion/bias guarded decoding rerun
+          -> Exp5466 PRD gap table
 
-V495 source refresh + deterministic code-hallucination literature
-  -> Exp5445 AST/KB witness constraints
-      -> Exp5452 PRD gap table
+Exp5443 verifier-potential fixtures + Exp5445 AST/KB witnesses
+  -> Exp5458 minimal-core repair formalization
+      -> Exp5459 constraint-distortion guard
 
-Exp5435/5436 verified workflow CSL
-  -> Exp5446 governed online workflow memory
-      -> Exp5447 memory-failure stress
-      -> Exp5451 bounded KAN governed-memory certificates
+Exp5446 governed CSL + Exp5447 memory-failure stress
+  -> Exp5460 governed CSL policy bandit
+      -> Exp5461 gated local SOTA memory-routing panel
 
-Exp5433 active constraints + V495 p-bit/CDCL literature
-  -> Exp5448 p-bit assumption bridge
-      -> Exp5449 hardware timing receipts
+Exp5448 p-bit sparsity bridge + V496 p-bit/p-dit literature
+  -> Exp5462 minimal-core p-bit/p-dit bridge
+      -> Exp5463 hardware timing-ratio receipts
 
-Exp5437 ARC no-bank + arc_solve_registry + known-issues ARC floor
-  -> Exp5450 live ARC level-up attempt
+Exp5450 ARC no-bank + known-issues perception lane
+  -> Exp5464 ARC metric-integrity precheck
+      -> Exp5465 ARC live connected-component salience level-up attempt
 
-Exp5443-Exp5451
-  -> Exp5452 PRD gap table
-      -> Exp5453 capstone
+Exp5456-Exp5465
+  -> Exp5466 PRD gap table
+      -> Exp5467 capstone
 ```
 
 ## Hardware Requirements
 
 | Experiment | Compute | Hardware notes | Claim boundary |
 |-----------|---------|----------------|----------------|
-| 5441, 5442, 5443, 5445, 5446, 5447, 5448, 5451-5453 | CPU | Deterministic fixtures, repository artifacts, exact solvers | No live model or hardware speedup claim |
-| 5444 | Dual RTX 3090 preferred | Must use CUDA-enabled `llama-cpp-python`/GGUF runtime; `MODEL_SPECS` include the three mandated SOTA GGUFs | Block headline result if offload/runtime receipts are absent |
-| 5449 | CPU plus PolarFire/KV260 if reachable | Same workload hash, result hash, repeat counts, timing distribution; KV260 SSH-only; GateMate diagnostic-only unless physical/JTAG evidence returns | `hardware_speedup_claim=false` unless future matched board-local timing justifies otherwise |
-| 5450 | CPU ARC offline/live runtime | Registry precheck, live-agent self-discovery only, no source reading, no offline BFS, no per-game adapter credited path | Registry count changes only after reproduction-gated new level |
+| 5454, 5455, 5456, 5458, 5459, 5460, 5462, 5464, 5466, 5467 | CPU | Deterministic fixtures, repository artifacts, exact solvers | No live model or hardware speedup claim |
+| 5457, 5461 | Dual RTX 3090 preferred | Must use CUDA-enabled `llama-cpp-python` or native llama.cpp GGUF runtime; `MODEL_SPECS` include the three mandated SOTA GGUFs | Block headline result if offload/runtime receipts are absent |
+| 5463 | CPU plus PolarFire/KV260 if reachable | Same workload hash, result hash, repeat counts, timing distribution; KV260 SSH-only; GateMate diagnostic-only unless physical/JTAG evidence returns | `hardware_speedup_claim=false` unless future matched board-local timing justifies otherwise |
+| 5464, 5465 | CPU ARC runtime | Registry precheck, live-agent self-discovery only, no source reading, no offline BFS, no per-game adapter credited path | Registry count changes only after reproduction-gated new level |
 
 ## Risk Controls
 
-- **GGUF runtime:** Exp5444 must use the three mandated local SOTA GGUFs:
+- **GGUF runtime:** Exp5457 and Exp5461 must use at least one of the three
+  mandated local SOTA GGUFs and list all three in `MODEL_SPECS`:
   `unsloth/Qwen3.6-35B-A3B-GGUF`,
   `unsloth/gemma-4-31B-it-GGUF`, and
-  `unsloth/gemma-4-26B-A4B-it-GGUF`. It must load via GGUF/llama.cpp paths,
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. They must load via GGUF/llama.cpp paths,
   not `AutoTokenizer.from_pretrained` on GGUF repositories.
-- **Verifier authority:** Verifier potentials may guide generation, but exact
-  deterministic verifiers remain final authority. No learned or LLM self-score
-  is accepted as a certificate.
-- **CSL safety:** Memory promotion cannot mutate model weights. Promoted
-  memory must retain raw traces, provenance, replay evidence, rollback pointers,
-  temporal decay policy, and negative-transfer controls.
+- **Metric independence:** Exp5456 must prove guided-decoding success metrics
+  are computed from row outcomes and exact verifier labels, not from the
+  guided reward scalar itself.
+- **Verifier authority:** Verifier potentials and policy scores may guide
+  search, but exact deterministic verifiers, AST/KB witnesses, and solvers
+  remain final authority.
+- **CSL safety:** Continuous self-learning cannot mutate model or adapter
+  weights. Policy updates must carry raw traces, provenance, UCB/confidence
+  receipts, replay evidence, rollback pointers, and negative-transfer controls.
 - **Hardware honesty:** Hardware tasks may report slower board execution.
   Speedup remains unclaimed without repeated matched board-local timing.
 - **ARC discipline:** Only the live agent's own attempts and runtime reverse
   engineering count. Offline BFS, hidden source reading, and hand per-game
   adapters are not headline solve paths.
 - **Closed lanes stay closed:** Token/internal hidden-state/logprob claims,
-  external generated-text scorer lanes, non-local TSU/Kona/Aleph execution, and
-  retired first-contact exploration reruns remain closed without authenticated
-  new receipts or operator override.
+  external generated-text scorer lanes, non-local TSU/Kona/Aleph execution,
+  and retired first-contact exploration reruns remain closed without
+  authenticated new receipts or operator override.

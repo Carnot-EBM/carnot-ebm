@@ -28466,3 +28466,77 @@ Execution-time sweep after the `.495` planner refresh checked arXiv, OpenReview,
 - **Watch-only/excluded:** Extropic TSU/XTR-0/THRML writing, Logical Intelligence Aleph/Kona pages, OpenReview EBT/neural-CSP surfaces, Dockerless post-training, SynthFix fine-tuning, and Semantic Scholar citation-route material were checked but not promoted as executable `.495` dependencies.
 
 <!-- V495-EXECUTION-REFRESH-20260708-END -->
+
+
+### V496 Planner Refresh - 20260709
+
+Planner sweep for milestone `.496` rechecked arXiv, OpenReview, HuggingFace
+Papers, Semantic Scholar routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`, GitHub, Extropic writing, Logical Intelligence public pages,
+and the V495 execution refresh. Most high-priority 2025-2026 anchors were
+already indexed: strict-constraint distortion (`2601.01490`), tractable
+locally constrained decoding (`2606.01926` / OpenReview `LYBs6f3jlK`),
+KAN PWA/MILP verification (`2602.06737`), STATIC trie decoding (`2602.22647`),
+million-p-bit FPGA sampling (`2606.25313`), governed evolving memory
+(`2603.11768`), and minimal-core-guided repair. The deltas below are the
+additional executable hooks for `.496`.
+
+### New actionable deltas
+- **Chance-Constrained Inference for Hallucination Risk Control**
+  (https://arxiv.org/abs/2602.01637): Frames hallucinations as stochastic
+  constraint violations and uses sequential, anytime-valid acceptance tests to
+  bound failure frequency under repeated generation. Carnot hook: the V496
+  guided-decoding rerun should report accepted-generation risk, abstention
+  rate, finite-sample confidence, and infeasible-input detection rather than
+  only average verifier accuracy.
+- **CoCoA: Confidence and Context-Aware Adaptive Decoding**
+  (https://arxiv.org/abs/2508.17670): Uses entropy-gap, contextual peakedness,
+  and divergence between parametric and contextual distributions to resolve
+  knowledge conflicts without degrading low-conflict cases. Carnot hook: add a
+  conflict-meter control to verifier-potential decoding so constraints do not
+  blindly override factual context or create the distortion pattern already
+  noted in `2601.01490`.
+- **Trust but Verify: DAVinCI dual attribution and verification**
+  (https://arxiv.org/abs/2604.21193; HuggingFace Papers mirror
+  https://huggingface.co/papers/2604.21193): Couples claim attribution with
+  entailment verification and recalibration. Carnot hook: require row-level
+  claim attribution, evidence span IDs, and calibrated entailment/contradiction
+  receipts in any SOTA GGUF factuality or guided-decoding artifact.
+- **OLIVIA: Online Learning via Inference-time Action Adaptation**
+  (https://arxiv.org/abs/2605.11169): Adds a lightweight contextual-bandit
+  decision layer over candidate ReAct actions while keeping the language model
+  frozen. Carnot hook: implement continuous self-learning as governed
+  action/memory routing updates, not backbone fine-tuning; log UCB/confidence,
+  regret proxies, rollback, and constraint-violation counts.
+- **Continual Learning Bench**
+  (https://arxiv.org/abs/2606.05661; code
+  https://github.com/pgasawa/continual-learning-bench): Evaluates whether
+  systems improve over sequential stateful tasks and separates online learning
+  from base model capability. Carnot hook: CSL experiments should include a
+  naive in-context baseline, a no-memory baseline, and a stateful replay split
+  before crediting memory compression or policy learning.
+- **Lyapunov Constraint-Aware Decoding / LCAD**
+  (https://openreview.net/forum?id=rbl8fHjLuF): Maps multi-dimensional text
+  constraints into a Lyapunov-style decoding control objective. Carnot hook:
+  treat this as a design reference for monotone verifier-potential accounting,
+  but keep exact final verifiers as authority and reject any metric that
+  defines success from the same scalar it is trying to prove.
+
+### Planner impact
+- `.496` should begin with an adversarially checkable corrigendum for the
+  Exp5444 tautology finding before any new SOTA decoding headline.
+- The gated SOTA decoding rerun should combine verifier-potential prefix
+  control with conflict/distortion guards, attribution receipts, chance-
+  constrained acceptance metrics, and locally constrained decoding bias checks.
+- Continuous self-learning should move from governed memory existence toward a
+  frozen-model action/memory policy that is evaluated against no-memory and
+  in-context baselines.
+- Hardware work should stay receipt-only: p-bit and p-dit timing-ratio
+  simulations can be extended, but no KV260, GateMate, PolarFire, Extropic
+  TSU, Kona, or Aleph speedup/execution claim is valid without authenticated
+  local evidence.
+- ARC remains under the live-path standing floor. The next attempt should
+  improve perception/salience and metric integrity rather than reopening a
+  retired exploration-signal or off-path solve lane.
+
+<!-- V496-PLANNER-REFRESH-20260709-END -->
