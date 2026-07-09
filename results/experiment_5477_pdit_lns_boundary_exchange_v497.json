@@ -1,0 +1,2133 @@
+{
+  "advisory_improvement_delta": 2.518519,
+  "boundary_exchange_ready": true,
+  "boundary_message_count": 36,
+  "claim_limits": [
+    "CPU-local deterministic accounting only",
+    "p-bit and p-dit repairs are advisory telemetry",
+    "exact unrestricted fallback supplies every final label",
+    "boundary messages are workload receipts, not hardware timing receipts",
+    "no hardware speedup claim"
+  ],
+  "destroy_strategies": [
+    "random",
+    "conflict_core_guided",
+    "prediction_score_guided"
+  ],
+  "exact_fallback_completeness_rate": 1.0,
+  "experiment": 5477,
+  "experiment_id": "exp5477-pdit-lns-boundary-exchange-v497",
+  "field_principles": {
+    "advisory_improvement_delta": "advisory utility without final authority",
+    "boundary_exchange_ready": "downstream boundary-exchange gate",
+    "destroy_strategies": "LNS destroy strategy coverage",
+    "exact_fallback_completeness_rate": "exact solver final authority",
+    "fixture_count": "SAT/MaxCut/assignment fixture coverage",
+    "hardware_speedup_claim": "must be false",
+    "honest_verdict": "terminal status; start with complete: or blocked:",
+    "inference_substrate": "deterministic CPU solver, no hardware speedup",
+    "pbit_variable_count": "binary p-bit control accounting",
+    "pdit_variable_count": "categorical p-dit control accounting",
+    "random_seed": "deterministic replay seed",
+    "repair_modes": "repair mode coverage",
+    "unsafe_false_accept_count": "advisory safety boundary",
+    "workload_hashes": "stable canonical workload identity"
+  },
+  "fixture_count": 3,
+  "fixture_family_counts": {
+    "assignment": 1,
+    "maxcut": 1,
+    "sat": 1
+  },
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: p-bit/p-dit boundary-exchange destroy and repair telemetry covered SAT, MaxCut, and assignment fixtures with exact fallback completeness 1.0, zero unsafe false accepts, and no hardware speedup claim",
+  "inference_substrate": "deterministic_solver_no_hardware_speedup",
+  "milestone": "2026.07.497",
+  "pbit_variable_count": 10,
+  "pdit_variable_count": 8,
+  "random_seed": 5477,
+  "readiness_blockers": [],
+  "repair_modes": [
+    "greedy_exact_fallback",
+    "stochastic_advisory_repair",
+    "no_repair_baseline"
+  ],
+  "reproducibility_checksum": "ce4ca63b3fa6126deb2b346f34942baf2e5010a5ed9fd25acafd498ac0b16451",
+  "research_conductor_modified": false,
+  "row_count": 27,
+  "row_records": [
+    {
+      "advisory_candidate": [
+        true,
+        true,
+        false
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 1.0,
+      "advisory_label": "sat",
+      "advisory_quality_after": 3.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x2",
+            "x1"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "925d218f2d57ec561fb49af9e684c45646d65a20112de9cc482871f9c9ed63bc",
+          "pbit_controls_sent": [
+            "x2",
+            "x1"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "x2",
+        "x1"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        false,
+        true,
+        true
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "violated_sat",
+      "advisory_quality_after": 2.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": false,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x2",
+            "x1"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "925d218f2d57ec561fb49af9e684c45646d65a20112de9cc482871f9c9ed63bc",
+          "pbit_controls_sent": [
+            "x2",
+            "x1"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "x2",
+        "x1"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        false,
+        true,
+        true
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "violated_sat",
+      "advisory_quality_after": 2.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": false,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x2",
+            "x1"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "925d218f2d57ec561fb49af9e684c45646d65a20112de9cc482871f9c9ed63bc",
+          "pbit_controls_sent": [
+            "x2",
+            "x1"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "x2",
+        "x1"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        true,
+        true,
+        false
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 1.0,
+      "advisory_label": "sat",
+      "advisory_quality_after": 3.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x1",
+            "x3"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
+          "pbit_controls_sent": [
+            "x1",
+            "x3"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "x1",
+        "x3"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        true,
+        true,
+        true
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 1.0,
+      "advisory_label": "sat",
+      "advisory_quality_after": 3.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x1",
+            "x3"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
+          "pbit_controls_sent": [
+            "x1",
+            "x3"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "x1",
+        "x3"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        false,
+        true,
+        true
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "violated_sat",
+      "advisory_quality_after": 2.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": false,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x1",
+            "x3"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
+          "pbit_controls_sent": [
+            "x1",
+            "x3"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "x1",
+        "x3"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        true,
+        true,
+        false
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 1.0,
+      "advisory_label": "sat",
+      "advisory_quality_after": 3.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x1",
+            "x3"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
+          "pbit_controls_sent": [
+            "x1",
+            "x3"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "x1",
+        "x3"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        true,
+        true,
+        true
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 1.0,
+      "advisory_label": "sat",
+      "advisory_quality_after": 3.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x1",
+            "x3"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
+          "pbit_controls_sent": [
+            "x1",
+            "x3"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "x1",
+        "x3"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        false,
+        true,
+        true
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "violated_sat",
+      "advisory_quality_after": 2.0,
+      "advisory_quality_before": 2.0,
+      "advisory_valid": false,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "x1",
+            "x3"
+          ],
+          "from_partition": "sat_left",
+          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
+          "pbit_controls_sent": [
+            "x1",
+            "x3"
+          ],
+          "pdit_controls_available": [
+            "x1",
+            "x2",
+            "x3"
+          ],
+          "reason": "clause_x2_not_x3",
+          "to_partition": "sat_right",
+          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "x1",
+        "x3"
+      ],
+      "exact_label": "sat",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        true,
+        true,
+        false
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        true,
+        true,
+        false
+      ],
+      "fixture_family": "sat",
+      "fixture_id": "sat_boundary_core",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        false,
+        true,
+        true
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "sat",
+      "unsafe_false_accept": false,
+      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 4.0,
+      "advisory_label": "maxcut_weight=10",
+      "advisory_quality_after": 10.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "c",
+            "d"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "6d42c1a7b4d76a04b73fa14f5450d067313abd0ce8291992940a3e03216f4ef4",
+          "pbit_controls_sent": [
+            "c",
+            "d"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "c",
+            "d"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "8221cba211199e9843e9b41d4f4ab8f0c8f90ec3b59b3bcb7d5c97d9021696d8",
+          "pbit_controls_sent": [
+            "c",
+            "d"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "c",
+        "d"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "maxcut_weight=6",
+      "advisory_quality_after": 6.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "c",
+            "d"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "6d42c1a7b4d76a04b73fa14f5450d067313abd0ce8291992940a3e03216f4ef4",
+          "pbit_controls_sent": [
+            "c",
+            "d"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "c",
+            "d"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "8221cba211199e9843e9b41d4f4ab8f0c8f90ec3b59b3bcb7d5c97d9021696d8",
+          "pbit_controls_sent": [
+            "c",
+            "d"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "c",
+        "d"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "maxcut_weight=6",
+      "advisory_quality_after": 6.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "c",
+            "d"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "6d42c1a7b4d76a04b73fa14f5450d067313abd0ce8291992940a3e03216f4ef4",
+          "pbit_controls_sent": [
+            "c",
+            "d"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "c",
+            "d"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "8221cba211199e9843e9b41d4f4ab8f0c8f90ec3b59b3bcb7d5c97d9021696d8",
+          "pbit_controls_sent": [
+            "c",
+            "d"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "c",
+        "d"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 4.0,
+      "advisory_label": "maxcut_weight=10",
+      "advisory_quality_after": 10.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "b",
+        "c"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 0.0,
+      "advisory_label": "maxcut_weight=6",
+      "advisory_quality_after": 6.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "b",
+        "c"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "maxcut_weight=6",
+      "advisory_quality_after": 6.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "b",
+        "c"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 4.0,
+      "advisory_label": "maxcut_weight=10",
+      "advisory_quality_after": 10.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "b",
+        "c"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 0.0,
+      "advisory_label": "maxcut_weight=6",
+      "advisory_quality_after": 6.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "b",
+        "c"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "maxcut_weight=6",
+      "advisory_quality_after": 6.0,
+      "advisory_quality_before": 6.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_a_c",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        },
+        {
+          "destroyed_controls": [
+            "b",
+            "c"
+          ],
+          "from_partition": "cut_left",
+          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
+          "pbit_controls_sent": [
+            "b",
+            "c"
+          ],
+          "pdit_controls_available": [
+            "left_partition",
+            "right_partition"
+          ],
+          "reason": "edge_b_d",
+          "to_partition": "cut_right",
+          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "b",
+        "c"
+      ],
+      "exact_label": "maxcut_weight=10",
+      "exact_objective_value": -10,
+      "exact_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "fixture_family": "maxcut",
+      "fixture_id": "maxcut_boundary_square",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pbit_variable_count": 4,
+      "pdit_variable_count": 2,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "maxcut_weight=10",
+      "unsafe_false_accept": false,
+      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
+    },
+    {
+      "advisory_candidate": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 11.0,
+      "advisory_label": "assignment_cost=0",
+      "advisory_quality_after": 0.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "pack",
+        "pack",
+        "ship"
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 6.0,
+      "advisory_label": "invalid_assignment_cost=5",
+      "advisory_quality_after": -5.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": false,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "assignment_cost=11",
+      "advisory_quality_after": -11.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "random",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 11.0,
+      "advisory_label": "assignment_cost=0",
+      "advisory_quality_after": 0.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "pack",
+        "pack",
+        "ship"
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 6.0,
+      "advisory_label": "invalid_assignment_cost=5",
+      "advisory_quality_after": -5.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": false,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "assignment_cost=11",
+      "advisory_quality_after": -11.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "conflict_core_guided",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 11.0,
+      "advisory_label": "assignment_cost=0",
+      "advisory_quality_after": 0.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "greedy_exact_fallback",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "pack",
+        "pack",
+        "ship"
+      ],
+      "advisory_changed_candidate": true,
+      "advisory_improvement": 6.0,
+      "advisory_label": "invalid_assignment_cost=5",
+      "advisory_quality_after": -5.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": false,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "stochastic_advisory_repair",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    },
+    {
+      "advisory_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "advisory_changed_candidate": false,
+      "advisory_improvement": 0.0,
+      "advisory_label": "assignment_cost=11",
+      "advisory_quality_after": -11.0,
+      "advisory_quality_before": -11.0,
+      "advisory_valid": true,
+      "boundary_messages": [
+        {
+          "destroyed_controls": [
+            "ana",
+            "ben"
+          ],
+          "from_partition": "assign_left",
+          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
+          "pbit_controls_sent": [
+            "ana",
+            "ben"
+          ],
+          "pdit_controls_available": [
+            "ana",
+            "ben",
+            "cy"
+          ],
+          "reason": "handoff_ship",
+          "to_partition": "assign_right",
+          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+        }
+      ],
+      "destroy_strategy": "prediction_score_guided",
+      "destroyed_controls": [
+        "ana",
+        "ben"
+      ],
+      "exact_label": "assignment_cost=0",
+      "exact_objective_value": 0,
+      "exact_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fallback_complete": true,
+      "fallback_used": true,
+      "final_solution": [
+        "pack",
+        "test",
+        "ship"
+      ],
+      "fixture_family": "assignment",
+      "fixture_id": "assignment_pdit_boundary",
+      "hardware_speedup_claim": false,
+      "initial_candidate": [
+        "test",
+        "pack",
+        "ship"
+      ],
+      "pbit_variable_count": 3,
+      "pdit_variable_count": 3,
+      "repair_mode": "no_repair_baseline",
+      "solver_final_label": "assignment_cost=0",
+      "unsafe_false_accept": false,
+      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+    }
+  ],
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5477.pdit_lns_boundary_exchange.v497",
+  "source_artifacts": [
+    "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json",
+    "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5477",
+    "SCENARIO-VERIFY-5477"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py -m pytest tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    },
+    {
+      "command": "ops/e2e-test-plan.md review: Exp5477 is deterministic CPU-local boundary accounting; no live training, PyO3, KV260, or hardware timing e2e path applies",
+      "outcome": "not_applicable"
+    }
+  ],
+  "unsafe_false_accept_count": 0,
+  "workload_hashes": [
+    "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
+    "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
+    "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
+  ]
+}
