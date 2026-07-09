@@ -10658,3 +10658,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 14:27 UTC | Gated hardware receipt continuation after Exp5491 | OK | 88 passed, 1 warning in 11.09s |
 | 2026-07-09 14:40 UTC | ARC trajectory target precheck with duplicate-solv | OK | 88 passed, 1 warning in 11.42s |
 | 2026-07-09 14:56 UTC | Gated ARC live trajectory-induction level-up attem | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-09 15:09 UTC | Milestone .498 capstone PRD gap table and next-roa | OK | 84 passed, 1 warning in 10.74s |
