@@ -1806,6 +1806,85 @@ candidate is rejected, or if `scripts/research_conductor.py` is modified,
 **Then** validation fails closed or emits a blocked artifact, and guided decoding
 remains quarantined.
 
+### REQ-SAFE-5472: Local SOTA GGUF Evidence Telemetry Panel V497
+
+Carnot SHALL provide Exp5472 at
+`python/carnot/experiment_5472_sota_evidence_telemetry_v497.py` and write
+`results/experiment_5472_sota_evidence_telemetry_v497.json` without modifying
+`scripts/research_conductor.py`. The panel SHALL reuse exact Exp5471 rows as a
+small balanced fixture subset containing a valid row, a hidden-premise row, a
+semantic-invalid row, and a factual-distortion temptation row. Exact Exp5471
+guard-composition validators SHALL remain the final authority for labels and
+validator outcomes.
+
+The panel SHALL declare model specs for all mandated local SOTA GGUF models:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Model paths SHALL be resolved through the
+repo-standard SOTA GGUF cache resolver, never through
+`AutoTokenizer.from_pretrained` on a GGUF repository. The panel SHALL run at
+least one mandated headline model only when a CUDA-capable llama.cpp substrate,
+non-empty local model file path, and pre-generation GPU-offload receipt are all
+present. Legacy small models MAY be used only by tests as non-headline smoke
+fixtures. If no mandated local SOTA GGUF model can run with verified GPU
+offload, the panel SHALL emit a blocked artifact rather than CPU-only headline
+results.
+
+The terminal result artifact MUST include:
+`model_specs`, `headline_models_run`, `n_samples`,
+`exact_validator_accuracy`, `semantic_false_accept_rate`,
+`factual_distortion_rate`, `abstention_rate`,
+`logprob_telemetry_available`, `gpu_offload_receipts`,
+`model_file_checksums`, `guided_decoding_used`,
+`sota_evidence_telemetry_ready`, `inference_substrate`, `random_seed`, and
+`honest_verdict`. `guided_decoding_used` MUST be false,
+`inference_substrate` MUST equal `local_sota_gguf_llama_cpp_or_blocked`, and
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Field principles:
+- `model_specs`: all mandated SOTA GGUF specs and resolved local path status.
+- `headline_models_run`: mandated model IDs that actually generated rows with verified GPU offload.
+- `n_samples`: count of selected exact Exp5471 fixture rows.
+- `exact_validator_accuracy`: model decision agreement with exact final validator labels.
+- `semantic_false_accept_rate`: semantic-invalid rows accepted by the generated model decision.
+- `factual_distortion_rate`: distortion-guard rows accepted by the generated model decision.
+- `abstention_rate`: generated decisions parsed as abstention or undecided.
+- `logprob_telemetry_available`: whether llama.cpp returned token/top-k logprob telemetry.
+- `gpu_offload_receipts`: pre-generation runtime evidence for CUDA llama.cpp offload.
+- `model_file_checksums`: SHA-256 checksums for local model files used or considered.
+- `guided_decoding_used`: guided decoding remains quarantined and is not used.
+- `sota_evidence_telemetry_ready`: downstream gate for local SOTA evidence telemetry.
+- `inference_substrate`: local SOTA GGUF llama.cpp run or honest blocked artifact.
+- `random_seed`: deterministic fixture and run seed.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5472: Local SOTA Telemetry Runs Or Blocks Honestly
+
+**Given** exact Exp5471 rows, mandated SOTA GGUF model specs, local GGUF cache
+resolution, and a llama.cpp runtime preflight,
+
+**When** Exp5472 runs on a host with at least one mandated local SOTA GGUF model
+and verified GPU offload,
+
+**Then** it writes
+`results/experiment_5472_sota_evidence_telemetry_v497.json`, records prompt
+text, output text, exact validator labels, parsed decisions, abstention
+behavior, runtime timings, optional logprob/top-k telemetry availability,
+GPU-offload receipts, VRAM receipts, model file checksums, and row-level exact
+validator outcomes; runs at least one mandated headline model; computes exact
+validator accuracy, semantic false-accept rate, factual-distortion rate, and
+abstention rate from row-level evidence; sets
+`sota_evidence_telemetry_ready=true`; and keeps
+`guided_decoding_used=false`.
+
+**And** when CUDA llama.cpp GPU offload or non-empty mandated local model paths
+are unavailable,
+
+**Then** it writes the same required artifact fields with
+`headline_models_run=[]`, `sota_evidence_telemetry_ready=false`,
+`guided_decoding_used=false`, and a `blocked:` honest verdict, without falling
+back to CPU-only headline results or lifting guided-decoding quarantine.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1840,5 +1919,6 @@ remains quarantined.
 | REQ-SAFE-5459 | Planned | Exp 5459: deterministic constraint-distortion guard |
 | REQ-SAFE-5470 | Planned | Exp 5470: deterministic rewrite-state semantic fixture |
 | REQ-SAFE-5471 | Planned | Exp 5471: deterministic guard-composition scale-up |
+| REQ-SAFE-5472 | Planned | Exp 5472: local SOTA GGUF evidence telemetry panel |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
