@@ -10623,3 +10623,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 09:28 UTC | Gated hardware boundary-exchange receipts after Ex | OK | 88 passed, 1 warning in 10.40s |
 | 2026-07-09 09:41 UTC | ARC target rotation and perception/salience preche | OK | 88 passed, 1 warning in 12.97s |
 | 2026-07-09 09:56 UTC | Gated ARC live salience level-up attempt on rotate | OK | 88 passed, 1 warning in 11.35s |
+| 2026-07-09 11:19 UTC | Milestone .497 capstone, PRD gap table, and next-r | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: )
++        ret |
