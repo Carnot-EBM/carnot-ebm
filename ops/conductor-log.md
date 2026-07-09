@@ -10672,3 +10672,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-09 18:53 UTC | Gated SOTA GGUF CSL memory panel with independent  | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5502-csl-tautology-static-corrigendum-v |
 | 2026-07-09 18:55 UTC | Gated SOTA GGUF CSL memory panel with independent  | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5502-csl-tautology-static-corrigendum-v |
 | 2026-07-09 18:57 UTC | Gated SOTA GGUF CSL memory panel with independent  | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5502-csl-tautology-static-corrigendum-v |
+| 2026-07-09 19:11 UTC | Gated active-constraint MILP/MaxSAT descriptor ext | OK | 87 passed, 1 warning in 8.17s |
