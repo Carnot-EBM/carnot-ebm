@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.499",
+  "generated_at": "2026-07-09T23:06:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true,
+  "summary": "No data available this milestone for experiment-level timing: total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, and slowest_experiments=[]. The timing assembler reports an integrity mismatch because both reconstruction paths found 0 experiment commits while ops/changelog.md contains 2026.07.499 references, so no experiment ID, duration, GPU-efficiency finding, or DualGPURunner miss is inferred.",
+  "bottlenecks_identified": [
+    "Timing integrity mismatch: live git-log and disk-mtime reconstruction found 0 experiment commits while ops/changelog.md contains 2026.07.499 references, blocking wall-time and slowest-experiment accounting.",
+    "No compute-bound timing rows are available, so the idle GPU snapshot is not a compute-bound bottleneck and cannot support a GPU-efficiency or DualGPURunner finding."
+  ],
+  "improvements_suggested": [
+    "Persist per-experiment timing receipts at experiment closeout instead of relying on closeout reconstruction from git history or disk mtimes.",
+    "Add a timing-assembly regression that fails when milestone changelog references exist but both reconstruction paths produce 0 experiment commits.",
+    "Record compute-bound and parallel-model metadata directly in timing receipts so GPU-idle and DualGPURunner checks are gated by data rather than inference."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make per-experiment timing receipt emission mandatory in the conductor closeout path.",
+    "Add a mismatch check for changelog-present but timing-row-absent milestones.",
+    "Carry compute-bound and parallel-model flags through the timing artifact schema."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The only supported operational conclusion is that timing assembly failed for this milestone; claims about slow experiments or GPU inefficiency would require timing rows that are absent. The next milestone should treat timing capture as the bottleneck, not runtime execution."
+}
