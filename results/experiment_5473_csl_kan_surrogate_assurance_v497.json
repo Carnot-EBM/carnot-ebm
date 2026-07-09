@@ -1,0 +1,712 @@
+{
+  "accepted_action_rate": 1.0,
+  "assurance_details": {
+    "accepted_action_count": 4,
+    "accepted_action_rate": 1.0,
+    "assurance_ratio": 1.0,
+    "candidate_action_count": 4,
+    "constraint_violation_count": 0,
+    "finite_sample_conservative_bound": 0.388063,
+    "rollback_trigger_count": 1,
+    "threshold_offset": 0.0425
+  },
+  "assurance_ratio": 1.0,
+  "constraint_violation_count": 0,
+  "csl_kan_surrogate_ready": true,
+  "experiment_id": "experiment_5473_csl_kan_surrogate_assurance_v497",
+  "governed_policy_score": 1.0,
+  "honest_verdict": "complete: deterministic CSL KAN surrogate audited frozen policy routing with chance-style assurance and no model weight mutation",
+  "inference_substrate": "deterministic_csl_policy_no_llm",
+  "milestone": "2026.07.497",
+  "model_weight_mutation": false,
+  "model_weight_mutation_receipt": {
+    "adapter_weights_written": false,
+    "exp5460_no_weight_mutation": true,
+    "exp5461_model_weights_written": false,
+    "exp5461_no_weight_mutation": true,
+    "learned_state_scope": "governed_policy_state_and_memory_routing_records_only",
+    "model_weight_mutation": false
+  },
+  "naive_icl_baseline_score": 0.5,
+  "negative_transfer_deflection_rate": 1.0,
+  "no_memory_baseline_score": 0.25,
+  "random_seed": 5473,
+  "reproducibility_checksum": "sha256:8bf1ef92bf323074bb93d3224d8935003af78e3da9e9304e6d90ac1793cc09e2",
+  "research_conductor_modified": false,
+  "rollback_trigger_count": 1,
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5473.csl_kan_surrogate_assurance.v497",
+  "source_artifacts": [
+    "results/experiment_5460_csl_policy_bandit_v496.json",
+    "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
+  ],
+  "source_file_checksums": {
+    "module": "sha256:3f24dc1265ba50343b02e843c901d4925fece634a21c881ee7f9a7c98794c345",
+    "spec": "sha256:2093f7d838e8701986714d1a371d3e981184b761eaeebeaaa8cc728ed7d96b0d",
+    "upstream_policy": "sha256:d62a15938aae66e9586484d739e331210b32b4afe114b0da46d69d155fb5c96d",
+    "upstream_routing": "sha256:465d9e8de5afca22def9a46a7d1e8867516742ec8fee9b8b6c37cf1d65590db9"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5473_csl_kan_surrogate_assurance_v497.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "upstream_policy": "results/experiment_5460_csl_policy_bandit_v496.json",
+    "upstream_routing": "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5473",
+    "SCENARIO-LEARN-5473-ROLLBACK",
+    "SCENARIO-LEARN-5473-NEGATIVE-TRANSFER",
+    "SCENARIO-LEARN-5473-MONOTONICITY",
+    "SCENARIO-LEARN-5473-ARTIFACT"
+  ],
+  "status": "complete",
+  "surrogate_coefficients_or_basis": {
+    "base_threshold": 0.58,
+    "coefficients": {
+      "conflict_risk": -0.45,
+      "constraint_violation_history": -0.55,
+      "context_cost": -0.03,
+      "memory_age": -0.16,
+      "prior_success": 0.58,
+      "verifier_cost": -0.04
+    },
+    "intercept": 0.28,
+    "local_basis": [
+      {
+        "acceptance_margin": -0.1816,
+        "basis_terms": {
+          "conflict_risk": -0.0,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0186,
+          "memory_age": -0.0,
+          "prior_success": 0.145,
+          "verifier_cost": -0.008
+        },
+        "condition": "no_memory",
+        "surrogate_score": 0.3984,
+        "task_id": "5461-a1-repeat-gasket",
+        "threshold_offset": 0.0
+      },
+      {
+        "acceptance_margin": -0.0965,
+        "basis_terms": {
+          "conflict_risk": -0.0,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0285,
+          "memory_age": -0.032,
+          "prior_success": 0.29,
+          "verifier_cost": -0.016
+        },
+        "condition": "naive_icl",
+        "surrogate_score": 0.4935,
+        "task_id": "5461-a1-repeat-gasket",
+        "threshold_offset": 0.01
+      },
+      {
+        "acceptance_margin": 0.1989,
+        "basis_terms": {
+          "conflict_risk": -0.0,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0231,
+          "memory_age": -0.032,
+          "prior_success": 0.58,
+          "verifier_cost": -0.016
+        },
+        "condition": "policy_selected",
+        "surrogate_score": 0.7889,
+        "task_id": "5461-a1-repeat-gasket",
+        "threshold_offset": 0.01
+      },
+      {
+        "acceptance_margin": -0.4675,
+        "basis_terms": {
+          "conflict_risk": -0.225,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0195,
+          "memory_age": -0.0,
+          "prior_success": 0.145,
+          "verifier_cost": -0.008
+        },
+        "condition": "no_memory",
+        "surrogate_score": 0.1725,
+        "task_id": "5461-b1-poisoned-vendor",
+        "threshold_offset": 0.06
+      },
+      {
+        "acceptance_margin": -1.2977,
+        "basis_terms": {
+          "conflict_risk": -0.45,
+          "constraint_violation_history": -0.55,
+          "context_cost": -0.0237,
+          "memory_age": -0.0,
+          "prior_success": 0.29,
+          "verifier_cost": -0.024
+        },
+        "condition": "naive_icl",
+        "surrogate_score": -0.4777,
+        "task_id": "5461-b1-poisoned-vendor",
+        "threshold_offset": 0.24
+      },
+      {
+        "acceptance_margin": 0.0978,
+        "basis_terms": {
+          "conflict_risk": -0.1125,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0237,
+          "memory_age": -0.0,
+          "prior_success": 0.58,
+          "verifier_cost": -0.016
+        },
+        "condition": "policy_selected",
+        "surrogate_score": 0.7078,
+        "task_id": "5461-b1-poisoned-vendor",
+        "threshold_offset": 0.03
+      },
+      {
+        "acceptance_margin": -0.5194,
+        "basis_terms": {
+          "conflict_risk": -0.225,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0189,
+          "memory_age": -0.04,
+          "prior_success": 0.145,
+          "verifier_cost": -0.008
+        },
+        "condition": "no_memory",
+        "surrogate_score": 0.1331,
+        "task_id": "5461-c1-stale-queue",
+        "threshold_offset": 0.0725
+      },
+      {
+        "acceptance_margin": -1.5068,
+        "basis_terms": {
+          "conflict_risk": -0.45,
+          "constraint_violation_history": -0.55,
+          "context_cost": -0.0228,
+          "memory_age": -0.16,
+          "prior_success": 0.29,
+          "verifier_cost": -0.024
+        },
+        "condition": "naive_icl",
+        "surrogate_score": -0.6368,
+        "task_id": "5461-c1-stale-queue",
+        "threshold_offset": 0.29
+      },
+      {
+        "acceptance_margin": 0.0453,
+        "basis_terms": {
+          "conflict_risk": -0.1125,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0237,
+          "memory_age": -0.04,
+          "prior_success": 0.58,
+          "verifier_cost": -0.016
+        },
+        "condition": "policy_selected",
+        "surrogate_score": 0.6678,
+        "task_id": "5461-c1-stale-queue",
+        "threshold_offset": 0.0425
+      },
+      {
+        "acceptance_margin": -0.1882,
+        "basis_terms": {
+          "conflict_risk": -0.0,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0252,
+          "memory_age": -0.0,
+          "prior_success": 0.145,
+          "verifier_cost": -0.008
+        },
+        "condition": "no_memory",
+        "surrogate_score": 0.3918,
+        "task_id": "5461-d1-fresh-ticket",
+        "threshold_offset": 0.0
+      },
+      {
+        "acceptance_margin": -0.0557,
+        "basis_terms": {
+          "conflict_risk": -0.0,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0297,
+          "memory_age": -0.0,
+          "prior_success": 0.29,
+          "verifier_cost": -0.016
+        },
+        "condition": "naive_icl",
+        "surrogate_score": 0.5243,
+        "task_id": "5461-d1-fresh-ticket",
+        "threshold_offset": 0.0
+      },
+      {
+        "acceptance_margin": 0.2468,
+        "basis_terms": {
+          "conflict_risk": -0.0,
+          "constraint_violation_history": -0.0,
+          "context_cost": -0.0252,
+          "memory_age": -0.0,
+          "prior_success": 0.58,
+          "verifier_cost": -0.008
+        },
+        "condition": "policy_selected",
+        "surrogate_score": 0.8268,
+        "task_id": "5461-d1-fresh-ticket",
+        "threshold_offset": 0.0
+      }
+    ],
+    "model_family": "deterministic_additive_kan_like_surrogate"
+  },
+  "surrogate_feature_names": [
+    "context_cost",
+    "verifier_cost",
+    "prior_success",
+    "conflict_risk",
+    "memory_age",
+    "constraint_violation_history"
+  ],
+  "surrogate_rows": [
+    {
+      "acceptance_margin": -0.1816,
+      "acceptance_threshold": 0.58,
+      "accepted_by_final_authority": false,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.0,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0186,
+        "memory_age": -0.0,
+        "prior_success": 0.145,
+        "verifier_cost": -0.008
+      },
+      "candidate_for_assurance": false,
+      "case_family": "repeated_task",
+      "condition": "no_memory",
+      "effective_condition": "no_memory",
+      "features": {
+        "conflict_risk": 0.0,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.62,
+        "memory_age": 0.0,
+        "prior_success": 0.25,
+        "verifier_cost": 0.2
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:6866277b3e4b53ba891d6fc02a157c68225c6263c94cde7b9664dfac49b63026",
+      "surrogate_accept": false,
+      "surrogate_row_index": 0,
+      "surrogate_score": 0.3984,
+      "task_id": "5461-a1-repeat-gasket",
+      "threshold_offset": 0.0
+    },
+    {
+      "acceptance_margin": -0.0965,
+      "acceptance_threshold": 0.59,
+      "accepted_by_final_authority": true,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.0,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0285,
+        "memory_age": -0.032,
+        "prior_success": 0.29,
+        "verifier_cost": -0.016
+      },
+      "candidate_for_assurance": false,
+      "case_family": "repeated_task",
+      "condition": "naive_icl",
+      "effective_condition": "naive_icl",
+      "features": {
+        "conflict_risk": 0.0,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.95,
+        "memory_age": 0.2,
+        "prior_success": 0.5,
+        "verifier_cost": 0.4
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:3ddd730753167a1a165ab13bfe15fc236e4dc21236241e840b978b10754a5b88",
+      "surrogate_accept": false,
+      "surrogate_row_index": 1,
+      "surrogate_score": 0.4935,
+      "task_id": "5461-a1-repeat-gasket",
+      "threshold_offset": 0.01
+    },
+    {
+      "acceptance_margin": 0.1989,
+      "acceptance_threshold": 0.59,
+      "accepted_by_final_authority": true,
+      "active_for_assurance": true,
+      "basis_terms": {
+        "conflict_risk": -0.0,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0231,
+        "memory_age": -0.032,
+        "prior_success": 0.58,
+        "verifier_cost": -0.016
+      },
+      "candidate_for_assurance": true,
+      "case_family": "repeated_task",
+      "condition": "policy_selected",
+      "effective_condition": "governed_memory",
+      "features": {
+        "conflict_risk": 0.0,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.77,
+        "memory_age": 0.2,
+        "prior_success": 1.0,
+        "verifier_cost": 0.4
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:aaed6147c30da6be7549dc7199aae6a5954b15091d1ab1bdbe03723eb3ff41b1",
+      "surrogate_accept": true,
+      "surrogate_row_index": 2,
+      "surrogate_score": 0.7889,
+      "task_id": "5461-a1-repeat-gasket",
+      "threshold_offset": 0.01
+    },
+    {
+      "acceptance_margin": -0.4675,
+      "acceptance_threshold": 0.64,
+      "accepted_by_final_authority": false,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.225,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0195,
+        "memory_age": -0.0,
+        "prior_success": 0.145,
+        "verifier_cost": -0.008
+      },
+      "candidate_for_assurance": false,
+      "case_family": "poisoned_memory",
+      "condition": "no_memory",
+      "effective_condition": "no_memory",
+      "features": {
+        "conflict_risk": 0.5,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.65,
+        "memory_age": 0.0,
+        "prior_success": 0.25,
+        "verifier_cost": 0.2
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:76f5c90bc4cc2cb679230ba694a41077ad851019c9ef67266b3cd86c859398c3",
+      "surrogate_accept": false,
+      "surrogate_row_index": 3,
+      "surrogate_score": 0.1725,
+      "task_id": "5461-b1-poisoned-vendor",
+      "threshold_offset": 0.06
+    },
+    {
+      "acceptance_margin": -1.2977,
+      "acceptance_threshold": 0.82,
+      "accepted_by_final_authority": false,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.45,
+        "constraint_violation_history": -0.55,
+        "context_cost": -0.0237,
+        "memory_age": -0.0,
+        "prior_success": 0.29,
+        "verifier_cost": -0.024
+      },
+      "candidate_for_assurance": false,
+      "case_family": "poisoned_memory",
+      "condition": "naive_icl",
+      "effective_condition": "naive_icl",
+      "features": {
+        "conflict_risk": 1.0,
+        "constraint_violation_history": 1.0,
+        "context_cost": 0.79,
+        "memory_age": 0.0,
+        "prior_success": 0.5,
+        "verifier_cost": 0.6
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": true,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:28883b7ab0848a42c39df40b60e769eff8a2ad68bff6791a5929fc94589ad995",
+      "surrogate_accept": false,
+      "surrogate_row_index": 4,
+      "surrogate_score": -0.4777,
+      "task_id": "5461-b1-poisoned-vendor",
+      "threshold_offset": 0.24
+    },
+    {
+      "acceptance_margin": 0.0978,
+      "acceptance_threshold": 0.61,
+      "accepted_by_final_authority": true,
+      "active_for_assurance": true,
+      "basis_terms": {
+        "conflict_risk": -0.1125,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0237,
+        "memory_age": -0.0,
+        "prior_success": 0.58,
+        "verifier_cost": -0.016
+      },
+      "candidate_for_assurance": true,
+      "case_family": "poisoned_memory",
+      "condition": "policy_selected",
+      "effective_condition": "governed_memory",
+      "features": {
+        "conflict_risk": 0.25,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.79,
+        "memory_age": 0.0,
+        "prior_success": 1.0,
+        "verifier_cost": 0.4
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:e083d54c41bb55761376af9e2f51015bbf78ee15203a0cd55288314a11c195cf",
+      "surrogate_accept": true,
+      "surrogate_row_index": 5,
+      "surrogate_score": 0.7078,
+      "task_id": "5461-b1-poisoned-vendor",
+      "threshold_offset": 0.03
+    },
+    {
+      "acceptance_margin": -0.5194,
+      "acceptance_threshold": 0.6525,
+      "accepted_by_final_authority": false,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.225,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0189,
+        "memory_age": -0.04,
+        "prior_success": 0.145,
+        "verifier_cost": -0.008
+      },
+      "candidate_for_assurance": false,
+      "case_family": "stale_memory",
+      "condition": "no_memory",
+      "effective_condition": "no_memory",
+      "features": {
+        "conflict_risk": 0.5,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.63,
+        "memory_age": 0.25,
+        "prior_success": 0.25,
+        "verifier_cost": 0.2
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:ff88b0867e709017e6145ca4cc4151ee4766f13beb0b4efe7f42a25bffcc8366",
+      "surrogate_accept": false,
+      "surrogate_row_index": 6,
+      "surrogate_score": 0.1331,
+      "task_id": "5461-c1-stale-queue",
+      "threshold_offset": 0.0725
+    },
+    {
+      "acceptance_margin": -1.5068,
+      "acceptance_threshold": 0.87,
+      "accepted_by_final_authority": false,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.45,
+        "constraint_violation_history": -0.55,
+        "context_cost": -0.0228,
+        "memory_age": -0.16,
+        "prior_success": 0.29,
+        "verifier_cost": -0.024
+      },
+      "candidate_for_assurance": false,
+      "case_family": "stale_memory",
+      "condition": "naive_icl",
+      "effective_condition": "naive_icl",
+      "features": {
+        "conflict_risk": 1.0,
+        "constraint_violation_history": 1.0,
+        "context_cost": 0.76,
+        "memory_age": 1.0,
+        "prior_success": 0.5,
+        "verifier_cost": 0.6
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": true,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:4650ed0001d03bfcdf6992305fe9af8db7808662316000bd0170e6dd357a4e19",
+      "surrogate_accept": false,
+      "surrogate_row_index": 7,
+      "surrogate_score": -0.6368,
+      "task_id": "5461-c1-stale-queue",
+      "threshold_offset": 0.29
+    },
+    {
+      "acceptance_margin": 0.0453,
+      "acceptance_threshold": 0.6225,
+      "accepted_by_final_authority": true,
+      "active_for_assurance": true,
+      "basis_terms": {
+        "conflict_risk": -0.1125,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0237,
+        "memory_age": -0.04,
+        "prior_success": 0.58,
+        "verifier_cost": -0.016
+      },
+      "candidate_for_assurance": true,
+      "case_family": "stale_memory",
+      "condition": "policy_selected",
+      "effective_condition": "governed_memory",
+      "features": {
+        "conflict_risk": 0.25,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.79,
+        "memory_age": 0.25,
+        "prior_success": 1.0,
+        "verifier_cost": 0.4
+      },
+      "negative_transfer_candidate": true,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:45e3e004f02a242bcb8b7b9bf5d2eba416a3eb7ed51a70c1187af59d76a10a3b",
+      "surrogate_accept": true,
+      "surrogate_row_index": 8,
+      "surrogate_score": 0.6678,
+      "task_id": "5461-c1-stale-queue",
+      "threshold_offset": 0.0425
+    },
+    {
+      "acceptance_margin": -0.1882,
+      "acceptance_threshold": 0.58,
+      "accepted_by_final_authority": true,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.0,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0252,
+        "memory_age": -0.0,
+        "prior_success": 0.145,
+        "verifier_cost": -0.008
+      },
+      "candidate_for_assurance": false,
+      "case_family": "no_memory_competitive",
+      "condition": "no_memory",
+      "effective_condition": "no_memory",
+      "features": {
+        "conflict_risk": 0.0,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.84,
+        "memory_age": 0.0,
+        "prior_success": 0.25,
+        "verifier_cost": 0.2
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:888323ac327b81590db01ef6a471962c876992327a97509fd734289032f5de3b",
+      "surrogate_accept": false,
+      "surrogate_row_index": 9,
+      "surrogate_score": 0.3918,
+      "task_id": "5461-d1-fresh-ticket",
+      "threshold_offset": 0.0
+    },
+    {
+      "acceptance_margin": -0.0557,
+      "acceptance_threshold": 0.58,
+      "accepted_by_final_authority": true,
+      "active_for_assurance": false,
+      "basis_terms": {
+        "conflict_risk": -0.0,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0297,
+        "memory_age": -0.0,
+        "prior_success": 0.29,
+        "verifier_cost": -0.016
+      },
+      "candidate_for_assurance": false,
+      "case_family": "no_memory_competitive",
+      "condition": "naive_icl",
+      "effective_condition": "naive_icl",
+      "features": {
+        "conflict_risk": 0.0,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.99,
+        "memory_age": 0.0,
+        "prior_success": 0.5,
+        "verifier_cost": 0.4
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:4356534d4f28aed604c9c58a16cbab31f3a3e8f64cd72cf9629e03d9e06ad007",
+      "surrogate_accept": false,
+      "surrogate_row_index": 10,
+      "surrogate_score": 0.5243,
+      "task_id": "5461-d1-fresh-ticket",
+      "threshold_offset": 0.0
+    },
+    {
+      "acceptance_margin": 0.2468,
+      "acceptance_threshold": 0.58,
+      "accepted_by_final_authority": true,
+      "active_for_assurance": true,
+      "basis_terms": {
+        "conflict_risk": -0.0,
+        "constraint_violation_history": -0.0,
+        "context_cost": -0.0252,
+        "memory_age": -0.0,
+        "prior_success": 0.58,
+        "verifier_cost": -0.008
+      },
+      "candidate_for_assurance": true,
+      "case_family": "no_memory_competitive",
+      "condition": "policy_selected",
+      "effective_condition": "no_memory",
+      "features": {
+        "conflict_risk": 0.0,
+        "constraint_violation_history": 0.0,
+        "context_cost": 0.84,
+        "memory_age": 0.0,
+        "prior_success": 1.0,
+        "verifier_cost": 0.2
+      },
+      "negative_transfer_candidate": false,
+      "negative_transfer_detected": false,
+      "rollback_audit_visible_count": 1,
+      "rollback_required": false,
+      "source_row_checksum": "sha256:3facd99cad08b6e453c49c2b95d6a8c57b38175ae728a2dca879f732a263da1b",
+      "surrogate_accept": true,
+      "surrogate_row_index": 11,
+      "surrogate_score": 0.8268,
+      "task_id": "5461-d1-fresh-ticket",
+      "threshold_offset": 0.0
+    }
+  ],
+  "task_id": "exp5473-csl-kan-surrogate-assurance-v497",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5473_csl_kan_surrogate_assurance_v497.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5473_csl_kan_surrogate_assurance_v497.py -m pytest tests/python/test_experiment_5473_csl_kan_surrogate_assurance_v497.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5473_csl_kan_surrogate_assurance_v497.py --fail-under=100",
+      "outcome": "passed"
+    }
+  ],
+  "threshold_offset": 0.0425
+}
