@@ -38793,3 +38793,71 @@ intent.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5495 | Planned (`python/carnot/experiment_5495_capstone_v498.py`, `results/experiment_5495_capstone_v498.json`) | Planned (`tests/python/test_experiment_5495_capstone_v498.py`) |
+
+### REQ-REPORT-5496: Archive .498 Facts And Emit .499 Transition Receipt
+
+The Exp5496 workflow SHALL write
+`results/experiment_5496_transition_v499.json` from prior milestone artifacts
+and conductor evidence only. It SHALL read `AGENTS.md`, `CLAUDE.md`,
+`CODEX.md`, `research-roadmap.yaml`, `research-roadmap-next.yaml` when
+present, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/changelog.md`, `ops/status.md`, `ops/conductor-log.md`,
+`results/experiment_5495_capstone_v498.json`,
+`results/experiment_5492_hardware_receipts_v498.json`, and
+`results/experiment_5494_arc_live_trajectory_levelup_v498.json`. It SHALL
+record the CalVer transition from `2026.07.498` to `2026.07.499`, SHALL record
+prior task range `exp5482-exp5495`, SHALL record next task range
+`exp5496-exp5509`, SHALL NOT modify `research-roadmap.yaml`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The workflow SHALL summarize only observed facts. It SHALL preserve clean lanes
+for transition evidence, active-constraint subproblem descriptors, PolarFire
+hash-matched hardware receipts, ARC target precheck, and capstone synthesis.
+It SHALL separately record missing or skipped lanes for source delta, CSL
+tautology corrigendum, Preference-MaxSAT fixture, concept telemetry,
+helper-contract repair, CSL independent metrics, and downstream gate-blocked
+CSL hardware mapping. It SHALL record blocked and honest-null lanes for KV260
+SSH identity, GateMate JTAG identity, ARC `dc22` L3 no-bank,
+`arc_registry_delta=0`, and `hardware_speedup_claim=false`, and SHALL keep
+flagged evidence separate from clean or headline-ready evidence.
+
+The artifact SHALL include required fields `milestone`,
+`previous_milestone`, `prior_capstone_path`, `previous_task_range`,
+`clean_lanes`, `missing_or_skipped_lanes`, `blocked_lanes`,
+`honest_null_lanes`, `flagged_lanes`,
+`exp5474_tautology_still_blocks_csl_headlines`, `next_task_range`,
+`roadmap_yaml_unchanged`, `conductor_unchanged`, `inference_substrate`, and
+`honest_verdict`.
+
+#### SCENARIO-REPORT-5496: V499 Transition Uses V498 Terminal Evidence
+
+**Given** the Exp5495 capstone, Exp5492 hardware receipt artifact, Exp5494 ARC
+live attempt artifact, conductor log, active roadmap, and vNEXT document are
+readable
+**When** the Exp5496 transition workflow runs
+**Then** it writes `results/experiment_5496_transition_v499.json`, records
+`previous_milestone=2026.07.498`, records
+`prior_capstone_path=results/experiment_5495_capstone_v498.json`, records
+`previous_task_range=exp5482-exp5495`, records
+`next_task_range=exp5496-exp5509`, preserves clean, missing/skipped, blocked,
+honest-null, and flagged lanes from observed artifact and conductor evidence,
+sets `exp5474_tautology_still_blocks_csl_headlines=true`, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and leaves the
+active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5496-BLOCKED-INPUT: Missing Or Dirty Inputs Fail Closed
+
+**Given** the prior capstone is missing or mismatched, the `.499` roadmap
+context is missing, Exp5492 or Exp5494 evidence is absent, or a protected file
+is dirty
+**When** the Exp5496 transition workflow runs
+**Then** it writes a terminal `blocked:` transition artifact, keeps all
+available evidence visible, keeps `roadmap_yaml_unchanged` and
+`conductor_unchanged` truthful, and does not repair or edit
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5496)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5496 | Planned (`python/carnot/experiment_5496_transition_v499.py`, `results/experiment_5496_transition_v499.json`) | Planned (`tests/python/test_experiment_5496_transition_v499.py`) |
