@@ -1406,6 +1406,90 @@ missing, a guided delta is copied from a baseline rate, or
 **Then** validation fails closed or emits a blocked artifact, and no
 verifier-guided decoding readiness claim is made.
 
+### REQ-SAFE-5456: Guided-Decoding Tautology Corrigendum V496
+
+Carnot SHALL provide Exp5456 at
+`python/carnot/experiment_5456_guided_decoding_tautology_corrigendum_v496.py`
+and write
+`results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json`
+plus an inspectable metric dependency graph, without modifying
+`scripts/research_conductor.py` and without invoking a live LLM.  The workflow
+SHALL treat
+`results/experiment_5444_gated_sota_energy_guided_decoding_v495.json` as a
+flagged prior artifact, load its row JSONL evidence from
+`results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl`,
+and record the prior `flagged_adversarial` state and every TAUTOLOGY finding
+before any readiness decision is made.
+
+The corrigendum SHALL build a dependency graph for the Exp5444 metric surface,
+showing which fields depend on guided reward counts, unconstrained and
+grammar-only baselines, exact final verifier labels, row counts, or other
+derived aggregates.  Every metric node SHALL be classified as `independent`,
+`derived-from-independent`, or `invalid-tautological`.  Fields named in the
+prior TAUTOLOGY findings SHALL be marked `invalid-tautological`; prior
+`metric_independence_checks_passed` and `verifier_guided_decoding_ready` SHALL
+not be accepted as readiness evidence because they depended on the invalid
+top-level metric surface they claimed to validate.
+
+The corrected validity, false-accept, abstention, and guided-delta audit SHALL
+be recomputed only from row-level evidence with
+`exact_final_verdict.verified=true`,
+`exact_final_verdict.authority="exact_final_verifier"`, and
+`final_authority_bypassed=false`.  Guided-delta readiness SHALL use guided
+accepted-validity counts minus each baseline condition's accepted-validity
+counts and SHALL fail closed if it imports the prior top-level guided delta,
+prior readiness boolean, prior metric-independence boolean, or any
+invalid-tautological scalar.
+
+The terminal result artifact MUST include:
+`prior_flagged_artifact`, `adversarial_flags_found`,
+`metric_dependency_graph_path`, `invalid_tautological_fields`,
+`recomputed_row_count`, `exact_final_labels_used`,
+`independent_metric_fields`, `guided_decoding_corrigendum_clean`,
+`rerun_gate_reason`, `inference_substrate`, and `honest_verdict`.
+`prior_flagged_artifact` MUST equal
+`results/experiment_5444_gated_sota_energy_guided_decoding_v495.json`,
+`inference_substrate` MUST equal `posthoc_row_metric_audit_no_llm`, and
+`honest_verdict` MUST start with `complete:` or `blocked:`.
+
+Field principles:
+- `prior_flagged_artifact`: preserves the quarantined Exp5444 source.
+- `adversarial_flags_found`: records prior TAUTOLOGY findings before repair.
+- `metric_dependency_graph_path`: inspectable dependency graph written beside the artifact.
+- `invalid_tautological_fields`: exact prior scalar fields invalidated by TAUTOLOGY.
+- `recomputed_row_count`: row-level audit denominator.
+- `exact_final_labels_used`: final verifier authority only.
+- `independent_metric_fields`: clean row-evidence and derived audit fields.
+- `guided_decoding_corrigendum_clean`: clean corrigendum receipt, not a new SOTA headline.
+- `rerun_gate_reason`: why a fresh non-tautological guided-decoding run is required.
+- `inference_substrate`: posthoc row audit with no live LLM call.
+- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
+
+### SCENARIO-SAFE-5456: Corrigendum Recomputes Readiness From Rows Only
+
+**Given** Exp5444 is present, `flagged_adversarial=true`, and its row JSONL
+contains exact final verifier outcomes for every condition row,
+
+**When** Exp5456 runs,
+
+**Then** it records the prior TAUTOLOGY findings, writes a dependency graph
+covering guided rewards, baselines, exact final labels, row counts, and derived
+aggregates, marks the TAUTOLOGY-paired Exp5444 scalar fields invalid,
+recomputes validity, false-accept, abstention, and guided-delta audit details
+from row-level exact final outcomes, writes
+`results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json`, and
+sets `guided_decoding_corrigendum_clean=true` only when the recomputation uses
+no prior top-level readiness, metric-independence, guided-delta, or invalid
+tautological scalar as evidence.
+
+**And** if the prior artifact or row JSONL is missing, no TAUTOLOGY finding is
+recorded, any row lacks exact final verifier authority, the dependency graph is
+not written, a readiness dependency points at the same scalar it claims to
+validate, or `scripts/research_conductor.py` is modified,
+
+**Then** validation fails closed or emits a blocked artifact, and no new SOTA
+guided-decoding headline is permitted.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1435,5 +1519,6 @@ verifier-guided decoding readiness claim is made.
 | REQ-SAFE-5431 | Planned | Exp 5431: structured constraint taxonomy replication |
 | REQ-SAFE-5443 | Planned | Exp 5443: deterministic verifier-potential prefix fixture |
 | REQ-SAFE-5444 | Planned | Exp 5444: gated local SOTA verifier-potential decoding pilot |
+| REQ-SAFE-5456 | Planned | Exp 5456: guided-decoding tautology corrigendum |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |

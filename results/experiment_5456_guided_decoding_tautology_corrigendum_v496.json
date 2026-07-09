@@ -1,0 +1,195 @@
+{
+  "adversarial_flags_found": [
+    {
+      "detail": "abstention_rate=0.25 and guided_validity_delta_vs_unconstrained=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    },
+    {
+      "detail": "action_unreachability_rate=0.08333333333333333 and semantic_false_accept_rate=0.08333333333333333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    }
+  ],
+  "blockers": [],
+  "exact_final_labels_used": true,
+  "experiment_id": "experiment_5456_guided_decoding_tautology_corrigendum_v496",
+  "field_principles": {
+    "adversarial_flags_found": "records prior TAUTOLOGY findings before repair.",
+    "exact_final_labels_used": "final verifier authority only.",
+    "guided_decoding_corrigendum_clean": "clean corrigendum receipt, not a new SOTA headline.",
+    "honest_verdict": "terminal status; start with \"complete:\" or \"blocked:\".",
+    "independent_metric_fields": "clean row-evidence and derived audit fields.",
+    "inference_substrate": "posthoc row audit with no live LLM call.",
+    "invalid_tautological_fields": "exact prior scalar fields invalidated by TAUTOLOGY.",
+    "metric_dependency_graph_path": "inspectable dependency graph written beside the artifact.",
+    "prior_flagged_artifact": "preserves the quarantined Exp5444 source.",
+    "recomputed_row_count": "row-level audit denominator.",
+    "rerun_gate_reason": "why a fresh non-tautological guided-decoding run is required."
+  },
+  "guided_decoding_corrigendum_clean": true,
+  "guided_decoding_ready_from_independent_rows": false,
+  "honest_verdict": "complete: guided-decoding corrigendum clean; Exp5444 headline readiness blocked",
+  "independent_metric_fields": [
+    "corrected.abstentions_by_condition",
+    "corrected.condition_validity",
+    "corrected.false_accepts_by_condition",
+    "corrected.guided_decoding_ready_from_rows",
+    "corrected.guided_delta_vs_grammar_only",
+    "corrected.guided_delta_vs_unconstrained",
+    "row.condition",
+    "row.condition_advisory_accept",
+    "row.constraint_family",
+    "row.exact_final_verdict.accepted",
+    "row.exact_final_verdict.verified",
+    "row.final_authority_bypassed",
+    "row.parse_status",
+    "row.reward_evaluation_count"
+  ],
+  "inference_substrate": "posthoc_row_metric_audit_no_llm",
+  "invalid_tautological_fields": [
+    "abstention_rate",
+    "action_unreachability_rate",
+    "guided_validity_delta_vs_unconstrained",
+    "semantic_false_accept_rate"
+  ],
+  "metric_classification_summary": {
+    "derived_from_independent": [
+      "corrected.condition_validity",
+      "corrected.false_accepts_by_condition",
+      "corrected.abstentions_by_condition",
+      "corrected.guided_delta_vs_unconstrained",
+      "corrected.guided_delta_vs_grammar_only",
+      "corrected.guided_decoding_ready_from_rows",
+      "prior.accepted_validity_rate",
+      "prior.condition_metrics",
+      "prior.guided_validity_delta_vs_grammar_only",
+      "prior.unsafe_false_accept_rate"
+    ],
+    "independent": [
+      "row.condition",
+      "row.constraint_family",
+      "row.condition_advisory_accept",
+      "row.parse_status",
+      "row.exact_final_verdict.accepted",
+      "row.exact_final_verdict.verified",
+      "row.final_authority_bypassed",
+      "row.reward_evaluation_count"
+    ],
+    "invalid_tautological": [
+      "prior.abstention_rate",
+      "prior.action_unreachability_rate",
+      "prior.guided_validity_delta_vs_unconstrained",
+      "prior.metric_independence_checks_passed",
+      "prior.semantic_false_accept_rate",
+      "prior.verifier_guided_decoding_ready"
+    ]
+  },
+  "metric_dependency_graph_path": "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
+  "milestone": "2026.07.496",
+  "prior_flagged_adversarial": true,
+  "prior_flagged_artifact": "results/experiment_5444_gated_sota_energy_guided_decoding_v495.json",
+  "prior_row_results": "results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl",
+  "recomputed_row_count": 12,
+  "rerun_gate_reason": "prior Exp5444 has invalid tautological top-level metrics; row recompute shows guided readiness is not headline-clean, so require a fresh non-tautological guided-decoding rerun before any SOTA guided-decoding result headlines",
+  "research_conductor_modified": false,
+  "row_metric_audit": {
+    "abstention_rate_by_condition": {
+      "grammar_only": 0.0,
+      "unconstrained": 0.75,
+      "verifier_potential_guided": 0.0
+    },
+    "abstentions_by_condition": {
+      "grammar_only": [],
+      "unconstrained": [
+        "5443-002:unconstrained",
+        "5443-003:unconstrained",
+        "5443-004:unconstrained"
+      ],
+      "verifier_potential_guided": []
+    },
+    "condition_validity": {
+      "grammar_only": {
+        "exact_valid_row_ids": [
+          "5443-001:grammar_only",
+          "5443-002:grammar_only",
+          "5443-003:grammar_only",
+          "5443-004:grammar_only"
+        ],
+        "invalid_count": 0,
+        "rate": 1.0,
+        "total": 4,
+        "valid_count": 4
+      },
+      "unconstrained": {
+        "exact_valid_row_ids": [
+          "5443-001:unconstrained"
+        ],
+        "invalid_count": 3,
+        "rate": 0.25,
+        "total": 4,
+        "valid_count": 1
+      },
+      "verifier_potential_guided": {
+        "exact_valid_row_ids": [
+          "5443-001:verifier_potential_guided",
+          "5443-002:verifier_potential_guided"
+        ],
+        "invalid_count": 2,
+        "rate": 0.5,
+        "total": 4,
+        "valid_count": 2
+      }
+    },
+    "constraint_family_counts": {
+      "schema_only_trap": 6,
+      "semantic_contradiction": 3,
+      "unreachable_tool_action": 3
+    },
+    "exact_final_labels_used": true,
+    "false_accept_rate_by_condition": {
+      "grammar_only": 0.0,
+      "unconstrained": 0.0,
+      "verifier_potential_guided": 0.5
+    },
+    "false_accepts_by_condition": {
+      "grammar_only": [],
+      "unconstrained": [],
+      "verifier_potential_guided": [
+        "5443-003:verifier_potential_guided",
+        "5443-004:verifier_potential_guided"
+      ]
+    },
+    "guided_condition_false_accept_count": 2,
+    "guided_delta_audit": {
+      "vs_grammar_only": {
+        "baseline_condition": "grammar_only",
+        "rate_delta": -0.5,
+        "valid_count_delta": -2
+      },
+      "vs_unconstrained": {
+        "baseline_condition": "unconstrained",
+        "rate_delta": 0.25,
+        "valid_count_delta": 1
+      }
+    },
+    "guided_ready_from_rows": false,
+    "prior_scalar_fields_used": [],
+    "row_authority_failures": [],
+    "row_count": 12
+  },
+  "run_date": "2026-07-09",
+  "schema": "carnot.experiment_5456.guided_decoding_tautology_corrigendum.v496",
+  "spec_refs": [
+    "REQ-SAFE-5456",
+    "SCENARIO-SAFE-5456"
+  ],
+  "status": "complete",
+  "task_id": "exp5456-guided-decoding-tautology-corrigendum-v496",
+  "tests_run": [
+    {
+      "command": "not_recorded",
+      "outcome": "not_recorded"
+    }
+  ]
+}
