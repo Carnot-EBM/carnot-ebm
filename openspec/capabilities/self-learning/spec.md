@@ -21645,3 +21645,85 @@ transfer claim SHALL be attributed only to external retrieval memory.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5544 | Planned (`python/carnot/experiment_5544_cross_model_sota_csl_transfer.py`, `results/experiment_5544_cross_model_sota_csl_transfer.json`) | Planned (`tests/python/test_experiment_5544_cross_model_sota_csl_transfer.py`) |
+
+## REQ-LEARN-5557: CSL Five-Arm Tautology Corrigendum v2
+
+The Exp5557 workflow SHALL write
+`results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json` as a
+deterministic no-LLM corrigendum for the Exp5543 five-arm CSL ablation
+TAUTOLOGY flag. The workflow SHALL load
+`results/experiment_5542_csl_residue_metric_independence_corrigendum.json` as
+the repaired event/topic independence source and
+`results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json` as the
+flagged upstream ablation. It SHALL NOT mutate model weights or call a live
+LLM.
+
+The corrigendum SHALL evaluate one shared held-out query set under
+best-constant, per-query-random, no-memory, shuffled-memory, and aligned-memory
+controls. Best-constant SHALL use one fixed answer for every query. Per-query
+random SHALL use deterministic query-keyed random memory that is not the same
+constant answer and is not aligned to the query's own memory row. No-memory,
+shuffled-memory, and aligned-memory SHALL reuse the Exp5542 independent
+event/topic label fixture so the scores are judged against independent outcome
+labels. A clean corrigendum SHALL fail closed when best-constant and
+per-query-random are equal within tolerance, or when aligned-memory does not
+beat shuffled-memory.
+
+The artifact SHALL include required fields
+`upstream_csl_residue_corrigendum`, `upstream_flagged_ablation`, `llm_invoked`,
+`no_model_specs_required`, `best_constant_score`, `per_query_random_score`,
+`no_memory_score`, `shuffled_memory_score`, `aligned_memory_score`,
+`aligned_delta_over_shuffled`, `equality_tolerance`,
+`duplicated_metric_pairs`, `tautology_resolved`, `csl_five_arm_clean`,
+`adversarial_clean`, `tests_added_or_reused`, `field_principles`,
+`inference_substrate`, and `honest_verdict`. It SHALL set
+`inference_substrate="deterministic_csl_ablation_no_llm"` and SHALL carry
+one-line principles for every required headline and gate field.
+
+### REQ-LEARN-5557 Sub-requirements
+
+- REQ-LEARN-5557-1: The workflow SHALL fail closed when Exp5542 is missing,
+  unreadable, or does not report `csl_residue_tautology_resolved=true`.
+- REQ-LEARN-5557-2: Every scored control SHALL use the same held-out query IDs
+  and independent outcome labels inherited from Exp5542.
+- REQ-LEARN-5557-3: `duplicated_metric_pairs` SHALL list every pair among
+  best-constant, per-query-random, no-memory, shuffled-memory, and
+  aligned-memory whose scores are equal within `equality_tolerance`.
+- REQ-LEARN-5557-4: `tautology_resolved` SHALL be true only when
+  best-constant and per-query-random are not duplicated and no headline score
+  pair is duplicated within tolerance.
+- REQ-LEARN-5557-5: `aligned_delta_over_shuffled` SHALL equal
+  `aligned_memory_score - shuffled_memory_score`, rounded deterministically.
+- REQ-LEARN-5557-6: `csl_five_arm_clean` and `adversarial_clean` SHALL be true
+  only when Exp5542 is clean, controls share the same query set,
+  `tautology_resolved=true`, aligned-memory beats shuffled-memory,
+  `llm_invoked=false`, and `no_model_specs_required=true`.
+
+### SCENARIO-LEARN-5557-BASELINES: Best-Constant And Random Controls Separate
+
+**Given** a non-degenerate held-out CSL fixture with multiple expected actions
+**When** best-constant and per-query-random controls are scored
+**Then** their scores SHALL differ by more than `equality_tolerance`
+**And** a fixture where those scores match SHALL be rejected as unresolved.
+
+### SCENARIO-LEARN-5557-CONTROLS: Aligned Memory Beats Shuffled Memory
+
+**Given** no-memory, shuffled-memory, and aligned-memory controls share the
+same Exp5542 independent outcome labels
+**When** the five-arm clean gate is computed
+**Then** `aligned_delta_over_shuffled` SHALL be positive before
+`csl_five_arm_clean` can be true.
+
+### SCENARIO-LEARN-5557-ARTIFACT: Corrigendum Receipt Is Conductor Visible
+
+**Given** Exp5542 is clean and Exp5543 is flagged for a five-arm tautology
+**When** Exp5557 writes its receipt
+**Then** the JSON SHALL include the upstream artifact paths, no-LLM substrate,
+separated baseline scores, duplicate-pair evidence, tests, field principles,
+and an honest terminal verdict.
+
+## Implementation Status (Exp 5557)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5557 | Planned (`python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py`, `results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json`) | Planned (`tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py`) |
