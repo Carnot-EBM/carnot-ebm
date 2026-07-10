@@ -11383,3 +11383,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-10: LLM-FSM inspired exact finite-state fixture (✅ Complete) — honest_verdict=complete: exact_fsm_fixture_ready_sat_unsat_ambiguous_no_llm; results/experiment_5541_llm_fsm_exact_fixture.json
 - 2026-07-10: CSL residue metric independence corrigendum (✅ Complete) — honest_verdict=complete: csl_residue_metric_independence_corrigendum_ready; results/experiment_5542_csl_residue_metric_independence_corrigendum.json
 - 2026-07-10: Gated retrieval-warmed CSL five-arm ablation (✅ Complete) — honest_verdict=complete: retrieval_warmed_csl_five_arm_ablation_ready; results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
+- 2026-07-10: Gated cross-model SOTA CSL transfer (⚠️ Blocked) — honest_verdict=blocked: cross_model_sota_csl_transfer_claim_not_allowed; results/experiment_5544_cross_model_sota_csl_transfer.json
