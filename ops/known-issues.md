@@ -97,6 +97,44 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    multi-step exploration?) to confirm `reproducible_total_levels` is not partly exploit-inflated rather than
    real capability. This is metric-integrity work, not a new lever, but should run before further salience-
    front-end iterations claim progress against a baseline that might itself be contaminated.
+   **DONE 2026-07-09 (exp5464): CLEAN — 22 reproduced loop artifacts audited, 0 contaminated,
+   `null_coordinate_exploit_valid=false`. The 69-level count is genuinely earned. Do not re-run unless the
+   registry composition changes materially.**
+6. **(Primary new lever) Strategy-Guided Exploration (SGE)-style parallel language-strategy generation.**
+   arXiv:2603.02045: an LLM first states a concise natural-language STRATEGY for what to try, then generates
+   actions conditioned on that strategy; diversity comes from mixed-temperature sampling of multiple strategies
+   IN PARALLEL, refined by an outcome-grounded reflection loop each round. Genuinely distinct from everything
+   tried so far — not a tool-use loop, not a subgoal value-head, not a novelty bonus, not object/perception
+   work: it is a PORTFOLIO of qualitatively different proposals competing for the action budget, rather than
+   one pipeline generating one kind of candidate. Tested on UI/tool-calling/coding/embodied domains, NOT
+   ARC-AGI-3 — transfer is unverified, and no exact benchmark numbers were confirmed from the source, only the
+   mechanism. Cheap to prototype: reuses the existing local generator, no new pretraining — just a strategy-
+   generation prompt layer + parallel sampling + a reflection step on top of the current action-execution
+   stack. Wire into the live `E3AgentPolicy` path per the ARC Live-Path Reachability Discipline, not a
+   standalone experiment.
+
+**Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
+human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
+(exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect
+predictor (exp4547/exp4568, both honest nulls, no efficiency gain) — the corpus itself is exhausted as a
+level-bank lever, do not re-propose using it for that purpose. MATM similarity-keyed partial-trajectory
+retrieval was tried and retired null (exp4933, action-efficiency only, no level-bank effect). A CoEx-style
+landmark/subgoal decomposition with state propagation across levels was tried and came back honest_null
+(exp5423, `lf52 L3 bounded_budget_no_levelup`) — do not re-propose this specific shape without a real
+differentiator. The one item from the original SOTA-ingestion mapping (exp4746, 2026-06-25) still genuinely
+UNTRIED: an Epistemic-Object-Model MCTS probe planner (uncertainty-aware MCTS over object-centric world-model
+rollouts + a factored interaction/causal-probe bank, arXiv:2210.13455 + arXiv:2511.02225 family) — mapped,
+never built. Lower priority than task 6 but a legitimate future candidate.
+
+**Corroborating reference, not a technique (2026-07-09):** ZendoWorld (arXiv:2607.08233, published
+2026-07-09) is a sibling interactive rule-induction benchmark (agents propose experiments to test hypotheses
+about a hidden rule) that independently finds "VLM-based agents propose near-uninformative experiments,
+failing to actively reduce hypothesis uncertainty" — an unrelated fresh benchmark landing on the exact same
+generation-not-selection diagnosis this project already reached. See
+`reference_zendoworld_hypothesis_uncertainty.md` (memory). Also worth adopting AERA's RHAE framing and its
+public-vs-private-game caveat when reading past "nulled on live solve-rate" results — some nulls may reflect
+the public-game ceiling (non-intelligent strategies solve most public games) rather than the mechanism itself
+failing.
 
 **Watch-item, NOT actionable yet (do not build against this until independently verified):** AGI Maze
 (arXiv:2607.00627, posted 2026-07-01) surfaced in the same 2026-07-08 follow-up but was only search-snippeted,
@@ -104,7 +142,10 @@ never fetched or adversarially checked. Reportedly tests whether LLM agents form
 world-state representations under partial observability, with an early claim that vanilla LLMs fail to do
 so at inference time — if that holds up, it would support building explicit archive/model machinery (tasks
 2-4 above) over relying on an LLM's implicit context. Flagged for a future SOTA-ingestion pass to actually
-fetch and verify before it informs any task.
+fetch and verify before it informs any task. Two other candidates from the 2026-07-09 sweep — Planning-in-8-
+Tokens (arXiv:2603.05438) and Discrete JEPA (arXiv:2506.14373), both proposing compact discrete world-model
+tokenizers for cross-game transfer — were only reached at search-snippet depth, never fetched/verified;
+flagged for the same future pass, not staged.
 
 **Also surveyed this pass and found NOT applicable (real papers, wrong shape for our setting):** Mind-Studio
 (arXiv:2606.16070) induces a Python world model from interaction but requires a pre-extracted "game skill
@@ -143,7 +184,10 @@ D's majority share, but no longer merely opportunistic either.
 - Internal do-not-repeat audit + external deep-research pass (this session, not yet filed as a standalone doc)
 - 2026-07-08 deep-research follow-up (re-ran the errored "Go-Explore archive + LLM-world-model-induction"
   angle; also read arXiv:2606.16070 and arXiv:2606.12316 in full) — source of tasks 4/5 and the watch-item
+- 2026-07-09 fresh literature sweep (procedural pretraining, ensemble/portfolio generation, discrete
+  state-abstraction, last-4-days ARC-AGI-3 check) — source of task 6 and ZendoWorld
 - `reference_transformer_circuits_jlens_workspace.md` (memory) — full J-lens paper notes for task 4
+- `reference_zendoworld_hypothesis_uncertainty.md` (memory) — full ZendoWorld notes
 - `ops/exclusion_manifest.yaml:generation_axis_exploration_signal_retired_exp5154_v473` — the retirement whose
   own reason field carves out representation/perception fixes as in-scope
 - CLAUDE.md "ARC Live-Path Reachability Discipline" — task 2 must be wired into the live entrypoint

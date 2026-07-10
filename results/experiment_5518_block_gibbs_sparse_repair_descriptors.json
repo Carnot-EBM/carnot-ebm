@@ -1,0 +1,3180 @@
+{
+  "active_constraint_sparse_repair_ready": true,
+  "all_candidates_exact_checked": true,
+  "candidate_count": 160,
+  "claim_limits": [
+    "small CPU-local hard/soft fixtures only",
+    "exact fallback accepts or rejects every candidate",
+    "random block is a deterministic same-size control",
+    "wall-time observations are recorded but no speedup claim is allowed"
+  ],
+  "descriptor_path": "results/block_gibbs_sparse_repair_5518/descriptors.json",
+  "descriptor_payload": {
+    "descriptor_count": 2,
+    "schema": "carnot.descriptor_bundle.sparse_block_repair_5518.v1",
+    "sparse_block_policy": "violated_hard_constraint_variables_then_exact_validate",
+    "sparse_repair_descriptors": [
+      {
+        "block_size": 2,
+        "descriptor_id": "sparse-repair:claim_support_preference",
+        "exact_fallback": {
+          "accepted_assignment": {
+            "scope": "bounded",
+            "source_quality": "primary",
+            "support": "entailed"
+          },
+          "objective_score": 11.0,
+          "required": true,
+          "status": "optimal",
+          "validator": "exp5499_finite_domain_hard_soft_exact_validator"
+        },
+        "initial_assignment": {
+          "scope": "overbroad",
+          "source_quality": "primary",
+          "support": "unsupported"
+        },
+        "repair_block_variables": [
+          "support",
+          "scope"
+        ],
+        "schema": "carnot.descriptor.sparse_block_repair.v1",
+        "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+        "source_instance_id": "claim_support_preference",
+        "sparse_block_policy": "violated_hard_constraint_variables_then_exact_validate",
+        "sparse_subset": true,
+        "variable_count": 3,
+        "variables": [
+          "support",
+          "source_quality",
+          "scope"
+        ],
+        "violated_hard_constraints": [
+          "HC_SUPPORT_ENTAILED",
+          "HC_SCOPE_BOUNDED"
+        ]
+      },
+      {
+        "block_size": 2,
+        "descriptor_id": "sparse-repair:claim_safety_conflict",
+        "exact_fallback": {
+          "accepted_assignment": {
+            "action": "accept",
+            "citation": "present",
+            "safety": "safe"
+          },
+          "objective_score": 12.0,
+          "required": true,
+          "status": "optimal",
+          "validator": "exp5499_finite_domain_hard_soft_exact_validator"
+        },
+        "initial_assignment": {
+          "action": "accept",
+          "citation": "missing",
+          "safety": "unsafe"
+        },
+        "repair_block_variables": [
+          "safety",
+          "citation"
+        ],
+        "schema": "carnot.descriptor.sparse_block_repair.v1",
+        "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+        "source_instance_id": "claim_safety_conflict",
+        "sparse_block_policy": "violated_hard_constraint_variables_then_exact_validate",
+        "sparse_subset": true,
+        "variable_count": 3,
+        "variables": [
+          "safety",
+          "citation",
+          "action"
+        ],
+        "violated_hard_constraints": [
+          "HC_SAFETY_SAFE",
+          "HC_CITATION_PRESENT"
+        ]
+      }
+    ]
+  },
+  "descriptor_payload_sha256": "1615ab158a056fbd4f1c6ac84549e15425046dc9543799ba1bb4182cdee7653f",
+  "exact_fallback_used": true,
+  "exact_only_success_rate": 1.0,
+  "experiment": 5518,
+  "experiment_id": "exp5518-block-gibbs-sparse-repair-descriptors",
+  "field_principles": {
+    "active_constraint_sparse_repair_ready": "interface readiness gate, not a performance headline.",
+    "descriptor_path": "points to the executable sparse block descriptor payload.",
+    "exact_fallback_used": "keeps exact validators as the acceptance authority.",
+    "exact_only_success_rate": "full exact fallback acceptance reference.",
+    "fixture_paths": "names the exact-checkable hard/soft fixtures used by every policy.",
+    "honest_verdict": "terminal status; start with complete: or blocked: and do not claim speedup.",
+    "inference_substrate": "declares exact-checked sparse repair, no model training or live inference.",
+    "mean_iterations_exact_only": "iteration evidence for the exact-only baseline.",
+    "mean_iterations_sparse_repair": "iteration evidence for sparse repair; not a speedup claim.",
+    "random_block_success_rate": "same-size random block control under exact checking.",
+    "seeds": "records deterministic candidate-generation seeds.",
+    "sparse_block_policy": "names the non-trained block-selection rule after violations.",
+    "sparse_repair_success_rate": "descriptor-guided repair acceptance under exact checking.",
+    "speedup_claim_allowed": "must remain false without matched timing evidence."
+  },
+  "fixture_paths": [
+    "results/block_gibbs_sparse_repair_5518/fixtures.json",
+    "results/preference_maxsat_minimal_fixture_5499/fixture.json"
+  ],
+  "fixture_payload": {
+    "exact_validator": "exp5499_finite_domain_hard_soft_exact_validator",
+    "fixture_selection": "two optimal Exp5499 rows with two hard-constraint violations each",
+    "instances": [
+      {
+        "domains": {
+          "scope": [
+            "overbroad",
+            "bounded"
+          ],
+          "source_quality": [
+            "secondary",
+            "primary"
+          ],
+          "support": [
+            "unsupported",
+            "entailed"
+          ]
+        },
+        "exact_reference": {
+          "assignment": {
+            "scope": "bounded",
+            "source_quality": "primary",
+            "support": "entailed"
+          },
+          "assignment_hash": "2c52605737bfbd2bfa5233e552f09b753ded312d009208bedbfbe631f1e49d9e",
+          "feasible_assignment_count": 2,
+          "objective_score": 11.0,
+          "status": "optimal"
+        },
+        "expected_repair_block_variables": [
+          "support",
+          "scope"
+        ],
+        "hard_constraints": [
+          {
+            "id": "HC_SUPPORT_ENTAILED",
+            "literals": [
+              {
+                "equals": "entailed",
+                "variable": "support"
+              }
+            ],
+            "type": "clause"
+          },
+          {
+            "id": "HC_SCOPE_BOUNDED",
+            "literals": [
+              {
+                "equals": "bounded",
+                "variable": "scope"
+              }
+            ],
+            "type": "clause"
+          }
+        ],
+        "initial_assignment": {
+          "scope": "overbroad",
+          "source_quality": "primary",
+          "support": "unsupported"
+        },
+        "instance_id": "claim_support_preference",
+        "schema": "carnot.fixture.preference_maxsat_minimal_typed_claim_state.v1",
+        "soft_preferences": [
+          {
+            "id": "SP_PRIMARY_SOURCE",
+            "type": "value_reward",
+            "value": "primary",
+            "variable": "source_quality",
+            "weight": 7
+          },
+          {
+            "id": "SP_ENTAILED_SUPPORT",
+            "type": "value_reward",
+            "value": "entailed",
+            "variable": "support",
+            "weight": 3
+          },
+          {
+            "id": "SP_BOUNDED_SCOPE",
+            "type": "value_reward",
+            "value": "bounded",
+            "variable": "scope",
+            "weight": 1
+          }
+        ],
+        "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+        "typed_claims": [
+          {
+            "claim_type": "evidence_support",
+            "domain": [
+              "unsupported",
+              "entailed"
+            ],
+            "name": "support"
+          },
+          {
+            "claim_type": "provenance_quality",
+            "domain": [
+              "secondary",
+              "primary"
+            ],
+            "name": "source_quality"
+          },
+          {
+            "claim_type": "claim_scope",
+            "domain": [
+              "overbroad",
+              "bounded"
+            ],
+            "name": "scope"
+          }
+        ],
+        "violated_hard_constraints": [
+          "HC_SUPPORT_ENTAILED",
+          "HC_SCOPE_BOUNDED"
+        ]
+      },
+      {
+        "domains": {
+          "action": [
+            "reject",
+            "accept"
+          ],
+          "citation": [
+            "missing",
+            "present"
+          ],
+          "safety": [
+            "unsafe",
+            "safe"
+          ]
+        },
+        "exact_reference": {
+          "assignment": {
+            "action": "accept",
+            "citation": "present",
+            "safety": "safe"
+          },
+          "assignment_hash": "18593a04479ad10f303da93394675b65b1243732f139b5777c42d2a3518d23ea",
+          "feasible_assignment_count": 2,
+          "objective_score": 12.0,
+          "status": "optimal"
+        },
+        "expected_repair_block_variables": [
+          "safety",
+          "citation"
+        ],
+        "hard_constraints": [
+          {
+            "id": "HC_SAFETY_SAFE",
+            "literals": [
+              {
+                "equals": "safe",
+                "variable": "safety"
+              }
+            ],
+            "type": "clause"
+          },
+          {
+            "id": "HC_CITATION_PRESENT",
+            "literals": [
+              {
+                "equals": "present",
+                "variable": "citation"
+              }
+            ],
+            "type": "clause"
+          }
+        ],
+        "initial_assignment": {
+          "action": "accept",
+          "citation": "missing",
+          "safety": "unsafe"
+        },
+        "instance_id": "claim_safety_conflict",
+        "schema": "carnot.fixture.preference_maxsat_minimal_typed_claim_state.v1",
+        "soft_preferences": [
+          {
+            "id": "SP_ACCEPT_WHEN_SAFE",
+            "type": "value_reward",
+            "value": "accept",
+            "variable": "action",
+            "weight": 5
+          },
+          {
+            "id": "SP_SAFE_LABEL",
+            "type": "value_reward",
+            "value": "safe",
+            "variable": "safety",
+            "weight": 4
+          },
+          {
+            "id": "SP_CITATION_PRESENT",
+            "type": "value_reward",
+            "value": "present",
+            "variable": "citation",
+            "weight": 3
+          }
+        ],
+        "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+        "typed_claims": [
+          {
+            "claim_type": "safety_label",
+            "domain": [
+              "unsafe",
+              "safe"
+            ],
+            "name": "safety"
+          },
+          {
+            "claim_type": "citation_state",
+            "domain": [
+              "missing",
+              "present"
+            ],
+            "name": "citation"
+          },
+          {
+            "claim_type": "validator_action",
+            "domain": [
+              "reject",
+              "accept"
+            ],
+            "name": "action"
+          }
+        ],
+        "violated_hard_constraints": [
+          "HC_SAFETY_SAFE",
+          "HC_CITATION_PRESENT"
+        ]
+      }
+    ],
+    "schema": "carnot.fixture.block_gibbs_sparse_repair_5518.v1",
+    "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json"
+  },
+  "fixture_payload_sha256": "c802864ab7720c4604c86556d03acf5c3b578b3be0796b459fc745a30f9fc9ad",
+  "honest_verdict": "complete: exact_checked_sparse_repair_descriptor_interface_ready_no_speedup_claim",
+  "inference_substrate": "exact_checked_sparse_repair",
+  "mean_iterations_exact_only": 8.0,
+  "mean_iterations_random_block": 4.0,
+  "mean_iterations_sparse_repair": 4.0,
+  "milestone": "2026.07.500",
+  "policy_results": {
+    "exact_only": [
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "source_quality",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "3be80e39b0015ebc182baf30d7984068eeacd577a615737c76f6d9b52ad9e999",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 1.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "496926ae2a547271c2c0e4331cd89aeacde2bf3f773e8a8e90f5eaa9535dda4c",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "2f14ae80915c485323966c41b76a38ca69513ad32b35d368da779b5d61d38492",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5518,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation",
+          "action"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "62310891fd3f77b92a554c3c3a36e3690a4fa96dbf373ef2b527c7ecacf23d94",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "2288caf5fc0b86407ba406170d134272e3a702c262f3a760af40f4efe099e353",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5518,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "source_quality",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "3be80e39b0015ebc182baf30d7984068eeacd577a615737c76f6d9b52ad9e999",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 1.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "496926ae2a547271c2c0e4331cd89aeacde2bf3f773e8a8e90f5eaa9535dda4c",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "2f14ae80915c485323966c41b76a38ca69513ad32b35d368da779b5d61d38492",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5519,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation",
+          "action"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "62310891fd3f77b92a554c3c3a36e3690a4fa96dbf373ef2b527c7ecacf23d94",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "2288caf5fc0b86407ba406170d134272e3a702c262f3a760af40f4efe099e353",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5519,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "source_quality",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "3be80e39b0015ebc182baf30d7984068eeacd577a615737c76f6d9b52ad9e999",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 1.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "496926ae2a547271c2c0e4331cd89aeacde2bf3f773e8a8e90f5eaa9535dda4c",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "2f14ae80915c485323966c41b76a38ca69513ad32b35d368da779b5d61d38492",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5520,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation",
+          "action"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "62310891fd3f77b92a554c3c3a36e3690a4fa96dbf373ef2b527c7ecacf23d94",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "2288caf5fc0b86407ba406170d134272e3a702c262f3a760af40f4efe099e353",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5520,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "source_quality",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "3be80e39b0015ebc182baf30d7984068eeacd577a615737c76f6d9b52ad9e999",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 1.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "496926ae2a547271c2c0e4331cd89aeacde2bf3f773e8a8e90f5eaa9535dda4c",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "2f14ae80915c485323966c41b76a38ca69513ad32b35d368da779b5d61d38492",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5521,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation",
+          "action"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "62310891fd3f77b92a554c3c3a36e3690a4fa96dbf373ef2b527c7ecacf23d94",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "2288caf5fc0b86407ba406170d134272e3a702c262f3a760af40f4efe099e353",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5521,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "source_quality",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "3be80e39b0015ebc182baf30d7984068eeacd577a615737c76f6d9b52ad9e999",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 1.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "496926ae2a547271c2c0e4331cd89aeacde2bf3f773e8a8e90f5eaa9535dda4c",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "2f14ae80915c485323966c41b76a38ca69513ad32b35d368da779b5d61d38492",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5522,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation",
+          "action"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "62310891fd3f77b92a554c3c3a36e3690a4fa96dbf373ef2b527c7ecacf23d94",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "2288caf5fc0b86407ba406170d134272e3a702c262f3a760af40f4efe099e353",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": true,
+            "reject_reason": "not_exact_optimum",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 8,
+        "policy": "exact_only",
+        "seed": 5522,
+        "success": true
+      }
+    ],
+    "random_block": [
+      {
+        "accepted_assignment": null,
+        "block_variables": [
+          "source_quality",
+          "support"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "496926ae2a547271c2c0e4331cd89aeacde2bf3f773e8a8e90f5eaa9535dda4c",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5518,
+        "success": false
+      },
+      {
+        "accepted_assignment": null,
+        "block_variables": [
+          "action",
+          "safety"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5518,
+        "success": false
+      },
+      {
+        "accepted_assignment": null,
+        "block_variables": [
+          "support",
+          "source_quality"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "entailed"
+            },
+            "assignment_hash": "496926ae2a547271c2c0e4331cd89aeacde2bf3f773e8a8e90f5eaa9535dda4c",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 3.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5519,
+        "success": false
+      },
+      {
+        "accepted_assignment": null,
+        "block_variables": [
+          "action",
+          "safety"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5519,
+        "success": false
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "scope",
+          "support"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5520,
+        "success": true
+      },
+      {
+        "accepted_assignment": null,
+        "block_variables": [
+          "action",
+          "safety"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "03fb7e9f2fe345c362a433a003e7fc36f829c61c4ebede834d27f108a776ab27",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "reject",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "ee1fbe8d4831900df957a3ee35b2d84f95581d5087286a9119ca79ea8c89797b",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 4.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5520,
+        "success": false
+      },
+      {
+        "accepted_assignment": null,
+        "block_variables": [
+          "scope",
+          "source_quality"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "3be80e39b0015ebc182baf30d7984068eeacd577a615737c76f6d9b52ad9e999",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 1.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5521,
+        "success": false
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5521,
+        "success": true
+      },
+      {
+        "accepted_assignment": null,
+        "block_variables": [
+          "scope",
+          "source_quality"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "4dba1639a8dad9bef546f6516d647e2ebd42346abb7e78f335e8a2c777746a0d",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 0.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "secondary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "3be80e39b0015ebc182baf30d7984068eeacd577a615737c76f6d9b52ad9e999",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 1.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5522,
+        "success": false
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "citation",
+          "safety"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "random_block",
+        "seed": 5522,
+        "success": true
+      }
+    ],
+    "sparse_repair": [
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5518,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5518,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5519,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5519,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5520,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5520,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5521,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5521,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "block_variables": [
+          "support",
+          "scope"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "b92a092c4d1498030017b68e96845aa1361c99e3ba9bf10f11c2280992626053",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 7.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "unsupported"
+            },
+            "assignment_hash": "91f249ab6f93953f9d3d68dbf3a1dfab38a72d03beb169c3a43324e73bab9466",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "scope": "overbroad",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "98194a884bc1f9300fe5168ba82c1309f95961c7e6338aaca64690129d93d075",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 10.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "assignment_hash": "3c61825b6e2863ca7dcbcad4c8fd8ac4c36c43c18e9e65928f298d43e6812b80",
+            "exact_reference_score": 11.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 11.0
+          }
+        ],
+        "instance_id": "claim_support_preference",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5522,
+        "success": true
+      },
+      {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "block_variables": [
+          "safety",
+          "citation"
+        ],
+        "candidate_checks": [
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "47b7b0f03a205a61eb605efd6fa700d826a5a0c75b01535457f19dba43d8b53a",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 5.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "unsafe"
+            },
+            "assignment_hash": "7e8f5fadc9995ac7a4993023f3e5c05b75a242eff1b5461f8b1da66f3e2f69b5",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 8.0
+          },
+          {
+            "accepted": false,
+            "assignment": {
+              "action": "accept",
+              "citation": "missing",
+              "safety": "safe"
+            },
+            "assignment_hash": "18ab4482811204d3bc2c53d038aa5ad547ea690b4941771c42b484d6a981ff19",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "rejected",
+            "hard_constraints_pass": false,
+            "reject_reason": "hard_constraints_failed",
+            "soft_score": 9.0
+          },
+          {
+            "accepted": true,
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "assignment_hash": "463d2f6e051321b427b0daafeaa9c2f96b51735c429b9e664eed59a85f62644f",
+            "exact_reference_score": 12.0,
+            "exact_validator_decision": "accepted",
+            "hard_constraints_pass": true,
+            "reject_reason": "accepted",
+            "soft_score": 12.0
+          }
+        ],
+        "instance_id": "claim_safety_conflict",
+        "iterations": 4,
+        "policy": "sparse_repair",
+        "seed": 5522,
+        "success": true
+      }
+    ]
+  },
+  "random_block_success_rate": 0.3,
+  "readiness_blockers": [],
+  "reproducibility_checksum": "e04347a9506554e09c972018838cfe47edc2d6694794452a04fe9bd82cd3e797",
+  "research_conductor_modified": false,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5518.block_gibbs_sparse_repair_descriptors.v500",
+  "seeds": [
+    5518,
+    5519,
+    5520,
+    5521,
+    5522
+  ],
+  "sparse_block_policy": "violated_hard_constraint_variables_then_exact_validate",
+  "sparse_repair_success_rate": 1.0,
+  "spec_refs": [
+    "REQ-VERIFY-5518",
+    "SCENARIO-VERIFY-5518",
+    "REQ-VERIFY-5499"
+  ],
+  "speedup_claim_allowed": false,
+  "test_paths": [
+    "tests/python/test_experiment_5518_block_gibbs_sparse_repair_descriptors.py"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5518_block_gibbs_sparse_repair_descriptors.py -q --no-cov",
+      "outcome": "passed",
+      "summary": "7 passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5518_block_gibbs_sparse_repair_descriptors.py -m pytest tests/python/test_experiment_5518_block_gibbs_sparse_repair_descriptors.py -q --no-cov -n 0",
+      "outcome": "passed",
+      "summary": "7 passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5518_block_gibbs_sparse_repair_descriptors.py --fail-under=100",
+      "outcome": "passed",
+      "summary": "100% coverage on new module"
+    }
+  ],
+  "unchecked_candidate_count": 0,
+  "wall_time_exact_only_s": 0.000673501,
+  "wall_time_random_block_s": 0.000492292,
+  "wall_time_sparse_repair_s": 0.000344285
+}

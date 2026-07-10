@@ -1,0 +1,236 @@
+{
+  "exact_validator": "exp5499_finite_domain_hard_soft_exact_validator",
+  "fixture_selection": "two optimal Exp5499 rows with two hard-constraint violations each",
+  "instances": [
+    {
+      "domains": {
+        "scope": [
+          "overbroad",
+          "bounded"
+        ],
+        "source_quality": [
+          "secondary",
+          "primary"
+        ],
+        "support": [
+          "unsupported",
+          "entailed"
+        ]
+      },
+      "exact_reference": {
+        "assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "assignment_hash": "2c52605737bfbd2bfa5233e552f09b753ded312d009208bedbfbe631f1e49d9e",
+        "feasible_assignment_count": 2,
+        "objective_score": 11.0,
+        "status": "optimal"
+      },
+      "expected_repair_block_variables": [
+        "support",
+        "scope"
+      ],
+      "hard_constraints": [
+        {
+          "id": "HC_SUPPORT_ENTAILED",
+          "literals": [
+            {
+              "equals": "entailed",
+              "variable": "support"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_SCOPE_BOUNDED",
+          "literals": [
+            {
+              "equals": "bounded",
+              "variable": "scope"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "initial_assignment": {
+        "scope": "overbroad",
+        "source_quality": "primary",
+        "support": "unsupported"
+      },
+      "instance_id": "claim_support_preference",
+      "schema": "carnot.fixture.preference_maxsat_minimal_typed_claim_state.v1",
+      "soft_preferences": [
+        {
+          "id": "SP_PRIMARY_SOURCE",
+          "type": "value_reward",
+          "value": "primary",
+          "variable": "source_quality",
+          "weight": 7
+        },
+        {
+          "id": "SP_ENTAILED_SUPPORT",
+          "type": "value_reward",
+          "value": "entailed",
+          "variable": "support",
+          "weight": 3
+        },
+        {
+          "id": "SP_BOUNDED_SCOPE",
+          "type": "value_reward",
+          "value": "bounded",
+          "variable": "scope",
+          "weight": 1
+        }
+      ],
+      "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+      "typed_claims": [
+        {
+          "claim_type": "evidence_support",
+          "domain": [
+            "unsupported",
+            "entailed"
+          ],
+          "name": "support"
+        },
+        {
+          "claim_type": "provenance_quality",
+          "domain": [
+            "secondary",
+            "primary"
+          ],
+          "name": "source_quality"
+        },
+        {
+          "claim_type": "claim_scope",
+          "domain": [
+            "overbroad",
+            "bounded"
+          ],
+          "name": "scope"
+        }
+      ],
+      "violated_hard_constraints": [
+        "HC_SUPPORT_ENTAILED",
+        "HC_SCOPE_BOUNDED"
+      ]
+    },
+    {
+      "domains": {
+        "action": [
+          "reject",
+          "accept"
+        ],
+        "citation": [
+          "missing",
+          "present"
+        ],
+        "safety": [
+          "unsafe",
+          "safe"
+        ]
+      },
+      "exact_reference": {
+        "assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "assignment_hash": "18593a04479ad10f303da93394675b65b1243732f139b5777c42d2a3518d23ea",
+        "feasible_assignment_count": 2,
+        "objective_score": 12.0,
+        "status": "optimal"
+      },
+      "expected_repair_block_variables": [
+        "safety",
+        "citation"
+      ],
+      "hard_constraints": [
+        {
+          "id": "HC_SAFETY_SAFE",
+          "literals": [
+            {
+              "equals": "safe",
+              "variable": "safety"
+            }
+          ],
+          "type": "clause"
+        },
+        {
+          "id": "HC_CITATION_PRESENT",
+          "literals": [
+            {
+              "equals": "present",
+              "variable": "citation"
+            }
+          ],
+          "type": "clause"
+        }
+      ],
+      "initial_assignment": {
+        "action": "accept",
+        "citation": "missing",
+        "safety": "unsafe"
+      },
+      "instance_id": "claim_safety_conflict",
+      "schema": "carnot.fixture.preference_maxsat_minimal_typed_claim_state.v1",
+      "soft_preferences": [
+        {
+          "id": "SP_ACCEPT_WHEN_SAFE",
+          "type": "value_reward",
+          "value": "accept",
+          "variable": "action",
+          "weight": 5
+        },
+        {
+          "id": "SP_SAFE_LABEL",
+          "type": "value_reward",
+          "value": "safe",
+          "variable": "safety",
+          "weight": 4
+        },
+        {
+          "id": "SP_CITATION_PRESENT",
+          "type": "value_reward",
+          "value": "present",
+          "variable": "citation",
+          "weight": 3
+        }
+      ],
+      "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+      "typed_claims": [
+        {
+          "claim_type": "safety_label",
+          "domain": [
+            "unsafe",
+            "safe"
+          ],
+          "name": "safety"
+        },
+        {
+          "claim_type": "citation_state",
+          "domain": [
+            "missing",
+            "present"
+          ],
+          "name": "citation"
+        },
+        {
+          "claim_type": "validator_action",
+          "domain": [
+            "reject",
+            "accept"
+          ],
+          "name": "action"
+        }
+      ],
+      "violated_hard_constraints": [
+        "HC_SAFETY_SAFE",
+        "HC_CITATION_PRESENT"
+      ]
+    }
+  ],
+  "schema": "carnot.fixture.block_gibbs_sparse_repair_5518.v1",
+  "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json"
+}
