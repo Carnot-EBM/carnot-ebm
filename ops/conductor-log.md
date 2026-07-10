@@ -10734,3 +10734,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 17:24 UTC | Hardware receipt substrate corrigendum | OK | 85 passed, 1 warning in 9.85s |
 | 2026-07-10 17:36 UTC | ARC no-LLM substrate and provenance precheck | OK | 87 passed, 1 warning in 11.44s |
 | 2026-07-10 17:50 UTC | Gated ARC clean live level-up attempt | OK | 88 passed, 1 warning in 11.82s |
+| 2026-07-10 19:13 UTC | V502 capstone reconciliation and claim boundaries | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ={
++           |

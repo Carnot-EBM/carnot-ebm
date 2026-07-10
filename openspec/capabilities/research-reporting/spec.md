@@ -39770,3 +39770,122 @@ modify `research-references.md`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5537 | Implemented (`python/carnot/experiment_5537_v502_source_delta_ingestion.py`, `results/experiment_5537_v502_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5537_v502_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5549: V502 Capstone Reconciliation Preserves Claim Boundaries
+
+The Exp5549 workflow SHALL write
+`results/experiment_5549_capstone_v502.json` after reading every expected
+`.502` artifact from Exp5536 through Exp5548: `results/experiment_5536_transition_v502.json`,
+`results/experiment_5537_v502_source_delta_ingestion.json`,
+`results/experiment_5538_sota_panel_duration_substrate_corrigendum.json`,
+`results/experiment_5539_gram2token_grammar_table_preflight.json`,
+`results/experiment_5540_sota_hard_soft_live_panel_v3.json`,
+`results/experiment_5541_llm_fsm_exact_fixture.json`,
+`results/experiment_5542_csl_residue_metric_independence_corrigendum.json`,
+`results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json`,
+`results/experiment_5544_cross_model_sota_csl_transfer.json`,
+`results/experiment_5545_sparse_repair_fsm_descriptor_scale.json`,
+`results/experiment_5546_hardware_receipt_substrate_corrigendum.json`,
+`results/experiment_5547_arc_no_llm_substrate_precheck.json`,
+`results/experiment_5548_arc_clean_live_levelup.json`, and
+`results/experiment_5548_arc_clean_live_levelup_trajectory.json`. It SHALL
+record missing, skipped or gated, failed, flagged, honest-null, and clean
+artifacts separately so missing or flagged evidence cannot become successful
+evidence. It SHALL NOT modify `scripts/research_conductor.py`,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when a separate
+conductor reconciliation step owns those files.
+
+The workflow SHALL compute claim boundaries from clean upstream artifacts only.
+It SHALL allow a structured SOTA claim only when the SOTA live panel has clean
+duration and grammar gates, all requested rows are emitted, and every emitted
+row is schema-valid and exact-validated. It SHALL allow a SOTA hard/soft claim
+only when Exp5540 explicitly allows `sota_hard_soft_claim_allowed`. It SHALL
+record continuous self-learning evidence when clean residue independence exists,
+but SHALL allow the broad CSL claim only when no flagged five-arm evidence and
+no blocked cross-model transfer gate remain. It SHALL allow sparse repair only
+for exact-checked finite-state repair evidence, not speedup. It SHALL keep
+hardware speedup false unless authenticated matched timing exists. It SHALL
+count ARC registry delta and reproduced levels only from Exp5548 when
+`solve_provenance=live_agent_self_discovery`,
+`offline_reproduced=true`, and `registry_delta` and `reproduced_levels` are
+positive; capstone aggregation itself SHALL never count as a level-up attempt.
+
+The workflow SHALL verify that every LLM-bearing `.502` artifact includes the
+mandated local SOTA GGUF model specs and that no-LLM artifacts declare
+`no_model_specs_required` when model specs are intentionally absent. It SHALL
+emit required fields `milestone`, `task_range`, `artifacts_expected`,
+`artifacts_read`, `missing_artifacts`, `skipped_by_gates`,
+`flagged_artifacts`, `honest_nulls`, `clean_artifacts`,
+`structured_sota_claim_allowed`, `sota_hard_soft_claim_allowed`,
+`continuous_self_learning_evidence`, `csl_claim_allowed`,
+`sparse_repair_claim_allowed`, `hardware_speedup_claim`,
+`arc_registry_delta`, `reproduced_levels`, `protected_files_unchanged`,
+`docs_updated`, `checks_run`, `field_principles`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `milestone`: principle "Route key for the `.502` capstone."
+- `task_range`: principle "Closed conductor boundary from transition through this capstone."
+- `artifacts_expected`: principle "Count of upstream `.502` artifacts Exp5549 expected to inspect before making claims."
+- `artifacts_read`: principle "Count of expected upstream artifacts actually parsed as JSON evidence."
+- `missing_artifacts`: principle "Absent or unreadable expected artifacts stay visible and never become successful evidence."
+- `skipped_by_gates`: principle "Blocked or gated upstreams are preserved as skipped evidence, not promoted."
+- `flagged_artifacts`: principle "Adversarial or methodology-flagged upstreams are excluded from headline claims."
+- `honest_nulls`: principle "Clean negative or no-bank results are recorded separately from failures."
+- `clean_artifacts`: principle "Readable, unflagged, unblocked, non-null artifacts safe for bounded aggregation."
+- `structured_sota_claim_allowed`: principle "Bare boolean for complete schema-valid exact-validated SOTA structured rows."
+- `sota_hard_soft_claim_allowed`: principle "Bare boolean imported only from clean Exp5540 hard/soft gate evidence."
+- `continuous_self_learning_evidence`: principle "Bare boolean for clean residue independence evidence, separate from broad CSL claim eligibility."
+- `csl_claim_allowed`: principle "Bare boolean blocked by flagged five-arm evidence or blocked cross-model transfer."
+- `sparse_repair_claim_allowed`: principle "Bare boolean for exact-checked FSM repair evidence, not a speedup claim."
+- `hardware_speedup_claim`: principle "Must remain false without authenticated matched timing evidence."
+- `arc_registry_delta`: principle "Registry delta imported only from offline-reproduced live self-discovery ARC evidence."
+- `reproduced_levels`: principle "Reproduced-level count imported only from the live attempt, never from capstone aggregation."
+- `protected_files_unchanged`: principle "Protected-file map for `research-roadmap.yaml` and `scripts/research_conductor.py`."
+- `docs_updated`: principle "Files intentionally updated by this workflow; ops/status, ops/changelog, and BMAD remain untouched when reconciler-owned."
+- `checks_run`: principle "Validation commands and protected-file checks actually run."
+- `field_principles`: principle "One-line annotations for every headline and gate field."
+- `inference_substrate`: principle "Must equal `aggregation_from_upstream_artifacts` because Exp5549 is synthesis only."
+- `honest_verdict`: principle "Terminal summary starting with `complete:` or `blocked:` that names the true `.502` outcome."
+
+#### SCENARIO-REPORT-5549: Capstone Aggregates V502 Without Laundering Flags
+
+**Given** Exp5536 through Exp5548 expected artifacts are readable
+**And** Exp5543 is adversarial-flagged, Exp5544 is blocked by a CSL transfer
+gate, Exp5540 is an honest SOTA hard/soft null, and Exp5548 is an honest ARC
+no-bank null
+**When** the Exp5549 capstone workflow runs
+**Then** it writes `results/experiment_5549_capstone_v502.json`, records all
+expected artifacts read, lists Exp5543 in `flagged_artifacts`, lists Exp5544 in
+`skipped_by_gates`, lists Exp5540 and Exp5548 in `honest_nulls`, keeps
+`sota_hard_soft_claim_allowed=false`, keeps `csl_claim_allowed=false`, keeps
+`hardware_speedup_claim=false`, records `arc_registry_delta=0`, records
+`reproduced_levels=0`, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and keeps protected
+files unchanged.
+
+#### SCENARIO-REPORT-5549-MISSING-INPUT: Missing Expected Artifacts Fail Closed
+
+**Given** one or more expected Exp5536 through Exp5548 artifacts is missing or
+unreadable
+**When** the Exp5549 capstone workflow runs
+**Then** it emits a terminal `blocked:` artifact, records the missing path in
+`missing_artifacts`, keeps all headline claim booleans false except clean
+residue evidence that remains independently visible, and does not modify
+protected files.
+
+#### SCENARIO-REPORT-5549-FIELD-PRINCIPLES: Required Fields Stay Annotated
+
+**Given** the Exp5549 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, every LLM-bearing artifact has mandated local GGUF
+model specs, no-LLM artifacts explain the absence of model specs, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5549)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5549 | Implemented (`python/carnot/experiment_5549_capstone_v502.py`, `results/experiment_5549_capstone_v502.json`) | Implemented (`tests/python/test_experiment_5549_capstone_v502.py`) |
