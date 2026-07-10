@@ -28966,6 +28966,106 @@ and avoid claiming hard/soft reasoning quality.
 |---|---|---|
 | REQ-VERIFY-5526 | Implemented (`python/carnot/experiment_5526_sota_structured_repair_loop.py`, `results/experiment_5526_sota_structured_repair_loop.json`) | Implemented (`tests/python/test_experiment_5526_sota_structured_repair_loop.py`) |
 
+### REQ-VERIFY-5527: Exact-Validated SOTA Hard/Soft Panel V2
+
+The repository SHALL provide Exp 5527 at
+`python/carnot/experiment_5527_sota_hard_soft_panel_v2.py` and write
+`results/experiment_5527_sota_hard_soft_panel_v2.json` only after
+`results/experiment_5526_sota_structured_repair_loop.json` is loadable and
+reports the repaired local-GGUF row gate as ready. The panel SHALL consume a
+bounded number of Exp 5499 hard/soft fixture rows from the Exp 5526 repaired
+candidate rows, SHALL require at least one attempted mandated local SOTA GGUF
+model from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL carry forward runtime/offload
+evidence from the upstream local-GGUF artifacts. It SHALL use the repository
+local-GGUF helper pattern and SHALL NOT call `AutoTokenizer.from_pretrained` or
+transformers `from_pretrained` on a GGUF repository.
+
+Every emitted candidate row SHALL be reparsed through the Exp 5512 hard/soft
+candidate schema and rescored through the Exp 5499 exact validators. The panel
+SHALL NOT trust prior row-level `exact_validator_*`, `soft_optimal`, or
+`reference_agreement` fields when computing headline metrics. Schema-invalid
+rows SHALL not be handed to the exact validators. Missing rows SHALL remain
+missing candidate rows and SHALL NOT be counted as abstentions. Logits, energy,
+or external text-scorer diagnostics MAY only appear in sidecar evidence and
+SHALL NOT control the exact hard/soft claim gate.
+
+The artifact SHALL include at minimum these top-level fields: `model_specs`,
+`models_attempted`, `rows_requested`, `rows_emitted`,
+`schema_validity_rate`, `missing_candidate_rows`,
+`exact_validator_accuracy`, `preference_optimality_rate`, `abstention_rate`,
+`confident_wrong_rate`, `gpu_offload_evidence`,
+`sota_structured_panel_ready`, `sota_hard_soft_claim_allowed`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`exact_validated_local_sota_gguf_panel`. `honest_verdict` SHALL start with
+`complete:` or `blocked:` and SHALL state whether the bounded exact-validated
+hard/soft claim is allowed.
+
+Field principles:
+
+- `model_specs`: Names all mandated local GGUF candidates so panel evidence
+  cannot detach from the approved SOTA set.
+- `models_attempted`: Identifies the local SOTA GGUF model path that actually
+  supplied upstream repaired-row evidence.
+- `rows_requested`: Bounds the hard/soft fixture denominator before candidate
+  parsing.
+- `rows_emitted`: Separates model/repaired-row output volume from correctness.
+- `schema_validity_rate`: Gates validator handoff on schema-valid rows rather
+  than parser optimism.
+- `missing_candidate_rows`: Keeps absent rows visible and prevents treating
+  missing output as abstention.
+- `exact_validator_accuracy`: Reports only deterministic Exp 5499 validator
+  correctness for schema-valid rows.
+- `preference_optimality_rate`: Reports soft-preference optimality only after
+  hard constraints pass.
+- `abstention_rate`: Counts explicit schema-valid abstentions without
+  absorbing missing rows.
+- `confident_wrong_rate`: Surfaces high-confidence schema-valid failures
+  separately from calibrated abstention.
+- `gpu_offload_evidence`: Preserves the runtime/offload receipt for the local
+  GGUF substrate.
+- `sota_structured_panel_ready`: States whether the exact-validated structured
+  panel gate is open.
+- `sota_hard_soft_claim_allowed`: Controls whether the bounded hard/soft claim
+  may be cited.
+- `tests_added_or_reused`: Links the artifact to tests for parsing and exact
+  validator handoff.
+- `field_principles`: Explains why each headline and gate field must stay
+  present.
+- `inference_substrate`: Declares exact-validated local SOTA GGUF panel
+  semantics and excludes external text scoring.
+- `honest_verdict`: Provides the terminal status without promoting missing or
+  schema-invalid rows.
+
+### SCENARIO-VERIFY-5527: Repaired Rows Are Revalidated Before Claim Gate
+
+Given Exp 5526 reports the repaired local-GGUF row gate as ready and includes
+at least one mandated local SOTA GGUF in its attempted model evidence, when Exp
+5527 runs over the bounded hard/soft fixture rows, then every row is parsed
+through the Exp 5512 schema, only schema-valid rows are scored by the Exp 5499
+exact validators, missing rows remain missing, runtime/offload evidence is
+preserved, and
+`results/experiment_5527_sota_hard_soft_panel_v2.json` reports schema validity,
+exact-validator accuracy, preference optimality, abstention rate, confident
+wrong rate, and hard/soft claim allowance from the recomputed validators.
+
+If the Exp 5526 gate artifact is missing, malformed, or not ready; if no
+mandated local SOTA GGUF model was attempted; if GPU offload evidence is absent
+or false; if any requested row is missing or schema-invalid; if an exact
+validator rejects a schema-valid row; if a feasible row is soft-suboptimal; or
+if any high-confidence wrong row appears, then Exp 5527 SHALL write the same
+result path with `sota_structured_panel_ready=false`,
+`sota_hard_soft_claim_allowed=false`, exact blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5527)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5527 | Implemented (`python/carnot/experiment_5527_sota_hard_soft_panel_v2.py`, `results/experiment_5527_sota_hard_soft_panel_v2.json`) | Implemented (`tests/python/test_experiment_5527_sota_hard_soft_panel_v2.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
