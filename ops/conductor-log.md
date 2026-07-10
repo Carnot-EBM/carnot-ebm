@@ -10686,3 +10686,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 01:01 UTC | Gated SOTA GGUF hard/soft structured evidence pane | OK | 87 passed, 1 warning in 8.41s |
 | 2026-07-10 01:03 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |
 | 2026-07-10 01:05 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |
+| 2026-07-10 01:07 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |
