@@ -21145,3 +21145,72 @@ be present and true.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5515 | Planned (`python/carnot/experiment_5515_csl_independent_outcome_gate_repair.py`, `results/experiment_5515_csl_independent_outcome_gate_repair.json`) | Planned (`tests/python/test_experiment_5515_csl_independent_outcome_gate_repair.py`) |
+
+## REQ-LEARN-5528: Canonical CSL Gate Artifact Stays Conductor Visible
+
+The Exp5528 workflow SHALL write
+`results/experiment_5528_csl_canonical_gate_artifact.json` as the canonical
+CSL gate artifact for downstream `.501` memory tasks. It SHALL copy or
+recompute the independent-outcome evidence from Exp5515 and expose the CSL gate
+fields as bare top-level JSON fields so the conductor gate resolver can read
+them without nested aliases. It SHALL NOT write any later
+`results/experiment_5528_*.json` sidecar after the primary artifact.
+
+The workflow SHALL reproduce the Exp5515 sidecar-selection failure mode by
+showing that the conductor's newest-artifact resolver can select a later
+same-experiment sidecar that lacks the gate fields. It SHALL evaluate the
+actual Exp5529 and Exp5530 roadmap gates that point at Exp5528 and record the
+results. `conductor_gate_probe_passed` SHALL be true only when every downstream
+gate whose upstream is `exp5528-csl-canonical-gate-artifact` passes through
+`scripts/conductor_gates.py`; any unrelated future gate such as Exp5530's
+dependency on Exp5529 SHALL be recorded separately and SHALL NOT hide the
+Exp5528 visibility result.
+
+The artifact SHALL include required fields `metric_independence_clean`,
+`csl_gate_fields_resolvable`, `csl_experience_graph_ready`,
+`continuous_self_learning_evidence`, `heldout_delta`, `no_memory_score`,
+`graph_memory_score`, `stale_memory_score`, `stale_evidence_rejection_rate`,
+`negative_transfer_rate`, `conductor_gate_probe_passed`,
+`csl_gate_fields_conductor_visible`, `same_exp_sidecar_after_primary`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL set
+`inference_substrate="canonical_csl_gate_artifact_from_independent_fixture"`.
+
+### REQ-LEARN-5528 Sub-requirements
+
+- REQ-LEARN-5528-1: The canonical artifact SHALL preserve Exp5515's
+  independent held-out scores and control rates without changing the measured
+  CSL evidence.
+- REQ-LEARN-5528-2: `csl_gate_fields_conductor_visible` SHALL be true only when
+  the conductor resolver selects the Exp5528 primary artifact and reads the
+  required top-level gate field values.
+- REQ-LEARN-5528-3: `same_exp_sidecar_after_primary` SHALL be false only when
+  no later `results/experiment_5528_*.json` artifact exists after the primary
+  artifact timestamp.
+- REQ-LEARN-5528-4: `field_principles` SHALL annotate every required headline
+  and gate field with a one-line reason.
+
+### SCENARIO-LEARN-5528-SIDECAR-FAILURE: Same-Experiment Sidecars Can Hide Gates
+
+**Given** a primary experiment artifact contains the CSL gate fields
+**And** a later same-number stream sidecar lacks those fields
+**When** the conductor resolver selects the newest `experiment_<N>_*.json`
+artifact for the upstream task
+**Then** the downstream gate evaluation sees `actual=None` for those fields and
+blocks.
+
+### SCENARIO-LEARN-5528-CANONICAL-GATE: Exp5528 Gates Resolve Downstream
+
+**Given** `results/experiment_5528_csl_canonical_gate_artifact.json` is the only
+Exp5528 artifact written after the workflow completes
+**When** the Exp5529 gate and the Exp5530 gate that references Exp5528 are
+evaluated with `scripts/conductor_gates.py`
+**Then** the Exp5528 gate field resolves to `true`, the visibility probe passes,
+and any remaining Exp5530 block is attributed only to its separate Exp5529
+dependency.
+
+## Implementation Status (Exp 5528)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5528 | Implemented (`python/carnot/experiment_5528_csl_canonical_gate_artifact.py`, `results/experiment_5528_csl_canonical_gate_artifact.json`) | Implemented (`tests/python/test_experiment_5528_csl_canonical_gate_artifact.py`) |
