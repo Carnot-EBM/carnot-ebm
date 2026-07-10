@@ -39183,3 +39183,94 @@ available evidence visible, keeps `roadmap_yaml_unchanged` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5510 | Planned (`python/carnot/experiment_5510_transition_v500.py`, `results/experiment_5510_transition_v500.json`) | Planned (`tests/python/test_experiment_5510_transition_v500.py`) |
+
+### REQ-REPORT-5511: Execute V500 Source Delta And Map Accepted Findings
+
+The Exp5511 workflow SHALL write
+`results/experiment_5511_v500_source_delta_ingestion.json` after reading
+`CLAUDE.md`, `CODEX.md`, `research-program.md`, `research-references.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, `ops/changelog.md`, `research-roadmap.yaml`,
+and `research-roadmap-next.yaml` when present. It SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+The workflow SHALL perform an execution-time freshness check against the V500
+planner refresh in `research-references.md`. It SHALL check arXiv for 2025-2026
+work on energy-based models for verification and reasoning, neural constraint
+satisfaction, Ising applications, hallucination mitigation, KANs,
+energy-guided decoding, hardware-accelerated sampling, and continual or online
+learning. It SHALL also check OpenReview, Extropic writing, Semantic Scholar-style routes for EBT `2507.02092` and ARM-EBM `2512.15605`,
+HuggingFace Papers, GitHub, Logical Intelligence public pages, local duplicate
+history, and `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL append a short `V500 Execution Refresh - 20260710` block to
+`research-references.md` only when at least one non-duplicate source adds a
+concrete Carnot-local hook for a planned `.500` experiment. It SHALL map each
+accepted finding to one of these planned lanes: structured SOTA control, CSL
+independence, sparse repair, hardware receipts, or ARC live-path improvement.
+If no new actionable finding exists, it SHALL leave `research-references.md`
+unchanged, record an explicit no-op verdict, and set
+`experiment_mappings=[]`. It SHALL classify closed-scope, proprietary,
+non-local, or non-executable items as watch-only or excluded and SHALL keep
+`closed_scopes_reopened=false`.
+
+The artifact SHALL include required fields `sources_checked`,
+`new_references_added`, `duplicates_suppressed`, `closed_scopes_reopened`,
+`research_references_updated`, `prior_refresh_marker_found`,
+`experiment_mappings`, `inference_substrate`, and `honest_verdict`. It SHOULD
+also include experiment metadata, source detail receipts, watch-only or excluded
+candidates, tests run, protected-file booleans, and field principles so the
+source refresh can be audited without rerunning web searches.
+
+Required field principles:
+
+- `sources_checked`: principle "Records each primary, secondary, local-dedupe, and exclusion source checked before V500 science tasks run."
+- `new_references_added`: principle "Lists only non-duplicate actionable findings that earned a V500 execution-refresh append."
+- `duplicates_suppressed`: principle "Prevents churn from re-adding V500 planner sources or earlier V49x source-delta findings."
+- `closed_scopes_reopened`: principle "Bare false boolean proving excluded, proprietary, non-local, or retired lanes stayed closed."
+- `research_references_updated`: principle "Bare boolean distinguishing a real V500 append from a no-op freshness receipt."
+- `prior_refresh_marker_found`: principle "Ensures the execution refresh dedupes against the actual V500 planner block before appending."
+- `experiment_mappings`: principle "Maps every accepted finding to a planned `.500` experiment lane; empty only when no finding was accepted."
+- `inference_substrate`: principle "Must be aggregation_from_upstream_artifacts because the receipt aggregates sources and local artifacts without model, solver, ARC, or hardware inference."
+- `honest_verdict`: principle "One-line terminal summary starting with complete: or blocked: that states whether references changed."
+
+#### SCENARIO-REPORT-5511-APPEND-DELTAS: New Actionable Finding Appends A V500 Refresh
+
+**Given** `research-references.md` contains the V500 planner refresh marker
+**And** the source check finds a genuinely new Carnot-actionable finding outside
+closed scopes
+**When** the Exp5511 workflow runs
+**Then** it writes `results/experiment_5511_v500_source_delta_ingestion.json`,
+appends one `V500 Execution Refresh - 20260710` block to
+`research-references.md`, records the source in `new_references_added`, maps it
+to a planned `.500` experiment lane in `experiment_mappings`, sets
+`research_references_updated=true`, sets `prior_refresh_marker_found=true`,
+keeps `closed_scopes_reopened=false`, and declares
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-5511-NO-NEW-DELTA: Duplicate-Only Sweep Leaves References Unchanged
+
+**Given** the V500 planner refresh marker is present
+**And** every surfaced source is already covered, watch-only, excluded, or
+non-executable for `.500`
+**When** the Exp5511 workflow runs
+**Then** it writes the JSON receipt, records `new_references_added=[]`, records
+`experiment_mappings=[]`, records `research_references_updated=false`, keeps
+`closed_scopes_reopened=false`, and does not append a V500 execution-refresh
+section.
+
+#### SCENARIO-REPORT-5511-BLOCKED-MARKER: Missing Planner Marker Fails Closed
+
+**Given** `research-references.md` lacks the V500 planner refresh marker
+**When** the Exp5511 workflow runs
+**Then** it writes a terminal blocked artifact, records
+`prior_refresh_marker_found=false`, keeps `research_references_updated=false`,
+keeps `new_references_added=[]`, keeps `experiment_mappings=[]`, and does not
+modify `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5511)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5511 | Planned (`python/carnot/experiment_5511_v500_source_delta_ingestion.py`, `results/experiment_5511_v500_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5511_v500_source_delta_ingestion.py`) |
