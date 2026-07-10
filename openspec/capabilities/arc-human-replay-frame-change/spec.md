@@ -1970,7 +1970,82 @@ Required field principles:
 - `inference_substrate`: principle "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm."
 - `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
 
+### REQ-ARC-FCP-5548: Clean No-LLM Live Level-Up Attempt
+
+Experiment 5548 SHALL write
+`results/experiment_5548_arc_clean_live_levelup.json` after one gated live ARC
+attempt using the clean no-LLM substrate precheck from Exp5547. The workflow
+SHALL first confirm that Exp5547 reports `arc_clean_precheck_ready=true`, then
+SHALL use Exp5547's `selected_game`, `selected_level`, `random_seed`, and
+repeated-coordinate suppression setting unless a fresh registry reread shows
+that target level is already banked. If the selected target is already banked,
+the workflow SHALL rotate to a fresh adjacent frontier target and record the
+rotation reason.
+
+The live attempt SHALL use the live agent self-discovery path with a disabled
+LLM strategy proposer, no model load, no `model_specs`, no hidden-game source
+inspection, no exhaustive offline ground-truth BFS, and no hand-built per-game
+adapter. It SHALL record the trajectory path, action entropy,
+repeated-coordinate rate, attempt budget, terminal state, and exact replay or
+banking result. A level-up claim SHALL be accepted only when
+`offline_reproduced=true` and `reproduced_levels>=1` with
+`solve_provenance=live_agent_self_discovery`; otherwise the artifact SHALL emit
+an honest null and leave `registry_delta=0`.
+
+The result artifact SHALL include `selected_game`, `selected_level`,
+`solve_provenance`, `llm_strategy_proposer_used`, `no_model_specs_required`,
+`random_seed`, `reproducibility_checksum`, `attempts`, `trajectory_path`,
+`action_entropy`, `repeated_coordinate_rate`, `offline_reproduced`,
+`reproduced_levels`, `registry_delta`, `arc_live_levelup_ready`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "registry-safe game id used for the clean live attempt after Exp5547 and duplicate checks."
+- `selected_level`: principle "adjacent unreproduced frontier level label attempted by the live agent."
+- `solve_provenance`: principle "must equal live_agent_self_discovery so only the live runtime's own attempt can receive credit."
+- `llm_strategy_proposer_used`: principle "bare bool false proving no LLM strategy proposer or model path was invoked."
+- `no_model_specs_required`: principle "bare bool true because the declared no-LLM substrate has no model invocation to name."
+- `random_seed`: principle "Exp5547-recorded deterministic seed reused for target rotation, trajectory gating, and checksum replay."
+- `reproducibility_checksum`: principle "content-addressed hash over target, seed, trajectory metrics, and banking gate to catch silent drift."
+- `attempts`: principle "bare int count of runtime actions executed during the live attempt."
+- `trajectory_path`: principle "path to the detailed trajectory log containing actions, route evidence, suppression events, terminal state, and replay gate."
+- `action_entropy`: principle "Shannon entropy over executed live action/coordinate choices as a bare float."
+- `repeated_coordinate_rate`: principle "fraction of executed coordinate actions that repeated an earlier executed coordinate."
+- `offline_reproduced`: principle "true only when the live-discovered trajectory passes the standard offline replay gate."
+- `reproduced_levels`: principle "integer new levels banked from the live-discovered trajectory; success requires at least one."
+- `registry_delta`: principle "bare int registry total delta; nonzero only when the accepted reproduction gate passes."
+- `arc_live_levelup_ready`: principle "bare bool proving Exp5547, registry reread, no-LLM metadata, and live harness preconditions allowed runtime."
+- `tests_added_or_reused`: principle "list of focused tests covering clean schema, target rotation, trajectory metrics, checksum, and banking gate."
+- `field_principles`: principle "mapping of one-line principle annotations for each headline and gate field."
+- `inference_substrate`: principle "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+
 ## Scenarios
+
+### SCENARIO-ARC-FCP-5548: Clean Live Attempt Banks Only Reproduced Self-Discovery
+
+Given Exp5547 reports `arc_clean_precheck_ready=true` and the registry still
+has the selected target as an adjacent unreproduced frontier level
+When Exp5548 runs one bounded live attempt with the recorded seed and
+repeated-coordinate suppression setting
+Then the artifact uses `solve_provenance=live_agent_self_discovery`,
+`llm_strategy_proposer_used=false`,
+`no_model_specs_required=true`,
+`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+omits `model_specs` and `target_model`, and records trajectory metrics plus an
+exact replay or no-bank result.
+
+Given the registry has already banked Exp5547's selected target
+When Exp5548 prepares the live attempt
+Then it rotates to a fresh adjacent frontier target, records the rotation
+reason, and still applies the same clean no-LLM metadata gates.
+
+Given a live trajectory reaches a candidate level
+When the standard offline replay gate does not reproduce at least one new level
+Then Exp5548 emits `honest_null:`, `offline_reproduced=false`,
+`reproduced_levels=0`, and `registry_delta=0`.
 
 ### SCENARIO-ARC-FCP-5547: Clean No-LLM Precheck Blocks Duplicates And Omits Model Specs
 
