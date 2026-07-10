@@ -16,17 +16,20 @@ OK: all solver-like ARC modules are reachable from the live agent path (48 modul
 
 ## Hostile LLM review
 
-TL;DR: **No recent ARC solve artifacts means no credited SELF_DISCOVERY_ADVANCE.** Reachability lint is clean, but there is nothing to classify or celebrate.
+TL;DR: **No recent ARC solve artifacts, so no new `SELF_DISCOVERY_ADVANCE` credit.** Reachability pre-pass is clean, but there is nothing to validate.
 
-**Per-Artifact Review**
-
+**Per-Artifact**
 None. `RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
 
-Verdict: **UNCLEAR / no artifact**
-Evidence: Empty artifact list. No solve claim, provenance, attempts, runtime traces, or live-agent discovery record exists.
-Recommended action: Do not record any new capability. Require future solve artifacts to show live entrypoint execution plus agent-derived attempts/runtime reverse-engineering evidence.
+**Evidence**
+- Live entrypoints listed.
+- Orphan solver lint passed: all solver-like ARC modules reachable from live closure.
+- No recent solve artifacts provided.
+- Therefore no artifact proves the live agent discovered a hidden-game solve from its own attempts/runtime reverse-engineering.
+
+**Recommended Action**
+No registry advancement. Require future artifacts to include live-entrypoint provenance: command, logs, attempts, observations, runtime model updates, and final solve path.
 
 **Pattern Watch**
-
-Reachability is currently healthy: all solver-like ARC modules are reachable from the live path. The risk remains provenance drift: any future “solve” without clear live-agent attempt history should be treated as **OUTER_LOOP_RE** or **OFF_PATH** until proven otherwise.
+No direct drift visible in this batch because there are no artifacts. Continue treating any source-reading, offline BFS, hand-built game model, or unreachable solver result as `OUTER_LOOP_RE` or `OFF_PATH` by default.
 
