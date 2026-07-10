@@ -10683,3 +10683,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 00:06 UTC | Transition .499 outcomes into .500 execution conte | OK | 87 passed, 1 warning in 11.04s |
 | 2026-07-10 00:22 UTC | Execution-time V500 source delta and experiment ma | OK | 124 passed, 1 warning in 9.28s |
 | 2026-07-10 00:42 UTC | Structured-output positive control for SOTA hard/s | OK | 91 passed, 1 warning in 9.75s |
+| 2026-07-10 01:01 UTC | Gated SOTA GGUF hard/soft structured evidence pane | OK | 87 passed, 1 warning in 8.41s |

@@ -1,0 +1,33 @@
+{
+  "experiment": 5514,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-10",
+  "started_at": "2026-07-10T01:03:19.393470+00:00",
+  "finished_at": "2026-07-10T01:03:19.393470+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated logits-energy sidecar on parsed SOTA rows",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.sota_structured_panel_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5513-sota-hard-soft-structured-panel",
+      "artifact_field": "sota_structured_panel_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp5513-sota-hard-soft-structured-panel",
+      "artifact_field": "sota_rows_emitted",
+      "op": ">",
+      "expected": 0,
+      "actual": 1,
+      "passed": true,
+      "reason": "actual=1 > expected=0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
