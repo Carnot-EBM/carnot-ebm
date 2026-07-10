@@ -1,0 +1,399 @@
+{
+  "adversarial_irrelevant_memory_score": 0.0,
+  "condition_results": {
+    "adversarial_irrelevant_memory": [
+      {
+        "accepted": false,
+        "expected_action": "run-circuit-reset",
+        "label_id": "label-5529-db-timeout",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "rotate-secret",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "accepted": false,
+        "expected_action": "use-zero-index-bound",
+        "label_id": "label-5529-api-pagination",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "rotate-secret",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "accepted": false,
+        "expected_action": "deny-escalation",
+        "label_id": "label-5529-access-policy",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "rotate-secret",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "event_only": [
+      {
+        "accepted": true,
+        "expected_action": "run-circuit-reset",
+        "label_id": "label-5529-db-timeout",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "run-circuit-reset",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "accepted": true,
+        "expected_action": "use-zero-index-bound",
+        "label_id": "label-5529-api-pagination",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "use-zero-index-bound",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "accepted": false,
+        "expected_action": "deny-escalation",
+        "label_id": "label-5529-access-policy",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "grant-escalation",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "event_plus_topic": [
+      {
+        "accepted": true,
+        "expected_action": "run-circuit-reset",
+        "label_id": "label-5529-db-timeout",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "run-circuit-reset",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "accepted": true,
+        "expected_action": "use-zero-index-bound",
+        "label_id": "label-5529-api-pagination",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "use-zero-index-bound",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "accepted": true,
+        "expected_action": "deny-escalation",
+        "label_id": "label-5529-access-policy",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "deny-escalation",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "no_memory": [
+      {
+        "accepted": false,
+        "expected_action": "run-circuit-reset",
+        "label_id": "label-5529-db-timeout",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "restart-service",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "accepted": false,
+        "expected_action": "use-zero-index-bound",
+        "label_id": "label-5529-api-pagination",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "add-retry",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "accepted": false,
+        "expected_action": "deny-escalation",
+        "label_id": "label-5529-access-policy",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "grant-escalation",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "stale_memory": [
+      {
+        "accepted": false,
+        "expected_action": "run-circuit-reset",
+        "label_id": "label-5529-db-timeout",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "restart-service",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "accepted": false,
+        "expected_action": "use-zero-index-bound",
+        "label_id": "label-5529-api-pagination",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "use-limit-offset",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "accepted": false,
+        "expected_action": "deny-escalation",
+        "label_id": "label-5529-access-policy",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "grant-escalation",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "topic_only": [
+      {
+        "accepted": true,
+        "expected_action": "run-circuit-reset",
+        "label_id": "label-5529-db-timeout",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "run-circuit-reset",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "accepted": false,
+        "expected_action": "use-zero-index-bound",
+        "label_id": "label-5529-api-pagination",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "add-retry",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "accepted": true,
+        "expected_action": "deny-escalation",
+        "label_id": "label-5529-access-policy",
+        "label_source": "deterministic_fixture::heldout_labels",
+        "selected_action": "deny-escalation",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ]
+  },
+  "control_counts": {
+    "negative_transfer_candidates_accepted": 0,
+    "negative_transfer_candidates_seen": 1,
+    "stale_candidates_rejected": 1,
+    "stale_candidates_seen": 1
+  },
+  "csl_residue_stress_ready": true,
+  "event_memory_hash_after": "sha256:9a770efb193c2a61a1b403d08e30f5626e6ea6b5426735060fd9c8eaee8d2497",
+  "event_memory_hash_before": "sha256:1e1ae6386bfb71da1b2931f254adf3270366f089aab26dd19895c79fd15f9a47",
+  "event_only_score": 0.6666666667,
+  "event_topic_score": 1.0,
+  "experiment": 5529,
+  "experiment_id": "experiment_5529_csl_event_topic_residue_stress",
+  "field_principles": {
+    "adversarial_irrelevant_memory_score": "Scores the adversarial irrelevant-memory control arm.",
+    "condition_results": "Keeps every row-level held-out verdict inspectable.",
+    "control_counts": "Exposes raw stale and negative-transfer numerator/denominator counts.",
+    "csl_residue_stress_ready": "Bare gate field for downstream memory panels.",
+    "event_memory_hash_after": "Shows verifier-governed event memory changed without touching weights.",
+    "event_memory_hash_before": "Proves the fast event memory starts from an auditable state.",
+    "event_only_score": "Measures fast event memory without stable topic associations.",
+    "event_topic_score": "Measures the combined event-plus-topic CSL condition.",
+    "field_principles": "Explains why each required headline and gate field exists.",
+    "heldout_delta": "Reports combined-memory lift as event_topic_score minus no_memory_score.",
+    "honest_verdict": "Terminal summary for conductor reconciliation.",
+    "inference_substrate": "Declares this is a deterministic fixture, not live LLM inference.",
+    "negative_transfer_rate": "Records whether irrelevant memory is accepted as useful transfer.",
+    "no_memory_score": "Anchors the held-out control with no external memory available.",
+    "no_model_weight_mutation": "Keeps CSL scoped to external memory and verifier state only.",
+    "promotion_records": "Shows exactly why topic memories were promoted.",
+    "residue_contamination_rate": "Measures rejected memory that survives into accepted state.",
+    "rollback_evidence": "Shows unsafe scratch memory can be removed back to prior hashes.",
+    "semantic_shift_gate_used": "Confirms topic consolidation used semantic/verifier gates, not labels.",
+    "stale_evidence_rejection_rate": "Records whether outdated memory is rejected before selection.",
+    "stale_memory_score": "Shows unsafe stale evidence is harmful when not governed.",
+    "tests_added_or_reused": "Lists the focused, coverage, and full tests backing the artifact.",
+    "topic_memory_hash_after": "Shows only promoted topic memories entered the stable layer.",
+    "topic_memory_hash_before": "Proves the stable topic memory starts separately from event memory.",
+    "topic_only_score": "Measures stable topic memory without recent event progression.",
+    "upstream_gate_path": "Binds residue stress to the canonical Exp5528 CSL gate artifact."
+  },
+  "heldout_delta": 1.0,
+  "honest_verdict": "complete: csl_event_topic_residue_stress_ready",
+  "inference_substrate": "deterministic_csl_memory_fixture",
+  "methodology_note": "Scores are exact pass rates on a deterministic three-row fixture; perfect governed rejection is a fixture safety invariant, not a benchmark capability claim.",
+  "milestone": "2026.07.501",
+  "model_weight_hash_after": "sha256:9467147e66f06cca36cbd887c3fe7a394a50a09a9b592b490b4b5584476f68d8",
+  "model_weight_hash_before": "sha256:9467147e66f06cca36cbd887c3fe7a394a50a09a9b592b490b4b5584476f68d8",
+  "negative_transfer_rate": 0.0,
+  "no_memory_score": 0.0,
+  "no_model_weight_mutation": true,
+  "promotion_records": [
+    {
+      "promoted_action": "run-circuit-reset",
+      "promoted_topic": "database",
+      "promotion_trigger": "semantic_shift",
+      "source_event_id": "evt-5529-db-timeout",
+      "trigger_used_answer_label": false
+    },
+    {
+      "promoted_action": "deny-escalation",
+      "promoted_topic": "access",
+      "promotion_trigger": "verifier_change",
+      "source_event_id": "evt-5529-access-policy",
+      "trigger_used_answer_label": false
+    }
+  ],
+  "random_seed": 5529,
+  "reproducibility_checksum": "sha256:2b76df0697fa43908301218769f5c85434610c62ffede8272192f91c7a5aa52b",
+  "residue_contamination_rate": 0.0,
+  "retrieval_traces": {
+    "adversarial_irrelevant_memory": [
+      {
+        "candidates": [],
+        "condition": "adversarial_irrelevant_memory",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "candidates": [],
+        "condition": "adversarial_irrelevant_memory",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "candidates": [],
+        "condition": "adversarial_irrelevant_memory",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "event_only": [
+      {
+        "candidates": [],
+        "condition": "event_only",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "candidates": [],
+        "condition": "event_only",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "candidates": [],
+        "condition": "event_only",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "event_plus_topic": [
+      {
+        "candidates": [
+          {
+            "accepted": false,
+            "candidate_id": "stale-5529-db-restart",
+            "candidate_type": "stale",
+            "rejection_reason": "stale_evidence"
+          }
+        ],
+        "condition": "event_plus_topic",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "candidates": [],
+        "condition": "event_plus_topic",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "candidates": [
+          {
+            "accepted": false,
+            "candidate_id": "irrelevant-5529-secret-rotation",
+            "candidate_type": "negative_transfer",
+            "rejection_reason": "topic_mismatch"
+          }
+        ],
+        "condition": "event_plus_topic",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "no_memory": [
+      {
+        "candidates": [],
+        "condition": "no_memory",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "candidates": [],
+        "condition": "no_memory",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "candidates": [],
+        "condition": "no_memory",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "stale_memory": [
+      {
+        "candidates": [],
+        "condition": "stale_memory",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "candidates": [],
+        "condition": "stale_memory",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "candidates": [],
+        "condition": "stale_memory",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ],
+    "topic_only": [
+      {
+        "candidates": [],
+        "condition": "topic_only",
+        "task_id": "5529-heldout-db-timeout"
+      },
+      {
+        "candidates": [],
+        "condition": "topic_only",
+        "task_id": "5529-heldout-api-pagination"
+      },
+      {
+        "candidates": [],
+        "condition": "topic_only",
+        "task_id": "5529-heldout-access-policy"
+      }
+    ]
+  },
+  "rollback_evidence": {
+    "event_hash_restored": true,
+    "pre_event_hash": "sha256:9a770efb193c2a61a1b403d08e30f5626e6ea6b5426735060fd9c8eaee8d2497",
+    "pre_topic_hash": "sha256:6b69ea3f4f9917ba4c1f6f125eff472ae3ab8ee512514299805af03f2eb0541c",
+    "rejected_candidate_ids": [
+      "stale-5529-db-restart",
+      "irrelevant-5529-secret-rotation"
+    ],
+    "restored_event_hash": "sha256:9a770efb193c2a61a1b403d08e30f5626e6ea6b5426735060fd9c8eaee8d2497",
+    "restored_topic_hash": "sha256:6b69ea3f4f9917ba4c1f6f125eff472ae3ab8ee512514299805af03f2eb0541c",
+    "rollback_applied": true,
+    "scratch_event_hash": "sha256:0379e6af98c65ef9631b3139aa57301953d623401a950ce68b964ee2760fb276",
+    "scratch_topic_hash": "sha256:4c98e31e04934842b453ce4315f77b6c9eb04d8954f0ea15a92214f393b8f589",
+    "topic_hash_restored": true
+  },
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5529.csl_event_topic_residue_stress.v1",
+  "semantic_shift_gate_used": true,
+  "source_file_checksums": {
+    "module": "sha256:555b092f86fb369afe018bc3e6af90b90284facc36e5250ee21d48ff673e2c99",
+    "spec": "sha256:c8d8b16f7f4ea63d1b9f6450bf9c507588ed702a74d9722b1e03c0368e18f247",
+    "test": "sha256:a99d983443549c63472f1c90359fe9bf95bc93bfcf3e2a15eff70a812e85926f"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5529_csl_event_topic_residue_stress.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "test": "tests/python/test_experiment_5529_csl_event_topic_residue_stress.py"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5529",
+    "SCENARIO-LEARN-5529-PROMOTION",
+    "SCENARIO-LEARN-5529-CONTROLS",
+    "SCENARIO-LEARN-5529-ROLLBACK"
+  ],
+  "stale_evidence_rejection_rate": 1.0,
+  "stale_memory_score": 0.0,
+  "task_id": "exp5529-gated-csl-event-topic-residue-stress",
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5529_csl_event_topic_residue_stress.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5529_csl_event_topic_residue_stress.py -m pytest tests/python/test_experiment_5529_csl_event_topic_residue_stress.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5529_csl_event_topic_residue_stress.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "topic_memory_hash_after": "sha256:6b69ea3f4f9917ba4c1f6f125eff472ae3ab8ee512514299805af03f2eb0541c",
+  "topic_memory_hash_before": "sha256:4904f1be708ac4824921847a4920e7b13079e86124a5c60b0884413fb84469bd",
+  "topic_only_score": 0.6666666667,
+  "upstream_gate_fields": {
+    "conductor_gate_probe_passed": true,
+    "csl_gate_fields_conductor_visible": true
+  },
+  "upstream_gate_path": "results/experiment_5528_csl_canonical_gate_artifact.json"
+}
