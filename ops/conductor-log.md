@@ -10684,3 +10684,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 00:22 UTC | Execution-time V500 source delta and experiment ma | OK | 124 passed, 1 warning in 9.28s |
 | 2026-07-10 00:42 UTC | Structured-output positive control for SOTA hard/s | OK | 91 passed, 1 warning in 9.75s |
 | 2026-07-10 01:01 UTC | Gated SOTA GGUF hard/soft structured evidence pane | OK | 87 passed, 1 warning in 8.41s |
+| 2026-07-10 01:03 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |
