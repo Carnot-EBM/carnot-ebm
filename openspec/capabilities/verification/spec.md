@@ -29346,6 +29346,103 @@ only when the artifact truthfully avoids overclaiming, and emit a terminal
 |---|---|---|
 | REQ-VERIFY-5540 | Planned (`python/carnot/experiment_5540_sota_hard_soft_live_panel_v3.py`, `results/experiment_5540_sota_hard_soft_live_panel_v3.json`) | Planned (`tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py`) |
 
+### REQ-VERIFY-5552: Automaton Schema Row-Completion Receipt
+
+The repository SHALL provide Exp 5552 at
+`python/carnot/experiment_5552_automaton_schema_row_completion_receipt.py` and
+write `results/experiment_5552_automaton_schema_row_completion_receipt.json`
+as a deterministic no-LLM receipt for the SOTA hard/soft candidate table. Exp
+5552 SHALL consume the Exp 5539 grammar-table preflight and the Exp 5540
+hard/soft panel artifact, SHALL reuse the Exp 5512
+`carnot.hard_soft_claim_candidate.v1` schema and parser/exact-validator
+handoff, and SHALL NOT invoke an LLM, load a model, or modify
+`scripts/research_conductor.py`.
+
+The receipt SHALL enumerate required model/instance candidate rows, build a
+finite deterministic table automaton whose states are completed required rows,
+identify terminal states where every required row is schema-valid and exactly
+accepted, and record invalid/dead-end transitions including missing rows,
+unknown rows, duplicate rows, malformed rows, schema-invalid rows, and invalid
+enum values. Exp 5552 SHALL use repository JSON-schema/parser utilities rather
+than ad hoc string splitting when classifying row payloads.
+
+The artifact SHALL include at minimum these top-level fields:
+`upstream_grammar_preflight`, `upstream_panel_path`, `llm_invoked`,
+`no_model_specs_required`, `automaton_backend`, `schema_hash`,
+`required_rows`, `reachable_state_count`, `terminal_state_count`,
+`dead_end_transition_count`, `valid_fixture_acceptance_rate`,
+`invalid_fixture_rejection_rate`, `row_completion_support_rate`,
+`missing_row_risk`, `local_mask_bias_diagnostic`,
+`automaton_row_completion_ready`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal `deterministic_automaton_no_llm`;
+`llm_invoked` SHALL be `false`; `no_model_specs_required` SHALL be `true`;
+and `honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Field principles:
+
+- `upstream_grammar_preflight`: Pins the grammar reachability evidence to Exp
+  5539.
+- `upstream_panel_path`: Pins the prior hard/soft panel whose missing rows
+  motivate the gate.
+- `llm_invoked`: Prevents this receipt from being mistaken for live model
+  evidence.
+- `no_model_specs_required`: Confirms no model loading or model metadata is
+  needed for this deterministic gate.
+- `automaton_backend`: Names the deterministic table-automaton construction
+  used for row completion.
+- `schema_hash`: Pins the receipt to the Exp 5512 candidate schema.
+- `required_rows`: Fixes every required model/instance row before downstream
+  live inference.
+- `reachable_state_count`: Records automaton scale for completed-row states.
+- `terminal_state_count`: Counts accepting states where all required rows are
+  complete.
+- `dead_end_transition_count`: Counts invalid transitions that would prevent a
+  complete candidate table.
+- `valid_fixture_acceptance_rate`: Reuses Exp 5539 valid-row evidence for the
+  schema and exact-validator handoff.
+- `invalid_fixture_rejection_rate`: Reuses Exp 5539 malformed and semantic
+  rejection evidence.
+- `row_completion_support_rate`: Measures required rows that are syntactically
+  reachable and locally supported by the observed proposal path.
+- `missing_row_risk`: Converts row-completion support into a downstream risk
+  label.
+- `local_mask_bias_diagnostic`: Lists reachable rows not supported by the local
+  mask/proposal path.
+- `automaton_row_completion_ready`: Opens only when every required row is
+  reachable and proposal-supported with clean upstream grammar evidence.
+- `tests_added_or_reused`: Links the receipt to focused row-completion tests.
+- `field_principles`: Explains why every headline and gate field exists.
+- `inference_substrate`: Declares deterministic automaton/schema analysis with
+  no LLM.
+- `honest_verdict`: Provides a terminal evidence boundary without a live SOTA
+  quality claim.
+
+### SCENARIO-VERIFY-5552: Automaton Receipt Blocks Unsupported Required Rows
+
+Given the Exp 5539 grammar preflight and the Exp 5540 SOTA hard/soft panel
+artifacts are available, when Exp 5552 runs, then it derives the required
+model/instance row set from the panel denominator, builds deterministic
+completed-row automaton states, accepts complete schema-valid fixture rows,
+rejects missing rows, malformed rows, and invalid enum values, writes
+`results/experiment_5552_automaton_schema_row_completion_receipt.json`, and
+keeps `llm_invoked=false` and
+`inference_substrate=deterministic_automaton_no_llm`.
+
+If any required row is syntactically reachable but unsupported by the local
+mask/proposal path, if the upstream grammar preflight is unclean, if fixture
+acceptance or rejection is not perfect, or if the automaton has no terminal
+completion, then Exp 5552 SHALL set
+`automaton_row_completion_ready=false`, preserve the unsupported rows in
+`local_mask_bias_diagnostic`, report nonzero dead-end transitions, and emit an
+honest `blocked:` verdict before any downstream live SOTA model is called.
+
+## Implementation Status (REQ-VERIFY-5552)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5552 | Implemented (`python/carnot/experiment_5552_automaton_schema_row_completion_receipt.py`, `results/experiment_5552_automaton_schema_row_completion_receipt.json`) | Implemented (`tests/python/test_experiment_5552_automaton_schema_row_completion_receipt.py`) |
+
 ### REQ-VERIFY-5541: LLM-FSM Deterministic Exact Fixture V502
 
 The repository SHALL provide Exp 5541 at
