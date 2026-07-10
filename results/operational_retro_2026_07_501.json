@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.501",
+  "generated_at": "2026-07-10T13:32:49Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true,
+  "summary": "no data available this milestone for experiment-level timing. The authoritative timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments despite changelog references for 2026.07.501, so slowest-run, GPU-efficiency, and DualGPURunner conclusions cannot be inferred.",
+  "bottlenecks_identified": [
+    "Timing-integrity mismatch: live git-log and disk-mtime reconstruction found 0 experiment commits while ops/changelog.md contains 2026.07.501 references, leaving operational throughput unmeasured."
+  ],
+  "improvements_suggested": [
+    "Persist per-experiment timing receipts during conductor execution instead of reconstructing milestone timing only at closeout.",
+    "Add a timing-integrity regression that fails when milestone changelog references exist but both authorized timing reconstruction paths return 0 experiment commits.",
+    "Surface an explicit 'no data available this milestone' closeout state when timing assembly fails, so downstream retrospectives cannot infer slowest experiments or GPU findings."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make conductor-emitted timing receipts the authoritative source for operational retrospectives.",
+    "Add a mismatch guard covering changelog-referenced milestones with 0 reconstructed experiment commits.",
+    "Keep GPU and DualGPURunner findings gated on compute-bound timing rows with explicit compute-bound tags."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The correct operational conclusion is an honest negative: no compute-efficiency ranking can be made from 0 completed timing rows. The next milestone should prioritize fixing timing capture before attempting to optimize runtime behavior."
+}
