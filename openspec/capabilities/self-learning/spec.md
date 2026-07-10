@@ -21727,3 +21727,113 @@ and an honest terminal verdict.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5557 | Planned (`python/carnot/experiment_5557_csl_five_arm_tautology_corrigendum_v2.py`, `results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json`) | Planned (`tests/python/test_experiment_5557_csl_five_arm_tautology_corrigendum_v2.py`) |
+
+## REQ-LEARN-5558: Causal Write-Manage-Read CSL Memory With Forbidden-Direction Reuse
+
+The Exp5558 workflow SHALL write
+`results/experiment_5558_causal_write_manage_read_csl_memory.json` as a
+deterministic no-LLM continuous self-learning memory fixture. It SHALL use the
+write-manage-read taxonomy: verified events are written into external memory,
+stale or contradicted evidence is managed or forgotten before a later decision,
+and matching memory is read to choose a different action than the no-memory
+policy. It SHALL load
+`results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json` as the
+upstream five-arm corrigendum, SHALL NOT mutate model weights, and SHALL NOT
+call a live LLM.
+
+The fixture SHALL include explicit no-memory, shuffled-memory, always-full
+memory, and aligned causal memory controls on the same online decision
+sequence. The aligned causal arm SHALL only read memory written by earlier
+events whose context matches the current decision and whose evidence survived
+management. Shuffled memory SHALL break context linkage. Always-full memory
+SHALL keep stale and contradicted records to expose false reuse risk. No-memory
+SHALL use the frozen baseline action only. A positive CSL claim SHALL fail
+closed when memory improves only a post-hoc score without changing action
+selection or deflecting contradictions.
+
+The workflow SHALL track NOVA-style forbidden-direction memory. When an earlier
+event verifies that a direction failed in a context, the later matching context
+SHALL remember that forbidden direction and select an alternative action. The
+artifact SHALL report the forbidden-direction reuse rate as the fraction of
+matching opportunities where the remembered failed direction changed the next
+choice away from that direction.
+
+The artifact SHALL include required fields
+`continuous_self_learning_target`, `upstream_five_arm_corrigendum`,
+`llm_invoked`, `no_model_specs_required`, `write_filter_precision`,
+`manage_forget_precision`, `read_retrieval_precision`,
+`causal_support_link_rate`, `forbidden_direction_reuse_rate`,
+`contradiction_deflection_rate`, `action_impact_delta_vs_no_memory`,
+`quality_delta_vs_shuffled_memory`, `quality_delta_vs_always_full`,
+`unsafe_false_accepts`, `no_weight_mutation`, `csl_memory_ready`,
+`csl_claim_allowed`, `spec_files_updated_or_confirmed`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`. It SHALL set
+`inference_substrate="deterministic_online_memory_fixture_no_llm"` and SHALL
+carry one-line principles for every required headline and gate field.
+
+### REQ-LEARN-5558 Sub-requirements
+
+- REQ-LEARN-5558-1: The workflow SHALL reject unverified write candidates and
+  report `write_filter_precision` from accepted verified writes only.
+- REQ-LEARN-5558-2: The manage step SHALL forget stale or contradicted
+  evidence before read time and report `manage_forget_precision` from correct
+  stale/contradiction removals.
+- REQ-LEARN-5558-3: The read step SHALL retrieve only prior, matching,
+  managed memory in the aligned causal arm and SHALL report
+  `read_retrieval_precision`.
+- REQ-LEARN-5558-4: No-memory, shuffled-memory, always-full memory, and
+  aligned causal memory SHALL score the same decision IDs and independent
+  expected actions.
+- REQ-LEARN-5558-5: Forbidden-direction memory SHALL change the next matching
+  action away from the previously failed direction before
+  `forbidden_direction_reuse_rate` can count the opportunity as successful.
+- REQ-LEARN-5558-6: `csl_claim_allowed` SHALL remain false unless aligned
+  causal memory beats no-memory, shuffled-memory, and always-full controls,
+  changes at least one action selection, deflects at least one contradiction,
+  has zero unsafe false accepts, uses no LLM, and mutates no model weights.
+
+### SCENARIO-LEARN-5558-WRITE: Verified Events Are Written And Noise Is Rejected
+
+**Given** an online sequence containing verified successful events, verified
+failed directions, and an unverified candidate
+**When** the write step runs
+**Then** only verified evidence SHALL enter external memory
+**And** unverified candidates SHALL remain rejected from all read decisions.
+
+### SCENARIO-LEARN-5558-MANAGE: Stale Evidence Is Forgotten Before Read
+
+**Given** external memory contains stale or contradicted rows for a later
+context
+**When** the manage step runs before action selection
+**Then** aligned causal memory SHALL forget those rows
+**And** always-full memory SHALL retain them as a negative control.
+
+### SCENARIO-LEARN-5558-READ: Causal Memory Changes Later Action Selection
+
+**Given** a later decision has a matching, earlier support memory row
+**When** aligned causal memory reads that row
+**Then** the selected action SHALL differ from the no-memory baseline when the
+memory row supplies the corrected action.
+
+### SCENARIO-LEARN-5558-FORBIDDEN: Failed Directions Are Reused As Avoidance Memory
+
+**Given** an earlier event records a failed direction for a context
+**When** the next matching context is evaluated
+**Then** the selected action SHALL avoid the remembered forbidden direction
+**And** the row SHALL count toward `forbidden_direction_reuse_rate`.
+
+### SCENARIO-LEARN-5558-ARTIFACT: Causal Memory Receipt Is Conductor Visible
+
+**Given** Exp5557 is clean and Exp5558 evaluates all controls
+**When** Exp5558 writes its receipt
+**Then** the JSON SHALL include the upstream artifact path, no-LLM substrate,
+control deltas, write/manage/read precisions, forbidden-direction and
+contradiction gates, tests, field principles, no-weight-mutation receipt, and
+an honest terminal verdict.
+
+## Implementation Status (Exp 5558)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5558 | Planned (`python/carnot/experiment_5558_causal_write_manage_read_csl_memory.py`, `results/experiment_5558_causal_write_manage_read_csl_memory.json`) | Planned (`tests/python/test_experiment_5558_causal_write_manage_read_csl_memory.py`) |
