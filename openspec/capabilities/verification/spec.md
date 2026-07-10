@@ -29860,6 +29860,89 @@ SHALL write the same result path with
 |---|---|---|
 | REQ-VERIFY-5531 | Implemented (`python/carnot/experiment_5531_sparse_repair_scaleup_ci.py`, `results/experiment_5531_sparse_repair_scaleup_ci.json`) | Implemented (`tests/python/test_experiment_5531_sparse_repair_scaleup_ci.py`) |
 
+### REQ-VERIFY-5546: Hardware Receipt Substrate Corrigendum
+
+The repository SHALL provide Exp 5546 at
+`python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py` and
+write `results/experiment_5546_hardware_receipt_substrate_corrigendum.json`
+without modifying `scripts/research_conductor.py`, without invoking an LLM,
+without including `model_specs` or `target_model`, without probing host
+`/dev/mmcblk*` or `/dev/disk` paths for KV260 evidence, without flashing any
+board, and without making a hardware speedup claim.
+
+Exp 5546 SHALL parse existing CPU, CUDA, PolarFire, KV260, and GateMate
+reachability receipts from prior hardware receipt artifacts when available.
+The parser SHALL prefer the repaired Exp 5532 receipt rows and SHALL fall back
+to Exp 5519 receipt rows only when a device row is absent. Each emitted device
+receipt row SHALL record the device name, status, parser outcome,
+classification, source artifact, source parser version, safe command kinds,
+device identities, and precise blocker if present. CUDA rows MAY identify CUDA
+hardware, drivers, or memory as hardware metadata, but SHALL NOT include
+LLM/GGUF/live-model markers or model specification fields.
+
+The Exp 5546 artifact SHALL derive `random_seed` and
+`reproducibility_checksum` from the canonical receipt inputs and parser version
+rather than from live model execution. `compute_bound_markers_absent` SHALL be
+true only when the emitted artifact contains no live-model, GGUF, target-model,
+or model-specification markers. KV260 evidence SHALL be accepted only from
+safe SSH, `xmutil`, or board-local `/dev/uio*` command kinds. Matched timing
+SHALL remain unavailable unless authenticated CPU and hardware timing receipts
+cover the same workload, and `hardware_speedup_claim` SHALL remain false in
+every valid Exp 5546 artifact.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`llm_invoked`, `no_model_specs_required`, `random_seed`,
+`reproducibility_checksum`, `compute_bound_markers_absent`,
+`device_receipts`, `parser_rows_valid`, `kv260_safe_path_used`, `blockers`,
+`matched_timing_available`, `hardware_speedup_claim`,
+`hardware_receipt_corrigendum_clean`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`llm_invoked` SHALL be false. `no_model_specs_required` SHALL be true.
+`inference_substrate` SHALL equal `hardware_receipt_methodology_no_llm`.
+`hardware_speedup_claim` SHALL be false.
+
+Required field principles:
+
+- `llm_invoked`: principle "Bare false records that this corrigendum reads receipts only and did not run an LLM."
+- `no_model_specs_required`: principle "Bare true prevents receipt-only hardware metadata from being mistaken for a model invocation."
+- `random_seed`: principle "Deterministic seed derived from receipt inputs and parser version anchors reproducibility without random execution."
+- `reproducibility_checksum`: principle "Content hash over receipt inputs and parser version catches future drift in the corrigendum source evidence."
+- `compute_bound_markers_absent`: principle "True only when live-model, target-model, and model-spec fields are absent from the emitted artifact."
+- `device_receipts`: principle "Flat per-device rows preserve identity, parser outcome, source artifact, and blocker evidence for CPU, CUDA, PolarFire, KV260, and GateMate."
+- `parser_rows_valid`: principle "Bare boolean proving every required device row was parsed into the corrigendum schema."
+- `kv260_safe_path_used`: principle "KV260 evidence must come only from SSH, xmutil, or board-local UIO command kinds."
+- `blockers`: principle "Explicit blockers prevent unreachable devices or missing matched timing from being laundered into speedup evidence."
+- `matched_timing_available`: principle "True only when authenticated matched CPU/device timing exists for the same workload."
+- `hardware_speedup_claim`: principle "Must remain false without matched authenticated timing."
+- `hardware_receipt_corrigendum_clean`: principle "Headline gate combining no-LLM, no-model-spec, parser-valid, safe-KV260, and no-speedup conditions."
+- `tests_added_or_reused`: principle "Names focused tests that assert the corrigendum schema and parser behavior."
+- `field_principles`: principle "One-line annotations explain why each headline and gate field exists."
+- `inference_substrate`: principle "Declares hardware_receipt_methodology_no_llm so receipt parsing is not treated as live inference."
+- `honest_verdict`: principle "Terminal summary states clean corrigendum status, blockers, and no speedup claim."
+
+### SCENARIO-VERIFY-5546: Receipt-Only Corrigendum Removes Live-Model Markers
+
+Given Exp 5532 and Exp 5519 hardware receipt artifacts exist locally, when Exp
+5546 builds its corrigendum, then it parses CPU, CUDA, PolarFire, KV260, and
+GateMate rows into a flat `device_receipts` list, records parser outcomes and
+blockers, derives seed and checksum from receipt inputs and parser version,
+sets `llm_invoked=false`, sets `no_model_specs_required=true`, sets
+`compute_bound_markers_absent=true`, sets `kv260_safe_path_used=true`, sets
+`matched_timing_available=false`, sets `hardware_speedup_claim=false`, and
+declares `inference_substrate=hardware_receipt_methodology_no_llm`.
+
+If a prior receipt row is malformed, missing, or uses an unsafe KV260 command
+kind, Exp 5546 SHALL record a precise blocker, set
+`parser_rows_valid=false` or `kv260_safe_path_used=false` as appropriate, keep
+`hardware_speedup_claim=false`, and refuse a clean
+`hardware_receipt_corrigendum_clean` gate.
+
+## Implementation Status (REQ-VERIFY-5546)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5546 | Planned (`python/carnot/experiment_5546_hardware_receipt_substrate_corrigendum.py`, `results/experiment_5546_hardware_receipt_substrate_corrigendum.json`) | Planned (`tests/python/test_experiment_5546_hardware_receipt_substrate_corrigendum.py`) |
+
 ### REQ-VERIFY-5532: Hardware Receipt Parser Repeatability Repair
 
 The repository SHALL provide Exp 5532 at
