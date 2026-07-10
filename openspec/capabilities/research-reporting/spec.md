@@ -39470,3 +39470,102 @@ modify `research-references.md`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5524 | Implemented (`python/carnot/experiment_5524_v501_source_delta_ingestion.py`, `results/experiment_5524_v501_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5524_v501_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5535: V501 Capstone Reconciliation
+
+The Exp5535 workflow SHALL write
+`results/experiment_5535_capstone_v501.json` after reading the available
+`.501` artifacts from Exp5523 through Exp5534, any same-range conductor
+gate-blocked or flagged artifacts, the active roadmap context, the vNEXT
+roadmap document, `ops/status.md`, `ops/changelog.md`, `ops/conductor-log.md`,
+and `ops/e2e-test-plan.md`. The expected primary artifact paths are
+`results/experiment_5523_transition_v501.json`,
+`results/experiment_5524_v501_source_delta_ingestion.json`,
+`results/experiment_5525_sota_schema_failure_taxonomy.json`,
+`results/experiment_5526_sota_structured_repair_loop.json`,
+`results/experiment_5527_sota_hard_soft_panel_v2.json`,
+`results/experiment_5528_csl_canonical_gate_artifact.json`,
+`results/experiment_5529_csl_event_topic_residue_stress.json`,
+`results/experiment_5530_sota_csl_memory_panel_v2.json`,
+`results/experiment_5531_sparse_repair_scaleup_ci.json`,
+`results/experiment_5532_hardware_receipt_parser_repeatability.json`,
+`results/experiment_5533_arc_strategy_routing_precheck.json`, and
+`results/experiment_5534_arc_strategy_routed_levelup.json`. It SHALL NOT
+modify `research-roadmap.yaml` or `scripts/research_conductor.py`. If
+`research-roadmap-next.yaml` is absent because the staged roadmap was consumed,
+the workflow SHALL record that absence as missing context rather than
+fabricating a row.
+
+The workflow SHALL skip every upstream artifact carrying
+`flagged_adversarial:true` before importing positive headline metrics. It SHALL
+still list the flagged artifact path, verdict, and corrigendum summary so the
+milestone record preserves what happened. The capstone SHALL decide the claim
+boundaries for structured SOTA output, hard/soft SOTA quality, continuous
+self-learning, sparse repair, hardware speedup, and ARC registry progress from
+observed non-flagged evidence only.
+
+The artifact SHALL include required fields `milestone`, `artifact_paths_read`,
+`missing_artifacts`, `skipped_by_gates`, `structured_sota_claim_allowed`,
+`sota_hard_soft_claim_allowed`, `continuous_self_learning_evidence`,
+`csl_claim_allowed`, `sparse_repair_claim_allowed`, `hardware_speedup_claim`,
+`arc_registry_delta`, `reproduced_levels`, `solve_provenance_summary`,
+`docs_updated`, `commands_run`, `roadmap_yaml_unchanged`,
+`conductor_unchanged`, `field_principles`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `milestone`: principle "Route key for the `.501` capstone."
+- `artifact_paths_read`: principle "Lists only artifacts actually loaded as JSON evidence; missing files do not become rows."
+- `missing_artifacts`: principle "Records absent or unreadable expected inputs, including consumed roadmap context."
+- `skipped_by_gates`: principle "Keeps conductor-blocked or adversarial-flagged upstreams visible while excluding their positive metrics from headline claims."
+- `structured_sota_claim_allowed`: principle "Bare boolean for schema-valid local SOTA structured-row evidence from clean taxonomy/repair artifacts."
+- `sota_hard_soft_claim_allowed`: principle "Bare boolean for hard/soft quality claims; false when the hard/soft panel artifact is flagged."
+- `continuous_self_learning_evidence`: principle "Bare boolean for clean CSL evidence from canonical gate or clean SOTA memory artifacts."
+- `csl_claim_allowed`: principle "Bare boolean for broad CSL claim eligibility; downstream flagged residue evidence keeps the claim bounded."
+- `sparse_repair_claim_allowed`: principle "Bare boolean for clean exact-checked sparse repair scale evidence, not a speedup claim."
+- `hardware_speedup_claim`: principle "Must remain false unless matched authenticated timing exists."
+- `arc_registry_delta`: principle "Integer registry delta imported only from live-path ARC artifacts, with flagged rows not promoted."
+- `reproduced_levels`: principle "Integer reproduced-level count; live ARC success requires offline reproduction."
+- `solve_provenance_summary`: principle "Per-ARC artifact provenance table preserving live self-discovery/null boundaries."
+- `docs_updated`: principle "Files intentionally updated by Exp5535; ops/status, ops/changelog, and traceability remain empty here when a separate reconciler owns them."
+- `commands_run`: principle "Validation commands and outcomes actually run or marked not applicable with a reason."
+- `roadmap_yaml_unchanged`: principle "Protected-file check for `research-roadmap.yaml`."
+- `conductor_unchanged`: principle "Protected-file check for `scripts/research_conductor.py`."
+- `field_principles`: principle "Carries the why behind every headline and gate field for downstream audit."
+- `inference_substrate`: principle "Must equal `capstone_aggregation_from_upstream_artifacts` because Exp5535 is synthesis only."
+- `honest_verdict`: principle "Terminal summary starting with `complete:` or `blocked:` that names the exact .501 boundary."
+
+#### SCENARIO-REPORT-5535: V501 Capstone Uses Actual Artifacts
+
+**Given** Exp5523 through Exp5534 artifacts are present
+**And** some upstreams may be `flagged_adversarial:true`
+**When** the Exp5535 capstone workflow runs
+**Then** it writes `results/experiment_5535_capstone_v501.json`, records every
+read artifact path, records missing context explicitly, skips flagged positive
+metrics, sets hardware speedup false without matched timing, preserves ARC
+registry delta and reproduced-level counts from live-path evidence, declares
+`inference_substrate=capstone_aggregation_from_upstream_artifacts`, and keeps
+`research-roadmap.yaml` and `scripts/research_conductor.py` unchanged.
+
+#### SCENARIO-REPORT-5535-MISSING-INPUT: Missing Inputs Fail Closed
+
+**Given** an expected primary `.501` artifact is missing or unreadable
+**When** the Exp5535 capstone workflow runs
+**Then** it writes a terminal `blocked:` capstone artifact, records the missing
+path in `missing_artifacts`, leaves claim booleans false unless independently
+supported by clean artifacts, and does not fabricate any missing result row.
+
+#### SCENARIO-REPORT-5535-FIELD-PRINCIPLES: Field Principles Are Complete
+
+**Given** the Exp5535 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `hardware_speedup_claim` is false, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5535)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5535 | Implemented (`python/carnot/experiment_5535_capstone_v501.py`, `results/experiment_5535_capstone_v501.json`) | Implemented (`tests/python/test_experiment_5535_capstone_v501.py`) |

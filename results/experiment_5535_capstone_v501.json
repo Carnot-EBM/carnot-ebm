@@ -1,0 +1,377 @@
+{
+  "arc_registry_delta": 0,
+  "artifact_metadata": {
+    "results/experiment_5523_transition_v501.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:621a6f5bf466c57486ce7080695503339603a13f340882b3f42026b39131bc8c"
+    },
+    "results/experiment_5524_v501_source_delta_ingestion.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:1d6e3cb39a167378977e52c5e3eaa17c335d29e8ab18b032b61f94b3a4f7e9a0"
+    },
+    "results/experiment_5525_sota_schema_failure_taxonomy.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:b81fba408b9e596e441ded599e6cc171376df45ceb9c1a1c6cb2f126d2cd3040"
+    },
+    "results/experiment_5526_sota_structured_repair_loop.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:85ad3e29c381585578610e4b8ade06174cf93fe2219a6766c3c894e35e0464e9"
+    },
+    "results/experiment_5527_sota_hard_soft_panel_v2.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:693a5ab13b352d888da90c4e8d14914c8188bb0912ae900fc2a76ebcf66909fe"
+    },
+    "results/experiment_5528_csl_canonical_gate_artifact.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:85b22b45d24be6e29c3f292280d4d1ebec036f55b115d3bc574b8466fe5a5540"
+    },
+    "results/experiment_5529_csl_event_topic_residue_stress.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:39000e5942700606cc6362eb1ba5de88946ce5d69c36f5e60e5ebb57a6e4d507"
+    },
+    "results/experiment_5530_sota_csl_memory_panel_v2.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:f772edbc05cee292cc0d416dff0008d20e95050c68265b7a96652e7ebf4cb507"
+    },
+    "results/experiment_5531_sparse_repair_scaleup_ci.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:a30b9bbf675fb29b74c4ef3e9a945ddc18f291c1b7c4b0bb5f72228db4aac7c2"
+    },
+    "results/experiment_5532_hardware_receipt_parser_repeatability.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:0a2ccf9e269f2068961754cc4a654f03e3860f3e4444acf7298cc1159d69f5f0"
+    },
+    "results/experiment_5533_arc_strategy_routing_precheck.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:c9b428b0f7402823a270b896c865ffea793ebbdedaac0954b264f02ae62a0d4e"
+    },
+    "results/experiment_5534_arc_strategy_routed_levelup.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:9567a64b41868874152e7745d58ac1ed6ae73a9b62bfef2de936738e9ffd0bd4"
+    },
+    "results/experiment_5534_arc_strategy_routed_levelup_trajectory.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:ffeb0fde56d4aa3828375b16af47a3888eead19410d44cf6c8053fdabb7a0b12"
+    }
+  },
+  "artifact_paths_read": [
+    "results/experiment_5523_transition_v501.json",
+    "results/experiment_5524_v501_source_delta_ingestion.json",
+    "results/experiment_5525_sota_schema_failure_taxonomy.json",
+    "results/experiment_5526_sota_structured_repair_loop.json",
+    "results/experiment_5527_sota_hard_soft_panel_v2.json",
+    "results/experiment_5528_csl_canonical_gate_artifact.json",
+    "results/experiment_5529_csl_event_topic_residue_stress.json",
+    "results/experiment_5530_sota_csl_memory_panel_v2.json",
+    "results/experiment_5531_sparse_repair_scaleup_ci.json",
+    "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+    "results/experiment_5533_arc_strategy_routing_precheck.json",
+    "results/experiment_5534_arc_strategy_routed_levelup.json",
+    "results/experiment_5534_arc_strategy_routed_levelup_trajectory.json"
+  ],
+  "claim_boundaries": [
+    "Structured SOTA interface credit is limited to clean taxonomy plus repair-loop handoff.",
+    "Hard/soft SOTA quality is not promoted because Exp5527 is adversarial-flagged.",
+    "CSL has clean evidence, but broad claim credit is bounded by flagged residue-gate evidence.",
+    "Sparse repair is claimable as exact-checked scale evidence, not as a speedup.",
+    "Hardware speedup remains false without matched authenticated timing.",
+    "ARC registry progress remains zero; flagged ARC rows are provenance only."
+  ],
+  "commands_run": [
+    "PASS: .venv/bin/pytest tests/python/test_experiment_5535_capstone_v501.py -q --no-cov -> 6 passed in 3.23s",
+    "PASS: .venv/bin/coverage run --include=python/carnot/experiment_5535_capstone_v501.py -m pytest tests/python/test_experiment_5535_capstone_v501.py -q --no-cov -n 0 -> 6 passed in 2.13s",
+    "PASS: .venv/bin/coverage report --include=python/carnot/experiment_5535_capstone_v501.py --fail-under=100 -> 145 statements, 0 missing, 100% coverage on new module",
+    "PASS: ruff check python/carnot/experiment_5535_capstone_v501.py tests/python/test_experiment_5535_capstone_v501.py -> All checks passed",
+    "PASS: ruff format --check python/carnot/experiment_5535_capstone_v501.py tests/python/test_experiment_5535_capstone_v501.py -> 2 files already formatted",
+    "PASS: .venv/bin/python -c YAML parse for research-roadmap.yaml/research-roadmap-next.yaml -> research-roadmap.yaml parsed mapping milestone=2026.07.501 tasks=13; research-roadmap-next.yaml missing, not parsed",
+    "PASS: .venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml -> roadmap_gate_audit_passed=true, n_tasks_audited=13, n_gate_upstream_failures=0",
+    "PASS: .venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml -> Exclusion-manifest lint clean",
+    "PASS: .venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml -> 1 level-up attempt >= min 1",
+    "PASS: .venv/bin/python scripts/operator_curated_docs_lint.py /tmp/exp5535-commit-msg.* -> no operator-curated staged-doc violation for [conductor] message",
+    "FAIL: .venv/bin/python scripts/check_spec_coverage.py -> 1262 pre-existing tests lack REQ/SCENARIO traceability; Exp5535 tests do contain REQ-REPORT-5535/SCENARIO-REPORT-5535 refs",
+    "FAIL: .venv/bin/pytest tests/python -q -> exit code 3 after 0:55:24; 590 failed, 41148 passed, 115 skipped, 1 xfailed, 267 warnings, 11 errors; xdist worker crashes/internal errors in pre-existing Z3/JAX paths; not rerun per stop rule",
+    "PASS: git diff --quiet -- research-roadmap.yaml scripts/research_conductor.py && git diff --cached --quiet -- research-roadmap.yaml scripts/research_conductor.py -> protected files unchanged",
+    "PASS: printf '%s\\n' 'Do NOT push. Do NOT modify scripts/research_conductor.py.'",
+    "N/A: ops/e2e-test-plan.md E2E-001 through E2E-008 -> Exp5535 is reporting-only capstone aggregation; no model training/sampling, PyO3 binding, serialization, packaged verifier workflow, EBRM CPU/KV260 scoring, SMGI update, or CLaRa-V runtime was changed"
+  ],
+  "conductor_unchanged": true,
+  "continuous_self_learning_evidence": true,
+  "csl_claim_allowed": false,
+  "docs_updated": [
+    "openspec/capabilities/research-reporting/spec.md"
+  ],
+  "experiment": "experiment_5535_capstone_v501",
+  "experiment_id": "exp5535-v501-capstone-reconciliation",
+  "field_principles": {
+    "arc_registry_delta": "Integer registry delta imported only from live-path ARC artifacts, with flagged rows not promoted.",
+    "artifact_paths_read": "Lists only artifacts actually loaded as JSON evidence; missing files do not become rows.",
+    "commands_run": "Validation commands and outcomes actually run or marked not applicable with a reason.",
+    "conductor_unchanged": "Protected-file check for `scripts/research_conductor.py`.",
+    "continuous_self_learning_evidence": "Bare boolean for clean CSL evidence from canonical gate or clean SOTA memory artifacts.",
+    "csl_claim_allowed": "Bare boolean for broad CSL claim eligibility; downstream flagged residue evidence keeps the claim bounded.",
+    "docs_updated": "Files intentionally updated by Exp5535; ops/status, ops/changelog, and traceability remain empty here when a separate reconciler owns them.",
+    "field_principles": "Carries the why behind every headline and gate field for downstream audit.",
+    "hardware_speedup_claim": "Must remain false unless matched authenticated timing exists.",
+    "honest_verdict": "Terminal summary starting with `complete:` or `blocked:` that names the exact .501 boundary.",
+    "inference_substrate": "Must equal `capstone_aggregation_from_upstream_artifacts` because Exp5535 is synthesis only.",
+    "milestone": "Route key for the `.501` capstone.",
+    "missing_artifacts": "Records absent or unreadable expected inputs, including consumed roadmap context.",
+    "reproduced_levels": "Integer reproduced-level count; live ARC success requires offline reproduction.",
+    "roadmap_yaml_unchanged": "Protected-file check for `research-roadmap.yaml`.",
+    "skipped_by_gates": "Keeps conductor-blocked or adversarial-flagged upstreams visible while excluding their positive metrics from headline claims.",
+    "solve_provenance_summary": "Per-ARC artifact provenance table preserving live self-discovery/null boundaries.",
+    "sota_hard_soft_claim_allowed": "Bare boolean for hard/soft quality claims; false when the hard/soft panel artifact is flagged.",
+    "sparse_repair_claim_allowed": "Bare boolean for clean exact-checked sparse repair scale evidence, not a speedup claim.",
+    "structured_sota_claim_allowed": "Bare boolean for schema-valid local SOTA structured-row evidence from clean taxonomy/repair artifacts."
+  },
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: .501 capstone read 13 result artifacts; missing=1; skipped_flagged_or_gated=5; structured_sota_claim_allowed=True; sota_hard_soft_claim_allowed=False; continuous_self_learning_evidence=True; csl_claim_allowed=False; sparse_repair_claim_allowed=True; hardware_speedup_claim=False; arc_registry_delta=0",
+  "inference_substrate": "capstone_aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.501",
+  "missing_artifacts": [
+    "research-roadmap-next.yaml"
+  ],
+  "missing_primary_artifacts": [],
+  "random_seed": 5535,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:f6a7ebe663837f3b40332f3c42cecf72a8259e155d69033a114e777d8792f82f",
+  "result_path": "results/experiment_5535_capstone_v501.json",
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5535.capstone_v501.v1",
+  "skipped_by_gates": [
+    {
+      "artifact_path": "results/experiment_5527_sota_hard_soft_panel_v2.json",
+      "blocked_at_layer": null,
+      "corrigendum_pending": [
+        {
+          "detail": "duration_s=0.001162 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "failed_gates": [],
+      "honest_verdict": "complete: sota_hard_soft_panel_v2_ready_bounded_exact_validated_claim_allowed",
+      "skip_reason": "flagged_adversarial",
+      "status": null
+    },
+    {
+      "artifact_path": "results/experiment_5529_csl_event_topic_residue_stress.json",
+      "blocked_at_layer": null,
+      "corrigendum_pending": [
+        {
+          "detail": "event_only_score=0.6666666667 and topic_only_score=0.6666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "failed_gates": [],
+      "honest_verdict": "complete: csl_event_topic_residue_stress_ready",
+      "skip_reason": "flagged_adversarial",
+      "status": null
+    },
+    {
+      "artifact_path": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+      "blocked_at_layer": null,
+      "corrigendum_pending": [
+        {
+          "detail": "duration_s=9.160578 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "failed_gates": [],
+      "honest_verdict": "complete: hardware receipt parser repaired with blockers (kv260,gatemate); matched_timing_available=false; hardware_speedup_claim=false",
+      "skip_reason": "flagged_adversarial",
+      "status": null
+    },
+    {
+      "artifact_path": "results/experiment_5533_arc_strategy_routing_precheck.json",
+      "blocked_at_layer": null,
+      "corrigendum_pending": [
+        {
+          "detail": "duration_s=0.07068435614928603 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "failed_gates": [],
+      "honest_verdict": "complete: g50t L3 strategy-routing precheck ready; no solve claimed",
+      "skip_reason": "flagged_adversarial",
+      "status": "complete"
+    },
+    {
+      "artifact_path": "results/experiment_5534_arc_strategy_routed_levelup.json",
+      "blocked_at_layer": null,
+      "corrigendum_pending": [
+        {
+          "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "duration_s=2.702068200800568 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "failed_gates": [],
+      "honest_verdict": "honest_null: g50t L3 bounded_budget_no_target_level_reproduction; entropy=1.000; repeat_rate=0.000; registry_delta=0",
+      "skip_reason": "flagged_adversarial",
+      "status": "honest_null"
+    }
+  ],
+  "solve_provenance_summary": [
+    {
+      "artifact_path": "results/experiment_5533_arc_strategy_routing_precheck.json",
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: g50t L3 strategy-routing precheck ready; no solve claimed",
+      "registry_delta": null,
+      "reproduced_levels": null,
+      "selected_game": "g50t",
+      "selected_level": "L3",
+      "solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "artifact_path": "results/experiment_5534_arc_strategy_routed_levelup.json",
+      "flagged_adversarial": true,
+      "honest_verdict": "honest_null: g50t L3 bounded_budget_no_target_level_reproduction; entropy=1.000; repeat_rate=0.000; registry_delta=0",
+      "registry_delta": 0,
+      "reproduced_levels": 0,
+      "selected_game": "g50t",
+      "selected_level": "L3",
+      "solve_provenance": "live_agent_self_discovery"
+    }
+  ],
+  "sota_hard_soft_claim_allowed": false,
+  "source_context": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:7c29a1a8bcab305edff1c6244428e775e314191def827ba8a39f8f717da73f20"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:f52f0d1543e7b037309504b2ddf729486a4500c6c25876b4af02f5626d101ef1"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:2010cb507b741bda5c7ba2f28933d43e8815b5cc294cfe8b93db3a844fdf9f5c"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:7b6f50656b8b46ed2cfbe35ec2d0af5abb463b3b4d1e3b00ddd5cb0c3c518cd0"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:7f1fe4fa0a5186c5bd53ea93540788648e3c3574d763ea6148116019d6da3e0e"
+    },
+    {
+      "exists": true,
+      "path": "ops/e2e-test-plan.md",
+      "read_only": true,
+      "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "sparse_repair_claim_allowed": true,
+  "spec_refs": [
+    "REQ-REPORT-5535",
+    "SCENARIO-REPORT-5535",
+    "SCENARIO-REPORT-5535-MISSING-INPUT",
+    "SCENARIO-REPORT-5535-FIELD-PRINCIPLES"
+  ],
+  "structured_sota_claim_allowed": true,
+  "terminal_evidence": {
+    "arc_levelup": "honest_null: g50t L3 bounded_budget_no_target_level_reproduction; entropy=1.000; repeat_rate=0.000; registry_delta=0",
+    "csl_canonical_gate": "complete: canonical_csl_gate_artifact_conductor_visible",
+    "csl_memory_panel": "complete: bounded_sota_csl_memory_panel_v2_claim_allowed",
+    "hard_soft_panel": "complete: sota_hard_soft_panel_v2_ready_bounded_exact_validated_claim_allowed",
+    "hardware": "complete: hardware receipt parser repaired with blockers (kv260,gatemate); matched_timing_available=false; hardware_speedup_claim=false",
+    "sota_repair_loop": "complete: sota_structured_repair_loop_ready_schema_valid_exact_handoff_no_quality_claim",
+    "sota_taxonomy": "complete: sota_schema_failure_taxonomy_ready_prompt_contract_miss_and_semantic_candidate_absent",
+    "sparse_repair": "complete: exact_checked_sparse_repair_scaleup_ci_ready_no_speedup_claim"
+  }
+}

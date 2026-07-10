@@ -166,5 +166,23 @@
     ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5534_arc_strategy_routed_levelup.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5534_arc_strategy_routed_levelup.py",
     ".venv/bin/pytest tests/python -q"
   ],
-  "trajectory_path": "results/experiment_5534_arc_strategy_routed_levelup_trajectory.json"
+  "trajectory_path": "results/experiment_5534_arc_strategy_routed_levelup_trajectory.json",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.702068200800568 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
