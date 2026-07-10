@@ -1,6 +1,46 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-10 (Milestone 2026.07.502 Planning Staged)
+**Last Updated:** 2026-07-10 (Milestone 2026.07.503 Planning Staged)
+
+## Session 2026-07-10 - Milestone 2026.07.503 Planning Staged
+
+Planned the next research milestone after the operator reported `.502`
+complete. The staged `.503` roadmap focuses on the remaining PRD gaps exposed
+by `.502`: incomplete live SOTA candidate rows, CSL evidence blocked by a
+tautological baseline and zero cross-family transfer, sparse repair that needs
+a harder exact constraint fixture, hardware receipt hygiene without matched
+timing, and ARC live-path target rotation after a clean honest null.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended actionable
+2025-2026 findings to `research-references.md`, including ASP+EBM for
+nonmonotonic exact fixtures, P-GCD-style automaton proposal/coverage checks,
+NOVA-style forbidden-direction memory, and write-manage-read agent memory.
+Extropic TSU, Logical Intelligence Kona, and the Rust `schoolmarm` GBNF
+implementation remain watch-only or audit references until local executable
+evidence exists.
+
+The `.503` plan contains 14 conductor tasks across transition/source refresh,
+automaton row-completion receipts, gated GBNF-forced SOTA row smoke, gated
+SOTA hard/soft panel v4, ASP/FSM nonmonotonic exact fixtures, gated sparse
+repair scale, CSL tautology corrigendum, causal write-manage-read CSL memory,
+gated cross-model SOTA CSL transfer, hardware/timing receipt hygiene, ARC FSM
+target rotation, one gated ARC live level-up attempt, and capstone
+reconciliation. All LLM-bearing prompts include the mandated local SOTA GGUF
+model specs, and the ARC level-up task records
+`solve_provenance: live_agent_self_discovery` with post-solve banking through
+`offline_reproduced=true` and `reproduced_levels>=1`.
+
+Validation for this planning task: YAML parsing, prompt-shape checks, SOTA
+model-spec checks, `scripts/validate_prior_failures.py`,
+`scripts/audit_roadmap_gates.py`, `scripts/exclusion_manifest_lint.py`,
+`scripts/arc_levelup_guarantee_lint.py research-roadmap-next.yaml --min 1`,
+`scripts/overdue_priority_lint.py`, touched-file `git diff --check`,
+protected-file diff checks, and `scripts/operator_curated_docs_lint.py`
+passed. Repo-wide spec coverage was not rerun; the known pre-existing
+traceability backlog remains the expected blocker. No implementation code,
+active roadmap, conductor, model-training run, or hardware workload was
+changed.
 
 ## Session 2026-07-10 - Milestone 2026.07.502 Planning Staged
 

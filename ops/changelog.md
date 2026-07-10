@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-07-10 (Milestone 2026.07.503 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V503 planner refresh to `research-references.md`, incorporating
+  ASP+EBM for exact nonmonotonic fixtures, P-GCD-style automaton
+  proposal/coverage checks, NOVA-style forbidden-direction memory, and
+  write-manage-read agent memory. Extropic TSU, Logical Intelligence Kona, and
+  the Rust `schoolmarm` GBNF implementation remain watch-only or audit
+  references until local executable evidence exists.
+- The `.503` plan contains 14 conductor tasks across transition/source
+  refresh, automaton row-completion receipts, gated GBNF-forced SOTA row smoke,
+  gated hard/soft panel v4, ASP/FSM exact fixtures, gated sparse repair scale,
+  CSL tautology corrigendum, causal write-manage-read CSL memory, gated
+  cross-model SOTA CSL transfer, hardware/timing receipt hygiene, ARC FSM
+  target rotation, one gated ARC live level-up attempt, and capstone
+  reconciliation.
+- Validation passed for YAML parsing, prompt-shape audit, SOTA model-spec
+  audit, prior-failure validation, gate audit, exclusion-manifest lint, ARC
+  level-up guarantee lint, overdue-priority lint, touched-file whitespace
+  checks, protected-file diff checks, and operator-curated docs lint. Repo-wide
+  spec coverage was not rerun; the known pre-existing traceability backlog
+  remains the expected blocker.
+
 ## 2026-07-10 (Milestone 2026.07.502 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`

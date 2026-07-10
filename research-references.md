@@ -29137,3 +29137,89 @@ Execution-time sweep after the `.502` planner refresh checked arXiv new/topic pa
 - **Watch-only/excluded:** ReCoLoRA: Spectrum-Aware Recursive Consolidation for Continual LLM Fine-Tuning (excluded); Hallucination Self-Play (excluded); GRAPHEVAL / Graph Reasoning Coherence Score (watch-only); Game Theory Driven Multi-Agent Framework Mitigates Language Model Hallucination (excluded); Extropic TSU / XTR / Z1 writing (watch-only); Logical Intelligence Kona and Aleph public pages (watch-only)
 
 <!-- V502-EXECUTION-REFRESH-20260710-END -->
+
+## V503 Planner Refresh - 20260710
+
+Planning-time sweep for milestone `.503` rechecked arXiv primary pages,
+OpenReview public listings, HuggingFace Papers/search results, Semantic Scholar
+routes for EBT `2507.02092` and ARM-EBM `2512.15605`, GitHub discovery, Extropic
+writing, Logical Intelligence public pages, the V502 execution refresh, and the
+exclusion manifest. Most hits were duplicates of V498-V502 source blocks; the
+items below are the non-duplicate or newly actionable planning consequences.
+
+### New or newly actionable deltas
+
+- **Answer Set Programming Energised! End-to-End Neurosymbolic Reasoning and
+  Learning with ASP and Energy Based Models** (https://arxiv.org/abs/2607.08136):
+  V502 filed this at execution time; `.503` should promote it into a concrete
+  deterministic ASP+FSM exact fixture. Carnot hook: add non-monotonic defaults,
+  contradiction rows, and stable-model count/checksum fields to the finite-state
+  fixture before claiming broader sparse-repair or hard/soft reasoning progress.
+  Keep exact ASP/FSM validators authoritative; do not import end-to-end training
+  or visual benchmarks into the conductor loop.
+- **Mitigating Bias in Locally Constrained Decoding via Tractable Proposals**
+  (https://arxiv.org/abs/2606.01926): Already indexed as P-GCD, but `.502`
+  proved a grammar table can be reachable while live rows still go missing.
+  Carnot hook: add an automaton proposal/coverage receipt that measures reachable
+  schema states, dead-end transitions, row-completion probability, and local-mask
+  bias before another hard/soft SOTA panel. This is a pre-generation or
+  candidate-completion diagnostic, not a quality claim by itself.
+- **NOVA: A Verification-Aware Agent Harness for Architecture Evolution in
+  Industrial Recommender Systems** (https://arxiv.org/abs/2606.27243): Its
+  useful idea for Carnot is not recommender architecture search; it is the
+  verification cascade plus a forbidden-direction memory derived from prior
+  failures. Carnot hook: continuous self-learning should record "do not retry"
+  directions, exact-gate failure signatures, and metric-leakage residues as
+  learned negative memory, with no model-weight mutation.
+- **Memory for Autonomous LLM Agents: Mechanisms, Evaluation, and Emerging
+  Frontiers** (https://arxiv.org/abs/2603.07670): Already listed in the memory
+  survey cluster, but the `.502` CSL tautology makes its write-manage-read
+  framing newly actionable. Carnot hook: split memory evaluation into write-path
+  filtering, manage/forget policies, read-time retrieval, and action impact;
+  require causal support links and contradiction handling before a CSL headline.
+- **schoolmarm / GitHub grammar-constrained-decoding topic**
+  (https://github.com/topics/grammar-constrained-decoding): GitHub discovery
+  now exposes a small Rust GBNF parser/decoder project and a C++ local-inference
+  engine with grammar-constrained output. Carnot hook: use only as a dependency
+  audit and local-first design reference for a possible Rust grammar receipt;
+  do not vendor or depend on it without a license/API audit and exact fixture
+  parity against the existing llama.cpp GBNF path.
+
+### Secondary-source status
+
+- **OpenReview:** Gram2Token and PSC remain relevant to grammar-table and parser
+  stack efficiency; `.503` should test local reachability and row completion,
+  not quote GPU-native overhead numbers without a local runtime.
+- **HuggingFace Papers:** EBT, NRGPT, and constrained-decoding pages mirror
+  arXiv/OpenReview findings but do not add a stronger executable local baseline.
+- **Semantic Scholar citation routes:** EBT `2507.02092` still surfaces
+  fixed-point/looped reasoner and NRGPT-style energy-native architecture hooks;
+  ARM-EBM `2512.15605` still supports theory framing. Neither route creates a
+  new local `.503` experiment beyond source-delta tracking and exact fixtures.
+- **Extropic:** X0/XTR-0 and TSU writing remains aligned with Carnot's
+  thermodynamic-sampling path, but there is still no local authenticated TSU
+  execution path. Treat as watch-only.
+- **Logical Intelligence:** Kona Sudoku and Aleph formal-verification posts
+  reinforce the PRD direction toward whole-state constraint reasoning and
+  proof-bearing outputs. They are architecture context only; no Kona/Aleph
+  benchmark, speedup, or baseline claim is valid without local authenticated
+  access.
+
+### Planner impact
+
+- Start `.503` by carrying forward `.502` truth: clean grammar preflight and FSM
+  sparse-repair evidence; blocked hard/soft SOTA; flagged CSL five-arm ablation;
+  zero ARC registry delta; hardware receipt-only.
+- Move SOTA work from "try another live panel" to "force row completion under a
+  local grammar/automaton proposal receipt, then gate a small panel on
+  schema-valid rows." Missing rows remain failures, not abstentions.
+- Make continuous self-learning the required FR-11 lane, but repair the Exp5543
+  tautology first and then test causal write-manage-read memory with
+  forbidden-direction negative memory and exact-validator action impact.
+- Extend sparse repair through ASP/non-monotonic finite-state descriptors and
+  matched-iteration receipts; keep speedup false without authenticated timing.
+- Keep hardware and ARC methodology clean: no LLM/model specs on no-LLM receipt
+  tasks, no hardware speedup without matched timing, and one ARC live-path
+  level-up attempt with `solve_provenance=live_agent_self_discovery`.
+
+<!-- V503-PLANNER-REFRESH-20260710-END -->

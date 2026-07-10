@@ -1,279 +1,209 @@
-# Research Roadmap vNEXT - Milestone 2026.07.502
+# Research Roadmap vNEXT - 2026.07.503
 
-**Milestone title:** Adversarial-Clean SOTA Evidence, Non-Tautological CSL, Finite-State Constraints, Receipt Hygiene, and ARC Live-Path Recovery
+Milestone: `2026.07.503`
+Previous milestone: `2026.07.502`
+Conductor queue: `research-roadmap-next.yaml`
+Task range: `exp5550` - `exp5563`
 
-**Planner date:** 2026-07-10
-**Previous milestone:** 2026.07.501
-**Task range:** Exp 5536-5549
-**Pre-staged roadmap:** `research-roadmap-next.yaml`
+## Executive Summary
+
+Milestone `.502` closed the immediate planning debt from the `.501` capstone: it made the SOTA panel duration correction honest, proved the deterministic GBNF grammar-table preflight, produced an exact no-LLM FSM fixture, repaired the CSL residue metric, found a useful sparse-repair signal, and kept the hardware and ARC lanes honest. It also exposed three hard blockers that now dominate the research risk:
+
+1. The SOTA hard/soft panel still cannot make a quality claim because live SOTA rows are incomplete even after duration and grammar preflight fixes.
+2. Continuous self-learning has evidence but no claim: the five-arm CSL ablation was adversarially flagged as tautological, and the cross-model SOTA transfer gate correctly blocked on zero cross-family delta.
+3. The embodied verification lanes remain one step short of PRD-grade proof: sparse repair is promising but too narrow, hardware has receipts but no matched timing, and ARC clean live level-up produced no registry delta.
+
+Milestone `.503` therefore focuses on proof-producing infrastructure instead of new broad claims. The central move is to build deterministic constrained-generation and exact-constraint receipts first, then run small gated SOTA, CSL, repair, hardware, and ARC experiments only when their upstream receipts are clean.
 
 ## Inputs Read
 
-Required repository inputs were read before planning:
+The planner read the required project sources in order:
 
-1. `research-program.md`
-2. `_bmad/prd.md`
-3. `_bmad/architecture.md`
-4. `ops/status.md`
-5. `ops/changelog.md`
-6. `research-complete.yaml`
-7. `research-roadmap.yaml`
-8. `openspec/change-proposals/`
-9. `ops/conductor-log.md`
-10. `research-references.md`
-11. `research-hardware-wishlist.md`
+- `research-program.md`
+- `_bmad/prd.md`
+- `_bmad/architecture.md`
+- `ops/status.md`
+- `ops/changelog.md`
+- `research-complete.yaml`
+- `research-roadmap.yaml`
+- `openspec/change-proposals/`
+- `ops/conductor-log.md`
+- `research-references.md`
+- `research-hardware-wishlist.md`
 
-Additional guardrails checked before writing the roadmap:
+The planner also read `CLAUDE.md`, `CODEX.md`, the current exclusion manifest, the `.502` result artifacts, and prior v7/v8/vNEXT roadmap formats before designing this milestone.
 
-- `CLAUDE.md`
-- `CODEX.md`
-- `ops/exclusion_manifest.yaml`
-- `ops/known-issues.md`
-- `ops/arc_solve_registry.yaml`
-- `scripts/experiment_template.py`
-- `scripts/conductor_gates.py`
-- `scripts/audit_roadmap_gates.py`
-- `scripts/arc_levelup_guarantee_lint.py`
-- `scripts/exclusion_manifest_lint.py`
-- `ops/e2e-test-plan.md`
+## Literature Refresh
 
-## Literature Refresh Incorporated
+The following findings were appended to `research-references.md` before experiment design:
 
-The planner performed a 2025-2026 refresh across arXiv, OpenReview public pages where reachable,
-Hugging Face Papers, GitHub discovery, Semantic Scholar public citation routes for EBT `2507.02092` and
-ARM-EBM `2512.15605`, Extropic writing, Logical Intelligence public posts, and Carnot's accumulated
-reference history. Non-duplicate actionable items were appended to `research-references.md` under:
+- `ASP energised` (`arXiv:2607.08136`) suggests treating Answer Set Programming as a practical bridge between exact symbolic constraints and EBM-style energy surfaces. `.503` uses this as the basis for the ASP/FSM nonmonotonic fixture.
+- `P-GCD` (`arXiv:2606.01926`) frames constrained decoding around tractable proposal distributions and tensorized finite automata. `.503` turns this into an automaton row-completion receipt before another SOTA panel.
+- `NOVA` (`arXiv:2606.27243`) provides a verification-aware harness pattern with failure memory. `.503` maps this into forbidden-direction CSL memory, not a generic text reward.
+- `Memory for Autonomous LLM Agents` (`arXiv:2603.07670`) gives a write-manage-read taxonomy for agent memory. `.503` uses that taxonomy for the causal CSL memory task.
+- `schoolmarm` on GitHub is a 2026 Rust GBNF constrained-decoding implementation worth auditing, but not vendoring, unless the local `llama_cpp_gbnf` path fails.
+- Extropic TSU and Logical Intelligence Kona updates remain watch-only context. They are not used as local evidence or speedup baselines.
 
-`## V502 Planner Refresh - 2026-07-10`
+## What 2026.07.502 Proved
 
-New planning consequences:
+| Area | `.502` Result | Planner Consequence |
+| --- | --- | --- |
+| SOTA duration/substrate | `exp5538` made the duration correction honest but showed no schema validity. | Duration is no longer the only blocker; row completion is now the blocker. |
+| Grammar preflight | `exp5539` proved deterministic GBNF fixtures accept valid rows and reject invalid rows. | Build an automaton row-completion receipt before calling the LLM again. |
+| Hard/soft panel | `exp5540` improved exact validation on emitted rows but still had missing rows and no claim. | Gate panel v4 on a grammar-forced row smoke. |
+| Exact fixtures | `exp5541` shipped a deterministic FSM exact fixture. | Extend it to ASP/nonmonotonic constraints and then stress sparse repair. |
+| CSL metrics | `exp5542` fixed residue metric independence, but `exp5543` was flagged for TAUTOLOGY. | Repair the five-arm ablation before any CSL headline. |
+| Cross-model CSL | `exp5544` correctly blocked SOTA transfer with zero delta. | Only retry cross-model transfer after causal memory shows action impact. |
+| Sparse repair | `exp5545` found descriptor-guided sparse repair signal without matched timing. | Scale to ASP/FSM rows and keep speedup claims disabled. |
+| Hardware | `exp5546` produced clean receipts but no matched timing. | Build matched-timing hygiene and receipt sidecars, no speedup claim. |
+| ARC | `exp5547` found a clean target; `exp5548` produced an honest null. | Rotate target and improve live-path mechanism, not offline solve. |
+| Capstone | `exp5549` accepted one flagged CSL artifact and one gated skip. | `.503` must keep claim boundaries explicit and capstone-adversarial. |
 
-- **LLM-FSM** (`arXiv:2602.07032`) motivates a deterministic finite-state exact fixture. This gives
-  Carnot a compact, checkable substrate for structured hard/soft reasoning, sparse repair descriptors,
-  and future hardware workloads.
-- **Gram2Token** (OpenReview public listing) motivates a grammar-table preflight before another flagship
-  GGUF schema-validity claim. V502 records backend availability and schema reachability, but does not
-  claim decoding speedup unless a real runtime path is exercised.
-- **ConstrainPrompt, CRV, XGrammar/llguidance, and JSONSchemaBench** remain the source family for the
-  local SOTA structured-output lane. V502 focuses on adversarial-clean substrate and duration receipts
-  before interpreting model quality.
-- **Continual memory and retrieval-warmed reasoning work** sharpen the CSL lane: memory claims need
-  non-identical event/topic metrics, retrieval ablations, stale-evidence rejection, negative-transfer
-  checks, and no-weight-mutation receipts.
-- **Extropic TSU and Logical Intelligence Kona/Aleph** remain architecture context only. There is no local
-  executable TSU, Kona, or Aleph path, so they cannot serve as baselines or speedup evidence.
+## Three Biggest Gaps to PRD Vision
 
-## What 2026.07.501 Proved
+1. **Verified reasoning over live SOTA models is still structurally fragile.** The PRD asks for verifiable reasoning and trustworthy generation. `.502` showed that exact validators work on emitted rows, but the local SOTA models still do not reliably emit the complete candidate table needed for a fair panel.
 
-The `.501` milestone completed its task range and closed with a useful bounded capstone. It proved that
-several repair paths are possible, but it also left important adversarial flags that must be resolved
-before broad claims are defensible.
+2. **Continuous self-learning is not yet causal.** The PRD and `research-program.md` require online, self-improving behavior. `.502` found useful retrieval-warmed signals, but the best baseline collapsed into a tautology and cross-model transfer showed no positive delta.
 
-| Lane | Experiments | Finding |
-|------|-------------|---------|
-| Transition and source freshness | Exp 5523, 5524 | `.500` claims were carried forward and the source delta was recorded cleanly. |
-| SOTA structured output | Exp 5525, 5526 | The schema-failure taxonomy and structured repair loop worked. Repair brought schema validity to `1.0` with exact handoff ready and no missing candidate rows after repair. |
-| SOTA hard/soft panel | Exp 5527 | The panel artifact reported schema-valid exact rows, but adversarial verification flagged `DURATION_TOO_SHORT`. The hard/soft SOTA claim is not allowed until substrate and duration are repaired. |
-| Continuous self-learning | Exp 5528, 5529, 5530 | The canonical CSL gate artifact was clean and a SOTA CSL memory panel ran, but the residue stress was flagged as tautological because event-only and topic-only scores were identical. Broad CSL claims remain blocked. |
-| Sparse repair | Exp 5531 | Exact-checked sparse repair scale-up completed with no speedup claim. This lane is ready for richer finite-state descriptors. |
-| Hardware receipts | Exp 5532 | Hardware receipt parsing was repaired enough to identify blockers, but the artifact carried compute-bound/GGUF markers and was flagged for methodology and duration. No hardware speedup claim is allowed. |
-| ARC live path | Exp 5533, 5534 | The ARC target and live attempt preserved `solve_provenance=live_agent_self_discovery`, but both artifacts were flagged for too-short/no-seed/no-checksum hygiene, and the live level-up reproduced no new level. |
-| Capstone | Exp 5535 | Final `.501` claims were bounded: structured SOTA repair was allowed, hard/soft SOTA and broad CSL remained blocked, sparse repair was bounded, hardware speedup was false, and `arc_registry_delta=0`. |
+3. **Embodied proof is missing across ARC and hardware.** The architecture requires live hidden-game discovery and hardware-backed substrate evidence. `.502` kept the ARC and hardware lanes clean, but no ARC registry delta and no matched timing mean both lanes are still evidence-limited.
 
-## Three Biggest Gaps To PRD Vision
-
-1. **Verifiable local SOTA reasoning lacks adversarial-clean live evidence.** The PRD asks for LLMs to
-   propose and exact constraints to decide. Carnot now has repairable structured rows, but Exp5527 was
-   too short to support a live flagship claim. V502 must either produce authenticated live GGUF evidence
-   with real duration/offload receipts or explicitly downgrade to no-live-quality-claim.
-
-2. **Continuous self-learning has a clean gate but a tainted residue metric.** FR-11 requires learning
-   from experience without metric leakage. Exp5528 proved the canonical gate path, but Exp5529's
-   event/topic scores were identical and therefore not independent evidence. V502 must repair the metric,
-   add retrieval-warmed ablations, and only then try cross-model local SOTA memory transfer.
-
-3. **Operational embodiment is still receipt-heavy rather than capability-increasing.** Sparse repair has
-   bounded exact evidence, hardware has no matched timing, and ARC has no new live banked level. V502
-   should add a finite-state exact substrate, keep hardware receipt hygiene no-LLM and speedup-free unless
-   matched timing appears, and clean the ARC live-path substrate before one gated level-up attempt.
-
-## Architecture For V502
+## Architecture Direction
 
 ```text
- research-program / PRD / architecture / .501 capstone / source refresh / references
-                                      |
-                                      v
-                    +--------------------------------------+
-                    | V502 Transition + Source Delta       |
-                    +------------------+-------------------+
-                                       |
-       +-------------------------------+-------------------------------+
-       |                               |                               |
-       v                               v                               v
-+------------------------+     +-------------------------+     +------------------------+
-| Adversarial-Clean SOTA |     | Continuous Self-Learning|     | Exact Constraints      |
-| - duration/substrate   |     | - residue corrigendum   |     | - LLM-FSM fixture      |
-| - grammar preflight    |     | - five-arm retrieval    |     | - sparse descriptors   |
-| - live hard/soft v3    |     | - cross-model memory    |     | - exact fallback       |
-+-----------+------------+     +-----------+-------------+     +-----------+------------+
-            |                              |                               |
-            +------------------------------+-------------------------------+
-                                           |
-                                           v
-                           +-------------------------------+
-                           | Hardware + ARC Hygiene        |
-                           | - no-LLM receipt substrate    |
-                           | - no speedup without timing   |
-                           | - ARC no-LLM live precheck    |
-                           | - one gated live level-up     |
-                           +---------------+---------------+
-                                           |
-                                           v
-                           +-------------------------------+
-                           | Capstone / Spec Reconciliation|
-                           +-------------------------------+
+                 recent literature + .502 artifacts
+                               |
+                               v
+        +---------------- deterministic receipts ----------------+
+        |                                                        |
+        v                                                        v
+  automaton/GBNF row completion                         ASP + exact FSM fixture
+        |                                                        |
+        v                                                        v
+ grammar-forced SOTA row smoke                     descriptor sparse repair scale
+        |                                                        |
+        v                                                        |
+ gated SOTA hard/soft panel v4                                  |
+        |                                                        |
+        +------------------ claim ledger ------------------------+
+                               |
+                               v
+              causal write-manage-read CSL memory
+                               |
+                               v
+              gated cross-model SOTA CSL transfer
+                               |
+                               v
+        ARC live-path target rotation + level-up attempt
+                               |
+                               v
+             capstone reconciliation and ops docs
+
+ Hardware/timing receipt hygiene runs in parallel as evidence plumbing.
 ```
+
+The milestone intentionally separates deterministic support checks from live LLM calls. The LLM tasks are small, gated, and use the mandated local GGUF models:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Legacy small models may appear only as CPU smoke tests, never as headline-result models.
 
 ## Phase Plan
 
-### Phase 0 - Transition And Source Freshness
+### Phase 0 - Transition and Source Freshness
 
-**Goal:** Carry `.501` terminal evidence forward and make the execution plan current with new literature.
+`exp5550` records the `.502` evidence ledger, claim boundaries, and protected-file checks for the new conductor queue.
 
-- `exp5536-transition-v502` records `.501` clean, flagged, and blocked claims, including Exp5527
-  duration/substrate, Exp5529 tautology, Exp5532 hardware hygiene, and Exp5533/Exp5534 ARC hygiene.
-- `exp5537-v502-source-delta-ingestion` confirms the V502 reference refresh and maps LLM-FSM and
-  Gram2Token into concrete experiment hooks.
+`exp5551` does a narrow execution-time source delta and appends only genuinely new findings to `research-references.md`. It must not reopen retired PHASE D external text-scorer scopes.
 
-### Phase 1 - Adversarial-Clean SOTA And Finite-State Fixtures
+### Phase 1 - Grammar-Forced SOTA Rows
 
-**Goal:** Repair the local SOTA evidence boundary and add a deterministic exact constraint substrate.
+`exp5552` builds an automaton/schema row-completion receipt from the `.502` GBNF preflight and the P-GCD finite-automata idea. This is a no-LLM gate.
 
-- `exp5538-sota-panel-duration-substrate-corrigendum` reopens the Exp5527 claim boundary and either
-  produces authenticated live GGUF duration/offload evidence or records a no-live-quality downgrade.
-- `exp5539-gram2token-grammar-table-preflight` checks whether local grammar/table backends are available
-  and schema-reachable before relying on grammar-constrained generation.
-- `exp5540-gated-sota-hard-soft-live-panel-v3` runs only after the duration and grammar gates are clean.
-  It uses the mandated flagship GGUF models with exact-validator authority and no missing-row credit.
-- `exp5541-llm-fsm-exact-fixture` creates a deterministic finite-state exact fixture inspired by
-  LLM-FSM, with schema, reference synthesis, and SAT/exact checks.
+`exp5553` runs a small grammar-forced local SOTA row smoke only if the automaton receipt is clean. It checks whether the mandated GGUF models can produce complete schema-valid rows under GBNF constraints.
 
-### Phase 2 - Continuous Self-Learning Without Tautology
+`exp5554` runs the SOTA hard/soft panel v4 only if `exp5553` proves complete grammar-forced rows. It may produce a small quality claim only if schema validity, exact validation, candidate completeness, and adversarial checks all pass.
 
-**Goal:** Convert the `.501` CSL positives into non-tautological, retrieval-aware, conductor-visible
-evidence.
+### Phase 2 - ASP/FSM Sparse Repair
 
-- `exp5542-csl-residue-metric-independence-corrigendum` repairs the Exp5529 event/topic residue stress so
-  event-only and topic-only metrics are distinct evidence families.
-- `exp5543-gated-retrieval-warmed-csl-five-arm-ablation` runs only after the residue corrigendum is clean
-  and compares oracle, best-constant, per-query random, shuffled-memory, and aligned-memory arms.
-- `exp5544-gated-cross-model-sota-csl-transfer` runs the mandated local SOTA GGUF models only behind the
-  clean five-arm gate and tests whether memory learned from one model family transfers to another without
-  weight mutation.
+`exp5555` extends the exact FSM fixture with ASP/nonmonotonic constraint cases inspired by the 2026 ASP+EBM paper.
 
-### Phase 3 - Sparse Repair, Hardware Hygiene, ARC Live Path, Capstone
+`exp5556` scales descriptor-guided sparse repair over the ASP/FSM fixture only if the exact fixture is ready. It preserves the no-speedup boundary unless matched timing exists.
 
-**Goal:** Improve operational reach without claiming unearned speedups or offline solves.
+### Phase 3 - Causal Continuous Self-Learning
 
-- `exp5545-gated-sparse-repair-fsm-descriptor-scale` uses the finite-state exact fixture to create a
-  richer sparse-repair descriptor family and records exact fallback plus matched-iteration evidence.
-- `exp5546-hardware-receipt-substrate-corrigendum` repairs the Exp5532 artifact class by removing
-  accidental GGUF/CUDA live-model markers unless a model actually runs, adding seed/checksum fields, and
-  keeping `hardware_speedup_claim=false` without matched authenticated timing.
-- `exp5547-arc-no-llm-substrate-precheck` repairs the ARC precheck artifact class: no model specs unless
-  an LLM proposer is invoked, explicit seed/checksum, registry duplicate check, and live-agent provenance.
-- `exp5548-gated-arc-clean-live-levelup` performs one gated live ARC attempt with
-  `solve_provenance=live_agent_self_discovery` and registry banking requirements.
-- `exp5549-v502-capstone-reconciliation` reconciles artifacts, gates, status, changelog, and claim
-  boundaries without modifying `research-roadmap.yaml` or `scripts/research_conductor.py`.
+`exp5557` repairs the `.502` five-arm CSL tautology and refuses any CSL claim unless the best-constant and per-query-random baselines separate.
+
+`exp5558` implements a causal write-manage-read memory check with forbidden-direction memory. This is the milestone's required continuous self-learning experiment.
+
+`exp5559` retries cross-model SOTA CSL transfer only if the causal CSL memory task produces an allowed CSL claim.
+
+### Phase 4 - Hardware Receipts, ARC, and Capstone
+
+`exp5560` cleans hardware and timing receipt hygiene without claiming speedup. It keeps the conductor untouched.
+
+`exp5561` rotates the ARC target using registry precheck and FSM action abstraction, avoiding duplicate solves and recent no-bank targets.
+
+`exp5562` runs a gated live ARC level-up attempt using only `live_agent_self_discovery` provenance.
+
+`exp5563` performs the capstone reconciliation, updates ops docs, records flags/skips/nulls, and confirms `research-roadmap.yaml` and `scripts/research_conductor.py` were not modified.
 
 ## Dependency Graph
 
 ```text
-exp5536 transition
-  |
-  v
-exp5537 source delta
-  |
-  +--> exp5538 SOTA duration/substrate corrigendum
-  |       |
-  |       v
-  |     exp5539 grammar-table preflight
-  |       |
-  |       v
-  |     exp5540 SOTA hard/soft live panel v3
-  |
-  +--> exp5541 LLM-FSM exact fixture
-  |       |
-  |       v
-  |     exp5545 sparse repair FSM descriptor scale
-  |
-  +--> exp5542 CSL residue metric corrigendum
-  |       |
-  |       v
-  |     exp5543 retrieval-warmed CSL five-arm ablation
-  |       |
-  |       v
-  |     exp5544 cross-model SOTA CSL transfer
-  |
-  +--> exp5546 hardware receipt substrate corrigendum
-  |
-  +--> exp5547 ARC no-LLM substrate precheck
-          |
-          v
-        exp5548 ARC clean live level-up
+exp5550
+exp5551
 
-all terminal evidence --> exp5549 capstone
+exp5552
+  -> exp5553
+       -> exp5554
+
+exp5555
+  -> exp5556
+
+exp5557
+  -> exp5558
+       -> exp5559
+
+exp5560
+
+exp5561
+  -> exp5562
+
+exp5550, exp5551, exp5554, exp5556, exp5558, exp5559, exp5560, exp5562
+  -> exp5563
 ```
 
-Structured conductor gates:
-
-- `exp5540` requires `exp5538.sota_panel_duration_corrigendum_ready == true` and
-  `exp5539.grammar_table_preflight_ready == true`.
-- `exp5543` requires `exp5542.csl_residue_tautology_resolved == true`.
-- `exp5544` requires `exp5543.csl_five_arm_ready == true`.
-- `exp5545` requires `exp5541.exact_fsm_fixture_ready == true`.
-- `exp5548` requires `exp5547.arc_clean_precheck_ready == true`.
-- `exp5549` reads all prior artifacts and reports any skipped gates explicitly.
+All structured gates are also encoded in `research-roadmap-next.yaml` so the conductor can skip downstream work without spending a synthesis call.
 
 ## Hardware Requirements
 
-- **Local SOTA GGUF lane:** Use only the mandated local SOTA GGUF headline models when an experiment needs
-  LLM inference:
-  - `unsloth/Qwen3.6-35B-A3B-GGUF`
-  - `unsloth/gemma-4-31B-it-GGUF`
-  - `unsloth/gemma-4-26B-A4B-it-GGUF`
-  Legacy small models are allowed only as CPU smoke-tests and cannot be headline results.
-- **GPU evidence:** SOTA experiments must record model specs, runtime backend, GPU/offload evidence where
-  applicable, command lines or helper paths used, measured duration, seeds, and exact-validator handoff.
-  Missing rows are not abstentions.
-- **Hardware lane:** KV260, GateMate, PolarFire, CUDA, and CPU receipts are receipt-only unless the
-  artifact includes matched authenticated workload timing and workload hashes. KV260 access must stay on
-  the safe SSH/xmutil/UIO path; no host SD-card probing.
-- **ARC lane:** ARC live-path tasks must use `solve_provenance=live_agent_self_discovery`, run the registry
-  precheck before targeting a level, and avoid offline source reading, exhaustive ground-truth BFS, or
-  per-game hand adapters as headline evidence.
+The milestone can complete without new hardware. Hardware-sensitive tasks must follow the current continuity rules:
+
+- Dual RTX 3090 is the preferred local SOTA path for GGUF inference receipts.
+- KV260 work must use SSH, `xmutil`, and UIO-safe paths only. Do not use SD-card, `/dev/mmcblk`, or host-block-device preconditions.
+- GateMate work remains IDCODE/dirtyJTAG limited unless a clean authenticated path appears.
+- PolarFire work remains SSH/workload-receipt limited unless matched timing is available.
+- Extropic TSU hardware is watch-only; no local TSU claim is allowed.
+- No hardware speedup claim is allowed unless matched hardware-vs-baseline timing receipts are captured in the same experiment.
 
 ## Claim Boundaries
 
-- A SOTA hard/soft reasoning claim is allowed only if `exp5540` is schema-valid, exact-validated,
-  adversarial-clean, and live-substrate evidence from `exp5538` remains clean.
-- A continuous self-learning claim is allowed only if `exp5542` resolves the residue tautology, `exp5543`
-  shows aligned memory beating shuffled/random controls, and `exp5544` records no weight mutation.
-- A sparse repair claim is bounded to exact-checked descriptor evidence unless matched timing appears.
-- A hardware speedup claim is false by default and can become true only with matched authenticated timing.
-- ARC solve credit is allowed only for live-agent self-discovery that is banked in the registry with
-  `offline_reproduced=true` and `reproduced_levels>=1`.
+- No SOTA hard/soft claim unless grammar-forced live rows are complete, schema-valid, exactly validated, and adversarial-clean.
+- No CSL claim unless the five-arm tautology is resolved and causal write-manage-read memory beats shuffled/no-memory controls.
+- No cross-model CSL transfer claim unless cross-family transfer shows positive delta over shuffled memory and no negative-transfer spike.
+- No sparse-repair speedup claim without matched timing.
+- No ARC solve credit without `solve_provenance: live_agent_self_discovery`.
+- No hardware speedup claim in `.503` unless matched timing unexpectedly becomes available and passes adversarial review.
 
 ## Expected Exit Criteria
 
-By the end of `.502`, Carnot should have:
+The milestone is successful if it produces at least one of the following:
 
-1. A clean answer on whether the `.501` SOTA hard/soft panel can become live evidence or must remain a
-   repaired-structured-output fixture.
-2. A grammar-table availability receipt that prevents another blind schema-validity rerun.
-3. A deterministic finite-state exact fixture ready for SOTA, sparse repair, and future hardware tasks.
-4. CSL evidence that separates event-only, topic-only, shuffled, random, and aligned memory effects.
-5. Hardware and ARC artifacts that no longer trip avoidable methodology flags for wrong substrate,
-   missing seeds, or missing checksums.
-6. One gated ARC live-path level-up attempt with honest registry outcome, whether positive or null.
+- A complete grammar-forced SOTA row path that allows a bounded hard/soft panel claim.
+- A non-tautological CSL memory result with causal support and explicit no-weight-mutation evidence.
+- A stronger exact ASP/FSM sparse-repair fixture with descriptor-guided improvement over random controls.
+- A clean ARC live-path registry delta.
+
+It is also acceptable, and useful, if the milestone produces honest nulls that narrow these claims while keeping receipts clean and docs reconciled.
