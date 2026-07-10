@@ -29434,6 +29434,99 @@ fixture intent, and SHALL keep `no_llm_invoked=true` regardless of outcome.
 |---|---|---|
 | REQ-VERIFY-5541 | Planned (`python/carnot/experiment_5541_llm_fsm_exact_fixture.py`, `results/experiment_5541_llm_fsm_exact_fixture.json`) | Planned (`tests/python/test_experiment_5541_llm_fsm_exact_fixture.py`) |
 
+### REQ-VERIFY-5545: Sparse Repair FSM Descriptor Scale
+
+The repository SHALL provide Exp 5545 at
+`python/carnot/experiment_5545_sparse_repair_fsm_descriptor_scale.py` and write
+`results/experiment_5545_sparse_repair_fsm_descriptor_scale.json` as an
+exact-checked sparse repair panel over the finite-state fixtures from Exp 5541.
+Exp 5545 SHALL first confirm that the upstream artifact
+`results/experiment_5541_llm_fsm_exact_fixture.json` has
+`exact_fsm_fixture_ready=true`. It SHALL derive active sparse repair
+descriptors from finite-state transition conflicts, unreachable states, and
+trace contradictions or underdetermined traces, and SHALL compare
+descriptor-guided repair, same-size random block repair, and exact-only
+fallback over the same FSM instance set and random seeds.
+
+Every proposed repair SHALL be checked by the Exp 5541 exact FSM validators.
+Descriptor-guided and random-block policies MAY record iteration counts and
+local wall observations, but Exp 5545 SHALL NOT claim speedup unless matched
+authenticated timing is present. For this experiment,
+`matched_timing_available` SHALL be `false` and `speedup_claim_allowed` SHALL
+be `false`. Exp 5545 SHALL NOT invoke an LLM, SHALL NOT train or load a model,
+and SHALL NOT modify `scripts/research_conductor.py`.
+`speedup_claim_allowed` SHALL be `false` whenever matched authenticated timing
+is absent.
+
+The artifact SHALL include at minimum these top-level fields:
+`fsm_instance_count`, `random_seed_count`,
+`descriptor_guided_success_rate`, `random_block_success_rate`,
+`exact_only_success_rate`, `descriptor_mean_iterations`,
+`random_mean_iterations`, `exact_fallback_used`,
+`exact_validator_all_repairs_checked`, `matched_timing_available`,
+`speedup_claim_allowed`, `sparse_repair_fsm_ready`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`exact_checked_sparse_repair_fsm_no_llm`; `honest_verdict` SHALL start with
+`complete:` or `blocked:`; and `field_principles` SHALL annotate every
+headline and gate field listed above.
+
+Field principles:
+
+- `fsm_instance_count`: Keeps the finite-state denominator visible for every
+  policy comparison.
+- `random_seed_count`: Records deterministic seed breadth instead of a single
+  lucky block draw.
+- `descriptor_guided_success_rate`: Measures active-descriptor repair only
+  after exact FSM acceptance.
+- `random_block_success_rate`: Provides a same-size random-block control on
+  the same fixtures and seeds.
+- `exact_only_success_rate`: Records the exact fallback authority on the same
+  fixtures and seeds.
+- `descriptor_mean_iterations`: Counts exact validator checks for
+  descriptor-guided repair without making a speedup claim.
+- `random_mean_iterations`: Counts exact validator checks for the random-block
+  control without making a speedup claim.
+- `exact_fallback_used`: Confirms exact FSM validation remains the acceptance
+  authority for repairs.
+- `exact_validator_all_repairs_checked`: Confirms every proposed repair has an
+  exact accept or reject decision.
+- `matched_timing_available`: Gates any future timing language to authenticated
+  matched measurements.
+- `speedup_claim_allowed`: Must remain false without matched authenticated
+  timing.
+- `sparse_repair_fsm_ready`: Opens only when the upstream fixture is ready,
+  exact checks cover every repair, and the descriptor panel succeeds.
+- `tests_added_or_reused`: Names focused tests and reused exact-fixture tests.
+- `field_principles`: Keeps headline and gate fields annotated by evidence
+  boundaries.
+- `inference_substrate`: Declares exact-checked sparse FSM repair with no LLM.
+- `honest_verdict`: Provides a terminal evidence boundary without speedup
+  language.
+
+### SCENARIO-VERIFY-5545: Descriptor-Guided FSM Repairs Are Exact Checked
+
+Given the Exp 5541 upstream artifact is ready, when Exp 5545 runs, then it
+loads the same FSM fixtures, extracts sparse descriptors from transition
+conflicts, unreachable states, and trace contradictions or underdetermined
+traces, builds canonical bounded repairs, and validates every descriptor-guided,
+random-block, and exact-only candidate with the Exp 5541 exact FSM checker.
+The result JSON SHALL report success rates, iteration means, exact-fallback
+usage, and a ready gate without any speedup claim.
+
+If the upstream fixture is not ready, if any descriptor lacks exact-validator
+evidence, if any candidate repair is not checked, if descriptor-guided repair
+fails on an active FSM row, or if matched authenticated timing is absent, then
+Exp 5545 SHALL keep `sparse_repair_fsm_ready=false` or
+`speedup_claim_allowed=false` as applicable and SHALL emit a terminal
+`complete:` or `blocked:` verdict.
+
+## Implementation Status (REQ-VERIFY-5545)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5545 | Planned (`python/carnot/experiment_5545_sparse_repair_fsm_descriptor_scale.py`, `results/experiment_5545_sparse_repair_fsm_descriptor_scale.json`) | Planned (`tests/python/test_experiment_5545_sparse_repair_fsm_descriptor_scale.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
