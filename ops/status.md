@@ -1,6 +1,44 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-10 (Milestone 2026.07.501 Planning Staged)
+**Last Updated:** 2026-07-10 (Milestone 2026.07.502 Planning Staged)
+
+## Session 2026-07-10 - Milestone 2026.07.502 Planning Staged
+
+Planned the next research milestone after the operator reported `.501`
+complete. The staged `.502` roadmap focuses on repairing adversarial flags
+from `.501`: SOTA hard/soft duration and substrate evidence, CSL residue
+tautology, no-LLM hardware receipt hygiene, and ARC seed/checksum/substrate
+metadata. It also adds a finite-state exact fixture inspired by LLM-FSM and a
+Gram2Token-style grammar-table preflight before another flagship GGUF panel.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`, including LLM-FSM for
+finite-state exact fixtures and Gram2Token for grammar-table preflight. FLaG,
+free-energy signatures, Extropic TSU, and Logical Intelligence Kona/Aleph
+remain watch-only until Carnot has executable local evidence.
+
+The `.502` plan contains 14 conductor tasks across transition/source refresh,
+SOTA duration/substrate corrigendum, grammar preflight, gated hard/soft panel
+v3, LLM-FSM exact fixtures, CSL residue metric repair, retrieval-warmed
+five-arm CSL, gated cross-model SOTA CSL transfer, sparse repair over finite
+state descriptors, hardware receipt substrate hygiene, ARC no-LLM precheck,
+one gated ARC live level-up attempt, and capstone reconciliation. All
+LLM-bearing prompts include the mandated local SOTA GGUF model specs, and the
+ARC level-up task records `solve_provenance: live_agent_self_discovery` with
+post-solve banking through `offline_reproduced=true` and
+`reproduced_levels>=1`.
+
+Validation for this planning task: YAML parsing, prompt-shape checks,
+SOTA model-spec checks, `scripts/validate_prior_failures.py`,
+`scripts/audit_roadmap_gates.py`, `scripts/exclusion_manifest_lint.py`,
+`scripts/arc_levelup_guarantee_lint.py --min 1 research-roadmap-next.yaml`,
+`scripts/overdue_priority_lint.py`, touched-file `git diff --check`,
+protected-file diff checks, and `scripts/operator_curated_docs_lint.py`
+passed. Repo-wide `scripts/check_spec_coverage.py` still fails on the
+pre-existing traceability backlog (`1262 test(s) missing spec traceability`).
+No implementation code, active roadmap, conductor, model-training run, or
+hardware workload was changed.
 
 ## Session 2026-07-10 - Milestone 2026.07.501 Planning Staged
 

@@ -17,6 +17,22 @@
 > the actual competition close). The task list immediately below (perception audit -> classical salience
 > front-end -> ontology-error pilot) is the current content feeding this floor.
 
+> **UPDATE 2026-07-10 (operator authorization): task 8 (TRM-as-generator, PTRM-style) gets its OWN
+> dedicated reserved slot, starting next milestone, on top of the standing floor.** Operator directive
+> ("let's add a milestone slot for task 8") clears the "flag for explicit operator go-ahead before
+> consuming a milestone slot on it" condition task 8 was staged with. Because task 8 is a genuinely
+> heavier commitment than tasks 1-7 (real GPU training time, likely spanning data prep -> training ->
+> held-out evaluation across more than one milestone, not a single-task pilot), it is NOT just another
+> item competing for the standing floor's generic >=1-ARC-task minimum — it is a SEPARATE, ADDITIONAL
+> reserved slot. Every milestone from .502 onward MUST include a task 8 slot (data prep / training run /
+> evaluation, whichever stage is next) UNTIL task 8 either lands a `retire_if_same_verdict` result (its own
+> falsifiable gate: no held-out generalization signal on the leave-one-game-out check) or genuinely
+> advances (a held-out signal, warranting the next stage of the 4-stage hidden-game-adaptation plan). This
+> reservation is scoped to task 8's own completion, not open-ended through November like the broader
+> standing floor — it retires the moment task 8 reaches a verdict, at which point the milestone reverts to
+> the standing floor's normal >=1-slot minimum. `track: arc-trm-generator` for auditability, distinct from
+> the general `track: arc` tag.
+
 **Origin:** 2026-07-06 operator directive. Per the 2026-06-30 Phase D entry below, ARC dropped from
 majority lever to opportunistic-only once the submission sprint deadline passed. The operator asked to
 resume ACTIVE novel-idea generation for ARC-AGI-3 — but first confirm we haven't tried the idea before. This
@@ -178,10 +194,12 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    adaptation plan built on top of it — do not re-propose a 5th variant. `DO_NOT_RELAUNCH` sentinel check:
    does NOT apply (scoped narrowly to the Sudoku-Extreme verifier-graft training run per
    `results/trm_runs/DO_NOT_RELAUNCH` and the prior outer-loop confirmation in
-   `docs/research-notes/trm-arc-action-sequence-generator-2026-07-04.md`), but this is still a meaningfully
-   bigger commitment than tasks 1-7 (real GPU training time, not a pilot) — flag for explicit operator
-   go-ahead before consuming a milestone slot on it, given the heavier cost and the four-pilot null track
-   record. Does NOT invalidate the original Sudoku precedent (TRM's actual validated architecture on a
+   `docs/research-notes/trm-arc-action-sequence-generator-2026-07-04.md`). **Operator go-ahead GIVEN
+   2026-07-10 — see the UPDATE block at the top of this entry for the dedicated reserved-slot mandate
+   starting .502.** This remains a meaningfully bigger commitment than tasks 1-7 (real GPU training time,
+   not a pilot) given the four-pilot null track record, so report progress/blockers honestly at each stage
+   rather than rushing to a premature verdict. Does NOT invalidate the original Sudoku precedent (TRM's
+   actual validated architecture on a
    genuinely different, constraint-structured task, 18.2% solve vs AR's ~0-0.2%) — only that four
    deterministic, fixed-depth, non-history-conditioned reimplementations don't replicate the effect on this
    specific interactive-action-sequence task.

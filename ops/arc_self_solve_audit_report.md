@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (48 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (49 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,20 +16,15 @@ OK: all solver-like ARC modules are reachable from the live agent path (48 modul
 
 ## Hostile LLM review
 
-TL;DR: **No recent ARC solve artifacts, so no new `SELF_DISCOVERY_ADVANCE` credit.** Reachability pre-pass is clean, but there is nothing to validate.
+TL;DR: **No creditable ARC self-discovery advance this window.** Reachability lint is clean, but there are **0 recent solve artifacts**, so there is nothing to classify as live-agent progress.
 
-**Per-Artifact**
-None. `RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
+**Per-Artifact Review**
 
-**Evidence**
-- Live entrypoints listed.
-- Orphan solver lint passed: all solver-like ARC modules reachable from live closure.
-- No recent solve artifacts provided.
-- Therefore no artifact proves the live agent discovered a hidden-game solve from its own attempts/runtime reverse-engineering.
+No artifacts present.
 
-**Recommended Action**
-No registry advancement. Require future artifacts to include live-entrypoint provenance: command, logs, attempts, observations, runtime model updates, and final solve path.
+`RECENT ARC SOLVE ARTIFACTS (last 7d): 0`
 
 **Pattern Watch**
-No direct drift visible in this batch because there are no artifacts. Continue treating any source-reading, offline BFS, hand-built game model, or unreachable solver result as `OUTER_LOOP_RE` or `OFF_PATH` by default.
+
+No direct evidence of outer-loop solving in this batch because there are no artifacts. Also no evidence of new live capability. A clean reachability pre-pass only proves solver modules are on-path; it does **not** prove the live agent discovered any hidden-game solves from its own attempts.
 

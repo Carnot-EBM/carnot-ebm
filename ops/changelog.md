@@ -1,5 +1,29 @@
 # Carnot — Changelog
 
+## 2026-07-10 (Milestone 2026.07.502 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V502 planner refresh to `research-references.md`, incorporating
+  LLM-FSM for deterministic finite-state exact fixtures and Gram2Token for
+  grammar-table preflight, while keeping FLaG, free-energy signatures,
+  Extropic TSU, and Logical Intelligence Kona/Aleph watch-only until local
+  executable evidence exists.
+- The `.502` plan contains 14 conductor tasks across transition/source
+  refresh, SOTA duration/substrate corrigendum, grammar-table preflight, gated
+  hard/soft panel v3, LLM-FSM exact fixtures, CSL residue metric repair,
+  retrieval-warmed five-arm CSL, gated cross-model SOTA CSL transfer, sparse
+  repair over finite-state descriptors, hardware receipt substrate hygiene, ARC
+  no-LLM substrate precheck, one gated ARC live level-up attempt, and capstone
+  reconciliation.
+- Validation passed for YAML parsing, prompt-shape audit, SOTA model-spec
+  audit, prior-failure validation, gate audit, exclusion-manifest lint, ARC
+  level-up guarantee lint, overdue-priority lint, touched-file whitespace
+  checks, protected-file diff checks, and operator-curated docs lint. Repo-wide
+  spec coverage remains blocked by the pre-existing traceability backlog
+  (`1262 test(s) missing spec traceability`).
+
 ## 2026-07-10 (Milestone 2026.07.501 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
