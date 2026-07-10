@@ -1,0 +1,548 @@
+{
+  "diagnostic_rows": {
+    "fixture": [
+      {
+        "abstention_reason": "",
+        "assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "candidate_id": "claim_support_preference_exact_assignment_5512",
+        "exact_validator_correct": true,
+        "exact_validator_target": {
+          "expected_status": "optimal",
+          "hard_constraint_ids": [
+            "HC_SUPPORT_ENTAILED",
+            "HC_SCOPE_BOUNDED"
+          ],
+          "instance_id": "claim_support_preference",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_PRIMARY_SOURCE",
+            "SP_ENTAILED_SUPPORT",
+            "SP_BOUNDED_SCOPE"
+          ],
+          "typed_claim_names": [
+            "support",
+            "source_quality",
+            "scope"
+          ]
+        },
+        "exact_validator_verdict": "exact_match",
+        "first_failure": null,
+        "gpu_offload_receipt": {},
+        "grammar_backend": "deterministic_fixture",
+        "grammar_mask_applied": true,
+        "hard_constraints_pass": true,
+        "instance_id": "claim_support_preference",
+        "json_extraction_succeeded": true,
+        "max_tokens": null,
+        "output_byte_length": 6502,
+        "output_byte_length_source": "fixture_wrapper",
+        "parse_status": "schema_valid_assignment",
+        "parseable": true,
+        "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+        "prompt_prefix_hash": "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866",
+        "reference_agreement": true,
+        "row_source": "fixture",
+        "schema_errors": [],
+        "schema_valid": true,
+        "secondary_failures": [],
+        "soft_optimal": true,
+        "soft_score": 11.0,
+        "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+        "stop_strings": [],
+        "truncation_marker": null,
+        "validator_target_ready": true
+      },
+      {
+        "abstention_reason": "",
+        "assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+        "exact_validator_correct": true,
+        "exact_validator_target": {
+          "expected_status": "optimal",
+          "hard_constraint_ids": [
+            "HC_SAFETY_SAFE",
+            "HC_CITATION_PRESENT"
+          ],
+          "instance_id": "claim_safety_conflict",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_ACCEPT_WHEN_SAFE",
+            "SP_SAFE_LABEL",
+            "SP_CITATION_PRESENT"
+          ],
+          "typed_claim_names": [
+            "safety",
+            "citation",
+            "action"
+          ]
+        },
+        "exact_validator_verdict": "exact_match",
+        "first_failure": null,
+        "gpu_offload_receipt": {},
+        "grammar_backend": "deterministic_fixture",
+        "grammar_mask_applied": true,
+        "hard_constraints_pass": true,
+        "instance_id": "claim_safety_conflict",
+        "json_extraction_succeeded": true,
+        "max_tokens": null,
+        "output_byte_length": 6502,
+        "output_byte_length_source": "fixture_wrapper",
+        "parse_status": "schema_valid_assignment",
+        "parseable": true,
+        "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+        "prompt_prefix_hash": "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866",
+        "reference_agreement": true,
+        "row_source": "fixture",
+        "schema_errors": [],
+        "schema_valid": true,
+        "secondary_failures": [],
+        "soft_optimal": true,
+        "soft_score": 12.0,
+        "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+        "stop_strings": [],
+        "truncation_marker": null,
+        "validator_target_ready": true
+      },
+      {
+        "abstention_reason": "hard_constraints_infeasible: HC_VERDICT_ACCEPT, HC_VERDICT_REJECT",
+        "assignment": null,
+        "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+        "exact_validator_correct": true,
+        "exact_validator_target": {
+          "expected_status": "infeasible",
+          "hard_constraint_ids": [
+            "HC_VERDICT_ACCEPT",
+            "HC_VERDICT_REJECT"
+          ],
+          "instance_id": "claim_infeasible_negative_control",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+            "SP_EVIDENCE_PRESENT"
+          ],
+          "typed_claim_names": [
+            "verdict",
+            "evidence"
+          ]
+        },
+        "exact_validator_verdict": "correct_abstention",
+        "first_failure": null,
+        "gpu_offload_receipt": {},
+        "grammar_backend": "deterministic_fixture",
+        "grammar_mask_applied": true,
+        "hard_constraints_pass": false,
+        "instance_id": "claim_infeasible_negative_control",
+        "json_extraction_succeeded": true,
+        "max_tokens": null,
+        "output_byte_length": 6502,
+        "output_byte_length_source": "fixture_wrapper",
+        "parse_status": "schema_valid_abstention",
+        "parseable": true,
+        "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+        "prompt_prefix_hash": "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866",
+        "reference_agreement": true,
+        "row_source": "fixture",
+        "schema_errors": [],
+        "schema_valid": true,
+        "secondary_failures": [],
+        "soft_optimal": false,
+        "soft_score": null,
+        "source_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+        "stop_strings": [],
+        "truncation_marker": null,
+        "validator_target_ready": true
+      }
+    ],
+    "live": [
+      {
+        "abstention_reason": "",
+        "assignment": null,
+        "candidate_id": "...",
+        "exact_validator_correct": false,
+        "exact_validator_target": null,
+        "exact_validator_verdict": "not_handed_off",
+        "first_failure": "prompt_contract_miss",
+        "gpu_offload_receipt": {
+          "gpu_memory_delta_mb": 21228.0,
+          "gpu_offload_verified": true,
+          "llama_cpp_cuda_available": true,
+          "offload_diagnostics": [
+            {
+              "available": true,
+              "detail": "nvidia-smi memory delta 21228.000 MB",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "n_gpu_layers": -1,
+              "resource": "llama_cpp_gpu_offload"
+            }
+          ]
+        },
+        "grammar_backend": "llama_cpp_gbnf",
+        "grammar_mask_applied": false,
+        "hard_constraints_pass": false,
+        "instance_id": null,
+        "json_extraction_succeeded": true,
+        "max_tokens": 2048,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "output_byte_length": 500,
+        "output_byte_length_source": "raw_output_preview",
+        "parse_status": "schema_invalid",
+        "parseable": false,
+        "parsed_payload": {
+          "candidate_id": "...",
+          "claimed_exact_validator_verdict": "..."
+        },
+        "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+        "prompt_prefix_hash": "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866",
+        "proof_claim_consistent": null,
+        "proof_claimed_exact_validator_verdict": null,
+        "reference_agreement": false,
+        "row_source": "live_emitted",
+        "schema_errors": [
+          "$.candidate_schema_version is required",
+          "$.instance_id is required",
+          "$.premises is required",
+          "$.rules_or_constraints is required",
+          "$.conclusion is required",
+          "$.abstention_reason is required",
+          "$.validator_target is required",
+          "$.claimed_exact_validator_verdict is not allowed"
+        ],
+        "schema_valid": false,
+        "secondary_failures": [
+          "grammar_mask_not_applied",
+          "max_tokens_truncation",
+          "json_schema_invalid",
+          "required_field_missing"
+        ],
+        "soft_optimal": false,
+        "soft_score": null,
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5513_sota_hard_soft_structured_panel.json",
+        "stop_strings": [],
+        "truncation_marker": "completion_tokens_reached_max_tokens",
+        "validator_target_ready": false
+      },
+      {
+        "candidate_id": null,
+        "exact_validator_correct": false,
+        "exact_validator_target": {
+          "expected_status": "infeasible",
+          "hard_constraint_ids": [
+            "HC_VERDICT_ACCEPT",
+            "HC_VERDICT_REJECT"
+          ],
+          "instance_id": "claim_infeasible_negative_control",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+            "SP_EVIDENCE_PRESENT"
+          ],
+          "typed_claim_names": [
+            "verdict",
+            "evidence"
+          ]
+        },
+        "exact_validator_verdict": "not_handed_off",
+        "first_failure": "semantic_candidate_absent",
+        "gpu_offload_receipt": {
+          "gpu_memory_delta_mb": 21228.0,
+          "gpu_offload_verified": true,
+          "llama_cpp_cuda_available": true,
+          "offload_diagnostics": [
+            {
+              "available": true,
+              "detail": "nvidia-smi memory delta 21228.000 MB",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "n_gpu_layers": -1,
+              "resource": "llama_cpp_gpu_offload"
+            }
+          ]
+        },
+        "grammar_backend": "llama_cpp_gbnf",
+        "grammar_mask_applied": false,
+        "instance_id": "claim_infeasible_negative_control",
+        "json_extraction_succeeded": false,
+        "max_tokens": 2048,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "output_byte_length": 500,
+        "output_byte_length_source": "raw_output_preview",
+        "parse_status": "missing_candidate_row",
+        "parseable": false,
+        "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+        "prompt_prefix_hash": "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866",
+        "row_source": "live_missing",
+        "schema_errors": [],
+        "schema_valid": false,
+        "secondary_failures": [
+          "max_tokens_truncation"
+        ],
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5513_sota_hard_soft_structured_panel.json",
+        "stop_strings": [],
+        "truncation_marker": "completion_tokens_reached_max_tokens"
+      },
+      {
+        "candidate_id": null,
+        "exact_validator_correct": false,
+        "exact_validator_target": {
+          "expected_status": "optimal",
+          "hard_constraint_ids": [
+            "HC_SAFETY_SAFE",
+            "HC_CITATION_PRESENT"
+          ],
+          "instance_id": "claim_safety_conflict",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_ACCEPT_WHEN_SAFE",
+            "SP_SAFE_LABEL",
+            "SP_CITATION_PRESENT"
+          ],
+          "typed_claim_names": [
+            "safety",
+            "citation",
+            "action"
+          ]
+        },
+        "exact_validator_verdict": "not_handed_off",
+        "first_failure": "semantic_candidate_absent",
+        "gpu_offload_receipt": {
+          "gpu_memory_delta_mb": 21228.0,
+          "gpu_offload_verified": true,
+          "llama_cpp_cuda_available": true,
+          "offload_diagnostics": [
+            {
+              "available": true,
+              "detail": "nvidia-smi memory delta 21228.000 MB",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "n_gpu_layers": -1,
+              "resource": "llama_cpp_gpu_offload"
+            }
+          ]
+        },
+        "grammar_backend": "llama_cpp_gbnf",
+        "grammar_mask_applied": false,
+        "instance_id": "claim_safety_conflict",
+        "json_extraction_succeeded": false,
+        "max_tokens": 2048,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "output_byte_length": 500,
+        "output_byte_length_source": "raw_output_preview",
+        "parse_status": "missing_candidate_row",
+        "parseable": false,
+        "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+        "prompt_prefix_hash": "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866",
+        "row_source": "live_missing",
+        "schema_errors": [],
+        "schema_valid": false,
+        "secondary_failures": [
+          "max_tokens_truncation"
+        ],
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5513_sota_hard_soft_structured_panel.json",
+        "stop_strings": [],
+        "truncation_marker": "completion_tokens_reached_max_tokens"
+      },
+      {
+        "candidate_id": null,
+        "exact_validator_correct": false,
+        "exact_validator_target": {
+          "expected_status": "optimal",
+          "hard_constraint_ids": [
+            "HC_SUPPORT_ENTAILED",
+            "HC_SCOPE_BOUNDED"
+          ],
+          "instance_id": "claim_support_preference",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_PRIMARY_SOURCE",
+            "SP_ENTAILED_SUPPORT",
+            "SP_BOUNDED_SCOPE"
+          ],
+          "typed_claim_names": [
+            "support",
+            "source_quality",
+            "scope"
+          ]
+        },
+        "exact_validator_verdict": "not_handed_off",
+        "first_failure": "semantic_candidate_absent",
+        "gpu_offload_receipt": {
+          "gpu_memory_delta_mb": 21228.0,
+          "gpu_offload_verified": true,
+          "llama_cpp_cuda_available": true,
+          "offload_diagnostics": [
+            {
+              "available": true,
+              "detail": "nvidia-smi memory delta 21228.000 MB",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "n_gpu_layers": -1,
+              "resource": "llama_cpp_gpu_offload"
+            }
+          ]
+        },
+        "grammar_backend": "llama_cpp_gbnf",
+        "grammar_mask_applied": false,
+        "instance_id": "claim_support_preference",
+        "json_extraction_succeeded": false,
+        "max_tokens": 2048,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "output_byte_length": 500,
+        "output_byte_length_source": "raw_output_preview",
+        "parse_status": "missing_candidate_row",
+        "parseable": false,
+        "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+        "prompt_prefix_hash": "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866",
+        "row_source": "live_missing",
+        "schema_errors": [],
+        "schema_valid": false,
+        "secondary_failures": [
+          "max_tokens_truncation"
+        ],
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5513_sota_hard_soft_structured_panel.json",
+        "stop_strings": [],
+        "truncation_marker": "completion_tokens_reached_max_tokens"
+      }
+    ]
+  },
+  "exact_validator_handoff_ready": false,
+  "experiment": 5525,
+  "experiment_id": "exp5525-sota-schema-failure-taxonomy",
+  "failure_taxonomy_counts": {
+    "exact_validator_mismatch": 0,
+    "grammar_mask_not_applied": 0,
+    "grammar_runtime_unavailable": 0,
+    "json_extraction_failure": 0,
+    "json_schema_invalid": 0,
+    "max_tokens_truncation": 0,
+    "prompt_contract_miss": 1,
+    "required_field_missing": 0,
+    "runtime_unavailable": 0,
+    "semantic_candidate_absent": 3
+  },
+  "field_principles": {
+    "exact_validator_handoff_ready": "Records whether live rows reached the deterministic hard/soft validator authority.",
+    "failure_taxonomy_counts": "Makes the first observed interface failure auditable instead of collapsing all failures into invalid JSON.",
+    "field_principles": "Explains why each headline and gate field exists so future agents preserve the audit boundary.",
+    "fixture_rows_checked": "Confirms the deterministic positive-control rows still pass before interpreting live failures.",
+    "gpu_offload_evidence": "Preserves CUDA and memory-delta evidence for any live SOTA GGUF row.",
+    "grammar_mask_applied": "Shows whether an available grammar was actually passed into the live generation call.",
+    "grammar_runtime_available": "Separates missing constrained-decoding infrastructure from model behavior.",
+    "honest_verdict": "Provides a terminal status that cannot promote malformed live rows into success.",
+    "inference_substrate": "Declares fixture plus live-smoke diagnosis rather than a full headline SOTA panel.",
+    "json_extraction_success_rate": "Distinguishes finding any JSON payload from validating the required schema.",
+    "live_rows_checked": "Counts emitted and missing live row slots so absent candidates cannot disappear from rates.",
+    "model_specs": "Names the exact mandated local GGUF candidates so fixture success is not mistaken for an unnamed model claim.",
+    "prompt_prefix_hashes": "Content-addresses the prompt contract that the live model saw before candidate-specific payloads.",
+    "schema_validity_rate": "Measures live schema conformance without letting fixture rows mask live invalidity.",
+    "smoke_models_used": "Identifies which model actually supplied live evidence and keeps legacy smoke models out of headline credit.",
+    "sota_schema_failure_taxonomy_ready": "States whether the diagnostic covered fixture and live evidence without dropping rows.",
+    "tests_added_or_reused": "Links the artifact to tests that exercise the taxonomy and reused parser contracts.",
+    "truncation_detected": "Flags token-budget exhaustion separately from semantic or schema mistakes."
+  },
+  "fixture_exact_validator_handoff_ready": true,
+  "fixture_rows_checked": 3,
+  "fixture_schema_validity_rate": 1.0,
+  "gpu_offload_evidence": {
+    "gpu_memory_delta_mb": 21228.0,
+    "gpu_offload_verified": true,
+    "llama_cpp_cuda_available": true,
+    "offload_diagnostics": [
+      {
+        "available": true,
+        "detail": "nvidia-smi memory delta 21228.000 MB",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "n_gpu_layers": -1,
+        "resource": "llama_cpp_gpu_offload"
+      }
+    ]
+  },
+  "grammar_backend": "llama_cpp_gbnf",
+  "grammar_mask_applied": false,
+  "grammar_runtime_available": true,
+  "honest_verdict": "complete: sota_schema_failure_taxonomy_ready_prompt_contract_miss_and_semantic_candidate_absent",
+  "inference_substrate": "structured_output_fixture_plus_live_llm_smoke",
+  "json_extraction_success_rate": 1.0,
+  "live_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5513_sota_hard_soft_structured_panel.json",
+  "live_rows_checked": 4,
+  "milestone": "2026.07.501",
+  "model_specs": [
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    }
+  ],
+  "no_autotokenizer_on_gguf": true,
+  "parser_backend": "experiment_5513.extract_candidate_payloads -> experiment_5512.classify_candidate_payload",
+  "prompt_prefix_hashes": [
+    "7595148e8cc23e1c2d2f869a0e04ee3b74c55ef66d69c157cbfbb9ee72f5b866"
+  ],
+  "random_seed": 5525,
+  "reproducibility_checksum": "3185e3df174f417a7e93be7149faffd044fdb6cad36d54f224f7501dd7aa7e82",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5525_sota_schema_failure_taxonomy.json",
+  "run_date": "2026-07-10",
+  "runtime_status": {
+    "grammar_runtime_available": true,
+    "llama_cpp_cuda_available": true,
+    "llama_cpp_grammar_available": true,
+    "llguidance_available": false,
+    "parser_only_fallback_used": false,
+    "runtime_blockers": [
+      "llguidance_not_installed",
+      "xgrammar_not_installed"
+    ],
+    "xgrammar_available": false
+  },
+  "schema": "carnot.experiment_5525.sota_schema_failure_taxonomy.v501",
+  "schema_validity_rate": 0.0,
+  "smoke_models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "sota_schema_failure_taxonomy_ready": true,
+  "spec_refs": [
+    "REQ-VERIFY-5525",
+    "SCENARIO-VERIFY-5525"
+  ],
+  "structured_positive_control_artifact": "results/experiment_5512_structured_output_positive_control.json",
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5525_sota_schema_failure_taxonomy.py",
+    "tests/python/test_experiment_5512_structured_output_positive_control.py",
+    "tests/python/test_experiment_5513_sota_hard_soft_structured_panel.py"
+  ],
+  "tests_run": [],
+  "truncation_detected": true
+}

@@ -28827,6 +28827,80 @@ headline model.
 |---|---|---|
 | REQ-VERIFY-5513 | Planned (`python/carnot/experiment_5513_sota_hard_soft_structured_panel.py`, `results/experiment_5513_sota_hard_soft_structured_panel.json`) | Planned (`tests/python/test_experiment_5513_sota_hard_soft_structured_panel.py`) |
 
+### REQ-VERIFY-5525: SOTA GGUF Schema Failure Taxonomy V501
+
+The repository SHALL provide Exp 5525 at
+`python/carnot/experiment_5525_sota_schema_failure_taxonomy.py` and write
+`results/experiment_5525_sota_schema_failure_taxonomy.json` as a reproducible
+taxonomy of why live SOTA structured rows fail before another headline SOTA
+panel is run. Exp 5525 SHALL reuse the Exp 5512 hard/soft candidate schema,
+the Exp 5499 fixture rows, the Exp 5513 reason-then-structure parser path, and
+the Exp 5499 exact validators; it SHALL NOT invent a new scoring target unless
+the reused schema itself is shown invalid.
+
+Every deterministic fixture row SHALL be sent through the same
+`extract_candidate_payloads` then `classify_candidate_payload` handoff used by
+the live panel and SHALL remain schema-valid with exact-validator handoff
+before any live-row interpretation is credited. Live SOTA evidence SHALL come
+from a bounded mandated local GGUF smoke row when a cached model and GPU path
+are available, or from the preserved Exp 5513 live smoke artifact when it
+already records the mandated local SOTA GGUF run; legacy small GGUFs MAY appear
+only as explicitly labeled CPU smoke tests and SHALL NOT receive headline
+credit. Exp 5525 SHALL NOT call `AutoTokenizer.from_pretrained` or
+transformers `from_pretrained` on a GGUF repository.
+
+For every fixture, emitted live, missing live, parse-failure, or runtime row,
+Exp 5525 SHALL classify the first failure as one of
+`prompt_contract_miss`, `grammar_runtime_unavailable`,
+`grammar_mask_not_applied`, `max_tokens_truncation`,
+`json_extraction_failure`, `json_schema_invalid`, `required_field_missing`,
+`exact_validator_mismatch`, `semantic_candidate_absent`, or
+`runtime_unavailable`, with successful fixture rows carrying no failure. The
+row evidence SHALL record prompt-prefix hash, `max_tokens`, stop strings,
+output byte length, truncation marker, grammar backend, parser backend, GPU
+offload receipt, and exact-validator target.
+
+The artifact SHALL include at minimum these top-level fields: `model_specs`,
+`smoke_models_used`, `fixture_rows_checked`, `live_rows_checked`,
+`failure_taxonomy_counts`, `prompt_prefix_hashes`,
+`grammar_runtime_available`, `grammar_mask_applied`, `truncation_detected`,
+`json_extraction_success_rate`, `schema_validity_rate`,
+`exact_validator_handoff_ready`, `gpu_offload_evidence`,
+`sota_schema_failure_taxonomy_ready`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`structured_output_fixture_plus_live_llm_smoke`. `honest_verdict` SHALL start
+with `complete:` or `blocked:` and SHALL NOT upgrade fixture-only parser
+success, missing live rows, schema-invalid live rows, or unavailable runtime
+into a SOTA model-quality claim.
+
+### SCENARIO-VERIFY-5525: Live Schema Failures Are Taxonomized Before Rerun
+
+Given the Exp 5512 structured-output positive control and the Exp 5513 live
+SOTA smoke artifact, when Exp 5525 runs, then fixture rows still parse through
+the live parser/extractor path, live rows and missing expected rows receive
+visible first-failure classifications, prompt-prefix hashes and decoding
+budgets are recorded, JSON extraction is separated from schema validity, GPU
+offload evidence is preserved, and
+`results/experiment_5525_sota_schema_failure_taxonomy.json` reports
+`sota_schema_failure_taxonomy_ready=true` only when the taxonomy has covered
+the fixture and live evidence without silently dropping any row.
+
+If the grammar runtime is absent, the runtime exists but no grammar mask was
+applied, the live completion hits `max_tokens`, JSON extraction fails, a JSON
+payload violates schema or misses required fields, the exact validator rejects
+a schema-valid row, an expected semantic candidate row is absent, or the live
+runtime is unavailable, then Exp 5525 SHALL record that first failure in
+`failure_taxonomy_counts`, keep the raw row telemetry visible, set the live
+schema-validity and exact-handoff gates honestly, and preserve the run as a
+diagnostic taxonomy rather than a headline SOTA quality panel.
+
+## Implementation Status (REQ-VERIFY-5525)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5525 | Implemented (`python/carnot/experiment_5525_sota_schema_failure_taxonomy.py`, `results/experiment_5525_sota_schema_failure_taxonomy.json`) | Implemented (`tests/python/test_experiment_5525_sota_schema_failure_taxonomy.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
