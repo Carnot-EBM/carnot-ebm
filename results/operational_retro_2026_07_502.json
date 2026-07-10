@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.502",
+  "generated_at": "2026-07-10T19:35:32Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true,
+  "summary": "The operational closeout has no experiment-level timing rows for milestone 2026.07.502: the locked artifact records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. Because ops/changelog.md references the milestone while both timing reconstruction paths found 0 experiment commits, this retrospective reports a timing-integrity mismatch rather than inferring durations, slow paths, GPU efficiency, or DualGPURunner behavior.",
+  "bottlenecks_identified": [
+    "Timing-integrity mismatch: both authorized timing reconstruction paths found 0 experiment commits for 2026.07.502 while ops/changelog.md contains milestone references, so operational throughput and slowest-run ranking are unavailable.",
+    "Compute-bound GPU utilization cannot be assessed because the locked timing data contains 0 compute-bound experiments; the idle GPU snapshot is not a bottleneck finding under the milestone rules."
+  ],
+  "improvements_suggested": [
+    "Write per-experiment start, finish, compute-bound flag, model-count, and runner metadata at launch and completion time.",
+    "Make changelog-present and timing-empty closeouts a failing assembly case so the mismatch is caught before retrospective writing.",
+    "Create a dedicated no-data operational receipt when timing rows are absent so later consumers can report the absence without reading prose logs."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Promote launch/finish timing receipts to the authoritative operational data feed.",
+    "Add a regression for milestones that have changelog references but no reconstructed timing rows.",
+    "Record compute-bound and parallel-model runner metadata at launch so GPU and DualGPURunner checks are data-backed."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is intentionally narrow: the authoritative timing block supplies no experiment rows, so the only defensible operational conclusion is the timing-assembly mismatch. The GPU monitor shows idle devices, but without compute-bound timing rows that observation is not evidence of inefficient execution."
+}
