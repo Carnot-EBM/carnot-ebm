@@ -21059,3 +21059,89 @@ unchanged
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5503 | Planned (`python/carnot/experiment_5503_csl_experience_graph_replay_v499.py`, `results/experiment_5503_csl_experience_graph_replay_v499.json`) | Planned (`tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py`) |
+
+---
+
+## REQ-LEARN-5515: CSL Independent-Outcome Gate Repair
+
+Experiment 5515 SHALL run an executor-frozen graph-memory replay whose held-out
+labels come from an independent fixture label table, not from retrieval utility
+scores, memory-node trust, or any other memory-ranking scalar. The experiment
+SHALL define a chronological stream with pre-memory tasks, deterministic memory
+updates, and held-out tasks. The same held-out task IDs and label rows SHALL be
+used for the no-memory, stale-memory, and governed graph-memory conditions.
+
+The replay SHALL record pre-memory and post-memory graph hashes, retrieval
+traces, stale-evidence rejection cases, and negative-transfer cases. Governed
+graph memory SHALL reject stale and negative-transfer evidence before action
+selection, while the stale-memory condition SHALL expose the degradation caused
+by using pre-update unsafe memories. The held-out delta SHALL be computed from
+exact independent outcome labels as `graph_memory_score - no_memory_score`.
+
+The result artifact SHALL be
+`results/experiment_5515_csl_independent_outcome_gate_repair.json` and SHALL
+include `stream_fixture_path`, `independent_label_source`, `pre_memory_hash`,
+`post_memory_hash`, `no_memory_score`, `graph_memory_score`,
+`stale_memory_score`, `heldout_delta`, `negative_transfer_rate`,
+`stale_evidence_rejection_rate`, `metric_independence_clean`,
+`csl_experience_graph_ready`, `csl_gate_fields_resolvable`,
+`continuous_self_learning_evidence`, `inference_substrate`, and
+`honest_verdict`. The exact top-level gate fields
+`metric_independence_clean`, `csl_experience_graph_ready`,
+`csl_gate_fields_resolvable`, and `continuous_self_learning_evidence` SHALL be
+present so downstream conductor checks can resolve them without nested aliases.
+The artifact SHALL set
+`inference_substrate="graph_memory_replay_with_independent_labels"`.
+
+### REQ-LEARN-5515 Sub-requirements
+
+- REQ-LEARN-5515-1: The stream fixture SHALL contain pre-memory tasks,
+  deterministic memory updates, held-out tasks, and a held-out label table
+  whose `independent_label_source` is not a memory retrieval score.
+- REQ-LEARN-5515-2: `pre_memory_hash` and `post_memory_hash` SHALL be
+  deterministic graph-state hashes, and they SHALL differ after memory updates.
+- REQ-LEARN-5515-3: No-memory, stale-memory, and graph-memory conditions SHALL
+  evaluate the same held-out label IDs.
+- REQ-LEARN-5515-4: Governed graph-memory retrieval SHALL record stale-evidence
+  and negative-transfer candidates, reject them before action selection, and
+  report `stale_evidence_rejection_rate` and `negative_transfer_rate`.
+- REQ-LEARN-5515-5: `metric_independence_clean` SHALL be true only when the
+  held-out labels are read from the independent label table and held-out scores
+  are exact label pass rates rather than utility-score summaries.
+- REQ-LEARN-5515-6: `csl_gate_fields_resolvable` SHALL be true only when the
+  conductor-readable bare gate fields are present at artifact top level.
+- REQ-LEARN-5515-7: `continuous_self_learning_evidence` SHALL be true only when
+  metric independence is clean, graph memory beats both controls, stale
+  evidence is fully rejected, negative-transfer acceptance is zero, graph hashes
+  changed, and the exact gate fields are resolvable.
+
+### SCENARIO-LEARN-5515-INDEPENDENT-LABELS: Held-Out Labels Are Separate From Retrieval
+
+**Given** the stream fixture contains held-out expected actions in its
+independent label table
+**When** the replay computes no-memory, stale-memory, and graph-memory scores
+**Then** each condition SHALL use the same held-out label IDs
+**And** retrieval utility scores SHALL NOT be used as outcome labels.
+
+### SCENARIO-LEARN-5515-GRAPH-CONTROLS: Unsafe Memories Are Auditable
+
+**Given** the pre-memory graph contains stale evidence and a negative-transfer
+candidate
+**When** governed graph-memory retrieval evaluates held-out tasks
+**Then** stale evidence SHALL be rejected before action selection
+**And** negative-transfer candidates SHALL be rejected before action selection
+**And** the artifact SHALL record the rejected cases.
+
+### SCENARIO-LEARN-5515-GATE-FIELDS: Downstream Gates Resolve Bare Fields
+
+**Given** the Exp5515 deliverable JSON is written
+**When** a downstream conductor checks its top-level fields
+**Then** `metric_independence_clean`, `csl_experience_graph_ready`,
+`csl_gate_fields_resolvable`, and `continuous_self_learning_evidence` SHALL all
+be present and true.
+
+## Implementation Status (Exp 5515)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5515 | Planned (`python/carnot/experiment_5515_csl_independent_outcome_gate_repair.py`, `results/experiment_5515_csl_independent_outcome_gate_repair.json`) | Planned (`tests/python/test_experiment_5515_csl_independent_outcome_gate_repair.py`) |

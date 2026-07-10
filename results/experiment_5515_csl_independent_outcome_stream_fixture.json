@@ -1,0 +1,266 @@
+{
+  "fixture_id": "exp5515-independent-outcome-stream",
+  "heldout_labels": [
+    {
+      "expected_action": "run-circuit-reset",
+      "label_id": "label-5515-heldout-db-timeout",
+      "source_kind": "independent_fixture",
+      "task_id": "5515-heldout-db-timeout"
+    },
+    {
+      "expected_action": "use-zero-index-bound",
+      "label_id": "label-5515-heldout-api-pagination",
+      "source_kind": "independent_fixture",
+      "task_id": "5515-heldout-api-pagination"
+    },
+    {
+      "expected_action": "deny-escalation",
+      "label_id": "label-5515-heldout-access-policy",
+      "source_kind": "independent_fixture",
+      "task_id": "5515-heldout-access-policy"
+    }
+  ],
+  "heldout_tasks": [
+    {
+      "candidates": [
+        "restart-service",
+        "run-circuit-reset"
+      ],
+      "domain": "incident-response",
+      "expected_action": "run-circuit-reset",
+      "label_id": "label-5515-heldout-db-timeout",
+      "locality": "db-primary",
+      "memory_update": {},
+      "no_memory_action": "restart-service",
+      "split": "heldout",
+      "tags": [
+        "db",
+        "timeout",
+        "circuit"
+      ],
+      "task_id": "5515-heldout-db-timeout",
+      "version": 3
+    },
+    {
+      "candidates": [
+        "add-retry",
+        "use-zero-index-bound",
+        "use-limit-offset"
+      ],
+      "domain": "code-patch",
+      "expected_action": "use-zero-index-bound",
+      "label_id": "label-5515-heldout-api-pagination",
+      "locality": "api-pagination",
+      "memory_update": {},
+      "no_memory_action": "add-retry",
+      "split": "heldout",
+      "tags": [
+        "pagination",
+        "off-by-one",
+        "bounds"
+      ],
+      "task_id": "5515-heldout-api-pagination",
+      "version": 3
+    },
+    {
+      "candidates": [
+        "grant-escalation",
+        "deny-escalation"
+      ],
+      "domain": "access-policy",
+      "expected_action": "deny-escalation",
+      "label_id": "label-5515-heldout-access-policy",
+      "locality": "partner-portal",
+      "memory_update": {},
+      "no_memory_action": "grant-escalation",
+      "split": "heldout",
+      "tags": [
+        "access",
+        "revoked",
+        "escalation"
+      ],
+      "task_id": "5515-heldout-access-policy",
+      "version": 3
+    }
+  ],
+  "independent_label_source": "results/experiment_5515_csl_independent_outcome_stream_fixture.json::heldout_labels",
+  "label_contract": "Held-out expected actions are literal fixture labels and are not derived from retrieval utility, trust score, or memory hits.",
+  "memory_updates": [
+    {
+      "action": "run-circuit-reset",
+      "description": "Verified DB timeout repairs use the circuit reset path.",
+      "domain": "incident-response",
+      "evidence_status": "active",
+      "expires_before_version": null,
+      "locality": "db-primary",
+      "negative_transfer_domains": [],
+      "node_id": "node5515-skill-db-circuit-reset",
+      "node_type": "skill",
+      "success_count": 1,
+      "tags": [
+        "db",
+        "timeout",
+        "circuit"
+      ],
+      "trust_score": 0.92,
+      "version": 2
+    },
+    {
+      "action": "use-zero-index-bound",
+      "description": "Verified API pagination repairs use zero-index bounds.",
+      "domain": "code-patch",
+      "evidence_status": "active",
+      "expires_before_version": null,
+      "locality": "api-pagination",
+      "negative_transfer_domains": [],
+      "node_id": "node5515-skill-api-zero-index",
+      "node_type": "skill",
+      "success_count": 1,
+      "tags": [
+        "pagination",
+        "off-by-one",
+        "bounds"
+      ],
+      "trust_score": 0.9,
+      "version": 2
+    },
+    {
+      "action": "deny-escalation",
+      "description": "Verified revoked-access cases deny escalation.",
+      "domain": "access-policy",
+      "evidence_status": "active",
+      "expires_before_version": null,
+      "locality": "partner-portal",
+      "negative_transfer_domains": [],
+      "node_id": "node5515-skill-access-deny",
+      "node_type": "skill",
+      "success_count": 1,
+      "tags": [
+        "access",
+        "revoked",
+        "escalation"
+      ],
+      "trust_score": 0.91,
+      "version": 2
+    }
+  ],
+  "pre_memory_tasks": [
+    {
+      "candidates": [
+        "restart-service",
+        "run-circuit-reset"
+      ],
+      "domain": "incident-response",
+      "expected_action": "run-circuit-reset",
+      "label_id": "label-5515-train-db-timeout",
+      "locality": "db-primary",
+      "memory_update": {
+        "action": "run-circuit-reset",
+        "description": "Verified DB timeout repairs use the circuit reset path.",
+        "domain": "incident-response",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "locality": "db-primary",
+        "negative_transfer_domains": [],
+        "node_id": "node5515-skill-db-circuit-reset",
+        "node_type": "skill",
+        "success_count": 1,
+        "tags": [
+          "db",
+          "timeout",
+          "circuit"
+        ],
+        "trust_score": 0.92,
+        "version": 2
+      },
+      "no_memory_action": "restart-service",
+      "split": "pre_memory",
+      "tags": [
+        "db",
+        "timeout",
+        "circuit"
+      ],
+      "task_id": "5515-train-db-timeout",
+      "version": 2
+    },
+    {
+      "candidates": [
+        "add-retry",
+        "use-zero-index-bound",
+        "use-limit-offset"
+      ],
+      "domain": "code-patch",
+      "expected_action": "use-zero-index-bound",
+      "label_id": "label-5515-train-api-pagination",
+      "locality": "api-pagination",
+      "memory_update": {
+        "action": "use-zero-index-bound",
+        "description": "Verified API pagination repairs use zero-index bounds.",
+        "domain": "code-patch",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "locality": "api-pagination",
+        "negative_transfer_domains": [],
+        "node_id": "node5515-skill-api-zero-index",
+        "node_type": "skill",
+        "success_count": 1,
+        "tags": [
+          "pagination",
+          "off-by-one",
+          "bounds"
+        ],
+        "trust_score": 0.9,
+        "version": 2
+      },
+      "no_memory_action": "add-retry",
+      "split": "pre_memory",
+      "tags": [
+        "pagination",
+        "off-by-one",
+        "bounds"
+      ],
+      "task_id": "5515-train-api-pagination",
+      "version": 2
+    },
+    {
+      "candidates": [
+        "grant-escalation",
+        "deny-escalation"
+      ],
+      "domain": "access-policy",
+      "expected_action": "deny-escalation",
+      "label_id": "label-5515-train-access-policy",
+      "locality": "partner-portal",
+      "memory_update": {
+        "action": "deny-escalation",
+        "description": "Verified revoked-access cases deny escalation.",
+        "domain": "access-policy",
+        "evidence_status": "active",
+        "expires_before_version": null,
+        "locality": "partner-portal",
+        "negative_transfer_domains": [],
+        "node_id": "node5515-skill-access-deny",
+        "node_type": "skill",
+        "success_count": 1,
+        "tags": [
+          "access",
+          "revoked",
+          "escalation"
+        ],
+        "trust_score": 0.91,
+        "version": 2
+      },
+      "no_memory_action": "grant-escalation",
+      "split": "pre_memory",
+      "tags": [
+        "access",
+        "revoked",
+        "escalation"
+      ],
+      "task_id": "5515-train-access-policy",
+      "version": 2
+    }
+  ],
+  "random_seed": 5515,
+  "schema": "carnot.experiment_5515.independent_outcome_stream.v1"
+}
