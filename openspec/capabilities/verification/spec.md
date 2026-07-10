@@ -29399,6 +29399,90 @@ SHALL write the same result path with
 |---|---|---|
 | REQ-VERIFY-5531 | Implemented (`python/carnot/experiment_5531_sparse_repair_scaleup_ci.py`, `results/experiment_5531_sparse_repair_scaleup_ci.json`) | Implemented (`tests/python/test_experiment_5531_sparse_repair_scaleup_ci.py`) |
 
+### REQ-VERIFY-5532: Hardware Receipt Parser Repeatability Repair
+
+The repository SHALL provide Exp 5532 at
+`python/carnot/experiment_5532_hardware_receipt_parser_repeatability.py` and
+write `results/experiment_5532_hardware_receipt_parser_repeatability.json`
+without modifying `scripts/research_conductor.py`, without probing host
+`/dev/mmcblk*` or `/dev/disk` paths for KV260 evidence, without flashing any
+board, and without making a hardware speedup claim.
+
+Exp 5532 SHALL repair the malformed Exp 5519 CPU and CUDA receipt parsing by
+using parseable local helper command paths and by preserving precise parser
+failure reasons when a runtime is unavailable. CPU receipts SHALL expose
+device, runtime, version, memory, and command metadata when reachable. CUDA
+receipts SHALL merge runtime metadata with `nvidia-smi` driver, device, and
+memory rows when those safe local commands are available, or SHALL classify the
+runtime/parser failure precisely when they are not. PolarFire SHALL be checked
+only by authenticated `ssh polarfire` identity commands. KV260 SHALL be checked
+only by SSH, `xmutil`, and board-local `/dev/uio*` commands through `ssh kria`.
+GateMate SHALL be checked only through non-destructive DirtyJTAG/toolchain
+identity commands.
+
+For each checked device, the artifact SHALL classify repeatability as exactly
+one of `reachable`, `identity_blocked`, `parser_blocked`, `workload_blocked`,
+`timing_blocked`, or `unavailable`. Repeated workload receipts, when collected,
+SHALL be bound to `workload_hash`, `device_hash`, `timestamp`, and
+`parser_version`. Matched timing SHALL remain unavailable unless CPU and device
+timing receipts are repeated over the same workload hash, and
+`hardware_speedup_claim` SHALL remain false in every valid Exp 5532 artifact.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`devices_checked`, `device_receipts`, `parser_versions`, `parser_failures`,
+`cpu_receipt_parseable`, `cuda_receipt_parseable`, `polarfire_reachable`,
+`kv260_safe_path_used`, `forbidden_kv260_host_sdcard_used`,
+`gatemate_identity_ok`, `repeated_workload_hashes`,
+`matched_timing_available`, `hardware_speedup_claim`,
+`hardware_speedup_claim_allowed`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal `hardware_receipt_parser_repeatability`;
+`forbidden_kv260_host_sdcard_used` and `hardware_speedup_claim` SHALL be false.
+
+Required field principles:
+
+- `devices_checked`: principle "names every local hardware receipt lane checked by the parser."
+- `device_receipts`: principle "per-device parsed receipt, class, command, and blocker evidence."
+- `parser_versions`: principle "stable parser ids used to interpret each receipt."
+- `parser_failures`: principle "precise parse or runtime blockers instead of silent malformed rows."
+- `cpu_receipt_parseable`: principle "CPU metadata gate; true only when local CPU receipt parses."
+- `cuda_receipt_parseable`: principle "CUDA metadata gate; true only when runtime or driver metadata parses."
+- `polarfire_reachable`: principle "SSH-authenticated board identity gate."
+- `kv260_safe_path_used`: principle "KV260 evidence came only from SSH, xmutil, or board-local UIO paths."
+- `forbidden_kv260_host_sdcard_used`: principle "false preserves the retired host SD-card boundary."
+- `gatemate_identity_ok`: principle "DirtyJTAG identity must show GateMate before reachable classification."
+- `repeated_workload_hashes`: principle "same-workload evidence names only hash-bound repeats."
+- `matched_timing_available`: principle "true only for repeated CPU/device timing over the same workload hash."
+- `hardware_speedup_claim`: principle "must remain false without matched timing."
+- `hardware_speedup_claim_allowed`: principle "derived promotion gate for speedup claims."
+- `tests_added_or_reused`: principle "records parser tests that asserted the repair."
+- `field_principles`: principle "one-line annotations for every headline and gate field."
+- `inference_substrate`: principle "declares parser-repeatability receipts, not acceleration evidence."
+- `honest_verdict`: principle "terminal status with no unsupported speedup claim."
+
+### SCENARIO-VERIFY-5532: Repaired Receipt Parser Emits Repeatability Classes Without Speedup
+
+Given Exp 5519 produced malformed CPU/CUDA helper command rows and blocked
+board identities, when Exp 5532 runs, then it builds parseable CPU/CUDA receipt
+rows from safe local commands, checks PolarFire, KV260, and GateMate only
+through their allowed non-destructive paths, classifies every device into the
+allowed repeatability classes, records parser versions and precise parser
+failures, sets `kv260_safe_path_used=true`, sets
+`forbidden_kv260_host_sdcard_used=false`, and writes the required artifact
+fields.
+
+If only CPU-local repeated workload evidence is present, Exp 5532 SHALL bind
+that evidence to workload hash, device hash, timestamp, and parser version, but
+SHALL keep `matched_timing_available=false`,
+`hardware_speedup_claim=false`, and `hardware_speedup_claim_allowed=false`
+because no matched CPU/device timing exists over the same workload hash.
+
+## Implementation Status (REQ-VERIFY-5532)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5532 | Implemented (`python/carnot/experiment_5532_hardware_receipt_parser_repeatability.py`, `results/experiment_5532_hardware_receipt_parser_repeatability.json`) | Implemented (`tests/python/test_experiment_5532_hardware_receipt_parser_repeatability.py`) |
+
 ### REQ-VERIFY-5519: Hardware Continuity And Timing-Methodology Receipts
 
 The repository SHALL provide Exp 5519 at

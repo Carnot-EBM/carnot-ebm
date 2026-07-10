@@ -1,0 +1,528 @@
+{
+  "command_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m carnot.experiment_5532_hardware_receipt_parser_repeatability --emit-cpu-info",
+      "command_sha256": "b12bd7ab9405094d10a720ba4d8c567ed32178f0bcdf9eb7ed5a17e8a269cf03",
+      "duration_s": 0.660744,
+      "exit_code": 0,
+      "kind": "cpu_info",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"device_names\": [\"AMD Ryzen AI 9 HX 370 w/ Radeon 890M\"], \"driver_versions\": {}, \"memory\": {\"mem_available_kib\": 80653292, \"mem_total_kib\": 131157572}, \"metadata\": {\"python_executable\": \"/home/ianblenke/github.com/ianblenke/carnot/.venv/bi",
+      "stdout_sha256": "2bb58137b1f968b731acb836d13e5d50892fb50cff536cfd9b4906cf267d58b6",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m carnot.experiment_5532_hardware_receipt_parser_repeatability --emit-cuda-info",
+      "command_sha256": "816a3476e4bc9f5eb040a92f9817aa430b19a47d978d80a75318e7938173d73a",
+      "duration_s": 2.474626,
+      "exit_code": 0,
+      "kind": "cuda_runtime_info",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "{\"device_names\": [\"NVIDIA GeForce RTX 3090\", \"NVIDIA GeForce RTX 3090\"], \"driver_versions\": {}, \"memory\": {\"device_memory\": [{\"free_mib\": 23858, \"index\": 0, \"reserved_mib\": 0, \"total_mib\": 24123}, {\"free_mib\": 23858, \"index\": 1, \"reserved_m",
+      "stdout_sha256": "1019dd7d06e9d22395b0e82c284d4d54d1ea0748a5cc7cc0e4c7b34ce64114ca",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "nvidia-smi --query-gpu=name,driver_version,memory.total,memory.free --format=csv,noheader,nounits",
+      "command_sha256": "8bcaa450cba8bc46bcb4e86c972863f263956612deb6142d203fcc775684ef66",
+      "duration_s": 0.026529,
+      "exit_code": 0,
+      "kind": "cuda_driver_info",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120\nNVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120",
+      "stdout_sha256": "7e91b2808d57ee8301f045e843c6af31102b9a4f47a836061562a9fc46f93950",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'board_identity=polarfire\\nhostname='\"'\"' && hostname && printf '\"'\"'\\nmachine='\"'\"' && uname -m && printf '\"'\"'\\nkernel='\"'\"' && uname -r && if test -r /sys/firmware/devicetree/base/model; then printf '\"'\"'\\nmodel='\"'\"'; tr '\"'\"'\\000'\"'\"' '\"'\"'\\n'\"'\"' < /sys/firmware/devicetree/base/model | head -n 1; fi'",
+      "command_sha256": "70173a1a8fb2737bdef2ab26f907bf490bae8b4cbd82e03adea1b7467b9d294d",
+      "duration_s": 0.933686,
+      "exit_code": 0,
+      "kind": "polarfire_ssh_identity",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "board_identity=polarfire\nhostname=mpfs-disco-kit\n\nmachine=riscv64\n\nkernel=6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d\n\nmodel=Microchip PolarFire-SoC Discovery Kit",
+      "stdout_sha256": "b576bb80f1a4f813befcfb559935e82605326878b8b84ce039e576cce638eb68",
+      "timeout_s": 5.0
+    },
+    {
+      "blocked_reason": "blocked_kv260_ssh_identity",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'board_identity=kv260\\nhostname='\"'\"' && hostname && printf '\"'\"'\\nmachine='\"'\"' && uname -m && printf '\"'\"'\\nkernel='\"'\"' && uname -r'",
+      "command_sha256": "f6c3bf9313ff95d470bba1495ce6c9b8b80b8b998a2fe3a57763ea63df4812d0",
+      "duration_s": 5.008165,
+      "exit_code": 124,
+      "kind": "kv260_ssh_identity",
+      "outcome": "blocked_identity",
+      "stderr_excerpt": "timeout",
+      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "command_sha256": "67601b438fbb88a70c1b25f3a913790ab47e5e19b36bc9c3b9f32a8a52363cd4",
+      "duration_s": 0.021621,
+      "exit_code": 0,
+      "kind": "gatemate_dirtyjtag_detect",
+      "outcome": "blocked_identity",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "stdout_sha256": "e96e9c9bdc5e9e0dc606129428b9716fe745efc6402f52cc56db17f800d12437",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "yosys -V",
+      "command_sha256": "593dc94bee43a1d46985190bbcf640d8cd7a63fa24a42f5a42604d0d8c3e5892",
+      "duration_s": 0.007356,
+      "exit_code": 0,
+      "kind": "gatemate_toolchain_yosys",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "stdout_sha256": "3e5d182bbe78885082bd07a2f3258ed451a9cbcf0c6584af0858643abdf82e02",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "nextpnr-himbaechel --version",
+      "command_sha256": "32a8ad3d97b5e36a2543d593f8d27719eeaaeca7195766f62ea9005bad011f86",
+      "duration_s": 0.024022,
+      "exit_code": 0,
+      "kind": "gatemate_toolchain_nextpnr_himbaechel",
+      "outcome": "reachable",
+      "stderr_excerpt": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "stderr_sha256": "1b9f06395421c7a842642ddf8d86695a65593fe8f99138ea656f6372c37fdf6d",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 10.0
+    },
+    {
+      "blocked_reason": "gmpack_unavailable",
+      "command": "gmpack --version",
+      "command_sha256": "343e3244c646929a3e66ab6489c8c5d4b12d421320396eaeab029670e141025b",
+      "duration_s": 0.002441,
+      "exit_code": 1,
+      "kind": "gatemate_toolchain_gmpack",
+      "outcome": "unavailable",
+      "stderr_excerpt": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: gmpack input.config [output.bit] [options]\n\nA",
+      "stderr_sha256": "db9637b5d79483f951c72825a14840d41184808715709d8ff5bf2c6475ba6055",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 10.0
+    }
+  ],
+  "cpu_receipt_parseable": true,
+  "cuda_receipt_parseable": true,
+  "device_receipts": {
+    "cpu": {
+      "blocked_reason": null,
+      "classification": "timing_blocked",
+      "command_kinds": [
+        "cpu_info"
+      ],
+      "device": "cpu",
+      "device_names": [
+        "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
+      ],
+      "driver_versions": {},
+      "memory": {
+        "mem_available_kib": 80653292,
+        "mem_total_kib": 131157572
+      },
+      "metadata": {
+        "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+      },
+      "parseable": true,
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "runtime_versions": {
+        "platform": "Linux-7.0.11-1-cachyos-x86_64-with-glibc2.43",
+        "python": "3.12.13"
+      },
+      "status": "reachable",
+      "versions": {
+        "machine": "x86_64",
+        "processor": ""
+      }
+    },
+    "cuda": {
+      "blocked_reason": null,
+      "classification": "workload_blocked",
+      "command_kinds": [
+        "cuda_runtime_info",
+        "cuda_driver_info"
+      ],
+      "device": "cuda",
+      "device_names": [
+        "NVIDIA GeForce RTX 3090",
+        "NVIDIA GeForce RTX 3090"
+      ],
+      "driver_versions": {
+        "nvidia_driver": "610.43.02"
+      },
+      "memory": {
+        "device_memory": [
+          {
+            "free_mib": 23858,
+            "index": 0,
+            "reserved_mib": 0,
+            "total_mib": 24123
+          },
+          {
+            "free_mib": 23858,
+            "index": 1,
+            "reserved_mib": 0,
+            "total_mib": 24123
+          }
+        ],
+        "nvidia_smi": [
+          {
+            "free_mib": 24120,
+            "index": 0,
+            "total_mib": 24576
+          },
+          {
+            "free_mib": 24120,
+            "index": 1,
+            "total_mib": 24576
+          }
+        ]
+      },
+      "metadata": {
+        "device_count": 2
+      },
+      "parseable": true,
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "runtime_versions": {
+        "cuda": "12.8",
+        "torch": "2.11.0+cu128"
+      },
+      "status": "reachable",
+      "versions": {
+        "device_count": 2
+      }
+    },
+    "gatemate": {
+      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
+      "classification": "identity_blocked",
+      "command_kinds": [
+        "gatemate_dirtyjtag_detect",
+        "gatemate_toolchain_yosys",
+        "gatemate_toolchain_nextpnr_himbaechel",
+        "gatemate_toolchain_gmpack"
+      ],
+      "device": "gatemate",
+      "device_names": [],
+      "driver_versions": {},
+      "memory": {},
+      "metadata": {
+        "detect_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+        "toolchain": {
+          "gmpack": {
+            "available": false,
+            "version_excerpt": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024"
+          },
+          "nextpnr_himbaechel": {
+            "available": true,
+            "version_excerpt": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+          },
+          "yosys": {
+            "available": true,
+            "version_excerpt": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+          }
+        }
+      },
+      "parseable": true,
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "runtime_versions": {},
+      "status": "blocked_identity",
+      "versions": {}
+    },
+    "kv260": {
+      "blocked_reason": "blocked_kv260_ssh_identity",
+      "classification": "identity_blocked",
+      "command_kinds": [
+        "kv260_ssh_identity"
+      ],
+      "device": "kv260",
+      "device_names": [],
+      "driver_versions": {},
+      "memory": {},
+      "metadata": {},
+      "parseable": true,
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "runtime_versions": {},
+      "status": "blocked_identity",
+      "versions": {}
+    },
+    "polarfire": {
+      "blocked_reason": null,
+      "classification": "timing_blocked",
+      "command_kinds": [
+        "polarfire_ssh_identity"
+      ],
+      "device": "polarfire",
+      "device_names": [
+        "Microchip PolarFire-SoC Discovery Kit"
+      ],
+      "driver_versions": {},
+      "memory": {},
+      "metadata": {
+        "board_identity": "polarfire",
+        "hostname": "mpfs-disco-kit",
+        "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+        "machine": "riscv64",
+        "model": "Microchip PolarFire-SoC Discovery Kit"
+      },
+      "parseable": true,
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "runtime_versions": {
+        "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d"
+      },
+      "status": "reachable",
+      "versions": {
+        "machine": "riscv64"
+      }
+    }
+  },
+  "devices_checked": [
+    "cpu",
+    "cuda",
+    "polarfire",
+    "kv260",
+    "gatemate"
+  ],
+  "duration_s": 9.160578,
+  "experiment": 5532,
+  "experiment_id": "exp5532-hardware-receipt-parser-repeatability",
+  "field_principles": {
+    "cpu_receipt_parseable": "CPU metadata gate; true only when local CPU receipt parses.",
+    "cuda_receipt_parseable": "CUDA metadata gate; true only when runtime or driver metadata parses.",
+    "device_receipts": "per-device parsed receipt, class, command, and blocker evidence.",
+    "devices_checked": "names every local hardware receipt lane checked by the parser.",
+    "field_principles": "one-line annotations for every headline and gate field.",
+    "forbidden_kv260_host_sdcard_used": "false preserves the retired host SD-card boundary.",
+    "gatemate_identity_ok": "DirtyJTAG identity must show GateMate before reachable classification.",
+    "hardware_speedup_claim": "must remain false without matched timing.",
+    "hardware_speedup_claim_allowed": "derived promotion gate for speedup claims.",
+    "honest_verdict": "terminal status with no unsupported speedup claim.",
+    "inference_substrate": "declares parser-repeatability receipts, not acceleration evidence.",
+    "kv260_safe_path_used": "KV260 evidence came only from SSH, xmutil, or board-local UIO paths.",
+    "matched_timing_available": "true only for repeated CPU/device timing over the same workload hash.",
+    "parser_failures": "precise parse or runtime blockers instead of silent malformed rows.",
+    "parser_versions": "stable parser ids used to interpret each receipt.",
+    "polarfire_reachable": "SSH-authenticated board identity gate.",
+    "repeated_workload_hashes": "same-workload evidence names only hash-bound repeats.",
+    "tests_added_or_reused": "records parser tests that asserted the repair."
+  },
+  "forbidden_kv260_host_sdcard_used": false,
+  "gatemate_identity_ok": false,
+  "hardware_speedup_claim": false,
+  "hardware_speedup_claim_allowed": false,
+  "honest_verdict": "complete: hardware receipt parser repaired with blockers (kv260,gatemate); matched_timing_available=false; hardware_speedup_claim=false",
+  "inference_substrate": "hardware_receipt_parser_repeatability",
+  "kv260_safe_path_used": true,
+  "matched_timing_available": false,
+  "milestone": "2026.07.501",
+  "parser_failures": {},
+  "parser_versions": {
+    "cpu": "hardware_receipt_parser_repeatability.v1",
+    "cuda": "hardware_receipt_parser_repeatability.v1",
+    "gatemate": "hardware_receipt_parser_repeatability.v1",
+    "kv260": "hardware_receipt_parser_repeatability.v1",
+    "polarfire": "hardware_receipt_parser_repeatability.v1"
+  },
+  "polarfire_reachable": true,
+  "random_seed": 5532,
+  "repeated_workload_hashes": [
+    "5fcdbb6a2b9a912549ec0e2ac8ea28006852f5913697863d9774c55a972dda3d",
+    "1d6ee84f60586a6ef521c95dd37e70cef951b5bfd1ca184b1b0b2076476a080e",
+    "22d85f810a52dcaa12276ed5ecfd10f3e5e30eda65b9a42d001fbf601add7ccc",
+    "3459adcd446f537400628b7a05e5e34e6c31ab9720f72283025563d3a4d55aee",
+    "03ba2498157f6914e3c76932e6f8333eb4bd8682f3fe686e36b322b0c14f552a",
+    "456f8621e4540a6defba01d19f2c277140cf77897d9139f612375316e52bc6d2",
+    "dbdcb5ffa33ce7ef30a5b98ae5a59c81b0408b459381d6ab56581e22254dabfa",
+    "f7de49c1460fb73eb192b5c475293900e79f99b7c01bff89c25262cfdf0c2a37"
+  ],
+  "repeated_workload_receipts": [
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "5fcdbb6a2b9a912549ec0e2ac8ea28006852f5913697863d9774c55a972dda3d"
+    },
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "1d6ee84f60586a6ef521c95dd37e70cef951b5bfd1ca184b1b0b2076476a080e"
+    },
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "22d85f810a52dcaa12276ed5ecfd10f3e5e30eda65b9a42d001fbf601add7ccc"
+    },
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "3459adcd446f537400628b7a05e5e34e6c31ab9720f72283025563d3a4d55aee"
+    },
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "03ba2498157f6914e3c76932e6f8333eb4bd8682f3fe686e36b322b0c14f552a"
+    },
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "456f8621e4540a6defba01d19f2c277140cf77897d9139f612375316e52bc6d2"
+    },
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "dbdcb5ffa33ce7ef30a5b98ae5a59c81b0408b459381d6ab56581e22254dabfa"
+    },
+    {
+      "device": "cpu",
+      "device_hash": "72fe6e846223627b28b2b2d3163aaca00c0a490e69cc245d91b560c04350ac0e",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "f7de49c1460fb73eb192b5c475293900e79f99b7c01bff89c25262cfdf0c2a37"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "5fcdbb6a2b9a912549ec0e2ac8ea28006852f5913697863d9774c55a972dda3d"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "1d6ee84f60586a6ef521c95dd37e70cef951b5bfd1ca184b1b0b2076476a080e"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "22d85f810a52dcaa12276ed5ecfd10f3e5e30eda65b9a42d001fbf601add7ccc"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "3459adcd446f537400628b7a05e5e34e6c31ab9720f72283025563d3a4d55aee"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "03ba2498157f6914e3c76932e6f8333eb4bd8682f3fe686e36b322b0c14f552a"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "456f8621e4540a6defba01d19f2c277140cf77897d9139f612375316e52bc6d2"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "dbdcb5ffa33ce7ef30a5b98ae5a59c81b0408b459381d6ab56581e22254dabfa"
+    },
+    {
+      "device": "polarfire",
+      "device_hash": "68fbd6b6fc801b7268d03d6065ee32087baa3a9d1e57a374ad1c5495c462faac",
+      "parser_version": "hardware_receipt_parser_repeatability.v1",
+      "repeat_count": 3,
+      "source_artifact": "results/experiment_5492_hardware_receipts_v498.json",
+      "source_experiment_id": "exp5492-hardware-receipts-v498",
+      "timestamp": "2026-07-09",
+      "workload_hash": "f7de49c1460fb73eb192b5c475293900e79f99b7c01bff89c25262cfdf0c2a37"
+    }
+  ],
+  "reproducibility_checksum": "6c0b634f0966c2089dee000a039d90058aca5c786895ef4320bf00257317da8b",
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5532.hardware_receipt_parser_repeatability.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5532",
+    "SCENARIO-VERIFY-5532"
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5532_hardware_receipt_parser_repeatability.py"
+  ]
+}
