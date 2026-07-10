@@ -1,0 +1,517 @@
+{
+  "ambiguous_instances": 1,
+  "duration_s": 0.0,
+  "exact_check_reports": [
+    {
+      "completion_count": 1,
+      "completion_samples": [
+        {
+          "S0": {
+            "a": "S1",
+            "b": "S2"
+          },
+          "S1": {
+            "a": "S1",
+            "b": "S1"
+          },
+          "S2": {
+            "a": "S2",
+            "b": "S2"
+          }
+        }
+      ],
+      "contradictions": [],
+      "expected_status": "satisfiable",
+      "instance_id": "fsm_sat_accept_error",
+      "sat_solver_check_passed": true,
+      "solver_status": "satisfiable",
+      "status_matches_expected": true,
+      "trace_checks": [
+        {
+          "actual_label": "rejected",
+          "expected_label": "rejected",
+          "labels_across_completions": [
+            "rejected"
+          ],
+          "passed": true,
+          "symbols": [],
+          "trace_id": "sat_empty_rejects"
+        },
+        {
+          "actual_label": "accepted",
+          "expected_label": "accepted",
+          "labels_across_completions": [
+            "accepted"
+          ],
+          "passed": true,
+          "symbols": [
+            "b"
+          ],
+          "trace_id": "sat_b_accepts"
+        },
+        {
+          "actual_label": "error",
+          "expected_label": "error",
+          "labels_across_completions": [
+            "error"
+          ],
+          "passed": true,
+          "symbols": [
+            "a"
+          ],
+          "trace_id": "sat_a_errors"
+        }
+      ],
+      "trace_checks_passed": true,
+      "transition_consistency_passed": true,
+      "unreachable_states": []
+    },
+    {
+      "completion_count": 0,
+      "completion_samples": [],
+      "contradictions": [
+        "deterministic_conflict:S0/x:S1!=S2"
+      ],
+      "expected_status": "unsatisfiable",
+      "instance_id": "fsm_unsat_conflicting_transition",
+      "sat_solver_check_passed": true,
+      "solver_status": "unsatisfiable",
+      "status_matches_expected": true,
+      "trace_checks": [
+        {
+          "actual_label": "contradiction",
+          "expected_label": "contradiction",
+          "labels_across_completions": [],
+          "passed": true,
+          "symbols": [
+            "x"
+          ],
+          "trace_id": "unsat_x_contradiction"
+        }
+      ],
+      "trace_checks_passed": true,
+      "transition_consistency_passed": false,
+      "unreachable_states": [
+        "S1"
+      ]
+    },
+    {
+      "completion_count": 3,
+      "completion_samples": [
+        {
+          "A": {
+            "go": "B"
+          },
+          "B": {
+            "go": "A"
+          },
+          "C": {
+            "go": "C"
+          },
+          "D": {
+            "go": "D"
+          }
+        },
+        {
+          "A": {
+            "go": "B"
+          },
+          "B": {
+            "go": "B"
+          },
+          "C": {
+            "go": "C"
+          },
+          "D": {
+            "go": "D"
+          }
+        },
+        {
+          "A": {
+            "go": "B"
+          },
+          "B": {
+            "go": "C"
+          },
+          "C": {
+            "go": "C"
+          },
+          "D": {
+            "go": "D"
+          }
+        }
+      ],
+      "contradictions": [],
+      "expected_status": "ambiguous",
+      "instance_id": "fsm_ambiguous_sparse_branch",
+      "sat_solver_check_passed": true,
+      "solver_status": "ambiguous",
+      "status_matches_expected": true,
+      "trace_checks": [
+        {
+          "actual_label": "rejected",
+          "expected_label": "rejected",
+          "labels_across_completions": [
+            "rejected"
+          ],
+          "passed": true,
+          "symbols": [
+            "go"
+          ],
+          "trace_id": "amb_go_rejects"
+        },
+        {
+          "actual_label": "underdetermined",
+          "expected_label": "underdetermined",
+          "labels_across_completions": [
+            "accepted",
+            "rejected"
+          ],
+          "passed": true,
+          "symbols": [
+            "go",
+            "go"
+          ],
+          "trace_id": "amb_go_go_underconstrained"
+        }
+      ],
+      "trace_checks_passed": true,
+      "transition_consistency_passed": true,
+      "unreachable_states": [
+        "C",
+        "D"
+      ]
+    }
+  ],
+  "exact_fsm_fixture_ready": true,
+  "exact_transition_checks_passed": true,
+  "experiment": 5541,
+  "experiment_id": "exp5541-llm-fsm-exact-fixture",
+  "field_principles": {
+    "ambiguous_instances": "Preserves underconstrained controls without forcing a false label.",
+    "exact_fsm_fixture_ready": "Opens only when schema, trace, transition, and SAT-style gates all pass.",
+    "exact_transition_checks_passed": "Confirms transition consistency and contradiction checks agree with fixture intent.",
+    "field_principles": "Explains why every headline and gate field exists.",
+    "fsm_instances": "Fixes the number of generated FSM rows so later panels keep the denominator visible.",
+    "honest_verdict": "Provides a terminal evidence boundary without a model quality claim.",
+    "inference_substrate": "Declares deterministic FSM enumeration as the evidence substrate.",
+    "no_llm_invoked": "Prevents this exact fixture from being mistaken for a live model result.",
+    "reference_trace_checks_passed": "Confirms trace labels are generated by exact execution or completion analysis.",
+    "sat_solver_checks_passed": "Confirms bounded completion enumeration agrees with expected fixture classes.",
+    "satisfiable_instances": "Counts clean exact machines separately from nulls.",
+    "state_counts": "Records fixture scale without relying on prose summaries.",
+    "tests_added_or_reused": "Links the artifact to tests that exercise the exact checker.",
+    "transition_constraints": "Makes the exact transition substrate inspectable.",
+    "unsatisfiable_instances": "Preserves contradiction controls as first-class evidence.",
+    "yaml_schema_valid": "Confirms emitted machine descriptions are parseable and schema-shaped."
+  },
+  "fsm_family": [
+    {
+      "accepting_states": [
+        "S2"
+      ],
+      "alphabet": [
+        "a",
+        "b"
+      ],
+      "error_states": [
+        "S1"
+      ],
+      "expected_status": "satisfiable",
+      "instance_id": "fsm_sat_accept_error",
+      "observable_traces": [
+        {
+          "expected_label": "rejected",
+          "reference_label_source": "generated_by_exact_fsm_completion_analysis",
+          "symbols": [],
+          "trace_id": "sat_empty_rejects"
+        },
+        {
+          "expected_label": "accepted",
+          "reference_label_source": "generated_by_exact_fsm_completion_analysis",
+          "symbols": [
+            "b"
+          ],
+          "trace_id": "sat_b_accepts"
+        },
+        {
+          "expected_label": "error",
+          "reference_label_source": "generated_by_exact_fsm_completion_analysis",
+          "symbols": [
+            "a"
+          ],
+          "trace_id": "sat_a_errors"
+        }
+      ],
+      "schema_version": "carnot.fsm_exact_fixture.v1",
+      "start_state": "S0",
+      "state_count": 3,
+      "states": [
+        "S0",
+        "S1",
+        "S2"
+      ],
+      "transition_constraints": [
+        {
+          "constraint_id": "TC_SAT_00",
+          "kind": "require",
+          "source": "S0",
+          "symbol": "a",
+          "target": "S1"
+        },
+        {
+          "constraint_id": "TC_SAT_01",
+          "kind": "require",
+          "source": "S0",
+          "symbol": "b",
+          "target": "S2"
+        },
+        {
+          "constraint_id": "TC_SAT_02",
+          "kind": "require",
+          "source": "S1",
+          "symbol": "a",
+          "target": "S1"
+        },
+        {
+          "constraint_id": "TC_SAT_03",
+          "kind": "require",
+          "source": "S1",
+          "symbol": "b",
+          "target": "S1"
+        },
+        {
+          "constraint_id": "TC_SAT_04",
+          "kind": "require",
+          "source": "S2",
+          "symbol": "a",
+          "target": "S2"
+        },
+        {
+          "constraint_id": "TC_SAT_05",
+          "kind": "require",
+          "source": "S2",
+          "symbol": "b",
+          "target": "S2"
+        }
+      ],
+      "transition_sparsity": 0.0
+    },
+    {
+      "accepting_states": [
+        "S1"
+      ],
+      "alphabet": [
+        "x"
+      ],
+      "error_states": [
+        "S2"
+      ],
+      "expected_status": "unsatisfiable",
+      "instance_id": "fsm_unsat_conflicting_transition",
+      "observable_traces": [
+        {
+          "expected_label": "contradiction",
+          "reference_label_source": "generated_by_exact_fsm_completion_analysis",
+          "symbols": [
+            "x"
+          ],
+          "trace_id": "unsat_x_contradiction"
+        }
+      ],
+      "schema_version": "carnot.fsm_exact_fixture.v1",
+      "start_state": "S0",
+      "state_count": 3,
+      "states": [
+        "S0",
+        "S1",
+        "S2"
+      ],
+      "transition_constraints": [
+        {
+          "constraint_id": "TC_UNSAT_00",
+          "kind": "require",
+          "source": "S0",
+          "symbol": "x",
+          "target": "S1"
+        },
+        {
+          "constraint_id": "TC_UNSAT_01",
+          "kind": "require",
+          "source": "S0",
+          "symbol": "x",
+          "target": "S2"
+        }
+      ],
+      "transition_sparsity": 0.333333
+    },
+    {
+      "accepting_states": [
+        "C"
+      ],
+      "alphabet": [
+        "go"
+      ],
+      "error_states": [
+        "D"
+      ],
+      "expected_status": "ambiguous",
+      "instance_id": "fsm_ambiguous_sparse_branch",
+      "observable_traces": [
+        {
+          "expected_label": "rejected",
+          "reference_label_source": "generated_by_exact_fsm_completion_analysis",
+          "symbols": [
+            "go"
+          ],
+          "trace_id": "amb_go_rejects"
+        },
+        {
+          "expected_label": "underdetermined",
+          "reference_label_source": "generated_by_exact_fsm_completion_analysis",
+          "symbols": [
+            "go",
+            "go"
+          ],
+          "trace_id": "amb_go_go_underconstrained"
+        }
+      ],
+      "schema_version": "carnot.fsm_exact_fixture.v1",
+      "start_state": "A",
+      "state_count": 4,
+      "states": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "transition_constraints": [
+        {
+          "constraint_id": "TC_AMB_00",
+          "kind": "require",
+          "source": "A",
+          "symbol": "go",
+          "target": "B"
+        },
+        {
+          "constraint_id": "TC_AMB_01",
+          "kind": "require",
+          "source": "C",
+          "symbol": "go",
+          "target": "C"
+        },
+        {
+          "constraint_id": "TC_AMB_02",
+          "kind": "require",
+          "source": "D",
+          "symbol": "go",
+          "target": "D"
+        },
+        {
+          "constraint_id": "TC_AMB_03",
+          "kind": "forbid",
+          "source": "B",
+          "symbol": "go",
+          "target": "D"
+        }
+      ],
+      "transition_sparsity": 0.25
+    }
+  ],
+  "fsm_instances": 3,
+  "honest_verdict": "complete: exact_fsm_fixture_ready_sat_unsat_ambiguous_no_llm",
+  "inference_substrate": "deterministic_fsm_exact_fixture_no_llm",
+  "machine_descriptions": [
+    {
+      "instance_id": "fsm_sat_accept_error",
+      "machine_description_hash": "de9d654f11eef4166654fe08fd9cd30143dbaac21abcee76a92d4f77163b9c68",
+      "machine_description_yaml": "{\n  \"accepting_states\": [\n    \"S2\"\n  ],\n  \"alphabet\": [\n    \"a\",\n    \"b\"\n  ],\n  \"error_states\": [\n    \"S1\"\n  ],\n  \"expected_status\": \"satisfiable\",\n  \"instance_id\": \"fsm_sat_accept_error\",\n  \"observable_traces\": [\n    {\n      \"expected_label\": \"rejected\",\n      \"reference_label_source\": \"generated_by_exact_fsm_completion_analysis\",\n      \"symbols\": [],\n      \"trace_id\": \"sat_empty_rejects\"\n    },\n    {\n      \"expected_label\": \"accepted\",\n      \"reference_label_source\": \"generated_by_exact_fsm_completion_analysis\",\n      \"symbols\": [\n        \"b\"\n      ],\n      \"trace_id\": \"sat_b_accepts\"\n    },\n    {\n      \"expected_label\": \"error\",\n      \"reference_label_source\": \"generated_by_exact_fsm_completion_analysis\",\n      \"symbols\": [\n        \"a\"\n      ],\n      \"trace_id\": \"sat_a_errors\"\n    }\n  ],\n  \"schema_version\": \"carnot.fsm_exact_fixture.v1\",\n  \"start_state\": \"S0\",\n  \"state_count\": 3,\n  \"states\": [\n    \"S0\",\n    \"S1\",\n    \"S2\"\n  ],\n  \"transition_constraints\": [\n    {\n      \"constraint_id\": \"TC_SAT_00\",\n      \"kind\": \"require\",\n      \"source\": \"S0\",\n      \"symbol\": \"a\",\n      \"target\": \"S1\"\n    },\n    {\n      \"constraint_id\": \"TC_SAT_01\",\n      \"kind\": \"require\",\n      \"source\": \"S0\",\n      \"symbol\": \"b\",\n      \"target\": \"S2\"\n    },\n    {\n      \"constraint_id\": \"TC_SAT_02\",\n      \"kind\": \"require\",\n      \"source\": \"S1\",\n      \"symbol\": \"a\",\n      \"target\": \"S1\"\n    },\n    {\n      \"constraint_id\": \"TC_SAT_03\",\n      \"kind\": \"require\",\n      \"source\": \"S1\",\n      \"symbol\": \"b\",\n      \"target\": \"S1\"\n    },\n    {\n      \"constraint_id\": \"TC_SAT_04\",\n      \"kind\": \"require\",\n      \"source\": \"S2\",\n      \"symbol\": \"a\",\n      \"target\": \"S2\"\n    },\n    {\n      \"constraint_id\": \"TC_SAT_05\",\n      \"kind\": \"require\",\n      \"source\": \"S2\",\n      \"symbol\": \"b\",\n      \"target\": \"S2\"\n    }\n  ],\n  \"transition_sparsity\": 0.0\n}",
+      "natural_language_summary": "fsm_sat_accept_error has 3 states over a,b; it starts at S0, accepts S2, treats S1 as error, carries 6 required and 0 forbidden transition constraints, and has 3 exact trace labels generated from the FSM."
+    },
+    {
+      "instance_id": "fsm_unsat_conflicting_transition",
+      "machine_description_hash": "8da080388d2b02b332bcfe1cf6bbf7f1852b182158c2afdbd0b825fb11c095b7",
+      "machine_description_yaml": "{\n  \"accepting_states\": [\n    \"S1\"\n  ],\n  \"alphabet\": [\n    \"x\"\n  ],\n  \"error_states\": [\n    \"S2\"\n  ],\n  \"expected_status\": \"unsatisfiable\",\n  \"instance_id\": \"fsm_unsat_conflicting_transition\",\n  \"observable_traces\": [\n    {\n      \"expected_label\": \"contradiction\",\n      \"reference_label_source\": \"generated_by_exact_fsm_completion_analysis\",\n      \"symbols\": [\n        \"x\"\n      ],\n      \"trace_id\": \"unsat_x_contradiction\"\n    }\n  ],\n  \"schema_version\": \"carnot.fsm_exact_fixture.v1\",\n  \"start_state\": \"S0\",\n  \"state_count\": 3,\n  \"states\": [\n    \"S0\",\n    \"S1\",\n    \"S2\"\n  ],\n  \"transition_constraints\": [\n    {\n      \"constraint_id\": \"TC_UNSAT_00\",\n      \"kind\": \"require\",\n      \"source\": \"S0\",\n      \"symbol\": \"x\",\n      \"target\": \"S1\"\n    },\n    {\n      \"constraint_id\": \"TC_UNSAT_01\",\n      \"kind\": \"require\",\n      \"source\": \"S0\",\n      \"symbol\": \"x\",\n      \"target\": \"S2\"\n    }\n  ],\n  \"transition_sparsity\": 0.333333\n}",
+      "natural_language_summary": "fsm_unsat_conflicting_transition has 3 states over x; it starts at S0, accepts S1, treats S2 as error, carries 2 required and 0 forbidden transition constraints, and has 1 exact trace labels generated from the FSM."
+    },
+    {
+      "instance_id": "fsm_ambiguous_sparse_branch",
+      "machine_description_hash": "b763dd9d479d273f04c99003bef5e5fe28a16c512c4dc11510b5d4d4c14ecb00",
+      "machine_description_yaml": "{\n  \"accepting_states\": [\n    \"C\"\n  ],\n  \"alphabet\": [\n    \"go\"\n  ],\n  \"error_states\": [\n    \"D\"\n  ],\n  \"expected_status\": \"ambiguous\",\n  \"instance_id\": \"fsm_ambiguous_sparse_branch\",\n  \"observable_traces\": [\n    {\n      \"expected_label\": \"rejected\",\n      \"reference_label_source\": \"generated_by_exact_fsm_completion_analysis\",\n      \"symbols\": [\n        \"go\"\n      ],\n      \"trace_id\": \"amb_go_rejects\"\n    },\n    {\n      \"expected_label\": \"underdetermined\",\n      \"reference_label_source\": \"generated_by_exact_fsm_completion_analysis\",\n      \"symbols\": [\n        \"go\",\n        \"go\"\n      ],\n      \"trace_id\": \"amb_go_go_underconstrained\"\n    }\n  ],\n  \"schema_version\": \"carnot.fsm_exact_fixture.v1\",\n  \"start_state\": \"A\",\n  \"state_count\": 4,\n  \"states\": [\n    \"A\",\n    \"B\",\n    \"C\",\n    \"D\"\n  ],\n  \"transition_constraints\": [\n    {\n      \"constraint_id\": \"TC_AMB_00\",\n      \"kind\": \"require\",\n      \"source\": \"A\",\n      \"symbol\": \"go\",\n      \"target\": \"B\"\n    },\n    {\n      \"constraint_id\": \"TC_AMB_01\",\n      \"kind\": \"require\",\n      \"source\": \"C\",\n      \"symbol\": \"go\",\n      \"target\": \"C\"\n    },\n    {\n      \"constraint_id\": \"TC_AMB_02\",\n      \"kind\": \"require\",\n      \"source\": \"D\",\n      \"symbol\": \"go\",\n      \"target\": \"D\"\n    },\n    {\n      \"constraint_id\": \"TC_AMB_03\",\n      \"kind\": \"forbid\",\n      \"source\": \"B\",\n      \"symbol\": \"go\",\n      \"target\": \"D\"\n    }\n  ],\n  \"transition_sparsity\": 0.25\n}",
+      "natural_language_summary": "fsm_ambiguous_sparse_branch has 4 states over go; it starts at A, accepts C, treats D as error, carries 3 required and 1 forbidden transition constraints, and has 2 exact trace labels generated from the FSM."
+    }
+  ],
+  "milestone": "2026.07.502",
+  "no_llm_invoked": true,
+  "random_seed": 5541,
+  "reference_trace_checks_passed": true,
+  "reproducibility_checksum": "3890afcb5bf7d0325568c032aff6a802d0ff6f683ccbbeb35e1406678ba2f894",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5541_llm_fsm_exact_fixture.json",
+  "run_date": "2026-07-10",
+  "sat_solver_checks_passed": true,
+  "satisfiable_instances": 1,
+  "schema": "carnot.experiment_5541.llm_fsm_exact_fixture.v502",
+  "spec_refs": [
+    "REQ-VERIFY-5541",
+    "SCENARIO-VERIFY-5541"
+  ],
+  "state_counts": [
+    3,
+    3,
+    4
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5541_llm_fsm_exact_fixture.py"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest -o addopts= tests/python/test_experiment_5541_llm_fsm_exact_fixture.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python -m coverage run --source=carnot -m pytest -o addopts= tests/python/test_experiment_5541_llm_fsm_exact_fixture.py -q && .venv/bin/python -m coverage report --fail-under=100 python/carnot/experiment_5541_llm_fsm_exact_fixture.py",
+      "outcome": "passed_new_module_100pct"
+    }
+  ],
+  "transition_constraints": [
+    {
+      "constraint_count": 6,
+      "constraint_ids": [
+        "TC_SAT_00",
+        "TC_SAT_01",
+        "TC_SAT_02",
+        "TC_SAT_03",
+        "TC_SAT_04",
+        "TC_SAT_05"
+      ],
+      "instance_id": "fsm_sat_accept_error",
+      "state_count": 3,
+      "transition_sparsity": 0.0
+    },
+    {
+      "constraint_count": 2,
+      "constraint_ids": [
+        "TC_UNSAT_00",
+        "TC_UNSAT_01"
+      ],
+      "instance_id": "fsm_unsat_conflicting_transition",
+      "state_count": 3,
+      "transition_sparsity": 0.333333
+    },
+    {
+      "constraint_count": 4,
+      "constraint_ids": [
+        "TC_AMB_00",
+        "TC_AMB_01",
+        "TC_AMB_02",
+        "TC_AMB_03"
+      ],
+      "instance_id": "fsm_ambiguous_sparse_branch",
+      "state_count": 4,
+      "transition_sparsity": 0.25
+    }
+  ],
+  "unsatisfiable_instances": 1,
+  "yaml_schema_valid": true
+}
