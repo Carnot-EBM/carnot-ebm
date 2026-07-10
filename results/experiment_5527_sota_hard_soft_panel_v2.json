@@ -216,5 +216,13 @@
   "upstream_repair_honest_verdict": "complete: sota_structured_repair_loop_ready_schema_valid_exact_handoff_no_quality_claim",
   "upstream_repair_load_error": null,
   "upstream_repair_loadable": true,
-  "upstream_repair_loop_ready": true
+  "upstream_repair_loop_ready": true,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.001162 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
