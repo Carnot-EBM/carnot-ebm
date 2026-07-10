@@ -28966,6 +28966,65 @@ and avoid claiming hard/soft reasoning quality.
 |---|---|---|
 | REQ-VERIFY-5526 | Implemented (`python/carnot/experiment_5526_sota_structured_repair_loop.py`, `results/experiment_5526_sota_structured_repair_loop.json`) | Implemented (`tests/python/test_experiment_5526_sota_structured_repair_loop.py`) |
 
+### REQ-VERIFY-5539: Gram2Token Grammar Table Preflight V502
+
+The repository SHALL provide Exp 5539 at
+`python/carnot/experiment_5539_gram2token_grammar_table_preflight.py` and write
+`results/experiment_5539_gram2token_grammar_table_preflight.json` as a local
+preflight for the hard/soft structured-output schema used by Exp 5512, Exp
+5525, and Exp 5526. Exp 5539 SHALL reuse
+`carnot.hard_soft_claim_candidate.v1`, SHALL inspect local grammar/runtime
+helpers including llama.cpp GBNF, llguidance, XGrammar, repository JSON-schema
+validation, and repository parser utilities, and SHALL NOT invoke an LLM or load
+a model.
+
+The preflight SHALL compile or otherwise reach the selected local grammar
+backend only when that backend is actually available. When a backend exposes no
+token-transition table, Exp 5539 SHALL say so and SHALL record only locally
+available grammar, schema-transition, and fixture-table hashes. If no constrained
+grammar backend exists, the artifact SHALL record the missing backend state
+honestly and keep `grammar_table_preflight_ready=false`.
+
+The artifact SHALL record schema hashes, backend names, table hashes when
+available, deterministic valid-fixture acceptance, deterministic invalid-fixture
+rejection, and unsupported schema features that still require the exact
+hard/soft validators. It SHALL include at minimum these top-level fields:
+`grammar_backend_candidates`, `selected_backend`, `backend_available`,
+`schema_hash`, `table_hashes`, `valid_fixture_acceptance_rate`,
+`invalid_fixture_rejection_rate`, `unsupported_schema_features`,
+`llm_invoked`, `no_model_specs_required`, `decoding_speedup_claim`,
+`grammar_table_preflight_ready`, `tests_added_or_reused`, `field_principles`,
+`inference_substrate`, and `honest_verdict`. `inference_substrate` SHALL equal
+`deterministic_grammar_table_preflight_no_llm`; `llm_invoked` SHALL be `false`;
+`no_model_specs_required` SHALL be `true`; and `decoding_speedup_claim` SHALL be
+`false`.
+
+### SCENARIO-VERIFY-5539: Grammar Table Preflight Is Reachable Without Generation
+
+Given the Exp 5512 hard/soft candidate schema and deterministic fixture rows,
+when Exp 5539 runs on a host with a compile-reachable grammar backend such as
+llama.cpp GBNF, then it records the selected backend, compiles the local grammar
+surface without loading a model, builds a deterministic schema-transition table,
+hashes the available grammar/table evidence, accepts every valid fixture row,
+rejects malformed or semantically invalid fixture rows, writes
+`results/experiment_5539_gram2token_grammar_table_preflight.json`, and keeps all
+speedup and model-quality claim fields false.
+
+If llguidance, XGrammar, or llama.cpp grammar support is absent, if a backend
+imports but cannot compile, if an internal token-transition table is not exposed,
+or if JSON-schema validation cannot express instance-specific assignment keys,
+validator-target equality, hard-constraint feasibility, soft-preference
+optimality, or abstention correctness, then Exp 5539 SHALL list those limitations
+in backend candidates or `unsupported_schema_features`, keep exact-validator
+handoff separate from grammar reachability, and use a `blocked:` verdict when no
+constrained grammar backend is locally reachable.
+
+## Implementation Status (REQ-VERIFY-5539)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5539 | Planned (`python/carnot/experiment_5539_gram2token_grammar_table_preflight.py`, `results/experiment_5539_gram2token_grammar_table_preflight.json`) | Planned (`tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py`) |
+
 ### REQ-VERIFY-5527: Exact-Validated SOTA Hard/Soft Panel V2
 
 The repository SHALL provide Exp 5527 at

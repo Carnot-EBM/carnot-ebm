@@ -1,0 +1,467 @@
+{
+  "backend_available": true,
+  "candidate_schema_path": "python/carnot/experiment_5512_structured_output_positive_control.py::candidate_schema",
+  "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+  "decoding_speedup_claim": false,
+  "experiment": 5539,
+  "experiment_id": "exp5539-gram2token-grammar-table-preflight",
+  "field_principles": {
+    "backend_available": "Separates reachable constrained grammar infrastructure from parser-only fallback evidence.",
+    "decoding_speedup_claim": "Must stay false because no decoding runtime or timing comparison ran.",
+    "field_principles": "Explains why each headline and gate field must remain in future artifacts.",
+    "grammar_backend_candidates": "Lists each local grammar or schema helper checked before selecting a backend.",
+    "grammar_table_preflight_ready": "Opens only when a constrained backend, table hashes, and fixture gates are all clean.",
+    "honest_verdict": "Provides a terminal status that cannot promote reachability into speed or quality.",
+    "inference_substrate": "Declares deterministic no-LLM grammar-table preflight as the evidence substrate.",
+    "invalid_fixture_rejection_rate": "Confirms malformed or semantically invalid fixture rows are rejected locally.",
+    "llm_invoked": "Must stay false because this preflight checks infrastructure, not generation quality.",
+    "no_model_specs_required": "Prevents model metadata from appearing when no model was loaded.",
+    "schema_hash": "Pins the preflight to the reused Exp5512 hard/soft candidate schema.",
+    "selected_backend": "Names only the constrained grammar backend whose compile path was actually reached.",
+    "table_hashes": "Content-addresses available grammar, schema-transition, and fixture acceptance tables without inventing hidden token tables.",
+    "tests_added_or_reused": "Links the artifact to tests that exercise backend selection and fixture gates.",
+    "unsupported_schema_features": "Keeps cross-field and exact-validator semantics out of the grammar-table claim.",
+    "valid_fixture_acceptance_rate": "Confirms schema-valid hard/soft fixture rows still reach the exact validators."
+  },
+  "grammar_backend_candidates": [
+    {
+      "available": true,
+      "constrained_generation": true,
+      "failure_reason": null,
+      "grammar_compiled": true,
+      "grammar_hash": "62c6a3c48db4461ee75534d106149d69f32c15c8578d582d1a0bd78e6ef2179a",
+      "import_available": true,
+      "name": "llama_cpp_gbnf",
+      "schema_support": "GBNF compile path for JSON grammar; no internal token table exposed here",
+      "table_exposed": false
+    },
+    {
+      "available": false,
+      "constrained_generation": true,
+      "failure_reason": "llguidance_not_installed",
+      "grammar_compiled": false,
+      "import_available": false,
+      "name": "llguidance_json_schema",
+      "schema_support": "llguidance JSON-schema grammar compiler",
+      "table_exposed": false
+    },
+    {
+      "available": false,
+      "constrained_generation": true,
+      "failure_reason": "xgrammar_not_installed",
+      "grammar_compiled": false,
+      "import_available": false,
+      "name": "xgrammar_json_schema",
+      "schema_support": "XGrammar JSON-schema compiler when locally wired",
+      "table_exposed": false
+    },
+    {
+      "available": true,
+      "constrained_generation": false,
+      "failure_reason": null,
+      "grammar_compiled": true,
+      "import_available": true,
+      "name": "repository_json_schema_validator",
+      "notes": "Useful as fixture/table evidence but not a constrained decoding backend.",
+      "schema_support": "post-decode validation plus deterministic schema-transition table",
+      "table_exposed": true
+    },
+    {
+      "available": true,
+      "constrained_generation": false,
+      "failure_reason": null,
+      "grammar_compiled": true,
+      "import_available": true,
+      "name": "experiment_5512_parser_exact_validator",
+      "notes": "Validates semantics after JSON is available; not a token mask runtime.",
+      "schema_support": "parser handoff plus Exp5499 exact hard/soft validators",
+      "table_exposed": true
+    }
+  ],
+  "grammar_table_evidence_scope": "schema/grammar compile and deterministic fixture table only; no tokenizer transition table, decoding path, speed, or model quality measured",
+  "grammar_table_preflight_ready": true,
+  "honest_verdict": "complete: gram2token_preflight_ready_llama_cpp_gbnf_schema_reachable_no_llm_no_speedup_or_quality_claim",
+  "inference_substrate": "deterministic_grammar_table_preflight_no_llm",
+  "invalid_fixture_rejection_rate": 1.0,
+  "invalid_fixture_rows": [
+    {
+      "acceptance_status": "schema_invalid",
+      "accepted": false,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": false,
+      "exact_validator_verdict": "not_handed_off",
+      "instance_id": "claim_support_preference",
+      "parseable": false,
+      "schema_errors": [
+        "$.candidate_schema_version is required"
+      ],
+      "schema_valid": false
+    },
+    {
+      "acceptance_status": "validator_target_mismatch",
+      "accepted": false,
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "exact_validator_correct": false,
+      "exact_validator_verdict": "not_handed_off",
+      "instance_id": "claim_safety_conflict",
+      "parseable": false,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "acceptance_status": "invalid_assignment_domain",
+      "accepted": false,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": false,
+      "exact_validator_verdict": "not_handed_off",
+      "instance_id": "claim_support_preference",
+      "parseable": false,
+      "schema_errors": [],
+      "schema_valid": true
+    }
+  ],
+  "llm_invoked": false,
+  "milestone": "2026.07.502",
+  "no_model_specs_required": true,
+  "random_seed": 5539,
+  "reproducibility_checksum": "88fb1c73cd31220186fa1213d740001a82116648108b5b8d847b52f9459366c0",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5539_gram2token_grammar_table_preflight.json",
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5539.gram2token_grammar_table_preflight.v502",
+  "schema_hash": "d8ca30099d73d222bf5b79b312804e2fd6f1ebfffdb0f5951d26fdb5d8fa7ab2",
+  "schema_transition_table": [
+    {
+      "additional_properties": false,
+      "dynamic_object": false,
+      "path": "$",
+      "properties": [
+        "abstention_reason",
+        "candidate_id",
+        "candidate_schema_version",
+        "conclusion",
+        "instance_id",
+        "premises",
+        "rules_or_constraints",
+        "validator_target"
+      ],
+      "required": [
+        "abstention_reason",
+        "candidate_id",
+        "candidate_schema_version",
+        "conclusion",
+        "instance_id",
+        "premises",
+        "rules_or_constraints",
+        "validator_target"
+      ],
+      "type": "object"
+    },
+    {
+      "path": "$.abstention_reason",
+      "type": "string"
+    },
+    {
+      "path": "$.candidate_id",
+      "type": "string"
+    },
+    {
+      "enum": [
+        "carnot.hard_soft_claim_candidate.v1"
+      ],
+      "path": "$.candidate_schema_version",
+      "type": "string"
+    },
+    {
+      "additional_properties": false,
+      "dynamic_object": false,
+      "path": "$.conclusion",
+      "properties": [
+        "assignment",
+        "confidence",
+        "status"
+      ],
+      "required": [
+        "assignment",
+        "confidence",
+        "status"
+      ],
+      "type": "object"
+    },
+    {
+      "additional_properties": null,
+      "dynamic_object": true,
+      "path": "$.conclusion.assignment",
+      "properties": [],
+      "required": [],
+      "type": "object"
+    },
+    {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "path": "$.conclusion.confidence",
+      "type": "number"
+    },
+    {
+      "enum": [
+        "candidate",
+        "abstain"
+      ],
+      "path": "$.conclusion.status",
+      "type": "string"
+    },
+    {
+      "path": "$.instance_id",
+      "type": "string"
+    },
+    {
+      "has_item_schema": true,
+      "max_items": null,
+      "min_items": 1,
+      "path": "$.premises",
+      "type": "array"
+    },
+    {
+      "additional_properties": false,
+      "dynamic_object": false,
+      "path": "$.premises[]",
+      "properties": [
+        "premise_id",
+        "source",
+        "text"
+      ],
+      "required": [
+        "premise_id",
+        "source",
+        "text"
+      ],
+      "type": "object"
+    },
+    {
+      "path": "$.premises[].premise_id",
+      "type": "string"
+    },
+    {
+      "path": "$.premises[].source",
+      "type": "string"
+    },
+    {
+      "path": "$.premises[].text",
+      "type": "string"
+    },
+    {
+      "has_item_schema": true,
+      "max_items": null,
+      "min_items": 1,
+      "path": "$.rules_or_constraints",
+      "type": "array"
+    },
+    {
+      "additional_properties": false,
+      "dynamic_object": false,
+      "path": "$.rules_or_constraints[]",
+      "properties": [
+        "kind",
+        "rule_id",
+        "text",
+        "validator_constraint_id"
+      ],
+      "required": [
+        "kind",
+        "rule_id",
+        "text",
+        "validator_constraint_id"
+      ],
+      "type": "object"
+    },
+    {
+      "enum": [
+        "hard_constraint",
+        "soft_preference",
+        "domain_rule",
+        "abstention_rule"
+      ],
+      "path": "$.rules_or_constraints[].kind",
+      "type": "string"
+    },
+    {
+      "path": "$.rules_or_constraints[].rule_id",
+      "type": "string"
+    },
+    {
+      "path": "$.rules_or_constraints[].text",
+      "type": "string"
+    },
+    {
+      "path": "$.rules_or_constraints[].validator_constraint_id",
+      "type": "string"
+    },
+    {
+      "additional_properties": false,
+      "dynamic_object": false,
+      "path": "$.validator_target",
+      "properties": [
+        "expected_status",
+        "hard_constraint_ids",
+        "instance_id",
+        "reference_solver_path",
+        "soft_preference_ids",
+        "typed_claim_names"
+      ],
+      "required": [
+        "expected_status",
+        "hard_constraint_ids",
+        "instance_id",
+        "reference_solver_path",
+        "soft_preference_ids",
+        "typed_claim_names"
+      ],
+      "type": "object"
+    },
+    {
+      "enum": [
+        "optimal",
+        "infeasible"
+      ],
+      "path": "$.validator_target.expected_status",
+      "type": "string"
+    },
+    {
+      "has_item_schema": true,
+      "max_items": null,
+      "min_items": null,
+      "path": "$.validator_target.hard_constraint_ids",
+      "type": "array"
+    },
+    {
+      "path": "$.validator_target.hard_constraint_ids[]",
+      "type": "string"
+    },
+    {
+      "path": "$.validator_target.instance_id",
+      "type": "string"
+    },
+    {
+      "path": "$.validator_target.reference_solver_path",
+      "type": "string"
+    },
+    {
+      "has_item_schema": true,
+      "max_items": null,
+      "min_items": null,
+      "path": "$.validator_target.soft_preference_ids",
+      "type": "array"
+    },
+    {
+      "path": "$.validator_target.soft_preference_ids[]",
+      "type": "string"
+    },
+    {
+      "has_item_schema": true,
+      "max_items": null,
+      "min_items": null,
+      "path": "$.validator_target.typed_claim_names",
+      "type": "array"
+    },
+    {
+      "path": "$.validator_target.typed_claim_names[]",
+      "type": "string"
+    }
+  ],
+  "schema_transition_table_row_count": 30,
+  "selected_backend": "llama_cpp_gbnf",
+  "spec_refs": [
+    "REQ-VERIFY-5539",
+    "SCENARIO-VERIFY-5539"
+  ],
+  "table_hashes": [
+    {
+      "backend": "llama_cpp_gbnf",
+      "hash": "62c6a3c48db4461ee75534d106149d69f32c15c8578d582d1a0bd78e6ef2179a",
+      "kind": "compiled_grammar_source",
+      "name": "llama_cpp_json_gbnf",
+      "row_count": 0,
+      "source": "Exp5512 build_llama_cpp_json_grammar"
+    },
+    {
+      "backend": "repository_json_schema_validator",
+      "hash": "c967d4013a5c1853fe62ecda90e298d91194c6b7f5b6fa13d8ad3986624bf950",
+      "kind": "schema_transition_table",
+      "name": "hard_soft_schema_transition_table",
+      "row_count": 30,
+      "source": "Exp5512 candidate_schema traversed by Exp5539"
+    },
+    {
+      "backend": "experiment_5512_parser_exact_validator",
+      "hash": "61b4a30db6119fd27f3d38033e8055264a6449b82902ce19652681f54937f38a",
+      "kind": "fixture_acceptance_table",
+      "name": "valid_fixture_acceptance_table",
+      "row_count": 3,
+      "source": "Exp5512 fixture candidate rows"
+    },
+    {
+      "backend": "experiment_5512_parser_exact_validator",
+      "hash": "f27c81bd037865151ab823976e577d235ac1ee72588a41921b6b2dad8c12545a",
+      "kind": "fixture_rejection_table",
+      "name": "invalid_fixture_rejection_table",
+      "row_count": 3,
+      "source": "Exp5539 deterministic invalid fixture mutations"
+    }
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py",
+    "tests/python/test_experiment_5512_structured_output_positive_control.py",
+    "tests/python/test_experiment_5525_sota_schema_failure_taxonomy.py",
+    "tests/python/test_experiment_5526_sota_structured_repair_loop.py"
+  ],
+  "tests_run": [],
+  "unsupported_schema_features": [
+    "abstention_correctness_not_json_schema_expressible",
+    "assignment_domain_values_require_exp5499_exact_validator",
+    "free_form_string_lengths_not_token_table_optimized_here",
+    "hard_constraint_feasibility_not_json_schema_expressible",
+    "instance_specific_assignment_keys_require_exp5499_exact_validator",
+    "llama_cpp_token_transition_table_not_exposed",
+    "llguidance_not_installed",
+    "premise_and_rule_text_truth_not_grammar_checkable",
+    "soft_preference_optimality_not_json_schema_expressible",
+    "validator_target_cross_field_equality_requires_exp5499_exact_validator",
+    "xgrammar_not_installed"
+  ],
+  "valid_fixture_acceptance_rate": 1.0,
+  "valid_fixture_rows": [
+    {
+      "acceptance_status": "schema_valid_assignment",
+      "accepted": true,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "instance_id": "claim_support_preference",
+      "parseable": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "acceptance_status": "schema_valid_assignment",
+      "accepted": true,
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "instance_id": "claim_safety_conflict",
+      "parseable": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "acceptance_status": "schema_valid_abstention",
+      "accepted": true,
+      "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "correct_abstention",
+      "instance_id": "claim_infeasible_negative_control",
+      "parseable": true,
+      "schema_errors": [],
+      "schema_valid": true
+    }
+  ]
+}
