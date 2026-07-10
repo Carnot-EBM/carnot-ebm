@@ -1,0 +1,420 @@
+{
+  "abstention_rate": 0.0,
+  "abstention_rows": 0,
+  "adversarial_clean": true,
+  "assignment_rows_scored": 2,
+  "command_helper_path": "carnot.inference.sota_models.cached_sota_pair + llama_cpp.Llama.create_chat_completion",
+  "confident_wrong_rate": 0.0,
+  "confident_wrong_rows": 0,
+  "duration_gate_clean": true,
+  "duration_gate_honest_verdict": "complete: live_sota_hard_soft_panel_claim_downgraded_no_quality_claim_exact_validator_mismatch_missing_candidate_rows_preference_suboptimal_or_unscored_schema_invalid_or_missing_rows",
+  "duration_gate_path": "results/experiment_5538_sota_panel_duration_substrate_corrigendum.json",
+  "exact_correct_rows": 2,
+  "exact_validator_accuracy": 1.0,
+  "exact_validator_path": "carnot.experiment_5527_sota_hard_soft_panel_v2.evaluate_candidate_rows",
+  "exact_validator_rows_scored": 2,
+  "experiment": 5540,
+  "experiment_id": "exp5540-sota-hard-soft-live-panel-v3",
+  "extra_emitted_rows": [],
+  "field_principles": {
+    "abstention_rate": "Counts only explicit schema-valid abstentions.",
+    "adversarial_clean": "States whether the panel avoids known overclaim modes.",
+    "confident_wrong_rate": "Separates high-confidence failures from abstention.",
+    "exact_validator_accuracy": "Uses deterministic validators as the correctness authority.",
+    "field_principles": "Explains why every headline and gate field exists.",
+    "gpu_offload_evidence": "Records offload evidence instead of trusting model names.",
+    "honest_verdict": "Provides a terminal, non-ambiguous evidence boundary.",
+    "inference_substrate": "Declares the local GGUF exact-validated panel substrate.",
+    "measured_duration_s": "Records wall-clock runtime for live or gated-null evidence.",
+    "missing_candidate_rows": "Keeps absent expected rows visible.",
+    "model_specs": "Names the only SOTA GGUF model IDs allowed for live panel rows.",
+    "models_attempted": "Records which mandated local models actually received the prompt.",
+    "output_hashes": "Pins raw model outputs without relying on prose summaries.",
+    "preference_optimality_rate": "Measures soft preference only for feasible assignment rows.",
+    "prompt_hashes": "Pins prompts used for live generation.",
+    "random_seed": "Records deterministic generation seed.",
+    "rows_emitted": "Separates raw row volume from correctness.",
+    "rows_requested": "Fixes the exact fixture denominator before generation.",
+    "schema_validity_rate": "Keeps schema validation upstream of exact scoring.",
+    "sota_hard_soft_claim_allowed": "Controls whether the live hard/soft quality result may be cited.",
+    "tests_added_or_reused": "Links the artifact to parser and validator tests."
+  },
+  "gate_blockers": [],
+  "gates_clean": true,
+  "gpu_offload_evidence": {
+    "gpu_memory_delta_mb": 21569.0,
+    "gpu_offload_verified": true,
+    "n_gpu_layers": -1,
+    "offload_evidence": true,
+    "per_model": [
+      {
+        "gpu_memory_after_mb": 30511.0,
+        "gpu_memory_before_mb": 8942.0,
+        "gpu_memory_delta_mb": 21569.0,
+        "gpu_offload_verified": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "n_gpu_layers": -1,
+        "offload_evidence": true
+      },
+      {
+        "gpu_memory_after_mb": 26923.0,
+        "gpu_memory_before_mb": 9549.0,
+        "gpu_memory_delta_mb": 17374.0,
+        "gpu_offload_verified": true,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "n_gpu_layers": -1,
+        "offload_evidence": true
+      }
+    ]
+  },
+  "grammar_gate_clean": true,
+  "grammar_gate_honest_verdict": "complete: gram2token_preflight_ready_llama_cpp_gbnf_schema_reachable_no_llm_no_speedup_or_quality_claim",
+  "grammar_gate_path": "results/experiment_5539_gram2token_grammar_table_preflight.json",
+  "grammar_masking_rows": 2,
+  "honest_verdict": "complete: sota_hard_soft_live_panel_v3_honest_null_no_claim_missing_candidate_rows_schema_invalid_or_missing_rows",
+  "inference_substrate": "live_local_sota_gguf_exact_validated_panel",
+  "legacy_smoke_models_used": [],
+  "live_receipts": [
+    {
+      "backend": "llama_cpp_python_cuda_gguf",
+      "binding": "llama_cpp.Llama.create_chat_completion",
+      "command": null,
+      "grammar_masking_used": true,
+      "helper_path": "carnot.inference.sota_models.cached_sota_pair",
+      "live_model_invoked": true,
+      "measured_duration_s": 132.225217,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "models_attempted": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "output_hash": "83f87643a092a886af09644f5d1ba37a0283da5cca9c3f166e69efc0e3e90bc4",
+      "production_mode": "grammar_masking",
+      "prompt_hash": "5362323f7850171a4a368bd09f8b5dc8a5205a163475f1c1b2da4288d72b5a30",
+      "random_seed": 5540,
+      "runtime_error": null
+    },
+    {
+      "backend": "llama_cpp_python_cuda_gguf",
+      "binding": "llama_cpp.Llama.create_chat_completion",
+      "command": null,
+      "grammar_masking_used": true,
+      "helper_path": "carnot.inference.sota_models.cached_sota_pair",
+      "live_model_invoked": true,
+      "measured_duration_s": 151.433575,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "models_attempted": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "output_hash": "bd7a171a9c4fa321f0d0065290a464f965d87792af6344ba88b0f7997d73e519",
+      "production_mode": "grammar_masking",
+      "prompt_hash": "5362323f7850171a4a368bd09f8b5dc8a5205a163475f1c1b2da4288d72b5a30",
+      "random_seed": 5540,
+      "runtime_error": null
+    }
+  ],
+  "measured_duration_s": 283.658792,
+  "milestone": "2026.07.502",
+  "missing_candidate_rows": 4,
+  "missing_instance_ids": [
+    {
+      "instance_id": "claim_safety_conflict",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "instance_id": "claim_infeasible_negative_control",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "instance_id": "claim_safety_conflict",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    },
+    {
+      "instance_id": "claim_infeasible_negative_control",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    }
+  ],
+  "model_specs": [
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    }
+  ],
+  "models_attempted": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "no_autotokenizer_on_gguf": true,
+  "output_hashes": [
+    "83f87643a092a886af09644f5d1ba37a0283da5cca9c3f166e69efc0e3e90bc4",
+    "bd7a171a9c4fa321f0d0065290a464f965d87792af6344ba88b0f7997d73e519"
+  ],
+  "panel_rows": [
+    {
+      "abstention_reason": "",
+      "assignment": {
+        "scope": "bounded",
+        "source_quality": "primary",
+        "support": "entailed"
+      },
+      "candidate_confidence": 1.0,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "conclusion_status": "candidate",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "hard_constraints_pass": true,
+      "instance_id": "claim_support_preference",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "production_mode": "grammar_masking",
+      "reference_agreement": true,
+      "row_output_hash": "83f87643a092a886af09644f5d1ba37a0283da5cca9c3f166e69efc0e3e90bc4",
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": true,
+      "soft_score": 11.0,
+      "source_exact_validator_correct": null,
+      "source_exact_validator_verdict": null,
+      "source_reference_agreement": null,
+      "source_repair_method": null,
+      "source_soft_optimal": null,
+      "validator_target_ready": true
+    },
+    {
+      "abstention_reason": "",
+      "assignment": {
+        "scope": "bounded",
+        "source_quality": "primary",
+        "support": "entailed"
+      },
+      "candidate_confidence": 1.0,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "conclusion_status": "candidate",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "hard_constraints_pass": true,
+      "instance_id": "claim_support_preference",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "production_mode": "grammar_masking",
+      "reference_agreement": true,
+      "row_output_hash": "bd7a171a9c4fa321f0d0065290a464f965d87792af6344ba88b0f7997d73e519",
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": true,
+      "soft_score": 11.0,
+      "source_exact_validator_correct": null,
+      "source_exact_validator_verdict": null,
+      "source_reference_agreement": null,
+      "source_repair_method": null,
+      "source_soft_optimal": null,
+      "validator_target_ready": true
+    }
+  ],
+  "parse_failures": [],
+  "per_model_reports": [
+    {
+      "abstention_rate": 0.0,
+      "assignment_rows_scored": 1,
+      "confident_wrong_rate": 0.0,
+      "confident_wrong_rows": 0,
+      "exact_validator_accuracy": 1.0,
+      "exact_validator_rows_scored": 1,
+      "extra_emitted_rows": [],
+      "missing_candidate_rows": 2,
+      "missing_instance_ids": [
+        "claim_safety_conflict",
+        "claim_infeasible_negative_control"
+      ],
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "panel_rows": [
+        {
+          "abstention_reason": "",
+          "assignment": {
+            "scope": "bounded",
+            "source_quality": "primary",
+            "support": "entailed"
+          },
+          "candidate_confidence": 1.0,
+          "candidate_id": "claim_support_preference_exact_assignment_5512",
+          "conclusion_status": "candidate",
+          "exact_validator_correct": true,
+          "exact_validator_verdict": "exact_match",
+          "hard_constraints_pass": true,
+          "instance_id": "claim_support_preference",
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "parse_status": "schema_valid_assignment",
+          "parseable": true,
+          "production_mode": "grammar_masking",
+          "reference_agreement": true,
+          "row_output_hash": "83f87643a092a886af09644f5d1ba37a0283da5cca9c3f166e69efc0e3e90bc4",
+          "schema_errors": [],
+          "schema_valid": true,
+          "soft_optimal": true,
+          "soft_score": 11.0,
+          "source_exact_validator_correct": null,
+          "source_exact_validator_verdict": null,
+          "source_reference_agreement": null,
+          "source_repair_method": null,
+          "source_soft_optimal": null,
+          "validator_target_ready": true
+        }
+      ],
+      "parse_failures": [],
+      "preference_optimality_rate": 1.0,
+      "production_mode": "grammar_masking",
+      "rows_emitted": 1,
+      "rows_requested": 3,
+      "schema_valid_rows": 1,
+      "schema_validity_rate": 0.333333
+    },
+    {
+      "abstention_rate": 0.0,
+      "assignment_rows_scored": 1,
+      "confident_wrong_rate": 0.0,
+      "confident_wrong_rows": 0,
+      "exact_validator_accuracy": 1.0,
+      "exact_validator_rows_scored": 1,
+      "extra_emitted_rows": [],
+      "missing_candidate_rows": 2,
+      "missing_instance_ids": [
+        "claim_safety_conflict",
+        "claim_infeasible_negative_control"
+      ],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "panel_rows": [
+        {
+          "abstention_reason": "",
+          "assignment": {
+            "scope": "bounded",
+            "source_quality": "primary",
+            "support": "entailed"
+          },
+          "candidate_confidence": 1.0,
+          "candidate_id": "claim_support_preference_exact_assignment_5512",
+          "conclusion_status": "candidate",
+          "exact_validator_correct": true,
+          "exact_validator_verdict": "exact_match",
+          "hard_constraints_pass": true,
+          "instance_id": "claim_support_preference",
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "parse_status": "schema_valid_assignment",
+          "parseable": true,
+          "production_mode": "grammar_masking",
+          "reference_agreement": true,
+          "row_output_hash": "bd7a171a9c4fa321f0d0065290a464f965d87792af6344ba88b0f7997d73e519",
+          "schema_errors": [],
+          "schema_valid": true,
+          "soft_optimal": true,
+          "soft_score": 11.0,
+          "source_exact_validator_correct": null,
+          "source_exact_validator_verdict": null,
+          "source_reference_agreement": null,
+          "source_repair_method": null,
+          "source_soft_optimal": null,
+          "validator_target_ready": true
+        }
+      ],
+      "parse_failures": [],
+      "preference_optimality_rate": 1.0,
+      "production_mode": "grammar_masking",
+      "rows_emitted": 1,
+      "rows_requested": 3,
+      "schema_valid_rows": 1,
+      "schema_validity_rate": 0.333333
+    }
+  ],
+  "post_hoc_extraction_rows": 0,
+  "preference_optimality_rate": 1.0,
+  "prompt_builder_path": "carnot.experiment_5540_sota_hard_soft_live_panel_v3.build_live_prompt",
+  "prompt_hashes": [
+    "5362323f7850171a4a368bd09f8b5dc8a5205a163475f1c1b2da4288d72b5a30"
+  ],
+  "random_seed": 5540,
+  "readiness_blockers": [
+    "missing_candidate_rows",
+    "schema_invalid_or_missing_rows"
+  ],
+  "reproducibility_checksum": "9f5e8b519510c518ed6d81e03d67b8277883040726ba78d1d680e4f418529b78",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5540_sota_hard_soft_live_panel_v3.json",
+  "row_production_mode_counts": {
+    "grammar_masking": 2,
+    "post_hoc_extraction": 0,
+    "repair": 0
+  },
+  "rows_emitted": 2,
+  "rows_requested": 6,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5540.sota_hard_soft_live_panel_v3.v502",
+  "schema_parser_path": "carnot.experiment_5513_sota_hard_soft_structured_panel.extract_candidate_payloads",
+  "schema_valid_rows": 2,
+  "schema_validator_path": "carnot.experiment_5512_structured_output_positive_control.classify_candidate_payload",
+  "schema_validity_rate": 0.333333,
+  "sota_hard_soft_claim_allowed": false,
+  "spec_refs": [
+    "REQ-VERIFY-5540",
+    "SCENARIO-VERIFY-5540"
+  ],
+  "structured_repair_applied": false,
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py",
+    "tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py",
+    "tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py",
+    "tests/python/test_experiment_5527_sota_hard_soft_panel_v2.py",
+    "tests/python/test_experiment_5513_sota_hard_soft_structured_panel.py",
+    "tests/python/test_experiment_5512_structured_output_positive_control.py",
+    "tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py"
+  ],
+  "tests_run": [],
+  "token_budgets": [
+    {
+      "completion_tokens": 1024,
+      "max_tokens": 1024,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "n_batch": 128,
+      "n_ctx": 4096,
+      "prompt_tokens": 1957
+    },
+    {
+      "completion_tokens": 1025,
+      "max_tokens": 1024,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "n_batch": 128,
+      "n_ctx": 4096,
+      "prompt_tokens": 2259
+    }
+  ]
+}

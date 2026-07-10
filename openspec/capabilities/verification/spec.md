@@ -29243,6 +29243,109 @@ counts, SHALL set live-authenticated quality gates false, and SHALL use an
 |---|---|---|
 | REQ-VERIFY-5538 | Implemented (`python/carnot/experiment_5538_sota_panel_duration_substrate_corrigendum.py`, `results/experiment_5538_sota_panel_duration_substrate_corrigendum.json`) | Implemented (`tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py`) |
 
+### REQ-VERIFY-5540: SOTA Hard/Soft Live Panel V3
+
+The repository SHALL provide Exp 5540 at
+`python/carnot/experiment_5540_sota_hard_soft_live_panel_v3.py` and write
+`results/experiment_5540_sota_hard_soft_live_panel_v3.json` as a compact local
+SOTA hard/soft panel. Exp 5540 SHALL start only after
+`results/experiment_5538_sota_panel_duration_substrate_corrigendum.json` is
+clean for the duration/substrate boundary and
+`results/experiment_5539_gram2token_grammar_table_preflight.json` is clean for
+the grammar-table preflight. If either gate is absent or not clean, Exp 5540
+SHALL emit an honest gated-null artifact and SHALL NOT claim SOTA hard/soft
+quality.
+
+When the gates are clean and runtime permits, Exp 5540 SHALL invoke at least
+one mandated local SOTA GGUF model, preferring two model families when locally
+cached and runtime-feasible. The allowed model IDs are exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The workflow SHALL use
+`cached_sota_pair()` or the repository local-GGUF helper pattern and SHALL NOT
+call `AutoTokenizer.from_pretrained` or transformers `from_pretrained` on a
+GGUF repository. Legacy small GGUFs MAY appear only as CPU smoke tests and SHALL
+NOT count as headline rows.
+
+Every emitted row SHALL record whether grammar masking, repair, or post-hoc
+extraction produced it. Candidate rows SHALL be extracted through the declared
+Exp 5513 structured extraction path and validated through the Exp 5512 schema.
+Correctness and soft-preference optimality SHALL be recomputed through the Exp
+5527 exact validator handoff, which delegates to the Exp 5499 exact validators.
+Missing rows, explicit abstentions, confident wrong rows, and exact-correct rows
+SHALL be counted separately. Missing rows SHALL NOT be treated as abstentions.
+Post-hoc repair or fixture projection SHALL NOT open the live SOTA hard/soft
+claim unless the artifact records it as such and keeps `sota_hard_soft_claim_allowed=false`.
+
+The artifact SHALL include at minimum these top-level fields: `model_specs`,
+`models_attempted`, `rows_requested`, `rows_emitted`,
+`schema_validity_rate`, `exact_validator_accuracy`,
+`preference_optimality_rate`, `missing_candidate_rows`, `abstention_rate`,
+`confident_wrong_rate`, `prompt_hashes`, `output_hashes`, `random_seed`,
+`measured_duration_s`, `gpu_offload_evidence`, `adversarial_clean`,
+`sota_hard_soft_claim_allowed`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`live_local_sota_gguf_exact_validated_panel`. `honest_verdict` SHALL start with
+`complete:` or `blocked:` and SHALL state whether the live exact-validated
+hard/soft claim is allowed or a gated null was emitted.
+
+Field principles:
+
+- `model_specs`: Names the only SOTA GGUF model IDs allowed for live panel rows.
+- `models_attempted`: Records which mandated local models actually received the
+  prompt.
+- `rows_requested`: Fixes the exact fixture denominator before generation.
+- `rows_emitted`: Separates raw row volume from correctness.
+- `schema_validity_rate`: Keeps schema validation upstream of exact scoring.
+- `exact_validator_accuracy`: Uses deterministic validators as the correctness
+  authority.
+- `preference_optimality_rate`: Measures soft preference only for feasible
+  assignment rows.
+- `missing_candidate_rows`: Keeps absent expected rows visible.
+- `abstention_rate`: Counts only explicit schema-valid abstentions.
+- `confident_wrong_rate`: Separates high-confidence failures from abstention.
+- `prompt_hashes`: Pins prompts used for live generation.
+- `output_hashes`: Pins raw model outputs without relying on prose summaries.
+- `random_seed`: Records deterministic generation seed.
+- `measured_duration_s`: Records wall-clock runtime for live or gated-null
+  evidence.
+- `gpu_offload_evidence`: Records offload evidence instead of trusting model
+  names.
+- `adversarial_clean`: States whether the panel avoids known overclaim modes.
+- `sota_hard_soft_claim_allowed`: Controls whether the live hard/soft quality
+  result may be cited.
+- `tests_added_or_reused`: Links the artifact to parser and validator tests.
+- `field_principles`: Explains why every headline and gate field exists.
+- `inference_substrate`: Declares the local GGUF exact-validated panel substrate.
+- `honest_verdict`: Provides a terminal, non-ambiguous evidence boundary.
+
+### SCENARIO-VERIFY-5540: Live Rows Or Gated Null Are Exact-Validated
+
+Given Exp 5538 and Exp 5539 are both clean, when Exp 5540 runs on a host with a
+cached mandated local GGUF runtime, then it builds the declared hard/soft prompt,
+records prompt hashes, attempts at least one mandated model through the local
+GGUF helper path, records token budgets, output hashes, duration, GPU/offload
+evidence, and per-row structured production mode, extracts candidate rows
+through the Exp 5513 path, validates rows through the Exp 5512 schema, scores
+schema-valid rows through the Exp 5527 exact validator handoff, and writes
+`results/experiment_5540_sota_hard_soft_live_panel_v3.json`.
+
+If either gate is not clean, no mandated GGUF is cached, the runtime fails,
+offload evidence is absent, no rows are emitted, any requested row is missing,
+any emitted row is schema-invalid, any exact validator rejects a schema-valid
+row, any feasible row is soft-suboptimal, or any row requires post-hoc repair
+instead of grammar masking or declared extraction, then Exp 5540 SHALL keep
+`sota_hard_soft_claim_allowed=false`, count missing rows separately from
+abstentions, preserve blockers in the artifact, set `adversarial_clean=true`
+only when the artifact truthfully avoids overclaiming, and emit a terminal
+`complete:` or `blocked:` verdict without modifying `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5540)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5540 | Planned (`python/carnot/experiment_5540_sota_hard_soft_live_panel_v3.py`, `results/experiment_5540_sota_hard_soft_live_panel_v3.json`) | Planned (`tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
