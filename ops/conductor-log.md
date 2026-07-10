@@ -10752,3 +10752,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 23:26 UTC | Gated ASP-FSM sparse repair scale | OK | 87 passed, 1 warning in 11.55s |
 | 2026-07-10 23:28 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |
 | 2026-07-10 23:40 UTC | CSL five-arm tautology corrigendum v2 | OK | 86 passed, 1 warning in 11.28s |
+| 2026-07-10 23:55 UTC | Gated causal write-manage-read CSL memory | OK | 89 passed, 1 warning in 13.04s |
