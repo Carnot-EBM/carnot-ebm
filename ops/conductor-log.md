@@ -10711,3 +10711,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 07:56 UTC | Gated SOTA GGUF hard/soft structured panel v2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-10 08:10 UTC | CSL canonical gate artifact and sidecar-safe field | OK | 85 passed, 1 warning in 10.44s |
 | 2026-07-10 08:38 UTC | Gated CSL event/topic memory residue stress | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-07-10 08:54 UTC | Gated SOTA GGUF CSL memory panel v2 | OK | 86 passed, 1 warning in 10.89s |
