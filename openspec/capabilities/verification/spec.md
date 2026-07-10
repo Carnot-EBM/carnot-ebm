@@ -29066,6 +29066,124 @@ result path with `sota_structured_panel_ready=false`,
 |---|---|---|
 | REQ-VERIFY-5527 | Implemented (`python/carnot/experiment_5527_sota_hard_soft_panel_v2.py`, `results/experiment_5527_sota_hard_soft_panel_v2.json`) | Implemented (`tests/python/test_experiment_5527_sota_hard_soft_panel_v2.py`) |
 
+### REQ-VERIFY-5538: SOTA Panel Duration/Substrate Corrigendum V502
+
+The repository SHALL provide Exp 5538 at
+`python/carnot/experiment_5538_sota_panel_duration_substrate_corrigendum.py`
+and write
+`results/experiment_5538_sota_panel_duration_substrate_corrigendum.json` as a
+corrigendum for the duration/substrate boundary in
+`results/experiment_5527_sota_hard_soft_panel_v2.json`. Exp 5538 SHALL reuse
+the Exp 5527 hard/soft fixture denominator, Exp 5512 candidate row schema, Exp
+5513 local-GGUF prompt/parser path, and Exp 5499 exact validators; it SHALL NOT
+change the scoring target to make a downstream panel easier.
+
+If a cached mandated local SOTA GGUF runtime is available, Exp 5538 SHALL invoke
+at least one of `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` through `cached_sota_pair()` or the
+repository local-GGUF helper pattern, and SHALL record the helper path, backend,
+command or binding, GPU/offload evidence, random seed, prompt hash, and measured
+wall-clock duration. Exp 5538 SHALL NOT call `AutoTokenizer.from_pretrained` or
+transformers `from_pretrained` on a GGUF repository. Legacy small GGUFs MAY
+appear only as explicitly labeled CPU smoke tests and SHALL NOT count as
+headline rows.
+
+If a live mandated model cannot be invoked, Exp 5538 SHALL not fabricate a
+panel. The result SHALL set `live_model_invoked=false`,
+`no_quality_claim_if_not_live=true`, count every requested fixture row as
+missing, and preserve a terminal verdict that downgrades Exp 5527-style
+hard/soft evidence to no live quality claim. If a live model is invoked, every
+emitted candidate row SHALL pass Exp 5512 schema validation before exact
+validator scoring; schema-invalid rows SHALL remain visible but SHALL NOT be
+handed to exact validators. Missing rows SHALL count as missing candidate rows,
+not abstentions. Exact validators SHALL remain the authority for correctness
+and preference optimality.
+
+The artifact SHALL include at minimum these top-level fields: `model_specs`,
+`upstream_panel_path`, `live_model_invoked`, `models_attempted`,
+`rows_requested`, `rows_emitted`, `schema_validity_rate`,
+`exact_validator_accuracy`, `preference_optimality_rate`,
+`missing_candidate_rows`, `abstention_rate`, `confident_wrong_rate`,
+`duration_floor_s`, `measured_duration_s`, `gpu_offload_evidence`,
+`adversarial_clean`, `no_quality_claim_if_not_live`,
+`sota_panel_duration_corrigendum_ready`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`upstream_panel_path` SHALL equal
+`results/experiment_5527_sota_hard_soft_panel_v2.json`.
+`inference_substrate` SHALL equal
+`live_local_sota_gguf_panel_or_claim_downgrade`. `honest_verdict` SHALL start
+with `complete:` or `blocked:` and SHALL state whether live SOTA hard/soft
+evidence was authenticated or downgraded to no quality claim.
+
+Field principles:
+
+- `model_specs`: Names the mandated GGUF set so the corrigendum cannot swap in
+  legacy smoke models as headline evidence.
+- `upstream_panel_path`: Pins the artifact whose duration/substrate boundary is
+  being repaired.
+- `live_model_invoked`: Separates real local-GGUF execution from evidence
+  downgrades.
+- `models_attempted`: Identifies which mandated model, if any, received the live
+  prompt.
+- `rows_requested`: Fixes the Exp 5527 fixture denominator before parsing.
+- `rows_emitted`: Separates model output volume from correctness or quality.
+- `schema_validity_rate`: Gates exact-validator handoff on schema-valid rows.
+- `exact_validator_accuracy`: Reports deterministic Exp 5499 correctness only
+  for schema-valid rows.
+- `preference_optimality_rate`: Reports soft optimality only after exact
+  hard-constraint validation.
+- `missing_candidate_rows`: Keeps absent rows visible and prevents missing rows
+  from becoming abstentions.
+- `abstention_rate`: Counts only explicit schema-valid abstentions.
+- `confident_wrong_rate`: Separates high-confidence schema-valid failures from
+  calibrated abstention.
+- `duration_floor_s`: Records the adversarial plausibility floor for live SOTA
+  local-GGUF claims.
+- `measured_duration_s`: Records the wall-clock receipt used to authenticate or
+  downgrade the claim.
+- `gpu_offload_evidence`: Records the runtime/offload substrate instead of
+  trusting model-name strings.
+- `adversarial_clean`: States whether the corrected boundary avoids the Exp 5527
+  duration/substrate overclaim.
+- `no_quality_claim_if_not_live`: Prevents missing live execution from inheriting
+  Exp 5527 quality metrics.
+- `sota_panel_duration_corrigendum_ready`: States whether the boundary repair is
+  complete enough for downstream gates.
+- `tests_added_or_reused`: Links the artifact to parser, duration, substrate, and
+  exact-validator tests.
+- `field_principles`: Explains why each headline and gate field must remain
+  present.
+- `inference_substrate`: Declares live local SOTA GGUF execution or explicit
+  claim downgrade semantics.
+- `honest_verdict`: Provides a terminal status without promoting too-short,
+  missing, or schema-invalid evidence.
+
+### SCENARIO-VERIFY-5538: Live Evidence Authenticates Or Downgrades Cleanly
+
+Given Exp 5527 exists but carries a duration/substrate adversarial flag, when
+Exp 5538 runs, then it reuses the Exp 5527 fixture denominator and schema, tries
+the repository local-GGUF helper path for at least one mandated SOTA model when
+the runtime is available, records duration/offload/prompt/seed receipts, parses
+only emitted rows through the Exp 5512 schema, scores only schema-valid rows
+with the Exp 5499 exact validators, and writes
+`results/experiment_5538_sota_panel_duration_substrate_corrigendum.json`.
+
+If no mandated local GGUF can be invoked, GPU/offload evidence is absent, the
+measured duration is below the live-claim floor, any requested row is missing,
+any emitted row is schema-invalid, any exact validator rejects a schema-valid
+row, or any feasible row is soft-suboptimal, then Exp 5538 SHALL keep
+`sota_panel_duration_corrigendum_ready=true` only when the artifact clearly
+downgrades to no live quality claim, SHALL keep missing rows out of abstention
+counts, SHALL set live-authenticated quality gates false, and SHALL use an
+`honest_verdict` that says no downstream SOTA hard/soft quality claim is opened.
+
+## Implementation Status (REQ-VERIFY-5538)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5538 | Implemented (`python/carnot/experiment_5538_sota_panel_duration_substrate_corrigendum.py`, `results/experiment_5538_sota_panel_duration_substrate_corrigendum.json`) | Implemented (`tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
