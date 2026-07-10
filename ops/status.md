@@ -1,6 +1,46 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-09 (Milestone 2026.07.500 Planning Staged)
+**Last Updated:** 2026-07-10 (Milestone 2026.07.501 Planning Staged)
+
+## Session 2026-07-10 - Milestone 2026.07.501 Planning Staged
+
+Planned the next research milestone after the operator reported `.500`
+complete. The staged `.501` roadmap focuses on repairing the live SOTA GGUF
+structured-output path before any hard/soft reasoning headline; making the
+Exp5515 continuous self-learning positive conductor-visible through a canonical
+gate artifact; testing GAM-inspired event/topic memory residue and then a
+gated local-SOTA CSL memory panel; scaling sparse repair with exact fallback
+and confidence intervals; repairing hardware receipt parsers without speedup
+claims; and satisfying the ARC standing floor with a strategy-routed live
+level-up attempt that suppresses repeated coordinate patterns.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`, including GAM
+hierarchical graph memory, compliance-grade schema-constrained local serving,
+and metacognitive uncertainty. Extropic TSU and Logical Intelligence
+Kona/Aleph remain watch-only architecture context because there is no local
+executable path.
+
+The `.501` plan contains 13 conductor tasks across transition/source refresh,
+SOTA schema-failure taxonomy, gated structured repair, gated hard/soft panel
+v2, canonical CSL gate receipt, event/topic memory residue stress, gated SOTA
+CSL memory, sparse repair scale-up, hardware receipt parser repeatability, ARC
+strategy-routing precheck, one gated ARC live level-up attempt, and capstone
+reconciliation. All LLM-bearing prompts include the mandated local SOTA GGUF
+model specs, and the ARC level-up task records `solve_provenance:
+live_agent_self_discovery` with post-solve banking through
+`offline_reproduced=true` and `reproduced_levels>=1`.
+
+Validation for this planning task: YAML parsing, prompt-shape checks,
+SOTA model-spec checks, `scripts/validate_prior_failures.py`,
+`scripts/audit_roadmap_gates.py`, `scripts/exclusion_manifest_lint.py`,
+`scripts/arc_levelup_guarantee_lint.py --min 1 research-roadmap-next.yaml`,
+`scripts/overdue_priority_lint.py`, and `scripts/operator_curated_docs_lint.py`
+passed. Repo-wide `scripts/check_spec_coverage.py` still fails on the
+pre-existing traceability backlog (`1262 test(s) missing spec traceability`).
+No implementation code, active roadmap, conductor, model-training run, or
+hardware workload was changed.
 
 ## Session 2026-07-09 - Milestone 2026.07.500 Planning Staged
 

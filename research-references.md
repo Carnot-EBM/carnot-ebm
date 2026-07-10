@@ -1,3 +1,67 @@
+## V501 Planner Refresh - 2026-07-10
+
+Planning sweep for milestone `2026.07.501` after the operator reported `.500` complete. Sources checked:
+arXiv primary pages for 2025-2026 EBM verification/reasoning, neural CSP, Ising/thermodynamic
+hardware, hallucination mitigation, KANs, constrained generation, and continual memory; OpenReview
+public pages where reachable; Hugging Face Papers; GitHub repository/topic discovery; Semantic
+Scholar-style public citation routes for EBT `2507.02092` and ARM-EBM `2512.15605`; Extropic writing;
+Logical Intelligence public posts; and Carnot's existing reference history. Existing entries already
+cover HIVE, ALMA, A-MEM, graph-memory surveys, structured-output control, XGrammar/llguidance,
+Distributional EBMs, Spilled/Semantic Energy, BloGDiT, KAN verification, p-bit hardware, Extropic TSU,
+and Kona/Aleph public context. This block only adds missing or newly-actionable deltas.
+
+### New actionable deltas
+
+- **GAM: Hierarchical Graph-based Agentic Memory for LLM Agents** - arXiv:2604.12285,
+  https://arxiv.org/abs/2604.12285. GAM separates fast event-progression memory from a more stable topic
+  associative network and consolidates only on semantic shifts. Carnot hook: `.501` should turn the
+  Exp5515 graph-memory positive into a conductor-visible two-tier CSL fixture with explicit
+  event-vs-topic hashes, semantic-shift promotion receipts, stale-evidence rejection, and no same-number
+  sidecar artifacts that can confuse downstream gates.
+- **Rethinking LLMOps for Fraud and AML: Building a Compliance-Grade LLM Serving Stack** -
+  arXiv:2605.11232, https://arxiv.org/abs/2605.11232. The paper treats prefix-heavy,
+  schema-constrained, evidence-rich local model serving as a systems problem: prefix reuse, KV-cache
+  efficiency, prompt-length-aware batching, runtime tuning, and output validation are first-class.
+  Carnot hook: `.501` should diagnose the Exp5513 live-SOTA schema failure at the workload boundary by
+  recording prompt-prefix hashes, token budgets, truncation markers, grammar/runtime path, retry counts,
+  and exact-validator handoff before interpreting model quality.
+- **Hallucinations Undermine Trust; Metacognition is a Way Forward** - arXiv:2605.01428,
+  https://arxiv.org/abs/2605.01428. The position frames trustworthy behavior as faithful uncertainty
+  rather than a binary answer-or-abstain choice. Carnot hook: the SOTA hard/soft panel should separate
+  schema-valid answers, exact-validator failures, calibrated uncertainty/abstention, and confident wrong
+  rows; missing rows must not be silently credited as safe abstention.
+
+### Secondary-source status
+
+- **OpenReview:** recent constrained-generation and verifier pages surfaced DIVER and related entries, but
+  their actionable ideas are already present in older Carnot blocks or have arXiv mirrors. No
+  OpenReview-only method is promoted for `.501`.
+- **Hugging Face Papers:** mirrored the metacognition paper and EBT paper pages; the EBT page currently
+  surfaced implementation/model links rather than a new local baseline. No citation-count claim is made.
+- **GitHub:** topic/trending checks found general EBM and constrained-decoding lists plus small or old repos,
+  but no new reproducible engine displaced Carnot's exact validators, llguidance/XGrammar watch path, or
+  ARC live-path provenance constraints.
+- **Semantic Scholar routes:** public routes for EBT `2507.02092` and ARM-EBM `2512.15605` did not produce a
+  stronger local experiment basis than the already-filed source papers and mirrors.
+- **Extropic and Logical Intelligence:** current public pages still support Carnot's architecture thesis:
+  TSU-style hardware targets energy-model sampling, and Kona/Aleph-style systems put verifier/prover layers
+  under LLM interfaces. Carnot still has no executable TSU, Kona, or Aleph path, so these remain
+  watch-only and cannot be baselines or speedup evidence.
+
+### V501 Planning impact
+
+- `.501` should repair the live SOTA schema path before more headline hard/soft reasoning claims: taxonomy
+  first, constrained/repair loop second, full panel only behind a clean gate.
+- `.501` should repair the CSL conductor gate artifact issue by emitting a canonical gate artifact with no
+  later same-exp sidecar, then run memory residue and local-SOTA memory panels behind that gate.
+- `.501` should scale sparse repair from a tiny descriptor positive to a larger, multi-seed CI comparison
+  with exact fallback and no speedup claim unless timing is matched.
+- `.501` hardware work should repair receipt parsers and repeatability classes only; no hardware speedup
+  claim without board-local matched timing and workload hashes.
+- `.501` ARC should satisfy the standing live-path level-up floor with strategy-guided action routing and
+  repeated-coordinate suppression, not offline source reading, exhaustive BFS, or a rerun of the retired
+  generic exploration-signal scope.
+
 ## V500 Planner Refresh - 2026-07-09
 
 Planning sweep for milestone `2026.07.500` after the operator reported `.499` complete. Sources checked:

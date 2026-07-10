@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-07-10 Milestone 2026.07.501 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-07-10T06:11:24Z | 2026-07-10T06:29:35Z | Planned milestone 2026.07.501 after reading required project context, `.500` completion evidence, exclusion manifest, ARC registry, hardware notes, prior roadmap docs, current references, and recent 2025-2026 sources. Added V501 planner refresh to `research-references.md`; rewrote `openspec/change-proposals/research-roadmap-vNEXT.md`; created `research-roadmap-next.yaml` with 13 tasks exp5523-exp5535 covering SOTA schema repair, gate-clean CSL, sparse repair scale-up, hardware receipt parser repeatability, ARC strategy-routed live level-up, and capstone reconciliation. Validation: YAML parse OK; prompt checks OK; prior-failure validator OK; gate audit OK; exclusion-manifest lint OK; ARC guarantee OK; overdue-priority lint OK; operator-curated docs lint OK; protected-file diff clean; spec coverage still fails on known 1262-test traceability backlog. | ~150k |
+
+---
+
 ## Session: 2026-07-08 Milestone 2026.07.495 Research Planning
 
 ### Turn Log

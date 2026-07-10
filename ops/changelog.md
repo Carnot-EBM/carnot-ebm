@@ -1,5 +1,26 @@
 # Carnot — Changelog
 
+## 2026-07-10 (Milestone 2026.07.501 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V501 planner refresh to `research-references.md`, incorporating
+  GAM hierarchical graph memory, compliance-grade schema-constrained local
+  serving, and metacognitive uncertainty, while keeping Extropic TSU and
+  Logical Intelligence Kona/Aleph as watch-only architecture context.
+- The `.501` plan contains 13 conductor tasks across transition/source refresh,
+  live SOTA schema taxonomy, gated structured repair, gated hard/soft panel v2,
+  canonical CSL gate receipt, event/topic memory residue stress, gated SOTA CSL
+  memory, sparse repair scale-up, hardware receipt parser repeatability, ARC
+  strategy-routing precheck, one gated ARC live level-up attempt, and capstone
+  reconciliation.
+- Validation passed for YAML parsing, prompt-shape audit, SOTA model-spec audit,
+  prior-failure validation, gate audit, exclusion-manifest lint, ARC level-up
+  guarantee lint, overdue-priority lint, and operator-curated docs lint.
+  Repo-wide spec coverage remains blocked by the pre-existing traceability
+  backlog (`1262 test(s) missing spec traceability`).
+
 ## 2026-07-09 (Milestone 2026.07.500 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
