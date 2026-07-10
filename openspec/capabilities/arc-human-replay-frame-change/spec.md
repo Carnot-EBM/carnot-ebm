@@ -1874,6 +1874,61 @@ Required field principles:
 - `inference_substrate`: principle "must equal arc_live_path_precheck_no_solve_claim."
 - `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
 
+### REQ-ARC-FCP-5534: Strategy-Routed Live Level-Up Attempt
+
+Experiment 5534 SHALL write
+`results/experiment_5534_arc_strategy_routed_levelup.json` from the target
+selected by Exp5533. The workflow SHALL load Exp5533's `selected_game` and
+`selected_level`, reread `ops/arc_solve_registry.yaml`, and block as
+`blocked_duplicate_target` without choosing a replacement if the registry now
+already reproduces the selected level.
+
+When not duplicate-blocked, the workflow SHALL run the live ARC agent with the
+Exp5533 bounded strategy portfolio and repeated-coordinate suppression enabled.
+It SHALL record action attempts, strategy choices, verifier route evidence,
+suppression events, and level counter changes in a trajectory artifact. It
+SHALL keep `solve_provenance=live_agent_self_discovery` and SHALL NOT inspect
+hidden game source, run exhaustive offline ground-truth BFS, perform outer-loop
+reverse engineering, or build a hand per-game adapter.
+
+A new-level claim SHALL require `offline_reproduced=true` and
+`reproduced_levels>=1` through the standard live-path reproduction gate. The
+ARC solve registry SHALL be updated only when that gate passes. Otherwise the
+artifact SHALL use an `honest_null:` verdict and preserve the trajectory
+evidence.
+
+The result artifact SHALL include `selected_game`, `selected_level`,
+`solve_provenance`, `strategy_portfolio_used`, `strategy_switch_count`,
+`attempts`, `action_entropy`, `repeated_coordinate_rate`,
+`repeated_coordinate_suppression_events`, `salience_coverage_rate`,
+`offline_reproduced`, `reproduced_levels`, `registry_delta`,
+`trajectory_path`, `model_specs`, `llm_strategy_proposer_used`,
+`arc_live_levelup_ready`, `tests_added_or_reused`, `field_principles`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "Exp5533-selected registry-safe game id; empty only when Exp5533 blocks before runtime."
+- `selected_level`: principle "Exp5533-selected adjacent frontier level label; duplicate targets block rather than rotate."
+- `solve_provenance`: principle "must equal live_agent_self_discovery."
+- `strategy_portfolio_used`: principle "bounded live-path-compatible strategy descriptors actually installed on the candidate router."
+- `strategy_switch_count`: principle "integer count of changes between executed strategy labels after repeated-coordinate suppression."
+- `attempts`: principle "bare int count of runtime actions executed by the live agent."
+- `action_entropy`: principle "Shannon entropy over executed live action/coordinate choices as a bare float."
+- `repeated_coordinate_rate`: principle "fraction of executed live coordinate choices that repeated an earlier executed coordinate."
+- `repeated_coordinate_suppression_events`: principle "bare int count of candidate-router repeated-coordinate suppressions recorded during live selection."
+- `salience_coverage_rate`: principle "fraction of executed live coordinate choices covering proposed salience coordinates."
+- `offline_reproduced`: principle "true only when the live-discovered trajectory passes the standard offline replay gate."
+- `reproduced_levels`: principle "integer new levels banked from the live-discovered trajectory; success requires >=1."
+- `registry_delta`: principle "bare int registry total delta; nonzero only when the live reproduction gate passes."
+- `trajectory_path`: principle "path to the detailed trajectory log containing attempts, strategies, verifier routes, suppression events, and level changes."
+- `model_specs`: principle "allowed local-GGUF proposer specs recorded for audit; no model is invoked when llm_strategy_proposer_used=false."
+- `llm_strategy_proposer_used`: principle "bare bool; false means deterministic strategy templates were used and no GGUF tokenizer/model path was loaded."
+- `arc_live_levelup_ready`: principle "bare bool proving Exp5533 and registry reread allowed live runtime."
+- `tests_added_or_reused`: principle "list of focused tests that cover the Exp5534 schema, duplicate block, live routing trace, and registry gate."
+- `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-5508: Classical Perception Generation Is Runtime-Grounded
@@ -2658,3 +2713,34 @@ computed, `repeated_coordinate_suppression_enabled=true`,
 `repeated_coordinate_rate_precheck` is lower than the unsuppressed route, and
 `arc_sge_candidate_ready=true` only when target, routing, suppression, and
 metric gates pass.
+
+### SCENARIO-ARC-FCP-5534: Strategy-Routed Live Attempt Is Reproduction-Gated
+
+Given Exp5533 selected `g50t:L3` and `arc_sge_candidate_ready=true`
+And the registry still records only `g50t` depth 2
+When experiment 5534 runs the bounded live self-discovery attempt
+Then the attempt installs the Exp5533 strategy portfolio on the live candidate
+router, enables repeated-coordinate suppression, records strategy choices,
+verifier routes, suppression events, and level counter changes, and writes
+`results/experiment_5534_arc_strategy_routed_levelup.json` with
+`solve_provenance=live_agent_self_discovery` and
+`inference_substrate=arc_live_agent_self_discovery`.
+
+Given the registry already reproduces the Exp5533 target level
+When experiment 5534 starts
+Then it writes a `blocked_duplicate_target` artifact, keeps
+`registry_delta=0`, chooses no replacement target, and does not run the live
+agent.
+
+Given the live attempt does not reproduce a new level through the standard
+offline replay gate
+When experiment 5534 validates the artifact
+Then `offline_reproduced=false`, `reproduced_levels=0`,
+`registry_delta=0`, and `honest_verdict` starts with `honest_null:` while
+preserving the trajectory evidence.
+
+Given the live attempt reaches a new level and the replay gate reproduces it
+When experiment 5534 banks the result
+Then `offline_reproduced=true`, `reproduced_levels>=1`, `registry_delta`
+equals `reproduced_levels`, and the registry update records the Exp5534
+live-path reproduction evidence.

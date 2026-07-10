@@ -10714,3 +10714,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 08:54 UTC | Gated SOTA GGUF CSL memory panel v2 | OK | 86 passed, 1 warning in 10.89s |
 | 2026-07-10 10:08 UTC | Sparse repair scale-up with exact fallback confide | OK | 87 passed, 1 warning in 8.67s |
 | 2026-07-10 10:24 UTC | Hardware receipt parser and repeatability repair | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-10 10:44 UTC | ARC strategy-routing and repeated-coordinate prech | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
