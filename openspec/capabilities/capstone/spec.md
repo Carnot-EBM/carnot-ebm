@@ -2024,3 +2024,80 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5467 | Planned (`python/carnot/experiment_5467_capstone_v496.py`, `results/experiment_5467_capstone_v496.json`) | Planned (`tests/python/test_experiment_5467_capstone_v496.py`) |
+
+- REQ-CAPSTONE-5522: The `.500` milestone-close capstone aggregator
+  `exp5522-v500-capstone-reconciliation` in
+  `python/carnot/experiment_5522_capstone_v500.py` SHALL write
+  `results/experiment_5522_capstone_v500.json` without modifying
+  `ops/status.md`, `ops/changelog.md`, `_bmad/traceability.md`, or
+  `scripts/research_conductor.py`. It SHALL read every available `.500`
+  primary result artifact from Exp5510 through Exp5521
+  (`results/experiment_5510_transition_v500.json`,
+  `results/experiment_5511_v500_source_delta_ingestion.json`,
+  `results/experiment_5512_structured_output_positive_control.json`,
+  `results/experiment_5513_sota_hard_soft_structured_panel.json`,
+  `results/experiment_5514_energy_spill_sidecar_diagnostic.json`,
+  `results/experiment_5515_csl_independent_outcome_gate_repair.json`,
+  `results/experiment_5516_sota_csl_memory_panel.json`,
+  `results/experiment_5517_csl_memory_residue_stress.json`,
+  `results/experiment_5518_block_gibbs_sparse_repair_descriptors.json`,
+  `results/experiment_5519_hardware_continuity_methodology_receipts.json`,
+  `results/experiment_5520_arc_action_diversity_target_precheck.json`, and
+  `results/experiment_5521_arc_live_action_diverse_levelup.json`) plus
+  available sidecar artifacts, record missing result artifacts without
+  fabricating skipped results, summarize terminal evidence for structured SOTA,
+  energy sidecars, CSL, sparse constraints, hardware, and ARC, and derive only
+  bounded claim gates from upstream artifact fields.
+- SCENARIO-CAPSTONE-5522: The artifact
+  `results/experiment_5522_capstone_v500.json` must emit top-level fields
+  `milestone`, `artifact_paths_read`, `missing_artifacts`, `skipped_by_gates`,
+  `structured_sota_claim_allowed`, `energy_sidecar_headline_allowed`,
+  `csl_claim_allowed`, `continuous_self_learning_evidence`,
+  `sparse_repair_claim_allowed`, `hardware_speedup_claim`,
+  `arc_registry_delta`, `reproduced_levels`, `solve_provenance_summary`,
+  `docs_updated`, `commands_run`, `conductor_unchanged`,
+  `inference_substrate`, and `honest_verdict`. The default `.500`
+  aggregation must set structured SOTA claim credit false when Exp5513 reports
+  `sota_structured_panel_ready=false`, keep the energy sidecar headline false
+  when Exp5514 is conductor-gated, preserve Exp5515 fixture-level
+  `continuous_self_learning_evidence=true` while keeping the broader
+  `csl_claim_allowed=false` if Exp5516 or Exp5517 are conductor-gated, allow
+  only the bounded sparse repair descriptor claim when Exp5518 exact fallback
+  checked every candidate, keep hardware speedup false without matched timing,
+  and report ARC registry delta and reproduced levels from Exp5521.
+- SCENARIO-CAPSTONE-5522-MISSING-SKIPPED-GATES: If an expected `.500` primary
+  result artifact is missing, malformed, or conductor-gated, the workflow must
+  still write the capstone artifact, list the missing path in
+  `missing_artifacts` or the gate receipt in `skipped_by_gates`, keep affected
+  claim gates false, and start `honest_verdict` with `blocked:` only when a
+  missing or malformed primary result prevents complete aggregation.
+- SCENARIO-CAPSTONE-5522-FIELD-PRINCIPLES: The required field principles are:
+  `milestone` = "route key; must equal 2026.07.500.",
+  `artifact_paths_read` = "evidence basis; primary and sidecar `.500` result
+  artifacts actually read.", `missing_artifacts` = "expected `.500` result
+  artifacts absent or unreadable; no fabricated rows.", `skipped_by_gates` =
+  "conductor gate receipts for skipped sidecar, CSL memory, or residue lanes.",
+  `structured_sota_claim_allowed` = "true only after a clean structured SOTA
+  panel, not merely a positive-control parse.", `energy_sidecar_headline_allowed`
+  = "must remain false for sidecar-only or gated evidence.",
+  `csl_claim_allowed` = "broad CSL claim gate; requires clean downstream SOTA
+  memory and residue evidence, not just a fixture.", `continuous_self_learning_evidence`
+  = "fixture-level Exp5515 independent graph-memory evidence.",
+  `sparse_repair_claim_allowed` = "bounded exact-checked descriptor-interface
+  claim only.", `hardware_speedup_claim` = "must remain false without matched
+  timing.", `arc_registry_delta` = "Exp5521 registry delta.", `reproduced_levels`
+  = "Exp5521 reproduced levels.", `solve_provenance_summary` = "ARC provenance
+  rows from precheck and live attempt.", `docs_updated` = "files updated by this
+  capstone; ops/status, ops/changelog, and traceability remain delegated to the
+  reconciler.", `commands_run` = "validation commands actually run.",
+  `conductor_unchanged` = "protected-file discipline; derived from git status.",
+  `inference_substrate` = "must equal
+  capstone_aggregation_from_upstream_artifacts.", and `honest_verdict` =
+  "terminal status; starts with complete: or blocked: and summarizes the bounded
+  `.500` close state."
+
+## Implementation Status (REQ-CAPSTONE-5522)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5522 | Planned (`python/carnot/experiment_5522_capstone_v500.py`, `results/experiment_5522_capstone_v500.json`) | Planned (`tests/python/test_experiment_5522_capstone_v500.py`) |

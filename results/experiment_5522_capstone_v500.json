@@ -1,0 +1,349 @@
+{
+  "arc_registry_delta": 0,
+  "artifact_metadata": {
+    "results/experiment_5510_transition_v500.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:5828bb4c2ab7e4c8609f6842b19c181a15a54ecddf906c1eca98448223d284a7"
+    },
+    "results/experiment_5511_v500_source_delta_ingestion.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:06c2b038f771a78d11f20df81a3bbab0dedbfe170e455e343ae93ff07b084fac"
+    },
+    "results/experiment_5512_structured_output_positive_control.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:7a770197d990a8523de3b4e0ca592e9bd09d68ad67618160707799119272d83b"
+    },
+    "results/experiment_5513_sota_hard_soft_structured_panel.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:b3597693c2281c20c6f1836680842d4ec1cf70b1bd8603774d1819b9803d8fc5"
+    },
+    "results/experiment_5514_energy_spill_sidecar_diagnostic.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:e9d2b5825200b75c38644ccf4ac0de53b7beb606dad968336ff703ce102ad3f1"
+    },
+    "results/experiment_5515_csl_independent_outcome_gate_repair.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:b66b7ec2fce1a6051b065e83c15e39e59203e52866847dbc84d81f73d807d473"
+    },
+    "results/experiment_5515_csl_independent_outcome_stream_fixture.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:cc5603be76e7ac0f44ae6b83f3cd32216f5d18697368da69f04b14f32d9ad2da"
+    },
+    "results/experiment_5516_sota_csl_memory_panel.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:65683b3f13926c05e335747a250f4b25b8a7705223f24c0cf0ee1fe3d3db88ed"
+    },
+    "results/experiment_5517_csl_memory_residue_stress.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:a3dbcfcba41664a3a8fc68a71218cb08f020355725856e6570b013b3f48b45c0"
+    },
+    "results/experiment_5518_block_gibbs_sparse_repair_descriptors.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:c4ff917f0771462caee22bd74df485f2a4ad88b869c593ba3a40314ad937e873"
+    },
+    "results/experiment_5519_hardware_continuity_methodology_receipts.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:f7fa5c4f90f46a263fd054dcfb5ed2056b8ebabcf26b9440b6cf763a067e15e6"
+    },
+    "results/experiment_5520_arc_action_diversity_target_precheck.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:577ea719bce9fb77328557efdb9b199ca8dd3ecc3846bf8ab001928ed6adc6da"
+    },
+    "results/experiment_5521_arc_live_action_diverse_levelup.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:1ebb61771a13e48c4f7eb907657a9a316f7289a0b79fde74a58385a1335fc7b8"
+    },
+    "results/experiment_5521_arc_live_action_diverse_levelup_trajectory.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:156d35918feb8e1bf9541f4ae054d33633d22ff0e7ab25bd5f7e22deb1266bfe"
+    }
+  },
+  "artifact_paths_read": [
+    "results/experiment_5510_transition_v500.json",
+    "results/experiment_5511_v500_source_delta_ingestion.json",
+    "results/experiment_5512_structured_output_positive_control.json",
+    "results/experiment_5513_sota_hard_soft_structured_panel.json",
+    "results/experiment_5514_energy_spill_sidecar_diagnostic.json",
+    "results/experiment_5515_csl_independent_outcome_gate_repair.json",
+    "results/experiment_5516_sota_csl_memory_panel.json",
+    "results/experiment_5517_csl_memory_residue_stress.json",
+    "results/experiment_5518_block_gibbs_sparse_repair_descriptors.json",
+    "results/experiment_5519_hardware_continuity_methodology_receipts.json",
+    "results/experiment_5520_arc_action_diversity_target_precheck.json",
+    "results/experiment_5521_arc_live_action_diverse_levelup.json",
+    "results/experiment_5515_csl_independent_outcome_stream_fixture.json",
+    "results/experiment_5521_arc_live_action_diverse_levelup_trajectory.json"
+  ],
+  "claim_boundaries": [
+    "No structured SOTA claim because Exp5513 is not panel-ready.",
+    "No energy-sidecar headline because Exp5514 was conductor-gated and sidecar-only.",
+    "No broad CSL claim because downstream SOTA memory/residue lanes did not execute.",
+    "Sparse repair claim is bounded to exact-checked descriptor-interface evidence.",
+    "No hardware speedup claim without matched timing.",
+    "No ARC progress claim because registry_delta and reproduced_levels are zero."
+  ],
+  "commands_run": [
+    "PASS: .venv/bin/pytest tests/python/test_experiment_5522_capstone_v500.py -q --no-cov",
+    "PASS: .venv/bin/coverage run --include=python/carnot/experiment_5522_capstone_v500.py -m pytest tests/python/test_experiment_5522_capstone_v500.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5522_capstone_v500.py --fail-under=100 --show-missing",
+    "FAIL/INTERRUPTED: .venv/bin/pytest tests/python -q (32 failed, 10910 passed, 33 skipped before KeyboardInterrupt after Z3 worker crash; 616.66s)",
+    "PASS: .venv/bin/ruff check python/carnot/experiment_5522_capstone_v500.py tests/python/test_experiment_5522_capstone_v500.py",
+    "PASS: .venv/bin/ruff format --check python/carnot/experiment_5522_capstone_v500.py tests/python/test_experiment_5522_capstone_v500.py",
+    "FAIL: python scripts/check_spec_coverage.py (pre-existing 1262 tests missing spec traceability)",
+    "PASS: python scripts/exclusion_manifest_lint.py (no research-roadmap-next.yaml present; nothing to lint)",
+    "PASS: python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    "PASS: git diff --check",
+    "PASS: git diff -- scripts/research_conductor.py (empty)",
+    "NOT_APPLICABLE: ops/e2e-test-plan.md reviewed; Exp5522 is capstone aggregation only with no fresh model-training, PyO3, hardware workload, or ARC live run"
+  ],
+  "conductor_unchanged": true,
+  "continuous_self_learning_evidence": true,
+  "csl_claim_allowed": false,
+  "docs_updated": [
+    "openspec/capabilities/capstone/spec.md"
+  ],
+  "energy_sidecar_headline_allowed": false,
+  "experiment": "experiment_5522_capstone_v500",
+  "experiment_id": "exp5522-v500-capstone-reconciliation",
+  "field_principles": {
+    "arc_registry_delta": "Exp5521 registry delta.",
+    "artifact_paths_read": "evidence basis; primary and sidecar `.500` result",
+    "commands_run": "validation commands actually run.",
+    "conductor_unchanged": "protected-file discipline; derived from git status.",
+    "continuous_self_learning_evidence": "fixture-level Exp5515 independent graph-memory evidence.",
+    "csl_claim_allowed": "not just a fixture.",
+    "docs_updated": "files updated by this",
+    "energy_sidecar_headline_allowed": "sidecar-only or gated evidence.",
+    "hardware_speedup_claim": "must remain false",
+    "honest_verdict": "terminal status; starts with complete: or blocked:",
+    "inference_substrate": "must equal",
+    "milestone": "route key; must equal 2026.07.500.",
+    "missing_artifacts": "no fabricated rows.",
+    "reproduced_levels": "Exp5521 reproduced levels.",
+    "skipped_by_gates": "conductor gate receipts",
+    "solve_provenance_summary": "from precheck",
+    "sparse_repair_claim_allowed": "bounded exact-checked",
+    "structured_sota_claim_allowed": "positive-control parse."
+  },
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: .500 capstone read 14 result artifacts; structured SOTA claim false, energy sidecar headline false, fixture-level CSL evidence True, broad CSL claim False, sparse repair bounded claim True, hardware_speedup_claim False, arc_registry_delta 0",
+  "inference_substrate": "capstone_aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.500",
+  "missing_artifacts": [],
+  "random_seed": 5522,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:a220b84aeed733bd02ccac4252e16b6a1b07c3f5c9c25899fbbbc26ef2ed58a5",
+  "result_path": "results/experiment_5522_capstone_v500.json",
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5522.capstone_v500.v1",
+  "skipped_by_gates": [
+    {
+      "artifact_path": "results/experiment_5514_energy_spill_sidecar_diagnostic.json",
+      "blocked_at_layer": "conductor_pre_gate",
+      "failed_gates": [
+        {
+          "actual": false,
+          "artifact_field": "sota_structured_panel_ready",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=False == expected=True",
+          "upstream": "exp5513-sota-hard-soft-structured-panel"
+        }
+      ],
+      "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.sota_structured_panel_ready (actual=False == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "artifact_path": "results/experiment_5516_sota_csl_memory_panel.json",
+      "blocked_at_layer": "conductor_pre_gate",
+      "failed_gates": [
+        {
+          "actual": null,
+          "artifact_field": "metric_independence_clean",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=None == expected=True",
+          "upstream": "exp5515-csl-independent-outcome-gate-repair"
+        },
+        {
+          "actual": null,
+          "artifact_field": "csl_gate_fields_resolvable",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=None == expected=True",
+          "upstream": "exp5515-csl-independent-outcome-gate-repair"
+        }
+      ],
+      "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repair.metric_independence_clean (actual=None == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed"
+    },
+    {
+      "artifact_path": "results/experiment_5517_csl_memory_residue_stress.json",
+      "blocked_at_layer": "conductor_pre_gate",
+      "failed_gates": [
+        {
+          "actual": null,
+          "artifact_field": "csl_experience_graph_ready",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=None == expected=True",
+          "upstream": "exp5515-csl-independent-outcome-gate-repair"
+        }
+      ],
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repair.csl_experience_graph_ready (actual=None == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed"
+    }
+  ],
+  "solve_provenance_summary": [
+    {
+      "artifact_path": "results/experiment_5520_arc_action_diversity_target_precheck.json",
+      "honest_verdict": "complete: sb26 L3 action-diversity precheck ready; no solve claimed",
+      "registry_delta": null,
+      "reproduced_levels": null,
+      "selected_game": "sb26",
+      "selected_level": "L3",
+      "solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "artifact_path": "results/experiment_5521_arc_live_action_diverse_levelup.json",
+      "honest_verdict": "honest_null: sb26 L3 bounded_budget_no_target_level_reproduction; entropy=2.481; repeat_rate=0.526; registry_delta=0",
+      "registry_delta": 0,
+      "reproduced_levels": 0,
+      "selected_game": "sb26",
+      "selected_level": "L3",
+      "solve_provenance": "live_agent_self_discovery"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:1bf5271ef8433d1d2684befe7370f878b8deeb834b4ae3f94306651477b6ee53"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:fb5259548d20946e7a05ed3742a12d57af5a4d458fd3c5a7e7b0771e43bb3f23"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:0090116455e81ab1881909675e8eb5d36c45189647c4c3eddce91e2e7ecb13a7"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:5f194b997b7043ae76f0fa9b9b5e6b9014466d8907ada72f0bc9d1dc2a63f246"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:69fb2c1782f76fbb986f0d4f96d23d3917db1ad96db990c4483b37bc93b514cc"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "read_only": true,
+      "sha256": "sha256:64d4d6008f10e715c85cafa08dac718778c383d2cbf732bac4a89d48d3664d53"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "sparse_repair_claim_allowed": true,
+  "spec_refs": [
+    "REQ-CAPSTONE-5522",
+    "SCENARIO-CAPSTONE-5522",
+    "SCENARIO-CAPSTONE-5522-MISSING-SKIPPED-GATES",
+    "SCENARIO-CAPSTONE-5522-FIELD-PRINCIPLES"
+  ],
+  "structured_sota_claim_allowed": false,
+  "terminal_evidence": {
+    "arc": {
+      "honest_verdict": "honest_null: sb26 L3 bounded_budget_no_target_level_reproduction; entropy=2.481; repeat_rate=0.526; registry_delta=0",
+      "registry_delta": 0,
+      "reproduced_levels": 0
+    },
+    "csl": {
+      "continuous_self_learning_evidence": true,
+      "csl_experience_graph_ready": true,
+      "honest_verdict": "complete: independent_outcome_graph_memory_gate_repair_ready",
+      "metric_independence_clean": true
+    },
+    "hardware": {
+      "hardware_speedup_claim_allowed": false,
+      "honest_verdict": "complete: hardware continuity receipts collected with blocked devices (cpu,cuda,kv260,gatemate); matched_timing_available=false; speedup_claim_allowed=false",
+      "matched_timing_available": false
+    },
+    "sparse_constraints": {
+      "active_constraint_sparse_repair_ready": true,
+      "honest_verdict": "complete: exact_checked_sparse_repair_descriptor_interface_ready_no_speedup_claim",
+      "speedup_claim_allowed": false
+    },
+    "structured_sota": {
+      "honest_verdict": "blocked: sota_hard_soft_structured_panel_not_ready_exact_validator_mismatch_missing_candidate_rows_parse_failures_preference_suboptimal_or_missing_schema_invalid_or_missing_rows",
+      "sota_rows_emitted": 1,
+      "sota_structured_panel_ready": false
+    }
+  }
+}
