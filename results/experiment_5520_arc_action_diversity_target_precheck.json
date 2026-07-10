@@ -1,0 +1,108 @@
+{
+  "action_entropy": 3.0,
+  "already_reproduced": false,
+  "arc_levelup_candidate_ready": true,
+  "candidate_audit": [
+    {
+      "action_entropy": 3.0,
+      "already_reproduced": false,
+      "exp5508_pattern_reused": false,
+      "no_credit_probe_attempts": 8,
+      "registry_depth": 2,
+      "repeated_coordinate_rate": 0.0,
+      "salience_coverage_rate": 1.0,
+      "target": "sb26:L3"
+    }
+  ],
+  "candidate_generator_changes": [
+    "connected_component_color_blob_salience",
+    "repeated_coordinate_suppression",
+    "no_credit_action_entropy_probe",
+    "target_rotation",
+    "salience_coverage_gate"
+  ],
+  "duration_s": 0.10580802196636796,
+  "exp5508_pattern": {
+    "action_count": 46,
+    "action_entropy": 1.4993179820792861,
+    "coordinates": [
+      {
+        "x": 10,
+        "y": 40
+      },
+      {
+        "x": 19,
+        "y": 31
+      },
+      {
+        "x": 24,
+        "y": 20
+      }
+    ],
+    "repeated_coordinate_rate": 0.9347826086956522,
+    "selected_game": "dc22",
+    "selected_level": "L3",
+    "target_level": 3,
+    "unique_coordinate_count": 3
+  },
+  "exp5508_pattern_reused": false,
+  "experiment": "experiment_5520_arc_action_diversity_target_precheck",
+  "experiment_id": 5520,
+  "field_principles": {
+    "action_entropy": "Shannon entropy over dry-run action/coordinate choices as a bare float.",
+    "already_reproduced": "must be false for any ready artifact.",
+    "arc_levelup_candidate_ready": "bare bool true only when registry and Exp5508-pattern gates pass and the diversity metrics meet threshold.",
+    "candidate_generator_changes": "non-empty list naming live-path generation changes such as repeated-coordinate suppression, target rotation, action entropy gating, or salience coverage.",
+    "exp5508_pattern_reused": "must be false; Exp5508's repeated ACTION6 coordinate loop cannot be reused.",
+    "honest_verdict": "one-line verdict starting complete: or blocked: without claiming a solve.",
+    "inference_substrate": "must equal arc_live_precheck.",
+    "no_credit_probe_attempts": "bare int count of no-credit dry-run choices measured before the live attempt.",
+    "registry_precheck_done": "bare bool proving ops/arc_solve_registry.yaml was checked before target selection.",
+    "repeated_coordinate_rate": "fraction of dry-run consecutive coordinate choices that repeat a prior coordinate, as a bare float.",
+    "salience_coverage_rate": "fraction of dry-run choices covering distinct salience candidates, as a bare float.",
+    "selected_game": "one registry-safe game id selected for the next live level-up attempt, or empty string when blocked.",
+    "selected_level": "next unreproduced target level as a string or bare int; it must be strictly deeper than the registry depth.",
+    "solve_provenance": "must equal live_agent_self_discovery."
+  },
+  "honest_verdict": "complete: sb26 L3 action-diversity precheck ready; no solve claimed",
+  "inference_substrate": "arc_live_precheck",
+  "input_artifacts": [
+    "ops/arc_solve_registry.yaml",
+    "results/experiment_5508_arc_live_perception_generation_levelup_v499.json",
+    "results/experiment_5480_arc_live_salience_levelup_v497.json",
+    "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
+  ],
+  "milestone": "2026.07.500",
+  "no_credit_probe_attempts": 8,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "candidate_salience_artifact_present": true,
+    "exp5508_present": true,
+    "game_source_read": false,
+    "offline_bfs_used": false,
+    "per_game_adapter_used": false,
+    "registry_present": true,
+    "solve_claimed": false,
+    "spec_has_req_5520": true
+  },
+  "registry_precheck_done": true,
+  "repeated_coordinate_rate": 0.0,
+  "result_path": "results/experiment_5520_arc_action_diversity_target_precheck.json",
+  "salience_coverage_rate": 1.0,
+  "schema": "carnot.experiment_5520_arc_action_diversity_target_precheck.v1",
+  "selected_game": "sb26",
+  "selected_level": "L3",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5520",
+    "SCENARIO-ARC-FCP-5520"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5520_arc_action_diversity_target_precheck.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5520_arc_action_diversity_target_precheck.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

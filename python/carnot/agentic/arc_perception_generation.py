@@ -15,6 +15,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+import math
 from typing import Any
 
 import numpy as np
@@ -72,6 +73,31 @@ def _point(row: Mapping[str, Any]) -> tuple[int, int]:
     return int(row["x"]), int(row["y"])
 
 
+def _row_data(row: Mapping[str, Any]) -> Mapping[str, Any]:
+    data = row.get("data")
+    return data if isinstance(data, Mapping) else {}
+
+
+def _row_coordinate(row: Mapping[str, Any]) -> tuple[int, int] | None:
+    if "x" in row and "y" in row:
+        return int(row["x"]), int(row["y"])
+    data = _row_data(row)
+    if "x" in data and "y" in data:
+        return int(data["x"]), int(data["y"])
+    return None
+
+
+def _row_signature(row: Mapping[str, Any]) -> str:
+    data = _row_data(row)
+    coord = _row_coordinate(row)
+    if coord is not None:
+        return f"A{_as_int(row.get('action'))}@{coord[0]},{coord[1]}"
+    if data:
+        items = ",".join(f"{key}={data[key]}" for key in sorted(data))
+        return f"A{_as_int(row.get('action'))}@{items}"
+    return f"A{_as_int(row.get('action'))}"
+
+
 def _changed_mask(before: Any | None, after: Any) -> tuple[np.ndarray, bool]:
     if before is None:
         return np.zeros_like(_as_grid(after), dtype=bool), False
@@ -97,6 +123,111 @@ def _taxonomy_counts(rows: Sequence[Mapping[str, Any]]) -> dict[str, int]:
         if failure in counts:
             counts[failure] += 1
     return counts
+
+
+@dataclass
+class ActionDiversityPerceptionGenerator:
+    """Diversity wrapper for live-path perception candidates.
+
+    The base perception generator can correctly find salient click targets but
+    still spend a short budget on the same coordinate pattern after a no-op or
+    non-winning effect. This wrapper keeps the same live-visible rows and adds a
+    conservative bookkeeping layer: avoid coordinates already known from the
+    failed Exp5508 path, suppress duplicate coordinates inside the dry run, and
+    report simple metrics before any credit-bearing live attempt is launched.
+    """
+
+    max_candidates: int = 8
+    _change_receipts: list[str] = field(default_factory=list, init=False)
+
+    @property
+    def change_receipts(self) -> list[str]:
+        return list(self._change_receipts)
+
+    def prioritize_rows(
+        self,
+        rows: Sequence[Mapping[str, Any]],
+        *,
+        avoid_coordinates: set[tuple[int, int]] | frozenset[tuple[int, int]] = frozenset(),
+        max_candidates: int | None = None,
+    ) -> list[dict[str, Any]]:
+        """Return diverse salience rows without spending live solve credit."""
+
+        limit = int(self.max_candidates if max_candidates is None else max_candidates)
+        ordered = sorted(
+            [dict(row) for row in rows if isinstance(row, Mapping)],
+            key=lambda row: (
+                -float(row.get("score") or 0.0),
+                _as_int(row.get("tier"), 99),
+                _row_signature(row),
+            ),
+        )
+        selected: list[dict[str, Any]] = []
+        seen: set[tuple[int, int]] = set()
+        suppressed_repeats = 0
+        suppressed_avoided = 0
+        for row in ordered:
+            coord = _row_coordinate(row)
+            if coord is not None and coord in set(avoid_coordinates):
+                suppressed_avoided += 1
+                continue
+            if coord is not None and coord in seen:
+                suppressed_repeats += 1
+                continue
+            if coord is not None:
+                seen.add(coord)
+            selected.append(row)
+            if len(selected) >= max(1, limit):
+                break
+        self._change_receipts = [
+            "connected_component_color_blob_salience",
+            "repeated_coordinate_suppression",
+            "no_credit_action_entropy_probe",
+        ]
+        if suppressed_avoided:
+            self._change_receipts.append("exp5508_failed_coordinate_avoidance")
+        if suppressed_repeats:
+            self._change_receipts.append("within_probe_duplicate_coordinate_suppression")
+        return selected
+
+    def diversity_metrics(
+        self,
+        rows: Sequence[Mapping[str, Any]],
+        *,
+        total_salience_candidates: int | None = None,
+    ) -> dict[str, float]:
+        """Measure entropy, coordinate repetition, and salience coverage."""
+
+        signatures = [_row_signature(row) for row in rows if isinstance(row, Mapping)]
+        counts = Counter(signatures)
+        total = sum(counts.values())
+        entropy = 0.0
+        for count in counts.values():
+            probability = float(count) / float(total or 1)
+            if probability:
+                entropy -= probability * math.log2(probability)
+
+        seen: set[tuple[int, int]] = set()
+        repeated = 0
+        coordinate_count = 0
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            coord = _row_coordinate(row)
+            if coord is None:
+                continue
+            coordinate_count += 1
+            if coord in seen:
+                repeated += 1
+            seen.add(coord)
+
+        denominator = int(total_salience_candidates or max(len(seen), len(rows), 1))
+        coverage = float(len(seen)) / float(max(1, denominator))
+        return {
+            "action_entropy": float(entropy),
+            "repeated_coordinate_rate": float(repeated) / float(max(1, coordinate_count)),
+            "salience_coverage_rate": min(1.0, max(0.0, float(coverage))),
+        }
 
 
 @dataclass
