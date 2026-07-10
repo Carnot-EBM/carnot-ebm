@@ -1,0 +1,826 @@
+{
+  "aligned_memory_score": 0.8333333333,
+  "aligned_minus_random_delta": 0.75,
+  "aligned_minus_shuffled_delta": 0.5833333333,
+  "arm_results": {
+    "aligned_retrieval_memory": [
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "resume-cache-replay",
+        "label_id": "label-5542-evt-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-01",
+        "selected_action": "resume-cache-replay"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "pin-timeout-window",
+        "label_id": "label-5542-evt-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-02",
+        "selected_action": "pin-timeout-window"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "refresh-circuit-state",
+        "label_id": "label-5542-evt-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-03",
+        "selected_action": "refresh-circuit-state"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "retry-idempotent-call",
+        "label_id": "label-5542-evt-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-04",
+        "selected_action": "retry-idempotent-call"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "drop-duplicate-event",
+        "label_id": "label-5542-evt-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-05",
+        "selected_action": "drop-duplicate-event"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "restore-sequence-cursor",
+        "label_id": "label-5542-evt-06",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-06",
+        "selected_action": "restore-sequence-cursor"
+      },
+      {
+        "accepted": false,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "quarantine-outdated-event",
+        "label_id": "label-5542-evt-07",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-07",
+        "selected_action": "joint-miss-evt-07"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "apply-access-deny-policy",
+        "label_id": "label-5542-topic-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-01",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "choose-zero-index-pagination",
+        "label_id": "label-5542-topic-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-02",
+        "selected_action": "choose-zero-index-pagination"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "prefer-circuit-breaker-reset",
+        "label_id": "label-5542-topic-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-03",
+        "selected_action": "prefer-circuit-breaker-reset"
+      },
+      {
+        "accepted": true,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "prefer-readonly-token",
+        "label_id": "label-5542-topic-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-04",
+        "selected_action": "prefer-readonly-token"
+      },
+      {
+        "accepted": false,
+        "arm": "aligned_retrieval_memory",
+        "expected_action": "reject-secret-rotation-transfer",
+        "label_id": "label-5542-topic-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-05",
+        "selected_action": "joint-miss-topic-05"
+      }
+    ],
+    "best_constant_answer": [
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "resume-cache-replay",
+        "label_id": "label-5542-evt-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-01",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "pin-timeout-window",
+        "label_id": "label-5542-evt-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-02",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "refresh-circuit-state",
+        "label_id": "label-5542-evt-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-03",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "retry-idempotent-call",
+        "label_id": "label-5542-evt-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-04",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "drop-duplicate-event",
+        "label_id": "label-5542-evt-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-05",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "restore-sequence-cursor",
+        "label_id": "label-5542-evt-06",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-06",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "quarantine-outdated-event",
+        "label_id": "label-5542-evt-07",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-07",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": true,
+        "arm": "best_constant_answer",
+        "expected_action": "apply-access-deny-policy",
+        "label_id": "label-5542-topic-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-01",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "choose-zero-index-pagination",
+        "label_id": "label-5542-topic-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-02",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "prefer-circuit-breaker-reset",
+        "label_id": "label-5542-topic-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-03",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "prefer-readonly-token",
+        "label_id": "label-5542-topic-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-04",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": false,
+        "arm": "best_constant_answer",
+        "expected_action": "reject-secret-rotation-transfer",
+        "label_id": "label-5542-topic-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-05",
+        "selected_action": "apply-access-deny-policy"
+      }
+    ],
+    "oracle_memory": [
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "resume-cache-replay",
+        "label_id": "label-5542-evt-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-01",
+        "selected_action": "resume-cache-replay"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "pin-timeout-window",
+        "label_id": "label-5542-evt-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-02",
+        "selected_action": "pin-timeout-window"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "refresh-circuit-state",
+        "label_id": "label-5542-evt-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-03",
+        "selected_action": "refresh-circuit-state"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "retry-idempotent-call",
+        "label_id": "label-5542-evt-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-04",
+        "selected_action": "retry-idempotent-call"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "drop-duplicate-event",
+        "label_id": "label-5542-evt-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-05",
+        "selected_action": "drop-duplicate-event"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "restore-sequence-cursor",
+        "label_id": "label-5542-evt-06",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-06",
+        "selected_action": "restore-sequence-cursor"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "quarantine-outdated-event",
+        "label_id": "label-5542-evt-07",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-07",
+        "selected_action": "quarantine-outdated-event"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "apply-access-deny-policy",
+        "label_id": "label-5542-topic-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-01",
+        "selected_action": "apply-access-deny-policy"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "choose-zero-index-pagination",
+        "label_id": "label-5542-topic-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-02",
+        "selected_action": "choose-zero-index-pagination"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "prefer-circuit-breaker-reset",
+        "label_id": "label-5542-topic-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-03",
+        "selected_action": "prefer-circuit-breaker-reset"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "prefer-readonly-token",
+        "label_id": "label-5542-topic-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-04",
+        "selected_action": "prefer-readonly-token"
+      },
+      {
+        "accepted": true,
+        "arm": "oracle_memory",
+        "expected_action": "reject-secret-rotation-transfer",
+        "label_id": "label-5542-topic-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-05",
+        "selected_action": "reject-secret-rotation-transfer"
+      }
+    ],
+    "per_query_random_memory": [
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "resume-cache-replay",
+        "label_id": "label-5542-evt-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-01",
+        "selected_action": "joint-miss-topic-05"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "pin-timeout-window",
+        "label_id": "label-5542-evt-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-02",
+        "selected_action": "restore-sequence-cursor"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "refresh-circuit-state",
+        "label_id": "label-5542-evt-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-03",
+        "selected_action": "resume-cache-replay"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "retry-idempotent-call",
+        "label_id": "label-5542-evt-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-04",
+        "selected_action": "joint-miss-evt-07"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "drop-duplicate-event",
+        "label_id": "label-5542-evt-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-05",
+        "selected_action": "prefer-readonly-token"
+      },
+      {
+        "accepted": true,
+        "arm": "per_query_random_memory",
+        "expected_action": "restore-sequence-cursor",
+        "label_id": "label-5542-evt-06",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-06",
+        "selected_action": "restore-sequence-cursor"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "quarantine-outdated-event",
+        "label_id": "label-5542-evt-07",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-07",
+        "selected_action": "retry-idempotent-call"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "apply-access-deny-policy",
+        "label_id": "label-5542-topic-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-01",
+        "selected_action": "prefer-circuit-breaker-reset"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "choose-zero-index-pagination",
+        "label_id": "label-5542-topic-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-02",
+        "selected_action": "resume-cache-replay"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "prefer-circuit-breaker-reset",
+        "label_id": "label-5542-topic-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-03",
+        "selected_action": "drop-duplicate-event"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "prefer-readonly-token",
+        "label_id": "label-5542-topic-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-04",
+        "selected_action": "drop-duplicate-event"
+      },
+      {
+        "accepted": false,
+        "arm": "per_query_random_memory",
+        "expected_action": "reject-secret-rotation-transfer",
+        "label_id": "label-5542-topic-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-05",
+        "selected_action": "retry-idempotent-call"
+      }
+    ],
+    "shuffled_memory": [
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "resume-cache-replay",
+        "label_id": "label-5542-evt-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-01",
+        "selected_action": "shuffled-miss-evt-01"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "pin-timeout-window",
+        "label_id": "label-5542-evt-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-02",
+        "selected_action": "shuffled-miss-evt-02"
+      },
+      {
+        "accepted": true,
+        "arm": "shuffled_memory",
+        "expected_action": "refresh-circuit-state",
+        "label_id": "label-5542-evt-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-03",
+        "selected_action": "refresh-circuit-state"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "retry-idempotent-call",
+        "label_id": "label-5542-evt-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-04",
+        "selected_action": "shuffled-miss-evt-04"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "drop-duplicate-event",
+        "label_id": "label-5542-evt-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-05",
+        "selected_action": "shuffled-miss-evt-05"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "restore-sequence-cursor",
+        "label_id": "label-5542-evt-06",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-06",
+        "selected_action": "shuffled-miss-evt-06"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "quarantine-outdated-event",
+        "label_id": "label-5542-evt-07",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "event_progression",
+        "query_id": "5542-heldout-evt-07",
+        "selected_action": "shuffled-miss-evt-07"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "apply-access-deny-policy",
+        "label_id": "label-5542-topic-01",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-01",
+        "selected_action": "shuffled-miss-topic-01"
+      },
+      {
+        "accepted": true,
+        "arm": "shuffled_memory",
+        "expected_action": "choose-zero-index-pagination",
+        "label_id": "label-5542-topic-02",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-02",
+        "selected_action": "choose-zero-index-pagination"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "prefer-circuit-breaker-reset",
+        "label_id": "label-5542-topic-03",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-03",
+        "selected_action": "shuffled-miss-topic-03"
+      },
+      {
+        "accepted": false,
+        "arm": "shuffled_memory",
+        "expected_action": "prefer-readonly-token",
+        "label_id": "label-5542-topic-04",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-04",
+        "selected_action": "shuffled-miss-topic-04"
+      },
+      {
+        "accepted": true,
+        "arm": "shuffled_memory",
+        "expected_action": "reject-secret-rotation-transfer",
+        "label_id": "label-5542-topic-05",
+        "label_source": "deterministic_corrigendum::independent_outcome_labels",
+        "query_family": "topic_policy",
+        "query_id": "5542-heldout-topic-05",
+        "selected_action": "reject-secret-rotation-transfer"
+      }
+    ]
+  },
+  "best_constant_score": 0.0833333333,
+  "control_counts": {
+    "negative_transfer_candidates_accepted": 0,
+    "negative_transfer_candidates_seen": 2,
+    "stale_candidates_rejected": 3,
+    "stale_candidates_seen": 3
+  },
+  "csl_five_arm_ready": true,
+  "experiment": 5543,
+  "experiment_id": "experiment_5543_retrieval_warmed_csl_five_arm_ablation",
+  "field_principles": {
+    "aligned_memory_score": "Measures query-aligned retrieval memory without reading held-out labels.",
+    "aligned_minus_random_delta": "Gate delta proving aligned retrieval beats per-query random memory.",
+    "aligned_minus_shuffled_delta": "Gate delta proving aligned retrieval beats shuffled memory.",
+    "best_constant_score": "Checks whether a fixed answer baseline explains the held-out score.",
+    "csl_five_arm_ready": "Bare downstream gate requiring aligned retrieval to beat both controls.",
+    "field_principles": "Explains why each required headline and gate field exists.",
+    "honest_verdict": "Terminal summary with complete or blocked prefix for reconciliation.",
+    "inference_substrate": "Declares deterministic no-LLM retrieval-warmed CSL evaluation.",
+    "memory_hashes": "Content-addresses each arm's memory state for replay and drift detection.",
+    "negative_transfer_rate": "Shows irrelevant transfer candidates are not accepted as useful memory.",
+    "no_weight_mutation": "Keeps the positive signal attributed to external retrieval memory only.",
+    "oracle_score": "Upper-bound leakage control; useful only as a ceiling, not a ready gate.",
+    "per_query_random_score": "Checks chance retrieval on the same query set as aligned memory.",
+    "query_hashes": "Content-addresses the shared held-out query set used by every arm.",
+    "shuffled_memory_score": "Checks whether memory order or arbitrary pairing explains the lift.",
+    "stale_evidence_rejection_rate": "Shows outdated evidence is rejected before aligned retrieval.",
+    "tests_added_or_reused": "Lists focused, coverage, and full-suite verification commands."
+  },
+  "heldout_queries": [
+    {
+      "label_id": "label-5542-evt-01",
+      "query_family": "event_progression",
+      "query_id": "5542-heldout-evt-01",
+      "query_key": "query:d717ec104e184be460c93ba283aec58755cf55419ccef9da4e88cc059cd1109f",
+      "task_id": "5542-heldout-evt-01"
+    },
+    {
+      "label_id": "label-5542-evt-02",
+      "query_family": "event_progression",
+      "query_id": "5542-heldout-evt-02",
+      "query_key": "query:f8fee8580d472eb71c775bf8336491fa1f975bb2299f49a86e9f4020f85ddfcb",
+      "task_id": "5542-heldout-evt-02"
+    },
+    {
+      "label_id": "label-5542-evt-03",
+      "query_family": "event_progression",
+      "query_id": "5542-heldout-evt-03",
+      "query_key": "query:2aa704bb220e074516a4f69ee57a1ae9b60592ed66a93d2fc6071b4671c27aa3",
+      "task_id": "5542-heldout-evt-03"
+    },
+    {
+      "label_id": "label-5542-evt-04",
+      "query_family": "event_progression",
+      "query_id": "5542-heldout-evt-04",
+      "query_key": "query:33de0d7430c77db4750c63052f8ce973e58a6dd12dbe160c9192349915ef4fd5",
+      "task_id": "5542-heldout-evt-04"
+    },
+    {
+      "label_id": "label-5542-evt-05",
+      "query_family": "event_progression",
+      "query_id": "5542-heldout-evt-05",
+      "query_key": "query:9f8831f99cb49343e3355ea69274432dbb80a32d1881824f978d369b05a69f11",
+      "task_id": "5542-heldout-evt-05"
+    },
+    {
+      "label_id": "label-5542-evt-06",
+      "query_family": "event_progression",
+      "query_id": "5542-heldout-evt-06",
+      "query_key": "query:88fcc6e28dbfde60f17db560567f0e66e3960fac8f24887e35d537cc06d4aded",
+      "task_id": "5542-heldout-evt-06"
+    },
+    {
+      "label_id": "label-5542-evt-07",
+      "query_family": "event_progression",
+      "query_id": "5542-heldout-evt-07",
+      "query_key": "query:ec6186b6db29b30a28ff59a140b1b3ebfc7e5cb4c071d5047b63251cc3023e71",
+      "task_id": "5542-heldout-evt-07"
+    },
+    {
+      "label_id": "label-5542-topic-01",
+      "query_family": "topic_policy",
+      "query_id": "5542-heldout-topic-01",
+      "query_key": "query:ea0566e8ee8f212c500eb31edb566ce1241d940533d433b313950e22ca5c85bd",
+      "task_id": "5542-heldout-topic-01"
+    },
+    {
+      "label_id": "label-5542-topic-02",
+      "query_family": "topic_policy",
+      "query_id": "5542-heldout-topic-02",
+      "query_key": "query:5551729935392653287634b05ba017bfe7bbc0906cee03549bff602d1b7dae88",
+      "task_id": "5542-heldout-topic-02"
+    },
+    {
+      "label_id": "label-5542-topic-03",
+      "query_family": "topic_policy",
+      "query_id": "5542-heldout-topic-03",
+      "query_key": "query:dbbd16bceed7566fabcb8302be515ff8077bfd79d5ea82500d3af3ebbfdb5979",
+      "task_id": "5542-heldout-topic-03"
+    },
+    {
+      "label_id": "label-5542-topic-04",
+      "query_family": "topic_policy",
+      "query_id": "5542-heldout-topic-04",
+      "query_key": "query:d156c65261853b5524a822c0b8c5ef10cbd76c27a5e07d3b3657804603ffe509",
+      "task_id": "5542-heldout-topic-04"
+    },
+    {
+      "label_id": "label-5542-topic-05",
+      "query_family": "topic_policy",
+      "query_id": "5542-heldout-topic-05",
+      "query_key": "query:14d56dc78a3feea18ece0762205ddf92b71ed21234014f1cf0312e0e921252fa",
+      "task_id": "5542-heldout-topic-05"
+    }
+  ],
+  "honest_verdict": "complete: retrieval_warmed_csl_five_arm_ablation_ready",
+  "inference_substrate": "deterministic_retrieval_warmed_csl_no_llm",
+  "memory_hash_evidence": {
+    "aligned_retrieval_memory": "sha256:a3231ffe4feedde7cca298ecfb4881b58587c3201f7645f5e850e62adb783e4a",
+    "best_constant_answer": "sha256:ff5bf8c80ce25dcaa7a8aa136c732beee17d1e71f1a183810e287c6c348fb424",
+    "oracle_memory": "sha256:da7bb286be5614b9f180e05e35f64903e79873369d82a371a090ab7ba3a853a8",
+    "per_query_random_memory": "sha256:726dbbfd4447a45979426b19fbb9ab90fade1030096dc2ed4a6a035f21120c90",
+    "shuffled_memory": "sha256:7092f63e7f378616c7150bc98be2743086245ca0930b28160fb494c75bff3c1d"
+  },
+  "memory_hashes": [
+    "sha256:da7bb286be5614b9f180e05e35f64903e79873369d82a371a090ab7ba3a853a8",
+    "sha256:ff5bf8c80ce25dcaa7a8aa136c732beee17d1e71f1a183810e287c6c348fb424",
+    "sha256:726dbbfd4447a45979426b19fbb9ab90fade1030096dc2ed4a6a035f21120c90",
+    "sha256:7092f63e7f378616c7150bc98be2743086245ca0930b28160fb494c75bff3c1d",
+    "sha256:a3231ffe4feedde7cca298ecfb4881b58587c3201f7645f5e850e62adb783e4a"
+  ],
+  "methodology_note": "Oracle memory is reported only as a leakage ceiling. The ready gate uses aligned retrieval beating random and shuffled memory on the same held-out queries, with model weights frozen.",
+  "milestone": "2026.07.502",
+  "negative_transfer_rate": 0.0,
+  "no_weight_mutation": true,
+  "oracle_score": 1.0,
+  "per_query_random_score": 0.0833333333,
+  "query_hashes": [
+    "sha256:1783e1ddb4f2d44f644b222b9f728094db8dd80ca8ec351dc5bdc0060e2d90ab",
+    "sha256:2143525508fdae3e2c450f0958a871bda23879ddb13c01adc44c036ece5ab68d",
+    "sha256:a299b8221941163393505fb202637ee051a7265ad7159e363f874a3da901f6b4",
+    "sha256:44cba93f2cd3d122569be7775a88a33a9fa0ab511b9d8dd12763a8b206c5247b",
+    "sha256:33bef85612f3721209efd8fe53ef6a3126b5ac23acbdea85f3885bca02d65a17",
+    "sha256:d774e4689e52dfc5d7096692a18425c465376c4ad4931e2e082b718549c13125",
+    "sha256:35c7ebec6c97565922b069d7f0a46ee0826b9c7d7b8dbb2024b0840359be8137",
+    "sha256:5466132d26ead3f8b9c8071680f78a95b54f7bb2be82cd8341dfdec2b06e8bd2",
+    "sha256:80e1cbea4485f14dc7f0cae5cb45e75eb2422ede1fa302f3b93967f04ce12fe8",
+    "sha256:ff4798a5963f2658fc67f0d6ec63b108a308a9b70806524ef38a29666c637ce7",
+    "sha256:303d6b7fab1b45c0299f6db87d81dc4e2735c02aafa1c89300c30f7710b4f927",
+    "sha256:93de7ce501da32817a079b03643bd0e0e6b476dc248e2eaec44b3c4a10e5c00a"
+  ],
+  "random_seed": 5543,
+  "reproducibility_checksum": "sha256:176ede615609527ec06438e74b7131a2c455f6222cfd68a82efba1195e6a4e8b",
+  "run_date": "2026-07-10",
+  "same_heldout_query_set": true,
+  "schema": "carnot.experiment_5543.retrieval_warmed_csl_five_arm_ablation.v1",
+  "shared_query_ids": [
+    "5542-heldout-evt-01",
+    "5542-heldout-evt-02",
+    "5542-heldout-evt-03",
+    "5542-heldout-evt-04",
+    "5542-heldout-evt-05",
+    "5542-heldout-evt-06",
+    "5542-heldout-evt-07",
+    "5542-heldout-topic-01",
+    "5542-heldout-topic-02",
+    "5542-heldout-topic-03",
+    "5542-heldout-topic-04",
+    "5542-heldout-topic-05"
+  ],
+  "shuffled_memory_score": 0.25,
+  "source_file_checksums": {
+    "module": "sha256:ee1201a8d14aa07c8c21cc6e3fef5916e16869969172d867bc95948ca5d947d2",
+    "spec": "sha256:fb33c226aab3f267c366ea2ff41803782eb4f187ec90f3c59294375749f583e3",
+    "test": "sha256:01623a6208e6a7fe752bb76b9cb7387bac86950b16cdbd1cd836f650271f6f25"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5543_retrieval_warmed_csl_five_arm_ablation.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "test": "tests/python/test_experiment_5543_retrieval_warmed_csl_five_arm_ablation.py"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5543",
+    "SCENARIO-LEARN-5543-FIVE-ARMS",
+    "SCENARIO-LEARN-5543-CONTROLS",
+    "SCENARIO-LEARN-5543-ARTIFACT"
+  ],
+  "stale_evidence_rejection_rate": 1.0,
+  "task_id": "exp5543-retrieval-warmed-csl-five-arm-ablation",
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5543_retrieval_warmed_csl_five_arm_ablation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5543_retrieval_warmed_csl_five_arm_ablation.py -m pytest tests/python/test_experiment_5543_retrieval_warmed_csl_five_arm_ablation.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5543_retrieval_warmed_csl_five_arm_ablation.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "upstream_csl_residue_tautology_resolved": true,
+  "upstream_residue_path": "results/experiment_5542_csl_residue_metric_independence_corrigendum.json",
+  "upstream_residue_status": {
+    "csl_residue_stress_ready": true,
+    "csl_residue_tautology_resolved": true,
+    "honest_verdict": "complete: csl_residue_metric_independence_corrigendum_ready",
+    "loadable": true,
+    "path": "results/experiment_5542_csl_residue_metric_independence_corrigendum.json"
+  },
+  "weight_mutation_evidence": {
+    "after_hash": "sha256:4e2b34ecae2ce4af9ec65f2014ea95222ee414b73840ea45938c2f11467a1166",
+    "before_hash": "sha256:4e2b34ecae2ce4af9ec65f2014ea95222ee414b73840ea45938c2f11467a1166",
+    "mutated_paths": [],
+    "no_weight_mutation": true
+  }
+}

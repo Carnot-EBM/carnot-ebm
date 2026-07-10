@@ -21473,3 +21473,83 @@ false
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5542 | Planned (`python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py`, `results/experiment_5542_csl_residue_metric_independence_corrigendum.json`) | Planned (`tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py`) |
+
+## REQ-LEARN-5543: Retrieval-Warmed CSL Five-Arm Ablation
+
+The Exp5543 workflow SHALL write
+`results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json` only
+after loading
+`results/experiment_5542_csl_residue_metric_independence_corrigendum.json` and
+confirming `csl_residue_tautology_resolved=true`. The workflow SHALL be
+deterministic, SHALL NOT invoke a live LLM, and SHALL NOT mutate model weights.
+
+The ablation SHALL evaluate the same held-out query set under exactly five
+arms: oracle memory, best constant answer, per-query random memory, shuffled
+memory, and aligned retrieval memory. Oracle memory is an upper-bound leakage
+control and SHALL NOT make the ready gate pass by itself. Best constant answer,
+per-query random memory, and shuffled memory SHALL be explicit controls so
+aligned retrieval beats both shuffled and per-query random controls before any
+ready claim is allowed, and so aligned retrieval benefit is separated from constant baselines, random
+retrieval, shuffled memory order, and oracle leakage.
+
+The artifact SHALL include required fields `oracle_score`,
+`best_constant_score`, `per_query_random_score`, `shuffled_memory_score`,
+`aligned_memory_score`, `aligned_minus_shuffled_delta`,
+`aligned_minus_random_delta`, `stale_evidence_rejection_rate`,
+`negative_transfer_rate`, `memory_hashes`, `query_hashes`,
+`no_weight_mutation`, `csl_five_arm_ready`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`. The artifact
+SHALL set `inference_substrate="deterministic_retrieval_warmed_csl_no_llm"` and
+SHALL carry one-line principles for every required headline and gate field.
+
+### REQ-LEARN-5543 Sub-requirements
+
+- REQ-LEARN-5543-1: The workflow SHALL fail closed when the Exp5542 artifact is
+  missing, unreadable, or does not report `csl_residue_tautology_resolved=true`.
+- REQ-LEARN-5543-2: Every arm SHALL score the same held-out query IDs, and the
+  artifact SHALL expose deterministic query hashes for that shared query set.
+- REQ-LEARN-5543-3: `memory_hashes` SHALL include deterministic hashes for the
+  memory states used by the oracle, constant, per-query random, shuffled, and
+  aligned arms.
+- REQ-LEARN-5543-4: `aligned_minus_shuffled_delta` SHALL equal
+  `aligned_memory_score - shuffled_memory_score`, and
+  `aligned_minus_random_delta` SHALL equal
+  `aligned_memory_score - per_query_random_score`, rounded deterministically.
+- REQ-LEARN-5543-5: Stale evidence and negative-transfer probes SHALL be
+  rejected before aligned retrieval is accepted, and the corresponding rates
+  SHALL be reported separately from the five arm scores.
+- REQ-LEARN-5543-6: `csl_five_arm_ready` SHALL be true only when Exp5542 is
+  clean, all five arms share the same query set, aligned retrieval beats both
+  shuffled and per-query random controls, stale evidence is fully rejected,
+  negative-transfer acceptance is zero, and `no_weight_mutation=true`.
+
+### SCENARIO-LEARN-5543-FIVE-ARMS: Controls Share One Held-Out Query Set
+
+**Given** the Exp5542 residue corrigendum is clean
+**When** oracle, constant, per-query random, shuffled, and aligned retrieval
+arms are evaluated
+**Then** each arm SHALL score the same held-out query IDs
+**And** oracle and constant controls SHALL be reported without contributing to
+the aligned retrieval ready gate.
+
+### SCENARIO-LEARN-5543-CONTROLS: Aligned Retrieval Beats Random And Shuffled
+
+**Given** random and shuffled memory controls are evaluated on the same queries
+**When** aligned retrieval memory is scored
+**Then** `aligned_minus_shuffled_delta` and `aligned_minus_random_delta` SHALL
+both be positive before `csl_five_arm_ready` can be true.
+
+### SCENARIO-LEARN-5543-ARTIFACT: Five-Arm Gate Fails Closed
+
+**Given** the upstream corrigendum is stale, the arm query sets diverge, aligned
+retrieval does not beat a control, stale evidence is accepted, negative transfer
+is accepted, or model weights mutate
+**When** the Exp5543 artifact is validated
+**Then** `csl_five_arm_ready` SHALL be false
+**And** the terminal verdict SHALL start with `blocked:`.
+
+## Implementation Status (Exp 5543)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5543 | Implemented (`python/carnot/experiment_5543_retrieval_warmed_csl_five_arm_ablation.py`, `results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json`) | Implemented (`tests/python/test_experiment_5543_retrieval_warmed_csl_five_arm_ablation.py`) |
