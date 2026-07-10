@@ -10690,3 +10690,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 01:21 UTC | CSL independent-outcome graph replay and gate-fiel | OK | 87 passed, 1 warning in 10.60s |
 | 2026-07-10 01:23 UTC | Gated SOTA GGUF CSL memory panel on clean independ | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |
 | 2026-07-10 01:25 UTC | Gated SOTA GGUF CSL memory panel on clean independ | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |
+| 2026-07-10 01:27 UTC | Gated SOTA GGUF CSL memory panel on clean independ | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |
