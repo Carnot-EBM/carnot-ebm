@@ -10708,3 +10708,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 07:04 UTC | Execution-time V501 source delta and experiment ma | OK | 124 passed, 1 warning in 11.87s |
 | 2026-07-10 07:20 UTC | SOTA GGUF structured-output failure taxonomy | OK | 94 passed, 1 warning in 9.73s |
 | 2026-07-10 07:39 UTC | Gated SOTA GGUF structured repair loop | OK | 86 passed, 1 warning in 9.82s |
+| 2026-07-10 07:56 UTC | Gated SOTA GGUF hard/soft structured panel v2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
