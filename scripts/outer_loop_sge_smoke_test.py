@@ -51,17 +51,23 @@ def main() -> int:
     game = "g50t"
     prior_levels = 2
     target_level = 3
-    budget = 8  # short, real-GPU-time-bounded smoke test (observed ~5 tok/s on the shared warm server)
+    budget = 46  # matches exp5534's scope for an honest apples-to-apples comparison
 
-    gguf = LocalGGUFProposer()  # defaults: gemma-4-12B-it, GPU-enforced, fails loud
-    proposer = LLMStrategyProposer(completer=gguf, max_tokens=40)
+    # port=8929 (not the default 8919): the default port already has a long-running HIP
+    # (AMD iGPU) server on it from an unrelated process, and _ensure_server() reuses ANY
+    # healthy server on the configured port regardless of which build backs it -- using a
+    # fresh port forces a genuinely fresh CUDA-pinned server instead of silently inheriting
+    # the slow iGPU one. GPU 1 is the outer loop's dedicated card per CLAUDE.md.
+    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
+    gguf = LocalGGUFProposer(port=8929)  # gemma-4-12B-it, GPU-enforced, fails loud
+    proposer = LLMStrategyProposer(completer=gguf, max_tokens=64)
     router = SGECandidateRouter(
         proposer=proposer,
         game_id=game,
-        k=2,
-        temperatures=(0.4, 0.8),
+        k=3,
+        temperatures=(0.3, 0.6, 0.9),
         max_candidates=8,
-        reflect_every=4,
+        reflect_every=6,
     )
     generator = ActionDiverseLiveGenerator(max_candidates=8)
 

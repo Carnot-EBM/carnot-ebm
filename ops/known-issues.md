@@ -116,18 +116,71 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    **DONE 2026-07-09 (exp5464): CLEAN — 22 reproduced loop artifacts audited, 0 contaminated,
    `null_coordinate_exploit_valid=false`. The 69-level count is genuinely earned. Do not re-run unless the
    registry composition changes materially.**
-6. **(Primary new lever) Strategy-Guided Exploration (SGE)-style parallel language-strategy generation.**
-   arXiv:2603.02045: an LLM first states a concise natural-language STRATEGY for what to try, then generates
-   actions conditioned on that strategy; diversity comes from mixed-temperature sampling of multiple strategies
-   IN PARALLEL, refined by an outcome-grounded reflection loop each round. Genuinely distinct from everything
-   tried so far — not a tool-use loop, not a subgoal value-head, not a novelty bonus, not object/perception
-   work: it is a PORTFOLIO of qualitatively different proposals competing for the action budget, rather than
-   one pipeline generating one kind of candidate. Tested on UI/tool-calling/coding/embodied domains, NOT
-   ARC-AGI-3 — transfer is unverified, and no exact benchmark numbers were confirmed from the source, only the
-   mechanism. Cheap to prototype: reuses the existing local generator, no new pretraining — just a strategy-
-   generation prompt layer + parallel sampling + a reflection step on top of the current action-execution
-   stack. Wire into the live `E3AgentPolicy` path per the ARC Live-Path Reachability Discipline, not a
-   standalone experiment.
+6. **(Primary new lever, REAL BUILD LANDED 2026-07-10 — outer-loop, needs a full-budget run next)
+   Strategy-Guided Exploration (SGE)-style parallel language-strategy generation.** arXiv:2603.02045: an LLM
+   first states a concise natural-language STRATEGY for what to try, then generates actions conditioned on
+   that strategy; diversity comes from mixed-temperature sampling of multiple strategies IN PARALLEL, refined
+   by an outcome-grounded reflection loop each round. Genuinely distinct from everything tried so far — not a
+   tool-use loop, not a subgoal value-head, not a novelty bonus, not object/perception work: it is a
+   PORTFOLIO of qualitatively different proposals competing for the action budget, rather than one pipeline
+   generating one kind of candidate.
+
+   **IMPORTANT — the conductor's own first "strategy-routed" attempt (exp5533/exp5534, milestone .501) was
+   NOT this mechanism.** It relabeled `BoundedStrategyCandidateRouter`'s four hand-coded deterministic
+   scoring templates as "strategy-routing" with `llm_strategy_proposer_used=false` — no model was ever
+   loaded (2.7s duration, correctly flagged `DURATION_TOO_SHORT` by adversarial_verify). Do not treat that
+   result as a test of SGE.
+
+   **The real mechanism was built and tested 2026-07-10 (outer-loop):**
+   `python/carnot/agentic/arc_llm_strategy_proposer.py` (`LLMStrategyProposer` + `SGECandidateRouter`, a
+   genuine drop-in for `candidate_router.rank()` reusing the existing `LocalGGUFProposer` GPU infra),
+   `tests/python/test_arc_llm_strategy_proposer.py` (25 unit tests, all passing, fake-completer based, no
+   GPU needed for CI), `scripts/outer_loop_sge_smoke_test.py` (real-GPU integration test against
+   `kit.offline_arcade()` + `E3AgentPolicy`, the same pattern the live path uses).
+
+   **First run (small, 8-step correctness check):** `duration_s=107.87`, `llm_strategy_proposer_used=true`
+   (a REAL invocation, contrast with exp5534's 2.7s fake) — but this run hit the GPU-offload gotcha below
+   (AMD iGPU, not the RTX 3090), so throughput was ~5 tok/s.
+
+   **Second run (full budget=46, matching exp5534's scope exactly, honest apples-to-apples comparison, GPU
+   fix applied):** `duration_s=114.14`, `attempts=45`, genuinely CUDA-backed this time (confirmed:
+   `build/bin/llama-server` on GPU 1, not `build-hip`) — ~2.5s/step, a real ~6x speedup over the misrouted
+   first run, confirming the GPU-pinning fix below actually works. The model produced coherent, evolving,
+   reflection-responsive strategies throughout (same qualitative behavior as the first run). **Honest
+   result: `max_level_reached=0` — no level banked, and it never even left level 0** (the deterministic-
+   template baseline, exp5534, also nulled on this same g50t L3 target but from level 2, i.e. it made LESS
+   net progress in this specific comparison, though on a different starting point so not a clean delta).
+   By the final steps the model's own strategies converged on a repetitive "wait for the system to process
+   the pending interaction" pattern that never escalated to more assertive probing even after multiple
+   reflection cycles — a real, observed failure mode (strategy convergence/collapse under reflection),
+   distinct from exp5534's "never tried" non-result. `results/outer_loop_sge_smoke_test.json` has the full
+   trace.
+   `addressed_by:` (Failed-Experiment Rerun Discipline) this was NOT a rerun of the exp5534 null — exp5534
+   never invoked an LLM at all; this is the first genuine, full-budget test of the mechanism task 6 was
+   staged for, and it produced an honest null too, but for a qualitatively different, now-documented reason
+   (strategy collapse under reflection, not "never tried").
+   **NEXT STEP (if picked up again):** the failure mode (reflection converging on a passive "wait" strategy
+   instead of escalating) suggests the reflection prompt needs an explicit anti-stagnation nudge (e.g.
+   detect repeated null-outcome strategies and force strategy diversity), not just "try again with a bigger
+   budget." Tested on UI/tool-calling/coding/embodied domains in the source paper, NOT ARC-AGI-3 beyond this
+   test. Full live-submission wiring (this used the offline dev sim per the ARC Live-Path Reachability
+   Discipline) is a separate, later step, not done here.
+
+   **GPU-offload gotcha found + fixed 2026-07-10 (outer-loop, durable lesson for future GPU-backed outer-
+   loop work):** `LocalGGUFProposer`'s default resolution (`_generator_server_and_env()` in
+   `arc_executable_world_model.py`) intentionally defaults to the AMD iGPU HIP build unless
+   `CARNOT_ARC_GENERATOR_CUDA_GPU=<idx>` is explicitly set (this is NOT a bug — it is the documented
+   "don't fight the conductor for the 3090s" default). The outer loop owns GPU 1 per CLAUDE.md's GPU
+   allocation rule; the first run above didn't set that env var and silently got the slow iGPU path (no
+   error, no warning — just ~5 tok/s instead of the expected CUDA throughput). SECOND gotcha, easy to miss:
+   even with the env var set, `_ensure_server()` reuses ANY already-healthy server on the configured PORT
+   regardless of which build backs it — the default port 8919 already had an unrelated long-running HIP
+   server on it (up since 2026-06-22, likely conductor-related), so setting the env var alone would have
+   silently kept reusing that slow server. Fix: use a DIFFERENT port (`LocalGGUFProposer(port=8929)`) to
+   force a genuinely fresh CUDA-pinned server. Confirmed via `ldd` that the default port's server links
+   `libamdhip64.so.7`/`librocblas.so.5` (ROCm) while the fresh one on 8929 links `libcuda.so.1`/
+   `libcublas.so.13` (CUDA). Any future outer-loop script using `LocalGGUFProposer` should set BOTH
+   `CARNOT_ARC_GENERATOR_CUDA_GPU=1` AND a non-default `port=` to reliably get real 3090 throughput.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

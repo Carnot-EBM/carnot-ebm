@@ -4,8 +4,8 @@
   "prior_levels_reproduced": 2,
   "target_level": 3,
   "max_level_reached": 2,
-  "attempts": 7,
-  "duration_s": 107.87058472633362,
+  "attempts": 45,
+  "duration_s": 114.1427698135376,
   "llm_strategy_proposer_used_any_step": true,
   "inference_substrate": "live_llm_inference",
   "model_specs": [
@@ -20,10 +20,11 @@
       "level_after": 0,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Wait and observe the initial state to identify any default patterns or environmental changes."
+        "Observe the initial game state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any passive changes occur without my input."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 2
       }
     },
     {
@@ -34,10 +35,11 @@
       "level_after": 0,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Wait and observe the initial state to identify any default patterns or environmental changes."
+        "Observe the initial game state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any passive changes occur without my input."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 2
       }
     },
     {
@@ -48,11 +50,12 @@
       "level_after": 0,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Wait to see if the game state changes automatically without any input.",
-        "Observe the initial state to see if any environmental changes occur without input."
+        "Observe the initial state of the game to identify any static elements or immediate environmental cues.",
+        "Observe the initial state of the game to see if any automatic events occur.",
+        "Observe the initial game state to see if any automatic transitions or visual cues occur without input."
       ],
       "votes_by_index": {
-        "0": 2
+        "0": 3
       }
     },
     {
@@ -63,10 +66,12 @@
       "level_after": 0,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Observe the initial state to see if any automatic events occur without input."
+        "Observe the initial state to see if any automatic events occur or if the environment provides feedback.",
+        "Observe the initial state and wait for any automatic environmental changes or messages.",
+        "Observe the initial game state and any passive events to understand the baseline environment."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 3
       }
     },
     {
@@ -77,10 +82,12 @@
       "level_after": 0,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Observe the initial state and any automatic transitions to understand the basic environment."
+        "Observe the initial state to see if any automatic events occur without input.",
+        "Observe the initial game state to identify any passive environmental changes or UI elements.",
+        "Observe the initial state to see if any automatic changes occur without player input."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 3
       }
     },
     {
@@ -91,11 +98,12 @@
       "level_after": 0,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Test if any input triggers a state change as suggested by the reflection.",
-        "Test if any input is required to change the game state as suggested by the reflection."
+        "Wait for the game to initialize or provide the first turn's options.",
+        "Observe the initial state and any automatic game progression to identify basic mechanics.",
+        "Wait for the initial game state to appear to understand the environment."
       ],
       "votes_by_index": {
-        "0": 2
+        "0": 3
       }
     },
     {
@@ -106,8 +114,524 @@
       "level_after": 0,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Test if any action triggers a state change as suggested by the reflection.",
-        "Test if submitting a null action triggers a state change or a system message."
+        "Observe the initial state to see if any automatic events occur or if the environment provides feedback.",
+        "Observe the initial game state to see if any automatic events or messages occur without input.",
+        "Observe the initial state to identify any visual cues or basic environmental rules."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 9,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur or if the environment provides a starting prompt.",
+        "I need to determine if any of the \"None\" actions trigger a state change or if I must first obtain coordinates.",
+        "Observe the current state without taking any action to see if the environment updates or provides feedback."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 10,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 11,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "I need to observe the initial state or any automatic transitions to understand the game's starting conditions."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 12,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the current state to see if any environmental changes or messages occur without input.",
+        "Wait for a prompt or environmental change to see if the game initializes without a coordinate action."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 13,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "I need to observe the initial state and any automatic transitions to understand the game's basic mechanics."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 14,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "I need to observe the initial state and see if any automatic events occur without my input."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 15,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers any system response or change in state."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 16,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game responds to a null action to establish a baseline.",
+        "Test if providing no action triggers a game response or state change."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 17,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game environment reacts to a null action or if it requires a specific input to proceed.",
+        "Test if providing no specific coordinate triggers a default game response or an error."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 18,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game responds to a null action to establish a baseline for interaction.",
+        "Test if the game registers a null action or a lack of input to establish a baseline."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 19,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game responds to a null action to establish a baseline for interaction."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 20,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game environment responds to a null action or if it requires a specific input to proceed.",
+        "Test if the game registers a null action or requires a specific input format.",
+        "Test if providing no specific action yields a response or change in state."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 21,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers a system response or error to establish baseline interaction.",
+        "Test if a null action is accepted or if a specific interaction is required to progress.",
+        "Test if providing a null action triggers a specific system response or error message."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 22,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action results in a system error or a specific game response.",
+        "Test if any null action triggers a response or if a specific candidate is required to progress.",
+        "Test if submitting a null action is accepted or triggers an error to establish a baseline."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 23,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action results in an error or a state change to determine valid input types.",
+        "Test if providing any action results in a state change since the current candidates are null."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 24,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers a system response or error to establish baseline interaction.",
+        "Test if submitting a null action results in a system error or a specific game response.",
+        "Test if submitting a null action triggers a response or an error from the game."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 25,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if a null action triggers a system response or error to establish baseline interaction."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 26,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers a response or a rule violation.",
+        "Test if a null action triggers a response or if a specific input is required to progress.",
+        "Test if submitting a non-null action triggers a response since the previous turn suggested a simple move."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 27,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting any non-null action triggers a state change or error."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 28,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if a non-null action is accepted to satisfy the current guidance.",
+        "Submit a non-null action to determine the required interaction format as suggested by the reflection.",
+        "I will attempt a generic interaction to see if the game accepts non-coordinate inputs as suggested by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 29,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a non-null action triggers a response or state change."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 30,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 31,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Submit a non-null action to see if the game accepts a specific move.",
+        "Test if any non-null action is accepted since the guidance suggests submitting a specific interaction."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 32,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt a basic interaction to see if the system accepts a non-null move as suggested by the reflection.",
+        "Test if submitting a non-null action triggers a valid game state change as suggested by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 33,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 34,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 35,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as instructed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 36,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as instructed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 37,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to confirm the previous action was successful before proceeding."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 38,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 39,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending basic interaction as instructed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 40,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 41,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 42,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 43,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 44,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 45,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as advised."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 46,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as instructed by the reflection.",
+        "Wait for the system to process the pending interaction as instructed by the guidance."
       ],
       "votes_by_index": {
         "0": 2
@@ -122,10 +646,11 @@
       "step": 1,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Wait and observe the initial state to identify any default patterns or environmental changes."
+        "Observe the initial game state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any passive changes occur without my input."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 2
       },
       "parse_failure_count": 1,
       "completer_failure_count": 0,
@@ -137,10 +662,11 @@
       "step": 1,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Wait and observe the initial state to identify any default patterns or environmental changes."
+        "Observe the initial game state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any passive changes occur without my input."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 2
       },
       "parse_failure_count": 1,
       "completer_failure_count": 0,
@@ -152,11 +678,12 @@
       "step": 2,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Wait to see if the game state changes automatically without any input.",
-        "Observe the initial state to see if any environmental changes occur without input."
+        "Observe the initial state of the game to identify any static elements or immediate environmental cues.",
+        "Observe the initial state of the game to see if any automatic events occur.",
+        "Observe the initial game state to see if any automatic transitions or visual cues occur without input."
       ],
       "votes_by_index": {
-        "0": 2
+        "0": 3
       },
       "parse_failure_count": 0,
       "completer_failure_count": 0,
@@ -168,12 +695,14 @@
       "step": 3,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Observe the initial state to see if any automatic events occur without input."
+        "Observe the initial state to see if any automatic events occur or if the environment provides feedback.",
+        "Observe the initial state and wait for any automatic environmental changes or messages.",
+        "Observe the initial game state and any passive events to understand the baseline environment."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 3
       },
-      "parse_failure_count": 1,
+      "parse_failure_count": 0,
       "completer_failure_count": 0,
       "reflection_note": "",
       "reflected_this_call": false,
@@ -183,30 +712,33 @@
       "step": 4,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Observe the initial state and any automatic transitions to understand the basic environment."
+        "Observe the initial state to see if any automatic events occur without input.",
+        "Observe the initial game state to identify any passive environmental changes or UI elements.",
+        "Observe the initial state to see if any automatic changes occur without player input."
       ],
       "votes_by_index": {
-        "0": 1
+        "0": 3
       },
-      "parse_failure_count": 1,
+      "parse_failure_count": 0,
       "completer_failure_count": 0,
-      "reflection_note": "Provide an input to trigger a change in the game state.",
-      "reflected_this_call": true,
+      "reflection_note": "",
+      "reflected_this_call": false,
       "suppressed_coordinate_count": 0
     },
     {
       "step": 5,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Test if any input triggers a state change as suggested by the reflection.",
-        "Test if any input is required to change the game state as suggested by the reflection."
+        "Wait for the game to initialize or provide the first turn's options.",
+        "Observe the initial state and any automatic game progression to identify basic mechanics.",
+        "Wait for the initial game state to appear to understand the environment."
       ],
       "votes_by_index": {
-        "0": 2
+        "0": 3
       },
       "parse_failure_count": 0,
       "completer_failure_count": 0,
-      "reflection_note": "Provide an input to trigger a change in the game state.",
+      "reflection_note": "",
       "reflected_this_call": false,
       "suppressed_coordinate_count": 0
     },
@@ -214,15 +746,569 @@
       "step": 6,
       "llm_strategy_proposer_used": true,
       "strategy_texts": [
-        "Test if any action triggers a state change as suggested by the reflection.",
-        "Test if submitting a null action triggers a state change or a system message."
+        "Observe the initial state to see if any automatic events occur or if the environment provides feedback.",
+        "Observe the initial game state to see if any automatic events or messages occur without input.",
+        "Observe the initial state to identify any visual cues or basic environmental rules."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "<one short sentence>",
+      "reflected_this_call": true,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur or if the environment provides a starting prompt.",
+        "I need to determine if any of the \"None\" actions trigger a state change or if I must first obtain coordinates.",
+        "Observe the current state without taking any action to see if the environment updates or provides feedback."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "<one short sentence>",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "<one short sentence>",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 9,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "I need to observe the initial state or any automatic transitions to understand the game's starting conditions."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "<one short sentence>",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 10,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the current state to see if any environmental changes or messages occur without input.",
+        "Wait for a prompt or environmental change to see if the game initializes without a coordinate action."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "<one short sentence>",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 11,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "I need to observe the initial state and any automatic transitions to understand the game's basic mechanics."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "<one short sentence>",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 12,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "I need to observe the initial state and see if any automatic events occur without my input."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Try a single, non-complex action to see if the game responds to any input.",
+      "reflected_this_call": true,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 13,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers any system response or change in state."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Try a single, non-complex action to see if the game responds to any input.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 14,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game responds to a null action to establish a baseline.",
+        "Test if providing no action triggers a game response or state change."
       ],
       "votes_by_index": {
         "0": 2
       },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Try a single, non-complex action to see if the game responds to any input.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 15,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game environment reacts to a null action or if it requires a specific input to proceed.",
+        "Test if providing no specific coordinate triggers a default game response or an error."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Try a single, non-complex action to see if the game responds to any input.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 16,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game responds to a null action to establish a baseline for interaction.",
+        "Test if the game registers a null action or a lack of input to establish a baseline."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Try a single, non-complex action to see if the game responds to any input.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 17,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game responds to a null action to establish a baseline for interaction."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Try a single, non-complex action to see if the game responds to any input.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 18,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the game environment responds to a null action or if it requires a specific input to proceed.",
+        "Test if the game registers a null action or requires a specific input format.",
+        "Test if providing no specific action yields a response or change in state."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
       "parse_failure_count": 0,
       "completer_failure_count": 0,
-      "reflection_note": "Provide an input to trigger a change in the game state.",
+      "reflection_note": "Submit a non-null, simple action like a single move or a type of interaction.",
+      "reflected_this_call": true,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 19,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers a system response or error to establish baseline interaction.",
+        "Test if a null action is accepted or if a specific interaction is required to progress.",
+        "Test if providing a null action triggers a specific system response or error message."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a non-null, simple action like a single move or a type of interaction.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 20,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action results in a system error or a specific game response.",
+        "Test if any null action triggers a response or if a specific candidate is required to progress.",
+        "Test if submitting a null action is accepted or triggers an error to establish a baseline."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a non-null, simple action like a single move or a type of interaction.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 21,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action results in an error or a state change to determine valid input types.",
+        "Test if providing any action results in a state change since the current candidates are null."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a non-null, simple action like a single move or a type of interaction.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 22,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers a system response or error to establish baseline interaction.",
+        "Test if submitting a null action results in a system error or a specific game response.",
+        "Test if submitting a null action triggers a response or an error from the game."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a non-null, simple action like a single move or a type of interaction.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 23,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if a null action triggers a system response or error to establish baseline interaction."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a non-null, simple action like a single move or a type of interaction.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 24,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a null action triggers a response or a rule violation.",
+        "Test if a null action triggers a response or if a specific input is required to progress.",
+        "Test if submitting a non-null action triggers a response since the previous turn suggested a simple move."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a single move or a specific type of interaction instead of a null action.",
+      "reflected_this_call": true,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 25,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting any non-null action triggers a state change or error."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a single move or a specific type of interaction instead of a null action.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 26,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if a non-null action is accepted to satisfy the current guidance.",
+        "Submit a non-null action to determine the required interaction format as suggested by the reflection.",
+        "I will attempt a generic interaction to see if the game accepts non-coordinate inputs as suggested by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a single move or a specific type of interaction instead of a null action.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 27,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if submitting a non-null action triggers a response or state change."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a single move or a specific type of interaction instead of a null action.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 28,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a single move or a specific type of interaction instead of a null action.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 29,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Submit a non-null action to see if the game accepts a specific move.",
+        "Test if any non-null action is accepted since the guidance suggests submitting a specific interaction."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Submit a single move or a specific type of interaction instead of a null action.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 30,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt a basic interaction to see if the system accepts a non-null move as suggested by the reflection.",
+        "Test if submitting a non-null action triggers a valid game state change as suggested by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": true,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 31,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 32,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 33,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as instructed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 34,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as instructed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 35,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to confirm the previous action was successful before proceeding."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 36,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 37,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending basic interaction as instructed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 38,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 39,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 40,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 41,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 42,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 43,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as advised."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 44,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait for the system to process the pending interaction as instructed by the reflection.",
+        "Wait for the system to process the pending interaction as instructed by the guidance."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Wait for the system to process the pending basic interaction before attempting another move.",
       "reflected_this_call": false,
       "suppressed_coordinate_count": 0
     }
