@@ -11384,3 +11384,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-10: CSL residue metric independence corrigendum (✅ Complete) — honest_verdict=complete: csl_residue_metric_independence_corrigendum_ready; results/experiment_5542_csl_residue_metric_independence_corrigendum.json
 - 2026-07-10: Gated retrieval-warmed CSL five-arm ablation (✅ Complete) — honest_verdict=complete: retrieval_warmed_csl_five_arm_ablation_ready; results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
 - 2026-07-10: Gated cross-model SOTA CSL transfer (⚠️ Blocked) — honest_verdict=blocked: cross_model_sota_csl_transfer_claim_not_allowed; results/experiment_5544_cross_model_sota_csl_transfer.json
+- 2026-07-10: Gated sparse repair FSM descriptor scale (✅ Complete) — honest_verdict=complete: exact_checked_sparse_repair_fsm_descriptor_scale_ready_no_speedup_claim; results/experiment_5545_sparse_repair_fsm_descriptor_scale.json
