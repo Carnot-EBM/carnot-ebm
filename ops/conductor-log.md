@@ -10715,3 +10715,6 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 10:08 UTC | Sparse repair scale-up with exact fallback confide | OK | 87 passed, 1 warning in 8.67s |
 | 2026-07-10 10:24 UTC | Hardware receipt parser and repeatability repair | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-10 10:44 UTC | ARC strategy-routing and repeated-coordinate prech | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-10 10:59 UTC | Gated ARC strategy-routed live level-up attempt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-10 12:22 UTC | Capstone reconciliation for milestone .501 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ={
++           |
