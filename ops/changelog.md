@@ -11345,3 +11345,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-10: CSL canonical gate artifact and sidecar-safe field receipt (✅ Complete) — honest_verdict=complete: canonical_csl_gate_artifact_conductor_visible; results/experiment_5528_csl_canonical_gate_artifact.json
 - 2026-07-10: Gated CSL event/topic memory residue stress (✅ Complete) — honest_verdict=complete: csl_event_topic_residue_stress_ready; results/experiment_5529_csl_event_topic_residue_stress.json
 - 2026-07-10: Gated SOTA GGUF CSL memory panel v2 (✅ Complete) — honest_verdict=complete: bounded_sota_csl_memory_panel_v2_claim_allowed; results/experiment_5530_sota_csl_memory_panel_v2.json
+- 2026-07-10: Sparse repair scale-up with exact fallback confidence intervals (✅ Complete) — honest_verdict=complete: exact_checked_sparse_repair_scaleup_ci_ready_no_speedup_claim; results/experiment_5531_sparse_repair_scaleup_ci.json
