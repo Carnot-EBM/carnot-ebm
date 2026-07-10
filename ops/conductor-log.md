@@ -10731,3 +10731,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 16:29 UTC | Gated retrieval-warmed CSL five-arm ablation | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-10 16:46 UTC | Gated cross-model SOTA CSL transfer | OK | 85 passed, 1 warning in 12.01s |
 | 2026-07-10 17:09 UTC | Gated sparse repair FSM descriptor scale | OK | 88 passed, 1 warning in 62.91s (0:01:02) |
+| 2026-07-10 17:24 UTC | Hardware receipt substrate corrigendum | OK | 85 passed, 1 warning in 9.85s |
