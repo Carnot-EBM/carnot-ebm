@@ -21214,3 +21214,89 @@ dependency.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5528 | Implemented (`python/carnot/experiment_5528_csl_canonical_gate_artifact.py`, `results/experiment_5528_csl_canonical_gate_artifact.json`) | Implemented (`tests/python/test_experiment_5528_csl_canonical_gate_artifact.py`) |
+
+## REQ-LEARN-5529: Event/Topic CSL Memory Residue Stress
+
+The Exp5529 workflow SHALL write
+`results/experiment_5529_csl_event_topic_residue_stress.json` as a bounded CSL
+memory stress artifact gated by
+`results/experiment_5528_csl_canonical_gate_artifact.json`. The fixture SHALL
+separate fast event-progression memory from stable topic-associative memory.
+Event memory SHALL store recent task transitions and verifier outcomes, while
+topic memory SHALL store only consolidated topic policies promoted by a
+deterministic semantic-shift or verifier-change gate. Promotion SHALL NOT use
+the held-out answer label as its trigger.
+
+The workflow SHALL compare no-memory, event-only, topic-only,
+event-plus-topic, stale-memory, and adversarially irrelevant-memory conditions
+against the same held-out outcome labels. It SHALL record heldout outcome
+delta, stale-evidence rejection, negative transfer, residue contamination, and
+rollback evidence while keeping model weights immutable. The artifact SHALL set
+`inference_substrate="deterministic_csl_memory_fixture"` and SHALL carry
+one-line principles for each required headline and gate field.
+
+The artifact SHALL include required fields `upstream_gate_path`,
+`event_memory_hash_before`, `event_memory_hash_after`,
+`topic_memory_hash_before`, `topic_memory_hash_after`,
+`semantic_shift_gate_used`, `no_memory_score`, `event_only_score`,
+`topic_only_score`, `event_topic_score`, `stale_memory_score`,
+`heldout_delta`, `stale_evidence_rejection_rate`, `negative_transfer_rate`,
+`residue_contamination_rate`, `no_model_weight_mutation`,
+`csl_residue_stress_ready`, `tests_added_or_reused`, `field_principles`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-5529 Sub-requirements
+
+- REQ-LEARN-5529-1: The workflow SHALL require the Exp5528 canonical gate
+  artifact to have `csl_gate_fields_conductor_visible=true` before reporting
+  `csl_residue_stress_ready=true`.
+- REQ-LEARN-5529-2: Event memory and topic memory hashes SHALL be deterministic
+  hashes of their separate states, and each after-hash SHALL differ from its
+  matching before-hash after verifier-governed updates.
+- REQ-LEARN-5529-3: Topic promotion SHALL occur only when a deterministic
+  semantic-shift or verifier-change predicate fires, and promotion records
+  SHALL expose which predicate fired without reading the answer label.
+- REQ-LEARN-5529-4: The six memory conditions SHALL evaluate the same held-out
+  label IDs, and `heldout_delta` SHALL equal
+  `event_topic_score - no_memory_score`.
+- REQ-LEARN-5529-5: Stale evidence and adversarially irrelevant memories SHALL
+  be rejected before action selection and SHALL determine
+  `stale_evidence_rejection_rate` and `negative_transfer_rate`.
+- REQ-LEARN-5529-6: Residue contamination SHALL be measured as the fraction of
+  rejected or rolled-back memories that survive into accepted event/topic
+  state; the ready gate SHALL require that rate to be zero.
+- REQ-LEARN-5529-7: Rollback evidence SHALL restore event and topic states to
+  their pre-update hashes and SHALL be present before the artifact can report
+  `csl_residue_stress_ready=true`.
+- REQ-LEARN-5529-8: `no_model_weight_mutation` SHALL be true, and the fixture
+  SHALL update only external memory and verifier-governed state.
+
+### SCENARIO-LEARN-5529-PROMOTION: Topic Promotion Is Label-Independent
+
+**Given** event memory contains verified event transitions across task topics
+**When** a deterministic semantic-shift or verifier-change predicate fires
+**Then** the workflow SHALL promote a stable topic memory entry
+**And** the promotion record SHALL state the predicate and SHALL NOT use the
+held-out answer label as a trigger.
+
+### SCENARIO-LEARN-5529-CONTROLS: Six Conditions Quantify Memory Residue
+
+**Given** the same held-out label IDs are evaluated under six memory conditions
+**When** no-memory, event-only, topic-only, event-plus-topic, stale-memory, and
+adversarially irrelevant-memory scores are computed
+**Then** event-plus-topic SHALL beat no-memory and both single-memory arms
+**And** stale evidence, negative transfer, and residue contamination SHALL be
+recorded as explicit rates.
+
+### SCENARIO-LEARN-5529-ROLLBACK: Unsafe Memory Can Be Removed
+
+**Given** a rejected stale or irrelevant memory candidate enters a scratch state
+**When** rollback is applied
+**Then** the event and topic memory hashes SHALL return to their prior values
+**And** the accepted event/topic memory states SHALL remain uncontaminated.
+
+## Implementation Status (Exp 5529)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5529 | Implemented (`python/carnot/experiment_5529_csl_event_topic_residue_stress.py`, `results/experiment_5529_csl_event_topic_residue_stress.json`) | Implemented (`tests/python/test_experiment_5529_csl_event_topic_residue_stress.py`) |
