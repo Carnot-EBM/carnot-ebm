@@ -28753,6 +28753,80 @@ without opening the downstream SOTA panel gate.
 |---|---|---|
 | REQ-VERIFY-5512 | Planned (`python/carnot/experiment_5512_structured_output_positive_control.py`, `results/experiment_5512_structured_output_positive_control.json`) | Planned (`tests/python/test_experiment_5512_structured_output_positive_control.py`) |
 
+### REQ-VERIFY-5513: SOTA GGUF Hard/Soft Structured Evidence Panel V500
+
+The repository SHALL provide Exp 5513 at
+`python/carnot/experiment_5513_sota_hard_soft_structured_panel.py` and write
+`results/experiment_5513_sota_hard_soft_structured_panel.json` only after the
+Exp 5512 artifact at
+`results/experiment_5512_structured_output_positive_control.json` reports
+`structured_output_positive_control_ready=true`. The panel SHALL use the
+mandated headline-eligible local GGUF model set
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` in `MODEL_SPECS`; SHALL resolve cached
+GGUF files through the repository local-GGUF helper pattern; and SHALL NOT
+call `AutoTokenizer.from_pretrained` or transformers `from_pretrained` on a
+GGUF repository.
+
+Before headline inference, Exp 5513 SHALL verify the Exp 5512 readiness gate,
+cached local GGUF files, llama.cpp CUDA capability, and observed GPU offload.
+If no mandated model is cached, llama.cpp CUDA is unavailable, or GPU offload
+cannot be verified, the same result path SHALL contain a blocked artifact with
+exact model-cache and offload diagnostics. When at least one mandated model is
+cached and GPU offload is verified, Exp 5513 SHALL run a bounded reason-then-
+structure prompt against at least one cached mandated model, run additional
+cached mandated models only when memory allows, and may include legacy small
+models only as explicitly labeled CPU smoke tests rather than headline rows.
+
+Every emitted candidate row SHALL be parsed through the Exp 5512 schema and
+scored by the Exp 5499 exact hard/soft validators as final authority. Missing
+rows, parse failures, malformed schema rows, and abstentions SHALL remain
+visible evidence and SHALL NOT be silently dropped. The artifact SHALL record
+model file, quantization, llama.cpp command or binding, `n_gpu_layers`, GPU
+memory delta, wall time, token counts, exact-validator verdicts, abstention
+classifications, parse failures, and proof/claim consistency checks.
+
+The artifact SHALL include at minimum these top-level fields: `model_specs`,
+`headline_models_used`, `legacy_smoke_models_used`, `cached_models_missing`,
+`llama_cpp_cuda_available`, `gpu_offload_verified`, `gpu_memory_delta_mb`,
+`structured_positive_control_artifact`, `exact_validator_accuracy`,
+`hard_constraint_violation_rate`, `preference_optimality_rate`,
+`schema_validity_rate`, `abstention_rate`, `missing_candidate_rows`,
+`sota_rows_emitted`, `sota_structured_panel_ready`, `inference_substrate`, and
+`honest_verdict`. `structured_positive_control_artifact` SHALL equal
+`results/experiment_5512_structured_output_positive_control.json`.
+`inference_substrate` SHALL equal `live_llm_inference`. `honest_verdict` SHALL
+start with `complete:` or `blocked:` and SHALL NOT treat blocked preconditions,
+missing rows, parse failures, or abstentions as silent success.
+
+### SCENARIO-VERIFY-5513: Local SOTA Structured Panel Uses Exact Validators
+
+Given Exp 5512 reports `structured_output_positive_control_ready=true`, at
+least one mandated local GGUF is cached, llama.cpp CUDA support is available,
+and GPU memory increases during a bounded llama.cpp load/generation, when
+Exp 5513 runs, then it prompts at least one mandated headline model with a
+reason-then-structure prompt, parses candidate rows through the Exp 5512 schema,
+scores every row with the Exp 5499 exact validators, records telemetry for the
+llama.cpp binding or command, and writes
+`results/experiment_5513_sota_hard_soft_structured_panel.json` with
+`inference_substrate=live_llm_inference`.
+
+If the Exp 5512 gate is closed, no mandated GGUF is cached, llama.cpp CUDA is
+unavailable, GPU offload is not observed, a model emits missing rows, a row is
+unparseable, a row violates the schema, a row abstains, a proof claim conflicts
+with the exact-validator verdict, or a candidate violates hard constraints or
+soft optimality, then Exp 5513 SHALL record the exact failure or abstention in
+the artifact, compute rates from visible rows only, keep missing row counts
+nonzero when applicable, and set `sota_structured_panel_ready=false` unless the
+panel has complete parseable exact-validator-correct evidence from at least one
+headline model.
+
+## Implementation Status (REQ-VERIFY-5513)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5513 | Planned (`python/carnot/experiment_5513_sota_hard_soft_structured_panel.py`, `results/experiment_5513_sota_hard_soft_structured_panel.json`) | Planned (`tests/python/test_experiment_5513_sota_hard_soft_structured_panel.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
