@@ -1,0 +1,33 @@
+{
+  "experiment": 5516,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-10",
+  "started_at": "2026-07-10T01:23:36.247174+00:00",
+  "finished_at": "2026-07-10T01:23:36.247174+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated SOTA GGUF CSL memory panel on clean independent metrics",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repair.metric_independence_clean (actual=None == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5515-csl-independent-outcome-gate-repair",
+      "artifact_field": "metric_independence_clean",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected=True"
+    },
+    {
+      "upstream": "exp5515-csl-independent-outcome-gate-repair",
+      "artifact_field": "csl_gate_fields_resolvable",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
