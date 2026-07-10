@@ -29319,6 +29319,86 @@ precise blocker details, and an `honest_verdict` starting with `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5518 | Implemented (`python/carnot/experiment_5518_block_gibbs_sparse_repair_descriptors.py`, `results/experiment_5518_block_gibbs_sparse_repair_descriptors.json`) | Implemented (`tests/python/test_experiment_5518_block_gibbs_sparse_repair_descriptors.py`) |
 
+### REQ-VERIFY-5531: Sparse Repair Scale-Up Confidence Intervals V501
+
+The repository SHALL provide Exp 5531 at
+`python/carnot/experiment_5531_sparse_repair_scaleup_ci.py` and write
+`results/experiment_5531_sparse_repair_scaleup_ci.json` without modifying `scripts/research_conductor.py`,
+without invoking live model inference, and
+without claiming solver, sampler, or hardware speedup. Exp 5531 SHALL reuse the
+Exp 5518 exact-checked sparse repair descriptor interface where possible, SHALL
+add larger or more varied hard/soft finite-domain active-constraint fixtures
+while keeping exact enumeration tractable, and SHALL evaluate exact-only
+fallback, descriptor-guided sparse repair, and same-size deterministic random
+blocks over multiple seeds.
+
+The scale-up artifact SHALL report success rate, candidate-check iterations,
+exact fallback usage, confidence intervals, and wall-time observations if
+measured. Confidence intervals SHALL be computed from exact-validated attempt
+rows rather than from fabricated timing or model-side telemetry. `matched_timing_available` SHALL be false
+unless a later matched timing harness supplies authenticated equivalent-work timings across policies, and
+`speedup_claim_allowed` SHALL be false whenever `matched_timing_available` is false.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`fixture_families`, `n_instances`, `n_seeds`, `exact_only_success_rate`,
+`sparse_repair_success_rate`, `random_block_success_rate`,
+`mean_iterations_exact_only`, `mean_iterations_sparse_repair`,
+`exact_fallback_rate`, `confidence_intervals`, `matched_timing_available`,
+`speedup_claim_allowed`, `active_constraint_sparse_repair_ready`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`exact_checked_sparse_repair_scaleup`. `active_constraint_sparse_repair_ready`
+SHALL be true only when every fixture has a sparse descriptor block, every
+candidate check has an exact accept/reject decision, sparse repair succeeds on
+the selected active hard-constraint violations, exact fallback usage is recorded,
+and no speedup claim is allowed.
+
+Required field principles:
+
+- `fixture_families`: principle "names the larger exact-checkable fixture families behind the aggregate."
+- `n_instances`: principle "bounds the scale-up evidence size without implying benchmark breadth."
+- `n_seeds`: principle "records deterministic multi-seed evidence rather than a single lucky row."
+- `exact_only_success_rate`: principle "full exact fallback acceptance reference."
+- `sparse_repair_success_rate`: principle "descriptor-guided repair acceptance under exact checking."
+- `random_block_success_rate`: principle "same-size random block control under exact checking."
+- `mean_iterations_exact_only`: principle "iteration evidence for the exact-only baseline."
+- `mean_iterations_sparse_repair`: principle "iteration evidence for sparse repair; not a speedup claim."
+- `exact_fallback_rate`: principle "fraction of policy attempts with exact accept/reject validation."
+- `confidence_intervals`: principle "uncertainty over success and iteration summaries, not headline proof."
+- `matched_timing_available`: principle "matched timing gate for any future speedup language."
+- `speedup_claim_allowed`: principle "must remain false without matched timing evidence."
+- `active_constraint_sparse_repair_ready`: principle "readiness gate for exact-checked active-constraint repair."
+- `tests_added_or_reused`: principle "names the tests supporting this artifact."
+- `field_principles`: principle "keeps headline and gate fields annotated by evidence boundaries."
+- `inference_substrate`: principle "declares exact-checked sparse repair scale-up, no live inference."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked: and avoid speedup claims."
+
+### SCENARIO-VERIFY-5531: Multi-Seed Sparse Repair Scale-Up Is Cautious
+
+Given Exp 5518 exact-checked sparse descriptor machinery and larger active
+hard/soft finite-domain fixtures, when Exp 5531 runs exact-only fallback,
+sparse repair, and same-size random block policies across deterministic seeds,
+then every candidate row has an exact accept/reject decision, the sparse repair
+block is non-empty and smaller than the full fixture, aggregate success rates
+and mean iterations are computed over all seed-instance attempts, confidence
+intervals are present for headline rates and iteration means, and the artifact
+sets `matched_timing_available=false`, `speedup_claim_allowed=false`, and
+`inference_substrate=exact_checked_sparse_repair_scaleup`.
+
+If any candidate lacks exact validation, if any sparse block is empty or covers
+the full fixture, if sparse repair fails on the selected active hard-constraint
+violations, if a speedup claim is allowed without matched timing, if confidence
+intervals are missing, or if the result omits any required field, then Exp 5531
+SHALL write the same result path with
+`active_constraint_sparse_repair_ready=false`, precise blocker details, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5531)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5531 | Implemented (`python/carnot/experiment_5531_sparse_repair_scaleup_ci.py`, `results/experiment_5531_sparse_repair_scaleup_ci.json`) | Implemented (`tests/python/test_experiment_5531_sparse_repair_scaleup_ci.py`) |
+
 ### REQ-VERIFY-5519: Hardware Continuity And Timing-Methodology Receipts
 
 The repository SHALL provide Exp 5519 at
