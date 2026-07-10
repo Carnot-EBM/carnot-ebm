@@ -21300,3 +21300,92 @@ recorded as explicit rates.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5529 | Implemented (`python/carnot/experiment_5529_csl_event_topic_residue_stress.py`, `results/experiment_5529_csl_event_topic_residue_stress.json`) | Implemented (`tests/python/test_experiment_5529_csl_event_topic_residue_stress.py`) |
+
+## REQ-LEARN-5530: SOTA GGUF CSL Memory Panel v2
+
+The Exp5530 workflow SHALL write
+`results/experiment_5530_sota_csl_memory_panel_v2.json` only after loading the
+canonical Exp5528 gate artifact and the Exp5529 event/topic residue-stress
+artifact. It SHALL require `csl_gate_fields_conductor_visible=true` from
+Exp5528 and `csl_residue_stress_ready=true` from Exp5529 before any positive
+CSL claim is allowed. The workflow SHALL use the mandated local SOTA GGUF model
+set (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`) through `cached_sota_pair()` or the
+repository local-GGUF resolver pattern, and SHALL NOT call a HuggingFace
+`AutoTokenizer.from_pretrained` path for any GGUF repository.
+
+The panel SHALL run a bounded before/after external-memory condition with at
+least one available mandated SOTA GGUF model. Model weights SHALL remain
+immutable. The artifact SHALL record memory hashes before and after external
+memory updates, model-file receipts before and after generation, and explicit
+GPU-offload evidence. Held-out scores SHALL be exact outcomes from an
+independent label table, not utility scores or labels stored in memory. The
+same held-out label IDs SHALL be scored under no-memory, fresh-memory, and
+stale-memory controls. Utility deltas SHALL be reported separately from token
+or verifier cost deltas, and negative transfer and stale-evidence rejection
+SHALL be explicit rates.
+
+The artifact SHALL include required fields `model_specs`, `models_attempted`,
+`no_memory_score`, `fresh_memory_score`, `stale_memory_score`,
+`heldout_delta`, `negative_transfer_rate`, `stale_evidence_rejection_rate`,
+`memory_hash_before`, `memory_hash_after`, `no_model_weight_mutation`,
+`gpu_offload_evidence`, `continuous_self_learning_evidence`,
+`csl_claim_allowed`, `tests_added_or_reused`, `field_principles`,
+`inference_substrate`, and `honest_verdict`. It SHALL set
+`inference_substrate="local_sota_gguf_csl_memory_panel"`. It SHALL set
+`csl_claim_allowed=true` only when `heldout_delta > 0`,
+`negative_transfer_rate` is zero, stale evidence is fully rejected, upstream
+gates are loadable and true, at least one mandated GGUF model ran with
+GPU-offload evidence, and model-weight receipts are unchanged.
+
+### REQ-LEARN-5530 Sub-requirements
+
+- REQ-LEARN-5530-1: The workflow SHALL parse Exp5528 and Exp5529 artifacts and
+  expose whether each required upstream gate was loadable and true.
+- REQ-LEARN-5530-2: `model_specs` SHALL list the three mandated local SOTA GGUF
+  IDs, local path availability, and selected-run receipts; legacy GGUFs SHALL
+  not count as headline models.
+- REQ-LEARN-5530-3: No-memory, fresh-memory, and stale-memory conditions SHALL
+  evaluate the same held-out label IDs from an independent label table.
+- REQ-LEARN-5530-4: `memory_hash_before` and `memory_hash_after` SHALL be
+  deterministic hashes of external memory state and SHALL differ after
+  verifier-governed memory updates.
+- REQ-LEARN-5530-5: `no_model_weight_mutation` SHALL be true only when
+  before/after model-file receipts match and no adapter or training write is
+  reported.
+- REQ-LEARN-5530-6: `gpu_offload_evidence` SHALL distinguish preflight support,
+  load-time memory delta, and any blocked preconditions.
+- REQ-LEARN-5530-7: `csl_claim_allowed` SHALL remain false unless the held-out
+  utility delta is positive, stale evidence is rejected, negative transfer is
+  zero, and no model weights changed.
+
+### SCENARIO-LEARN-5530-UPSTREAM-GATES: Upstream Artifacts Must Be Loadable
+
+**Given** the Exp5528 and Exp5529 artifacts exist and are valid JSON
+**When** the Exp5530 workflow evaluates preconditions
+**Then** it SHALL record both gate paths, gate values, and whether the gate
+state allows a positive CSL claim.
+
+### SCENARIO-LEARN-5530-CONTROLS: Held-Out Controls Use Independent Labels
+
+**Given** the same held-out task IDs are evaluated under no-memory,
+fresh-memory, and stale-memory conditions
+**When** the panel scores model outputs
+**Then** `heldout_delta` SHALL equal `fresh_memory_score - no_memory_score`
+**And** stale-memory outcomes SHALL be reported separately from stale-evidence
+rejection in the fresh-memory arm.
+
+### SCENARIO-LEARN-5530-NO-WEIGHT-MUTATION: External Memory Is The Only Learned State
+
+**Given** a mandated GGUF model is selected for the panel
+**When** the before/after run completes
+**Then** model-file receipts SHALL match, `no_model_weight_mutation` SHALL be
+true, and any positive CSL evidence SHALL be attributed only to external memory
+state.
+
+## Implementation Status (Exp 5530)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5530 | Planned (`python/carnot/experiment_5530_sota_csl_memory_panel_v2.py`, `results/experiment_5530_sota_csl_memory_panel_v2.json`) | Planned (`tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py`) |
