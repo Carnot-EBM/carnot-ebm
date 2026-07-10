@@ -1929,7 +1929,66 @@ Required field principles:
 - `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5547: No-LLM ARC Substrate Clean Precheck
+
+Experiment 5547 SHALL write
+`results/experiment_5547_arc_no_llm_substrate_precheck.json` as a clean
+no-credit ARC live-path precheck before any level-up attempt that follows the
+flagged Exp5533/Exp5534 artifacts. The workflow SHALL read
+`ops/arc_solve_registry.yaml`, run a duplicate registry precheck, and choose one
+adjacent target level that is not already banked by the live mechanism. It SHALL
+use only the live agent path, SHALL NOT invoke an LLM strategy proposer, and
+SHALL NOT include `model_specs` or `target_model` because the declared
+substrate is the offline arcade live-agent runtime with self-discovery and no
+LLM.
+
+The result artifact SHALL include `selected_game`, `selected_level`,
+`registry_precheck_passed`, `already_reproduced`,
+`llm_strategy_proposer_used`, `no_model_specs_required`, `random_seed`,
+`reproducibility_checksum`, `strategy_routing_live_path_reachable`,
+`repeated_coordinate_suppression_enabled`, `action_entropy_precheck`,
+`solve_provenance`, `arc_clean_precheck_ready`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "registry-safe game id selected for the next clean no-LLM live-path attempt."
+- `selected_level`: principle "adjacent unreproduced frontier level label selected after the duplicate registry precheck."
+- `registry_precheck_passed`: principle "bare bool proving the registry was read and the selected level is not already reproduced."
+- `already_reproduced`: principle "must remain false because duplicate live levels cannot satisfy the ARC standing progress floor."
+- `llm_strategy_proposer_used`: principle "bare bool false proving this precheck did not load or invoke an LLM strategy proposer."
+- `no_model_specs_required`: principle "bare bool true because the no-LLM substrate has no model invocation to name."
+- `random_seed`: principle "deterministic seed required for third-party reruns of the target choice and checksum."
+- `reproducibility_checksum`: principle "content-addressed hash over registry target, seed, substrate, and routing gates to catch silent drift."
+- `strategy_routing_live_path_reachable`: principle "bare bool proving the bounded candidate router is reachable from the live candidate-router hook."
+- `repeated_coordinate_suppression_enabled`: principle "bare bool proving repeated-coordinate suppression is active before action entropy is trusted."
+- `action_entropy_precheck`: principle "bare float expectation for routed action/coordinate diversity before the live attempt."
+- `solve_provenance`: principle "must equal live_agent_self_discovery even though this artifact claims no solve."
+- `arc_clean_precheck_ready`: principle "bare bool true only when registry, no-LLM substrate, provenance, seed/checksum, live path, and suppression gates pass."
+- `tests_added_or_reused`: principle "list of focused tests covering duplicate blocking, no-model metadata, checksum determinism, and schema gates."
+- `field_principles`: principle "mapping of one-line principle annotations for every headline and gate field."
+- `inference_substrate`: principle "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm."
+- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
+
 ## Scenarios
+
+### SCENARIO-ARC-FCP-5547: Clean No-LLM Precheck Blocks Duplicates And Omits Model Specs
+
+Given the ARC solve registry has at least one reproduced game with an
+unbanked adjacent frontier level
+When Exp5547 builds the clean substrate precheck
+Then it selects a target whose requested level is deeper than the registry
+depth, records `already_reproduced=false`,
+`llm_strategy_proposer_used=false`, `no_model_specs_required=true`,
+`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+`solve_provenance=live_agent_self_discovery`, a deterministic `random_seed`,
+and a non-empty `reproducibility_checksum`
+And the artifact contains no `model_specs` or `target_model` field.
+
+Given the registry already banks a proposed target level
+When Exp5547 runs the duplicate precheck
+Then that target is rejected before readiness and the artifact only becomes
+ready after selecting a non-duplicate adjacent frontier target.
 
 ### SCENARIO-ARC-FCP-5508: Classical Perception Generation Is Runtime-Grounded
 
