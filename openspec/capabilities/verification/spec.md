@@ -29080,6 +29080,86 @@ precise blocker details, and an `honest_verdict` starting with `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5518 | Implemented (`python/carnot/experiment_5518_block_gibbs_sparse_repair_descriptors.py`, `results/experiment_5518_block_gibbs_sparse_repair_descriptors.json`) | Implemented (`tests/python/test_experiment_5518_block_gibbs_sparse_repair_descriptors.py`) |
 
+### REQ-VERIFY-5519: Hardware Continuity And Timing-Methodology Receipts
+
+The repository SHALL provide Exp 5519 at
+`python/carnot/experiment_5519_hardware_continuity_methodology_receipts.py` and
+write
+`results/experiment_5519_hardware_continuity_methodology_receipts.json` without
+modifying `scripts/research_conductor.py`, without pushing, without probing
+host `/dev/mmcblk*` paths for KV260, without flashing GateMate or any board,
+and without claiming hardware speedup unless authenticated matched CPU, GPU,
+and FPGA timing over equivalent work exists.
+
+Exp 5519 SHALL collect bounded command receipts for CPU, CUDA, PolarFire,
+KV260, and GateMate. CPU and CUDA SHALL run authenticated local commands that
+record device names plus driver and runtime versions when available. PolarFire
+SHALL be checked by `ssh polarfire` and SHALL record bitstream or hash identity
+only when a safe board-side command exposes it. KV260 SHALL be checked only by
+allowed SSH, `xmutil`, and remote `/dev/uio*` paths through `ssh kria`; host
+storage preconditions such as `/dev/mmcblk*` SHALL NOT be used. GateMate SHALL
+be checked only by safe host/toolchain commands such as
+`openFPGALoader -c dirtyJtag --detect`, `yosys -V`,
+`nextpnr-himbaechel --version`, or `gmpack --version`; no flash command is part
+of this receipt.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`cpu_receipt`, `cuda_receipt`, `polar_fire_receipt`, `kv260_receipt`,
+`gatemate_receipt`, `forbidden_kv260_host_sdcard_used`,
+`timing_methodology`, `matched_timing_available`, `hardware_speedup_claim`,
+`hardware_speedup_claim_allowed`, `blocked_devices`, `receipt_commands`,
+`inference_substrate`, and `honest_verdict`.
+`forbidden_kv260_host_sdcard_used` SHALL be false.
+`inference_substrate` SHALL equal `hardware_receipts`.
+`timing_methodology` SHALL explicitly record workload, warmup, repetitions,
+clock source, host/device separation, whether matched CPU/GPU/FPGA timing
+exists, and why any absent matched timing blocks speedup promotion.
+`hardware_speedup_claim` SHALL be false and
+`hardware_speedup_claim_allowed` SHALL be false when matched timing is absent.
+`honest_verdict` SHALL start with `complete:` or `blocked:` and SHALL state
+whether speedup claims are disallowed.
+
+Required field principles:
+
+- `cpu_receipt`: principle "authenticated local CPU command receipt with device and runtime metadata."
+- `cuda_receipt`: principle "authenticated local CUDA command receipt with GPU, driver, and runtime metadata when reachable."
+- `polar_fire_receipt`: principle "SSH-only PolarFire reachability plus board-side identity or hash data when available."
+- `kv260_receipt`: principle "KV260 evidence limited to SSH, xmutil, and remote UIO paths; never host SD-card storage."
+- `gatemate_receipt`: principle "safe host/toolchain identity only; no flashing or workload overclaim."
+- `forbidden_kv260_host_sdcard_used`: principle "must be false to preserve the retired KV260 SD-card boundary."
+- `timing_methodology`: principle "records workload, warmup, repetitions, clock source, host/device split, and matched timing availability."
+- `matched_timing_available`: principle "true only when equivalent CPU, GPU, and FPGA timings exist."
+- `hardware_speedup_claim`: principle "must remain false without authenticated matched timing."
+- `hardware_speedup_claim_allowed`: principle "promotion gate derived from matched timing and safe receipts."
+- `blocked_devices`: principle "names devices with unavailable identity, runtime, or safe command receipts."
+- `receipt_commands`: principle "bounded command transcripts with exit codes, hashes, durations, and blocked reasons."
+- `inference_substrate`: principle "declares hardware_receipts, not live inference or benchmark acceleration."
+- `honest_verdict`: principle "terminal status with no speedup overclaim."
+
+### SCENARIO-VERIFY-5519: Timing Methodology Blocks Hardware Speedup Without Matched Timing
+
+Given the Exp 5519 hardware receipt task runs on the local host, when it builds
+the continuity artifact, then it runs bounded CPU and CUDA commands locally,
+checks PolarFire through SSH, checks KV260 only through SSH, `xmutil`, and
+remote `/dev/uio*` commands when SSH succeeds, checks GateMate only through
+safe host/toolchain identity commands, records every command transcript in
+`receipt_commands`, records device and runtime metadata in per-device receipt
+objects, sets `forbidden_kv260_host_sdcard_used=false`, and sets
+`inference_substrate=hardware_receipts`.
+
+If any device is unreachable or a safe metadata command is unavailable, Exp
+5519 SHALL add that device to `blocked_devices` with a precise reason rather
+than failing the whole artifact. If matched CPU/GPU/FPGA timing over the same
+workload is absent, Exp 5519 SHALL set `matched_timing_available=false`,
+`hardware_speedup_claim=false`, `hardware_speedup_claim_allowed=false`, and
+explain the missing timing in `timing_methodology`.
+
+## Implementation Status (REQ-VERIFY-5519)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5519 | Implemented (`python/carnot/experiment_5519_hardware_continuity_methodology_receipts.py`, `results/experiment_5519_hardware_continuity_methodology_receipts.json`) | Implemented (`tests/python/test_experiment_5519_hardware_continuity_methodology_receipts.py`) |
+
 ### REQ-VERIFY-5506: Multi-Board Hardware Smoke Receipts V499
 
 The repository SHALL provide Exp 5506 at
