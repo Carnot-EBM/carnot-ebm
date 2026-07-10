@@ -1786,6 +1786,45 @@ Required field principles:
 - `inference_substrate`: principle "must equal arc_live_precheck."
 - `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
 
+### REQ-ARC-FCP-5521: Live Action-Diverse Level-Up Attempt
+
+Experiment 5521 SHALL write
+`results/experiment_5521_arc_live_action_diverse_levelup.json` after the
+Exp5520 action-diversity precheck is ready. The attempt SHALL re-read
+`ops/arc_solve_registry.yaml`, verify that Exp5520 selected a registry-safe
+target with `arc_levelup_candidate_ready=true`, and run one bounded live-agent
+self-discovery attempt against that target using the action-diverse
+connected-component/color-blob generator. The live attempt MAY replay a
+live-discovered trajectory through the standard offline reproduction gate, but
+it SHALL NOT use offline ground-truth BFS, read game source, or credit a
+hand-built per-game adapter.
+
+The result artifact SHALL include `selected_game`, `selected_level`,
+`offline_reproduced`, `reproduced_levels`, `banking_gate`, `registry_delta`,
+`solve_provenance`, `live_attempts`, `action_entropy`,
+`repeated_coordinate_rate`, `salience_coverage_rate`, `trajectory_log_path`,
+`reproduction_command`, `arc_live_levelup_ready`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "Exp5520-selected registry-safe game id; empty only when the readiness gate blocks before live runtime."
+- `selected_level`: principle "Exp5520-selected unreproduced level label or int; success must be strictly deeper than the registry depth."
+- `offline_reproduced`: principle "true only when the live-discovered trajectory passes the standard offline replay gate."
+- `reproduced_levels`: principle "integer new levels banked from the live-discovered trajectory; success requires >=1."
+- `banking_gate`: principle "bare bool equal to offline_reproduced=true and reproduced_levels>=1 for solve_provenance=live_agent_self_discovery."
+- `registry_delta`: principle "bare int registry total delta; nonzero only when the banking gate is true."
+- `solve_provenance`: principle "must equal live_agent_self_discovery."
+- `live_attempts`: principle "bare int count of runtime actions executed by the live agent."
+- `action_entropy`: principle "Shannon entropy over executed live action/coordinate choices as a bare float."
+- `repeated_coordinate_rate`: principle "fraction of executed live coordinate choices that repeated a prior coordinate, as a bare float."
+- `salience_coverage_rate`: principle "fraction of executed live coordinate choices covering proposed salience coordinates, as a bare float."
+- `trajectory_log_path`: principle "path to the detailed trajectory log containing observations, proposed actions, verifier feedback, and diversity metrics."
+- `reproduction_command`: principle "exact replay command when a live trajectory was reproduced, else null."
+- `arc_live_levelup_ready`: principle "bare bool proving Exp5520 and the registry reread allowed the live attempt."
+- `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-5508: Classical Perception Generation Is Runtime-Grounded
@@ -2520,3 +2559,31 @@ When experiment 5520 validates the artifact
 Then `arc_levelup_candidate_ready=false`, `already_reproduced` or
 `exp5508_pattern_reused` records the blocker, and `honest_verdict` starts with
 `blocked:`.
+
+### SCENARIO-ARC-FCP-5521: Live Action-Diverse Attempt Is Reproduction-Gated
+
+Given Exp5520 selected `sb26:L3` with a changed action-diverse generator and
+the registry still records only `sb26` depth 2
+When experiment 5521 runs the bounded live self-discovery attempt
+Then the attempt records observations, proposed actions, verifier feedback,
+action entropy, repeated-coordinate rate, and salience coverage in a trajectory
+log
+And the result writes
+`results/experiment_5521_arc_live_action_diverse_levelup.json` with
+`solve_provenance=live_agent_self_discovery` and
+`inference_substrate=arc_live_agent_self_discovery`.
+
+Given the live attempt does not reproduce a new level through the standard
+offline replay gate
+When experiment 5521 validates the artifact
+Then `offline_reproduced=false`, `reproduced_levels=0`,
+`banking_gate=false`, `registry_delta=0`, `reproduction_command=null`, and
+`honest_verdict` starts with `honest_null:` while preserving enough trajectory
+detail to distinguish the attempt from Exp5508.
+
+Given the live attempt reaches a new level and the replay gate reproduces it
+When experiment 5521 banks the result
+Then `offline_reproduced=true`, `reproduced_levels>=1`,
+`banking_gate=true`, `registry_delta` equals `reproduced_levels`, and the
+artifact records the exact reproduction command used for the live-discovered
+trajectory.
