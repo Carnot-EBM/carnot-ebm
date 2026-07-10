@@ -11343,3 +11343,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-10: Gated SOTA GGUF structured repair loop (✅ Complete) — honest_verdict=complete: sota_structured_repair_loop_ready_schema_valid_exact_handoff_no_quality_claim; results/experiment_5526_sota_structured_repair_loop.json
 - 2026-07-10: Gated SOTA GGUF hard/soft structured panel v2 (✅ Complete) — honest_verdict=complete: sota_hard_soft_panel_v2_ready_bounded_exact_validated_claim_allowed; results/experiment_5527_sota_hard_soft_panel_v2.json
 - 2026-07-10: CSL canonical gate artifact and sidecar-safe field receipt (✅ Complete) — honest_verdict=complete: canonical_csl_gate_artifact_conductor_visible; results/experiment_5528_csl_canonical_gate_artifact.json
+- 2026-07-10: Gated CSL event/topic memory residue stress (✅ Complete) — honest_verdict=complete: csl_event_topic_residue_stress_ready; results/experiment_5529_csl_event_topic_residue_stress.json
