@@ -21389,3 +21389,87 @@ state.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5530 | Planned (`python/carnot/experiment_5530_sota_csl_memory_panel_v2.py`, `results/experiment_5530_sota_csl_memory_panel_v2.json`) | Planned (`tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py`) |
+
+## REQ-LEARN-5542: CSL Residue Metric Independence Corrigendum
+
+The Exp5542 workflow SHALL write
+`results/experiment_5542_csl_residue_metric_independence_corrigendum.json` as
+the corrigendum for Exp5529's event/topic residue TAUTOLOGY flag. The workflow
+SHALL load `results/experiment_5528_csl_canonical_gate_artifact.json` and reuse
+its canonical CSL gate fields as the starting contract before reporting any
+residue readiness field. The workflow SHALL be deterministic and SHALL NOT
+invoke a live LLM.
+
+The residue metric SHALL evaluate event-only memory and topic-only memory on
+distinct held-out labels or distinct query families so the two headline scores
+cannot be identical by construction. Held-out labels SHALL come from an
+independent label table, not from memory retrieval utility, memory hashes,
+promotion triggers, or the score being audited. The workflow SHALL also include
+stale-evidence, shuffled-memory, and negative-transfer probes. A clean
+corrigendum SHALL require `event_only_score` and `topic_only_score` to be
+non-identical; if they match, `csl_residue_tautology_resolved` SHALL be false.
+
+The artifact SHALL include required fields `canonical_gate_path`,
+`event_only_score`, `topic_only_score`, `score_difference_abs`,
+`event_topic_score`, `no_memory_score`, `shuffled_memory_score`,
+`stale_evidence_rejection_rate`, `negative_transfer_rate`,
+`independent_outcome_labels`, `nonidentical_metric_evidence`,
+`csl_residue_tautology_resolved`, `csl_residue_stress_ready`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`. The artifact SHALL set
+`inference_substrate="deterministic_csl_residue_corrigendum_no_llm"` and SHALL
+carry one-line principles for every required headline and gate field.
+
+### REQ-LEARN-5542 Sub-requirements
+
+- REQ-LEARN-5542-1: The workflow SHALL require the Exp5528 canonical gate
+  artifact to expose `csl_gate_fields_conductor_visible=true`,
+  `metric_independence_clean=true`, and `continuous_self_learning_evidence=true`
+  before `csl_residue_stress_ready` can be true.
+- REQ-LEARN-5542-2: Event-only and topic-only scores SHALL be computed from
+  disjoint held-out label IDs or disjoint query families, and the artifact SHALL
+  expose enough row evidence to verify that separation.
+- REQ-LEARN-5542-3: `score_difference_abs` SHALL equal the absolute difference
+  between `event_only_score` and `topic_only_score`, rounded deterministically.
+- REQ-LEARN-5542-4: `nonidentical_metric_evidence` SHALL be true only when
+  `event_only_score` and `topic_only_score` differ, and
+  `csl_residue_tautology_resolved` SHALL be false when they match.
+- REQ-LEARN-5542-5: Stale-evidence rejection, shuffled-memory scoring, and
+  negative-transfer probes SHALL be measured separately from the event-only and
+  topic-only headline scores.
+- REQ-LEARN-5542-6: `csl_residue_stress_ready` SHALL be true only when the
+  canonical gate is clean, independent labels are used, event/topic evidence is
+  non-identical, combined event-topic memory beats no-memory and shuffled
+  controls, stale evidence is fully rejected, and negative-transfer acceptance
+  is zero.
+
+### SCENARIO-LEARN-5542-DISTINCT-FAMILIES: Event And Topic Scores Are Independent
+
+**Given** the corrigendum fixture contains event-progression labels and
+topic-policy labels with disjoint label IDs
+**When** event-only and topic-only scores are computed
+**Then** each score SHALL use only its own query family
+**And** `score_difference_abs` SHALL be positive for a clean claim.
+
+### SCENARIO-LEARN-5542-CONTROLS: Residue Probes Stay Separate From Headlines
+
+**Given** stale, shuffled, and negative-transfer memory candidates are present
+**When** the governed event-topic condition is evaluated
+**Then** stale candidates SHALL be rejected before action selection
+**And** shuffled-memory score and negative-transfer rate SHALL be reported as
+separate controls rather than folded into the event-only or topic-only scores.
+
+### SCENARIO-LEARN-5542-ARTIFACT: Corrigendum Gate Fails Closed
+
+**Given** the event-only and topic-only scores are identical or the Exp5528 gate
+is not clean
+**When** the Exp5542 artifact is validated
+**Then** `csl_residue_tautology_resolved` or `csl_residue_stress_ready` SHALL be
+false
+**And** the terminal verdict SHALL start with `blocked:`.
+
+## Implementation Status (Exp 5542)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5542 | Planned (`python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py`, `results/experiment_5542_csl_residue_metric_independence_corrigendum.json`) | Planned (`tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py`) |
