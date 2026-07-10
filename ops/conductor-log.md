@@ -10688,3 +10688,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 01:05 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |
 | 2026-07-10 01:07 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |
 | 2026-07-10 01:21 UTC | CSL independent-outcome graph replay and gate-fiel | OK | 87 passed, 1 warning in 10.60s |
+| 2026-07-10 01:23 UTC | Gated SOTA GGUF CSL memory panel on clean independ | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |
