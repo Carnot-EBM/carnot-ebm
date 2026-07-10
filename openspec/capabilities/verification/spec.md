@@ -28687,6 +28687,72 @@ evidence into a headline claim.
 |---|---|---|
 | REQ-VERIFY-5500 | Planned (`python/carnot/experiment_5500_sota_concept_claim_panel_v499.py`, `results/experiment_5500_sota_concept_claim_panel_v499.json`) | Planned (`tests/python/test_experiment_5500_sota_concept_claim_panel_v499.py`) |
 
+### REQ-VERIFY-5512: Structured Output Positive Control For Hard/Soft Claim Candidates V500
+
+The repository SHALL provide Exp 5512 at
+`python/carnot/experiment_5512_structured_output_positive_control.py` and write
+`results/experiment_5512_structured_output_positive_control.json` before any
+new hard/soft SOTA panel is promoted. The experiment SHALL define a row-level
+JSON schema for hard/soft claim candidates that includes premises,
+rules or constraints, conclusions, abstention reason, and validator target
+fields. The schema SHALL be tested against deterministic rows derived from the
+Exp 5499 typed claim-state fixture before any live LLM call is attempted.
+
+The parser SHALL classify malformed or missing output as explicit parse
+failures rather than silently dropping rows. Schema-valid rows SHALL be handed
+to the Exp 5499 exact validators, which remain the final authority for hard
+constraint feasibility, soft preference optimality, infeasible abstentions, and
+false accepts. The experiment SHALL report parseable candidate rows, missing
+candidate rows, schema validity rate, exact-validator handoff readiness, and a
+terminal positive-control readiness flag.
+
+The runtime probe SHALL check whether a local structured generation path is
+available through llama.cpp grammar support, llguidance, XGrammar, or an
+existing repository structured-output helper. If no constrained runtime is
+available, Exp 5512 SHALL document the parser-only fallback and keep any SOTA
+panel gate closed. If a mandated local GGUF model from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` is cached and llama.cpp CUDA offload is
+available, the experiment SHALL run at most a tiny smoke sample through the
+same schema parser path. It SHALL resolve GGUFs with `cached_sota_pair()` or the
+repository GGUF resolver pattern and SHALL NOT call
+`AutoTokenizer.from_pretrained` on a GGUF repository.
+
+The artifact SHALL include at minimum these top-level fields: `schema_path`,
+`parser_path`, `tests_added_or_reused`, `model_specs`, `smoke_models_used`,
+`grammar_runtime_available`, `parser_only_fallback_used`,
+`schema_validity_rate`, `parseable_candidate_rows`, `missing_candidate_rows`,
+`exact_validator_handoff_ready`, `structured_output_positive_control_ready`,
+`llama_cpp_cuda_available`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`structured_output_fixture_or_live_llm_smoke`. `honest_verdict` SHALL start
+with `complete:` or `blocked:` and SHALL NOT upgrade parser-only evidence into
+a SOTA model-quality claim.
+
+### SCENARIO-VERIFY-5512: Fixture Rows Prove Parseable Handoff Before SOTA
+
+Given the Exp 5499 fixture artifact exists, when Exp 5512 builds deterministic
+structured candidate rows from the exact reference solutions, then every row
+validates against the candidate schema, parse failures are zero, feasible rows
+handoff to the exact hard/soft validators as reference-optimal assignments, the
+infeasible negative control becomes an explicit abstention with a reason, and
+`structured_output_positive_control_ready=true` is written only when the
+schema-valid rows cover every fixture instance with exact-validator handoff.
+
+If a row is missing JSON, violates the candidate schema, names an unknown
+fixture instance, omits validator target fields, uses assignment keys or domain
+values outside the Exp 5499 typed claims, reports an abstention without a
+reason, or lacks a constrained local runtime, then Exp 5512 SHALL classify the
+failure precisely, keep missing rows visible, preserve exact-validator
+authority, and either document parser-only fallback or write a blocked verdict
+without opening the downstream SOTA panel gate.
+
+## Implementation Status (REQ-VERIFY-5512)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5512 | Planned (`python/carnot/experiment_5512_structured_output_positive_control.py`, `results/experiment_5512_structured_output_positive_control.json`) | Planned (`tests/python/test_experiment_5512_structured_output_positive_control.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at

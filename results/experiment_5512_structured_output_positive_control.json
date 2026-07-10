@@ -1,0 +1,595 @@
+{
+  "candidate_rows": [
+    {
+      "abstention_reason": "",
+      "assignment": {
+        "scope": "bounded",
+        "source_quality": "primary",
+        "support": "entailed"
+      },
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "hard_constraints_pass": true,
+      "instance_id": "claim_support_preference",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "reference_agreement": true,
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": true,
+      "soft_score": 11.0,
+      "validator_target_ready": true
+    },
+    {
+      "abstention_reason": "",
+      "assignment": {
+        "action": "accept",
+        "citation": "present",
+        "safety": "safe"
+      },
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "hard_constraints_pass": true,
+      "instance_id": "claim_safety_conflict",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "reference_agreement": true,
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": true,
+      "soft_score": 12.0,
+      "validator_target_ready": true
+    },
+    {
+      "abstention_reason": "hard_constraints_infeasible: HC_VERDICT_ACCEPT, HC_VERDICT_REJECT",
+      "assignment": null,
+      "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "correct_abstention",
+      "hard_constraints_pass": false,
+      "instance_id": "claim_infeasible_negative_control",
+      "parse_status": "schema_valid_abstention",
+      "parseable": true,
+      "reference_agreement": true,
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": false,
+      "soft_score": null,
+      "validator_target_ready": true
+    }
+  ],
+  "candidate_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "abstention_reason": {
+        "type": "string"
+      },
+      "candidate_id": {
+        "type": "string"
+      },
+      "candidate_schema_version": {
+        "enum": [
+          "carnot.hard_soft_claim_candidate.v1"
+        ],
+        "type": "string"
+      },
+      "conclusion": {
+        "additionalProperties": false,
+        "properties": {
+          "assignment": {
+            "type": "object"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "status": {
+            "enum": [
+              "candidate",
+              "abstain"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "assignment",
+          "confidence"
+        ],
+        "type": "object"
+      },
+      "instance_id": {
+        "type": "string"
+      },
+      "premises": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "premise_id": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "premise_id",
+            "text",
+            "source"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "rules_or_constraints": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "hard_constraint",
+                "soft_preference",
+                "domain_rule",
+                "abstention_rule"
+              ],
+              "type": "string"
+            },
+            "rule_id": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "validator_constraint_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "rule_id",
+            "kind",
+            "text",
+            "validator_constraint_id"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "validator_target": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_status": {
+            "enum": [
+              "optimal",
+              "infeasible"
+            ],
+            "type": "string"
+          },
+          "hard_constraint_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "instance_id": {
+            "type": "string"
+          },
+          "reference_solver_path": {
+            "type": "string"
+          },
+          "soft_preference_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "typed_claim_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "instance_id",
+          "expected_status",
+          "reference_solver_path",
+          "hard_constraint_ids",
+          "soft_preference_ids",
+          "typed_claim_names"
+        ],
+        "type": "object"
+      }
+    },
+    "required": [
+      "candidate_schema_version",
+      "instance_id",
+      "candidate_id",
+      "premises",
+      "rules_or_constraints",
+      "conclusion",
+      "abstention_reason",
+      "validator_target"
+    ],
+    "type": "object"
+  },
+  "exact_validator_handoff_ready": true,
+  "experiment": 5512,
+  "experiment_id": "exp5512-structured-output-positive-control",
+  "fixture_artifact": "results/experiment_5499_preference_maxsat_minimal_fixture_v499.json",
+  "fixture_candidate_payloads": [
+    {
+      "abstention_reason": "",
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "conclusion": {
+        "assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "confidence": 1.0,
+        "status": "candidate"
+      },
+      "instance_id": "claim_support_preference",
+      "premises": [
+        {
+          "premise_id": "DOMAIN_SUPPORT",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "support is a typed claim with finite domain [unsupported, entailed]"
+        },
+        {
+          "premise_id": "DOMAIN_SOURCE_QUALITY",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "source_quality is a typed claim with finite domain [secondary, primary]"
+        },
+        {
+          "premise_id": "DOMAIN_SCOPE",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "scope is a typed claim with finite domain [overbroad, bounded]"
+        }
+      ],
+      "rules_or_constraints": [
+        {
+          "kind": "hard_constraint",
+          "rule_id": "HC_SUPPORT_ENTAILED",
+          "text": "{\"literals\":[{\"equals\":\"entailed\",\"variable\":\"support\"}]}",
+          "validator_constraint_id": "HC_SUPPORT_ENTAILED"
+        },
+        {
+          "kind": "hard_constraint",
+          "rule_id": "HC_SCOPE_BOUNDED",
+          "text": "{\"literals\":[{\"equals\":\"bounded\",\"variable\":\"scope\"}]}",
+          "validator_constraint_id": "HC_SCOPE_BOUNDED"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_PRIMARY_SOURCE",
+          "text": "{\"value\":\"primary\",\"variable\":\"source_quality\",\"weight\":7}",
+          "validator_constraint_id": "SP_PRIMARY_SOURCE"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_ENTAILED_SUPPORT",
+          "text": "{\"value\":\"entailed\",\"variable\":\"support\",\"weight\":3}",
+          "validator_constraint_id": "SP_ENTAILED_SUPPORT"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_BOUNDED_SCOPE",
+          "text": "{\"value\":\"bounded\",\"variable\":\"scope\",\"weight\":1}",
+          "validator_constraint_id": "SP_BOUNDED_SCOPE"
+        }
+      ],
+      "validator_target": {
+        "expected_status": "optimal",
+        "hard_constraint_ids": [
+          "HC_SUPPORT_ENTAILED",
+          "HC_SCOPE_BOUNDED"
+        ],
+        "instance_id": "claim_support_preference",
+        "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+        "soft_preference_ids": [
+          "SP_PRIMARY_SOURCE",
+          "SP_ENTAILED_SUPPORT",
+          "SP_BOUNDED_SCOPE"
+        ],
+        "typed_claim_names": [
+          "support",
+          "source_quality",
+          "scope"
+        ]
+      }
+    },
+    {
+      "abstention_reason": "",
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "conclusion": {
+        "assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "confidence": 1.0,
+        "status": "candidate"
+      },
+      "instance_id": "claim_safety_conflict",
+      "premises": [
+        {
+          "premise_id": "DOMAIN_SAFETY",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "safety is a typed claim with finite domain [unsafe, safe]"
+        },
+        {
+          "premise_id": "DOMAIN_CITATION",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "citation is a typed claim with finite domain [missing, present]"
+        },
+        {
+          "premise_id": "DOMAIN_ACTION",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "action is a typed claim with finite domain [reject, accept]"
+        }
+      ],
+      "rules_or_constraints": [
+        {
+          "kind": "hard_constraint",
+          "rule_id": "HC_SAFETY_SAFE",
+          "text": "{\"literals\":[{\"equals\":\"safe\",\"variable\":\"safety\"}]}",
+          "validator_constraint_id": "HC_SAFETY_SAFE"
+        },
+        {
+          "kind": "hard_constraint",
+          "rule_id": "HC_CITATION_PRESENT",
+          "text": "{\"literals\":[{\"equals\":\"present\",\"variable\":\"citation\"}]}",
+          "validator_constraint_id": "HC_CITATION_PRESENT"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_ACCEPT_WHEN_SAFE",
+          "text": "{\"value\":\"accept\",\"variable\":\"action\",\"weight\":5}",
+          "validator_constraint_id": "SP_ACCEPT_WHEN_SAFE"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_SAFE_LABEL",
+          "text": "{\"value\":\"safe\",\"variable\":\"safety\",\"weight\":4}",
+          "validator_constraint_id": "SP_SAFE_LABEL"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_CITATION_PRESENT",
+          "text": "{\"value\":\"present\",\"variable\":\"citation\",\"weight\":3}",
+          "validator_constraint_id": "SP_CITATION_PRESENT"
+        }
+      ],
+      "validator_target": {
+        "expected_status": "optimal",
+        "hard_constraint_ids": [
+          "HC_SAFETY_SAFE",
+          "HC_CITATION_PRESENT"
+        ],
+        "instance_id": "claim_safety_conflict",
+        "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+        "soft_preference_ids": [
+          "SP_ACCEPT_WHEN_SAFE",
+          "SP_SAFE_LABEL",
+          "SP_CITATION_PRESENT"
+        ],
+        "typed_claim_names": [
+          "safety",
+          "citation",
+          "action"
+        ]
+      }
+    },
+    {
+      "abstention_reason": "hard_constraints_infeasible: HC_VERDICT_ACCEPT, HC_VERDICT_REJECT",
+      "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "conclusion": {
+        "assignment": {},
+        "confidence": 1.0,
+        "status": "abstain"
+      },
+      "instance_id": "claim_infeasible_negative_control",
+      "premises": [
+        {
+          "premise_id": "DOMAIN_VERDICT",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "verdict is a typed claim with finite domain [reject, accept]"
+        },
+        {
+          "premise_id": "DOMAIN_EVIDENCE",
+          "source": "exp5499_fixture_typed_claim",
+          "text": "evidence is a typed claim with finite domain [absent, present]"
+        }
+      ],
+      "rules_or_constraints": [
+        {
+          "kind": "hard_constraint",
+          "rule_id": "HC_VERDICT_ACCEPT",
+          "text": "{\"literals\":[{\"equals\":\"accept\",\"variable\":\"verdict\"}]}",
+          "validator_constraint_id": "HC_VERDICT_ACCEPT"
+        },
+        {
+          "kind": "hard_constraint",
+          "rule_id": "HC_VERDICT_REJECT",
+          "text": "{\"literals\":[{\"equals\":\"reject\",\"variable\":\"verdict\"}]}",
+          "validator_constraint_id": "HC_VERDICT_REJECT"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+          "text": "{\"value\":\"accept\",\"variable\":\"verdict\",\"weight\":10}",
+          "validator_constraint_id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED"
+        },
+        {
+          "kind": "soft_preference",
+          "rule_id": "SP_EVIDENCE_PRESENT",
+          "text": "{\"value\":\"present\",\"variable\":\"evidence\",\"weight\":2}",
+          "validator_constraint_id": "SP_EVIDENCE_PRESENT"
+        },
+        {
+          "kind": "abstention_rule",
+          "rule_id": "ABSTAIN_WHEN_HARD_CONSTRAINTS_CONFLICT",
+          "text": "Return abstain when the exact validator finds no hard-feasible state.",
+          "validator_constraint_id": "exact_validator_infeasible"
+        }
+      ],
+      "validator_target": {
+        "expected_status": "infeasible",
+        "hard_constraint_ids": [
+          "HC_VERDICT_ACCEPT",
+          "HC_VERDICT_REJECT"
+        ],
+        "instance_id": "claim_infeasible_negative_control",
+        "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+        "soft_preference_ids": [
+          "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+          "SP_EVIDENCE_PRESENT"
+        ],
+        "typed_claim_names": [
+          "verdict",
+          "evidence"
+        ]
+      }
+    }
+  ],
+  "fixture_sha256": "5e5bc66f0f9eee90c83468d3cdcc294938975ee7b2b872f902ccb88ee782d02a",
+  "grammar_runtime_available": true,
+  "honest_verdict": "complete: structured_output_positive_control_ready_live_llm_smoke_sota_gate_open",
+  "inference_substrate": "structured_output_fixture_or_live_llm_smoke",
+  "live_smoke_rows": [
+    {
+      "abstention_reason": "",
+      "assignment": null,
+      "candidate_id": null,
+      "exact_validator_correct": false,
+      "exact_validator_verdict": "not_handed_off",
+      "hard_constraints_pass": false,
+      "instance_id": null,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_status": "schema_invalid",
+      "parseable": false,
+      "parsed_payload": {
+        "kind": "hard_constraint",
+        "rule_id": "HC_SUPPORT_ENTAILED",
+        "text": "{\"literals\":[{\"equals\":\"entailed\",\"variable\":\"support\"}]}",
+        "validator_constraint_id": "HC_SUPPORT_ENTAILED"
+      },
+      "raw_output_preview": "{\"abstention_reason\":\"\",\"candidate_id\":\"claim_support_preference_exact_assignment_5512\",\"candidate_schema_version\":\"carnot.hard_soft_claim_candidate.v1\",\"conclusion\":{\"assignment\":{\"scope\":\"bounded\",\"source_quality\":\"primary\",\"support\":\"entailed\"},\"confidence\":1.0,\"required\":[\"status\",\"assignment\",\"confidence\"],\"type\":\"object\"},\"instance_id\":\"claim_support_preference\",\"premises\":[{\"premise_id\":\"DOMAIN_SUPPORT\",\"source\":\"exp5499_fixture_typed_claim\",\"text\":\"support is a typed claim with finite do",
+      "reference_agreement": false,
+      "runtime_error": null,
+      "schema_errors": [
+        "$.candidate_schema_version is required",
+        "$.instance_id is required",
+        "$.candidate_id is required",
+        "$.premises is required",
+        "$.rules_or_constraints is required",
+        "$.conclusion is required",
+        "$.abstention_reason is required",
+        "$.validator_target is required",
+        "$.kind is not allowed",
+        "$.rule_id is not allowed",
+        "$.text is not allowed",
+        "$.validator_constraint_id is not allowed"
+      ],
+      "schema_valid": false,
+      "soft_optimal": false,
+      "soft_score": null,
+      "validator_target_ready": false
+    }
+  ],
+  "llama_cpp_cuda_available": true,
+  "milestone": "2026.07.500",
+  "missing_candidate_rows": 0,
+  "model_specs": [
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    }
+  ],
+  "no_autotokenizer_on_gguf": true,
+  "parse_failure_counts": {},
+  "parseable_candidate_rows": 3,
+  "parser_only_fallback_used": false,
+  "parser_path": "python/carnot/experiment_5512_structured_output_positive_control.py::classify_candidate_text",
+  "random_seed": 5512,
+  "reproducibility_checksum": "3ca5ea9b3b7c274238f86e9d5a4a4d5d025eaa47b9157e9fad61ec4a70419517",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5512_structured_output_positive_control.json",
+  "run_date": "2026-07-10",
+  "runtime_blockers": [
+    "llguidance_not_installed",
+    "xgrammar_not_installed"
+  ],
+  "runtime_status": {
+    "grammar_runtime_available": true,
+    "llama_cpp_cuda_available": true,
+    "llama_cpp_grammar_available": true,
+    "llguidance_available": false,
+    "parser_only_fallback_used": false,
+    "runtime_blockers": [
+      "llguidance_not_installed",
+      "xgrammar_not_installed"
+    ],
+    "xgrammar_available": false
+  },
+  "schema": "carnot.experiment_5512.structured_output_positive_control.v500",
+  "schema_path": "python/carnot/experiment_5512_structured_output_positive_control.py::candidate_schema",
+  "schema_sha256": "d8ca30099d73d222bf5b79b312804e2fd6f1ebfffdb0f5951d26fdb5d8fa7ab2",
+  "schema_validity_rate": 1.0,
+  "smoke_models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "sota_panel_gate_open": true,
+  "spec_refs": [
+    "REQ-VERIFY-5512",
+    "SCENARIO-VERIFY-5512"
+  ],
+  "structured_output_positive_control_ready": true,
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5512_structured_output_positive_control.py",
+    "tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py",
+    "tests/python/test_experiment_5500_sota_concept_claim_panel_v499.py"
+  ],
+  "tests_run": []
+}
