@@ -1,0 +1,267 @@
+{
+  "action_entropy_precheck": 2.0,
+  "already_reproduced": false,
+  "arc_clean_precheck_ready": true,
+  "duration_s": 0.1327935024164617,
+  "experiment": "experiment_5547_arc_no_llm_substrate_precheck",
+  "experiment_id": 5547,
+  "field_principles": {
+    "action_entropy_precheck": "bare float expectation for routed action/coordinate diversity before the live attempt.",
+    "already_reproduced": "must remain false because duplicate live levels cannot satisfy the ARC standing progress floor.",
+    "arc_clean_precheck_ready": "bare bool true only when registry, no-LLM substrate, provenance, seed/checksum, live path, and suppression gates pass.",
+    "field_principles": "mapping of one-line principle annotations for every headline and gate field.",
+    "honest_verdict": "one-line verdict starting complete: or blocked: without claiming a solve.",
+    "inference_substrate": "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm.",
+    "llm_strategy_proposer_used": "bare bool false proving this precheck did not load or invoke an LLM strategy proposer.",
+    "no_model_specs_required": "bare bool true because the no-LLM substrate has no model invocation to name.",
+    "random_seed": "deterministic seed required for third-party reruns of the target choice and checksum.",
+    "registry_precheck_passed": "bare bool proving the registry was read and the selected level is not already reproduced.",
+    "repeated_coordinate_suppression_enabled": "bare bool proving repeated-coordinate suppression is active before action entropy is trusted.",
+    "reproducibility_checksum": "content-addressed hash over registry target, seed, substrate, and routing gates to catch silent drift.",
+    "selected_game": "registry-safe game id selected for the next clean no-LLM live-path attempt.",
+    "selected_level": "adjacent unreproduced frontier level label selected after the duplicate registry precheck.",
+    "solve_provenance": "must equal live_agent_self_discovery even though this artifact claims no solve.",
+    "strategy_routing_live_path_reachable": "bare bool proving the bounded candidate router is reachable from the live candidate-router hook.",
+    "tests_added_or_reused": "list of focused tests covering duplicate blocking, no-model metadata, checksum determinism, and schema gates."
+  },
+  "honest_verdict": "complete: g50t L3 clean no-LLM ARC precheck ready; no solve claimed",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "input_artifacts": [
+    "ops/arc_solve_registry.yaml"
+  ],
+  "live_path_reachability": {
+    "checks": {
+      "e3_policy_accepts_candidate_router": true,
+      "rich_action_candidates_accepts_candidate_router": true,
+      "router_has_rank_method": true,
+      "stepwise_explorer_accepts_candidate_router": true
+    },
+    "ok": true
+  },
+  "llm_strategy_proposer_used": false,
+  "milestone": "2026.07.502",
+  "no_model_specs_required": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "game_source_read": false,
+    "llm_strategy_proposer_used": false,
+    "model_specs_present": false,
+    "offline_bfs_used": false,
+    "per_game_adapter_used": false,
+    "registry_present": true,
+    "solve_claimed": false,
+    "spec_has_req_5547": true
+  },
+  "prior_levels_reproduced": 2,
+  "random_seed": 5547,
+  "registry_precheck_passed": true,
+  "registry_total_levels": 69,
+  "repeated_coordinate_suppression_enabled": true,
+  "reproducibility_checksum": "sha256:67e2eaeecdd6716d02f518d5cf5b1a9eabb249f09ad93316e4e77cb715190de8",
+  "result_path": "results/experiment_5547_arc_no_llm_substrate_precheck.json",
+  "schema": "carnot.experiment_5547_arc_no_llm_substrate_precheck.v1",
+  "selected_game": "g50t",
+  "selected_level": "L3",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5547",
+    "SCENARIO-ARC-FCP-5547"
+  ],
+  "status": "complete",
+  "strategy_probe": {
+    "diagnostics": {
+      "avoid_coordinates": [],
+      "selected_signatures": [
+        "A6@28,24",
+        "A6@34,24",
+        "A6@40,24",
+        "A6@46,24"
+      ],
+      "selected_strategy_count": 4,
+      "selection_changed_by_suppression": true,
+      "strategies_used": [
+        "salience_first",
+        "action_effect_memory",
+        "verifier_router_candidate_ranking",
+        "conservative_reset_reinduction"
+      ],
+      "strategy_portfolio": [
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "salience_first",
+          "principle": "try visually salient live candidates first without spending the whole budget on one coordinate.",
+          "score_field": "salience_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "action_effect_memory",
+          "principle": "prefer candidates with observed or cached action-effect evidence.",
+          "score_field": "effect_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "verifier_router_candidate_ranking",
+          "principle": "rank compatible candidates by verifier-style confidence with stable fallback order.",
+          "score_field": "verifier_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "conservative_reset_reinduction",
+          "principle": "reserve a small budget for reset or reinduction-safe candidates after local evidence stalls.",
+          "score_field": "reset_score"
+        }
+      ],
+      "suppressed_coordinate_count": 2,
+      "suppression_enabled": true,
+      "unsuppressed_signatures": [
+        "A6@28,24",
+        "A6@28,24",
+        "A6@28,24",
+        "A6@46,24"
+      ]
+    },
+    "selected_rows": [
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 24
+        },
+        "effect_score": 1.0,
+        "label": "salience-top",
+        "reset_score": 0.0,
+        "salience_score": 10.0,
+        "verifier_score": 1.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 34,
+          "y": 24
+        },
+        "effect_score": 8.0,
+        "label": "effect-fallback",
+        "reset_score": 1.0,
+        "salience_score": 7.0,
+        "verifier_score": 3.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 40,
+          "y": 24
+        },
+        "effect_score": 3.0,
+        "label": "verifier-fallback",
+        "reset_score": 1.0,
+        "salience_score": 6.0,
+        "verifier_score": 8.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 46,
+          "y": 24
+        },
+        "effect_score": 4.0,
+        "label": "reset-fallback",
+        "reset_score": 9.0,
+        "salience_score": 5.0,
+        "verifier_score": 4.0
+      }
+    ],
+    "unsuppressed_selected_rows": [
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 24
+        },
+        "effect_score": 1.0,
+        "label": "salience-top",
+        "reset_score": 0.0,
+        "salience_score": 10.0,
+        "verifier_score": 1.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 24
+        },
+        "effect_score": 10.0,
+        "label": "effect-top-same-coordinate",
+        "reset_score": 0.0,
+        "salience_score": 9.0,
+        "verifier_score": 2.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 24
+        },
+        "effect_score": 2.0,
+        "label": "verifier-top-same-coordinate",
+        "reset_score": 0.0,
+        "salience_score": 8.0,
+        "verifier_score": 10.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 46,
+          "y": 24
+        },
+        "effect_score": 4.0,
+        "label": "reset-fallback",
+        "reset_score": 9.0,
+        "salience_score": 5.0,
+        "verifier_score": 4.0
+      }
+    ]
+  },
+  "strategy_routing_live_path_reachable": true,
+  "target_audit": {
+    "g50t:L3": {
+      "adjacent_frontier": true,
+      "already_reproduced": false,
+      "decision": "selected",
+      "game": "g50t",
+      "registry_depth": 2,
+      "target_level": 3
+    }
+  },
+  "target_selection": {
+    "already_reproduced": false,
+    "blocked": false,
+    "prior_levels_reproduced": 2,
+    "registry_precheck_passed": true,
+    "registry_total_levels": 69,
+    "selected_game": "g50t",
+    "selected_level": "L3",
+    "selection_reason": "first_fixed_clean_target_not_already_reproduced",
+    "target_audit": {
+      "g50t:L3": {
+        "adjacent_frontier": true,
+        "already_reproduced": false,
+        "decision": "selected",
+        "game": "g50t",
+        "registry_depth": 2,
+        "target_level": 3
+      }
+    },
+    "target_level": 3
+  },
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5547_arc_no_llm_substrate_precheck.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5547_arc_no_llm_substrate_precheck.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5547_arc_no_llm_substrate_precheck.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
