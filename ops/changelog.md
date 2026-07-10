@@ -11382,3 +11382,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-10: Gated SOTA hard-soft live panel v3 (✅ Complete) — honest_verdict=complete: sota_hard_soft_live_panel_v3_honest_null_no_claim_missing_candidate_rows_schema_invalid_or_missing_rows; results/experiment_5540_sota_hard_soft_live_panel_v3.json
 - 2026-07-10: LLM-FSM inspired exact finite-state fixture (✅ Complete) — honest_verdict=complete: exact_fsm_fixture_ready_sat_unsat_ambiguous_no_llm; results/experiment_5541_llm_fsm_exact_fixture.json
 - 2026-07-10: CSL residue metric independence corrigendum (✅ Complete) — honest_verdict=complete: csl_residue_metric_independence_corrigendum_ready; results/experiment_5542_csl_residue_metric_independence_corrigendum.json
+- 2026-07-10: Gated retrieval-warmed CSL five-arm ablation (✅ Complete) — honest_verdict=complete: retrieval_warmed_csl_five_arm_ablation_ready; results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
