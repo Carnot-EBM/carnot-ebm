@@ -28901,6 +28901,71 @@ diagnostic taxonomy rather than a headline SOTA quality panel.
 |---|---|---|
 | REQ-VERIFY-5525 | Implemented (`python/carnot/experiment_5525_sota_schema_failure_taxonomy.py`, `results/experiment_5525_sota_schema_failure_taxonomy.json`) | Implemented (`tests/python/test_experiment_5525_sota_schema_failure_taxonomy.py`) |
 
+### REQ-VERIFY-5526: SOTA Structured Row Repair Loop V501
+
+The repository SHALL provide Exp 5526 at
+`python/carnot/experiment_5526_sota_structured_repair_loop.py` and write
+`results/experiment_5526_sota_structured_repair_loop.json` as a bounded repair
+loop over the live structured-output rows taxonomized by Exp 5525. Exp 5526
+SHALL consume `results/experiment_5525_sota_schema_failure_taxonomy.json`, reuse
+the Exp 5512 candidate schema, the Exp 5513 reason-then-structure extraction
+path, and the Exp 5499 exact hard/soft validators, and SHALL NOT score hard or
+soft reasoning quality unless a repaired row is schema-valid and handed to the
+exact validators.
+
+Each expected row SHALL run deterministic fixtures first and then the available
+live local SOTA smoke rows from the taxonomy artifact. The repair loop SHALL cap
+retries per row, record every retry cause, and stop at the first schema-valid
+exact-validator-readable candidate or an explicit terminal missing/unrepaired
+state. At minimum the loop SHALL test validator-error feedback plus structured
+projection from the exact fixture target, and MAY additionally record JSON
+extraction repair, reason-then-structure prompting, grammar-mask activation, or
+token-budget repair recommendations when those causes appear in Exp 5525.
+Missing rows SHALL count as missing after repair unless a bounded retry produces
+a schema-valid candidate for that same expected instance; they SHALL NOT receive
+credit as abstentions.
+
+The artifact SHALL include at minimum these top-level fields: `model_specs`,
+`smoke_models_used`, `upstream_taxonomy_path`, `repair_methods_tested`,
+`retry_budget_per_row`, `rows_before_repair`, `rows_after_repair`,
+`schema_validity_before`, `schema_validity_after`,
+`missing_candidate_rows_after`, `exact_validator_handoff_ready`,
+`abstention_rows`, `confident_wrong_rows`,
+`sota_structured_repair_loop_ready`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`upstream_taxonomy_path` SHALL equal
+`results/experiment_5525_sota_schema_failure_taxonomy.json`.
+`inference_substrate` SHALL equal
+`structured_output_repair_fixture_plus_live_llm_smoke`. `honest_verdict` SHALL
+start with `complete:` or `blocked:` and SHALL keep repaired schema validity
+separate from any headline hard/soft reasoning-quality claim.
+
+### SCENARIO-VERIFY-5526: Bounded Repair Produces Validator-Readable Rows
+
+Given the Exp 5525 taxonomy artifact is ready and includes deterministic
+fixture rows plus at least one live mandated-GGUF smoke row, when Exp 5526 runs,
+then deterministic fixtures remain schema-valid through the reused parser path,
+live emitted or missing rows receive no more than the configured retry budget,
+each retry records a cause from the taxonomy or validator feedback, repaired
+rows are reclassified through the Exp 5512 schema and exact validators, and
+`results/experiment_5526_sota_structured_repair_loop.json` compares before and
+after schema validity, missing-row rate, exact-validator handoff readiness, and
+abstention versus confident-wrong separation.
+
+If a row cannot be repaired within the retry budget, if the taxonomy artifact is
+missing or not ready, if no live smoke row exists, if a repaired row is still
+schema-invalid, or if the exact validators cannot read the candidate, then
+Exp 5526 SHALL record the terminal row state and retry causes, count missing
+rows against the after-repair gate, keep `sota_structured_repair_loop_ready`
+false unless all expected rows are schema-valid and exact-validator-readable,
+and avoid claiming hard/soft reasoning quality.
+
+## Implementation Status (REQ-VERIFY-5526)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5526 | Implemented (`python/carnot/experiment_5526_sota_structured_repair_loop.py`, `results/experiment_5526_sota_structured_repair_loop.json`) | Implemented (`tests/python/test_experiment_5526_sota_structured_repair_loop.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
