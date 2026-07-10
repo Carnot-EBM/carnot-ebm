@@ -1,0 +1,151 @@
+{
+  "artifact_policy": {
+    "no_later_same_exp_sidecar": true,
+    "primary_artifact": "results/experiment_5528_csl_canonical_gate_artifact.json",
+    "same_experiment_glob": "results/experiment_5528_*.json",
+    "sidecar_safe_rule": "Do not write a later same-number sidecar after this primary artifact."
+  },
+  "conductor_gate_probe_passed": true,
+  "continuous_self_learning_evidence": true,
+  "csl_experience_graph_ready": true,
+  "csl_gate_fields_conductor_visible": true,
+  "csl_gate_fields_resolvable": true,
+  "downstream_gate_probe": {
+    "conductor_gate_probe_passed": true,
+    "csl_gate_fields_conductor_visible": true,
+    "exp5529_full": {
+      "gates_evaluated": [
+        {
+          "actual": true,
+          "artifact_field": "csl_gate_fields_conductor_visible",
+          "expected": true,
+          "op": "==",
+          "passed": true,
+          "reason": "actual=True == expected=True",
+          "upstream": "exp5528-csl-canonical-gate-artifact"
+        }
+      ],
+      "passed": true,
+      "summary": "1 gate(s) satisfied"
+    },
+    "exp5530_exp5528_only": {
+      "gates_evaluated": [
+        {
+          "actual": true,
+          "artifact_field": "csl_gate_fields_conductor_visible",
+          "expected": true,
+          "op": "==",
+          "passed": true,
+          "reason": "actual=True == expected=True",
+          "upstream": "exp5528-csl-canonical-gate-artifact"
+        }
+      ],
+      "passed": true,
+      "summary": "1 gate(s) satisfied"
+    },
+    "exp5530_full": {
+      "gates_evaluated": [
+        {
+          "actual": true,
+          "artifact_field": "csl_gate_fields_conductor_visible",
+          "expected": true,
+          "op": "==",
+          "passed": true,
+          "reason": "actual=True == expected=True",
+          "upstream": "exp5528-csl-canonical-gate-artifact"
+        },
+        {
+          "actual": null,
+          "artifact_field": "csl_residue_stress_ready",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "upstream artifact not found for task id 'exp5529-gated-csl-event-topic-residue-stress'",
+          "upstream": "exp5529-gated-csl-event-topic-residue-stress"
+        }
+      ],
+      "passed": false,
+      "summary": "1 of 2 gate(s) failed; first failure: exp5529-gated-csl-event-topic-residue-stress.csl_residue_stress_ready (upstream artifact not found for task id 'exp5529-gated-csl-event-topic-residue-stress')"
+    },
+    "selected_exp5528_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5528_csl_canonical_gate_artifact.json"
+  },
+  "experiment": 5528,
+  "experiment_id": "experiment_5528_csl_canonical_gate_artifact",
+  "field_principles": {
+    "conductor_gate_probe_passed": "Records that real downstream Exp5528 gates pass through conductor_gates.py.",
+    "continuous_self_learning_evidence": "Keeps the CSL evidence claim tied to all required clean sub-gates.",
+    "csl_experience_graph_ready": "Carries the graph-memory readiness gate from the independent Exp5515 replay.",
+    "csl_gate_fields_conductor_visible": "Bare boolean used by Exp5529 and Exp5530 to prove conductor visibility.",
+    "csl_gate_fields_resolvable": "Confirms downstream conductor gates can read the bare CSL field names.",
+    "field_principles": "Explains why each headline and gate field exists for downstream audits.",
+    "graph_memory_score": "Preserves the governed graph-memory score that must beat controls.",
+    "heldout_delta": "Reports graph-memory improvement as graph score minus no-memory score.",
+    "honest_verdict": "Terminal summary with complete or blocked prefix for conductor reconciliation.",
+    "inference_substrate": "Declares this artifact is a canonical CSL gate receipt from an independent fixture.",
+    "metric_independence_clean": "Proves held-out scores come from independent labels, not memory utility.",
+    "negative_transfer_rate": "Shows irrelevant transfer candidates are not accepted as useful memory.",
+    "no_memory_score": "Preserves the no-memory control used to compute the held-out delta.",
+    "same_exp_sidecar_after_primary": "Must stay false so no newer Exp5528 sidecar can hide the canonical fields.",
+    "stale_evidence_rejection_rate": "Shows stale evidence is rejected before action selection.",
+    "stale_memory_score": "Preserves the stale-memory control that guards against unsafe memory reuse.",
+    "tests_added_or_reused": "Lists the focused and full test commands backing this artifact."
+  },
+  "graph_memory_score": 1.0,
+  "heldout_delta": 1.0,
+  "honest_verdict": "complete: canonical_csl_gate_artifact_conductor_visible",
+  "inference_substrate": "canonical_csl_gate_artifact_from_independent_fixture",
+  "metric_independence_clean": true,
+  "milestone": "2026.07.501",
+  "negative_transfer_rate": 0.0,
+  "no_memory_score": 0.0,
+  "random_seed": 5528,
+  "reproducibility_checksum": "sha256:db74856126e731645e8abd34625e18155388b1adc4158768f3b52eff79ae45d7",
+  "run_date": "2026-07-10",
+  "same_exp_sidecar_after_primary": false,
+  "schema": "carnot.experiment_5528.csl_canonical_gate_artifact.v1",
+  "sidecar_selection_reproduction": {
+    "gate_check_passed": false,
+    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repair.metric_independence_clean (actual=None == expected=True)",
+    "gates_evaluated": [
+      {
+        "actual": null,
+        "artifact_field": "metric_independence_clean",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=None == expected=True",
+        "upstream": "exp5515-csl-independent-outcome-gate-repair"
+      }
+    ],
+    "primary_fields_visible_through_newest_artifact": false,
+    "probe_task_id": "exp5528-sidecar-reproduction-probe",
+    "selected_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5515_csl_independent_outcome_stream_fixture.json"
+  },
+  "source_artifacts": {
+    "independent_outcome_gate_repair": "results/experiment_5515_csl_independent_outcome_gate_repair.json",
+    "independent_outcome_stream_fixture": "results/experiment_5515_csl_independent_outcome_stream_fixture.json"
+  },
+  "source_file_checksums": {
+    "module": "sha256:3637344facde5e3e7eb5b289523c1e4cb93f6c0af3ea727fab5156adc979a879",
+    "spec": "sha256:3c1ed033aaaf2162cd55d96c80c35dbf2150fadc0c42e47f58af77f5ade88155",
+    "test": "sha256:2e3bea36a5502df790ad6e02b48beb150d287cc29550e38a1bd456666b5757fd"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5528_csl_canonical_gate_artifact.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "test": "tests/python/test_experiment_5528_csl_canonical_gate_artifact.py"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5528",
+    "SCENARIO-LEARN-5528-SIDECAR-FAILURE",
+    "SCENARIO-LEARN-5528-CANONICAL-GATE"
+  ],
+  "stale_evidence_rejection_rate": 1.0,
+  "stale_memory_score": 0.0,
+  "task_id": "exp5528-csl-canonical-gate-artifact",
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5528_csl_canonical_gate_artifact.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5528_csl_canonical_gate_artifact.py -m pytest tests/python/test_experiment_5528_csl_canonical_gate_artifact.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5528_csl_canonical_gate_artifact.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
