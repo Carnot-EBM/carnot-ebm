@@ -1,0 +1,335 @@
+{
+  "accepted_row_keys": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF::claim_support_preference",
+    "unsloth/gemma-4-26B-A4B-it-GGUF::claim_support_preference"
+  ],
+  "automaton_backend": "deterministic_completed_row_set_dfa_over_exp5512_schema",
+  "automaton_dead_end_transition_templates": [
+    {
+      "count": 192,
+      "reason": "duplicate_required_row"
+    },
+    {
+      "count": 64,
+      "reason": "schema_invalid_row"
+    },
+    {
+      "count": 64,
+      "reason": "malformed_row"
+    },
+    {
+      "count": 64,
+      "reason": "invalid_enum_value"
+    },
+    {
+      "count": 64,
+      "reason": "unknown_required_row"
+    },
+    {
+      "count": 63,
+      "reason": "missing_required_row"
+    }
+  ],
+  "automaton_row_completion_ready": false,
+  "automaton_terminal_states": [
+    {
+      "accepting": true,
+      "completed_row_keys": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF::claim_support_preference",
+        "unsloth/Qwen3.6-35B-A3B-GGUF::claim_safety_conflict",
+        "unsloth/Qwen3.6-35B-A3B-GGUF::claim_infeasible_negative_control",
+        "unsloth/gemma-4-26B-A4B-it-GGUF::claim_support_preference",
+        "unsloth/gemma-4-26B-A4B-it-GGUF::claim_safety_conflict",
+        "unsloth/gemma-4-26B-A4B-it-GGUF::claim_infeasible_negative_control"
+      ]
+    }
+  ],
+  "dead_end_transition_count": 511,
+  "experiment": 5552,
+  "experiment_id": "exp5552-automaton-schema-row-completion-receipt",
+  "field_principles": {
+    "automaton_backend": "Names the deterministic completed-row-set DFA used for table completion.",
+    "automaton_row_completion_ready": "Opens only when all required rows are reachable and proposal-supported.",
+    "dead_end_transition_count": "Counts invalid automaton transitions that cannot complete the table.",
+    "field_principles": "Explains why every headline and gate field exists.",
+    "honest_verdict": "Provides a terminal evidence boundary without a live SOTA quality claim.",
+    "inference_substrate": "Declares deterministic automaton/schema analysis with no LLM.",
+    "invalid_fixture_rejection_rate": "Reuses malformed and semantic rejection evidence before live inference.",
+    "llm_invoked": "Must remain false because this receipt is deterministic preflight evidence.",
+    "local_mask_bias_diagnostic": "Lists reachable rows missing from the local mask/proposal path.",
+    "missing_row_risk": "Turns row-completion support into a downstream missing-row risk label.",
+    "no_model_specs_required": "Confirms row-completion analysis needs no model loading or model specs.",
+    "reachable_state_count": "Records how many completed-row states the automaton can reach.",
+    "required_rows": "Fixes every required model/instance row before downstream live inference.",
+    "row_completion_support_rate": "Measures required rows that are reachable and locally proposal-supported.",
+    "schema_hash": "Pins the receipt to the Exp5512 hard/soft candidate schema.",
+    "terminal_state_count": "Counts accepting states where all required rows are complete.",
+    "tests_added_or_reused": "Links the receipt to focused row-completion and reused parser tests.",
+    "upstream_grammar_preflight": "Pins grammar reachability evidence to the Exp5539 preflight artifact.",
+    "upstream_panel_path": "Pins the prior hard/soft panel whose missing rows motivate this gate.",
+    "valid_fixture_acceptance_rate": "Reuses valid Exp5539 fixture evidence for parser and exact-validator handoff."
+  },
+  "honest_verdict": "blocked: automaton_row_completion_not_ready_proposal_path_missing_required_rows",
+  "inference_substrate": "deterministic_automaton_no_llm",
+  "invalid_fixture_rejection_rate": 1.0,
+  "invalid_fixture_rows": [
+    {
+      "accepted": false,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": false,
+      "instance_id": "claim_support_preference",
+      "parse_status": "schema_invalid",
+      "parseable": false,
+      "rejection_reason": "schema_invalid_row",
+      "schema_errors": [
+        "$.candidate_schema_version is required"
+      ],
+      "schema_valid": false
+    },
+    {
+      "accepted": false,
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "exact_validator_correct": false,
+      "instance_id": "claim_safety_conflict",
+      "parse_status": "validator_target_mismatch",
+      "parseable": false,
+      "rejection_reason": "validator_target_mismatch",
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": false,
+      "instance_id": "claim_support_preference",
+      "parse_status": "invalid_assignment_domain",
+      "parseable": false,
+      "rejection_reason": "invalid_assignment_domain",
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "accepted": false,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": false,
+      "instance_id": "claim_support_preference",
+      "parse_status": "schema_invalid",
+      "parseable": false,
+      "rejection_reason": "invalid_enum_value",
+      "schema_errors": [
+        "$.conclusion.status expected one of ['candidate', 'abstain']"
+      ],
+      "schema_valid": false
+    }
+  ],
+  "llm_invoked": false,
+  "local_mask_bias_diagnostic": {
+    "grammar_backend": "llama_cpp_gbnf",
+    "grammar_table_exposed": false,
+    "mask_bias_flags": [
+      "generic_json_gbnf_does_not_force_candidate_row_ids",
+      "proposal_path_missing_required_rows",
+      "selected_backend_token_transition_table_not_exposed"
+    ],
+    "proposal_path_source": "upstream_panel_rows_or_injected_local_records",
+    "proposal_supported_row_count": 2,
+    "reachable_but_proposal_unsupported_rows": [
+      {
+        "instance_id": "claim_safety_conflict",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "absent_from_local_proposal_path",
+        "row_key": "unsloth/Qwen3.6-35B-A3B-GGUF::claim_safety_conflict",
+        "schema_reachable": true
+      },
+      {
+        "instance_id": "claim_infeasible_negative_control",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "absent_from_local_proposal_path",
+        "row_key": "unsloth/Qwen3.6-35B-A3B-GGUF::claim_infeasible_negative_control",
+        "schema_reachable": true
+      },
+      {
+        "instance_id": "claim_safety_conflict",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "absent_from_local_proposal_path",
+        "row_key": "unsloth/gemma-4-26B-A4B-it-GGUF::claim_safety_conflict",
+        "schema_reachable": true
+      },
+      {
+        "instance_id": "claim_infeasible_negative_control",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "absent_from_local_proposal_path",
+        "row_key": "unsloth/gemma-4-26B-A4B-it-GGUF::claim_infeasible_negative_control",
+        "schema_reachable": true
+      }
+    ],
+    "syntactically_reachable_row_count": 6,
+    "unsupported_required_row_count": 4
+  },
+  "milestone": "2026.07.503",
+  "missing_row_risk": "high_missing_row_risk",
+  "no_model_specs_required": true,
+  "observed_dead_end_transition_count": 4,
+  "observed_dead_end_transitions": [
+    {
+      "detail": null,
+      "instance_id": "claim_safety_conflict",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "reason": "missing_required_row",
+      "row_key": "unsloth/Qwen3.6-35B-A3B-GGUF::claim_safety_conflict"
+    },
+    {
+      "detail": null,
+      "instance_id": "claim_infeasible_negative_control",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "reason": "missing_required_row",
+      "row_key": "unsloth/Qwen3.6-35B-A3B-GGUF::claim_infeasible_negative_control"
+    },
+    {
+      "detail": null,
+      "instance_id": "claim_safety_conflict",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "reason": "missing_required_row",
+      "row_key": "unsloth/gemma-4-26B-A4B-it-GGUF::claim_safety_conflict"
+    },
+    {
+      "detail": null,
+      "instance_id": "claim_infeasible_negative_control",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "reason": "missing_required_row",
+      "row_key": "unsloth/gemma-4-26B-A4B-it-GGUF::claim_infeasible_negative_control"
+    }
+  ],
+  "random_seed": 5552,
+  "reachable_state_count": 64,
+  "readiness_blockers": [
+    "proposal_path_missing_required_rows"
+  ],
+  "reproducibility_checksum": "2d7b0172b209994a1bff171e33713d0eaf6b409b56db5d80377f079b19a62b8b",
+  "required_row_count": 6,
+  "required_rows": [
+    {
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "expected_status": "optimal",
+      "fixture_payload_hash": "331f9f74d7deee59aa988cd48f4405f28db8bf989211ead3e4beb7406b4aec10",
+      "instance_id": "claim_support_preference",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "proposal_supported": true,
+      "row_key": "unsloth/Qwen3.6-35B-A3B-GGUF::claim_support_preference",
+      "schema_reachable": true
+    },
+    {
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "expected_status": "optimal",
+      "fixture_payload_hash": "b18ca3a2fdcf49ae196134c23e029b5a78e8750a8b69c1013630772d0a41e5f2",
+      "instance_id": "claim_safety_conflict",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "proposal_supported": false,
+      "row_key": "unsloth/Qwen3.6-35B-A3B-GGUF::claim_safety_conflict",
+      "schema_reachable": true
+    },
+    {
+      "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "expected_status": "infeasible",
+      "fixture_payload_hash": "9d7ef0ffb99b4ceda1db0a7a00dbd500f4e4a4ab4bf748b768ca7ea20412dd37",
+      "instance_id": "claim_infeasible_negative_control",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "proposal_supported": false,
+      "row_key": "unsloth/Qwen3.6-35B-A3B-GGUF::claim_infeasible_negative_control",
+      "schema_reachable": true
+    },
+    {
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "expected_status": "optimal",
+      "fixture_payload_hash": "331f9f74d7deee59aa988cd48f4405f28db8bf989211ead3e4beb7406b4aec10",
+      "instance_id": "claim_support_preference",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "proposal_supported": true,
+      "row_key": "unsloth/gemma-4-26B-A4B-it-GGUF::claim_support_preference",
+      "schema_reachable": true
+    },
+    {
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "expected_status": "optimal",
+      "fixture_payload_hash": "b18ca3a2fdcf49ae196134c23e029b5a78e8750a8b69c1013630772d0a41e5f2",
+      "instance_id": "claim_safety_conflict",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "proposal_supported": false,
+      "row_key": "unsloth/gemma-4-26B-A4B-it-GGUF::claim_safety_conflict",
+      "schema_reachable": true
+    },
+    {
+      "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+      "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+      "expected_status": "infeasible",
+      "fixture_payload_hash": "9d7ef0ffb99b4ceda1db0a7a00dbd500f4e4a4ab4bf748b768ca7ea20412dd37",
+      "instance_id": "claim_infeasible_negative_control",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "proposal_supported": false,
+      "row_key": "unsloth/gemma-4-26B-A4B-it-GGUF::claim_infeasible_negative_control",
+      "schema_reachable": true
+    }
+  ],
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5552_automaton_schema_row_completion_receipt.json",
+  "row_completion_support_rate": 0.333333,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5552.automaton_schema_row_completion_receipt.v503",
+  "schema_hash": "d8ca30099d73d222bf5b79b312804e2fd6f1ebfffdb0f5951d26fdb5d8fa7ab2",
+  "spec_refs": [
+    "REQ-VERIFY-5552",
+    "SCENARIO-VERIFY-5552"
+  ],
+  "terminal_state_count": 1,
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5552_automaton_schema_row_completion_receipt.py",
+    "tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py",
+    "tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py",
+    "tests/python/test_experiment_5512_structured_output_positive_control.py"
+  ],
+  "tests_run": [],
+  "upstream_grammar_clean": true,
+  "upstream_grammar_preflight": "results/experiment_5539_gram2token_grammar_table_preflight.json",
+  "upstream_panel_path": "results/experiment_5540_sota_hard_soft_live_panel_v3.json",
+  "valid_fixture_acceptance_rate": 1.0,
+  "valid_fixture_rows": [
+    {
+      "accepted": true,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "exact_validator_correct": true,
+      "instance_id": "claim_support_preference",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "rejection_reason": "accepted",
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "exact_validator_correct": true,
+      "instance_id": "claim_safety_conflict",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "rejection_reason": "accepted",
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "accepted": true,
+      "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+      "exact_validator_correct": true,
+      "instance_id": "claim_infeasible_negative_control",
+      "parse_status": "schema_valid_abstention",
+      "parseable": true,
+      "rejection_reason": "accepted",
+      "schema_errors": [],
+      "schema_valid": true
+    }
+  ]
+}
