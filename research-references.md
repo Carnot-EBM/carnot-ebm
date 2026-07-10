@@ -1,3 +1,79 @@
+## V502 Planner Refresh - 2026-07-10
+
+Planning sweep for milestone `2026.07.502` after the operator reported `.501` complete. Sources checked:
+arXiv primary pages for 2025-2026 EBM verification/reasoning, neural CSPs, Ising and
+thermodynamic hardware, hallucination mitigation, KANs, constrained decoding, hardware-accelerated
+sampling, and continual/online constraint learning; OpenReview public pages where reachable;
+Hugging Face Papers; GitHub repository/topic discovery; Semantic Scholar public citation routes for
+EBT `2507.02092` and ARM-EBM `2512.15605`; Extropic writing; Logical Intelligence public posts; and
+Carnot's accumulated reference history. Existing entries already cover FLaG, free-energy
+signatures, ConstrainPrompt, CRV, Distributional EBMs, XGrammar/llguidance, graph/agent memory,
+KAN verification and online learning, p-bit hardware, Extropic TSU context, and Kona/Aleph public
+context. This block adds only missing or newly-actionable deltas for `.502`.
+
+### New actionable deltas
+
+- **LLM-FSM: Scaling Large Language Models for Finite-State Reasoning in RTL Code Generation** -
+  arXiv:2602.07032, https://arxiv.org/abs/2602.07032. The work builds configurable finite-state
+  machine fixtures, translates FSM structure into natural-language RTL-generation prompts, and verifies
+  generated RTL/testbenches with LLM-based checks plus SAT-style solver checks. Carnot hook: `.502`
+  should add a deterministic finite-state exact fixture that can later feed SOTA structured hard/soft
+  panels, sparse repair descriptors, and hardware workload receipts without relying on ambiguous natural
+  language labels.
+- **Gram2Token: Enabling Run-time GPU-Native Grammar-Constrained Decoding** - OpenReview public listing,
+  https://openreview.net/forum?id=h3K23f6tLU. The method aligns tokenizer byte sequences with grammar
+  transitions through trie/table machinery and groups tokens with identical transition outcomes so
+  grammar-constrained decoding can become GPU-native table lookup. Carnot hook: `.502` should add a
+  local grammar-table preflight that records backend availability, schema reachability, and token/table
+  hashes before another flagship GGUF schema-validity claim. This is a preflight only; no decoding
+  speedup or quality claim is allowed unless the local runtime path is actually exercised.
+
+### Promoted existing deltas for `.502`
+
+- **FLaG** and **free-energy signatures** remain relevant to long-term verification and hallucination
+  diagnosis, but Carnot still lacks the required internal training tensors or reproducible local
+  fine-tuning path. They stay watch-only for `.502`; they should not become headline detector claims.
+- **ConstrainPrompt, CRV, XGrammar/llguidance, and JSONSchemaBench** remain the practical source family
+  for the local SOTA schema lane. `.502` should focus on adversarial-clean substrate and duration
+  evidence before interpreting flagship model quality.
+- **Continual memory and retrieval-warmed reasoning papers** sharpen the CSL plan: Carnot needs
+  non-identical event/topic residue metrics, five-arm retrieval ablations, stale-evidence rejection,
+  and explicit no-weight-mutation receipts before any continuous self-learning claim.
+
+### Secondary-source status
+
+- **Semantic Scholar routes:** direct metadata lookup for EBT `2507.02092` and ARM-EBM `2512.15605`
+  was rate-limited during planning, but public citation endpoints exposed sample citing papers including
+  fixed-point reasoners, causal-energy parameterization, distributional EBMs, LoopUS, and
+  ontology-constrained neural reasoning. None produced a stronger local `.502` experiment than the
+  finite-state exact fixture, grammar preflight, and CSL residue repair already selected.
+- **Hugging Face Papers:** mirrored several arXiv papers already indexed in Carnot's reference history.
+  No new local baseline or model artifact displaced the mandated GGUF SOTA panel.
+- **GitHub discovery:** found constrained-decoding and EBM repositories consistent with the existing
+  XGrammar/llguidance watch path, but no new reproducible local engine strong enough to become a
+  milestone dependency.
+- **Extropic writing:** current TSU public pages still support the thermodynamic-sampling architecture
+  thesis, but Carnot has no executable TSU path. TSU remains watch-only and cannot be used for a hardware
+  speedup claim.
+- **Logical Intelligence:** public Kona/Aleph material continues to support the verifier-under-LLM
+  architecture direction. No reproducible Kona baseline is available locally, so Carnot should treat it
+  as architecture context rather than comparative evidence.
+
+### V502 Planning impact
+
+- `.502` should repair `.501` adversarial flags before escalating claims: Exp5527 needs a live-duration
+  and substrate corrigendum, Exp5529 needs a non-tautological residue metric, Exp5532 needs no-LLM
+  hardware receipt hygiene, and Exp5533/Exp5534 need ARC no-LLM substrate/provenance receipts with seeds
+  and checksums.
+- `.502` should add the LLM-FSM finite-state exact fixture as a reusable constraint substrate for
+  structured panels, sparse repair, and future hardware workloads.
+- `.502` should add a Gram2Token-inspired grammar-table preflight, but only as local availability and
+  schema-reachability evidence unless a real runtime decoding path is exercised.
+- `.502` should include a continuous self-learning lane with non-tautological residue evidence,
+  retrieval-warmed five-arm ablations, and cross-model local SOTA memory transfer only behind clean gates.
+- `.502` should keep hardware and ARC claims bounded: no speedup without matched authenticated timing, and
+  no ARC solve credit without live-agent self-discovery plus registry banking.
+
 ## V501 Planner Refresh - 2026-07-10
 
 Planning sweep for milestone `2026.07.501` after the operator reported `.500` complete. Sources checked:
