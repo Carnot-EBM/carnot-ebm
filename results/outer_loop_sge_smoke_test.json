@@ -1,0 +1,230 @@
+{
+  "smoke_test": "outer_loop_sge_smoke_test",
+  "game": "g50t",
+  "prior_levels_reproduced": 2,
+  "target_level": 3,
+  "max_level_reached": 2,
+  "attempts": 7,
+  "duration_s": 107.87058472633362,
+  "llm_strategy_proposer_used_any_step": true,
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    "gemma-4-12B-it"
+  ],
+  "action_log": [
+    {
+      "step": 2,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait and observe the initial state to identify any default patterns or environmental changes."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 3,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait and observe the initial state to identify any default patterns or environmental changes."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 4,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait to see if the game state changes automatically without any input.",
+        "Observe the initial state to see if any environmental changes occur without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 5,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without input."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 6,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state and any automatic transitions to understand the basic environment."
+      ],
+      "votes_by_index": {
+        "0": 1
+      }
+    },
+    {
+      "step": 7,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if any input triggers a state change as suggested by the reflection.",
+        "Test if any input is required to change the game state as suggested by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 8,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if any action triggers a state change as suggested by the reflection.",
+        "Test if submitting a null action triggers a state change or a system message."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    }
+  ],
+  "diagnostics_log": [
+    {
+      "step": 1
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait and observe the initial state to identify any default patterns or environmental changes."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait and observe the initial state to identify any default patterns or environmental changes."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Wait to see if the game state changes automatically without any input.",
+        "Observe the initial state to see if any environmental changes occur without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 3,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without input."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state and any automatic transitions to understand the basic environment."
+      ],
+      "votes_by_index": {
+        "0": 1
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Provide an input to trigger a change in the game state.",
+      "reflected_this_call": true,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if any input triggers a state change as suggested by the reflection.",
+        "Test if any input is required to change the game state as suggested by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Provide an input to trigger a change in the game state.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if any action triggers a state change as suggested by the reflection.",
+        "Test if submitting a null action triggers a state change or a system message."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Provide an input to trigger a change in the game state.",
+      "reflected_this_call": false,
+      "suppressed_coordinate_count": 0
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "abstention_rate": 0.0,
+  "adversarial_clean": true,
+  "assignment_rows_scored": 0,
+  "confident_wrong_rate": 0.0,
+  "confident_wrong_rows": 0,
+  "duration_floor_s": 60.0,
+  "duration_receipt": {
+    "backend": "llama_cpp_python_cuda_gguf",
+    "binding": "llama_cpp.Llama.create_chat_completion",
+    "command": null,
+    "helper_path": "carnot.inference.sota_models.cached_sota_pair",
+    "measured_duration_s": 72.923386,
+    "prompt_hash": "0f1b0da7dac1157a1ef292b33b0c26919678f7e5086bc26b43807b5ede7a8869",
+    "random_seed": 5538,
+    "runtime_error": null
+  },
+  "exact_validator_accuracy": 0.0,
+  "exact_validator_path": "carnot.experiment_5527_sota_hard_soft_panel_v2.evaluate_candidate_rows",
+  "exact_validator_rows_scored": 0,
+  "experiment": 5538,
+  "experiment_id": "exp5538-sota-panel-duration-substrate-corrigendum",
+  "extra_emitted_rows": [],
+  "field_principles": {
+    "abstention_rate": "Counts only explicit schema-valid abstentions.",
+    "adversarial_clean": "States whether the corrected boundary avoids the Exp5527 duration/substrate overclaim.",
+    "confident_wrong_rate": "Separates high-confidence schema-valid failures from calibrated abstention.",
+    "duration_floor_s": "Records the adversarial plausibility floor for live SOTA local-GGUF claims.",
+    "exact_validator_accuracy": "Reports deterministic Exp5499 correctness only for schema-valid rows.",
+    "field_principles": "Explains why each headline and gate field must remain present.",
+    "gpu_offload_evidence": "Records the runtime/offload substrate instead of trusting model-name strings.",
+    "honest_verdict": "Provides a terminal status without promoting too-short, missing, or schema-invalid evidence.",
+    "inference_substrate": "Declares live local SOTA GGUF execution or explicit claim downgrade semantics.",
+    "live_model_invoked": "Separates real local-GGUF execution from evidence downgrades.",
+    "measured_duration_s": "Records the wall-clock receipt used to authenticate or downgrade the claim.",
+    "missing_candidate_rows": "Keeps absent rows visible and prevents missing rows from becoming abstentions.",
+    "model_specs": "Names the mandated GGUF set so the corrigendum cannot swap in legacy smoke models as headline evidence.",
+    "models_attempted": "Identifies which mandated model, if any, received the live prompt.",
+    "no_quality_claim_if_not_live": "Prevents missing live execution from inheriting Exp5527 quality metrics.",
+    "preference_optimality_rate": "Reports soft optimality only after exact hard-constraint validation.",
+    "quality_claim_allowed": "States whether this corrigendum opens a downstream hard/soft SOTA quality claim.",
+    "readiness_blockers": "Lists the exact gates preventing claim authentication.",
+    "rows_emitted": "Separates model output volume from correctness or quality.",
+    "rows_requested": "Fixes the Exp5527 fixture denominator before parsing.",
+    "schema_validity_rate": "Gates exact-validator handoff on schema-valid rows.",
+    "sota_panel_duration_corrigendum_ready": "States whether the boundary repair is complete enough for downstream gates.",
+    "tests_added_or_reused": "Links the artifact to parser, duration, substrate, and exact-validator tests.",
+    "upstream_panel_path": "Pins the artifact whose duration/substrate boundary is being repaired."
+  },
+  "gpu_offload_evidence": {
+    "gpu_memory_after_mb": 21580.0,
+    "gpu_memory_before_mb": 8.0,
+    "gpu_memory_delta_mb": 21572.0,
+    "gpu_offload_verified": true,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "n_gpu_layers": -1,
+    "offload_evidence": true
+  },
+  "honest_verdict": "complete: live_sota_hard_soft_panel_claim_downgraded_no_quality_claim_exact_validator_mismatch_missing_candidate_rows_preference_suboptimal_or_unscored_schema_invalid_or_missing_rows",
+  "inference_substrate": "live_local_sota_gguf_panel_or_claim_downgrade",
+  "legacy_smoke_models_used": [],
+  "live_model_invoked": true,
+  "measured_duration_s": 72.923386,
+  "milestone": "2026.07.502",
+  "missing_candidate_rows": 3,
+  "missing_instance_ids": [
+    "claim_support_preference",
+    "claim_safety_conflict",
+    "claim_infeasible_negative_control"
+  ],
+  "model_specs": [
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    }
+  ],
+  "models_attempted": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "no_autotokenizer_on_gguf": true,
+  "no_quality_claim_if_not_live": true,
+  "panel_rows": [],
+  "parse_failures": [
+    {
+      "parse_status": "candidate_rows_missing"
+    }
+  ],
+  "preference_optimality_rate": 0.0,
+  "prompt_builder_path": "carnot.experiment_5513_sota_hard_soft_structured_panel.build_reason_then_structure_prompt",
+  "prompt_hash": "0f1b0da7dac1157a1ef292b33b0c26919678f7e5086bc26b43807b5ede7a8869",
+  "quality_claim_allowed": false,
+  "random_seed": 5538,
+  "readiness_blockers": [
+    "exact_validator_mismatch",
+    "missing_candidate_rows",
+    "preference_suboptimal_or_unscored",
+    "schema_invalid_or_missing_rows"
+  ],
+  "reproducibility_checksum": "76e5de6216921d96de5ac9fdc79f408f7660a3454b27f015b2acb848e5bc2c9d",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5538_sota_panel_duration_substrate_corrigendum.json",
+  "rows_emitted": 0,
+  "rows_requested": 3,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5538.sota_panel_duration_substrate_corrigendum.v502",
+  "schema_parser_path": "carnot.experiment_5513_sota_hard_soft_structured_panel.extract_candidate_payloads",
+  "schema_valid_rows": 0,
+  "schema_validity_rate": 0.0,
+  "sota_panel_duration_corrigendum_ready": true,
+  "spec_refs": [
+    "REQ-VERIFY-5538",
+    "SCENARIO-VERIFY-5538"
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py",
+    "tests/python/test_experiment_5527_sota_hard_soft_panel_v2.py",
+    "tests/python/test_experiment_5513_sota_hard_soft_structured_panel.py",
+    "tests/python/test_experiment_5512_structured_output_positive_control.py",
+    "tests/python/test_experiment_5499_preference_maxsat_minimal_fixture_v499.py"
+  ],
+  "tests_run": [],
+  "upstream_panel_claim_allowed": true,
+  "upstream_panel_duration_s": 0.001162,
+  "upstream_panel_flagged_adversarial": true,
+  "upstream_panel_honest_verdict": "complete: sota_hard_soft_panel_v2_ready_bounded_exact_validated_claim_allowed",
+  "upstream_panel_path": "results/experiment_5527_sota_hard_soft_panel_v2.json"
+}

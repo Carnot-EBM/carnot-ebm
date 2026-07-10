@@ -51,17 +51,17 @@ def main() -> int:
     game = "g50t"
     prior_levels = 2
     target_level = 3
-    budget = 24  # short, real-GPU-time-bounded smoke test
+    budget = 8  # short, real-GPU-time-bounded smoke test (observed ~5 tok/s on the shared warm server)
 
     gguf = LocalGGUFProposer()  # defaults: gemma-4-12B-it, GPU-enforced, fails loud
-    proposer = LLMStrategyProposer(completer=gguf, max_tokens=64)
+    proposer = LLMStrategyProposer(completer=gguf, max_tokens=40)
     router = SGECandidateRouter(
         proposer=proposer,
         game_id=game,
-        k=3,
-        temperatures=(0.3, 0.6, 0.9),
+        k=2,
+        temperatures=(0.4, 0.8),
         max_candidates=8,
-        reflect_every=6,
+        reflect_every=4,
     )
     generator = ActionDiverseLiveGenerator(max_candidates=8)
 
