@@ -29122,3 +29122,18 @@ Execution-time sweep after the `.499` planner refresh checked arXiv primary page
 - **Closed scope:** No closed scope was reopened. External logprob scorers, broad policy-gradient/RL/fine-tuning loops, duplicate ARC lanes, non-local TSU/Kona/Aleph execution claims, and hardware speedup claims without matched board timing remain closed.
 
 <!-- V499-EXECUTION-REFRESH-20260709-END -->
+
+## V502 Execution Refresh - 20260710
+
+Execution-time sweep after the `.502` planner refresh checked arXiv new/topic pages, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, local duplicate history, and the exclusion manifest. Only non-duplicate actionable deltas are listed below.
+
+### New actionable delta
+- **Answer Set Programming Energised! End-to-End Neurosymbolic Reasoning and Learning with ASP and Energy Based Models** (https://arxiv.org/abs/2607.08136): Add ASP declarative semantics and non-monotonic constraint rows to the deterministic finite-state exact fixture; reuse the same rows as richer sparse-FSM descriptors without reopening training or proprietary baselines. Primary V502 hook: exp5541-llm-fsm-exact-fixture. Secondary V502 hook: exp5545-gated-sparse-repair-fsm-descriptor-scale.
+
+### Execution impact
+- **Plan impact:** No active roadmap edit is required. The accepted ASP+EBM delta sharpens Exp5541's finite-state exact fixture and Exp5545's sparse FSM descriptor family without changing gate order.
+- **Duplicates suppressed:** LLM-FSM arXiv:2602.07032 is already the V502 planner finite-state exact fixture source and remains mapped to Exp5541.; Gram2Token is already the V502 planner grammar-table preflight source and remains mapped to Exp5539.; 2607.07026 constrained diffusion-LM finite automata was already filed in V499/V500 history and remains watch-only without a local diffusion backend.; Distributional EBMs, ConstrainPrompt, CRV, XGrammar, llguidance, and JSONSchemaBench were already covered by V500-V502 structured-output history.; EBT 2507.02092 and ARM-EBM 2512.15605 Semantic Scholar routes matched the planner context and did not create a stronger local dependency.; Extropic TSU/XTR/Z1 and Logical Intelligence Kona/Aleph public pages remain strategic non-local context with no executable Carnot baseline or speedup receipt.
+- **Closed scope:** No closed scope was reopened. Fine-tuning, external detector training, proprietary/non-local TSU or Kona execution, and hardware speedup claims without matched timing remain closed.
+- **Watch-only/excluded:** ReCoLoRA: Spectrum-Aware Recursive Consolidation for Continual LLM Fine-Tuning (excluded); Hallucination Self-Play (excluded); GRAPHEVAL / Graph Reasoning Coherence Score (watch-only); Game Theory Driven Multi-Agent Framework Mitigates Language Model Hallucination (excluded); Extropic TSU / XTR / Z1 writing (watch-only); Logical Intelligence Kona and Aleph public pages (watch-only)
+
+<!-- V502-EXECUTION-REFRESH-20260710-END -->
