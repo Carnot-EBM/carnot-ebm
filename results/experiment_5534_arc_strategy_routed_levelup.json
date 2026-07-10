@@ -1,0 +1,170 @@
+{
+  "action_entropy": 1.0,
+  "arc_live_levelup_ready": true,
+  "attempt_summary": {
+    "action_count": 46,
+    "failure_mode": "bounded_budget_no_target_level_reproduction",
+    "proposed_action_count": 235,
+    "reproduction_gate": {
+      "claimed_level": 2,
+      "game": "g50t",
+      "mode": "standard_reproduction_gate_not_run_no_new_target_candidate",
+      "reached_level": 2,
+      "reproduced": false
+    },
+    "strategy_switch_count": 0,
+    "suppression_events": 0
+  },
+  "attempts": 46,
+  "duration_s": 2.702068200800568,
+  "experiment": "experiment_5534_arc_strategy_routed_levelup",
+  "experiment_id": 5534,
+  "field_principles": {
+    "action_entropy": "Shannon entropy over executed live action/coordinate choices as a bare float.",
+    "arc_live_levelup_ready": "bare bool proving Exp5533 and registry reread allowed live runtime.",
+    "attempts": "bare int count of runtime actions executed by the live agent.",
+    "honest_verdict": "one-line verdict starting complete:, honest_null:, or blocked:.",
+    "inference_substrate": "must equal arc_live_agent_self_discovery.",
+    "llm_strategy_proposer_used": "bare bool; false means deterministic strategy templates were used and no GGUF tokenizer/model path was loaded.",
+    "model_specs": "allowed local-GGUF proposer specs recorded for audit; no model is invoked when llm_strategy_proposer_used=false.",
+    "offline_reproduced": "true only when the live-discovered trajectory passes the standard offline replay gate.",
+    "registry_delta": "bare int registry total delta; nonzero only when the live reproduction gate passes.",
+    "repeated_coordinate_rate": "fraction of executed live coordinate choices that repeated an earlier executed coordinate.",
+    "repeated_coordinate_suppression_events": "bare int count of candidate-router repeated-coordinate suppressions recorded during live selection.",
+    "reproduced_levels": "integer new levels banked from the live-discovered trajectory; success requires >=1.",
+    "salience_coverage_rate": "fraction of executed live coordinate choices covering proposed salience coordinates.",
+    "selected_game": "Exp5533-selected registry-safe game id; empty only when Exp5533 blocks before runtime.",
+    "selected_level": "Exp5533-selected adjacent frontier level label; duplicate targets block rather than rotate.",
+    "solve_provenance": "must equal live_agent_self_discovery.",
+    "strategy_portfolio_used": "bounded live-path-compatible strategy descriptors actually installed on the candidate router.",
+    "strategy_switch_count": "integer count of changes between executed strategy labels after repeated-coordinate suppression.",
+    "tests_added_or_reused": "list of focused tests that cover the Exp5534 schema, duplicate block, live routing trace, and registry gate.",
+    "trajectory_path": "path to the detailed trajectory log containing attempts, strategies, verifier routes, suppression events, and level changes."
+  },
+  "game_source_read": false,
+  "hand_built_per_game_adapter_used": false,
+  "honest_verdict": "honest_null: g50t L3 bounded_budget_no_target_level_reproduction; entropy=1.000; repeat_rate=0.000; registry_delta=0",
+  "inference_substrate": "arc_live_agent_self_discovery",
+  "llm_strategy_proposer_used": false,
+  "methodology_receipt": "bounded_live_runtime budget=48 mechanism=strategy_routed_live_agent gate=standard_reproduction prohibited_inputs=false",
+  "milestone": "2026.07.501",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "offline_bfs_used": false,
+  "offline_reproduced": false,
+  "post_levels_reproduced": 2,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "OPENCODE.md": true,
+    "exp5533_precheck_present": true,
+    "exp5533_ready": true,
+    "game_source_read": false,
+    "hand_built_per_game_adapter_used": false,
+    "llm_strategy_proposer_used": false,
+    "offline_arcade_available": true,
+    "offline_bfs_used": false,
+    "registry_present": true,
+    "spec_has_req_5534": true
+  },
+  "prior_levels_reproduced": 2,
+  "registry_after_levels": 69,
+  "registry_before_levels": 69,
+  "registry_delta": 0,
+  "registry_updated": false,
+  "repeated_coordinate_rate": 0.0,
+  "repeated_coordinate_suppression_events": 0,
+  "reproduced_levels": 0,
+  "result_path": "results/experiment_5534_arc_strategy_routed_levelup.json",
+  "salience_coverage_rate": 0.0,
+  "schema": "carnot.experiment_5534_arc_strategy_routed_levelup.v1",
+  "selected_game": "g50t",
+  "selected_level": "L3",
+  "selected_target_level": 3,
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5534",
+    "SCENARIO-ARC-FCP-5534"
+  ],
+  "status": "honest_null",
+  "strategy_portfolio_used": [
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "salience_first",
+      "principle": "try visually salient live candidates first without spending the whole budget on one coordinate.",
+      "score_field": "salience_score"
+    },
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "action_effect_memory",
+      "principle": "prefer candidates with observed or cached action-effect evidence.",
+      "score_field": "effect_score"
+    },
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "verifier_router_candidate_ranking",
+      "principle": "rank compatible candidates by verifier-style confidence with stable fallback order.",
+      "score_field": "verifier_score"
+    },
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "conservative_reset_reinduction",
+      "principle": "reserve a small budget for reset or reinduction-safe candidates after local evidence stalls.",
+      "score_field": "reset_score"
+    }
+  ],
+  "strategy_switch_count": 0,
+  "target_selection": {
+    "blocked": false,
+    "prior_levels_reproduced": 2,
+    "registry_before_levels": 69,
+    "selected_game": "g50t",
+    "selected_level": "L3",
+    "selection_reason": "exp5533_strategy_routed_target_survived_registry_reread",
+    "strategy_portfolio": [
+      {
+        "bound": 1,
+        "live_path_hook": "candidate_router.rank",
+        "name": "salience_first",
+        "principle": "try visually salient live candidates first without spending the whole budget on one coordinate.",
+        "score_field": "salience_score"
+      },
+      {
+        "bound": 1,
+        "live_path_hook": "candidate_router.rank",
+        "name": "action_effect_memory",
+        "principle": "prefer candidates with observed or cached action-effect evidence.",
+        "score_field": "effect_score"
+      },
+      {
+        "bound": 1,
+        "live_path_hook": "candidate_router.rank",
+        "name": "verifier_router_candidate_ranking",
+        "principle": "rank compatible candidates by verifier-style confidence with stable fallback order.",
+        "score_field": "verifier_score"
+      },
+      {
+        "bound": 1,
+        "live_path_hook": "candidate_router.rank",
+        "name": "conservative_reset_reinduction",
+        "principle": "reserve a small budget for reset or reinduction-safe candidates after local evidence stalls.",
+        "score_field": "reset_score"
+      }
+    ],
+    "target_level": 3
+  },
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5534_arc_strategy_routed_levelup.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5534_arc_strategy_routed_levelup.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5534_arc_strategy_routed_levelup.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "trajectory_path": "results/experiment_5534_arc_strategy_routed_levelup_trajectory.json"
+}

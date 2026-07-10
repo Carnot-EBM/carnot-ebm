@@ -637,5 +637,18 @@
     ".venv/bin/pytest tests/python/test_experiment_5533_arc_strategy_routing_precheck.py -q --no-cov",
     ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5533_arc_strategy_routing_precheck.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5533_arc_strategy_routing_precheck.py python/carnot/agentic/arc_bounded_strategy_router.py",
     ".venv/bin/pytest tests/python -q"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.07068435614928603 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
