@@ -1825,6 +1825,55 @@ Required field principles:
 - `inference_substrate`: principle "must equal arc_live_agent_self_discovery."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5533: Strategy-Routing Precheck Before Live Level-Up Attempt
+
+Experiment 5533 SHALL write
+`results/experiment_5533_arc_strategy_routing_precheck.json` before the next
+credit-bearing ARC live level-up attempt. The workflow SHALL read
+`ops/arc_solve_registry.yaml`, Exp5520, and Exp5521; select one adjacent
+frontier target whose target level is not already reproduced; and rotate away
+from the stale Exp5521 target when Exp5521 records a no-bank live attempt with
+repeated-coordinate collapse.
+
+The workflow SHALL configure a bounded, deterministic strategy portfolio with
+at least three live-path-compatible strategies, including salience-first,
+action-effect memory, verifier-router candidate ranking, or conservative
+reset/reinduction. The precheck SHALL verify that strategy routing is reachable
+through the live candidate-router hook and that repeated-coordinate suppression
+changes the candidate action selected before metrics are computed. It SHALL NOT
+inspect hidden game source, run exhaustive offline ground-truth BFS, build a
+hand per-game adapter, or claim a solve.
+
+The result artifact SHALL include `selected_game`, `selected_level`,
+`already_reproduced`, `registry_precheck_passed`, `strategy_portfolio`,
+`strategy_routing_live_path_reachable`,
+`repeated_coordinate_suppression_enabled`,
+`repeated_coordinate_rate_precheck`, `action_entropy_precheck`,
+`salience_coverage_rate_precheck`, `model_specs`,
+`llm_strategy_proposer_used`, `solve_provenance`,
+`arc_sge_candidate_ready`, `tests_added_or_reused`, `field_principles`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `selected_game`: principle "registry-safe game id selected for the next strategy-guided live attempt, or empty string when blocked."
+- `selected_level`: principle "adjacent unreproduced frontier level label; it must be deeper than the registry depth."
+- `already_reproduced`: principle "must be false for any ready artifact because duplicate live levels cannot satisfy the standing floor."
+- `registry_precheck_passed`: principle "bare bool proving the registry was read and the selected level is not already reproduced."
+- `strategy_portfolio`: principle "list of at least three bounded live-path-compatible strategy descriptors used before the attempt."
+- `strategy_routing_live_path_reachable`: principle "bare bool proving the router object reaches the live candidate-router hook used by E3AgentPolicy and graph exploration."
+- `repeated_coordinate_suppression_enabled`: principle "bare bool true only when repeated-coordinate suppression changes candidate selection before metrics."
+- `repeated_coordinate_rate_precheck`: principle "fraction of routed precheck coordinate choices repeating earlier coordinates after suppression."
+- `action_entropy_precheck`: principle "Shannon entropy over routed precheck action/coordinate choices as a bare float."
+- `salience_coverage_rate_precheck`: principle "fraction of salience candidate coordinates covered by routed precheck choices."
+- `model_specs`: principle "allowed local-GGUF proposer specs recorded for audit; no model is invoked when llm_strategy_proposer_used=false."
+- `llm_strategy_proposer_used`: principle "bare bool; false means deterministic strategy templates were used and no GGUF tokenizer/model path was loaded."
+- `solve_provenance`: principle "must equal live_agent_self_discovery."
+- `arc_sge_candidate_ready`: principle "bare bool true only when target, strategy routing, suppression, and metric gates pass."
+- `tests_added_or_reused`: principle "list of focused tests that cover the Exp5533 schema, target rotation, live routing hook, and suppression evidence."
+- `inference_substrate`: principle "must equal arc_live_path_precheck_no_solve_claim."
+- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-5508: Classical Perception Generation Is Runtime-Grounded
@@ -2587,3 +2636,25 @@ Then `offline_reproduced=true`, `reproduced_levels>=1`,
 `banking_gate=true`, `registry_delta` equals `reproduced_levels`, and the
 artifact records the exact reproduction command used for the live-discovered
 trajectory.
+
+### SCENARIO-ARC-FCP-5533: Strategy-Routing Precheck Selects A Non-Stale Live Target
+
+Given Exp5521 selected `sb26:L3` but banked no level and recorded repeated
+coordinate collapse
+And the registry records multiple adjacent unreproduced frontier targets
+When experiment 5533 runs the strategy-routing precheck
+Then it rejects the stale Exp5521 target, selects one non-duplicate adjacent
+frontier target, records a bounded strategy portfolio with at least three
+strategies, proves the strategy router is reachable through the live candidate
+router hook, and writes
+`results/experiment_5533_arc_strategy_routing_precheck.json` without a solve
+claim.
+
+Given repeated candidate coordinates would otherwise be selected by multiple
+strategies
+When experiment 5533 applies repeated-coordinate suppression
+Then the selected action sequence changes before diversity metrics are
+computed, `repeated_coordinate_suppression_enabled=true`,
+`repeated_coordinate_rate_precheck` is lower than the unsuppressed route, and
+`arc_sge_candidate_ready=true` only when target, routing, suppression, and
+metric gates pass.
