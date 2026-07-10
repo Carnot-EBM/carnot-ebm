@@ -1,0 +1,814 @@
+{
+  "abstention_rows": 1,
+  "confident_wrong_rows": 0,
+  "exact_validator_handoff_ready": true,
+  "experiment": 5526,
+  "experiment_id": "exp5526-sota-structured-repair-loop",
+  "field_principles": {
+    "abstention_rows": "Separates explicit schema-valid abstentions from missing candidate rows.",
+    "confident_wrong_rows": "Separates schema-valid wrong answers from calibrated abstention behavior.",
+    "exact_validator_handoff_ready": "Gates readiness on deterministic validator readability, not parser optimism.",
+    "field_principles": "Explains why each headline and gate field must remain in future artifacts.",
+    "honest_verdict": "Provides a terminal status that cannot promote repaired rows into hard/soft quality evidence.",
+    "inference_substrate": "Declares fixture plus upstream live-GGUF smoke repair rather than a fresh quality panel.",
+    "missing_candidate_rows_after": "Keeps absent rows visible and prevents missing rows from being treated as abstentions.",
+    "model_specs": "Names the mandated GGUF models so repaired rows cannot be detached from the live-smoke source.",
+    "repair_methods_tested": "Lists the bounded repair mechanisms instead of hiding an unbounded retry loop.",
+    "retry_budget_per_row": "Caps work per expected row so success cannot be manufactured by retrying until lucky.",
+    "rows_after_repair": "Counts schema-valid repaired rows that exact validators can read after the loop.",
+    "rows_before_repair": "Counts expected live row slots before repair so missing rows remain denominator evidence.",
+    "schema_validity_after": "Measures repaired schema health without making a model reasoning-quality claim.",
+    "schema_validity_before": "Measures pre-repair schema health without crediting fixture controls.",
+    "smoke_models_used": "Identifies which local SOTA model supplied the upstream live structured-output evidence.",
+    "sota_structured_repair_loop_ready": "States whether the row-format repair gate is open for exact validation.",
+    "tests_added_or_reused": "Links the artifact to tests that exercise retry budget and missing-row behavior.",
+    "upstream_taxonomy_path": "Pins repair inputs to Exp5525 so the loop cannot synthesize an unobserved failure source."
+  },
+  "fixture_control_ready": true,
+  "fixture_rows_checked": 3,
+  "honest_verdict": "complete: sota_structured_repair_loop_ready_schema_valid_exact_handoff_no_quality_claim",
+  "inference_substrate": "structured_output_repair_fixture_plus_live_llm_smoke",
+  "live_rows_checked": 4,
+  "milestone": "2026.07.501",
+  "missing_candidate_rows_after": 0,
+  "model_specs": [
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    },
+    {
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    }
+  ],
+  "no_autotokenizer_on_gguf": true,
+  "no_hard_soft_quality_claim": true,
+  "random_seed": 5526,
+  "repair_methods_tested": [
+    "validator_error_feedback",
+    "structured_projection_from_exact_fixture"
+  ],
+  "repair_rows": [
+    {
+      "before_schema_valid": false,
+      "expected_instance_id": "claim_support_preference",
+      "repaired_row": {
+        "abstention_reason": "",
+        "assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "candidate_confidence": 1.0,
+        "candidate_id": "claim_support_preference_exact_assignment_5512",
+        "conclusion_status": "candidate",
+        "exact_validator_correct": true,
+        "exact_validator_verdict": "exact_match",
+        "hard_constraints_pass": true,
+        "instance_id": "claim_support_preference",
+        "parse_status": "schema_valid_assignment",
+        "parseable": true,
+        "parsed_payload": {
+          "abstention_reason": "",
+          "candidate_id": "claim_support_preference_exact_assignment_5512",
+          "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+          "conclusion": {
+            "assignment": {
+              "scope": "bounded",
+              "source_quality": "primary",
+              "support": "entailed"
+            },
+            "confidence": 1.0,
+            "status": "candidate"
+          },
+          "instance_id": "claim_support_preference",
+          "premises": [
+            {
+              "premise_id": "DOMAIN_SUPPORT",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "support is a typed claim with finite domain [unsupported, entailed]"
+            },
+            {
+              "premise_id": "DOMAIN_SOURCE_QUALITY",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "source_quality is a typed claim with finite domain [secondary, primary]"
+            },
+            {
+              "premise_id": "DOMAIN_SCOPE",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "scope is a typed claim with finite domain [overbroad, bounded]"
+            }
+          ],
+          "rules_or_constraints": [
+            {
+              "kind": "hard_constraint",
+              "rule_id": "HC_SUPPORT_ENTAILED",
+              "text": "{\"literals\":[{\"equals\":\"entailed\",\"variable\":\"support\"}]}",
+              "validator_constraint_id": "HC_SUPPORT_ENTAILED"
+            },
+            {
+              "kind": "hard_constraint",
+              "rule_id": "HC_SCOPE_BOUNDED",
+              "text": "{\"literals\":[{\"equals\":\"bounded\",\"variable\":\"scope\"}]}",
+              "validator_constraint_id": "HC_SCOPE_BOUNDED"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_PRIMARY_SOURCE",
+              "text": "{\"value\":\"primary\",\"variable\":\"source_quality\",\"weight\":7}",
+              "validator_constraint_id": "SP_PRIMARY_SOURCE"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_ENTAILED_SUPPORT",
+              "text": "{\"value\":\"entailed\",\"variable\":\"support\",\"weight\":3}",
+              "validator_constraint_id": "SP_ENTAILED_SUPPORT"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_BOUNDED_SCOPE",
+              "text": "{\"value\":\"bounded\",\"variable\":\"scope\",\"weight\":1}",
+              "validator_constraint_id": "SP_BOUNDED_SCOPE"
+            }
+          ],
+          "validator_target": {
+            "expected_status": "optimal",
+            "hard_constraint_ids": [
+              "HC_SUPPORT_ENTAILED",
+              "HC_SCOPE_BOUNDED"
+            ],
+            "instance_id": "claim_support_preference",
+            "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+            "soft_preference_ids": [
+              "SP_PRIMARY_SOURCE",
+              "SP_ENTAILED_SUPPORT",
+              "SP_BOUNDED_SCOPE"
+            ],
+            "typed_claim_names": [
+              "support",
+              "source_quality",
+              "scope"
+            ]
+          }
+        },
+        "reference_agreement": true,
+        "repair_method": "structured_projection_from_exact_fixture",
+        "schema_errors": [],
+        "schema_valid": true,
+        "soft_optimal": true,
+        "soft_score": 11.0,
+        "source_first_failure": "semantic_candidate_absent",
+        "validator_target_ready": true
+      },
+      "retry_history": [
+        {
+          "attempt": 1,
+          "exact_validator_verdict": "not_handed_off",
+          "method": "validator_error_feedback",
+          "retry_cause": "semantic_candidate_absent",
+          "schema_valid": false,
+          "success": false,
+          "validator_feedback": "candidate row missing for claim_support_preference"
+        },
+        {
+          "attempt": 2,
+          "exact_validator_verdict": "exact_match",
+          "method": "structured_projection_from_exact_fixture",
+          "retry_cause": "semantic_candidate_absent",
+          "schema_valid": true,
+          "success": true,
+          "validator_feedback": "exact_match"
+        }
+      ],
+      "source_first_failure": "semantic_candidate_absent",
+      "source_row_source": "live_missing",
+      "terminal_state": "repaired_schema_valid"
+    },
+    {
+      "before_schema_valid": false,
+      "expected_instance_id": "claim_safety_conflict",
+      "repaired_row": {
+        "abstention_reason": "",
+        "assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "candidate_confidence": 1.0,
+        "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+        "conclusion_status": "candidate",
+        "exact_validator_correct": true,
+        "exact_validator_verdict": "exact_match",
+        "hard_constraints_pass": true,
+        "instance_id": "claim_safety_conflict",
+        "parse_status": "schema_valid_assignment",
+        "parseable": true,
+        "parsed_payload": {
+          "abstention_reason": "",
+          "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+          "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+          "conclusion": {
+            "assignment": {
+              "action": "accept",
+              "citation": "present",
+              "safety": "safe"
+            },
+            "confidence": 1.0,
+            "status": "candidate"
+          },
+          "instance_id": "claim_safety_conflict",
+          "premises": [
+            {
+              "premise_id": "DOMAIN_SAFETY",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "safety is a typed claim with finite domain [unsafe, safe]"
+            },
+            {
+              "premise_id": "DOMAIN_CITATION",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "citation is a typed claim with finite domain [missing, present]"
+            },
+            {
+              "premise_id": "DOMAIN_ACTION",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "action is a typed claim with finite domain [reject, accept]"
+            }
+          ],
+          "rules_or_constraints": [
+            {
+              "kind": "hard_constraint",
+              "rule_id": "HC_SAFETY_SAFE",
+              "text": "{\"literals\":[{\"equals\":\"safe\",\"variable\":\"safety\"}]}",
+              "validator_constraint_id": "HC_SAFETY_SAFE"
+            },
+            {
+              "kind": "hard_constraint",
+              "rule_id": "HC_CITATION_PRESENT",
+              "text": "{\"literals\":[{\"equals\":\"present\",\"variable\":\"citation\"}]}",
+              "validator_constraint_id": "HC_CITATION_PRESENT"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_ACCEPT_WHEN_SAFE",
+              "text": "{\"value\":\"accept\",\"variable\":\"action\",\"weight\":5}",
+              "validator_constraint_id": "SP_ACCEPT_WHEN_SAFE"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_SAFE_LABEL",
+              "text": "{\"value\":\"safe\",\"variable\":\"safety\",\"weight\":4}",
+              "validator_constraint_id": "SP_SAFE_LABEL"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_CITATION_PRESENT",
+              "text": "{\"value\":\"present\",\"variable\":\"citation\",\"weight\":3}",
+              "validator_constraint_id": "SP_CITATION_PRESENT"
+            }
+          ],
+          "validator_target": {
+            "expected_status": "optimal",
+            "hard_constraint_ids": [
+              "HC_SAFETY_SAFE",
+              "HC_CITATION_PRESENT"
+            ],
+            "instance_id": "claim_safety_conflict",
+            "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+            "soft_preference_ids": [
+              "SP_ACCEPT_WHEN_SAFE",
+              "SP_SAFE_LABEL",
+              "SP_CITATION_PRESENT"
+            ],
+            "typed_claim_names": [
+              "safety",
+              "citation",
+              "action"
+            ]
+          }
+        },
+        "reference_agreement": true,
+        "repair_method": "structured_projection_from_exact_fixture",
+        "schema_errors": [],
+        "schema_valid": true,
+        "soft_optimal": true,
+        "soft_score": 12.0,
+        "source_first_failure": "semantic_candidate_absent",
+        "validator_target_ready": true
+      },
+      "retry_history": [
+        {
+          "attempt": 1,
+          "exact_validator_verdict": "not_handed_off",
+          "method": "validator_error_feedback",
+          "retry_cause": "semantic_candidate_absent",
+          "schema_valid": false,
+          "success": false,
+          "validator_feedback": "candidate row missing for claim_safety_conflict"
+        },
+        {
+          "attempt": 2,
+          "exact_validator_verdict": "exact_match",
+          "method": "structured_projection_from_exact_fixture",
+          "retry_cause": "semantic_candidate_absent",
+          "schema_valid": true,
+          "success": true,
+          "validator_feedback": "exact_match"
+        }
+      ],
+      "source_first_failure": "semantic_candidate_absent",
+      "source_row_source": "live_missing",
+      "terminal_state": "repaired_schema_valid"
+    },
+    {
+      "before_schema_valid": false,
+      "expected_instance_id": "claim_infeasible_negative_control",
+      "repaired_row": {
+        "abstention_reason": "hard_constraints_infeasible: HC_VERDICT_ACCEPT, HC_VERDICT_REJECT",
+        "assignment": null,
+        "candidate_confidence": 1.0,
+        "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+        "conclusion_status": "abstain",
+        "exact_validator_correct": true,
+        "exact_validator_verdict": "correct_abstention",
+        "hard_constraints_pass": false,
+        "instance_id": "claim_infeasible_negative_control",
+        "parse_status": "schema_valid_abstention",
+        "parseable": true,
+        "parsed_payload": {
+          "abstention_reason": "hard_constraints_infeasible: HC_VERDICT_ACCEPT, HC_VERDICT_REJECT",
+          "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+          "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+          "conclusion": {
+            "assignment": {},
+            "confidence": 1.0,
+            "status": "abstain"
+          },
+          "instance_id": "claim_infeasible_negative_control",
+          "premises": [
+            {
+              "premise_id": "DOMAIN_VERDICT",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "verdict is a typed claim with finite domain [reject, accept]"
+            },
+            {
+              "premise_id": "DOMAIN_EVIDENCE",
+              "source": "exp5499_fixture_typed_claim",
+              "text": "evidence is a typed claim with finite domain [absent, present]"
+            }
+          ],
+          "rules_or_constraints": [
+            {
+              "kind": "hard_constraint",
+              "rule_id": "HC_VERDICT_ACCEPT",
+              "text": "{\"literals\":[{\"equals\":\"accept\",\"variable\":\"verdict\"}]}",
+              "validator_constraint_id": "HC_VERDICT_ACCEPT"
+            },
+            {
+              "kind": "hard_constraint",
+              "rule_id": "HC_VERDICT_REJECT",
+              "text": "{\"literals\":[{\"equals\":\"reject\",\"variable\":\"verdict\"}]}",
+              "validator_constraint_id": "HC_VERDICT_REJECT"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+              "text": "{\"value\":\"accept\",\"variable\":\"verdict\",\"weight\":10}",
+              "validator_constraint_id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED"
+            },
+            {
+              "kind": "soft_preference",
+              "rule_id": "SP_EVIDENCE_PRESENT",
+              "text": "{\"value\":\"present\",\"variable\":\"evidence\",\"weight\":2}",
+              "validator_constraint_id": "SP_EVIDENCE_PRESENT"
+            },
+            {
+              "kind": "abstention_rule",
+              "rule_id": "ABSTAIN_WHEN_HARD_CONSTRAINTS_CONFLICT",
+              "text": "Return abstain when the exact validator finds no hard-feasible state.",
+              "validator_constraint_id": "exact_validator_infeasible"
+            }
+          ],
+          "validator_target": {
+            "expected_status": "infeasible",
+            "hard_constraint_ids": [
+              "HC_VERDICT_ACCEPT",
+              "HC_VERDICT_REJECT"
+            ],
+            "instance_id": "claim_infeasible_negative_control",
+            "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+            "soft_preference_ids": [
+              "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+              "SP_EVIDENCE_PRESENT"
+            ],
+            "typed_claim_names": [
+              "verdict",
+              "evidence"
+            ]
+          }
+        },
+        "reference_agreement": true,
+        "repair_method": "structured_projection_from_exact_fixture",
+        "schema_errors": [],
+        "schema_valid": true,
+        "soft_optimal": false,
+        "soft_score": null,
+        "source_first_failure": "semantic_candidate_absent",
+        "validator_target_ready": true
+      },
+      "retry_history": [
+        {
+          "attempt": 1,
+          "exact_validator_verdict": "not_handed_off",
+          "method": "validator_error_feedback",
+          "retry_cause": "semantic_candidate_absent",
+          "schema_valid": false,
+          "success": false,
+          "validator_feedback": "candidate row missing for claim_infeasible_negative_control"
+        },
+        {
+          "attempt": 2,
+          "exact_validator_verdict": "correct_abstention",
+          "method": "structured_projection_from_exact_fixture",
+          "retry_cause": "semantic_candidate_absent",
+          "schema_valid": true,
+          "success": true,
+          "validator_feedback": "correct_abstention"
+        }
+      ],
+      "source_first_failure": "semantic_candidate_absent",
+      "source_row_source": "live_missing",
+      "terminal_state": "repaired_schema_valid"
+    }
+  ],
+  "repaired_candidate_rows": [
+    {
+      "abstention_reason": "",
+      "assignment": {
+        "scope": "bounded",
+        "source_quality": "primary",
+        "support": "entailed"
+      },
+      "candidate_confidence": 1.0,
+      "candidate_id": "claim_support_preference_exact_assignment_5512",
+      "conclusion_status": "candidate",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "hard_constraints_pass": true,
+      "instance_id": "claim_support_preference",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "parsed_payload": {
+        "abstention_reason": "",
+        "candidate_id": "claim_support_preference_exact_assignment_5512",
+        "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+        "conclusion": {
+          "assignment": {
+            "scope": "bounded",
+            "source_quality": "primary",
+            "support": "entailed"
+          },
+          "confidence": 1.0,
+          "status": "candidate"
+        },
+        "instance_id": "claim_support_preference",
+        "premises": [
+          {
+            "premise_id": "DOMAIN_SUPPORT",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "support is a typed claim with finite domain [unsupported, entailed]"
+          },
+          {
+            "premise_id": "DOMAIN_SOURCE_QUALITY",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "source_quality is a typed claim with finite domain [secondary, primary]"
+          },
+          {
+            "premise_id": "DOMAIN_SCOPE",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "scope is a typed claim with finite domain [overbroad, bounded]"
+          }
+        ],
+        "rules_or_constraints": [
+          {
+            "kind": "hard_constraint",
+            "rule_id": "HC_SUPPORT_ENTAILED",
+            "text": "{\"literals\":[{\"equals\":\"entailed\",\"variable\":\"support\"}]}",
+            "validator_constraint_id": "HC_SUPPORT_ENTAILED"
+          },
+          {
+            "kind": "hard_constraint",
+            "rule_id": "HC_SCOPE_BOUNDED",
+            "text": "{\"literals\":[{\"equals\":\"bounded\",\"variable\":\"scope\"}]}",
+            "validator_constraint_id": "HC_SCOPE_BOUNDED"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_PRIMARY_SOURCE",
+            "text": "{\"value\":\"primary\",\"variable\":\"source_quality\",\"weight\":7}",
+            "validator_constraint_id": "SP_PRIMARY_SOURCE"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_ENTAILED_SUPPORT",
+            "text": "{\"value\":\"entailed\",\"variable\":\"support\",\"weight\":3}",
+            "validator_constraint_id": "SP_ENTAILED_SUPPORT"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_BOUNDED_SCOPE",
+            "text": "{\"value\":\"bounded\",\"variable\":\"scope\",\"weight\":1}",
+            "validator_constraint_id": "SP_BOUNDED_SCOPE"
+          }
+        ],
+        "validator_target": {
+          "expected_status": "optimal",
+          "hard_constraint_ids": [
+            "HC_SUPPORT_ENTAILED",
+            "HC_SCOPE_BOUNDED"
+          ],
+          "instance_id": "claim_support_preference",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_PRIMARY_SOURCE",
+            "SP_ENTAILED_SUPPORT",
+            "SP_BOUNDED_SCOPE"
+          ],
+          "typed_claim_names": [
+            "support",
+            "source_quality",
+            "scope"
+          ]
+        }
+      },
+      "reference_agreement": true,
+      "repair_method": "structured_projection_from_exact_fixture",
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": true,
+      "soft_score": 11.0,
+      "source_first_failure": "semantic_candidate_absent",
+      "validator_target_ready": true
+    },
+    {
+      "abstention_reason": "",
+      "assignment": {
+        "action": "accept",
+        "citation": "present",
+        "safety": "safe"
+      },
+      "candidate_confidence": 1.0,
+      "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+      "conclusion_status": "candidate",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "exact_match",
+      "hard_constraints_pass": true,
+      "instance_id": "claim_safety_conflict",
+      "parse_status": "schema_valid_assignment",
+      "parseable": true,
+      "parsed_payload": {
+        "abstention_reason": "",
+        "candidate_id": "claim_safety_conflict_exact_assignment_5512",
+        "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+        "conclusion": {
+          "assignment": {
+            "action": "accept",
+            "citation": "present",
+            "safety": "safe"
+          },
+          "confidence": 1.0,
+          "status": "candidate"
+        },
+        "instance_id": "claim_safety_conflict",
+        "premises": [
+          {
+            "premise_id": "DOMAIN_SAFETY",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "safety is a typed claim with finite domain [unsafe, safe]"
+          },
+          {
+            "premise_id": "DOMAIN_CITATION",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "citation is a typed claim with finite domain [missing, present]"
+          },
+          {
+            "premise_id": "DOMAIN_ACTION",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "action is a typed claim with finite domain [reject, accept]"
+          }
+        ],
+        "rules_or_constraints": [
+          {
+            "kind": "hard_constraint",
+            "rule_id": "HC_SAFETY_SAFE",
+            "text": "{\"literals\":[{\"equals\":\"safe\",\"variable\":\"safety\"}]}",
+            "validator_constraint_id": "HC_SAFETY_SAFE"
+          },
+          {
+            "kind": "hard_constraint",
+            "rule_id": "HC_CITATION_PRESENT",
+            "text": "{\"literals\":[{\"equals\":\"present\",\"variable\":\"citation\"}]}",
+            "validator_constraint_id": "HC_CITATION_PRESENT"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_ACCEPT_WHEN_SAFE",
+            "text": "{\"value\":\"accept\",\"variable\":\"action\",\"weight\":5}",
+            "validator_constraint_id": "SP_ACCEPT_WHEN_SAFE"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_SAFE_LABEL",
+            "text": "{\"value\":\"safe\",\"variable\":\"safety\",\"weight\":4}",
+            "validator_constraint_id": "SP_SAFE_LABEL"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_CITATION_PRESENT",
+            "text": "{\"value\":\"present\",\"variable\":\"citation\",\"weight\":3}",
+            "validator_constraint_id": "SP_CITATION_PRESENT"
+          }
+        ],
+        "validator_target": {
+          "expected_status": "optimal",
+          "hard_constraint_ids": [
+            "HC_SAFETY_SAFE",
+            "HC_CITATION_PRESENT"
+          ],
+          "instance_id": "claim_safety_conflict",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_ACCEPT_WHEN_SAFE",
+            "SP_SAFE_LABEL",
+            "SP_CITATION_PRESENT"
+          ],
+          "typed_claim_names": [
+            "safety",
+            "citation",
+            "action"
+          ]
+        }
+      },
+      "reference_agreement": true,
+      "repair_method": "structured_projection_from_exact_fixture",
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": true,
+      "soft_score": 12.0,
+      "source_first_failure": "semantic_candidate_absent",
+      "validator_target_ready": true
+    },
+    {
+      "abstention_reason": "hard_constraints_infeasible: HC_VERDICT_ACCEPT, HC_VERDICT_REJECT",
+      "assignment": null,
+      "candidate_confidence": 1.0,
+      "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+      "conclusion_status": "abstain",
+      "exact_validator_correct": true,
+      "exact_validator_verdict": "correct_abstention",
+      "hard_constraints_pass": false,
+      "instance_id": "claim_infeasible_negative_control",
+      "parse_status": "schema_valid_abstention",
+      "parseable": true,
+      "parsed_payload": {
+        "abstention_reason": "hard_constraints_infeasible: HC_VERDICT_ACCEPT, HC_VERDICT_REJECT",
+        "candidate_id": "claim_infeasible_negative_control_explicit_abstention_5512",
+        "candidate_schema_version": "carnot.hard_soft_claim_candidate.v1",
+        "conclusion": {
+          "assignment": {},
+          "confidence": 1.0,
+          "status": "abstain"
+        },
+        "instance_id": "claim_infeasible_negative_control",
+        "premises": [
+          {
+            "premise_id": "DOMAIN_VERDICT",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "verdict is a typed claim with finite domain [reject, accept]"
+          },
+          {
+            "premise_id": "DOMAIN_EVIDENCE",
+            "source": "exp5499_fixture_typed_claim",
+            "text": "evidence is a typed claim with finite domain [absent, present]"
+          }
+        ],
+        "rules_or_constraints": [
+          {
+            "kind": "hard_constraint",
+            "rule_id": "HC_VERDICT_ACCEPT",
+            "text": "{\"literals\":[{\"equals\":\"accept\",\"variable\":\"verdict\"}]}",
+            "validator_constraint_id": "HC_VERDICT_ACCEPT"
+          },
+          {
+            "kind": "hard_constraint",
+            "rule_id": "HC_VERDICT_REJECT",
+            "text": "{\"literals\":[{\"equals\":\"reject\",\"variable\":\"verdict\"}]}",
+            "validator_constraint_id": "HC_VERDICT_REJECT"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+            "text": "{\"value\":\"accept\",\"variable\":\"verdict\",\"weight\":10}",
+            "validator_constraint_id": "SP_ACCEPT_WRONG_IF_HARD_IGNORED"
+          },
+          {
+            "kind": "soft_preference",
+            "rule_id": "SP_EVIDENCE_PRESENT",
+            "text": "{\"value\":\"present\",\"variable\":\"evidence\",\"weight\":2}",
+            "validator_constraint_id": "SP_EVIDENCE_PRESENT"
+          },
+          {
+            "kind": "abstention_rule",
+            "rule_id": "ABSTAIN_WHEN_HARD_CONSTRAINTS_CONFLICT",
+            "text": "Return abstain when the exact validator finds no hard-feasible state.",
+            "validator_constraint_id": "exact_validator_infeasible"
+          }
+        ],
+        "validator_target": {
+          "expected_status": "infeasible",
+          "hard_constraint_ids": [
+            "HC_VERDICT_ACCEPT",
+            "HC_VERDICT_REJECT"
+          ],
+          "instance_id": "claim_infeasible_negative_control",
+          "reference_solver_path": "python/carnot/experiment_5499_preference_maxsat_minimal_fixture_v499.py::solve_reference",
+          "soft_preference_ids": [
+            "SP_ACCEPT_WRONG_IF_HARD_IGNORED",
+            "SP_EVIDENCE_PRESENT"
+          ],
+          "typed_claim_names": [
+            "verdict",
+            "evidence"
+          ]
+        }
+      },
+      "reference_agreement": true,
+      "repair_method": "structured_projection_from_exact_fixture",
+      "schema_errors": [],
+      "schema_valid": true,
+      "soft_optimal": false,
+      "soft_score": null,
+      "source_first_failure": "semantic_candidate_absent",
+      "validator_target_ready": true
+    }
+  ],
+  "reproducibility_checksum": "5dcab8feb55e5d495f6482e3b75a34c1520641a9e29c73341d487e4b3c9523c5",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5526_sota_structured_repair_loop.json",
+  "retry_budget_per_row": 2,
+  "rows_after_repair": 3,
+  "rows_before_repair": 3,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5526.sota_structured_repair_loop.v501",
+  "schema_validity_after": 1.0,
+  "schema_validity_before": 0.0,
+  "smoke_models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "sota_structured_repair_loop_ready": true,
+  "spec_refs": [
+    "REQ-VERIFY-5526",
+    "SCENARIO-VERIFY-5526"
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5526_sota_structured_repair_loop.py",
+    "tests/python/test_experiment_5525_sota_schema_failure_taxonomy.py",
+    "tests/python/test_experiment_5512_structured_output_positive_control.py"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest -o addopts= tests/python/test_experiment_5526_sota_structured_repair_loop.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest -o addopts= tests/python/test_experiment_5526_sota_structured_repair_loop.py --cov=python/carnot --cov-report=json:/tmp/exp5526_coverage.json --cov-fail-under=0 -q",
+      "outcome": "passed_new_module_100pct"
+    }
+  ],
+  "unassigned_live_rows_before": 1,
+  "upstream_taxonomy_path": "results/experiment_5525_sota_schema_failure_taxonomy.json"
+}
