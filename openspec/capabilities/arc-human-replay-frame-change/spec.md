@@ -1744,6 +1744,48 @@ Required field principles:
 - `inference_substrate`: principle "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5520: Action-Diversity Target Precheck
+
+Experiment 5520 SHALL write
+`results/experiment_5520_arc_action_diversity_target_precheck.json` before the
+next live ARC level-up attempt spends credit-bearing budget. The workflow SHALL
+read `ops/arc_solve_registry.yaml` and the Exp5508 live perception-generation
+artifact, reject any candidate whose target level is already reproduced by the
+registry, and reject the Exp5508 repeated coordinate/action pattern as a target
+or mechanism reuse.
+
+The workflow SHALL configure a live-path candidate-generator change based on
+connected-component/color-blob salience plus repeated-coordinate suppression,
+target rotation, action entropy, or salience coverage. It SHALL measure that
+changed path through a dry-run or limited no-credit probe only; the probe SHALL
+NOT run offline ground-truth BFS, use a hand per-game adapter, or claim solve
+credit. A target SHALL be selected only when the probe shows a meaningfully
+different action-diversity path from Exp5508.
+
+The result artifact SHALL include `registry_precheck_done`, `selected_game`,
+`selected_level`, `already_reproduced`, `exp5508_pattern_reused`,
+`candidate_generator_changes`, `action_entropy`,
+`repeated_coordinate_rate`, `salience_coverage_rate`,
+`no_credit_probe_attempts`, `arc_levelup_candidate_ready`,
+`solve_provenance`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `registry_precheck_done`: principle "bare bool proving ops/arc_solve_registry.yaml was checked before target selection."
+- `selected_game`: principle "one registry-safe game id selected for the next live level-up attempt, or empty string when blocked."
+- `selected_level`: principle "next unreproduced target level as a string or bare int; it must be strictly deeper than the registry depth."
+- `already_reproduced`: principle "must be false for any ready artifact."
+- `exp5508_pattern_reused`: principle "must be false; Exp5508's repeated ACTION6 coordinate loop cannot be reused."
+- `candidate_generator_changes`: principle "non-empty list naming live-path generation changes such as repeated-coordinate suppression, target rotation, action entropy gating, or salience coverage."
+- `action_entropy`: principle "Shannon entropy over dry-run action/coordinate choices as a bare float."
+- `repeated_coordinate_rate`: principle "fraction of dry-run consecutive coordinate choices that repeat a prior coordinate, as a bare float."
+- `salience_coverage_rate`: principle "fraction of dry-run choices covering distinct salience candidates, as a bare float."
+- `no_credit_probe_attempts`: principle "bare int count of no-credit dry-run choices measured before the live attempt."
+- `arc_levelup_candidate_ready`: principle "bare bool true only when registry and Exp5508-pattern gates pass and the diversity metrics meet threshold."
+- `solve_provenance`: principle "must equal live_agent_self_discovery."
+- `inference_substrate`: principle "must equal arc_live_precheck."
+- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-5508: Classical Perception Generation Is Runtime-Grounded
@@ -2458,3 +2500,23 @@ When experiment 5507 builds its artifact
 Then it leaves `selected_game`, `selected_level`, and `selected_mechanism`
 empty, sets `levelup_attempt_ready=false`, keeps `solve_claimed=false`, and
 uses a `blocked:` honest verdict with exact reasons.
+
+### SCENARIO-ARC-FCP-5520: Action-Diversity Precheck Selects Changed Target
+
+Given Exp5508 repeatedly chose ACTION6 at the same small coordinate set and did
+not bank a new level
+And the registry records the Exp5508 target depth but has a different candidate
+game with an unreproduced next level
+When experiment 5520 runs the no-credit action-diversity precheck
+Then it rejects the Exp5508 target/pattern, rotates to one registry-safe target,
+measures action entropy, repeated-coordinate rate, and salience coverage from
+the changed live-path candidate generator, and writes
+`results/experiment_5520_arc_action_diversity_target_precheck.json` without a
+solve claim.
+
+Given the registry already reproduces the candidate level or the dry-run probe
+collapses to the Exp5508 repeated-coordinate pattern
+When experiment 5520 validates the artifact
+Then `arc_levelup_candidate_ready=false`, `already_reproduced` or
+`exp5508_pattern_reused` records the blocker, and `honest_verdict` starts with
+`blocked:`.
