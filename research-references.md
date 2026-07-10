@@ -29223,3 +29223,18 @@ items below are the non-duplicate or newly actionable planning consequences.
   level-up attempt with `solve_provenance=live_agent_self_discovery`.
 
 <!-- V503-PLANNER-REFRESH-20260710-END -->
+
+## V503 Execution Refresh - 20260710
+
+Execution-time sweep after the `.503` planner refresh checked arXiv primary pages, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, local duplicate history, and the exclusion manifest. Only non-duplicate actionable deltas are listed below.
+
+### New actionable delta
+- **ClassicLogic: A Knowledge-Driven Benchmark of Classic Puzzle Games for Evaluating Compositional Generalization** (arXiv:2607.05185, https://arxiv.org/abs/2607.05185; code https://github.com/mahnoor-shahid/classic_games_benchmark): Use the hierarchical strategy knowledge base as fixture metadata for Exp5555 ASP/FSM exact rows and as non-ARC puzzle-strategy sanity context for Exp5561 ARC target rotation. Do not import it as a benchmark claim, training dependency, or ARC solve substitute.
+
+### Execution impact
+- **Plan impact:** No roadmap edit is required. The accepted delta sharpens exact fixture and ARC target-rotation inputs without changing gate order.
+- **Duplicates suppressed:** ASP+EBM, P-GCD, NOVA, Memory for Autonomous LLM Agents, Gram2Token, schoolmarm, EBT, ARM-EBM, CodeSpear, AgentCL, KAN verification, Ising FPGA, p-bit hardware, Extropic, and Logical Intelligence context were already covered or stayed watch-only.
+- **Closed scope:** No closed scope was reopened. External text scorers, memory RL/fine-tuning, proprietary TSU/Kona/Aleph execution, and hardware speedup claims without matched timing remain closed.
+- **Watch-only/excluded:** Extropic TSU/XTR/Z1 writing, Logical Intelligence Kona/Aleph pages, and memory-evolution RL/fine-tuning surfaces were checked but not promoted as executable `.503` dependencies.
+
+<!-- V503-EXECUTION-REFRESH-20260710-END -->

@@ -40005,3 +40005,93 @@ available evidence visible, keeps `roadmap_yaml_unchanged` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5550 | Implemented (`python/carnot/experiment_5550_transition_v503.py`, `results/experiment_5550_transition_v503.json`) | Implemented (`tests/python/test_experiment_5550_transition_v503.py`) |
+
+### REQ-REPORT-5551: Ingest V503 Source Delta And Emit Execution Receipt
+
+The Exp5551 workflow SHALL read `CLAUDE.md`, `CODEX.md`,
+`research-program.md`, `research-references.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, `ops/changelog.md`, and the active `.503`
+roadmap context. If `research-roadmap-next.yaml` is absent because the
+conductor has already activated the staged roadmap, the workflow SHALL read
+`research-roadmap.yaml` instead and SHALL NOT recreate
+`research-roadmap-next.yaml`.
+
+The workflow SHALL record that execution-time source checks covered arXiv,
+OpenReview, HuggingFace Papers, GitHub, Extropic writing, Logical Intelligence
+public pages, and Semantic Scholar public routes for EBT `2507.02092` and
+ARM-EBM `2512.15605`. It SHALL deduplicate every accepted candidate against
+the full `research-references.md` history, especially the
+`V503 Planner Refresh - 20260710` block. It SHALL append a
+`V503 Execution Refresh - 20260710` block to `research-references.md` only when
+a candidate is both non-duplicate and actionable for a planned `.503`
+experiment. If no such candidate exists, it SHALL leave
+`research-references.md` unchanged and explain the no-op in the artifact.
+
+The workflow SHALL classify closed-scope, proprietary, non-local,
+non-executable, training-only, or already-indexed items as duplicate,
+watch-only, or excluded instead of reopening closed scopes. It SHALL map
+accepted findings and retained planner context to the `.503` lanes for
+automaton row completion, GBNF-forced SOTA rows, ASP/FSM exact fixtures, causal
+CSL memory, hardware timing receipts, and ARC live-path rotation. It SHALL
+declare `inference_substrate="aggregation_from_upstream_artifacts"` and SHALL
+write `results/experiment_5551_v503_source_delta_ingestion.json`.
+
+The artifact SHALL include required fields `sources_checked`,
+`new_references_added`, `duplicates_suppressed`, `semantic_scholar_status`,
+`closed_scopes_reopened`, `research_references_updated`,
+`prior_refresh_marker_found`, `experiment_mappings`, `field_principles`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `sources_checked`: principle "Lists each public and local source surface checked so absence of new deltas is auditable."
+- `new_references_added`: principle "Contains only non-duplicate actionable findings accepted into the V503 execution refresh."
+- `duplicates_suppressed`: principle "Names source hits already covered by earlier Carnot reference history or the V503 planner block."
+- `semantic_scholar_status`: principle "Records public EBT/ARM-EBM route status without fabricating citation deltas during rate limits."
+- `closed_scopes_reopened`: principle "Bare boolean proving excluded, watch-only, proprietary, and retired scopes stayed closed."
+- `research_references_updated`: principle "Bare boolean saying whether the execution refresh block is present because at least one accepted delta exists."
+- `prior_refresh_marker_found`: principle "Bare boolean proving the V503 planner baseline was found before dedupe."
+- `experiment_mappings`: principle "Maps accepted or retained source context to the planned .503 experiment lanes without changing the roadmap."
+- `inference_substrate`: principle "Must equal aggregation_from_upstream_artifacts because Exp5551 aggregates source metadata and local files only."
+- `honest_verdict`: principle "Terminal summary starting with complete: or blocked: that distinguishes accepted deltas from no-op dedupe."
+
+#### SCENARIO-REPORT-5551: Non-Duplicate Actionable Source Appends Execution Refresh
+
+**Given** `research-references.md` contains the
+`V503 Planner Refresh - 20260710` marker
+**And** an execution-time source candidate is absent from the full reference
+history
+**And** the candidate maps to at least one planned `.503` experiment lane
+**When** the Exp5551 workflow runs
+**Then** it appends one `V503 Execution Refresh - 20260710` block, records the
+candidate in `new_references_added`, sets `research_references_updated=true`,
+sets `prior_refresh_marker_found=true`, keeps `closed_scopes_reopened=false`,
+declares `inference_substrate=aggregation_from_upstream_artifacts`, and writes
+`results/experiment_5551_v503_source_delta_ingestion.json`.
+
+#### SCENARIO-REPORT-5551-NOOP: Duplicate Or Non-Executable Source Leaves References Unchanged
+
+**Given** the V503 planner marker is present
+**And** every checked source candidate is already indexed, watch-only,
+excluded, proprietary, or non-executable for local `.503` work
+**When** the Exp5551 workflow runs
+**Then** it does not append an execution refresh block, records the suppressed
+sources in `duplicates_suppressed` or closed-scope classifications, sets
+`research_references_updated=false`, keeps `closed_scopes_reopened=false`, and
+emits a complete no-op artifact.
+
+#### SCENARIO-REPORT-5551-FIELD-PRINCIPLES: Source Delta Fields Stay Annotated
+
+**Given** the Exp5551 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `closed_scopes_reopened` is false,
+`inference_substrate` is `aggregation_from_upstream_artifacts`, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5551)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5551 | Implemented (`python/carnot/experiment_5551_v503_source_delta_ingestion.py`, `results/experiment_5551_v503_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5551_v503_source_delta_ingestion.py`) |
