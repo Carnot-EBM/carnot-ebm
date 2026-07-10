@@ -1,0 +1,397 @@
+{
+  "ambiguous_count": 1,
+  "asp_fixture_rows": [
+    {
+      "contradiction_row": false,
+      "description": "Satisfiable row guarded by an accepted trace and default absence of a false accept.",
+      "expected_status": "satisfiable",
+      "facts": [
+        "fsm_sat_accept_error_status_satisfiable",
+        "fsm_sat_accept_error_trace_sat_b_accepts_accepted",
+        "fsm_sat_accept_error_trace_sat_a_errors_error",
+        "fsm_sat_accept_error_trace_sat_empty_rejects_rejected"
+      ],
+      "fsm_instance_id": "fsm_sat_accept_error",
+      "row_id": "asp_sat_fsm_acceptance_default_guard",
+      "rules": [
+        {
+          "default_negated": [
+            "fsm_sat_accept_error_trace_sat_a_errors_accepted"
+          ],
+          "head": "sat_guarded_accept",
+          "positive": [
+            "fsm_sat_accept_error_status_satisfiable",
+            "fsm_sat_accept_error_trace_sat_b_accepts_accepted"
+          ],
+          "rule_id": "ASP_SAT_00"
+        },
+        {
+          "default_negated": [],
+          "head": null,
+          "positive": [
+            "sat_guarded_accept",
+            "fsm_sat_accept_error_trace_sat_empty_rejects_accepted"
+          ],
+          "rule_id": "ASP_SAT_01"
+        }
+      ]
+    },
+    {
+      "contradiction_row": false,
+      "description": "Unsatisfiable row where an upstream FSM contradiction triggers a hard constraint.",
+      "expected_status": "unsatisfiable",
+      "facts": [
+        "fsm_unsat_conflicting_transition_status_unsatisfiable",
+        "fsm_unsat_conflicting_transition_has_contradiction"
+      ],
+      "fsm_instance_id": "fsm_unsat_conflicting_transition",
+      "row_id": "asp_unsat_fsm_forbidden_error",
+      "rules": [
+        {
+          "default_negated": [],
+          "head": "unsat_error_seen",
+          "positive": [
+            "fsm_unsat_conflicting_transition_status_unsatisfiable",
+            "fsm_unsat_conflicting_transition_has_contradiction"
+          ],
+          "rule_id": "ASP_UNSAT_00"
+        },
+        {
+          "default_negated": [],
+          "head": null,
+          "positive": [
+            "unsat_error_seen"
+          ],
+          "rule_id": "ASP_UNSAT_01"
+        }
+      ]
+    },
+    {
+      "contradiction_row": false,
+      "description": "Ambiguous row with two default-negation repair choices over the sparse FSM branch.",
+      "expected_status": "ambiguous",
+      "facts": [
+        "fsm_ambiguous_sparse_branch_status_ambiguous",
+        "fsm_ambiguous_sparse_branch_trace_amb_go_go_underconstrained_underdetermined"
+      ],
+      "fsm_instance_id": "fsm_ambiguous_sparse_branch",
+      "row_id": "asp_ambiguous_fsm_default_repair_choice",
+      "rules": [
+        {
+          "default_negated": [
+            "repair_choose_reject"
+          ],
+          "head": "repair_choose_accept",
+          "positive": [
+            "fsm_ambiguous_sparse_branch_status_ambiguous",
+            "fsm_ambiguous_sparse_branch_trace_amb_go_go_underconstrained_underdetermined"
+          ],
+          "rule_id": "ASP_AMB_00"
+        },
+        {
+          "default_negated": [
+            "repair_choose_accept"
+          ],
+          "head": "repair_choose_reject",
+          "positive": [
+            "fsm_ambiguous_sparse_branch_status_ambiguous",
+            "fsm_ambiguous_sparse_branch_trace_amb_go_go_underconstrained_underdetermined"
+          ],
+          "rule_id": "ASP_AMB_01"
+        },
+        {
+          "default_negated": [],
+          "head": null,
+          "positive": [
+            "repair_choose_accept",
+            "repair_choose_reject"
+          ],
+          "rule_id": "ASP_AMB_02"
+        }
+      ]
+    },
+    {
+      "contradiction_row": false,
+      "description": "Default-negation row where no exception fact derives the safe default.",
+      "expected_status": "satisfiable",
+      "facts": [
+        "fsm_sat_accept_error_status_satisfiable"
+      ],
+      "fsm_instance_id": "fsm_sat_accept_error",
+      "row_id": "asp_default_negation_no_exception",
+      "rules": [
+        {
+          "default_negated": [
+            "exception_seen"
+          ],
+          "head": "default_safe_accept",
+          "positive": [
+            "fsm_sat_accept_error_status_satisfiable"
+          ],
+          "rule_id": "ASP_DEFAULT_00"
+        },
+        {
+          "default_negated": [],
+          "head": "default_trace_accept",
+          "positive": [
+            "default_safe_accept"
+          ],
+          "rule_id": "ASP_DEFAULT_01"
+        },
+        {
+          "default_negated": [],
+          "head": null,
+          "positive": [
+            "exception_seen"
+          ],
+          "rule_id": "ASP_DEFAULT_02"
+        }
+      ]
+    },
+    {
+      "contradiction_row": true,
+      "description": "Contradiction row where an explicit fact is forbidden by a hard constraint.",
+      "expected_status": "unsatisfiable",
+      "facts": [
+        "contradiction_fact"
+      ],
+      "fsm_instance_id": "fsm_sat_accept_error",
+      "row_id": "asp_contradiction_fact_constraint",
+      "rules": [
+        {
+          "default_negated": [],
+          "head": null,
+          "positive": [
+            "contradiction_fact"
+          ],
+          "rule_id": "ASP_CONTRA_00"
+        }
+      ]
+    }
+  ],
+  "asp_row_count": 5,
+  "asp_solver_backend": "tiny_fixture_local_stable_model_enumerator",
+  "contradiction_row_count": 1,
+  "default_rule_count": 4,
+  "duration_s": 0.0,
+  "exact_asp_validator_ready": true,
+  "exact_fsm_fixture_extended_ready": true,
+  "experiment": 5555,
+  "experiment_id": "exp5555-asp-fsm-nonmonotonic-fixture",
+  "field_principles": {
+    "ambiguous_count": "Counts multi-stable-model rows so underdetermination stays visible.",
+    "asp_row_count": "Keeps the nonmonotonic fixture denominator visible.",
+    "contradiction_row_count": "Preserves explicit hard-conflict controls as first-class evidence.",
+    "default_rule_count": "Counts default-negation coverage instead of hiding it in prose.",
+    "exact_asp_validator_ready": "Opens only when every ASP row matches its expected stable-model class.",
+    "exact_fsm_fixture_extended_ready": "Opens only when the upstream FSM fixture is ready and the ASP gate is clean.",
+    "field_principles": "Explains why every headline and gate field exists.",
+    "honest_verdict": "Provides a terminal evidence boundary without a model quality claim.",
+    "inference_substrate": "Declares deterministic ASP/FSM exact validation with no LLM.",
+    "llm_invoked": "Prevents stable-model validation from being mistaken for live model inference.",
+    "no_model_specs_required": "Confirms the deterministic validator has no model dependency to disclose.",
+    "sat_count": "Counts one-model rows separately from nulls and ambiguity.",
+    "spec_files_updated_or_confirmed": "Shows which OpenSpec contract anchors the artifact.",
+    "stable_model_count": "Records the exact stable-model evidence across all rows.",
+    "tests_added_or_reused": "Names the focused tests and reused upstream FSM tests.",
+    "unsat_count": "Counts no-stable-model rows without collapsing them into parser failures.",
+    "upstream_fsm_fixture": "Pins the ASP rows to the exact FSM substrate they extend."
+  },
+  "honest_verdict": "complete: exact ASP/FSM stable-model fixture ready with no LLM",
+  "inference_substrate": "deterministic_asp_fsm_exact_fixture_no_llm",
+  "llm_invoked": false,
+  "milestone": "2026.07.503",
+  "no_model_specs_required": true,
+  "random_seed": 5555,
+  "reproducibility_checksum": "476e3c82171cea86625c4d295202846ceb087412462f75678930993b8b590f70",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json",
+  "run_date": "2026-07-10",
+  "sat_count": 2,
+  "schema": "carnot.experiment_5555.asp_fsm_nonmonotonic_fixture.v503",
+  "solver_boundary": {
+    "supported": [
+      "finite propositional facts",
+      "normal single-head rules",
+      "hard constraints with no head",
+      "default negation in rule bodies",
+      "exact finite stable-model enumeration"
+    ],
+    "unsupported": [
+      "aggregates",
+      "optimization statements",
+      "arithmetic terms",
+      "variables",
+      "external predicates",
+      "disjunctive heads"
+    ]
+  },
+  "spec_files_updated_or_confirmed": [
+    "openspec/capabilities/verification/spec.md"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5555",
+    "SCENARIO-VERIFY-5555",
+    "REQ-VERIFY-5541"
+  ],
+  "stable_model_count": 4,
+  "stable_model_reports": [
+    {
+      "atom_count": 7,
+      "atoms": [
+        "fsm_sat_accept_error_status_satisfiable",
+        "fsm_sat_accept_error_trace_sat_a_errors_accepted",
+        "fsm_sat_accept_error_trace_sat_a_errors_error",
+        "fsm_sat_accept_error_trace_sat_b_accepts_accepted",
+        "fsm_sat_accept_error_trace_sat_empty_rejects_accepted",
+        "fsm_sat_accept_error_trace_sat_empty_rejects_rejected",
+        "sat_guarded_accept"
+      ],
+      "constraint_rule_count": 1,
+      "contains_default_negation": true,
+      "contradiction_row": false,
+      "default_rule_count": 1,
+      "description": "Satisfiable row guarded by an accepted trace and default absence of a false accept.",
+      "expected_status": "satisfiable",
+      "fsm_instance_id": "fsm_sat_accept_error",
+      "row_id": "asp_sat_fsm_acceptance_default_guard",
+      "rule_count": 2,
+      "solver_status": "satisfiable",
+      "stable_model_count": 1,
+      "stable_model_samples": [
+        [
+          "fsm_sat_accept_error_status_satisfiable",
+          "fsm_sat_accept_error_trace_sat_a_errors_error",
+          "fsm_sat_accept_error_trace_sat_b_accepts_accepted",
+          "fsm_sat_accept_error_trace_sat_empty_rejects_rejected",
+          "sat_guarded_accept"
+        ]
+      ],
+      "status_matches_expected": true,
+      "unsupported_candidate_count": 127,
+      "violated_constraint_count": 0
+    },
+    {
+      "atom_count": 3,
+      "atoms": [
+        "fsm_unsat_conflicting_transition_has_contradiction",
+        "fsm_unsat_conflicting_transition_status_unsatisfiable",
+        "unsat_error_seen"
+      ],
+      "constraint_rule_count": 1,
+      "contains_default_negation": false,
+      "contradiction_row": false,
+      "default_rule_count": 0,
+      "description": "Unsatisfiable row where an upstream FSM contradiction triggers a hard constraint.",
+      "expected_status": "unsatisfiable",
+      "fsm_instance_id": "fsm_unsat_conflicting_transition",
+      "row_id": "asp_unsat_fsm_forbidden_error",
+      "rule_count": 2,
+      "solver_status": "unsatisfiable",
+      "stable_model_count": 0,
+      "stable_model_samples": [],
+      "status_matches_expected": true,
+      "unsupported_candidate_count": 7,
+      "violated_constraint_count": 1
+    },
+    {
+      "atom_count": 4,
+      "atoms": [
+        "fsm_ambiguous_sparse_branch_status_ambiguous",
+        "fsm_ambiguous_sparse_branch_trace_amb_go_go_underconstrained_underdetermined",
+        "repair_choose_accept",
+        "repair_choose_reject"
+      ],
+      "constraint_rule_count": 1,
+      "contains_default_negation": true,
+      "contradiction_row": false,
+      "default_rule_count": 2,
+      "description": "Ambiguous row with two default-negation repair choices over the sparse FSM branch.",
+      "expected_status": "ambiguous",
+      "fsm_instance_id": "fsm_ambiguous_sparse_branch",
+      "row_id": "asp_ambiguous_fsm_default_repair_choice",
+      "rule_count": 3,
+      "solver_status": "ambiguous",
+      "stable_model_count": 2,
+      "stable_model_samples": [
+        [
+          "fsm_ambiguous_sparse_branch_status_ambiguous",
+          "fsm_ambiguous_sparse_branch_trace_amb_go_go_underconstrained_underdetermined",
+          "repair_choose_accept"
+        ],
+        [
+          "fsm_ambiguous_sparse_branch_status_ambiguous",
+          "fsm_ambiguous_sparse_branch_trace_amb_go_go_underconstrained_underdetermined",
+          "repair_choose_reject"
+        ]
+      ],
+      "status_matches_expected": true,
+      "unsupported_candidate_count": 14,
+      "violated_constraint_count": 0
+    },
+    {
+      "atom_count": 4,
+      "atoms": [
+        "default_safe_accept",
+        "default_trace_accept",
+        "exception_seen",
+        "fsm_sat_accept_error_status_satisfiable"
+      ],
+      "constraint_rule_count": 1,
+      "contains_default_negation": true,
+      "contradiction_row": false,
+      "default_rule_count": 1,
+      "description": "Default-negation row where no exception fact derives the safe default.",
+      "expected_status": "satisfiable",
+      "fsm_instance_id": "fsm_sat_accept_error",
+      "row_id": "asp_default_negation_no_exception",
+      "rule_count": 3,
+      "solver_status": "satisfiable",
+      "stable_model_count": 1,
+      "stable_model_samples": [
+        [
+          "default_safe_accept",
+          "default_trace_accept",
+          "fsm_sat_accept_error_status_satisfiable"
+        ]
+      ],
+      "status_matches_expected": true,
+      "unsupported_candidate_count": 15,
+      "violated_constraint_count": 0
+    },
+    {
+      "atom_count": 1,
+      "atoms": [
+        "contradiction_fact"
+      ],
+      "constraint_rule_count": 1,
+      "contains_default_negation": false,
+      "contradiction_row": true,
+      "default_rule_count": 0,
+      "description": "Contradiction row where an explicit fact is forbidden by a hard constraint.",
+      "expected_status": "unsatisfiable",
+      "fsm_instance_id": "fsm_sat_accept_error",
+      "row_id": "asp_contradiction_fact_constraint",
+      "rule_count": 1,
+      "solver_status": "unsatisfiable",
+      "stable_model_count": 0,
+      "stable_model_samples": [],
+      "status_matches_expected": true,
+      "unsupported_candidate_count": 1,
+      "violated_constraint_count": 1
+    }
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5555_asp_fsm_nonmonotonic_fixture.py",
+    "tests/python/test_experiment_5541_llm_fsm_exact_fixture.py"
+  ],
+  "tests_run": [
+    {
+      "command": "tests/python/test_experiment_5555_asp_fsm_nonmonotonic_fixture.py",
+      "outcome": "passed"
+    }
+  ],
+  "unsat_count": 2,
+  "upstream_fsm_fixture": "results/experiment_5541_llm_fsm_exact_fixture.json",
+  "upstream_fsm_fixture_ready": true
+}

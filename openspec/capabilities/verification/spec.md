@@ -29624,6 +29624,103 @@ Exp 5545 SHALL keep `sparse_repair_fsm_ready=false` or
 |---|---|---|
 | REQ-VERIFY-5545 | Planned (`python/carnot/experiment_5545_sparse_repair_fsm_descriptor_scale.py`, `results/experiment_5545_sparse_repair_fsm_descriptor_scale.json`) | Planned (`tests/python/test_experiment_5545_sparse_repair_fsm_descriptor_scale.py`) |
 
+### REQ-VERIFY-5555: ASP/FSM Nonmonotonic Exact Fixture
+
+The repository SHALL provide Exp 5555 at
+`python/carnot/experiment_5555_asp_fsm_nonmonotonic_fixture.py` and write
+`results/experiment_5555_asp_fsm_nonmonotonic_fixture.json` as a deterministic
+ASP-style extension of the Exp 5541 exact FSM fixture. Exp 5555 SHALL load or
+rebuild the upstream FSM fixture from
+`results/experiment_5541_llm_fsm_exact_fixture.json`, confirm
+`exact_fsm_fixture_ready=true`, translate selected FSM statuses and trace labels
+into exact propositional facts, and validate compact nonmonotonic rule rows with
+stable-model checks. Exp 5555 SHALL include satisfiable, unsatisfiable,
+ambiguous, default-negation, and contradiction rows. It SHALL NOT invoke an LLM,
+SHALL NOT require `model_specs`, SHALL NOT call an external text scorer, and
+SHALL NOT modify `scripts/research_conductor.py`.
+
+The ASP evaluator MAY be a tiny fixture-local exact evaluator when no local ASP
+dependency is available, but its boundary SHALL be explicit: propositional
+normal rules, hard constraints, finite fact rows, and default negation are
+supported; aggregates, optimization statements, arithmetic terms, variables,
+and external predicates are out of scope. Stable models SHALL be computed by
+exact finite enumeration and GL-reduct least-model checks over the row's bounded
+atom set. A row SHALL be satisfiable when it has one stable model, unsatisfiable
+when it has zero stable models, and ambiguous when it has more than one stable
+model.
+
+The artifact SHALL include at minimum these top-level fields:
+`upstream_fsm_fixture`, `llm_invoked`, `no_model_specs_required`,
+`asp_row_count`, `default_rule_count`, `contradiction_row_count`,
+`stable_model_count`, `sat_count`, `unsat_count`, `ambiguous_count`,
+`exact_asp_validator_ready`, `exact_fsm_fixture_extended_ready`,
+`spec_files_updated_or_confirmed`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`upstream_fsm_fixture` SHALL equal
+`results/experiment_5541_llm_fsm_exact_fixture.json`; `llm_invoked` SHALL be `false`;
+`no_model_specs_required` SHALL be `true`; `inference_substrate` SHALL equal
+`deterministic_asp_fsm_exact_fixture_no_llm`; and `honest_verdict` SHALL start
+with `complete:` or `blocked:`.
+
+Field principles:
+
+- `upstream_fsm_fixture`: Pins the ASP rows to the exact FSM substrate they
+  extend.
+- `llm_invoked`: Prevents stable-model validation from being mistaken for live
+  model inference.
+- `no_model_specs_required`: Confirms the deterministic validator has no model
+  dependency to disclose.
+- `asp_row_count`: Keeps the nonmonotonic fixture denominator visible.
+- `default_rule_count`: Counts default-negation coverage instead of hiding it in
+  prose.
+- `contradiction_row_count`: Preserves explicit hard-conflict controls as
+  first-class evidence.
+- `stable_model_count`: Records the exact stable-model evidence across all
+  rows.
+- `sat_count`: Counts one-model rows separately from nulls and ambiguity.
+- `unsat_count`: Counts no-stable-model rows without collapsing them into
+  parser failures.
+- `ambiguous_count`: Counts multi-stable-model rows so underdetermination stays
+  visible.
+- `exact_asp_validator_ready`: Opens only when every ASP row matches its
+  expected stable-model class.
+- `exact_fsm_fixture_extended_ready`: Opens only when the upstream FSM fixture
+  is ready and the ASP gate is clean.
+- `spec_files_updated_or_confirmed`: Shows which OpenSpec contract anchors the
+  artifact.
+- `tests_added_or_reused`: Names the focused tests and reused upstream FSM
+  tests.
+- `field_principles`: Explains why every headline and gate field exists.
+- `inference_substrate`: Declares deterministic ASP/FSM exact validation with
+  no LLM.
+- `honest_verdict`: Provides a terminal evidence boundary without a model
+  quality claim.
+
+### SCENARIO-VERIFY-5555: Stable Models Classify ASP/FSM Rows Exactly
+
+Given the Exp 5541 upstream FSM artifact is ready, when Exp 5555 runs, then it
+builds ASP-style rows from upstream exact FSM facts, computes stable models with
+the fixture-local exact evaluator, records stable-model samples and row
+diagnostics, writes
+`results/experiment_5555_asp_fsm_nonmonotonic_fixture.json`, and sets
+`exact_fsm_fixture_extended_ready=true` only when satisfiable,
+unsatisfiable, ambiguous, default-negation, and contradiction controls are all
+present and all expected stable-model classes match.
+
+If the upstream FSM artifact is absent or unready, if a rule references an atom
+outside the finite row vocabulary, if a hard constraint eliminates every
+candidate model, if default negation creates more than one stable model, or if a
+contradiction row is misclassified as satisfiable, then Exp 5555 SHALL preserve
+the row diagnostic, keep `exact_asp_validator_ready=false` or
+`exact_fsm_fixture_extended_ready=false` as applicable, and emit a terminal
+`complete:` or `blocked:` verdict without invoking an LLM.
+
+## Implementation Status (REQ-VERIFY-5555)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5555 | Implemented (`python/carnot/experiment_5555_asp_fsm_nonmonotonic_fixture.py`, `results/experiment_5555_asp_fsm_nonmonotonic_fixture.json`) | Implemented (`tests/python/test_experiment_5555_asp_fsm_nonmonotonic_fixture.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
