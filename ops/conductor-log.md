@@ -10728,3 +10728,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 15:48 UTC | Gated SOTA hard-soft live panel v3 | OK | 89 passed, 1 warning in 11.98s |
 | 2026-07-10 16:02 UTC | LLM-FSM inspired exact finite-state fixture | OK | 87 passed, 1 warning in 12.29s |
 | 2026-07-10 16:15 UTC | CSL residue metric independence corrigendum | OK | 85 passed, 1 warning in 12.60s |
+| 2026-07-10 16:29 UTC | Gated retrieval-warmed CSL five-arm ablation | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
