@@ -41,6 +41,11 @@ from typing import Optional
 
 import yaml
 
+from carnot.agentic.arc_bounded_strategy_router import (
+    BoundedStrategyCandidateRouter,
+    DEFAULT_BOUNDED_ACTION_STRATEGIES,
+)
+
 REPO = Path(__file__).resolve().parents[3]
 REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
 
@@ -210,3 +215,4 @@ def route_for_game(
     out = route_strategy(m)
     out["game"] = game
     return out
+

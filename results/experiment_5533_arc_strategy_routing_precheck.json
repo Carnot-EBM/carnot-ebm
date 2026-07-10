@@ -1,0 +1,641 @@
+{
+  "action_entropy_precheck": 2.0,
+  "already_reproduced": false,
+  "arc_sge_candidate_ready": true,
+  "duration_s": 0.07068435614928603,
+  "experiment": "experiment_5533_arc_strategy_routing_precheck",
+  "experiment_id": 5533,
+  "field_principles": {
+    "action_entropy_precheck": "Shannon entropy over routed precheck action/coordinate choices as a bare float.",
+    "already_reproduced": "must be false for any ready artifact because duplicate live levels cannot satisfy the standing floor.",
+    "arc_sge_candidate_ready": "bare bool true only when target, strategy routing, suppression, and metric gates pass.",
+    "honest_verdict": "one-line verdict starting complete: or blocked: without claiming a solve.",
+    "inference_substrate": "must equal arc_live_path_precheck_no_solve_claim.",
+    "llm_strategy_proposer_used": "bare bool; false means deterministic strategy templates were used and no GGUF tokenizer/model path was loaded.",
+    "model_specs": "allowed local-GGUF proposer specs recorded for audit; no model is invoked when llm_strategy_proposer_used=false.",
+    "registry_precheck_passed": "bare bool proving the registry was read and the selected level is not already reproduced.",
+    "repeated_coordinate_rate_precheck": "fraction of routed precheck coordinate choices repeating earlier coordinates after suppression.",
+    "repeated_coordinate_suppression_enabled": "bare bool true only when repeated-coordinate suppression changes candidate selection before metrics.",
+    "salience_coverage_rate_precheck": "fraction of salience candidate coordinates covered by routed precheck choices.",
+    "selected_game": "registry-safe game id selected for the next strategy-guided live attempt, or empty string when blocked.",
+    "selected_level": "adjacent unreproduced frontier level label; it must be deeper than the registry depth.",
+    "solve_provenance": "must equal live_agent_self_discovery.",
+    "strategy_portfolio": "list of at least three bounded live-path-compatible strategy descriptors used before the attempt.",
+    "strategy_routing_live_path_reachable": "bare bool proving the router object reaches the live candidate-router hook used by E3AgentPolicy and graph exploration.",
+    "tests_added_or_reused": "list of focused tests that cover the Exp5533 schema, target rotation, live routing hook, and suppression evidence."
+  },
+  "honest_verdict": "complete: g50t L3 strategy-routing precheck ready; no solve claimed",
+  "inference_substrate": "arc_live_path_precheck_no_solve_claim",
+  "input_artifacts": [
+    "ops/arc_solve_registry.yaml",
+    "results/experiment_5520_arc_action_diversity_target_precheck.json",
+    "results/experiment_5521_arc_live_action_diverse_levelup.json"
+  ],
+  "live_path_reachability": {
+    "checks": {
+      "e3_policy_accepts_candidate_router": true,
+      "rich_action_candidates_accepts_candidate_router": true,
+      "router_has_rank_method": true,
+      "stepwise_explorer_accepts_candidate_router": true
+    },
+    "ok": true
+  },
+  "llm_strategy_proposer_used": false,
+  "milestone": "2026.07.501",
+  "model_specs": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "exp5520_present": true,
+    "exp5521_present": true,
+    "game_source_read": false,
+    "llm_strategy_proposer_used": false,
+    "offline_bfs_used": false,
+    "per_game_adapter_used": false,
+    "registry_present": true,
+    "solve_claimed": false,
+    "spec_has_req_5533": true
+  },
+  "registry_precheck_passed": true,
+  "repeated_coordinate_rate_precheck": 0.0,
+  "repeated_coordinate_suppression_enabled": true,
+  "result_path": "results/experiment_5533_arc_strategy_routing_precheck.json",
+  "salience_coverage_rate_precheck": 1.0,
+  "schema": "carnot.experiment_5533_arc_strategy_routing_precheck.v1",
+  "selected_game": "g50t",
+  "selected_level": "L3",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5533",
+    "SCENARIO-ARC-FCP-5533"
+  ],
+  "status": "complete",
+  "strategy_portfolio": [
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "salience_first",
+      "principle": "try visually salient live candidates first without spending the whole budget on one coordinate.",
+      "score_field": "salience_score"
+    },
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "action_effect_memory",
+      "principle": "prefer candidates with observed or cached action-effect evidence.",
+      "score_field": "effect_score"
+    },
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "verifier_router_candidate_ranking",
+      "principle": "rank compatible candidates by verifier-style confidence with stable fallback order.",
+      "score_field": "verifier_score"
+    },
+    {
+      "bound": 1,
+      "live_path_hook": "candidate_router.rank",
+      "name": "conservative_reset_reinduction",
+      "principle": "reserve a small budget for reset or reinduction-safe candidates after local evidence stalls.",
+      "score_field": "reset_score"
+    }
+  ],
+  "strategy_probe": {
+    "diagnostics": {
+      "avoid_coordinates": [],
+      "selected_signatures": [
+        "A6@21,23",
+        "A6@27,23",
+        "A6@33,23",
+        "A6@39,23"
+      ],
+      "selected_strategy_count": 4,
+      "selection_changed_by_suppression": true,
+      "strategies_used": [
+        "salience_first",
+        "action_effect_memory",
+        "verifier_router_candidate_ranking",
+        "conservative_reset_reinduction"
+      ],
+      "strategy_portfolio": [
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "salience_first",
+          "principle": "try visually salient live candidates first without spending the whole budget on one coordinate.",
+          "score_field": "salience_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "action_effect_memory",
+          "principle": "prefer candidates with observed or cached action-effect evidence.",
+          "score_field": "effect_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "verifier_router_candidate_ranking",
+          "principle": "rank compatible candidates by verifier-style confidence with stable fallback order.",
+          "score_field": "verifier_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "conservative_reset_reinduction",
+          "principle": "reserve a small budget for reset or reinduction-safe candidates after local evidence stalls.",
+          "score_field": "reset_score"
+        }
+      ],
+      "suppressed_coordinate_count": 2,
+      "suppression_enabled": true,
+      "unsuppressed_signatures": [
+        "A6@21,23",
+        "A6@21,23",
+        "A6@21,23",
+        "A6@39,23"
+      ]
+    },
+    "selected_rows": [
+      {
+        "action": 6,
+        "data": {
+          "x": 21,
+          "y": 23
+        },
+        "effect_score": 1.0,
+        "label": "salience-top",
+        "reset_score": 0.0,
+        "salience_score": 10.0,
+        "verifier_score": 1.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 27,
+          "y": 23
+        },
+        "effect_score": 8.0,
+        "label": "effect-fallback",
+        "reset_score": 1.0,
+        "salience_score": 7.0,
+        "verifier_score": 3.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 33,
+          "y": 23
+        },
+        "effect_score": 3.0,
+        "label": "verifier-fallback",
+        "reset_score": 1.0,
+        "salience_score": 6.0,
+        "verifier_score": 8.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 39,
+          "y": 23
+        },
+        "effect_score": 4.0,
+        "label": "reset-reinduction-fallback",
+        "reset_score": 9.0,
+        "salience_score": 5.0,
+        "verifier_score": 4.0
+      }
+    ],
+    "unsuppressed_metrics": {
+      "action_entropy_precheck": 0.8112781244591328,
+      "repeated_coordinate_rate_precheck": 0.5,
+      "salience_coverage_rate_precheck": 0.5
+    },
+    "unsuppressed_selected_rows": [
+      {
+        "action": 6,
+        "data": {
+          "x": 21,
+          "y": 23
+        },
+        "effect_score": 1.0,
+        "label": "salience-top",
+        "reset_score": 0.0,
+        "salience_score": 10.0,
+        "verifier_score": 1.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 21,
+          "y": 23
+        },
+        "effect_score": 10.0,
+        "label": "effect-top-same-coordinate",
+        "reset_score": 0.0,
+        "salience_score": 9.0,
+        "verifier_score": 2.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 21,
+          "y": 23
+        },
+        "effect_score": 2.0,
+        "label": "verifier-top-same-coordinate",
+        "reset_score": 0.0,
+        "salience_score": 8.0,
+        "verifier_score": 10.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 39,
+          "y": 23
+        },
+        "effect_score": 4.0,
+        "label": "reset-reinduction-fallback",
+        "reset_score": 9.0,
+        "salience_score": 5.0,
+        "verifier_score": 4.0
+      }
+    ]
+  },
+  "strategy_routing_live_path_reachable": true,
+  "target_audit": {
+    "ar25:L4": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "ar25",
+      "registry_depth": 3,
+      "target_level": 4
+    },
+    "bp35:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "bp35",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "cd82:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "cd82",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "cn04:L4": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "cn04",
+      "registry_depth": 3,
+      "target_level": 4
+    },
+    "dc22:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "dc22",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "ft09:L4": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "ft09",
+      "registry_depth": 3,
+      "target_level": 4
+    },
+    "g50t:L3": {
+      "already_reproduced": false,
+      "decision": "selected",
+      "game": "g50t",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "ka59:L2": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "ka59",
+      "registry_depth": 1,
+      "target_level": 2
+    },
+    "lf52:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "lf52",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "lp85:L6": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "lp85",
+      "registry_depth": 5,
+      "target_level": 6
+    },
+    "ls20:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "ls20",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "m0r0:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "m0r0",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "r11l:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "r11l",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "re86:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "re86",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "s5i5:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "s5i5",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "sb26:L3": {
+      "already_reproduced": false,
+      "decision": "rejected_stale_exp5521_repeated_coordinate",
+      "game": "sb26",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "sc25:L6": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "sc25",
+      "registry_depth": 5,
+      "target_level": 6
+    },
+    "sk48:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "sk48",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "sp80:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "sp80",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "su15:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "su15",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "tn36:L8": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "tn36",
+      "registry_depth": 7,
+      "target_level": 8
+    },
+    "tr87:L7": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "tr87",
+      "registry_depth": 6,
+      "target_level": 7
+    },
+    "tu93:L6": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "tu93",
+      "registry_depth": 5,
+      "target_level": 6
+    },
+    "vc33:L3": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "vc33",
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "wa30:L2": {
+      "already_reproduced": false,
+      "decision": "candidate",
+      "game": "wa30",
+      "registry_depth": 1,
+      "target_level": 2
+    }
+  },
+  "target_selection": {
+    "already_reproduced": false,
+    "blocked": false,
+    "prior_levels_reproduced": 2,
+    "registry_precheck_passed": true,
+    "selected_game": "g50t",
+    "selected_level": "L3",
+    "selection_reason": "adjacent_frontier_rotated_off_stale_exp5521_pattern",
+    "stale_exp5521_target": "sb26:L3",
+    "target_audit": {
+      "ar25:L4": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "ar25",
+        "registry_depth": 3,
+        "target_level": 4
+      },
+      "bp35:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "bp35",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "cd82:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "cd82",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "cn04:L4": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "cn04",
+        "registry_depth": 3,
+        "target_level": 4
+      },
+      "dc22:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "dc22",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "ft09:L4": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "ft09",
+        "registry_depth": 3,
+        "target_level": 4
+      },
+      "g50t:L3": {
+        "already_reproduced": false,
+        "decision": "selected",
+        "game": "g50t",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "ka59:L2": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "ka59",
+        "registry_depth": 1,
+        "target_level": 2
+      },
+      "lf52:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "lf52",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "lp85:L6": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "lp85",
+        "registry_depth": 5,
+        "target_level": 6
+      },
+      "ls20:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "ls20",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "m0r0:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "m0r0",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "r11l:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "r11l",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "re86:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "re86",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "s5i5:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "s5i5",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "sb26:L3": {
+        "already_reproduced": false,
+        "decision": "rejected_stale_exp5521_repeated_coordinate",
+        "game": "sb26",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "sc25:L6": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "sc25",
+        "registry_depth": 5,
+        "target_level": 6
+      },
+      "sk48:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "sk48",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "sp80:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "sp80",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "su15:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "su15",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "tn36:L8": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "tn36",
+        "registry_depth": 7,
+        "target_level": 8
+      },
+      "tr87:L7": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "tr87",
+        "registry_depth": 6,
+        "target_level": 7
+      },
+      "tu93:L6": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "tu93",
+        "registry_depth": 5,
+        "target_level": 6
+      },
+      "vc33:L3": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "vc33",
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "wa30:L2": {
+        "already_reproduced": false,
+        "decision": "candidate",
+        "game": "wa30",
+        "registry_depth": 1,
+        "target_level": 2
+      }
+    },
+    "target_level": 3
+  },
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5533_arc_strategy_routing_precheck.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5533_arc_strategy_routing_precheck.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5533_arc_strategy_routing_precheck.py python/carnot/agentic/arc_bounded_strategy_router.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
