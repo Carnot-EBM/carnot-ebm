@@ -11421,3 +11421,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 - 2026-07-10: ASP-FSM nonmonotonic exact fixture (✅ Complete) — honest_verdict=complete: exact ASP/FSM stable-model fixture ready with no LLM; results/experiment_5555_asp_fsm_nonmonotonic_fixture.json
 - 2026-07-10: Gated ASP-FSM sparse repair scale (✅ Complete) — honest_verdict=complete: asp_fsm_sparse_repair_descriptor_signal_ready_no_speedup_claim; results/experiment_5556_asp_fsm_sparse_repair_scale.json
 - 2026-07-10: CSL five-arm tautology corrigendum v2 (✅ Complete) — honest_verdict=complete: csl_five_arm_tautology_corrigendum_v2_clean; results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
+- 2026-07-10: Gated causal write-manage-read CSL memory (✅ Complete) — honest_verdict=complete: causal_write_manage_read_csl_memory_ready; results/experiment_5558_causal_write_manage_read_csl_memory.json
