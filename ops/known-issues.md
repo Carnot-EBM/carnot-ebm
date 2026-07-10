@@ -112,6 +112,79 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    generation prompt layer + parallel sampling + a reflection step on top of the current action-execution
    stack. Wire into the live `E3AgentPolicy` path per the ARC Live-Path Reachability Discipline, not a
    standalone experiment.
+7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
+   ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
+   ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
+   ARC-3 tracks reasoning-effort separation more than raw static-benchmark capability (Sol beats Terra 9.75x
+   on ARC-3 despite tying on ARC-1). Our frozen live-submission generator (Qwen3.5-9B-MTP,
+   `project_arc_live_generator` memory) runs with `/no_think` — reasoning explicitly disabled, decided under
+   June sprint time pressure for Kaggle-parity/latency, never re-measured since. PRECONDITIONS (check first,
+   do not skip): (a) confirm Qwen3.5-9B-MTP actually exposes a think-mode toggle compatible with MTP decoding
+   — MTP and extended chain-of-thought may have different serving-path requirements, verify before assuming
+   this A/B is even runnable; (b) if incompatible, emit `blocked_think_mode_incompatible_with_mtp` and stop.
+   If compatible: measure actions-to-first-win and first-contact solve rate WITH vs WITHOUT `/think` on
+   held-out games, offline only. **This is an OFFLINE DEV MEASUREMENT, not a live-stack change** — per the
+   precedent in CLAUDE.md's iGPU-vs-3090 carve-out (the frozen-stack constraint governs the LIVE submission
+   path only, not offline dev measurement). Do NOT flip the frozen stack's `/no_think` setting based on this
+   task alone; report the delta and require an explicit operator decision before touching the frozen
+   live-submission config, since that is a settled decision per the (retired but still-referenced) ARC-AGI-3
+   Submission Sprint Forcing Function rule 4.
+8. **(Heavier lift — real training infra, a 3090; not a cheap pilot) TRM-as-generator: PTRM-style
+   stochastic multi-trajectory recursion + Carnot-verifier selection, history/intent-conditioned.**
+   `prior_failures:` full writeup `docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md`,
+   four REAL pilots 2026-07-05/06, all on a standalone 4.2M-param DETERMINISTIC reimplementation (one fixed
+   recursion path per input, no ACT halting, one shared training recipe, three epochs) — v1 (single static
+   frame -> action type): recursive refiner beat a matched non-recursive baseline by +15pp (0.6151 vs
+   0.4626) but NEITHER beat the trivial majority-class baseline (0.7787), inconclusive. v2 (+8-action
+   history window): baseline jumped to 0.7757 confirming history was the missing signal, but recursion now
+   scored 16.5pp WORSE than baseline — opposite ranking from v1. v3 (pre-registered 10-seed x 2-framing x
+   5-game multi-seed Wilcoxon sweep, 200 runs, resolving the v1/v2 contradiction as noise): 0/10
+   combinations reached significance for recursion; the lone significant result in the whole sweep favored
+   the baseline. v4 (the more faithful full-K=8-action-window joint refinement toward a KNOWN winning
+   target, trained on the 144 genuinely human-WON trajectories, 5 seeds, 3 held-out games sk48/m0r0/cn04):
+   gate fails again, 0/3 significant — but for a DIFFERENT reason than v1-v3: both recursive and
+   non-recursive arms sit AT OR BELOW chance (~14% for a ~7-action vocabulary). The v4 entry's own diagnosis:
+   most likely "predicting 8 steps ahead from a single static frame with zero action-history context is
+   under-determined — the same frame plausibly precedes very different sequences depending on invisible
+   player intent," recommending history/intent conditioning as the next test.
+   `addressed_by:` this task combines THREE still-open, genuinely different fixes, none tried in v1-v4 and
+   none tried together — (1, PRIMARY) arXiv:2605.19943 "Probabilistic Tiny Recursive Model" (PTRM,
+   Sghaier/Parviz/Jolicoeur-Martineau, May 2026 — already SOTA-ingested into `research-references.md` and
+   `docs/research-notes/tiny-recursive-models-primer-and-links.md`, but NEVER applied to any of the four
+   generator pilots): injects Gaussian noise at each deep-recursion step to spawn multiple stochastic
+   trajectories instead of one deterministic path, then selects among them via a Q-head. Directly targets
+   v4's own diagnosed failure mode — if the true target is a whole basin of plausible action sequences
+   (depending on hidden player intent) rather than one point, a deterministic recursion converges to a
+   single guess and looks like a "the model isn't learning" null even when it partially understands the
+   task; stochastic multi-trajectory exploration is built for exactly this ambiguity. Reported PTRM gains
+   (source-reported, re-verify locally): Sudoku-Extreme 87.4%->98.75%, Pencil Puzzle Bench 62.6%->91.2%,
+   from noise injection ALONE with no retraining. Carnot-specific angle, sharper than the original paper:
+   swap PTRM's self-trained Q-head for CARNOT'S OWN externally-validated verifier ensemble as the
+   trajectory-selection mechanism — this is a more natural fit for us than for PTRM's authors, and is
+   exactly the generate-diverse-candidates-then-verify pattern Carnot's whole thesis is built on, just
+   moved inside the recursion loop instead of around it. (2) Condition the (now-stochastic) full-sequence
+   refinement on recent action history/intent (v4's own recommended fix — v2 already showed history
+   resolves a large chunk of the missing-signal problem for the simpler single-step framing; never
+   combined with full-sequence refinement). (3) This project's own literature review (arXiv:2604.07822,
+   "Loop, Think, & Generalize") flagged two design rules NONE of v1-v4 implemented — ACT halting / dynamic
+   (not fixed) recursion depth, and explicit overthinking instrumentation (accuracy peaks at some recursion
+   depth then degrades). Verified 2026-07-10: none of the three fixes (PTRM noise injection, history
+   conditioning, ACT halting/dynamic depth) appears anywhere in the actual pilot code, only in design-notes
+   docs or SOTA-ingestion reference lists that preceded or ran parallel to the pilots without informing them.
+   `retire_if_same_verdict: true` — if PTRM-style stochastic exploration + Carnot-verifier selection +
+   history/intent-conditioned full-sequence refinement still shows no held-out generalization signal (the
+   leave-one-game-out gate from `docs/research-notes/trm-generator-hidden-game-plan-2026-07-04.md` Stage 1),
+   retire the whole TRM-as-generator line for ARC-AGI-3 for good, including the 4-stage hidden-game-
+   adaptation plan built on top of it — do not re-propose a 5th variant. `DO_NOT_RELAUNCH` sentinel check:
+   does NOT apply (scoped narrowly to the Sudoku-Extreme verifier-graft training run per
+   `results/trm_runs/DO_NOT_RELAUNCH` and the prior outer-loop confirmation in
+   `docs/research-notes/trm-arc-action-sequence-generator-2026-07-04.md`), but this is still a meaningfully
+   bigger commitment than tasks 1-7 (real GPU training time, not a pilot) — flag for explicit operator
+   go-ahead before consuming a milestone slot on it, given the heavier cost and the four-pilot null track
+   record. Does NOT invalidate the original Sudoku precedent (TRM's actual validated architecture on a
+   genuinely different, constraint-structured task, 18.2% solve vs AR's ~0-0.2%) — only that four
+   deterministic, fixed-depth, non-history-conditioned reimplementations don't replicate the effect on this
+   specific interactive-action-sequence task.
 
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
@@ -188,6 +261,11 @@ D's majority share, but no longer merely opportunistic either.
   state-abstraction, last-4-days ARC-AGI-3 check) — source of task 6 and ZendoWorld
 - `reference_transformer_circuits_jlens_workspace.md` (memory) — full J-lens paper notes for task 4
 - `reference_zendoworld_hypothesis_uncertainty.md` (memory) — full ZendoWorld notes
+- `reference_gpt56_arcprize_reasoning_effort.md` (memory) — full GPT-5.6 ARC Prize notes for task 7
+- `project_arc_live_generator` (memory) — the frozen `/no_think` stack decision task 7 tests against
+- arXiv:2510.04871 (foundational TRM), arXiv:2605.19943 (PTRM), `docs/research-notes/tiny-recursive-models-
+  primer-and-links.md` + `research-references.md` (PTRM's prior SOTA-ingestion mapping) — source of task 8's
+  primary fix, confirmed 2026-07-10 to have never reached the actual v1-v4 pilots
 - `ops/exclusion_manifest.yaml:generation_axis_exploration_signal_retired_exp5154_v473` — the retirement whose
   own reason field carves out representation/perception fixes as in-scope
 - CLAUDE.md "ARC Live-Path Reachability Discipline" — task 2 must be wired into the live entrypoint

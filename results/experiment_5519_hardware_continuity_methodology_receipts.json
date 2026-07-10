@@ -1,0 +1,314 @@
+{
+  "blocked_devices": [
+    {
+      "blocked_reason": "cpu_info_command_failed",
+      "device": "cpu",
+      "status": "blocked_toolchain"
+    },
+    {
+      "blocked_reason": "cuda_info_command_unparseable",
+      "device": "cuda",
+      "status": "blocked_toolchain"
+    },
+    {
+      "blocked_reason": "blocked_kv260_ssh_identity",
+      "device": "kv260",
+      "status": "blocked_identity"
+    },
+    {
+      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
+      "device": "gatemate",
+      "status": "blocked_identity"
+    }
+  ],
+  "cpu_receipt": {
+    "blocked_reason": "cpu_info_command_failed",
+    "command_kinds": [
+      "cpu_info"
+    ],
+    "device": "cpu",
+    "device_names": [],
+    "driver_versions": {},
+    "metadata": {},
+    "runtime_versions": {},
+    "status": "blocked_toolchain"
+  },
+  "cuda_receipt": {
+    "blocked_reason": "cuda_info_command_unparseable",
+    "command_kinds": [
+      "cuda_runtime_info",
+      "cuda_driver_info"
+    ],
+    "device": "cuda",
+    "device_names": [],
+    "driver_versions": {
+      "nvidia_driver": "610.43.02"
+    },
+    "metadata": {
+      "reason": "cuda_info_command_unparseable"
+    },
+    "runtime_versions": {},
+    "status": "blocked_toolchain"
+  },
+  "duration_s": 6.566884,
+  "experiment": 5519,
+  "experiment_id": "exp5519-hardware-continuity-methodology-receipts",
+  "field_principles": {
+    "blocked_devices": "names devices with unavailable identity, runtime, or safe command receipts.",
+    "cpu_receipt": "authenticated local CPU command receipt with device and runtime metadata.",
+    "cuda_receipt": "authenticated local CUDA command receipt with GPU, driver, and runtime metadata when reachable.",
+    "forbidden_kv260_host_sdcard_used": "must be false to preserve the retired KV260 SD-card boundary.",
+    "gatemate_receipt": "safe host/toolchain identity only; no flashing or workload overclaim.",
+    "hardware_speedup_claim": "must remain false without authenticated matched timing.",
+    "hardware_speedup_claim_allowed": "promotion gate derived from matched timing and safe receipts.",
+    "honest_verdict": "terminal status with no speedup overclaim.",
+    "inference_substrate": "declares hardware_receipts, not live inference or benchmark acceleration.",
+    "kv260_receipt": "KV260 evidence limited to SSH, xmutil, and remote UIO paths; never host SD-card storage.",
+    "matched_timing_available": "true only when equivalent CPU, GPU, and FPGA timings exist.",
+    "polar_fire_receipt": "SSH-only PolarFire reachability plus board-side identity or hash data when available.",
+    "receipt_commands": "bounded command transcripts with exit codes, hashes, durations, and blocked reasons.",
+    "timing_methodology": "records workload, warmup, repetitions, clock source, host/device split, and matched timing availability."
+  },
+  "forbidden_kv260_host_sdcard_used": false,
+  "gatemate_receipt": {
+    "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
+    "command_kinds": [
+      "gatemate_dirtyjtag_detect",
+      "gatemate_toolchain_yosys",
+      "gatemate_toolchain_nextpnr_himbaechel",
+      "gatemate_toolchain_gmpack"
+    ],
+    "device": "gatemate",
+    "device_names": [],
+    "driver_versions": {},
+    "metadata": {
+      "detect_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "toolchain": {
+        "gmpack": {
+          "available": false,
+          "version_excerpt": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024"
+        },
+        "nextpnr_himbaechel": {
+          "available": true,
+          "version_excerpt": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+        },
+        "yosys": {
+          "available": true,
+          "version_excerpt": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+        }
+      }
+    },
+    "runtime_versions": {},
+    "status": "blocked_identity"
+  },
+  "hardware_speedup_claim": false,
+  "hardware_speedup_claim_allowed": false,
+  "honest_verdict": "complete: hardware continuity receipts collected with blocked devices (cpu,cuda,kv260,gatemate); matched_timing_available=false; speedup_claim_allowed=false",
+  "inference_substrate": "hardware_receipts",
+  "kv260_receipt": {
+    "blocked_reason": "blocked_kv260_ssh_identity",
+    "command_kinds": [
+      "kv260_ssh_identity"
+    ],
+    "device": "kv260",
+    "device_names": [],
+    "driver_versions": {},
+    "metadata": {},
+    "runtime_versions": {},
+    "status": "blocked_identity"
+  },
+  "matched_timing_available": false,
+  "milestone": "2026.07.500",
+  "polar_fire_receipt": {
+    "blocked_reason": null,
+    "command_kinds": [
+      "polarfire_ssh_identity_hash"
+    ],
+    "device": "polar_fire",
+    "device_names": [
+      "Microchip PolarFire-SoC Discovery Kit"
+    ],
+    "driver_versions": {},
+    "hash_identity": {
+      "firmware_paths": [],
+      "firmware_sha256": []
+    },
+    "metadata": {
+      "board_identity": "polarfire",
+      "hostname": "mpfs-disco-kit",
+      "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+      "machine": "riscv64",
+      "model": "Microchip PolarFire-SoC Discovery Kit"
+    },
+    "runtime_versions": {
+      "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d"
+    },
+    "status": "reachable"
+  },
+  "random_seed": 5519,
+  "receipt_commands": [
+    {
+      "blocked_reason": "cpu_info_command_failed",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m __main__ --emit-cpu-info",
+      "command_sha256": "30d3809f53acb8677c4f23b6b6dba356c336d820edfcbcc74fecfc5b3b3e981b",
+      "duration_s": 0.019824,
+      "exit_code": 1,
+      "kind": "cpu_info",
+      "outcome": "blocked_toolchain",
+      "stderr_excerpt": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python: Error while finding module specification for '__main__' (ValueError: __main__.__spec__ is None)",
+      "stderr_sha256": "93f179e86b1e605027dc422b63b7293fef3e93b5cdd6aa90c1e54c9caa51cc64",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 10.0
+    },
+    {
+      "blocked_reason": "cuda_info_command_unparseable",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m __main__ --emit-cuda-info",
+      "command_sha256": "1d46b66567b2609e385381462c9f652bd26779aa8976f07b9e7172a0a8596135",
+      "duration_s": 0.018953,
+      "exit_code": 1,
+      "kind": "cuda_runtime_info",
+      "outcome": "blocked_toolchain",
+      "stderr_excerpt": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python: Error while finding module specification for '__main__' (ValueError: __main__.__spec__ is None)",
+      "stderr_sha256": "93f179e86b1e605027dc422b63b7293fef3e93b5cdd6aa90c1e54c9caa51cc64",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "nvidia-smi --query-gpu=name,driver_version --format=csv,noheader,nounits",
+      "command_sha256": "34841da296398bcca2bbff3b5d452523a9c5bf91799e683cf2ce5be7267f92dd",
+      "duration_s": 0.027245,
+      "exit_code": 0,
+      "kind": "cuda_driver_info",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "NVIDIA GeForce RTX 3090, 610.43.02\nNVIDIA GeForce RTX 3090, 610.43.02",
+      "stdout_sha256": "c6b1daf0ae41838212b297dea9a8bb046f0909c4ac7b9228ff05f2e68d017915",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'board_identity=polarfire\\nhostname='\"'\"' && hostname && printf '\"'\"'\\nmachine='\"'\"' && uname -m && printf '\"'\"'\\nkernel='\"'\"' && uname -r && if test -r /sys/firmware/devicetree/base/model; then printf '\"'\"'\\nmodel='\"'\"'; tr '\"'\"'\\000'\"'\"' '\"'\"'\\n'\"'\"' < /sys/firmware/devicetree/base/model | head -n 1; fi && find /lib/firmware -maxdepth 3 -type f 2>/dev/null | grep -Ei '\"'\"'\\.(bit|bin|dtbo|elf)$'\"'\"' | sort | head -n 20 | while read f; do sha256sum \"$f\" | sed '\"'\"'s/^/\\nfirmware_sha256=/'\"'\"'; done'",
+      "command_sha256": "4650168372c23d9c14390238e4edf4c8dd7548ab10fa95d2deece3d5bd602382",
+      "duration_s": 1.313713,
+      "exit_code": 0,
+      "kind": "polarfire_ssh_identity_hash",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "board_identity=polarfire\nhostname=mpfs-disco-kit\n\nmachine=riscv64\n\nkernel=6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d\n\nmodel=Microchip PolarFire-SoC Discovery Kit",
+      "stdout_sha256": "b576bb80f1a4f813befcfb559935e82605326878b8b84ce039e576cce638eb68",
+      "timeout_s": 5.0
+    },
+    {
+      "blocked_reason": "blocked_kv260_ssh_identity",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'board_identity=kv260\\nhostname='\"'\"' && hostname && printf '\"'\"'\\nmachine='\"'\"' && uname -m && printf '\"'\"'\\nkernel='\"'\"' && uname -r'",
+      "command_sha256": "f6c3bf9313ff95d470bba1495ce6c9b8b80b8b998a2fe3a57763ea63df4812d0",
+      "duration_s": 5.008911,
+      "exit_code": 124,
+      "kind": "kv260_ssh_identity",
+      "outcome": "blocked_identity",
+      "stderr_excerpt": "timeout",
+      "stderr_sha256": "f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 5.0
+    },
+    {
+      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "command_sha256": "67601b438fbb88a70c1b25f3a913790ab47e5e19b36bc9c3b9f32a8a52363cd4",
+      "duration_s": 0.015761,
+      "exit_code": 0,
+      "kind": "gatemate_dirtyjtag_detect",
+      "outcome": "blocked_identity",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "stdout_sha256": "e96e9c9bdc5e9e0dc606129428b9716fe745efc6402f52cc56db17f800d12437",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "yosys -V",
+      "command_sha256": "593dc94bee43a1d46985190bbcf640d8cd7a63fa24a42f5a42604d0d8c3e5892",
+      "duration_s": 0.007011,
+      "exit_code": 0,
+      "kind": "gatemate_toolchain_yosys",
+      "outcome": "reachable",
+      "stderr_excerpt": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_excerpt": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "stdout_sha256": "3e5d182bbe78885082bd07a2f3258ed451a9cbcf0c6584af0858643abdf82e02",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "nextpnr-himbaechel --version",
+      "command_sha256": "32a8ad3d97b5e36a2543d593f8d27719eeaaeca7195766f62ea9005bad011f86",
+      "duration_s": 0.14104,
+      "exit_code": 0,
+      "kind": "gatemate_toolchain_nextpnr_himbaechel",
+      "outcome": "reachable",
+      "stderr_excerpt": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "stderr_sha256": "1b9f06395421c7a842642ddf8d86695a65593fe8f99138ea656f6372c37fdf6d",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 10.0
+    },
+    {
+      "blocked_reason": "gmpack_unavailable",
+      "command": "gmpack --version",
+      "command_sha256": "343e3244c646929a3e66ab6489c8c5d4b12d421320396eaeab029670e141025b",
+      "duration_s": 0.013547,
+      "exit_code": 1,
+      "kind": "gatemate_toolchain_gmpack",
+      "outcome": "blocked_toolchain",
+      "stderr_excerpt": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: gmpack input.config [output.bit] [options]\n\nA",
+      "stderr_sha256": "db9637b5d79483f951c72825a14840d41184808715709d8ff5bf2c6475ba6055",
+      "stdout_excerpt": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout_s": 10.0
+    }
+  ],
+  "reproducibility_checksum": "ec5f3a09e173d84c697661f1a564a7ff93369f043b764998f0b23d5f1f6cce71",
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5519.hardware_continuity_methodology_receipts.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5519",
+    "SCENARIO-VERIFY-5519"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/coverage run --include='*/python/carnot/experiment_5519_hardware_continuity_methodology_receipts.py' -m pytest -o addopts='' tests/python/test_experiment_5519_hardware_continuity_methodology_receipts.py -q",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include='*/python/carnot/experiment_5519_hardware_continuity_methodology_receipts.py' --fail-under=100 --show-missing",
+      "outcome": "passed"
+    }
+  ],
+  "timing_methodology": {
+    "clock_source": "time.perf_counter for command duration receipts only",
+    "hardware_speedup_claim_allowed": false,
+    "host_device_separation": {
+      "device_commands": [
+        "polarfire_ssh_identity_hash",
+        "kv260_ssh_identity",
+        "kv260_xmutil_listapps",
+        "kv260_remote_uio_list",
+        "gatemate_dirtyjtag_detect"
+      ],
+      "host_commands": [
+        "cpu_info",
+        "cuda_runtime_info",
+        "cuda_driver_info"
+      ],
+      "separation_note": "metadata reachability commands are separated from workload timing; no host-device dispatch benchmark is interpreted as acceleration evidence"
+    },
+    "matched_cpu_gpu_fpga_timing_exists": false,
+    "matched_timing_absence_reason": "CPU, CUDA, and FPGA receipts do not run the same repeated workload with warmup and synchronized device timing, so a hardware speedup claim is disallowed.",
+    "repetitions": 1,
+    "warmup": 0,
+    "workload": "hardware-continuity metadata receipts only; no matched solver or sampler benchmark workload"
+  }
+}
