@@ -39100,3 +39100,86 @@ aggregation incomplete.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5509 | Implemented (`python/carnot/experiment_5509_capstone_v499.py`, `results/experiment_5509_capstone_v499.json`) | Implemented (`tests/python/test_experiment_5509_capstone_v499.py`) |
+
+### REQ-REPORT-5510: Archive .499 Facts And Emit .500 Transition Receipt
+
+The Exp5510 workflow SHALL write
+`results/experiment_5510_transition_v500.json` from prior milestone artifacts,
+the active `.500` roadmap context, the vNEXT roadmap document, and conductor
+log evidence only. It SHALL read `CLAUDE.md`, `CODEX.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/changelog.md`,
+`ops/status.md`, `ops/conductor-log.md`,
+`results/experiment_5509_capstone_v499.json`,
+`results/experiment_5500_sota_concept_claim_panel_v499.json`,
+`results/experiment_5502_csl_tautology_static_corrigendum_v499.json`,
+`results/experiment_5503_csl_experience_graph_replay_v499.json`,
+`results/experiment_5504_sota_csl_memory_panel_v499.json`,
+`results/experiment_5506_hardware_multiboard_receipts_v499.json`, and
+`results/experiment_5508_arc_live_perception_generation_levelup_v499.json`.
+If the roadmap prompt names shortened artifact paths, the workflow SHALL record
+the alias mapping to the actual artifact filenames and SHALL NOT treat an absent
+alias path as missing evidence when the actual artifact is present and was read.
+It SHALL record the CalVer transition from `2026.07.499` to `2026.07.500`,
+SHALL record previous task range `exp5496-exp5509`, SHALL record next task
+range `exp5510-exp5522`, SHALL NOT modify `research-roadmap.yaml`, and SHALL
+NOT modify `scripts/research_conductor.py`.
+
+The workflow SHALL summarize clean lanes for transition, pretest cascade
+repair, source delta, Preference-MaxSAT fixture, helper-contract fixture, and
+experience-graph replay readiness. It SHALL separately record bounded lanes
+for the SOTA missing-candidate or abstention panel, active-constraint exact
+fallback, and hardware receipt-only timing limits. It SHALL record blocked
+lanes for the CSL metric-independence block, the CSL gate-field mismatch, and
+hardware identity or methodology blockers. It SHALL record honest-null lanes
+for ARC no-bank and zero registry delta. It SHALL keep adversarially flagged
+hardware timing/methodology evidence and unresolved CSL headline leakage
+separate from clean lanes.
+
+The workflow SHALL record `.500` execution gates: structured-output positive
+control before a SOTA hard/soft panel, independent CSL metrics plus
+conductor-visible fields before a SOTA CSL memory panel, ARC action-diversity
+precheck before live level-up, and hardware receipt-only posture unless
+authenticated matched timing exists. The artifact SHALL include required fields
+`milestone`, `previous_milestone`, `prior_capstone_path`,
+`previous_task_range`, `clean_lanes`, `bounded_lanes`, `blocked_lanes`,
+`honest_null_lanes`, `flagged_lanes`, `next_task_range`,
+`structured_sota_gate_required`, `csl_independent_metric_gate_required`,
+`arc_live_levelup_gate_required`, `hardware_receipt_only`,
+`roadmap_yaml_unchanged`, `conductor_unchanged`, `inference_substrate`, and
+`honest_verdict`.
+
+#### SCENARIO-REPORT-5510: V500 Transition Uses V499 Terminal Evidence
+
+**Given** the Exp5509 capstone and requested Exp5500, Exp5502, Exp5503,
+Exp5504, Exp5506, and Exp5508 artifacts are readable through their actual
+filenames
+**And** the active roadmap and vNEXT document name milestone `2026.07.500`
+with task range `Exp 5510-5522`
+**When** the Exp5510 transition workflow runs
+**Then** it writes `results/experiment_5510_transition_v500.json`, records
+`previous_milestone=2026.07.499`, records
+`prior_capstone_path=results/experiment_5509_capstone_v499.json`, records
+`previous_task_range=exp5496-exp5509`, records
+`next_task_range=exp5510-exp5522`, preserves clean, bounded, blocked,
+honest-null, and flagged lanes from observed artifacts and conductor evidence,
+sets all four `.500` gate booleans to true, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and leaves the
+active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5510-BLOCKED-INPUT: Missing Or Dirty Inputs Fail Closed
+
+**Given** the prior capstone is missing or mismatched, a required `.499`
+evidence artifact is absent or unreadable, the `.500` roadmap context is
+missing or mismatched, or a protected file is dirty
+**When** the Exp5510 transition workflow runs
+**Then** it writes a terminal `blocked:` transition artifact, keeps all
+available evidence visible, keeps `roadmap_yaml_unchanged` and
+`conductor_unchanged` truthful, and does not repair or edit
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5510)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5510 | Planned (`python/carnot/experiment_5510_transition_v500.py`, `results/experiment_5510_transition_v500.json`) | Planned (`tests/python/test_experiment_5510_transition_v500.py`) |
