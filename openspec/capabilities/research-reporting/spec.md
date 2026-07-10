@@ -39889,3 +39889,119 @@ model specs, no-LLM artifacts explain the absence of model specs, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5549 | Implemented (`python/carnot/experiment_5549_capstone_v502.py`, `results/experiment_5549_capstone_v502.json`) | Implemented (`tests/python/test_experiment_5549_capstone_v502.py`) |
+
+### REQ-REPORT-5550: Archive .502 Facts And Emit .503 Transition Receipt
+
+The Exp5550 workflow SHALL write
+`results/experiment_5550_transition_v503.json` after reading `CLAUDE.md`,
+`CODEX.md`, `research-roadmap.yaml`, `research-roadmap-next.yaml` when
+present, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/changelog.md`, `ops/status.md`, `ops/conductor-log.md`,
+`research-complete.yaml`, `results/experiment_5549_capstone_v502.json`,
+`results/experiment_5538_sota_panel_duration_substrate_corrigendum.json`,
+`results/experiment_5539_gram2token_grammar_table_preflight.json`,
+`results/experiment_5540_sota_hard_soft_live_panel_v3.json`,
+`results/experiment_5541_llm_fsm_exact_fixture.json`,
+`results/experiment_5542_csl_residue_metric_independence_corrigendum.json`,
+`results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json`,
+`results/experiment_5544_cross_model_sota_csl_transfer.json`,
+`results/experiment_5545_sparse_repair_fsm_descriptor_scale.json`,
+`results/experiment_5546_hardware_receipt_substrate_corrigendum.json`,
+`results/experiment_5547_arc_no_llm_substrate_precheck.json`, and
+`results/experiment_5548_arc_clean_live_levelup.json`. It SHALL record the
+CalVer transition from `2026.07.502` to `2026.07.503`, SHALL record previous
+task range `exp5536-exp5549`, SHALL record next task range
+`exp5550-exp5563`, SHALL NOT modify `research-roadmap.yaml`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The workflow SHALL summarize clean lanes for duration/substrate corrigendum,
+grammar table preflight, exact FSM fixture, CSL residue independence, sparse
+FSM repair signal, hardware receipt hygiene, and ARC clean precheck from real
+`.502` artifacts and conductor log entries. It SHALL separately preserve
+bounded lanes where evidence is useful but claim-limited, including incomplete
+SOTA rows, causal-CSL prerequisites, sparse repair without speedup, hardware
+receipt-only posture, and ARC no-bank provenance.
+
+The workflow SHALL explicitly record blocked or flagged lanes for Exp5540 no
+SOTA hard/soft claim, Exp5543 CSL TAUTOLOGY flag, Exp5544 gated cross-model
+transfer skip, Exp5548 ARC honest null, hardware speedup false, and ARC
+registry delta zero. It SHALL record `.503` execution gates requiring automaton
+row-completion before grammar-forced SOTA smoke, grammar-forced smoke before
+panel v4, ASP/FSM fixture before sparse repair scale, CSL tautology repair
+before causal CSL memory, causal memory before cross-model transfer, and ARC
+target rotation before level-up. It SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The artifact SHALL include required fields `milestone`,
+`previous_milestone`, `prior_capstone_path`, `previous_task_range`,
+`next_task_range`, `clean_lanes`, `bounded_lanes`, `blocked_lanes`,
+`flagged_lanes`, `skipped_by_gates`, `sota_row_completion_required`,
+`asp_fsm_fixture_required`, `csl_tautology_corrigendum_required`,
+`causal_csl_memory_required`, `arc_target_rotation_required`,
+`hardware_receipt_only`, `roadmap_yaml_unchanged`, `conductor_unchanged`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `milestone`: principle "Route key for the `.503` transition receipt."
+- `previous_milestone`: principle "Source milestone whose terminal facts are archived."
+- `prior_capstone_path`: principle "Exact `.502` capstone artifact used as the main source of truth."
+- `previous_task_range`: principle "Closed `.502` conductor task range."
+- `next_task_range`: principle "Planned `.503` conductor task range."
+- `clean_lanes`: principle "Completed `.502` evidence safe to carry forward without promoting flagged claims."
+- `bounded_lanes`: principle "Useful `.502` evidence kept claim-limited until the matching `.503` gate runs."
+- `blocked_lanes`: principle "Blocked `.502` prerequisites that must not become headline credit."
+- `flagged_lanes`: principle "Adversarial or methodology flags preserved as repair work, not clean evidence."
+- `skipped_by_gates`: principle "Gated `.502` skips preserved as skipped evidence, not clean completion."
+- `sota_row_completion_required`: principle "Bare boolean requiring automaton row-completion before grammar-forced SOTA smoke."
+- `asp_fsm_fixture_required`: principle "Bare boolean requiring ASP/FSM exact fixture evidence before sparse repair scale."
+- `csl_tautology_corrigendum_required`: principle "Bare boolean requiring non-tautological five-arm CSL evidence before causal memory."
+- `causal_csl_memory_required`: principle "Bare boolean requiring causal CSL memory before cross-model transfer."
+- `arc_target_rotation_required`: principle "Bare boolean requiring ARC target rotation before another level-up attempt."
+- `hardware_receipt_only`: principle "Bare boolean preserving no-speedup posture without matched authenticated timing."
+- `roadmap_yaml_unchanged`: principle "Protected-file check for `research-roadmap.yaml`."
+- `conductor_unchanged`: principle "Protected-file check for `scripts/research_conductor.py`."
+- `inference_substrate`: principle "Must equal `aggregation_from_upstream_artifacts` because Exp5550 is synthesis only."
+- `honest_verdict`: principle "Terminal summary starting with `complete:` or `blocked:` that names the transition boundary."
+
+#### SCENARIO-REPORT-5550: V503 Transition Uses V502 Terminal Evidence
+
+**Given** the `.502` capstone and requested Exp5540, Exp5543, Exp5544,
+Exp5545, Exp5546, and Exp5548 artifacts are readable
+**And** the active roadmap and vNEXT document name milestone `2026.07.503`
+with task range `Exp 5550-5563`
+**When** the Exp5550 transition workflow runs
+**Then** it writes `results/experiment_5550_transition_v503.json`, records
+`previous_milestone=2026.07.502`, records
+`prior_capstone_path=results/experiment_5549_capstone_v502.json`, records
+`previous_task_range=exp5536-exp5549`, records
+`next_task_range=exp5550-exp5563`, preserves clean, bounded, blocked,
+flagged, and skipped lanes from observed artifacts and conductor evidence, sets
+all five `.503` gate booleans to true, keeps `hardware_receipt_only=true`,
+declares `inference_substrate=aggregation_from_upstream_artifacts`, and leaves
+the active roadmap and conductor unchanged.
+
+#### SCENARIO-REPORT-5550-BLOCKED-INPUT: Missing Or Dirty Inputs Fail Closed
+
+**Given** the prior capstone is missing or mismatched, a required `.502`
+evidence artifact is absent or unreadable, the `.503` roadmap context is
+missing or mismatched, or a protected file is dirty
+**When** the Exp5550 transition workflow runs
+**Then** it writes a terminal `blocked:` transition artifact, keeps all
+available evidence visible, keeps `roadmap_yaml_unchanged` and
+`conductor_unchanged` truthful, and does not repair or edit
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-5550-FIELD-PRINCIPLES: Transition Fields Stay Annotated
+
+**Given** the Exp5550 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `hardware_receipt_only` is true, and
+`honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5550)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5550 | Implemented (`python/carnot/experiment_5550_transition_v503.py`, `results/experiment_5550_transition_v503.json`) | Implemented (`tests/python/test_experiment_5550_transition_v503.py`) |
