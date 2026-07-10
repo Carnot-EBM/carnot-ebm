@@ -1,0 +1,651 @@
+{
+  "arc_clean_precheck_required": true,
+  "artifact_metadata": {
+    "results/experiment_5524_v501_source_delta_ingestion.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:1d6e3cb39a167378977e52c5e3eaa17c335d29e8ab18b032b61f94b3a4f7e9a0"
+    },
+    "results/experiment_5525_sota_schema_failure_taxonomy.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:b81fba408b9e596e441ded599e6cc171376df45ceb9c1a1c6cb2f126d2cd3040"
+    },
+    "results/experiment_5526_sota_structured_repair_loop.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:85ad3e29c381585578610e4b8ade06174cf93fe2219a6766c3c894e35e0464e9"
+    },
+    "results/experiment_5527_sota_hard_soft_panel_v2.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:693a5ab13b352d888da90c4e8d14914c8188bb0912ae900fc2a76ebcf66909fe"
+    },
+    "results/experiment_5528_csl_canonical_gate_artifact.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:85b22b45d24be6e29c3f292280d4d1ebec036f55b115d3bc574b8466fe5a5540"
+    },
+    "results/experiment_5529_csl_event_topic_residue_stress.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:39000e5942700606cc6362eb1ba5de88946ce5d69c36f5e60e5ebb57a6e4d507"
+    },
+    "results/experiment_5530_sota_csl_memory_panel_v2.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:f772edbc05cee292cc0d416dff0008d20e95050c68265b7a96652e7ebf4cb507"
+    },
+    "results/experiment_5531_sparse_repair_scaleup_ci.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:a30b9bbf675fb29b74c4ef3e9a945ddc18f291c1b7c4b0bb5f72228db4aac7c2"
+    },
+    "results/experiment_5532_hardware_receipt_parser_repeatability.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:0a2ccf9e269f2068961754cc4a654f03e3860f3e4444acf7298cc1159d69f5f0"
+    },
+    "results/experiment_5533_arc_strategy_routing_precheck.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:c9b428b0f7402823a270b896c865ffea793ebbdedaac0954b264f02ae62a0d4e"
+    },
+    "results/experiment_5534_arc_strategy_routed_levelup.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:9567a64b41868874152e7745d58ac1ed6ae73a9b62bfef2de936738e9ffd0bd4"
+    },
+    "results/experiment_5535_capstone_v501.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:e67c822bcda50f6f5dfd6e5a7cc56615d11c4e53a447c5d896178e528b816632"
+    }
+  },
+  "artifacts_expected": [
+    "results/experiment_5524_v501_source_delta_ingestion.json",
+    "results/experiment_5525_sota_schema_failure_taxonomy.json",
+    "results/experiment_5526_sota_structured_repair_loop.json",
+    "results/experiment_5527_sota_hard_soft_panel_v2.json",
+    "results/experiment_5528_csl_canonical_gate_artifact.json",
+    "results/experiment_5529_csl_event_topic_residue_stress.json",
+    "results/experiment_5530_sota_csl_memory_panel_v2.json",
+    "results/experiment_5531_sparse_repair_scaleup_ci.json",
+    "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+    "results/experiment_5533_arc_strategy_routing_precheck.json",
+    "results/experiment_5534_arc_strategy_routed_levelup.json",
+    "results/experiment_5535_capstone_v501.json"
+  ],
+  "artifacts_found": [
+    "results/experiment_5524_v501_source_delta_ingestion.json",
+    "results/experiment_5525_sota_schema_failure_taxonomy.json",
+    "results/experiment_5526_sota_structured_repair_loop.json",
+    "results/experiment_5527_sota_hard_soft_panel_v2.json",
+    "results/experiment_5528_csl_canonical_gate_artifact.json",
+    "results/experiment_5529_csl_event_topic_residue_stress.json",
+    "results/experiment_5530_sota_csl_memory_panel_v2.json",
+    "results/experiment_5531_sparse_repair_scaleup_ci.json",
+    "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+    "results/experiment_5533_arc_strategy_routing_precheck.json",
+    "results/experiment_5534_arc_strategy_routed_levelup.json",
+    "results/experiment_5535_capstone_v501.json"
+  ],
+  "artifacts_missing": [],
+  "blocked_lanes": [
+    {
+      "claim_boundary": "Hard/soft SOTA claim credit is blocked until duration and substrate evidence are clean.",
+      "classification": "blocked",
+      "evidence": {
+        "flagged_adversarial": true,
+        "sota_hard_soft_claim_allowed": false
+      },
+      "lane": "sota_hard_soft_claim_blocked",
+      "source_artifacts": [
+        "results/experiment_5527_sota_hard_soft_panel_v2.json",
+        "results/experiment_5535_capstone_v501.json"
+      ]
+    },
+    {
+      "claim_boundary": "Broad CSL claim credit is blocked by the flagged event/topic residue tautology.",
+      "classification": "blocked",
+      "evidence": {
+        "continuous_self_learning_evidence": true,
+        "csl_claim_allowed": false,
+        "residue_flagged_adversarial": true
+      },
+      "lane": "broad_csl_claim_blocked",
+      "source_artifacts": [
+        "results/experiment_5529_csl_event_topic_residue_stress.json",
+        "results/experiment_5530_sota_csl_memory_panel_v2.json",
+        "results/experiment_5535_capstone_v501.json"
+      ]
+    },
+    {
+      "claim_boundary": "No hardware speedup is allowed without matched authenticated timing.",
+      "classification": "blocked",
+      "evidence": {
+        "artifact_hardware_speedup_claim": false,
+        "hardware_speedup_claim": false,
+        "hardware_speedup_claim_allowed": false,
+        "matched_timing_available": false
+      },
+      "lane": "hardware_speedup_false",
+      "source_artifacts": [
+        "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+        "results/experiment_5535_capstone_v501.json"
+      ]
+    },
+    {
+      "claim_boundary": "ARC registry progress is zero, so no live level-up credit carries forward.",
+      "classification": "blocked",
+      "evidence": {
+        "arc_registry_delta": 0,
+        "registry_after_levels": 69,
+        "registry_before_levels": 69,
+        "registry_delta": 0,
+        "reproduced_levels": 0
+      },
+      "lane": "arc_registry_delta_zero",
+      "source_artifacts": [
+        "results/experiment_5534_arc_strategy_routed_levelup.json",
+        "results/experiment_5535_capstone_v501.json"
+      ]
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "claim_boundary": "Structured repair may carry forward, but the live hard/soft SOTA claim is blocked.",
+      "classification": "bounded",
+      "evidence": {
+        "capstone_verdict": "complete: .501 capstone read 13 result artifacts; missing=1; skipped_flagged_or_gated=5; structured_sota_claim_allowed=True; sota_hard_soft_claim_allowed=False; continuous_self_learning_evidence=True; csl_claim_allowed=False; sparse_repair_claim_allowed=True; hardware_speedup_claim=False; arc_registry_delta=0",
+        "sota_hard_soft_claim_allowed": false,
+        "structured_sota_claim_allowed": true
+      },
+      "lane": "structured_sota_repair_claim_boundary",
+      "source_artifacts": [
+        "results/experiment_5525_sota_schema_failure_taxonomy.json",
+        "results/experiment_5526_sota_structured_repair_loop.json",
+        "results/experiment_5535_capstone_v501.json"
+      ]
+    },
+    {
+      "claim_boundary": "The CSL memory panel is useful evidence, but broad CSL waits on non-tautological residue repair.",
+      "classification": "bounded",
+      "evidence": {
+        "continuous_self_learning_evidence": true,
+        "csl_claim_allowed": false,
+        "memory_panel_claim_allowed": true,
+        "residue_corrigendum_pending": [
+          {
+            "detail": "event_only_score=0.6666666667 and topic_only_score=0.6666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ]
+      },
+      "lane": "bounded_csl_memory_claim",
+      "source_artifacts": [
+        "results/experiment_5530_sota_csl_memory_panel_v2.json",
+        "results/experiment_5529_csl_event_topic_residue_stress.json",
+        "results/experiment_5535_capstone_v501.json"
+      ]
+    },
+    {
+      "claim_boundary": "Sparse repair can scale descriptors only after the finite-state exact fixture, and still has no speedup claim.",
+      "classification": "bounded",
+      "evidence": {
+        "active_constraint_sparse_repair_ready": true,
+        "matched_timing_available": false,
+        "speedup_claim_allowed": false
+      },
+      "lane": "sparse_repair_no_speedup",
+      "source_artifacts": [
+        "results/experiment_5531_sparse_repair_scaleup_ci.json"
+      ]
+    },
+    {
+      "claim_boundary": "ARC live-path provenance is preserved, but no level is banked without offline reproduction.",
+      "classification": "bounded",
+      "evidence": {
+        "offline_reproduced": false,
+        "reproduced_levels": 0,
+        "selected_game": "g50t",
+        "selected_level": "L3",
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "lane": "arc_live_path_provenance_no_bank",
+      "source_artifacts": [
+        "results/experiment_5534_arc_strategy_routed_levelup.json"
+      ]
+    }
+  ],
+  "clean_lanes": [
+    {
+      "claim_boundary": "The .501 source delta is archived as execution context only; it does not re-plan .502.",
+      "classification": "clean",
+      "evidence": {
+        "closed_scopes_reopened": false,
+        "honest_verdict": "complete: no new actionable V501 execution-time source deltas after the planner refresh; references unchanged and closed scopes stayed closed.",
+        "new_references_added": [],
+        "research_references_updated": false
+      },
+      "lane": "source_delta",
+      "source_artifacts": [
+        "results/experiment_5524_v501_source_delta_ingestion.json"
+      ]
+    },
+    {
+      "claim_boundary": "The taxonomy explains the schema failure boundary but is not itself a quality claim.",
+      "classification": "clean",
+      "evidence": {
+        "exact_validator_handoff_ready": false,
+        "honest_verdict": "complete: sota_schema_failure_taxonomy_ready_prompt_contract_miss_and_semantic_candidate_absent",
+        "schema_validity_rate": 0.0,
+        "sota_schema_failure_taxonomy_ready": true
+      },
+      "lane": "sota_schema_taxonomy",
+      "source_artifacts": [
+        "results/experiment_5525_sota_schema_failure_taxonomy.json"
+      ]
+    },
+    {
+      "claim_boundary": "The repair loop made rows schema-valid with exact handoff, but panel quality still needs clean duration evidence.",
+      "classification": "clean",
+      "evidence": {
+        "exact_validator_handoff_ready": true,
+        "missing_candidate_rows_after": 0,
+        "schema_validity_after": 1.0,
+        "schema_validity_before": 0.0,
+        "sota_structured_repair_loop_ready": true
+      },
+      "lane": "structured_repair_loop",
+      "source_artifacts": [
+        "results/experiment_5526_sota_structured_repair_loop.json"
+      ]
+    },
+    {
+      "claim_boundary": "The canonical gate is conductor-visible CSL evidence, not broad memory-transfer proof.",
+      "classification": "clean",
+      "evidence": {
+        "conductor_gate_probe_passed": true,
+        "continuous_self_learning_evidence": true,
+        "csl_gate_fields_conductor_visible": true,
+        "heldout_delta": 1.0
+      },
+      "lane": "canonical_csl_gate",
+      "source_artifacts": [
+        "results/experiment_5528_csl_canonical_gate_artifact.json"
+      ]
+    },
+    {
+      "claim_boundary": "The memory panel ran and is useful, but its broad claim remains bounded by flagged residue evidence.",
+      "classification": "clean",
+      "evidence": {
+        "continuous_self_learning_evidence": true,
+        "csl_claim_allowed": true,
+        "heldout_delta": 0.6666666667,
+        "stale_evidence_rejection_rate": 1.0
+      },
+      "lane": "sota_csl_memory_panel",
+      "source_artifacts": [
+        "results/experiment_5530_sota_csl_memory_panel_v2.json"
+      ]
+    },
+    {
+      "claim_boundary": "Sparse repair is exact-checked scale evidence, not a speedup or hardware result.",
+      "classification": "clean",
+      "evidence": {
+        "active_constraint_sparse_repair_ready": true,
+        "all_candidates_exact_checked": true,
+        "exact_only_success_rate": 1.0,
+        "sparse_repair_success_rate": 1.0
+      },
+      "lane": "sparse_repair_scaleup",
+      "source_artifacts": [
+        "results/experiment_5531_sparse_repair_scaleup_ci.json"
+      ]
+    }
+  ],
+  "conductor_evidence": [
+    "| 2026-07-10 00:42 UTC | Structured-output positive control for SOTA hard/s | OK | 91 passed, 1 warning in 9.75s |",
+    "| 2026-07-10 01:01 UTC | Gated SOTA GGUF hard/soft structured evidence pane | OK | 87 passed, 1 warning in 8.41s |",
+    "| 2026-07-10 01:03 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |",
+    "| 2026-07-10 01:05 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |",
+    "| 2026-07-10 01:07 UTC | Gated logits-energy sidecar on parsed SOTA rows | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.so |",
+    "| 2026-07-10 01:21 UTC | CSL independent-outcome graph replay and gate-fiel | OK | 87 passed, 1 warning in 10.60s |",
+    "| 2026-07-10 01:23 UTC | Gated SOTA GGUF CSL memory panel on clean independ | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |",
+    "| 2026-07-10 01:25 UTC | Gated SOTA GGUF CSL memory panel on clean independ | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |",
+    "| 2026-07-10 01:27 UTC | Gated SOTA GGUF CSL memory panel on clean independ | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |",
+    "| 2026-07-10 01:29 UTC | Gated CSL memory residue and stale-evidence stress | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |",
+    "| 2026-07-10 01:31 UTC | Gated CSL memory residue and stale-evidence stress | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |",
+    "| 2026-07-10 01:33 UTC | Gated CSL memory residue and stale-evidence stress | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |",
+    "| 2026-07-10 04:27 UTC | Hardware continuity and timing-methodology receipt | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: =tmp_path,",
+    "| 2026-07-10 04:39 UTC | Hardware continuity and timing-methodology receipt | OK | cache hit: 85 passed, 1 warning in 14.47s |",
+    "| 2026-07-10 04:55 UTC | ARC live target precheck with action-diversity gua | OK | 109 passed, 1 warning in 13.31s |",
+    "| 2026-07-10 05:12 UTC | Gated ARC live action-diverse level-up attempt | OK | 90 passed, 1 warning in 11.40s |",
+    "| 2026-07-10 05:38 UTC | Capstone reconciliation for milestone .500 | OK | 86 passed, 1 warning in 9.18s |",
+    "| 2026-07-10 07:20 UTC | SOTA GGUF structured-output failure taxonomy | OK | 94 passed, 1 warning in 9.73s |",
+    "| 2026-07-10 07:39 UTC | Gated SOTA GGUF structured repair loop | OK | 86 passed, 1 warning in 9.82s |",
+    "| 2026-07-10 07:56 UTC | Gated SOTA GGUF hard/soft structured panel v2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+    "| 2026-07-10 08:10 UTC | CSL canonical gate artifact and sidecar-safe field | OK | 85 passed, 1 warning in 10.44s |",
+    "| 2026-07-10 08:38 UTC | Gated CSL event/topic memory residue stress | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY \u2014 result quarantined, not a clean success |",
+    "| 2026-07-10 08:54 UTC | Gated SOTA GGUF CSL memory panel v2 | OK | 86 passed, 1 warning in 10.89s |",
+    "| 2026-07-10 10:24 UTC | Hardware receipt parser and repeatability repair | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+    "| 2026-07-10 10:44 UTC | ARC strategy-routing and repeated-coordinate prech | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+    "| 2026-07-10 10:59 UTC | Gated ARC strategy-routed live level-up attempt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+    "| 2026-07-10 12:22 UTC | Capstone reconciliation for milestone .501 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ={",
+    "| 2026-07-10 13:26 UTC | Capstone reconciliation for milestone .501 | OK | cache hit: 87 passed, 1 warning in 14.22s |",
+    "| 2026-07-10 14:14 UTC | Plan milestone 2026.07.502 | OK | 14 tasks proposed |",
+    "| 2026-07-10 14:16 UTC | Milestone 2026.07.502 activated | OK | 14 tasks queued |"
+  ],
+  "conductor_unchanged": true,
+  "csl_residue_corrigendum_required": true,
+  "experiment": "experiment_5536_transition_v502",
+  "experiment_id": "exp5536-transition-v502",
+  "failed_preconditions": [],
+  "field_principles": {
+    "arc_clean_precheck_required": "Bare boolean requiring seed/checksum/substrate-clean ARC precheck before live level-up.",
+    "blocked_lanes": "Blocked `.501` prerequisites that must not become headline credit.",
+    "bounded_lanes": "Useful `.501` evidence kept claim-limited until the matching `.502` gate runs.",
+    "clean_lanes": "Completed `.501` evidence safe to carry forward without promoting flagged claims.",
+    "conductor_unchanged": "Protected-file check for `scripts/research_conductor.py`.",
+    "csl_residue_corrigendum_required": "Bare boolean requiring non-tautological event/topic residue evidence before retrieval and cross-model memory.",
+    "finite_state_fixture_required": "Bare boolean requiring a deterministic exact finite-state fixture before sparse descriptor scale.",
+    "flagged_lanes": "Adversarial or methodology flags preserved as repair work, not clean evidence.",
+    "grammar_preflight_required": "Bare boolean requiring grammar-table reachability before another SOTA hard/soft panel.",
+    "hardware_receipt_only": "Bare boolean preserving no-speedup posture without matched authenticated timing.",
+    "honest_verdict": "Terminal summary starting with `complete:` or `blocked:` that names the transition boundary.",
+    "inference_substrate": "Must equal `aggregation_from_upstream_artifacts` because Exp5536 is synthesis only.",
+    "milestone": "Route key for the `.502` transition receipt.",
+    "next_task_range": "Planned `.502` conductor task range.",
+    "previous_milestone": "Source milestone whose terminal facts are archived.",
+    "previous_task_range": "Closed `.501` conductor task range.",
+    "prior_capstone_path": "Exact `.501` capstone artifact used as the main source of truth.",
+    "roadmap_yaml_unchanged": "Protected-file check for `research-roadmap.yaml`.",
+    "sota_duration_corrigendum_required": "Bare boolean requiring Exp5527 duration and substrate repair before panel v3."
+  },
+  "finite_state_fixture_required": true,
+  "flagged_lanes": [
+    {
+      "claim_boundary": "Exp5527 reported valid rows but was too short for a live local GGUF substrate claim.",
+      "classification": "flagged",
+      "evidence": {
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=0.001162 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          }
+        ],
+        "duration_s": 0.001162,
+        "flagged_adversarial": true,
+        "inference_substrate": "exact_validated_local_sota_gguf_panel",
+        "sota_hard_soft_claim_allowed": true
+      },
+      "lane": "exp5527_duration_substrate",
+      "source_artifacts": [
+        "results/experiment_5527_sota_hard_soft_panel_v2.json"
+      ]
+    },
+    {
+      "claim_boundary": "Exp5529 event-only and topic-only metrics are identical, so residue repair is mandatory.",
+      "classification": "flagged",
+      "evidence": {
+        "corrigendum_pending": [
+          {
+            "detail": "event_only_score=0.6666666667 and topic_only_score=0.6666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "event_only_score": 0.6666666667,
+        "flagged_adversarial": true,
+        "topic_only_score": 0.6666666667
+      },
+      "lane": "exp5529_residue_tautology",
+      "source_artifacts": [
+        "results/experiment_5529_csl_event_topic_residue_stress.json"
+      ]
+    },
+    {
+      "claim_boundary": "Exp5532 remains receipt-only and needs methodology cleanup before it can be clean evidence.",
+      "classification": "flagged",
+      "evidence": {
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=9.160578 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "duration_s": 9.160578,
+        "flagged_adversarial": true,
+        "hardware_speedup_claim": false,
+        "matched_timing_available": false
+      },
+      "lane": "exp5532_hardware_receipt_methodology",
+      "source_artifacts": [
+        "results/experiment_5532_hardware_receipt_parser_repeatability.json"
+      ]
+    },
+    {
+      "claim_boundary": "Exp5533 kept live-path provenance but needs clean seed, checksum, and substrate hygiene.",
+      "classification": "flagged",
+      "evidence": {
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=0.07068435614928603 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "flagged_adversarial": true,
+        "random_seed_present": false,
+        "reproducibility_checksum_present": false,
+        "selected_game": "g50t",
+        "selected_level": "L3",
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "lane": "exp5533_arc_precheck_hygiene",
+      "source_artifacts": [
+        "results/experiment_5533_arc_strategy_routing_precheck.json"
+      ]
+    },
+    {
+      "claim_boundary": "Exp5534 was an honest null with zero registry delta and avoidable hygiene flags.",
+      "classification": "flagged",
+      "evidence": {
+        "corrigendum_pending": [
+          {
+            "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          {
+            "detail": "duration_s=2.702068200800568 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "duration_s": 2.702068200800568,
+        "flagged_adversarial": true,
+        "random_seed_present": false,
+        "registry_delta": 0,
+        "reproduced_levels": 0,
+        "reproducibility_checksum_present": false,
+        "status": "honest_null"
+      },
+      "lane": "exp5534_arc_levelup_hygiene",
+      "source_artifacts": [
+        "results/experiment_5534_arc_strategy_routed_levelup.json"
+      ]
+    }
+  ],
+  "grammar_preflight_required": true,
+  "hardware_receipt_only": true,
+  "honest_verdict": "complete: .501 terminal evidence archived into .502 transition; clean_lanes=6; bounded_lanes=4; blocked_lanes=4; flagged_lanes=5; gates=sota_duration,grammar_preflight,csl_residue,finite_state,arc_clean; hardware_receipt_only=True; arc_registry_delta=0",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.502",
+  "next_task_range": "exp5536-exp5549",
+  "preconditions_checked": {
+    "active_roadmap_loadable": true,
+    "active_roadmap_milestone": "2026.07.502",
+    "prior_capstone_milestone": "2026.07.501",
+    "roadmap_next_present": false,
+    "roadmap_task_ids_match": true,
+    "vnext_names_milestone": true,
+    "vnext_task_range": "exp5536-exp5549"
+  },
+  "previous_milestone": "2026.07.501",
+  "previous_task_range": "exp5523-exp5535",
+  "prior_capstone_path": "results/experiment_5535_capstone_v501.json",
+  "protected_file_checks": {
+    "research-roadmap.yaml": {
+      "modified": false
+    },
+    "scripts/research_conductor.py": {
+      "modified": false
+    }
+  },
+  "random_seed": 5536,
+  "reproducibility_checksum": "sha256:83948fa1235bbc7dc6a9932f07dcf4363361b04c42e2a8cbbda19a74219d2d39",
+  "result_path": "results/experiment_5536_transition_v502.json",
+  "roadmap_doc_task_range": "exp5536-exp5549",
+  "roadmap_task_ids": [
+    "exp5536-transition-v502",
+    "exp5537-v502-source-delta-ingestion",
+    "exp5538-sota-panel-duration-substrate-corrigendum",
+    "exp5539-gram2token-grammar-table-preflight",
+    "exp5540-gated-sota-hard-soft-live-panel-v3",
+    "exp5541-llm-fsm-exact-fixture",
+    "exp5542-csl-residue-metric-independence-corrigendum",
+    "exp5543-gated-retrieval-warmed-csl-five-arm-ablation",
+    "exp5544-gated-cross-model-sota-csl-transfer",
+    "exp5545-gated-sparse-repair-fsm-descriptor-scale",
+    "exp5546-hardware-receipt-substrate-corrigendum",
+    "exp5547-arc-no-llm-substrate-precheck",
+    "exp5548-gated-arc-clean-live-levelup",
+    "exp5549-v502-capstone-reconciliation"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5536.transition_v502.v1",
+  "sota_duration_corrigendum_required": true,
+  "source_context": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:b4126df57891704c663382fe99d96087705830ad27ada0a7aeb0524335b494b3"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:82e7ebffe04059807ba984af15a2a08903416c22c657f54b2e588a6840de9729"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:c120a5426a59b3eab5b55773551a8398be966b310dcd8b56df875373d96f71a3"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:3b56a8d4033194579229ce72d0aa4d3f4ad38b76fd3f9d9185d60c14dcae3a43"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:8224a43f5e38e3aad3cabf053abe2dd426bb28866bcdff91bf3381d9cfd94fa8"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5536",
+    "SCENARIO-REPORT-5536",
+    "SCENARIO-REPORT-5536-BLOCKED-INPUT",
+    "SCENARIO-REPORT-5536-FIELD-PRINCIPLES"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5536_transition_v502.py -q --no-cov",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5536_transition_v502.py -m pytest tests/python/test_experiment_5536_transition_v502.py -q --no-cov -n 0",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5536_transition_v502.py --fail-under=100",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ]
+}
