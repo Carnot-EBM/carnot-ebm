@@ -29000,6 +29000,86 @@ is true, then Exp 5505 SHALL write the same result path with
 |---|---|---|
 | REQ-VERIFY-5505 | Implemented (`python/carnot/experiment_5505_active_constraint_milp_descriptor_v499.py`, `results/experiment_5505_active_constraint_milp_descriptor_v499.json`) | Implemented (`tests/python/test_experiment_5505_active_constraint_milp_descriptor_v499.py`) |
 
+### REQ-VERIFY-5518: Exact-Checked Sparse Block Repair Descriptors V500
+
+The repository SHALL provide Exp 5518 at
+`python/carnot/experiment_5518_block_gibbs_sparse_repair_descriptors.py` and
+write `results/experiment_5518_block_gibbs_sparse_repair_descriptors.json`
+plus descriptor and fixture payloads under
+`results/block_gibbs_sparse_repair_5518/descriptors.json` and
+`results/block_gibbs_sparse_repair_5518/fixtures.json` without modifying
+`scripts/research_conductor.py`, without training a diffusion model, without
+invoking a live LLM, and without claiming solver or hardware speedup. The
+experiment SHALL select small hard/soft Carnot descriptor fixtures where exact
+fallback can certify every emitted candidate as accepted or rejected.
+
+Exp 5518 SHALL compare three deterministic policies over the same fixture rows
+and seeds: an exact-only finite-domain baseline, a descriptor-guided sparse
+repair policy named `violated_hard_constraint_variables_then_exact_validate`,
+and a random block repair policy. The sparse block descriptor SHALL identify a
+strict subset of variables or claims to repair from violated hard-constraint
+rows after a violation, SHALL generate candidate repairs only inside that
+block, and SHALL send every candidate through the exact validator before
+recording acceptance. Random block repair SHALL use deterministic seeds and the
+same block size as the sparse descriptor where possible. Exact-only baseline
+SHALL use full finite-domain exact fallback over the same fixture.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`descriptor_path`, `fixture_paths`, `exact_fallback_used`,
+`sparse_block_policy`, `seeds`, `exact_only_success_rate`,
+`sparse_repair_success_rate`, `random_block_success_rate`,
+`mean_iterations_exact_only`, `mean_iterations_sparse_repair`,
+`speedup_claim_allowed`, `active_constraint_sparse_repair_ready`,
+`inference_substrate`, and `honest_verdict`. `inference_substrate` SHALL equal
+`exact_checked_sparse_repair`. `exact_fallback_used` SHALL be true.
+`speedup_claim_allowed` SHALL be false unless a matched timing harness with
+authenticated timing evidence is added in a later task. `honest_verdict` SHALL
+start with `complete:` or `blocked:`. `active_constraint_sparse_repair_ready`
+SHALL be true only when descriptor and fixture payloads exist, all candidate
+rows have exact accept/reject decisions, sparse repair succeeds on the selected
+hard/soft fixture violations, and no speedup claim is allowed.
+
+Required field principles:
+
+- `descriptor_path`: principle "points to the executable sparse block descriptor payload."
+- `fixture_paths`: principle "names the exact-checkable hard/soft fixtures used by every policy."
+- `exact_fallback_used`: principle "keeps exact validators as the acceptance authority."
+- `sparse_block_policy`: principle "names the non-trained block-selection rule after violations."
+- `seeds`: principle "records deterministic candidate-generation seeds."
+- `exact_only_success_rate`: principle "full exact fallback acceptance reference."
+- `sparse_repair_success_rate`: principle "descriptor-guided repair acceptance under exact checking."
+- `random_block_success_rate`: principle "same-size random block control under exact checking."
+- `mean_iterations_exact_only`: principle "iteration evidence for the exact-only baseline."
+- `mean_iterations_sparse_repair`: principle "iteration evidence for sparse repair; not a speedup claim."
+- `speedup_claim_allowed`: principle "must remain false without matched timing evidence."
+- `active_constraint_sparse_repair_ready`: principle "interface readiness gate, not a performance headline."
+- `inference_substrate`: principle "declares exact-checked sparse repair, no model training or live inference."
+- `honest_verdict`: principle "terminal status; start with complete: or blocked: and do not claim speedup."
+
+### SCENARIO-VERIFY-5518: Sparse Block Repairs Are Exact-Validated
+
+Given small Exp 5499 hard/soft typed claim-state fixtures with deliberate
+hard-constraint violations, when Exp 5518 runs exact-only, sparse repair, and
+random block repair policies across deterministic seeds, then every candidate
+repair is accepted or rejected by the exact validator, the sparse descriptor
+block is a strict subset of the fixture variables, sparse repair succeeds on
+the selected violations, and the artifact records acceptance rates, iteration
+counts, wall-time observations, seeds, descriptor path, fixture paths, and
+`inference_substrate=exact_checked_sparse_repair`.
+
+If any candidate lacks an exact accept/reject decision, if the sparse block is
+empty or covers the full fixture, if sparse repair fails on the selected
+hard/soft fixtures, if `speedup_claim_allowed` is true without matched timing
+evidence, or if the result omits any required field, then Exp 5518 SHALL write
+the same result path with `active_constraint_sparse_repair_ready=false`,
+precise blocker details, and an `honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5518)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5518 | Implemented (`python/carnot/experiment_5518_block_gibbs_sparse_repair_descriptors.py`, `results/experiment_5518_block_gibbs_sparse_repair_descriptors.json`) | Implemented (`tests/python/test_experiment_5518_block_gibbs_sparse_repair_descriptors.py`) |
+
 ### REQ-VERIFY-5506: Multi-Board Hardware Smoke Receipts V499
 
 The repository SHALL provide Exp 5506 at

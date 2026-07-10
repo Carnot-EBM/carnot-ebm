@@ -1,0 +1,85 @@
+{
+  "descriptor_count": 2,
+  "schema": "carnot.descriptor_bundle.sparse_block_repair_5518.v1",
+  "sparse_block_policy": "violated_hard_constraint_variables_then_exact_validate",
+  "sparse_repair_descriptors": [
+    {
+      "block_size": 2,
+      "descriptor_id": "sparse-repair:claim_support_preference",
+      "exact_fallback": {
+        "accepted_assignment": {
+          "scope": "bounded",
+          "source_quality": "primary",
+          "support": "entailed"
+        },
+        "objective_score": 11.0,
+        "required": true,
+        "status": "optimal",
+        "validator": "exp5499_finite_domain_hard_soft_exact_validator"
+      },
+      "initial_assignment": {
+        "scope": "overbroad",
+        "source_quality": "primary",
+        "support": "unsupported"
+      },
+      "repair_block_variables": [
+        "support",
+        "scope"
+      ],
+      "schema": "carnot.descriptor.sparse_block_repair.v1",
+      "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+      "source_instance_id": "claim_support_preference",
+      "sparse_block_policy": "violated_hard_constraint_variables_then_exact_validate",
+      "sparse_subset": true,
+      "variable_count": 3,
+      "variables": [
+        "support",
+        "source_quality",
+        "scope"
+      ],
+      "violated_hard_constraints": [
+        "HC_SUPPORT_ENTAILED",
+        "HC_SCOPE_BOUNDED"
+      ]
+    },
+    {
+      "block_size": 2,
+      "descriptor_id": "sparse-repair:claim_safety_conflict",
+      "exact_fallback": {
+        "accepted_assignment": {
+          "action": "accept",
+          "citation": "present",
+          "safety": "safe"
+        },
+        "objective_score": 12.0,
+        "required": true,
+        "status": "optimal",
+        "validator": "exp5499_finite_domain_hard_soft_exact_validator"
+      },
+      "initial_assignment": {
+        "action": "accept",
+        "citation": "missing",
+        "safety": "unsafe"
+      },
+      "repair_block_variables": [
+        "safety",
+        "citation"
+      ],
+      "schema": "carnot.descriptor.sparse_block_repair.v1",
+      "source_fixture_path": "results/preference_maxsat_minimal_fixture_5499/fixture.json",
+      "source_instance_id": "claim_safety_conflict",
+      "sparse_block_policy": "violated_hard_constraint_variables_then_exact_validate",
+      "sparse_subset": true,
+      "variable_count": 3,
+      "variables": [
+        "safety",
+        "citation",
+        "action"
+      ],
+      "violated_hard_constraints": [
+        "HC_SAFETY_SAFE",
+        "HC_CITATION_PRESENT"
+      ]
+    }
+  ]
+}

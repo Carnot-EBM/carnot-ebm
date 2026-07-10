@@ -10694,3 +10694,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 01:29 UTC | Gated CSL memory residue and stale-evidence stress | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |
 | 2026-07-10 01:31 UTC | Gated CSL memory residue and stale-evidence stress | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |
 | 2026-07-10 01:33 UTC | Gated CSL memory residue and stale-evidence stress | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5515-csl-independent-outcome-gate-repai |
+| 2026-07-10 02:57 UTC | Block-Gibbs sparse repair descriptors with exact f | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ValueError, ma |
