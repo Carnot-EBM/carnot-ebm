@@ -1,31 +1,31 @@
-milestone: "2026.07.502"
-milestone_title: "Adversarial-Clean SOTA Evidence, Non-Tautological CSL, Finite-State Constraints, Receipt Hygiene, and ARC Live-Path Recovery"
+milestone: "2026.07.503"
+milestone_title: "Grammar-Forced SOTA Rows, ASP-FSM Sparse Repair, Causal CSL Memory, Timing Receipts, and ARC Live-Path Rotation"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 overdue_priority_override: "Operator request for this planning turn explicitly says Do NOT modify scripts/research_conductor.py, so conductor-fix overdue priorities are not included in this research roadmap."
-operator_override: "2026-07-10 operator request explicitly says Do NOT modify scripts/research_conductor.py; conductor-fix overdue priorities are therefore excluded from the .502 research roadmap."
+operator_override: "2026-07-10 operator request explicitly says Do NOT modify scripts/research_conductor.py; conductor-fix overdue priorities are therefore excluded from the .503 research roadmap."
 tasks:
-  - id: exp5536-transition-v502
-    milestone: "2026.07.502"
-    title: "Transition .501 outcomes into .502 execution context"
+  - id: exp5550-transition-v503
+    milestone: "2026.07.503"
+    title: "Transition .502 outcomes into .503 execution context"
     priority: critical
     track: planning
-    deliverable: results/experiment_5536_transition_v502.json
+    deliverable: results/experiment_5550_transition_v503.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 30
     estimated_wall_time_min: 20
     prior_failures:
-      - experiment_id: exp5535-v501-capstone-reconciliation
-        verdict: "complete: .501 capstone read 13 result artifacts; structured_sota_claim_allowed true; sota_hard_soft_claim_allowed false; continuous_self_learning_evidence true; csl_claim_allowed false; sparse_repair_claim_allowed true; hardware_speedup_claim false; arc_registry_delta 0."
-        addressed_by: "This is the routine next-milestone transition from .501 to .502 and carries terminal facts forward rather than rerunning the capstone."
+      - experiment_id: exp5549-v502-capstone-reconciliation
+        verdict: "complete: .502 capstone read 14/14 artifacts with one flagged CSL tautology, one gated skip, two honest nulls, continuous_self_learning_evidence true, csl_claim_allowed false, hardware_speedup_claim false, and arc_registry_delta 0."
+        addressed_by: "This is the routine next-milestone transition from .502 to .503 and carries terminal facts forward rather than rerunning the capstone."
         retire_if_same_verdict: true
-      - experiment_id: exp5523-transition-v501
-        verdict: "complete: archived .500 terminal evidence into .501 transition receipt with next_task_range exp5523-exp5535."
-        addressed_by: "This transition targets the newer .501 artifact set and increments the CalVer sequence to 2026.07.502."
+      - experiment_id: exp5536-transition-v502
+        verdict: "complete: archived .501 terminal evidence into .502 transition receipt with next_task_range exp5536-exp5549."
+        addressed_by: "This transition targets the newer .502 artifact set and increments the CalVer sequence to 2026.07.503."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are starting milestone 2026.07.502 on {date} after all 2026.07.501 tasks completed. The planner has staged {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml. Your job is to archive prior milestone facts into a transition receipt, not to re-plan the milestone.
+      You are starting milestone 2026.07.503 on {date} after all 2026.07.502 tasks completed. The planner has staged {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml. Your job is to archive prior milestone facts into a transition receipt, not to re-plan the milestone.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -36,38 +36,41 @@ tasks:
       - {project_root}/ops/changelog.md
       - {project_root}/ops/status.md
       - {project_root}/ops/conductor-log.md
-      - {project_root}/results/experiment_5535_capstone_v501.json
-      - {project_root}/results/experiment_5527_sota_hard_soft_panel_v2.json
-      - {project_root}/results/experiment_5529_csl_event_topic_residue_stress.json
-      - {project_root}/results/experiment_5532_hardware_receipt_parser_repeatability.json
-      - {project_root}/results/experiment_5533_arc_strategy_routing_precheck.json
-      - {project_root}/results/experiment_5534_arc_strategy_routed_levelup.json
+      - {project_root}/research-complete.yaml
+      - {project_root}/results/experiment_5549_capstone_v502.json
+      - {project_root}/results/experiment_5540_sota_hard_soft_live_panel_v3.json
+      - {project_root}/results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
+      - {project_root}/results/experiment_5544_cross_model_sota_csl_transfer.json
+      - {project_root}/results/experiment_5545_sparse_repair_fsm_descriptor_scale.json
+      - {project_root}/results/experiment_5546_hardware_receipt_substrate_corrigendum.json
+      - {project_root}/results/experiment_5548_arc_clean_live_levelup.json
 
       TASK:
-      Emit results/experiment_5536_transition_v502.json summarizing exact .501 terminal evidence and .502 execution gates.
+      Emit results/experiment_5550_transition_v503.json summarizing exact .502 terminal evidence and .503 execution gates.
 
       CONCRETE STEPS:
-      1. Read the listed files and extract .501 facts from real artifacts and conductor log entries.
-      2. Record the CalVer transition to 2026.07.502 and the expected task range exp5536-exp5549.
-      3. Summarize clean lanes: source delta, SOTA schema taxonomy, structured repair loop, canonical CSL gate, SOTA CSL memory panel, and sparse repair scale-up.
-      4. Explicitly record blocked or flagged lanes: Exp5527 duration/substrate, Exp5529 residue tautology, Exp5532 hardware receipt methodology, Exp5533/Exp5534 ARC hygiene, hardware speedup false, and ARC registry delta zero.
-      5. Record the .502 gates: SOTA duration and grammar preflight before panel v3, CSL residue repair before retrieval/cross-model memory, finite-state fixture before sparse descriptor scale, and ARC clean precheck before live level-up.
+      1. Read the listed files and extract .502 facts from real artifacts and conductor log entries.
+      2. Record the CalVer transition to 2026.07.503 and the expected task range exp5550-exp5563.
+      3. Summarize clean lanes: duration/substrate corrigendum, grammar table preflight, exact FSM fixture, CSL residue independence, sparse FSM repair signal, hardware receipt hygiene, and ARC clean precheck.
+      4. Explicitly record blocked or flagged lanes: Exp5540 no SOTA hard/soft claim, Exp5543 CSL TAUTOLOGY flag, Exp5544 gated cross-model transfer skip, Exp5548 ARC honest null, hardware speedup false, and ARC registry delta zero.
+      5. Record the .503 gates: automaton row-completion before grammar-forced SOTA smoke, grammar-forced smoke before panel v4, ASP/FSM fixture before sparse repair scale, CSL tautology repair before causal CSL memory, causal memory before cross-model transfer, and ARC target rotation before level-up.
       6. Confirm that research-roadmap.yaml and scripts/research_conductor.py were not modified.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - milestone: 2026.07.502
-         - previous_milestone: 2026.07.501
-         - prior_capstone_path: results/experiment_5535_capstone_v501.json
-         - previous_task_range: exp5523-exp5535
-         - next_task_range: exp5536-exp5549
+         - milestone: 2026.07.503
+         - previous_milestone: 2026.07.502
+         - prior_capstone_path: results/experiment_5549_capstone_v502.json
+         - previous_task_range: exp5536-exp5549
+         - next_task_range: exp5550-exp5563
          - clean_lanes: list
          - bounded_lanes: list
          - blocked_lanes: list
          - flagged_lanes: list
-         - sota_duration_corrigendum_required: bool
-         - grammar_preflight_required: bool
-         - csl_residue_corrigendum_required: bool
-         - finite_state_fixture_required: bool
-         - arc_clean_precheck_required: bool
+         - skipped_by_gates: list
+         - sota_row_completion_required: bool
+         - asp_fsm_fixture_required: bool
+         - csl_tautology_corrigendum_required: bool
+         - causal_csl_memory_required: bool
+         - arc_target_rotation_required: bool
          - hardware_receipt_only: bool
          - roadmap_yaml_unchanged: bool
          - conductor_unchanged: bool
@@ -76,28 +79,28 @@ tasks:
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5537-v502-source-delta-ingestion
-    milestone: "2026.07.502"
-    title: "Execution-time V502 source delta and experiment mapping"
+  - id: exp5551-v503-source-delta-ingestion
+    milestone: "2026.07.503"
+    title: "Execution-time V503 source delta and experiment mapping"
     priority: high
     track: literature
-    deliverable: results/experiment_5537_v502_source_delta_ingestion.json
+    deliverable: results/experiment_5551_v503_source_delta_ingestion.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 35
     estimated_wall_time_min: 35
     prior_failures:
+      - experiment_id: exp5537-v502-source-delta-ingestion
+        verdict: "complete: V502 source delta appended no duplicate actionable deltas beyond the planner refresh and mapped accepted items to .502 tasks."
+        addressed_by: "This refresh targets only new or newly actionable 2025-2026 deltas after the V503 planner block and maps accepted items to .503 tasks."
+        retire_if_same_verdict: true
       - experiment_id: exp5524-v501-source-delta-ingestion
         verdict: "complete: V501 source delta mapped GAM, compliance-grade schema-constrained serving, and metacognitive uncertainty into .501 tasks."
-        addressed_by: "This refresh targets only new or newly actionable 2025-2026 deltas after the V502 planner block and maps accepted items to .502 tasks."
-        retire_if_same_verdict: true
-      - experiment_id: exp5511-v500-sota-source-delta-ingestion
-        verdict: "complete: V500 source delta found no new actionable deltas after the planner refresh and emitted research_references_updated false."
         addressed_by: "This task uses a newer source baseline and treats no-op dedupe as acceptable if research-references.md is already current."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      The planner appended a V502 Planner Refresh to research-references.md on {date}. This task is the execution-time freshness check before science experiments run. It must add only non-duplicate actionable findings and must map each accepted finding to a planned .502 experiment.
+      The planner appended a V503 Planner Refresh to research-references.md on {date}. This task is the execution-time freshness check before science experiments run. It must add only non-duplicate actionable findings and must map each accepted finding to a planned .503 experiment.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -109,15 +112,15 @@ tasks:
       - {project_root}/research-roadmap-next.yaml
 
       TASK:
-      Search arXiv and secondary sources for 2025-2026 work relevant to Carnot since the V502 planner refresh, append only non-duplicate actionable findings to research-references.md, and emit a source-delta receipt.
+      Search arXiv and secondary sources for 2025-2026 work relevant to Carnot since the V503 planner refresh, append only non-duplicate actionable findings to research-references.md, and emit a source-delta receipt.
 
       CONCRETE STEPS:
       1. Search arXiv for EBMs for verification/reasoning, neural constraint satisfaction, Ising applications, hallucination mitigation, KANs, energy-guided decoding, hardware-accelerated sampling, and continual/online learning.
       2. Check OpenReview, Extropic writing, Semantic Scholar public routes for EBT 2507.02092 and ARM-EBM 2512.15605, HuggingFace Papers, GitHub, and Logical Intelligence public pages.
-      3. Dedupe against research-references.md, especially the V502 Planner Refresh block.
-      4. Append a short "V502 Execution Refresh - {date}" block only if new actionable deltas exist. If none exist, append nothing and explain the no-op in the artifact.
+      3. Dedupe against research-references.md, especially the V503 Planner Refresh block.
+      4. Append a short "V503 Execution Refresh - {date}" block only if new actionable deltas exist. If none exist, append nothing and explain the no-op in the artifact.
       5. Explicitly classify closed-scope or non-executable items as watch-only or excluded.
-      6. Map accepted findings to .502 experiments: SOTA duration/substrate repair, grammar table preflight, LLM-FSM exact fixture, CSL residue repair, sparse FSM descriptors, hardware receipt hygiene, or ARC live-path recovery.
+      6. Map accepted findings to .503 experiments: automaton row completion, GBNF-forced SOTA rows, ASP/FSM exact fixture, causal CSL memory, hardware timing receipts, and ARC live-path rotation.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
          - sources_checked: list
          - new_references_added: list
@@ -132,33 +135,107 @@ tasks:
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5538-sota-panel-duration-substrate-corrigendum
-    milestone: "2026.07.502"
-    title: "SOTA hard-soft panel duration and substrate corrigendum"
+  - id: exp5552-automaton-schema-row-completion-receipt
+    milestone: "2026.07.503"
+    title: "Automaton schema row-completion receipt"
     priority: critical
     track: verification
-    deliverable: results/experiment_5538_sota_panel_duration_substrate_corrigendum.json
+    deliverable: results/experiment_5552_automaton_schema_row_completion_receipt.json
     agent_type: codex
     model: "gpt-5.5"
-    requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 80
+    max_turns: 40
+    estimated_wall_time_min: 45
     prior_failures:
+      - experiment_id: exp5540-sota-hard-soft-live-panel-v3
+        verdict: "honest_null: schema_validity_rate 0.333333, exact_validator_accuracy 1.0 on emitted rows, preference_optimality_rate 1.0 on emitted rows, missing_candidate_rows 4, sota_hard_soft_claim_allowed false."
+        addressed_by: "This task does not rerun the panel; it builds a deterministic row-completion automaton to address missing candidate rows before live SOTA calls."
+        retire_if_same_verdict: true
+      - experiment_id: exp5538-sota-panel-duration-substrate-corrigendum
+        verdict: "complete_with_no_quality_claim: live_model_invoked true, schema_validity_rate 0.0, exact_validator_accuracy 0.0, preference_optimality_rate 0.0, and missing_candidate_rows 3."
+        addressed_by: "This task targets schema reachability and row-completion support rather than duration evidence."
+        retire_if_same_verdict: true
       - experiment_id: exp5527-gated-sota-hard-soft-panel-v2
-        verdict: "flagged: DURATION_TOO_SHORT; artifact reported exact_validated_local_sota_gguf_panel and positive hard-soft fields but measured duration_s was approximately 0.001."
-        addressed_by: "This task reopens only the claim boundary and requires authenticated live duration/offload evidence or an explicit no-live-quality downgrade."
-        retire_if_same_verdict: true
-      - experiment_id: exp5513-sota-hard-soft-structured-panel
-        verdict: "blocked: live SOTA structured panel not ready due exact validator mismatch, missing candidate rows, parse failures, and schema-invalid or missing rows."
-        addressed_by: "The .501 repair loop fixed schema handoff; this task now focuses on adversarial-clean substrate and duration evidence."
-        retire_if_same_verdict: true
-      - experiment_id: exp5500-sota-concept-claim-panel-v499
-        verdict: "complete: live_sota_claim_panel_measured_accuracy_0.333333 with candidate rows missing or abstained."
-        addressed_by: "Missing rows remain disallowed; this task requires row-level accounting and exact validator handoff."
+        verdict: "flagged: DURATION_TOO_SHORT on a claimed live local SOTA GGUF panel."
+        addressed_by: "The experiment is no-LLM and produces a deterministic receipt, so it cannot repeat the too-short live-model claim."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5527 reported schema-valid exact hard/soft rows, but adversarial verification flagged the artifact as too short for a live local SOTA GGUF claim. Repair the evidence boundary before any downstream SOTA hard/soft panel.
+      Exp5539 proved a deterministic GBNF grammar-table preflight, while Exp5540 still missed candidate rows in the SOTA hard/soft panel. Recent constrained-decoding work suggests checking automaton reachability and proposal support before spending live SOTA inference.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5539_gram2token_grammar_table_preflight.json
+      - {project_root}/results/experiment_5540_sota_hard_soft_live_panel_v3.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+
+      TASK:
+      Build and test a deterministic automaton/schema row-completion receipt for the SOTA hard/soft candidate table. Do not call an LLM.
+
+      CONCRETE STEPS:
+      1. Locate or implement the smallest repository-native helper that can enumerate the required row schema, valid terminal states, and invalid/dead-end transitions for the hard/soft candidate table.
+      2. Use structured parsing or existing grammar APIs rather than ad hoc string splitting wherever the repo provides a parser.
+      3. Reuse Exp5539 fixtures when possible and add coverage for complete rows, missing rows, malformed rows, and invalid enum values.
+      4. Emit a receipt showing whether every required row has reachable grammar support before a live model is called.
+      5. Include a local mask/proposal bias diagnostic: identify whether any required row is syntactically reachable but unsupported by the proposal path.
+      6. Add focused tests if code changes are needed.
+      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - upstream_grammar_preflight: results/experiment_5539_gram2token_grammar_table_preflight.json
+         - upstream_panel_path: results/experiment_5540_sota_hard_soft_live_panel_v3.json
+         - llm_invoked: false
+         - no_model_specs_required: true
+         - automaton_backend: string
+         - schema_hash: string
+         - required_rows: list
+         - reachable_state_count: int
+         - terminal_state_count: int
+         - dead_end_transition_count: int
+         - valid_fixture_acceptance_rate: float
+         - invalid_fixture_rejection_rate: float
+         - row_completion_support_rate: float
+         - missing_row_risk: string
+         - local_mask_bias_diagnostic: mapping
+         - automaton_row_completion_ready: bool
+         - tests_added_or_reused: list
+         - field_principles: mapping with one-line principle annotations for each headline and gate field
+         - inference_substrate: deterministic_automaton_no_llm
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5553-gated-gbnf-forced-sota-row-smoke
+    milestone: "2026.07.503"
+    title: "Gated GBNF-forced SOTA row smoke"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5553_gbnf_forced_sota_row_smoke.json
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 75
+    gated_on:
+      - upstream: exp5552-automaton-schema-row-completion-receipt
+        artifact_field: automaton_row_completion_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5540-sota-hard-soft-live-panel-v3
+        verdict: "honest_null: missing_candidate_rows 4 and sota_hard_soft_claim_allowed false despite exact validator correctness on emitted rows."
+        addressed_by: "This task uses grammar-forced local GGUF row emission and emits only a smoke receipt, not a hard/soft quality claim."
+        retire_if_same_verdict: true
+      - experiment_id: exp5538-sota-panel-duration-substrate-corrigendum
+        verdict: "complete_with_no_quality_claim: live SOTA invocation produced schema_validity_rate 0.0 and no quality claim."
+        addressed_by: "The upstream automaton gate must pass first, and the grammar-forced path counts row completeness before any quality claim."
+        retire_if_same_verdict: true
+      - experiment_id: exp5527-gated-sota-hard-soft-panel-v2
+        verdict: "flagged: DURATION_TOO_SHORT on claimed local SOTA panel."
+        addressed_by: "This smoke run requires duration, backend, offload, prompt hash, grammar hash, and row-level accounting."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5552 should prove deterministic schema reachability for the hard/soft candidate table. This task checks whether the mandated local SOTA GGUF models can actually emit complete grammar-forced rows under that schema. This is a smoke test, not a headline quality panel.
 
       MODEL_SPECS for any LLM call in this experiment:
       - unsloth/Qwen3.6-35B-A3B-GGUF
@@ -170,143 +247,76 @@ tasks:
       - {project_root}/CLAUDE.md
       - {project_root}/scripts/experiment_template.py
       - {project_root}/research-roadmap-next.yaml
-      - {project_root}/results/experiment_5525_sota_schema_failure_taxonomy.json
-      - {project_root}/results/experiment_5526_sota_structured_repair_loop.json
-      - {project_root}/results/experiment_5527_sota_hard_soft_panel_v2.json
+      - {project_root}/results/experiment_5552_automaton_schema_row_completion_receipt.json
+      - {project_root}/results/experiment_5539_gram2token_grammar_table_preflight.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5538_sota_panel_duration_substrate_corrigendum.json that either authenticates Exp5527-style live SOTA evidence or clearly downgrades it to no live quality claim.
+      Run a small grammar-forced local SOTA row-emission smoke using at least one mandated GGUF model and emit row-completion evidence. Do not make a quality claim.
 
       CONCRETE STEPS:
-      1. Reuse the Exp5527 exact fixtures and row schema; do not change the scoring target to make the panel easier.
-      2. Run a minimal live local GGUF panel with at least one mandated SOTA model if the runtime is available, recording command/helper path, backend, GPU/offload evidence, random seed, prompt hash, and wall-clock duration.
-      3. If a live model cannot be run, do not fabricate a panel; emit live_model_invoked=false and no_quality_claim_if_not_live=true.
-      4. Require all emitted candidate rows to pass schema validation before exact-validator scoring. Missing rows must be counted as missing, not abstentions.
-      5. Use exact validators as authority for correctness and preference optimality.
-      6. Add or reuse tests for the duration/substrate receipt parser if any code changes are needed.
+      1. Reuse the grammar/schema from Exp5552 and Exp5539; do not invent a looser output format.
+      2. Attempt at least one mandated local GGUF model, preferably the cached SOTA pair if available. Record all attempted models and any unavailable models explicitly.
+      3. Use the local grammar-constrained backend when available, such as llama.cpp GBNF. If the backend is unavailable, emit a blocked artifact rather than unconstrained generations.
+      4. Request the smallest candidate table that exercises all required rows.
+      5. Count requested rows, emitted rows, schema-valid rows, missing rows, duration, prompt hash, grammar hash, backend, and GPU/offload evidence.
+      6. Set no_quality_claim=true regardless of success; this task only gates the panel.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
          - model_specs: list
-         - upstream_panel_path: results/experiment_5527_sota_hard_soft_panel_v2.json
+         - upstream_automaton_receipt: results/experiment_5552_automaton_schema_row_completion_receipt.json
+         - grammar_backend: string
+         - grammar_hash: string
          - live_model_invoked: bool
          - models_attempted: list
          - rows_requested: int
          - rows_emitted: int
          - schema_validity_rate: float
-         - exact_validator_accuracy: float
-         - preference_optimality_rate: float
          - missing_candidate_rows: int
-         - abstention_rate: float
-         - confident_wrong_rate: float
-         - duration_floor_s: float
          - measured_duration_s: float
          - gpu_offload_evidence: mapping
-         - adversarial_clean: bool
-         - no_quality_claim_if_not_live: bool
-         - sota_panel_duration_corrigendum_ready: bool
+         - no_quality_claim: true
+         - gbnf_forced_rows_ready: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: live_local_sota_gguf_panel_or_claim_downgrade
+         - inference_substrate: live_local_sota_gguf_gbnf_smoke_or_blocked
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5539-gram2token-grammar-table-preflight
-    milestone: "2026.07.502"
-    title: "Gram2Token-inspired grammar table preflight"
+  - id: exp5554-gated-sota-hard-soft-panel-v4
+    milestone: "2026.07.503"
+    title: "Gated SOTA hard-soft panel v4"
     priority: high
     track: verification
-    deliverable: results/experiment_5539_gram2token_grammar_table_preflight.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 40
-    estimated_wall_time_min: 45
-    prior_failures:
-      - experiment_id: exp5525-sota-schema-failure-taxonomy
-        verdict: "complete: taxonomy found schema failure classes and exact validator handoff readiness, but did not prove a runtime grammar table path."
-        addressed_by: "This task is a no-LLM grammar/table availability preflight inspired by Gram2Token rather than another live panel."
-        retire_if_same_verdict: true
-      - experiment_id: exp5526-gated-sota-structured-repair-loop
-        verdict: "complete: structured repair loop reached schema_validity_after 1.0 with exact handoff, but remained a repair loop rather than runtime-constrained decoding evidence."
-        addressed_by: "This task checks local grammar backend availability and schema reachability before depending on constrained decoding."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      The V502 source refresh identified Gram2Token-style grammar table construction as useful local preflight evidence. This task must not claim decoding speed or model quality; it should only prove what grammar/table path is locally reachable.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/research-references.md
-      - {project_root}/results/experiment_5525_sota_schema_failure_taxonomy.json
-      - {project_root}/results/experiment_5526_sota_structured_repair_loop.json
-      - {project_root}/python/carnot
-      - {project_root}/tests/python
-
-      TASK:
-      Emit results/experiment_5539_gram2token_grammar_table_preflight.json with local grammar backend, schema reachability, and table-hash evidence for the hard/soft structured-output schema.
-
-      CONCRETE STEPS:
-      1. Reuse the hard/soft candidate schema from the SOTA structured-output lane.
-      2. Inspect available local grammar/runtime helpers, including any existing llama.cpp grammar, llguidance, XGrammar, JSON Schema, or repository parser utilities.
-      3. Build a small deterministic grammar reachability/table preflight when a backend exists. If no backend exists, record the missing backend and keep the artifact honest.
-      4. Do not invoke an LLM and do not include model specs unless a model is actually loaded. This task is about grammar reachability, not generation quality.
-      5. Record schema hashes, backend names, transition/table hashes where available, valid/invalid fixture acceptance, and unsupported features.
-      6. Add focused tests if you add grammar/table code.
-      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - grammar_backend_candidates: list
-         - selected_backend: string
-         - backend_available: bool
-         - schema_hash: string
-         - table_hashes: list
-         - valid_fixture_acceptance_rate: float
-         - invalid_fixture_rejection_rate: float
-         - unsupported_schema_features: list
-         - llm_invoked: false
-         - no_model_specs_required: true
-         - decoding_speedup_claim: false
-         - grammar_table_preflight_ready: bool
-         - tests_added_or_reused: list
-         - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: deterministic_grammar_table_preflight_no_llm
-         - honest_verdict: string
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5540-gated-sota-hard-soft-live-panel-v3
-    milestone: "2026.07.502"
-    title: "Gated SOTA hard-soft live panel v3"
-    priority: critical
-    track: verification
-    deliverable: results/experiment_5540_sota_hard_soft_live_panel_v3.json
-    agent_type: codex
-    model: "gpt-5.5"
+    deliverable: results/experiment_5554_sota_hard_soft_panel_v4.json
     requires_gpu: true
-    max_turns: 60
-    estimated_wall_time_min: 110
+    max_turns: 50
+    estimated_wall_time_min: 90
     gated_on:
-      - upstream: exp5538-sota-panel-duration-substrate-corrigendum
-        artifact_field: sota_panel_duration_corrigendum_ready
-        op: "=="
-        value: true
-      - upstream: exp5539-gram2token-grammar-table-preflight
-        artifact_field: grammar_table_preflight_ready
+      - upstream: exp5553-gated-gbnf-forced-sota-row-smoke
+        artifact_field: gbnf_forced_rows_ready
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: exp5540-sota-hard-soft-live-panel-v3
+        verdict: "honest_null: schema_validity_rate 0.333333, exact_validator_accuracy 1.0 on emitted rows, preference_optimality_rate 1.0 on emitted rows, missing_candidate_rows 4, sota_hard_soft_claim_allowed false."
+        addressed_by: "This panel runs only after a grammar-forced row smoke proves complete candidate rows."
+        retire_if_same_verdict: true
+      - experiment_id: exp5538-sota-panel-duration-substrate-corrigendum
+        verdict: "complete_with_no_quality_claim: schema_validity_rate 0.0 and missing_candidate_rows 3."
+        addressed_by: "The row-emission gate and exact validator are now prerequisites rather than post-hoc checks."
+        retire_if_same_verdict: true
       - experiment_id: exp5527-gated-sota-hard-soft-panel-v2
-        verdict: "flagged: DURATION_TOO_SHORT despite positive exact panel fields."
-        addressed_by: "This v3 run is gated on an explicit duration/substrate corrigendum and a grammar-table preflight."
+        verdict: "flagged: DURATION_TOO_SHORT on a claimed live local SOTA GGUF panel."
+        addressed_by: "This task must record measured duration, prompt hash, grammar hash, offload evidence, and all row accounting before any claim."
         retire_if_same_verdict: true
       - experiment_id: exp5513-sota-hard-soft-structured-panel
-        verdict: "blocked: schema-invalid or missing rows prevented a live SOTA hard-soft claim."
-        addressed_by: "The task requires schema-valid rows, exact-validator authority, missing-row accounting, and authenticated live runtime evidence."
-        retire_if_same_verdict: true
-      - experiment_id: exp5500-sota-concept-claim-panel-v499
-        verdict: "complete: candidate rows were missing or abstained and could not support headline accuracy."
-        addressed_by: "This task disallows missing-row credit and records abstention separately from absent output."
+        verdict: "blocked: live SOTA structured panel not ready due exact validator mismatch, missing candidate rows, parse failures, and schema-invalid or missing rows."
+        addressed_by: "Exact validator handoff and row-completion gates are now required before the panel can run."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This task runs only if the SOTA duration/substrate corrigendum and grammar-table preflight are clean. The goal is a small but adversarial-clean local SOTA hard/soft verification panel with exact validators as authority.
+      Run the next SOTA hard/soft panel only if Exp5553 proves complete grammar-forced rows. This task may make a bounded quality claim only if all schema, row-completion, exact-validation, duration, and adversarial checks pass.
 
       MODEL_SPECS for any LLM call in this experiment:
       - unsloth/Qwen3.6-35B-A3B-GGUF
@@ -317,25 +327,28 @@ tasks:
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/scripts/experiment_template.py
-      - {project_root}/results/experiment_5538_sota_panel_duration_substrate_corrigendum.json
-      - {project_root}/results/experiment_5539_gram2token_grammar_table_preflight.json
-      - {project_root}/results/experiment_5526_sota_structured_repair_loop.json
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_5553_gbnf_forced_sota_row_smoke.json
+      - {project_root}/results/experiment_5540_sota_hard_soft_live_panel_v3.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5540_sota_hard_soft_live_panel_v3.json with exact-validated local SOTA hard/soft rows or an honest gated-null if runtime evidence is unavailable.
+      Run a small grammar-forced SOTA hard/soft panel v4 and emit a claim-eligible receipt only if candidate rows are complete and exact validators agree.
 
       CONCRETE STEPS:
-      1. Confirm both structured gates are satisfied before starting work.
-      2. Run a compact panel with at least one mandated local SOTA GGUF model, preferring two model families if local runtime permits.
-      3. Use the structured repair/extraction path only as declared; record whether grammar masking, repair, or post-hoc extraction produced each row.
-      4. Validate every row against schema and exact validators. Count missing rows, abstentions, confident wrong rows, and exact-correct rows separately.
-      5. Record duration, command/helper path, prompt hashes, random seeds, GPU/offload evidence, token budgets, and output hashes.
-      6. Add or reuse tests for any changed parser or validator code.
+      1. Reuse the Exp5553 grammar-forced row path and hard/soft fixtures; do not change the task to a different benchmark.
+      2. Attempt the mandated SOTA GGUF models available locally and record unavailable models honestly.
+      3. Validate every emitted row against the schema before exact scoring.
+      4. Score correctness and preference optimality using exact validators only.
+      5. Count missing rows as missing, not abstentions.
+      6. Run the adversarial verifier or the repository's current artifact-verification path before setting any claim flag.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
          - model_specs: list
+         - upstream_row_smoke: results/experiment_5553_gbnf_forced_sota_row_smoke.json
+         - live_model_invoked: bool
          - models_attempted: list
+         - grammar_backend: string
          - rows_requested: int
          - rows_emitted: int
          - schema_validity_rate: float
@@ -344,247 +357,316 @@ tasks:
          - missing_candidate_rows: int
          - abstention_rate: float
          - confident_wrong_rate: float
-         - prompt_hashes: list
-         - output_hashes: list
-         - random_seed: int
          - measured_duration_s: float
          - gpu_offload_evidence: mapping
          - adversarial_clean: bool
          - sota_hard_soft_claim_allowed: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: live_local_sota_gguf_exact_validated_panel
+         - inference_substrate: live_local_sota_gguf_gbnf_exact_validated_panel_or_honest_null
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5541-llm-fsm-exact-fixture
-    milestone: "2026.07.502"
-    title: "LLM-FSM inspired exact finite-state fixture"
+  - id: exp5555-asp-fsm-nonmonotonic-fixture
+    milestone: "2026.07.503"
+    title: "ASP-FSM nonmonotonic exact fixture"
     priority: high
-    track: constraints
-    deliverable: results/experiment_5541_llm_fsm_exact_fixture.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 45
-    estimated_wall_time_min: 60
-    prior_failures:
-      - experiment_id: exp5527-gated-sota-hard-soft-panel-v2
-        verdict: "flagged: hard-soft panel evidence was too short and lacked a reusable finite-state exact substrate."
-        addressed_by: "This task creates a deterministic finite-state exact fixture without making a live SOTA quality claim."
-        retire_if_same_verdict: true
-      - experiment_id: exp5512-structured-output-positive-control
-        verdict: "complete: deterministic fixtures were schema-valid but did not cover finite-state transition structure."
-        addressed_by: "This fixture adds state counts, transition constraints, reference traces, and exact/SAT-style checks."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      The V502 literature refresh identified LLM-FSM as a useful exact-fixture direction. Build a deterministic finite-state constraint substrate that future SOTA, sparse repair, and hardware tasks can reuse.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/research-references.md
-      - {project_root}/python/carnot
-      - {project_root}/tests/python
-      - {project_root}/results/experiment_5525_sota_schema_failure_taxonomy.json
-      - {project_root}/results/experiment_5526_sota_structured_repair_loop.json
-
-      TASK:
-      Emit results/experiment_5541_llm_fsm_exact_fixture.json and any narrowly scoped fixture/test code needed for a deterministic finite-state exact benchmark.
-
-      CONCRETE STEPS:
-      1. Define a compact family of finite-state machines with configurable state count, transition sparsity, accepting/error states, and observable traces.
-      2. Emit schema-valid machine descriptions and natural-language summaries, but keep the reference labels deterministic and generated from the machine definition.
-      3. Implement or reuse exact checks for trace acceptance, transition consistency, unreachable states, and contradiction detection.
-      4. Include at least one satisfiable, one unsatisfiable, and one ambiguous/underconstrained fixture.
-      5. Do not invoke an LLM in this task; this is an exact fixture builder.
-      6. Add focused tests for fixture generation and exact checks.
-      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - fsm_instances: int
-         - state_counts: list
-         - transition_constraints: list
-         - satisfiable_instances: int
-         - unsatisfiable_instances: int
-         - ambiguous_instances: int
-         - yaml_schema_valid: bool
-         - reference_trace_checks_passed: bool
-         - exact_transition_checks_passed: bool
-         - sat_solver_checks_passed: bool
-         - no_llm_invoked: true
-         - exact_fsm_fixture_ready: bool
-         - tests_added_or_reused: list
-         - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: deterministic_fsm_exact_fixture_no_llm
-         - honest_verdict: string
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5542-csl-residue-metric-independence-corrigendum
-    milestone: "2026.07.502"
-    title: "CSL residue metric independence corrigendum"
-    priority: critical
-    track: continuous-learning
-    deliverable: results/experiment_5542_csl_residue_metric_independence_corrigendum.json
+    track: verification
+    deliverable: results/experiment_5555_asp_fsm_nonmonotonic_fixture.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 45
     estimated_wall_time_min: 55
     prior_failures:
-      - experiment_id: exp5529-gated-csl-event-topic-residue-stress
-        verdict: "flagged: TAUTOLOGY because event_only_score and topic_only_score were both 0.6666666667."
-        addressed_by: "This task changes the metric construction and requires non-identical event-only and topic-only evidence families."
+      - experiment_id: exp5541-llm-fsm-exact-fixture
+        verdict: "complete: exact_fsm_fixture_ready true with deterministic_fsm_exact_fixture_no_llm inference substrate."
+        addressed_by: "This task extends the finished FSM fixture with ASP/nonmonotonic stable-model cases instead of repeating the same fixture."
         retire_if_same_verdict: true
-      - experiment_id: exp5517-gated-csl-memory-residue-stress
-        verdict: "gate_blocked: canonical CSL fields were unavailable due sidecar artifact selection."
-        addressed_by: "The .501 canonical gate artifact exists; this task focuses on metric independence rather than gate visibility."
-        retire_if_same_verdict: true
-      - experiment_id: exp5474-csl-memory-residue-diagnostic
-        verdict: "flagged: tautological memory residue diagnostic could not support continuous self-learning claims."
-        addressed_by: "This corrigendum requires independent labels, score separation, stale-evidence rejection, and negative-transfer accounting."
+      - experiment_id: exp5505-constraint-cell-benchmark-v499
+        verdict: "complete: bounded constraint-cell benchmark succeeded but did not cover nonmonotonic ASP-style constraints."
+        addressed_by: "The new fixture adds stable-model and default-negation cases that the prior constraint-cell benchmark did not exercise."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5528 produced a clean canonical CSL gate, but Exp5529 was flagged because event-only and topic-only scores were identical. Repair the residue metric before any downstream CSL claim.
+      Exp5541 created a deterministic exact FSM fixture. New 2026 ASP+EBM work suggests a natural next step: exact nonmonotonic constraints with stable-model checks, still without relying on an external text scorer.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
-      - {project_root}/research-program.md
-      - {project_root}/results/experiment_5528_csl_canonical_gate_artifact.json
-      - {project_root}/results/experiment_5529_csl_event_topic_residue_stress.json
-      - {project_root}/results/experiment_5530_sota_csl_memory_panel_v2.json
+      - {project_root}/CODEX.md
+      - {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5541_llm_fsm_exact_fixture.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+      - {project_root}/openspec/capabilities
+
+      TASK:
+      Extend the exact FSM fixture with ASP-style nonmonotonic constraint rows and stable-model validation. Do not call an LLM.
+
+      CONCRETE STEPS:
+      1. Before editing implementation code, verify that the relevant OpenSpec capability spec exists and contains REQ-* requirements; update specs first if needed.
+      2. Reuse existing exact-constraint/FSM infrastructure where possible.
+      3. Add a compact fixture set covering satisfiable, unsatisfiable, ambiguous, default-negation, and contradiction rows.
+      4. Prefer an existing local structured solver or deterministic evaluator. If an ASP dependency is unavailable, implement a tiny fixture-local exact evaluator for the limited rows and document the boundary.
+      5. Add tests covering the new stable-model rows and their expected exact outcomes.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - upstream_fsm_fixture: results/experiment_5541_llm_fsm_exact_fixture.json
+         - llm_invoked: false
+         - no_model_specs_required: true
+         - asp_row_count: int
+         - default_rule_count: int
+         - contradiction_row_count: int
+         - stable_model_count: int
+         - sat_count: int
+         - unsat_count: int
+         - ambiguous_count: int
+         - exact_asp_validator_ready: bool
+         - exact_fsm_fixture_extended_ready: bool
+         - spec_files_updated_or_confirmed: list
+         - tests_added_or_reused: list
+         - field_principles: mapping with one-line principle annotations for each headline and gate field
+         - inference_substrate: deterministic_asp_fsm_exact_fixture_no_llm
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5556-gated-asp-fsm-sparse-repair-scale
+    milestone: "2026.07.503"
+    title: "Gated ASP-FSM sparse repair scale"
+    priority: high
+    track: repair
+    deliverable: results/experiment_5556_asp_fsm_sparse_repair_scale.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 70
+    gated_on:
+      - upstream: exp5555-asp-fsm-nonmonotonic-fixture
+        artifact_field: exact_fsm_fixture_extended_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5545-sparse-repair-fsm-descriptor-scale
+        verdict: "complete: descriptor_guided_success_rate 1.0, random_block_success_rate 0.333333, exact_only_success_rate 1.0, matched_timing_available false, speedup_claim_allowed false."
+        addressed_by: "This scales the descriptor repair signal to ASP/FSM nonmonotonic rows while preserving the no-speedup boundary."
+        retire_if_same_verdict: true
+      - experiment_id: exp5531-gated-sparse-repair-scaleup-v2
+        verdict: "complete: sparse repair claim was bounded and hardware speedup remained unavailable."
+        addressed_by: "This retry changes the fixture class to exact ASP/FSM rows and requires stable-model checks."
+        retire_if_same_verdict: true
+      - experiment_id: exp5518-sparse-verifier-repair-v2
+        verdict: "complete: sparse repair signal found but no hardware speedup claim allowed."
+        addressed_by: "The new task tests a harder exact-constraint fixture and keeps matched timing as a required field before any speedup claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5545 found a descriptor-guided sparse repair signal on FSM rows, but no matched timing. Exp5555 should add ASP/nonmonotonic rows. This task tests whether descriptor-guided repair still beats random controls on the harder exact fixture.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_5555_asp_fsm_nonmonotonic_fixture.json
+      - {project_root}/results/experiment_5545_sparse_repair_fsm_descriptor_scale.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5542_csl_residue_metric_independence_corrigendum.json with non-tautological event/topic residue evidence.
+      Run a descriptor-guided sparse repair scale test over the ASP/FSM exact fixture and compare against random-block and exact-only controls.
 
       CONCRETE STEPS:
-      1. Reuse the canonical CSL gate fields from Exp5528 as the starting contract.
-      2. Redesign the residue stress so event-only memory and topic-only memory are evaluated on distinct heldout labels or distinct query families.
-      3. Include stale evidence, shuffled evidence, and negative-transfer probes.
-      4. Require event_only_score and topic_only_score to be non-identical for a clean claim; if they match, mark csl_residue_tautology_resolved=false.
-      5. Keep this task deterministic and no-LLM unless an existing fixture explicitly requires a model.
-      6. Add focused tests if you change CSL metric code.
+      1. Reuse the Exp5555 ASP/FSM fixture and Exp5545 descriptor-repair harness where possible.
+      2. Keep the controls matched: descriptor-guided repair, random-block repair, and exact-only repair should see the same fixture rows and budget.
+      3. Record stable-model validation coverage for every row.
+      4. Capture iteration counts and success rates separately for satisfiable, unsatisfiable, ambiguous, and default-negation rows.
+      5. Do not claim hardware or timing speedup unless matched timing receipts exist in this experiment.
+      6. Add focused tests if code changes are needed.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - canonical_gate_path: results/experiment_5528_csl_canonical_gate_artifact.json
-         - event_only_score: float
-         - topic_only_score: float
-         - score_difference_abs: float
-         - event_topic_score: float
-         - no_memory_score: float
-         - shuffled_memory_score: float
-         - stale_evidence_rejection_rate: float
-         - negative_transfer_rate: float
-         - independent_outcome_labels: bool
-         - nonidentical_metric_evidence: bool
-         - csl_residue_tautology_resolved: bool
-         - csl_residue_stress_ready: bool
+         - upstream_asp_fsm_fixture: results/experiment_5555_asp_fsm_nonmonotonic_fixture.json
+         - llm_invoked: false
+         - no_model_specs_required: true
+         - descriptor_guided_success_rate: float
+         - random_block_success_rate: float
+         - exact_only_success_rate: float
+         - stable_model_checked_rate: float
+         - descriptor_mean_iterations: float
+         - random_mean_iterations: float
+         - exact_only_mean_iterations: float
+         - row_family_breakdown: mapping
+         - matched_timing_available: bool
+         - speedup_claim_allowed: false
+         - asp_sparse_repair_claim_allowed: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: deterministic_csl_residue_corrigendum_no_llm
+         - inference_substrate: deterministic_asp_fsm_sparse_repair_no_llm
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5543-gated-retrieval-warmed-csl-five-arm-ablation
-    milestone: "2026.07.502"
-    title: "Gated retrieval-warmed CSL five-arm ablation"
-    priority: high
-    track: continuous-learning
-    deliverable: results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
+  - id: exp5557-csl-five-arm-tautology-corrigendum-v2
+    milestone: "2026.07.503"
+    title: "CSL five-arm tautology corrigendum v2"
+    priority: critical
+    track: self_learning
+    deliverable: results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 45
-    estimated_wall_time_min: 60
-    gated_on:
-      - upstream: exp5542-csl-residue-metric-independence-corrigendum
-        artifact_field: csl_residue_tautology_resolved
-        op: "=="
-        value: true
+    estimated_wall_time_min: 55
     prior_failures:
-      - experiment_id: exp5529-gated-csl-event-topic-residue-stress
-        verdict: "flagged: TAUTOLOGY because event-only and topic-only scores were identical."
-        addressed_by: "This task runs only after the residue tautology is resolved and adds shuffled/random controls."
+      - experiment_id: exp5543-retrieval-warmed-csl-five-arm-ablation
+        verdict: "flagged: TAUTOLOGY; best_constant_score 0.0833333333 equaled per_query_random_score 0.0833333333 while csl_five_arm_ready was true."
+        addressed_by: "This task directly repairs the baseline definition and refuses readiness if best-constant and per-query-random collapse again."
         retire_if_same_verdict: true
-      - experiment_id: exp5530-gated-sota-csl-memory-panel-v2
-        verdict: "complete: SOTA CSL memory panel ran, but broad csl_claim_allowed stayed false because upstream residue evidence was tainted."
-        addressed_by: "This task builds deterministic five-arm evidence before another model-backed memory panel."
-        retire_if_same_verdict: true
-      - experiment_id: exp5515-csl-independent-outcome-gate-repair
-        verdict: "complete: graph memory showed heldout_delta 1.0 with stale-evidence rejection but downstream gate selection was brittle."
-        addressed_by: "The .501 canonical gate repaired visibility; this task tests retrieval arms and control memories."
+      - experiment_id: exp5529-csl-event-topic-residue-stress
+        verdict: "flagged: residue field was adversarially tautological before Exp5542 repaired event/topic independence."
+        addressed_by: "The task builds on the repaired Exp5542 independence metric and targets the newer five-arm ablation."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run this task only after the CSL residue corrigendum is clean. The goal is to separate real retrieval-warmed benefit from oracle leakage, constant baselines, random retrieval, and shuffled memory.
+      Exp5542 repaired CSL residue metric independence, but Exp5543 was adversarially flagged because the best-constant baseline equaled the per-query-random baseline. Fix the five-arm ablation before any causal CSL memory task runs.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
-      - {project_root}/research-program.md
+      - {project_root}/CODEX.md
       - {project_root}/results/experiment_5542_csl_residue_metric_independence_corrigendum.json
-      - {project_root}/results/experiment_5528_csl_canonical_gate_artifact.json
+      - {project_root}/results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
+      - {project_root}/research-roadmap-next.yaml
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json with deterministic five-arm CSL memory evidence.
+      Produce a non-tautological five-arm CSL ablation receipt with separated best-constant, per-query-random, shuffled-memory, aligned-memory, and no-memory controls. Do not call an LLM.
 
       CONCRETE STEPS:
-      1. Confirm csl_residue_tautology_resolved=true in the upstream artifact.
-      2. Build or reuse the same heldout query set across all arms.
-      3. Evaluate five arms: oracle memory, best constant answer, per-query random memory, shuffled memory, and aligned retrieval memory.
-      4. Record memory hashes, query hashes, no-weight-mutation evidence, stale-evidence rejection, and negative-transfer rate.
-      5. Require aligned memory to beat shuffled and random controls before marking the gate ready.
-      6. Add focused tests if you change CSL retrieval code.
-      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - oracle_score: float
+      1. Reuse the Exp5542 repaired event/topic independence metric.
+      2. Inspect the Exp5543 scoring path to identify why best-constant and per-query-random collapsed.
+      3. Implement the smallest fix that makes each baseline semantically distinct, or emit an honest blocked artifact if the controls cannot be separated.
+      4. Add regression coverage that fails if best-constant and per-query-random are identical on a non-degenerate fixture.
+      5. Require aligned-memory improvement over shuffled-memory before setting csl_five_arm_clean=true.
+      6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - upstream_csl_residue_corrigendum: results/experiment_5542_csl_residue_metric_independence_corrigendum.json
+         - upstream_flagged_ablation: results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
+         - llm_invoked: false
+         - no_model_specs_required: true
          - best_constant_score: float
          - per_query_random_score: float
+         - no_memory_score: float
          - shuffled_memory_score: float
          - aligned_memory_score: float
-         - aligned_minus_shuffled_delta: float
-         - aligned_minus_random_delta: float
-         - stale_evidence_rejection_rate: float
-         - negative_transfer_rate: float
-         - memory_hashes: list
-         - query_hashes: list
-         - no_weight_mutation: bool
-         - csl_five_arm_ready: bool
+         - aligned_delta_over_shuffled: float
+         - equality_tolerance: float
+         - duplicated_metric_pairs: list
+         - tautology_resolved: bool
+         - csl_five_arm_clean: bool
+         - adversarial_clean: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: deterministic_retrieval_warmed_csl_no_llm
+         - inference_substrate: deterministic_csl_ablation_no_llm
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5544-gated-cross-model-sota-csl-transfer
-    milestone: "2026.07.502"
-    title: "Gated cross-model SOTA CSL transfer"
-    priority: high
-    track: continuous-learning
-    deliverable: results/experiment_5544_cross_model_sota_csl_transfer.json
-    agent_type: codex
-    model: "gpt-5.5"
-    requires_gpu: true
-    max_turns: 60
-    estimated_wall_time_min: 110
+  - id: exp5558-gated-causal-write-manage-read-csl-memory
+    milestone: "2026.07.503"
+    title: "Gated causal write-manage-read CSL memory"
+    priority: critical
+    track: self_learning
+    deliverable: results/experiment_5558_causal_write_manage_read_csl_memory.json
+    max_turns: 50
+    estimated_wall_time_min: 75
     gated_on:
-      - upstream: exp5543-gated-retrieval-warmed-csl-five-arm-ablation
-        artifact_field: csl_five_arm_ready
+      - upstream: exp5557-csl-five-arm-tautology-corrigendum-v2
+        artifact_field: csl_five_arm_clean
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp5530-gated-sota-csl-memory-panel-v2
-        verdict: "complete: local SOTA GGUF CSL memory panel ran, but broad csl_claim_allowed remained false because upstream residue was tainted."
-        addressed_by: "This task runs only after non-tautological residue and five-arm controls are clean, and it tests cross-model transfer."
+      - experiment_id: exp5544-cross-model-sota-csl-transfer
+        verdict: "blocked: cross_family_delta_over_shuffled 0.0, stale_evidence_rejection_rate 1.0, no_weight_mutation true, csl_claim_allowed false."
+        addressed_by: "This prerequisite task measures causal memory impact before retrying cross-model transfer."
         retire_if_same_verdict: true
-      - experiment_id: exp5516-gated-sota-csl-memory-panel
-        verdict: "gate_blocked: upstream CSL gate fields were not conductor-visible."
-        addressed_by: "The canonical gate and five-arm readiness fields are now explicit current-roadmap gates."
+      - experiment_id: exp5543-retrieval-warmed-csl-five-arm-ablation
+        verdict: "flagged: TAUTOLOGY despite aligned_memory_score 0.833333 and shuffled_memory_score 0.25."
+        addressed_by: "The upstream gate requires the five-arm tautology to be resolved before this memory task runs."
         retire_if_same_verdict: true
-      - experiment_id: exp5504-sota-csl-memory-panel-v499
-        verdict: "gate_blocked: CSL metric-independence prerequisite was not satisfied."
-        addressed_by: "This task depends on a repaired metric-independence artifact and deterministic retrieval controls."
+      - experiment_id: exp5530-gated-sota-csl-memory-panel
+        verdict: "complete_bounded: SOTA CSL memory evidence remained claim-limited."
+        addressed_by: "This task changes the target to causal write-manage-read memory with forbidden-direction reuse and action-impact controls."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the required continuous self-learning experiment for the milestone. It should test whether retrieval memory from one local SOTA model family helps another without changing weights.
+      This is the required continuous self-learning experiment for milestone 2026.07.503. It should use the write-manage-read memory taxonomy and NOVA-style forbidden-direction memory to test whether memory changes later behavior, not merely whether retrieval correlates with labels.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
+      - {project_root}/results/experiment_5542_csl_residue_metric_independence_corrigendum.json
+      - {project_root}/python/carnot
+      - {project_root}/tests/python
+      - {project_root}/openspec/capabilities
+
+      TASK:
+      Implement and evaluate a causal write-manage-read continuous self-learning memory fixture with forbidden-direction memory. Do not mutate model weights.
+
+      CONCRETE STEPS:
+      1. Before editing implementation code, verify the relevant OpenSpec capability spec contains REQ-* requirements for self-learning or memory; update specs first if needed.
+      2. Define a compact online sequence where the system writes memory after an event, manages or forgets stale evidence, and later reads memory to choose a different action.
+      3. Include controls for no memory, shuffled memory, always-full memory, and aligned causal memory.
+      4. Track forbidden-direction reuse: when a previous failed direction is remembered, the next choice should avoid it if the context matches.
+      5. Reject claims if memory only improves a post-hoc score without changing action selection or contradiction handling.
+      6. Confirm no model weights are mutated.
+      7. Add focused tests for write, manage, read, stale rejection, and forbidden-direction reuse.
+      8. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - continuous_self_learning_target: true
+         - upstream_five_arm_corrigendum: results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
+         - llm_invoked: false
+         - no_model_specs_required: true
+         - write_filter_precision: float
+         - manage_forget_precision: float
+         - read_retrieval_precision: float
+         - causal_support_link_rate: float
+         - forbidden_direction_reuse_rate: float
+         - contradiction_deflection_rate: float
+         - action_impact_delta_vs_no_memory: float
+         - quality_delta_vs_shuffled_memory: float
+         - quality_delta_vs_always_full: float
+         - unsafe_false_accepts: int
+         - no_weight_mutation: true
+         - csl_memory_ready: bool
+         - csl_claim_allowed: bool
+         - spec_files_updated_or_confirmed: list
+         - tests_added_or_reused: list
+         - field_principles: mapping with one-line principle annotations for each headline and gate field
+         - inference_substrate: deterministic_online_memory_fixture_no_llm
+         - honest_verdict: string
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5559-gated-cross-model-sota-csl-transfer-v2
+    milestone: "2026.07.503"
+    title: "Gated cross-model SOTA CSL transfer v2"
+    priority: medium
+    track: self_learning
+    deliverable: results/experiment_5559_cross_model_sota_csl_transfer_v2.json
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 90
+    gated_on:
+      - upstream: exp5558-gated-causal-write-manage-read-csl-memory
+        artifact_field: csl_claim_allowed
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5544-cross-model-sota-csl-transfer
+        verdict: "blocked: cross_family_delta_over_shuffled 0.0, negative_transfer_rate 0.0, stale_evidence_rejection_rate 1.0, no_weight_mutation true, csl_claim_allowed false."
+        addressed_by: "This retry is gated on causal CSL memory and must show positive cross-family delta over shuffled memory before any claim."
+        retire_if_same_verdict: true
+      - experiment_id: exp5530-gated-sota-csl-memory-panel
+        verdict: "complete_bounded: local SOTA CSL memory panel remained bounded and did not establish cross-model transfer."
+        addressed_by: "This task requires source-to-target family transfer using the mandated SOTA GGUF models and causal-memory gate evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Only run this task if Exp5558 allows a CSL claim. Exp5544 correctly blocked cross-model transfer because cross-family delta over shuffled memory was zero. This retry must use causal memory and the mandated local SOTA GGUF models.
 
       MODEL_SPECS for any LLM call in this experiment:
       - unsloth/Qwen3.6-35B-A3B-GGUF
@@ -595,287 +677,239 @@ tasks:
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/scripts/experiment_template.py
-      - {project_root}/research-program.md
-      - {project_root}/results/experiment_5543_retrieval_warmed_csl_five_arm_ablation.json
-      - {project_root}/results/experiment_5530_sota_csl_memory_panel_v2.json
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_5558_causal_write_manage_read_csl_memory.json
+      - {project_root}/results/experiment_5544_cross_model_sota_csl_transfer.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5544_cross_model_sota_csl_transfer.json with cross-model local SOTA CSL transfer evidence behind the clean five-arm gate.
+      Test whether causal CSL memory transfers across mandated local SOTA model families. Make no claim unless aligned causal memory beats shuffled memory on the target family.
 
       CONCRETE STEPS:
-      1. Confirm csl_five_arm_ready=true in the upstream artifact.
-      2. Select at least two mandated model families when runtime permits, preferably one Qwen MoE and one Gemma model.
-      3. Build memory from source-model attempts and evaluate target-model heldout queries with no weight mutation.
-      4. Compare no-memory, shuffled-memory, source-family aligned memory, and cross-family aligned memory.
-      5. Record model specs, command/helper paths, prompt/output hashes, random seed, duration, and GPU/offload evidence.
-      6. Mark csl_claim_allowed true only if aligned cross-model memory beats shuffled/no-memory controls and no-weight-mutation evidence is clean.
+      1. Reuse the Exp5558 memory fixture and do not mutate model weights.
+      2. Use at least two different mandated GGUF model families if locally available. Record unavailable models explicitly.
+      3. Separate source models and target models in the artifact.
+      4. Compare no-memory, shuffled-memory, stale-memory, and aligned causal-memory target behavior.
+      5. Reject the claim if cross_family_delta_over_shuffled is not positive or if negative_transfer_rate spikes.
+      6. Record duration, backend, GPU/offload evidence, and prompt/fixture hashes for any live calls.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
          - model_specs: list
+         - upstream_causal_memory: results/experiment_5558_causal_write_manage_read_csl_memory.json
+         - live_model_invoked: bool
          - source_models: list
          - target_models: list
          - no_memory_score: float
          - shuffled_memory_score: float
-         - same_family_memory_score: float
-         - cross_family_memory_score: float
+         - stale_memory_score: float
+         - aligned_memory_score: float
          - cross_family_delta_over_shuffled: float
-         - heldout_delta: float
-         - no_weight_mutation: bool
-         - stale_evidence_rejection_rate: float
          - negative_transfer_rate: float
-         - random_seed: int
+         - stale_evidence_rejection_rate: float
+         - no_weight_mutation: true
          - measured_duration_s: float
          - gpu_offload_evidence: mapping
          - csl_claim_allowed: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: live_local_sota_gguf_cross_model_csl
+         - inference_substrate: live_local_sota_gguf_cross_model_csl_transfer_or_gate_skip
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5545-gated-sparse-repair-fsm-descriptor-scale
-    milestone: "2026.07.502"
-    title: "Gated sparse repair FSM descriptor scale"
-    priority: high
-    track: constraints
-    deliverable: results/experiment_5545_sparse_repair_fsm_descriptor_scale.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 50
-    estimated_wall_time_min: 75
-    gated_on:
-      - upstream: exp5541-llm-fsm-exact-fixture
-        artifact_field: exact_fsm_fixture_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp5531-sparse-repair-scaleup-ci
-        verdict: "complete: exact_checked_sparse_repair_scaleup_ci_ready_no_speedup_claim with matched_timing_available false."
-        addressed_by: "This task changes the descriptor family to finite-state constraints and keeps speedup false without matched timing."
-        retire_if_same_verdict: true
-      - experiment_id: exp5518-block-gibbs-sparse-repair-descriptors
-        verdict: "complete: sparse repair descriptors beat random blocks on tiny fixtures but speedup remained disallowed."
-        addressed_by: "This task scales the exact-checked descriptor substrate with FSM fixtures and matched-iteration receipts."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      Exp5531 established bounded sparse repair scale-up with no speedup claim. Use the new finite-state exact fixture to test richer active-constraint descriptors while keeping exact fallback as authority.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_5541_llm_fsm_exact_fixture.json
-      - {project_root}/results/experiment_5531_sparse_repair_scaleup_ci.json
-      - {project_root}/python/carnot
-      - {project_root}/tests/python
-
-      TASK:
-      Emit results/experiment_5545_sparse_repair_fsm_descriptor_scale.json with exact-checked sparse repair evidence over finite-state fixtures.
-
-      CONCRETE STEPS:
-      1. Confirm exact_fsm_fixture_ready=true in the upstream artifact.
-      2. Build sparse repair descriptors from finite-state transition conflicts, unreachable states, and trace contradictions.
-      3. Compare descriptor-guided repair, random block repair, and exact-only fallback on the same fixture set and seeds.
-      4. Record iteration counts and optional matched timing if available, but do not claim speedup without matched authenticated timing.
-      5. Ensure all proposed repairs are checked by exact FSM validators.
-      6. Add focused tests for the descriptor extraction or repair loop if changed.
-      7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - fsm_instance_count: int
-         - random_seed_count: int
-         - descriptor_guided_success_rate: float
-         - random_block_success_rate: float
-         - exact_only_success_rate: float
-         - descriptor_mean_iterations: float
-         - random_mean_iterations: float
-         - exact_fallback_used: bool
-         - exact_validator_all_repairs_checked: bool
-         - matched_timing_available: bool
-         - speedup_claim_allowed: false
-         - sparse_repair_fsm_ready: bool
-         - tests_added_or_reused: list
-         - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: exact_checked_sparse_repair_fsm_no_llm
-         - honest_verdict: string
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5546-hardware-receipt-substrate-corrigendum
-    milestone: "2026.07.502"
-    title: "Hardware receipt substrate corrigendum"
-    priority: high
+  - id: exp5560-hardware-and-timing-receipt-hygiene
+    milestone: "2026.07.503"
+    title: "Hardware and experiment timing receipt hygiene"
+    priority: medium
     track: hardware
-    deliverable: results/experiment_5546_hardware_receipt_substrate_corrigendum.json
+    deliverable: results/experiment_5560_hardware_and_timing_receipt_hygiene.json
     agent_type: codex
     model: "gpt-5.5"
-    max_turns: 50
-    estimated_wall_time_min: 70
+    max_turns: 40
+    estimated_wall_time_min: 50
     prior_failures:
-      - experiment_id: exp5532-hardware-receipt-parser-repeatability
-        verdict: "flagged: DURATION_TOO_SHORT and methodology warnings; artifact repaired blockers but had matched_timing_available false and hardware_speedup_claim false."
-        addressed_by: "This task removes accidental live-model/GGUF markers, adds seed/checksum receipts, and keeps the lane explicitly no-LLM and speedup-free unless matched timing exists."
+      - experiment_id: exp5546-hardware-receipt-substrate-corrigendum
+        verdict: "complete: hardware_receipt_corrigendum_clean true, compute_bound_markers_absent true, parser_rows_valid true, matched_timing false, hardware_speedup false."
+        addressed_by: "This task keeps the no-speedup boundary and adds launch/finish timing and matched-pair hygiene around the clean receipt parser."
         retire_if_same_verdict: true
-      - experiment_id: exp5519-hardware-continuity-methodology-receipts
-        verdict: "complete: receipt-only continuity ran, but CPU/CUDA parser rows were malformed and matched_timing_available false."
-        addressed_by: "This task focuses on clean receipt schemas and no-LLM substrate hygiene, not a speedup claim."
+      - experiment_id: exp5532-hardware-receipt-parser-repeatability
+        verdict: "flagged: hardware receipt methodology required corrigendum before any timing or speedup claim."
+        addressed_by: "Exp5546 corrected the receipt substrate; this task adds timing hygiene without changing the conductor."
+        retire_if_same_verdict: true
+      - experiment_id: exp5519-kv260-uio-smoke
+        verdict: "complete_bounded: KV260 UIO smoke remained receipt-only with no speedup claim."
+        addressed_by: "The task aggregates safe board receipts and timing-pair readiness while preserving receipt-only status."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5532 repaired some hardware receipt parsing but was flagged because the artifact looked compute-bound/live-model-like despite being receipt-only. Clean the substrate and methodology fields before future hardware timing work.
+      Exp5546 made the hardware receipt substrate clean but still found no matched timing. This task improves receipt hygiene and experiment-side launch/finish timing without modifying scripts/research_conductor.py and without making any speedup claim.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
       - {project_root}/research-hardware-wishlist.md
+      - {project_root}/results/experiment_5546_hardware_receipt_substrate_corrigendum.json
       - {project_root}/results/experiment_5532_hardware_receipt_parser_repeatability.json
-      - {project_root}/results/experiment_5519_hardware_continuity_methodology_receipts.json
+      - {project_root}/ops/status.md
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5546_hardware_receipt_substrate_corrigendum.json with clean no-LLM hardware receipt methodology and repeatability fields.
+      Produce a clean hardware and timing receipt hygiene artifact. Use safe board paths only, keep matched timing explicit, and do not modify the conductor.
 
       CONCRETE STEPS:
-      1. Parse existing CPU, CUDA, PolarFire, KV260, and GateMate reachability receipts where available.
-      2. Do not invoke an LLM and do not include model specs. Remove or avoid live-model markers unless a model actually runs, which this task should not require.
-      3. Add random_seed and reproducibility_checksum fields generated from the receipt inputs and parser version.
-      4. For KV260, use only safe SSH/xmutil/UIO-style reachability checks if you probe at all; do not use host block-device assumptions.
-      5. Record blockers, device identities, parser outcomes, and matched_timing_available. Keep hardware_speedup_claim=false unless matched authenticated timing exists.
-      6. Add focused tests for receipt parsing if code changes are needed.
+      1. Reuse the Exp5546 receipt parser and safe hardware rules.
+      2. If boards are reachable, collect only non-destructive identity and workload receipts through approved paths: SSH/xmutil/UIO for KV260, SSH/workload receipt for PolarFire, and authenticated dirtyJTAG/IDCODE status for GateMate.
+      3. Do not use SD-card, host block-device, `/dev/mmcblk`, or destructive board commands.
+      4. Add experiment-side launch/finish receipt examples using monotonic time and artifact checksums if code changes are needed; do not touch scripts/research_conductor.py.
+      5. Record whether matched hardware-vs-baseline timing pairs exist. If they do not, set hardware_speedup_claim=false.
+      6. Add focused tests for the receipt parser or timing receipt helper if code changes are needed.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
          - llm_invoked: false
          - no_model_specs_required: true
-         - random_seed: int
-         - reproducibility_checksum: string
-         - compute_bound_markers_absent: bool
+         - upstream_hardware_corrigendum: results/experiment_5546_hardware_receipt_substrate_corrigendum.json
          - device_receipts: list
-         - parser_rows_valid: bool
          - kv260_safe_path_used: bool
-         - blockers: list
+         - forbidden_block_device_paths_used: false
+         - parser_rows_valid: bool
+         - launch_finish_receipt_ready: bool
+         - monotonic_clock_used: bool
+         - artifact_checksum_linked: bool
          - matched_timing_available: bool
+         - repeated_timing_pairs: int
          - hardware_speedup_claim: false
-         - hardware_receipt_corrigendum_clean: bool
+         - conductor_modified: false
+         - roadmap_yaml_unchanged: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: hardware_receipt_methodology_no_llm
+         - inference_substrate: hardware_receipt_and_timing_hygiene_no_llm
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5547-arc-no-llm-substrate-precheck
-    milestone: "2026.07.502"
-    title: "ARC no-LLM substrate and provenance precheck"
-    priority: critical
+  - id: exp5561-arc-fsm-target-rotation-precheck
+    milestone: "2026.07.503"
+    title: "ARC FSM target rotation precheck"
+    priority: high
     track: arc
-    deliverable: results/experiment_5547_arc_no_llm_substrate_precheck.json
-    agent_type: codex
-    model: "gpt-5.5"
+    deliverable: results/experiment_5561_arc_fsm_target_rotation_precheck.json
     max_turns: 45
-    estimated_wall_time_min: 60
+    estimated_wall_time_min: 55
     prior_failures:
-      - experiment_id: exp5533-arc-strategy-routing-precheck
-        verdict: "flagged: DURATION_TOO_SHORT and missing random_seed/reproducibility_checksum; no solve was claimed."
-        addressed_by: "This task repairs the no-LLM substrate declaration, seed/checksum fields, and registry-precheck evidence before another live attempt."
+      - experiment_id: exp5548-arc-clean-live-levelup
+        verdict: "honest_null: selected g50t L3, attempts 46, action_entropy 1.0, repeated_coordinate_rate 0.0, offline_reproduced false, reproduced_levels 0, registry_delta 0."
+        addressed_by: "This task rotates the target and improves the live-path precheck rather than repeating the same g50t L3 attempt."
         retire_if_same_verdict: true
-      - experiment_id: exp5520-arc-action-diversity-precheck
-        verdict: "complete: target precheck selected a valid non-duplicate target but did not prevent repeated-coordinate failure downstream."
-        addressed_by: "This precheck includes repeated-coordinate suppression and action entropy receipts in the same no-LLM substrate."
+      - experiment_id: exp5547-arc-no-llm-substrate-precheck
+        verdict: "complete: selected g50t L3, registry_precheck_passed true, already_reproduced false, action_entropy_precheck 2.0, solve_provenance live_agent_self_discovery."
+        addressed_by: "The new precheck avoids recent no-bank targets and adds FSM action abstraction before a live attempt."
+        retire_if_same_verdict: true
+      - experiment_id: exp5534-arc-strategy-routed-levelup
+        verdict: "honest_null: ARC strategy-routed level-up produced no registry delta."
+        addressed_by: "This task does not reuse the retired strategy-routing scope; it prepares a registry-safe FSM target rotation."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5533 and Exp5534 preserved live-agent self-discovery intent, but the artifacts were flagged for no-seed/no-checksum and confusing model-spec/substrate metadata. Repair the precheck before a level-up attempt.
+      Exp5547 selected a clean ARC target, but Exp5548 produced an honest null with no registry delta. Before another live attempt, rotate the target using registry precheck and a simple FSM action abstraction. Do not solve via offline source reading or ground-truth BFS.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
+      - {project_root}/research-program.md
       - {project_root}/ops/arc_solve_registry.yaml
-      - {project_root}/results/experiment_5533_arc_strategy_routing_precheck.json
-      - {project_root}/results/experiment_5534_arc_strategy_routed_levelup.json
+      - {project_root}/results/experiment_5547_arc_no_llm_substrate_precheck.json
+      - {project_root}/results/experiment_5548_arc_clean_live_levelup.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5547_arc_no_llm_substrate_precheck.json with a clean ARC live-path target, substrate, and provenance precheck.
+      Select a registry-safe ARC target for a live FSM-guided level-up attempt and emit a precheck artifact with live-agent self-discovery provenance.
 
       CONCRETE STEPS:
-      1. Run the registry precheck and choose a target level that is not already banked by the live mechanism.
-      2. Use the live agent path only. Do not invoke an LLM strategy proposer in this precheck and do not include model specs.
-      3. Record selected_game, selected_level, repeated-coordinate suppression settings, action entropy expectations, random_seed, and reproducibility_checksum.
-      4. Ensure solve_provenance is set to live_agent_self_discovery even though this task does not claim a solve.
-      5. Add or reuse tests for registry duplicate checks and precheck metadata if needed.
+      1. Read the ARC solve registry before selecting a target. Do not select a level already reproduced by the live mechanism.
+      2. Avoid recent no-bank targets from Exp5548 unless the registry or ops docs show a concrete reason to retry.
+      3. Build or reuse a simple FSM action abstraction that the live agent can actually reach at runtime.
+      4. Confirm repeated-coordinate suppression and action-entropy precheck are enabled.
+      5. Do not read hidden game source, do not run exhaustive offline BFS, and do not build a hand per-game calibration solver.
       6. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
+         - llm_invoked: false
+         - no_model_specs_required: true
          - selected_game: string
          - selected_level: string
          - registry_precheck_passed: bool
          - already_reproduced: false
-         - llm_strategy_proposer_used: false
-         - no_model_specs_required: true
-         - random_seed: int
-         - reproducibility_checksum: string
-         - strategy_routing_live_path_reachable: bool
+         - recent_no_bank_targets_avoided: list
+         - fsm_action_abstraction_ready: bool
          - repeated_coordinate_suppression_enabled: bool
          - action_entropy_precheck: float
          - solve_provenance: live_agent_self_discovery
-         - arc_clean_precheck_ready: bool
+         - arc_fsm_precheck_ready: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: offline_arcade_live_agent_runtime_self_discovery_no_llm
+         - inference_substrate: arc_live_path_precheck_no_llm
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5548-gated-arc-clean-live-levelup
-    milestone: "2026.07.502"
-    title: "Gated ARC clean live level-up attempt"
-    priority: critical
+  - id: exp5562-gated-arc-fsm-live-levelup
+    milestone: "2026.07.503"
+    title: "Gated ARC FSM live level-up attempt"
+    priority: high
     track: arc
-    deliverable: results/experiment_5548_arc_clean_live_levelup.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 60
-    estimated_wall_time_min: 95
+    deliverable: results/experiment_5562_arc_fsm_live_levelup.json
+    max_turns: 50
+    estimated_wall_time_min: 80
     gated_on:
-      - upstream: exp5547-arc-no-llm-substrate-precheck
-        artifact_field: arc_clean_precheck_ready
+      - upstream: exp5561-arc-fsm-target-rotation-precheck
+        artifact_field: arc_fsm_precheck_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp5534-gated-arc-strategy-routed-levelup
-        verdict: "honest_null: g50t L3 bounded_budget_no_target_level_reproduction with registry_delta 0; artifact also flagged for duration and missing seed/checksum."
-        addressed_by: "This attempt runs only after the no-LLM substrate precheck is clean and requires registry banking fields."
+      - experiment_id: exp5548-arc-clean-live-levelup
+        verdict: "honest_null: selected g50t L3, attempts 46, action_entropy 1.0, repeated_coordinate_rate 0.0, offline_reproduced false, reproduced_levels 0, registry_delta 0."
+        addressed_by: "This attempt is gated on a rotated target and live-reachable FSM action abstraction rather than repeating the same target and policy."
         retire_if_same_verdict: true
-      - experiment_id: exp5521-gated-arc-action-diverse-levelup
-        verdict: "honest_null: no new level banked and repeated-coordinate behavior returned downstream."
-        addressed_by: "This task changes the precheck/substrate hygiene and requires repeated-coordinate suppression evidence before the live attempt."
+      - experiment_id: exp5534-arc-strategy-routed-levelup
+        verdict: "honest_null: strategy-routed level-up produced no registry delta."
+        addressed_by: "The task uses a registry-safe FSM precheck and live_agent_self_discovery provenance instead of strategy-routing claims."
         retire_if_same_verdict: true
-      - experiment_id: exp5508-arc-live-levelup-v499
-        verdict: "honest_null: no new reproducible level and repeated action pattern dominated the attempt."
-        addressed_by: "This task rotates target through the current registry precheck and preserves live self-discovery provenance."
+      - experiment_id: exp5521-arc-first-contact-levelup-v2
+        verdict: "honest_null: ARC live-path attempt produced no registry delta."
+        addressed_by: "This attempt requires target rotation, repeated-coordinate suppression, entropy accounting, and no offline solve."
+        retire_if_same_verdict: true
+      - experiment_id: exp5508-arc-first-contact-candidate-generation
+        verdict: "retired: first-contact candidate-generation exploration signals did not establish live ARC solve evidence."
+        addressed_by: "This task is not a candidate-generation exploration-signal rerun; it is a live level-up attempt gated on registry-safe target rotation."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the mandatory ARC level-up attempt for milestone 2026.07.502. It must use the clean no-LLM live-path precheck and must bank a new level only if the live agent self-discovers it.
+      Run an ARC live level-up attempt only if Exp5561 selected a registry-safe target and a live-reachable FSM action abstraction. Solve credit requires the live agent to self-discover the level through its own attempts and runtime reverse engineering. A successful level-up must then be banked with post-solve reproduction evidence: offline_reproduced=true and reproduced_levels>=1.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
+      - {project_root}/research-roadmap-next.yaml
       - {project_root}/ops/arc_solve_registry.yaml
-      - {project_root}/results/experiment_5547_arc_no_llm_substrate_precheck.json
-      - {project_root}/results/experiment_5534_arc_strategy_routed_levelup.json
+      - {project_root}/results/experiment_5561_arc_fsm_target_rotation_precheck.json
+      - {project_root}/results/experiment_5548_arc_clean_live_levelup.json
       - {project_root}/python/carnot
       - {project_root}/tests/python
 
       TASK:
-      Emit results/experiment_5548_arc_clean_live_levelup.json after one gated live ARC attempt. The acceptance gate for a level-up claim is offline_reproduced=true AND reproduced_levels>=1, with solve_provenance=live_agent_self_discovery.
+      Execute the gated ARC FSM live level-up attempt and emit a provenance-clean artifact. Do not use an offline solver, hidden source reading, or outer-loop reverse engineering as solve evidence. The target is a first-contact or +1 deeper live-path level-up attempt, not a generic re-solve.
 
       CONCRETE STEPS:
-      1. Confirm arc_clean_precheck_ready=true in the upstream artifact.
-      2. Use selected_game and selected_level from the clean precheck unless the registry now says they are already banked; if so, choose a fresh target and record the rotation reason.
-      3. Run the live agent self-discovery path with the recorded seed and repeated-coordinate suppression settings.
-      4. Record trajectory path, action entropy, repeated-coordinate rate, attempt budget, terminal state, and any exact replay/banking result.
-      5. Do not read game source, do not use a hand-built per-game adapter, and do not include model specs unless an LLM proposer is actually invoked. This plan expects llm_strategy_proposer_used=false.
-      6. If a new level is banked, update the appropriate registry path through the existing project mechanism. If no level is banked, emit an honest null with registry_delta=0.
+      1. Use the selected target from Exp5561 unless the registry now says it is already reproduced. If it is already reproduced, emit a duplicate-prevented artifact and do not rerun the solve.
+      2. Use only live agent attempts and runtime-reachable induction for credited solve evidence.
+      3. Record every attempt trajectory or a reproducible trajectory path, random seed, checksum, selected target, action entropy, repeated-coordinate rate, and reproduction count.
+      4. If a level is solved by the live agent, run post-solve banking only after the live path has found the solution, update the ARC solve registry according to repository practice, and require offline_reproduced=true plus reproduced_levels>=1 for a level-up claim.
+      5. If no level is solved, emit an honest null with the same artifact fields.
+      6. Do not use LLM strategy proposer text as the credited solver path.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - selected_game: string
-         - selected_level: string
+         - llm_invoked: false
+         - no_model_specs_required: true
+         - upstream_arc_precheck: results/experiment_5561_arc_fsm_target_rotation_precheck.json
          - solve_provenance: live_agent_self_discovery
          - llm_strategy_proposer_used: false
-         - no_model_specs_required: true
          - random_seed: int
          - reproducibility_checksum: string
+         - selected_game: string
+         - selected_level: string
          - attempts: int
          - trajectory_path: string
          - action_entropy: float
@@ -886,76 +920,86 @@ tasks:
          - arc_live_levelup_ready: bool
          - tests_added_or_reused: list
          - field_principles: mapping with one-line principle annotations for each headline and gate field
-         - inference_substrate: offline_arcade_live_agent_runtime_self_discovery_no_llm
+         - inference_substrate: arc_live_agent_self_discovery_no_llm
          - honest_verdict: string
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5549-v502-capstone-reconciliation
-    milestone: "2026.07.502"
-    title: "V502 capstone reconciliation and claim boundaries"
+  - id: exp5563-v503-capstone-reconciliation
+    milestone: "2026.07.503"
+    title: "V503 capstone reconciliation and claim ledger"
     priority: critical
-    track: planning
-    deliverable: results/experiment_5549_capstone_v502.json
-    agent_type: codex
-    model: "gpt-5.5"
+    track: capstone
+    deliverable: results/experiment_5563_capstone_v503.json
     max_turns: 45
-    estimated_wall_time_min: 55
+    estimated_wall_time_min: 60
     prior_failures:
-      - experiment_id: exp5535-v501-capstone-reconciliation
-        verdict: "complete: .501 capstone read 13 result artifacts; missing=1; skipped_flagged_or_gated=5; structured_sota_claim_allowed true; sota_hard_soft_claim_allowed false; csl_claim_allowed false; hardware_speedup_claim false; arc_registry_delta 0."
-        addressed_by: "This capstone reconciles the newer .502 artifacts and must carry forward any unresolved blocks honestly."
+      - experiment_id: exp5549-v502-capstone-reconciliation
+        verdict: "complete: .502 capstone read 14/14 artifacts; flagged 1; skipped_by_gates 1; honest_nulls 2; structured_sota_claim_allowed false; sota_hard_soft_claim_allowed false; continuous_self_learning_evidence true; csl_claim_allowed false; sparse_repair_claim_allowed true; hardware_speedup_claim false; arc_registry_delta 0."
+        addressed_by: "This capstone reconciles the new .503 artifact range and does not rerun .502 conclusions."
         retire_if_same_verdict: true
-      - experiment_id: exp5522-v500-capstone-reconciliation
-        verdict: "complete: .500 capstone bounded SOTA, CSL, sparse, hardware, and ARC claims."
-        addressed_by: "This is the standard next-milestone capstone over a different task range and artifact set."
+      - experiment_id: exp5535-v501-capstone-reconciliation
+        verdict: "complete: .501 capstone read 13 result artifacts and preserved claim boundaries."
+        addressed_by: "This capstone targets the .503 task range and the newer grammar/ASP/CSL/ARC gates."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Close milestone 2026.07.502 after the conductor has run exp5536 through exp5548. This task reconciles artifacts and claim boundaries; it must not make missing or flagged evidence look successful.
+      This is the capstone for milestone 2026.07.503. Reconcile all .503 artifacts, update ops docs, and make claim boundaries explicit. Do not rerun experiments and do not re-plan the milestone.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/research-roadmap.yaml
       - {project_root}/research-roadmap-next.yaml
       - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - {project_root}/ops/conductor-log.md
-      - {project_root}/ops/status.md
+      - {project_root}/research-complete.yaml
       - {project_root}/ops/changelog.md
-      - {project_root}/ops/e2e-test-plan.md
-      - {project_root}/results
+      - {project_root}/ops/status.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/results/experiment_5550_transition_v503.json
+      - {project_root}/results/experiment_5551_v503_source_delta_ingestion.json
+      - {project_root}/results/experiment_5552_automaton_schema_row_completion_receipt.json
+      - {project_root}/results/experiment_5553_gbnf_forced_sota_row_smoke.json
+      - {project_root}/results/experiment_5554_sota_hard_soft_panel_v4.json
+      - {project_root}/results/experiment_5555_asp_fsm_nonmonotonic_fixture.json
+      - {project_root}/results/experiment_5556_asp_fsm_sparse_repair_scale.json
+      - {project_root}/results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json
+      - {project_root}/results/experiment_5558_causal_write_manage_read_csl_memory.json
+      - {project_root}/results/experiment_5559_cross_model_sota_csl_transfer_v2.json
+      - {project_root}/results/experiment_5560_hardware_and_timing_receipt_hygiene.json
+      - {project_root}/results/experiment_5561_arc_fsm_target_rotation_precheck.json
+      - {project_root}/results/experiment_5562_arc_fsm_live_levelup.json
 
       TASK:
-      Emit results/experiment_5549_capstone_v502.json and reconcile docs with the true .502 outcome.
+      Emit results/experiment_5563_capstone_v503.json and update ops/status.md and ops/changelog.md with the final .503 outcomes.
 
       CONCRETE STEPS:
-      1. Read every .502 artifact from exp5536 through exp5548 and record missing, skipped, gated, failed, flagged, honest-null, and clean results separately.
-      2. Compute whether the following claims are allowed: structured SOTA hard/soft, continuous self-learning, sparse repair, hardware speedup, and ARC live level-up.
-      3. Verify that the LLM-bearing artifacts include the mandated local SOTA GGUF model specs.
-      4. Verify ARC solve_provenance, registry_delta, offline reproduction, and reproduced-level fields without treating capstone aggregation as a level-up attempt.
-      5. Update ops/status.md and ops/changelog.md with concise factual .502 closure notes. Keep openspec and BMAD traceability aligned if any spec-affecting code changed.
-      6. Run relevant roadmap/artifact/doc checks, including protected-file checks for research-roadmap.yaml and scripts/research_conductor.py.
+      1. Read every .503 artifact that exists. If a gated task was skipped by the conductor, read its blocked artifact and count it as skipped_by_gates.
+      2. Summarize clean, flagged, blocked, gated-skip, and honest-null outcomes.
+      3. Determine whether SOTA hard/soft, continuous self-learning, cross-model CSL, ASP sparse repair, hardware speedup, and ARC live level-up claims are allowed.
+      4. Preserve honest boundaries: no claim if row completion failed, CSL tautology persisted, cross-model transfer was gated/skipped, matched timing was absent, or ARC registry delta remained zero.
+      5. Update ops/status.md and ops/changelog.md with concise .503 completion facts.
+      6. Confirm research-roadmap.yaml and scripts/research_conductor.py were not modified.
       7. Emit the deliverable JSON with REQUIRED ARTIFACT FIELDS:
-         - milestone: 2026.07.502
-         - task_range: exp5536-exp5549
+         - milestone: 2026.07.503
+         - task_range: exp5550-exp5563
          - artifacts_expected: int
          - artifacts_read: int
          - missing_artifacts: list
-         - skipped_by_gates: list
          - flagged_artifacts: list
+         - blocked_artifacts: list
+         - skipped_by_gates: list
          - honest_nulls: list
-         - clean_artifacts: list
          - structured_sota_claim_allowed: bool
          - sota_hard_soft_claim_allowed: bool
          - continuous_self_learning_evidence: bool
          - csl_claim_allowed: bool
-         - sparse_repair_claim_allowed: bool
+         - cross_model_csl_claim_allowed: bool
+         - asp_sparse_repair_claim_allowed: bool
          - hardware_speedup_claim: bool
          - arc_registry_delta: int
-         - reproduced_levels: int
-         - protected_files_unchanged: mapping
+         - arc_live_levelup_claim_allowed: bool
          - docs_updated: list
-         - checks_run: list
+         - roadmap_yaml_unchanged: bool
+         - conductor_unchanged: bool
          - field_principles: mapping with one-line principle annotations for each headline and gate field
          - inference_substrate: aggregation_from_upstream_artifacts
          - honest_verdict: string
