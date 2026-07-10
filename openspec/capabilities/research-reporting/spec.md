@@ -39677,3 +39677,96 @@ available evidence visible, keeps `roadmap_yaml_unchanged` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5536 | Implemented (`python/carnot/experiment_5536_transition_v502.py`, `results/experiment_5536_transition_v502.json`) | Implemented (`tests/python/test_experiment_5536_transition_v502.py`) |
+
+### REQ-REPORT-5537: Execute V502 Source Delta And Map Accepted Findings
+
+The Exp 5537 workflow SHALL perform an execution-time source delta check after
+the V502 planner refresh and write
+`results/experiment_5537_v502_source_delta_ingestion.json` after reading
+`AGENTS.md`, `CODEX.md`, `CLAUDE.md`, `research-program.md`,
+`research-references.md`, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, `ops/changelog.md`, and
+`research-roadmap-next.yaml` when present. It SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+The workflow SHALL verify the `## V502 Planner Refresh - 2026-07-10` marker in
+`research-references.md`. It SHALL check arXiv for 2025-2026 EBMs for
+verification/reasoning, neural constraint satisfaction, Ising applications,
+hallucination mitigation, KANs, energy-guided decoding, hardware-accelerated
+sampling, and continual/online learning. It SHALL also check OpenReview,
+Extropic writing, Semantic Scholar public routes for EBT `2507.02092` and
+ARM-EBM `2512.15605`, HuggingFace Papers, GitHub, Logical Intelligence public
+pages, local duplicate history, the `.502` roadmap proposal, and the exclusion
+manifest.
+
+The workflow SHALL append `## V502 Execution Refresh - 20260710` to
+`research-references.md` only when at least one non-duplicate source adds a
+Carnot-actionable delta mapped to one of the planned `.502` experiments: SOTA
+duration/substrate repair, grammar table preflight, LLM-FSM exact fixture, CSL
+residue repair, sparse FSM descriptors, hardware receipt hygiene, or ARC
+live-path recovery. If every surfaced source is duplicate, watch-only, excluded,
+closed-scope, or not locally executable, the workflow SHALL leave
+`research-references.md` unchanged and record an explicit no-op receipt.
+
+The artifact SHALL include required fields `sources_checked`,
+`new_references_added`, `duplicates_suppressed`, `semantic_scholar_status`,
+`closed_scopes_reopened`, `research_references_updated`,
+`prior_refresh_marker_found`, `experiment_mappings`, `field_principles`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include experiment
+metadata, searched source details, watch-only or excluded candidates, tests run,
+protected-file booleans, and no-deep-research evidence so the source refresh can
+be audited without reopening protected scope.
+
+Required field principles:
+
+- `sources_checked`: principle "Records every primary, secondary, local-dedupe, and exclusion source checked before V502 science tasks run."
+- `new_references_added`: principle "Lists only non-duplicate actionable findings that earned a V502 execution-refresh append."
+- `duplicates_suppressed`: principle "Prevents churn from re-adding the V502 planner block or older source-delta findings."
+- `semantic_scholar_status`: principle "Records whether EBT and ARM-EBM public citation routes were reachable without turning counts into a claim."
+- `closed_scopes_reopened`: principle "Bare false boolean proving excluded, proprietary, non-local, and retired lanes stayed closed."
+- `research_references_updated`: principle "Bare boolean distinguishing a real V502 append from a no-op freshness receipt."
+- `prior_refresh_marker_found`: principle "Ensures the execution refresh dedupes against the actual V502 planner block before appending."
+- `experiment_mappings`: principle "Maps every accepted finding to a planned `.502` experiment lane; empty only when no finding was accepted."
+- `field_principles`: principle "Carries the why behind every headline and gate field so downstream reconcilers can audit field intent."
+- `inference_substrate`: principle "Must be aggregation_from_upstream_artifacts because the receipt aggregates sources and local artifacts without model, solver, ARC, or hardware inference."
+- `honest_verdict`: principle "One-line terminal summary starting with complete: or blocked: that states whether references changed."
+
+#### SCENARIO-REPORT-5537-APPEND-DELTAS: New Actionable Finding Appends A V502 Refresh
+
+**Given** `research-references.md` contains the V502 planner refresh marker
+**And** the source check finds a genuinely new Carnot-actionable finding outside
+the planner block and local duplicate history
+**When** the Exp 5537 workflow runs
+**Then** it writes `results/experiment_5537_v502_source_delta_ingestion.json`,
+appends exactly one `V502 Execution Refresh - 20260710` block to
+`research-references.md`, records the source in `new_references_added`, maps it
+to a planned `.502` experiment, records `research_references_updated=true`, sets
+`prior_refresh_marker_found=true`, keeps `closed_scopes_reopened=false`, and
+declares `inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-5537-NO-NEW-DELTA: Duplicate-Only Sweep Leaves References Unchanged
+
+**Given** `research-references.md` contains the V502 planner refresh marker
+**And** every surfaced source is already covered, watch-only, excluded, or
+closed-scope
+**When** the Exp 5537 workflow runs
+**Then** it writes the JSON receipt, records `new_references_added=[]`, records
+`experiment_mappings=[]`, records `research_references_updated=false`, keeps
+`research-references.md` byte-for-byte unchanged, and records the no-op in
+`honest_verdict`.
+
+#### SCENARIO-REPORT-5537-BLOCKED-MARKER: Missing Planner Marker Fails Closed
+
+**Given** `research-references.md` lacks the V502 planner refresh marker
+**When** the Exp 5537 workflow runs
+**Then** it writes a terminal blocked artifact, records
+`prior_refresh_marker_found=false`, keeps `research_references_updated=false`,
+keeps `new_references_added=[]`, keeps `experiment_mappings=[]`, and does not
+modify `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5537)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5537 | Implemented (`python/carnot/experiment_5537_v502_source_delta_ingestion.py`, `results/experiment_5537_v502_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5537_v502_source_delta_ingestion.py`) |
