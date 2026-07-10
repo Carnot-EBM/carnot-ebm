@@ -10747,3 +10747,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 22:50 UTC | Gated GBNF-forced SOTA row smoke | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-re |
 | 2026-07-10 22:52 UTC | Gated GBNF-forced SOTA row smoke | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-re |
 | 2026-07-10 22:54 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |
+| 2026-07-10 23:07 UTC | ASP-FSM nonmonotonic exact fixture | OK | 86 passed, 1 warning in 11.58s |
+| 2026-07-10 23:09 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |
