@@ -29721,6 +29721,120 @@ the row diagnostic, keep `exact_asp_validator_ready=false` or
 |---|---|---|
 | REQ-VERIFY-5555 | Implemented (`python/carnot/experiment_5555_asp_fsm_nonmonotonic_fixture.py`, `results/experiment_5555_asp_fsm_nonmonotonic_fixture.json`) | Implemented (`tests/python/test_experiment_5555_asp_fsm_nonmonotonic_fixture.py`) |
 
+### REQ-VERIFY-5556: ASP/FSM Sparse Repair Scale
+
+The repository SHALL provide Exp 5556 at
+`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py` and write
+`results/experiment_5556_asp_fsm_sparse_repair_scale.json` as a
+descriptor-guided sparse repair scale test over the Exp 5555 ASP/FSM
+nonmonotonic exact fixture. Exp 5556 SHALL first confirm that the upstream
+artifact `results/experiment_5555_asp_fsm_nonmonotonic_fixture.json` has
+`exact_fsm_fixture_extended_ready=true` and `exact_asp_validator_ready=true`.
+It SHALL reuse the Exp 5555 stable-model evaluator as the acceptance authority
+for every candidate repair, and it SHALL compare descriptor-guided repair,
+same-size random-block repair, and exact-only repair over the same ASP rows,
+random seeds, and per-attempt candidate budget.
+
+Exp 5556 SHALL derive sparse repair descriptors from row-local ASP/FSM
+evidence: satisfiable rows, unsatisfiable rows, ambiguous rows,
+default-negation rows, and contradiction controls SHALL all receive
+stable-model-checked repair attempts. Descriptor-guided repair SHALL use only
+the active descriptor block for each row; random-block repair SHALL use the
+same block size over the same row-local variable universe; exact-only repair
+SHALL use exact stable-model validation without descriptor ordering under the
+same per-attempt budget. The workflow SHALL record stable-model validation
+coverage for every fixture row and SHALL report success rates plus iteration
+counts separately for satisfiable, unsatisfiable, ambiguous, and
+default-negation row families.
+
+Exp 5556 SHALL NOT invoke an LLM, SHALL NOT require `model_specs`, SHALL NOT
+train or load a model, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL NOT claim hardware or timing speedup unless matched timing receipts are
+captured in this experiment. For this experiment, `matched_timing_available`
+SHALL be `false` and `speedup_claim_allowed` SHALL be `false`. The bounded ASP
+sparse-repair claim SHALL be allowed only when descriptor-guided repair beats
+random-block repair, exact stable-model validation covers every row, and
+matched timing remains disabled as a speedup claim source.
+
+The artifact SHALL include at minimum these top-level fields:
+`upstream_asp_fsm_fixture`, `llm_invoked`, `no_model_specs_required`,
+`descriptor_guided_success_rate`, `random_block_success_rate`,
+`exact_only_success_rate`, `stable_model_checked_rate`,
+`descriptor_mean_iterations`, `random_mean_iterations`,
+`exact_only_mean_iterations`, `row_family_breakdown`,
+`matched_timing_available`, `speedup_claim_allowed`,
+`asp_sparse_repair_claim_allowed`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+`upstream_asp_fsm_fixture` SHALL equal
+`results/experiment_5555_asp_fsm_nonmonotonic_fixture.json`;
+`llm_invoked` SHALL be `false`; `no_model_specs_required` SHALL be `true`;
+`inference_substrate` SHALL equal
+`deterministic_asp_fsm_sparse_repair_no_llm`; and `honest_verdict` SHALL start
+with `complete:` or `blocked:`.
+
+Field principles:
+
+- `upstream_asp_fsm_fixture`: Pins the sparse repair panel to the exact ASP/FSM
+  fixture it reuses.
+- `llm_invoked`: Prevents deterministic stable-model repair from being
+  mistaken for live model inference.
+- `no_model_specs_required`: Confirms the deterministic repair evaluator has no
+  model dependency to disclose.
+- `descriptor_guided_success_rate`: Measures active-descriptor repair only
+  after stable-model validation.
+- `random_block_success_rate`: Provides the matched same-budget random-block
+  control on the same rows and seeds.
+- `exact_only_success_rate`: Records exact-validator-only repair under the same
+  row and budget denominator.
+- `stable_model_checked_rate`: Confirms every fixture row received
+  stable-model validation evidence.
+- `descriptor_mean_iterations`: Counts exact stable-model checks for
+  descriptor-guided repair without making a timing claim.
+- `random_mean_iterations`: Counts exact stable-model checks for the
+  random-block control without making a timing claim.
+- `exact_only_mean_iterations`: Counts exact stable-model checks for the
+  exact-only control without making a timing claim.
+- `row_family_breakdown`: Keeps satisfiable, unsatisfiable, ambiguous, and
+  default-negation outcomes separate.
+- `matched_timing_available`: Gates any future timing language to authenticated
+  matched measurements.
+- `speedup_claim_allowed`: Must remain false without matched authenticated
+  timing.
+- `asp_sparse_repair_claim_allowed`: Opens only when descriptor-guided repair
+  beats random-block repair under exact stable-model checks.
+- `tests_added_or_reused`: Names focused tests and reused upstream ASP/FSM
+  tests.
+- `field_principles`: Keeps headline and gate fields annotated by evidence
+  boundaries.
+- `inference_substrate`: Declares deterministic ASP/FSM sparse repair with no
+  LLM.
+- `honest_verdict`: Provides a terminal evidence boundary without speedup
+  language.
+
+### SCENARIO-VERIFY-5556: Descriptor-Guided ASP/FSM Repairs Beat Random Blocks
+
+Given the Exp 5555 upstream ASP/FSM fixture is ready, when Exp 5556 runs, then
+it loads the same ASP rows, builds row-local sparse repair descriptors, applies
+descriptor-guided, random-block, and exact-only repair policies over the same
+rows, random seeds, and candidate budget, validates every candidate with the
+Exp 5555 stable-model evaluator, writes
+`results/experiment_5556_asp_fsm_sparse_repair_scale.json`, and sets
+`asp_sparse_repair_claim_allowed=true` only when descriptor-guided repair beats
+the random-block control and `stable_model_checked_rate=1.0`.
+
+If the upstream ASP/FSM fixture is absent or unready, if any row lacks
+stable-model validation evidence, if random-block and descriptor-guided repair
+do not use the same rows and budget, if descriptor-guided repair does not beat
+random-block repair, or if matched timing evidence is absent, then Exp 5556
+SHALL keep the appropriate gate field false and emit a terminal `complete:` or
+`blocked:` verdict without invoking an LLM or making a speedup claim.
+
+## Implementation Status (REQ-VERIFY-5556)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
