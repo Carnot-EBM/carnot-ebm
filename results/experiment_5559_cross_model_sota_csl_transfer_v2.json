@@ -2175,5 +2175,43 @@
     "learned_state_scope": "external_retrieval_memory_only",
     "no_weight_mutation": true,
     "training_steps": 0
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "aligned_memory_score=0.1666666667 and no_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "aligned_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "aligned_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "no_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "no_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "shuffled_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "cross_family_delta_over_shuffled=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
