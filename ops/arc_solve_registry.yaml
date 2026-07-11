@@ -807,7 +807,44 @@ games:
   levels_reproduced: 1
   win_condition: first-solve L1; ACTION + kind sequence replays offline.
   solver: results/experiment_4275 solve_trace.actions.
-  gotchas: []
+  gotchas:
+  - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex, not yet
+    adaptered): a 64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4
+    (not on ACTION5 pickup/drop). Five outlined blocks must each be carried and
+    explicitly dropped into one of five distinct target slots; a temporary overlap
+    is not a placement, only frame.levels_completed advancing is ground truth; all
+    five are required (four confirmed insufficient, v3/v4).'
+  - 'Carry-while-repositioning (holding a block against the target while moving
+    before the explicit drop) does NOT save timer budget vs. drop-then-repick (v4
+    refuted this efficiency hypothesis empirically).'
+  - 'Voluntary mid-level resets on L2 risk eventually clearing the L1 checkpoint;
+    timer-forced-expiry resets preserve it safely — never trigger a reset yourself
+    on L2.'
+  dead_ends:
+  - 'v1-v2 (results/outer_loop_gpt56sol_wa30_probe.json, _v2.json): improvised
+    step-by-step play, discovered the L2 mechanics above but ran out of step
+    budget before a full 5-placement route.'
+  - 'v3 (results/outer_loop_gpt56sol_wa30_probe_v3.json): 4/5 placements in one
+    continuous run, 197/250 steps used, timer expired before the 5th.'
+  - 'v4 (results/outer_loop_gpt56sol_wa30_probe_v4.json): 4/5 placements again,
+    296/350 steps used, independently confirmed the same 4-placement ceiling and
+    refuted the carry-while-repositioning efficiency hypothesis.'
+  - 'v5 (results/outer_loop_gpt56sol_wa30_probe_v5.json): switched from improvised
+    play to explicit computation — extracted exact grid coordinates (player,
+    5 blocks, 2x3 six-cell receiving bay) from the post-L1-prefix L2 frame, then
+    exhaustively searched all 120 block orders x every 5-of-6 bay-cell assignment
+    for the minimum movement-only cost (ACTION5 charged as free). Optimistic
+    lower bound = 80 movement actions, vs. the 64-cell budget — infeasible by 16
+    even before steering/orientation overhead, under a plain Manhattan-distance
+    movement-cost model. This is a proven bound, not a budget-exhaustion result:
+    if the naive one-block-at-a-time carry model is complete and correct, this
+    level cannot be won in the timer as currently understood. Two live
+    possibilities remain unexplored: (a) an undiscovered mechanic reduces true
+    cost below 64 (multi-carry, a push-not-carry option, a shortcut/warp), or
+    (b) the level genuinely requires a different tile-cost model than plain
+    Manhattan distance (e.g. diagonal movement, or ACTION1-4 do turn-then-step
+    rather than a pure translate). Next attempt should probe (a)/(b) directly
+    rather than re-running route optimization under the same assumed cost model.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
