@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.503",
+  "generated_at": "2026-07-11T12:24:15.073Z",
+  "retro_type": "operational_in_progress",
+  "summary": "no data available this milestone \u2014 the authoritative timing record contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Both timing assembly paths returned no experiment commits despite milestone references in the changelog, so execution efficiency cannot be quantified.",
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "Timing integrity mismatch: both milestone timing assembly paths found no experiment commits even though ops/changelog.md contains milestone references, preventing operational runtime analysis."
+  ],
+  "improvements_suggested": [
+    "Record a milestone-keyed timing receipt when each experiment starts and finishes so closeout does not depend on git-log or disk-mtime reconstruction.",
+    "Make closeout reject timing assembly when milestone changelog references exist but neither timing path returns experiment rows.",
+    "Add a regression fixture for this zero-row mismatch and retain diagnostics from both assembly paths."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument experiment launch and completion with durable milestone-keyed timestamps.",
+    "Block retrospective finalization when changelog evidence and assembled timing rows disagree.",
+    "Regression-test the newly observed dual-path zero-row failure mode."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "meta_reflection": "The milestone cannot support conclusions about the longest compute-bound work, GPU utilization efficiency, or multi-model runner engagement. Trustworthy timing capture must be restored before operational retrospectives can guide execution optimization.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "estimated_time_savings_pct": 0,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true
+}
