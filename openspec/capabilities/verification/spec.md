@@ -29835,6 +29835,117 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5568: Cached Verifier Coevolution Trigger Audit
+
+The repository SHALL provide Exp 5568 at
+`python/carnot/experiment_5568_verifier_coevolution_trigger.py` and write
+`results/experiment_5568_verifier_coevolution_trigger.json`. Exp 5568 SHALL
+consume only cached Exp 5567 verifier outputs from
+`results/experiment_5567_local_sota_solve_verify_asymmetry.json` and cached
+Exp 5566 exact labels from
+`results/experiment_5566_exact_asp_fsm_near_miss_corpus.json`. It SHALL NOT
+invoke an LLM, SHALL NOT retrain or tune a verifier, and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+Exp 5568 SHALL audit verifier residuals for scalability, faithfulness, and
+robustness. It SHALL stratify false accepts, false rejects, calibration error,
+and abstention by generator family, constraint family, corruption distance,
+and verifier arm. The exact Exp 5566 labels SHALL remain the correctness
+oracle, while the Exp 5567 verifier outputs SHALL remain non-oracle cached
+measurements. When the cached panel has only aggregate confusion counts rather
+than raw response text, Exp 5568 SHALL preserve that limitation explicitly and
+SHALL reconstruct only aggregate-equivalent residual rows consistent with the
+cached counts and sampled exact-label rows.
+
+Exp 5568 SHALL test robustness to candidate-order reversal, semantically
+equivalent candidate formatting, and criteria-order permutation without
+changing exact labels or making new model calls. It SHALL quantify whether a
+single threshold transfers across model families by reporting paired
+cross-family intervals and the number of independent instances used as the
+paired denominator. It SHALL preregister the coevolution trigger as true when
+any worst-family false-accept rate exceeds 0.10, family calibration gap exceeds
+0.05, or a robustness perturbation changes a verdict on more than 0.05 of
+rows. It SHALL emit a bounded next-action recommendation instead of silently
+tuning thresholds until a favorable metric appears.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `upstream_panel_path`, `cached_only`, `llm_invoked`,
+`n_independent_instances`, `stratification_cells`, `scalability_metrics`,
+`faithfulness_metrics`, `robustness_metrics`,
+`worst_family_false_accept_rate`, `family_calibration_gap`,
+`perturbation_flip_rate`, `threshold_transferable`,
+`coevolution_trigger_thresholds`, `verifier_coevolution_required`,
+`exact_validator_is_oracle`, `verifier_is_oracle`, `inference_substrate`, and
+`honest_verdict`. `cached_only` SHALL be `true`; `llm_invoked` SHALL be
+`false`; `exact_validator_is_oracle` SHALL be `true`; `verifier_is_oracle`
+SHALL be `false`; and `inference_substrate` SHALL equal
+`cached_verifier_outputs_plus_exact_labels`.
+
+Field principles:
+
+- `field_principles`: Keeps every headline and gate field annotated by the
+  evidence boundary it protects.
+- `upstream_panel_path`: Pins the Exp 5567 cached verifier-output artifact
+  being audited.
+- `cached_only`: Prevents hidden fresh inference, retraining, or threshold
+  tuning from being laundered as a cached residual audit.
+- `llm_invoked`: Bare boolean declaring that no model call occurred in Exp
+  5568.
+- `n_independent_instances`: Records the paired statistical denominator used
+  for cross-family intervals.
+- `stratification_cells`: Exposes residuals by generator family, constraint
+  family, corruption distance, and verifier arm so a global average cannot hide
+  a brittle subgroup.
+- `scalability_metrics`: Measures cached panel coverage, arms, model families,
+  and label rows without implying new inference scale.
+- `faithfulness_metrics`: Reports false accept, false reject, calibration, and
+  abstention residuals against the exact labels.
+- `robustness_metrics`: Records perturbation flip rates without changing exact
+  labels or making new model calls.
+- `worst_family_false_accept_rate`: Preregistered unsafe-accept trigger input.
+- `family_calibration_gap`: Preregistered cross-model-family calibration trigger
+  input.
+- `perturbation_flip_rate`: Preregistered robustness trigger input.
+- `threshold_transferable`: States whether one verifier threshold is
+  decision-grade across model families under the cached evidence.
+- `coevolution_trigger_thresholds`: Preserves the preregistered 0.10, 0.05, and
+  0.05 trigger thresholds before interpretation.
+- `verifier_coevolution_required`: Final decision trigger; true means retrain
+  or redesign in a later task, not here.
+- `exact_validator_is_oracle`: Bare boolean disclosing the exact ASP/FSM
+  validators are the label oracle.
+- `verifier_is_oracle`: Bare boolean disclosing the fixed verifier is not the
+  oracle and can be unfaithful or gameable.
+- `inference_substrate`: Declares cached verifier outputs plus exact labels
+  rather than live model inference.
+- `honest_verdict`: Terminal verdict states whether the cached audit triggered
+  coevolution and names the bounded next action.
+
+### SCENARIO-VERIFY-5568: Cached Residual Audit Emits Preregistered Trigger
+
+Given Exp 5567 has written cached verifier metrics and Exp 5566 has written
+ready exact labels, when Exp 5568 runs, then it loads those artifacts without
+LLM calls, reconstructs aggregate-equivalent residual rows from the sampled
+Exp 5567 instance IDs and Exp 5566 labels, stratifies false accepts, false
+rejects, calibration error, and abstention by generator family, constraint
+family, corruption distance, and verifier arm, computes paired cross-family
+intervals over independent instance IDs, tests the three robustness
+perturbations without changing exact labels, writes
+`results/experiment_5568_verifier_coevolution_trigger.json`, and sets the
+coevolution trigger from the preregistered thresholds.
+
+If either upstream artifact is absent, unready, or lacks the fields needed for
+the cached audit, then Exp 5568 SHALL write a blocked terminal artifact with
+`cached_only=true`, `llm_invoked=false`, `verifier_coevolution_required=false`,
+and an `honest_verdict` beginning with `blocked_` rather than fabricating
+residuals.
+
+## Implementation Status (REQ-VERIFY-5568)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5568 | Implemented (`python/carnot/experiment_5568_verifier_coevolution_trigger.py`, `results/experiment_5568_verifier_coevolution_trigger.json`) | Implemented (`tests/python/test_experiment_5568_verifier_coevolution_trigger.py`) |
+
 ### REQ-VERIFY-5567: Local SOTA Solve-Versus-Verify Asymmetry Panel
 
 The repository SHALL provide Exp 5567 at
