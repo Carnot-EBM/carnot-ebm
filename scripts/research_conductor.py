@@ -3134,7 +3134,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     skeleton: dict = {
         "schema": "carnot.operational_retro.v64",
         "milestone": current,
-        "generated_at": _dt_now.now(_tz_now.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": _dt_now.now(_tz_now.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),  # noqa: UP017 -- _tz_now is `timezone` (aliased import), not the `datetime` module; ruff's suggested `datetime.UTC` does not exist on `timezone` and crashes (AttributeError, see 2026-07-11 incident)
         "retro_type": "operational_full",
         "total_wall_time_minutes": round(pre_total_min, 1),
         "experiments_completed": len(experiment_times),

@@ -5889,3 +5889,9 @@ The critical path for milestone .250:
 - theme: operational closeout constrained by a timing-integrity mismatch
 - key result: honest negative -- no data available this milestone; the timing assembler produced 0 experiment commits even though milestone changelog references exist, so compute-bound duration ranking, GPU-efficiency assessment, and DualGPURunner evaluation are unsupported
 - acceptance: 0/0 criteria met -- no authoritative timing rows were available for milestone-scoped operational scoring
+
+### Milestone 2026.07.503
+- exp_range: no data available this milestone
+- theme: contradictory closeout evidence exposes a new timing-assembly failure
+- key result: honest negative -- no data available this milestone; both reconstruction routes returned 0 experiment commits despite changelog evidence for the milestone, leaving compute-bound duration, GPU efficiency, and parallel-runner engagement unmeasured
+- acceptance: 0/0 criteria met -- no authoritative milestone-scoped timing entries were available to score
