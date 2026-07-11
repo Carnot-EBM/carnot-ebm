@@ -56,7 +56,7 @@ SCORECARD_PLAN_SOURCES = {
 GENERIC_ACTION_ARTIFACTS = {
     "r11l": "results/experiment_4296_arc_incremental_progress_new_game.json",
     "ls20": "results/experiment_4285_arc_incremental_progress_new_game.json",
-    "wa30": "results/outer_loop_fable5_wa30_probe_l6.json",
+    "wa30": "results/outer_loop_fable5_wa30_probe_l7.json",
     "cd82": "results/arc_explore_trajectory_cd82.json",
     "sp80": "results/arc_explore_trajectory_sp80.json",
     "su15": "results/arc_explore_trajectory_su15.json",

@@ -40427,3 +40427,138 @@ prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5565 | Planned (`python/carnot/experiment_5565_v504_source_delta_ingestion.py`, `results/experiment_5565_v504_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5565_v504_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5577: V504 Capstone Reconciles Terminal Evidence Without Promotion From Nulls
+
+The Exp5577 workflow SHALL read every expected `.504` terminal artifact from
+`results/experiment_5564_transition_v504.json` through
+`results/experiment_5576_gated_sge_live_levelup.json`, including the
+`results/experiment_5573_matched_sampler_hardware_continuity_raw_rows.json`
+sidecar. Missing expected artifacts SHALL be listed explicitly and SHALL NOT
+be inferred from adjacent artifacts or roadmap text.
+
+The expected upstream artifact set is:
+`results/experiment_5564_transition_v504.json`,
+`results/experiment_5565_v504_source_delta_ingestion.json`,
+`results/experiment_5566_exact_asp_fsm_near_miss_corpus.json`,
+`results/experiment_5567_local_sota_solve_verify_asymmetry.json`,
+`results/experiment_5568_verifier_coevolution_trigger.json`,
+`results/experiment_5569_causal_memory_policy_tournament.json`,
+`results/experiment_5570_spline_local_kan_online_energy.json`,
+`results/experiment_5571_reset_free_sota_continual_harness.json`,
+`results/experiment_5572_gated_delayed_regression_promotion.json`,
+`results/experiment_5573_matched_sampler_hardware_continuity.json`,
+`results/experiment_5573_matched_sampler_hardware_continuity_raw_rows.json`,
+`results/experiment_5574_ptrm_stochastic_generator_stage1.json`,
+`results/experiment_5575_sge_anti_stagnation_live_precheck.json`, and
+`results/experiment_5576_gated_sge_live_levelup.json`.
+
+The workflow SHALL classify every lane as clean, bounded, blocked, flagged,
+skipped, retired, or promoted. It SHALL apply adversarial-verification flags
+before headline fields: a flagged artifact may remain useful as terminal
+evidence, but it SHALL NOT support a positive claim. A blocked, skipped, or
+honest-null artifact SHALL be terminal evidence only and SHALL NOT be converted
+into a positive result.
+
+The capstone SHALL decide these headline/gate fields separately:
+`solve_verify_asymmetry_supported`, `verifier_coevolution_required`,
+`memory_policy_promoted`, `kan_online_energy_promoted`,
+`continuous_self_learning_claim_allowed`, `hardware_speedup_claim_allowed`,
+`ptrm_stage1_status`, `ptrm_retired`, `ordinary_arc_floor_satisfied`,
+`arc_solve_provenance`, `arc_registry_before_after`, `arc_registry_delta`,
+and `sge_retired`. It SHALL require every ARC solve claim to have
+`solve_provenance=live_agent_self_discovery`, offline reproduction, and a
+positive registry delta. PTRM development-proxy work SHALL NOT count as a
+solve or as the ordinary ARC slot.
+
+The artifact SHALL include the required fields `field_principles`,
+`milestone`, `expected_task_range`, `upstream_artifacts_expected`,
+`upstream_artifacts_read`, `missing_artifacts`, `clean_lanes`,
+`bounded_lanes`, `blocked_lanes`, `flagged_lanes`, `skipped_lanes`,
+`retired_lanes`, `promoted_lanes`, `solve_verify_asymmetry_supported`,
+`verifier_coevolution_required`, `memory_policy_promoted`,
+`kan_online_energy_promoted`, `continuous_self_learning_claim_allowed`,
+`hardware_speedup_claim_allowed`, `ptrm_stage1_status`, `ptrm_retired`,
+`ordinary_arc_floor_satisfied`, `arc_solve_provenance`,
+`arc_registry_before_after`, `arc_registry_delta`, `sge_retired`,
+`specs_updated`, `traceability_updated`, `ops_docs_updated`,
+`research_complete_updated`, `exclusion_manifest_updated`, `tests_run`,
+`roadmap_yaml_unchanged`, `conductor_unchanged`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `milestone`: principle "Route key for the `.504` capstone."
+- `expected_task_range`: principle "Closed conductor boundary from transition through this capstone."
+- `upstream_artifacts_expected`: principle "Every expected `.504` JSON artifact and sidecar before claim aggregation."
+- `upstream_artifacts_read`: principle "Expected upstream artifacts actually parsed."
+- `missing_artifacts`: principle "Absent expected inputs stay visible and never become success."
+- `clean_lanes`: principle "Readable unflagged nonblocked evidence available for direct aggregation."
+- `bounded_lanes`: principle "Useful evidence that is narrower than a headline claim."
+- `blocked_lanes`: principle "Terminal blocked artifacts remain blockers rather than wins."
+- `flagged_lanes`: principle "Adversarial or methodology-flagged evidence cannot support positive claims."
+- `skipped_lanes`: principle "Conductor gate skips stay terminal but non-positive."
+- `retired_lanes`: principle "Continuations closed by terminal null, block, or explicit retirement."
+- `promoted_lanes`: principle "Narrow positive results promoted only when all lane-specific gates pass."
+- `solve_verify_asymmetry_supported`: principle "True only for a clean measured positive solve-versus-verify asymmetry, not equal failure."
+- `verifier_coevolution_required`: principle "True only when the clean co-evolution trigger artifact explicitly requires it."
+- `memory_policy_promoted`: principle "False when the memory-policy artifact is adversarial-flagged, regardless of local policy_ready fields."
+- `kan_online_energy_promoted`: principle "True only for clean KAN online update evidence with rollback and no unsafe false-accept increase."
+- `continuous_self_learning_claim_allowed`: principle "Broad CSL requires unflagged memory policy, KAN promotion, reset-free harness, and delayed regression promotion."
+- `hardware_speedup_claim_allowed`: principle "True only for matched successful hardware/device speedup above baseline, not board receipts or CPU/CUDA slowdown."
+- `ptrm_stage1_status`: principle "Records PTRM Stage-1 development-proxy status separately from ARC solve credit."
+- `ptrm_retired`: principle "True only when PTRM evidence explicitly retires the line."
+- `ordinary_arc_floor_satisfied`: principle "True only when ordinary ARC live level-up produced self-discovered offline-reproduced registry delta."
+- `arc_solve_provenance`: principle "ARC solve provenance audit; development_proxy cannot count as a solve."
+- `arc_registry_before_after`: principle "Registry total before/after accounting; positive delta required for a solve claim."
+- `arc_registry_delta`: principle "Counts only offline-reproduced live-agent registry increments."
+- `sge_retired`: principle "True when the SGE live continuation is blocked or null after its precheck gate."
+- `specs_updated`: principle "Spec reconciliation done by this workflow; ops and traceability edits may be delegated."
+- `traceability_updated`: principle "Bare boolean for whether `_bmad/traceability.md` was edited by this workflow."
+- `ops_docs_updated`: principle "Bare boolean for whether ops status/changelog/conductor docs were edited by this workflow."
+- `research_complete_updated`: principle "Bare boolean for whether `research-complete.yaml` was edited by this workflow."
+- `exclusion_manifest_updated`: principle "Bare boolean for whether exclusion or registry files were edited by this workflow."
+- `tests_run`: principle "Commands run for the capstone and whether they passed, failed, or were not applicable."
+- `roadmap_yaml_unchanged`: principle "Protected-file discipline; true only when `research-roadmap.yaml` is unchanged."
+- `conductor_unchanged`: principle "Protected-file discipline; true only when `scripts/research_conductor.py` is unchanged."
+- `inference_substrate`: principle "Must equal aggregation_from_all_v504_artifacts because Exp5577 is synthesis only."
+- `honest_verdict`: principle "Terminal summary starting with complete: or blocked: that names the `.504` claim boundary."
+
+#### SCENARIO-REPORT-5577: V504 Capstone Separates Clean, Bounded, Blocked, Flagged, And Skipped Evidence
+
+**Given** all expected Exp5564 through Exp5576 artifacts are present
+**And** Exp5569 is adversarial-flagged
+**And** Exp5571, Exp5572, Exp5575, and Exp5576 are blocked or gate-skipped
+**When** the Exp5577 workflow runs
+**Then** it emits `results/experiment_5577_capstone_v504.json`, keeps
+`memory_policy_promoted=false`, keeps
+`continuous_self_learning_claim_allowed=false`, keeps
+`hardware_speedup_claim_allowed=false`, keeps
+`ordinary_arc_floor_satisfied=false`, records `arc_registry_delta=0`,
+records PTRM as a complete development proxy without ARC solve credit, and
+declares `inference_substrate=aggregation_from_all_v504_artifacts`.
+
+#### SCENARIO-REPORT-5577-MISSING-INPUT: Missing Upstreams Fail Closed
+
+**Given** any expected `.504` artifact is absent
+**When** the Exp5577 workflow runs
+**Then** the missing path appears in `missing_artifacts`, the verdict uses a
+blocked terminal prefix, and broad claims that depend on the missing evidence
+remain false.
+
+#### SCENARIO-REPORT-5577-FIELD-PRINCIPLES: Capstone Fields Stay Annotated
+
+**Given** the Exp5577 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `roadmap_yaml_unchanged` is true,
+`conductor_unchanged` is true, `inference_substrate` is
+`aggregation_from_all_v504_artifacts`, and `honest_verdict` has a terminal
+prefix.
+
+## Implementation Status (REQ-REPORT-5577)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5577 | Planned (`python/carnot/experiment_5577_capstone_v504.py`, `results/experiment_5577_capstone_v504.json`) | Planned (`tests/python/test_experiment_5577_capstone_v504.py`) |
