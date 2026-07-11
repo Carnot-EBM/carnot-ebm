@@ -22140,3 +22140,117 @@ verdict.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5570 | Planned (`python/carnot/experiment_5570_spline_local_kan_online_energy.py`, `results/experiment_5570_spline_local_kan_online_energy.json`) | Planned (`tests/python/test_experiment_5570_spline_local_kan_online_energy.py`) |
+
+## REQ-LEARN-5571: Reset-Free Local SOTA Continual Harness
+
+The Exp5571 workflow SHALL write
+`results/experiment_5571_reset_free_sota_continual_harness.json` as a
+gated reset-free exact-feedback continual harness over sequential exact ASP/FSM
+families. It SHALL require the Exp5569 memory policy gate and Exp5570 energy
+calibrator gate, resolve the cached local SOTA GGUF path through
+`cached_sota_pair()`, authenticate llama.cpp CUDA offload and device identity,
+and SHALL NOT substitute a legacy headline model when the mandated Qwen GGUF
+is missing. A blocked precondition SHALL emit a terminal `blocked_*` verdict
+rather than a synthetic live result.
+
+The harness SHALL declare `unsloth/Qwen3.6-35B-A3B-GGUF` as the headline
+frozen local SOTA model and SHALL declare
+`unsloth/gemma-4-31B-it-GGUF` plus
+`unsloth/gemma-4-26B-A4B-it-GGUF` as optional replication models. It SHALL run
+at least the Qwen headline arm, keep GGUF model weights frozen, persist only
+the Exp5569 governed memory policy and the Exp5570 energy calibrator, and use
+exact validator outcomes as the only feedback labels.
+
+The experiment SHALL evaluate at least three ordered constraint-family
+sessions, with at least 30 independent instance IDs per session, under
+reset-free exact-feedback adaptation, reset-each-session adaptation,
+shuffled-feedback control, and a no-adaptation control. The same instance IDs
+SHALL be preserved across arms, and paired bootstrap intervals SHALL use the
+independent instance ID as the statistical unit rather than repeated model or
+verifier calls.
+
+The artifact SHALL include required fields `field_principles`, `gate_receipt`,
+`continuous_self_learning_target`, `MODEL_SPECS`, `live_model_invoked`,
+`gpu_offload_authenticated`, `device_receipt`, `sessions`,
+`n_independent_instances_per_session`, `arms`, `model_weights_mutated`,
+`harness_state_persisted`, `energy_weights_mutated`, `exact_feedback_only`,
+`new_family_accuracy_by_arm`, `backward_retention_by_session`,
+`adaptation_slope`, `false_accept_delta`, `rollback_count`,
+`rollback_success`, `cost_receipt`, `confidence_intervals`,
+`inference_duration_s`, `inference_substrate`, `honest_verdict`, and
+`continual_harness_candidate`. It SHALL set
+`inference_substrate="live_local_sota_reset_free_exact_feedback_harness"` and
+SHALL carry one-line principles for every required headline and gate field.
+`continual_harness_candidate` SHALL be true only when reset-free improves
+new-family exact success over reset-each-session with a paired confidence
+interval excluding zero, prior-family regression is <=0.02, false accepts do
+not increase, and rollback succeeds.
+
+### REQ-LEARN-5571 Sub-requirements
+
+- REQ-LEARN-5571-1: The precondition resolver SHALL call `cached_sota_pair()`,
+  require the Qwen3.6-35B-A3B GGUF path for the headline arm, declare both
+  Gemma optional replication model IDs, authenticate llama.cpp CUDA offload,
+  and SHALL NOT substitute legacy CPU or tiny headline models.
+- REQ-LEARN-5571-2: The session builder SHALL load the Exp5566 exact ASP/FSM
+  corpus, create at least three ordered family sessions, expose at least 30
+  independent instance IDs per session, and preserve the same IDs across all
+  arms.
+- REQ-LEARN-5571-3: The reset-free arm SHALL persist only the Exp5569 governed
+  memory policy and Exp5570 energy calibrator; reset-each-session SHALL clear
+  state at every session boundary; shuffled-feedback SHALL use mismatched exact
+  feedback labels; and no-adaptation SHALL keep all harness state frozen.
+- REQ-LEARN-5571-4: The workflow SHALL report new-family solve/verify
+  accuracy, prior-family retention after every session, adaptation slope,
+  false accepts, rollback count and success, latency, tokens, memory bytes,
+  and energy-update cost from paired row evidence.
+- REQ-LEARN-5571-5: `continual_harness_candidate` SHALL remain false unless
+  the reset-free versus reset-each paired bootstrap confidence interval lower
+  bound is above zero, prior-family regression is <=0.02, false accepts do not
+  increase, model weights remain frozen, exact feedback is the only label
+  source, and rollback succeeds.
+
+### SCENARIO-LEARN-5571-PRECONDITIONS: Missing SOTA Or CUDA Blocks Cleanly
+
+**Given** `cached_sota_pair()` does not resolve the mandated Qwen GGUF or
+llama.cpp CUDA offload is not authenticated
+**When** Exp5571 builds its terminal receipt
+**Then** it SHALL set `live_model_invoked=false`
+**And** the honest verdict SHALL begin with `blocked_missing_sota_cache` or
+`blocked_no_cuda_offload`
+**And** no legacy headline model SHALL appear in `MODEL_SPECS`.
+
+### SCENARIO-LEARN-5571-SESSIONS: Paired Ordered ASP/FSM Families
+
+**Given** the Exp5566 exact ASP/FSM near-miss corpus is ready
+**When** Exp5571 builds ordered sessions
+**Then** at least three sessions SHALL contain at least 30 independent
+instance IDs each
+**And** every arm SHALL evaluate the same instance IDs in the same order.
+
+### SCENARIO-LEARN-5571-RESET-FREE: Exact Feedback Beats Reset Each
+
+**Given** reset-free, reset-each-session, shuffled-feedback, and no-adaptation
+arms evaluate the same ordered instances
+**When** the reset-free arm persists only governed memory and the energy
+calibrator
+**Then** reset-free new-family exact success SHALL exceed reset-each-session
+with a paired bootstrap confidence interval lower bound above zero
+**And** prior-family regression SHALL remain <=0.02
+**And** false accepts SHALL not increase.
+
+### SCENARIO-LEARN-5571-ARTIFACT: Continual Harness Receipt Is Conductor Visible
+
+**Given** all preconditions and gates pass
+**When** Exp5571 writes its receipt
+**Then** the JSON SHALL include required fields, field principles, gate
+receipt, Qwen headline model declaration, optional Gemma replication
+declarations, no-GGUF-weight-mutation evidence, exact-feedback-only evidence,
+paired confidence intervals, rollback evidence, cost receipt, and an honest
+terminal verdict.
+
+## Implementation Status (Exp 5571)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5571 | Planned (`python/carnot/experiment_5571_reset_free_sota_continual_harness.py`, `results/experiment_5571_reset_free_sota_continual_harness.json`) | Planned (`tests/python/test_experiment_5571_reset_free_sota_continual_harness.py`) |
