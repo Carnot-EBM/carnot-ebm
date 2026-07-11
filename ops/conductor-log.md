@@ -10754,3 +10754,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-10 23:40 UTC | CSL five-arm tautology corrigendum v2 | OK | 86 passed, 1 warning in 11.28s |
 | 2026-07-10 23:55 UTC | Gated causal write-manage-read CSL memory | OK | 89 passed, 1 warning in 13.04s |
 | 2026-07-11 00:12 UTC | Gated cross-model SOTA CSL transfer v2 | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
+| 2026-07-11 00:39 UTC | Hardware and experiment timing receipt hygiene | OK | 85 passed, 1 warning in 9.40s |
