@@ -10775,3 +10775,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-11 17:34 UTC | Reserved PTRM stochastic multi-trajectory ARC gene | FAIL | Post-tests failed:  |
 | 2026-07-11 17:36 UTC | Reserved PTRM stochastic multi-trajectory ARC gene | OK | Deliverable already exists in repo |
 | 2026-07-11 18:06 UTC | SGE anti-stagnation diversity controller and live- | OK | 157 passed, 2 warnings in 13.27s |
+| 2026-07-11 18:08 UTC | Gated SGE anti-stagnation live ARC level-up attemp | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5575-sge-anti-stagnation-live-precheck. |
