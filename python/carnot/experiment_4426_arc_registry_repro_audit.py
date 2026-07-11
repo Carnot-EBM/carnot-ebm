@@ -47,13 +47,16 @@ SCORECARD_PLAN_SOURCES = {
     "lp85": ("results/experiment_4372_e3_deeper_high_headroom_games.json", "per_target_scorecard"),
     "tu93": ("results/experiment_4361_e3_deeper_high_headroom_games.json", "per_target_scorecard"),
     "tn36": ("results/experiment_4372_e3_deeper_high_headroom_games.json", "per_target_scorecard"),
-    "ft09": ("results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json", "per_game_scorecard"),
+    "ft09": (
+        "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
+        "per_game_scorecard",
+    ),
 }
 
 GENERIC_ACTION_ARTIFACTS = {
     "r11l": "results/experiment_4296_arc_incremental_progress_new_game.json",
     "ls20": "results/experiment_4285_arc_incremental_progress_new_game.json",
-    "wa30": "results/experiment_4275_arc_incremental_progress_new_game.json",
+    "wa30": "results/outer_loop_fable5_wa30_probe_l6.json",
     "cd82": "results/arc_explore_trajectory_cd82.json",
     "sp80": "results/arc_explore_trajectory_sp80.json",
     "su15": "results/arc_explore_trajectory_su15.json",
@@ -90,18 +93,24 @@ def _as_int(value: Any) -> int:
 
 
 def _counted_by_registry(entry: Mapping[str, Any]) -> bool:
-    return entry.get("reproducibility") == "reproduced" and _as_int(entry.get("levels_reproduced")) > 0
+    return (
+        entry.get("reproducibility") == "reproduced" and _as_int(entry.get("levels_reproduced")) > 0
+    )
 
 
 def _terminal_prefixed(value: Any) -> bool:
-    return isinstance(value, str) and value.startswith(("success:", "complete:", "blocked:", "failed:"))
+    return isinstance(value, str) and value.startswith(
+        ("success:", "complete:", "blocked:", "failed:")
+    )
 
 
 def _actual_reproduced_levels(result: Mapping[str, Any]) -> int:
     return max(0, _as_int(result.get("reached_level", result.get("reproduced_levels"))))
 
 
-def _entry_audit(entry: Mapping[str, Any], reproduction_result: Mapping[str, Any] | None) -> dict[str, Any]:
+def _entry_audit(
+    entry: Mapping[str, Any], reproduction_result: Mapping[str, Any] | None
+) -> dict[str, Any]:
     claimed = _as_int(entry.get("levels_reproduced"))
     counted = _counted_by_registry(entry)
     result = dict(reproduction_result or {})
@@ -117,7 +126,11 @@ def _entry_audit(entry: Mapping[str, Any], reproduction_result: Mapping[str, Any
         "offline_reproduced_claim": bool(claim_reproduced),
         "effective_levels_reproduced": reached if counted else 0,
         "effective_reproducibility": (
-            "provisional" if downgraded else "reproduced" if counted else str(entry.get("reproducibility", ""))
+            "provisional"
+            if downgraded
+            else "reproduced"
+            if counted
+            else str(entry.get("reproducibility", ""))
         ),
         "downgraded_to_provisional": downgraded,
         "gate": "arc_solver_kit.reproduce" if counted else "not_counted",
@@ -160,7 +173,9 @@ def audit_registry(
     }
 
 
-def run_metaharness(root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - subprocess boundary
+def run_metaharness(
+    root: Path = REPO_ROOT,
+) -> dict[str, Any]:  # pragma: no cover - subprocess boundary
     python = root / ".venv" / "bin" / "python"
     executable = str(python if python.exists() else Path(sys.executable))
     command = [executable, str(root / "scripts" / "arc3_replay_scorecard_metaharness.py")]
@@ -185,7 +200,11 @@ def _find_scorecard_plan(root: Path, game: str) -> tuple[list[str], str]:  # pra
     rows = artifact.get(row_key)
     if isinstance(rows, list):
         for row in rows:
-            if isinstance(row, Mapping) and row.get("game") == game and isinstance(row.get("plan"), list):
+            if (
+                isinstance(row, Mapping)
+                and row.get("game") == game
+                and isinstance(row.get("plan"), list)
+            ):
                 return [str(label) for label in row["plan"]], rel_path
     return [], rel_path
 
@@ -206,6 +225,7 @@ def _load_action_dicts(root: Path, rel_path: str) -> list[Mapping[str, Any]]:  #
     for keys in (
         ("solution",),
         ("trajectory",),
+        ("action_sequence",),
         ("solve_trace", "actions"),
         ("solver_trace", "actions"),
         ("plan_executed_detail", "plan_result", "executed_steps"),
@@ -220,7 +240,9 @@ def _load_action_dicts(root: Path, rel_path: str) -> list[Mapping[str, Any]]:  #
     return []
 
 
-def _labels_from_action_artifact(root: Path, game: str) -> tuple[list[str], str]:  # pragma: no cover
+def _labels_from_action_artifact(
+    root: Path, game: str
+) -> tuple[list[str], str]:  # pragma: no cover
     rel_path = GENERIC_ACTION_ARTIFACTS[game]
     labels = []
     for action in _load_action_dicts(root, rel_path):
@@ -289,7 +311,9 @@ def _kit_reproduce(
     return result
 
 
-def reproduce_registry_entry(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover
+def reproduce_registry_entry(
+    entry: Mapping[str, Any], root: Path = REPO_ROOT
+) -> dict[str, Any]:  # pragma: no cover
     """REQ-REPORT-4426: replay one counted registry row through arc_solver_kit.reproduce."""
 
     game = str(entry.get("game") or "")
@@ -299,23 +323,53 @@ def reproduce_registry_entry(entry: Mapping[str, Any], root: Path = REPO_ROOT) -
 
         artifact = _load_json(root / exp4421.RESULT_RELATIVE_PATH)
         solution = artifact.get("solver", {}).get("solution") or exp4421.derive_s5i5_l1_path()
-        return _kit_reproduce(game, [str(label) for label in solution], exp4421.apply_s5i5_label,
-                              claimed_level=claimed, source=exp4421.RESULT_RELATIVE_PATH)
+        return _kit_reproduce(
+            game,
+            [str(label) for label in solution],
+            exp4421.apply_s5i5_label,
+            claimed_level=claimed,
+            source=exp4421.RESULT_RELATIVE_PATH,
+        )
     if game == "sc25":  # pragma: no cover - ARC SDK boundary
-        from carnot.experiment_4341_e3_sc25_reproduction import L1_SOLUTION_LABELS, _apply_sc25_label
+        from carnot.experiment_4341_e3_sc25_reproduction import (
+            L1_SOLUTION_LABELS,
+            _apply_sc25_label,
+        )
 
-        return _kit_reproduce(game, L1_SOLUTION_LABELS, _apply_sc25_label, warmup_label="warmup",
-                              claimed_level=claimed, source="python/carnot/experiment_4341_e3_sc25_reproduction.py")
+        return _kit_reproduce(
+            game,
+            L1_SOLUTION_LABELS,
+            _apply_sc25_label,
+            warmup_label="warmup",
+            claimed_level=claimed,
+            source="python/carnot/experiment_4341_e3_sc25_reproduction.py",
+        )
     if game == "ar25":  # pragma: no cover - ARC SDK boundary
-        from carnot.experiment_4339_e3_explore_verify_plan_ar25 import L1_SOLUTION_LABELS, _apply_ar25_label
+        from carnot.experiment_4339_e3_explore_verify_plan_ar25 import (
+            L1_SOLUTION_LABELS,
+            _apply_ar25_label,
+        )
 
-        return _kit_reproduce(game, L1_SOLUTION_LABELS, _apply_ar25_label,
-                              claimed_level=claimed, source="python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py")
+        return _kit_reproduce(
+            game,
+            L1_SOLUTION_LABELS,
+            _apply_ar25_label,
+            claimed_level=claimed,
+            source="python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
+        )
     if game == "ka59":  # pragma: no cover - ARC SDK boundary
-        from carnot.experiment_4350_e3_explore_verify_plan_ka59 import L1_SOLUTION_LABELS, _apply_ka59_label
+        from carnot.experiment_4350_e3_explore_verify_plan_ka59 import (
+            L1_SOLUTION_LABELS,
+            _apply_ka59_label,
+        )
 
-        return _kit_reproduce(game, L1_SOLUTION_LABELS, _apply_ka59_label,
-                              claimed_level=claimed, source="python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py")
+        return _kit_reproduce(
+            game,
+            L1_SOLUTION_LABELS,
+            _apply_ka59_label,
+            claimed_level=claimed,
+            source="python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py",
+        )
 
     labels, source = _labels_for_game(root, game)  # pragma: no cover - ARC SDK boundary
     if not labels:  # pragma: no cover - ARC SDK boundary
@@ -331,7 +385,12 @@ def reproduce_registry_entry(entry: Mapping[str, Any], root: Path = REPO_ROOT) -
 
 
 def _gate_evidence(artifact: Mapping[str, Any]) -> Mapping[str, Any]:
-    for key in ("reproduction_result", "reproduce_result", "standing_loop_result", "reproduction_gate"):
+    for key in (
+        "reproduction_result",
+        "reproduce_result",
+        "standing_loop_result",
+        "reproduction_gate",
+    ):
         value = artifact.get(key)
         if isinstance(value, Mapping):
             return value
@@ -381,9 +440,17 @@ def build_artifact(
     started_at: float,
     ended_at: float,
 ) -> dict[str, Any]:
-    registry = registry_audit.get("registry") if isinstance(registry_audit.get("registry"), Mapping) else {}
+    registry = (
+        registry_audit.get("registry")
+        if isinstance(registry_audit.get("registry"), Mapping)
+        else {}
+    )
     rows = registry_audit.get("rows") if isinstance(registry_audit.get("rows"), list) else []
-    downgraded = registry_audit.get("downgraded") if isinstance(registry_audit.get("downgraded"), list) else []
+    downgraded = (
+        registry_audit.get("downgraded")
+        if isinstance(registry_audit.get("downgraded"), list)
+        else []
+    )
     total = _as_int(registry_audit.get("reproducible_total_levels"))
     claimed_total = _as_int(registry.get("reproducible_total_levels"))
     artifact = {
@@ -391,7 +458,9 @@ def build_artifact(
         "schema": "carnot.exp4426.arc_registry_repro_audit.v1",
         "reproducible_total_levels": total,
         "registry_claimed_reproducible_total_levels": claimed_total,
-        "registry_claimed_reproducible_total_games": _as_int(registry.get("reproducible_total_games")),
+        "registry_claimed_reproducible_total_games": _as_int(
+            registry.get("reproducible_total_games")
+        ),
         "counted_entries_audited": _as_int(registry_audit.get("counted_entries_audited")),
         "registry_entry_audits": [dict(row) for row in rows],
         "entries_downgraded_to_provisional": [str(game) for game in downgraded],
@@ -419,7 +488,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("reproducible_total_levels must be bare int")
     if not _terminal_prefixed(artifact.get("honest_verdict")):
         errors.append("honest_verdict must be terminal-prefixed")
-    if not isinstance(artifact.get("inference_substrate"), str) or not artifact.get("inference_substrate"):
+    if not isinstance(artifact.get("inference_substrate"), str) or not artifact.get(
+        "inference_substrate"
+    ):
         errors.append("inference_substrate must be non-empty string")
     if not isinstance(artifact.get("registry_entry_audits"), list):
         errors.append("registry_entry_audits must be list")
@@ -436,7 +507,9 @@ def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
         raise ValueError("; ".join(errors))
     path = root / RESULT_RELATIVE_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
+    )
     return path
 
 

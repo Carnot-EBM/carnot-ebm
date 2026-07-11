@@ -85,9 +85,7 @@ FIELD_PRINCIPLES = {
     "reproducibility_checksum": "Catches drift.",
     "model_specs": "Names compute target.",
     "duration_s": "Real wall time; no padding.",
-    "preconditions_checked": (
-        "Anti-fabrication. The CUDA check uses .venv/bin/python3."
-    ),
+    "preconditions_checked": ("Anti-fabrication. The CUDA check uses .venv/bin/python3."),
     "methodology_note": "Honest interpretation of the delta.",
 }
 
@@ -300,9 +298,11 @@ def find_qwen36_gguf(config: ExperimentConfig) -> dict[str, object]:
 
     candidates: list[Path] = []
     no_exist_markers: list[str] = []
+    selected: Path | None = None
     for root in config.qwen_search_roots():
         if not root.exists():
             continue
+        root_candidates: list[Path] = []
         for path in root.rglob("*.gguf"):
             if not _is_qwen36_a3b_gguf(path):
                 continue
@@ -310,9 +310,12 @@ def find_qwen36_gguf(config: ExperimentConfig) -> dict[str, object]:
                 no_exist_markers.append(str(path))
                 continue
             if path.is_file() and path.stat().st_size > 0:
-                candidates.append(path)
+                root_candidates.append(path)
+        root_candidates = sorted(root_candidates, key=lambda item: str(item))
+        if selected is None and root_candidates:
+            selected = root_candidates[0]
+        candidates.extend(root_candidates)
 
-    selected = sorted(candidates, key=lambda item: str(item))[0] if candidates else None
     return {
         "name": MODEL_NAME,
         "quant": _quant_from_path(selected) if selected is not None else None,
@@ -499,9 +502,7 @@ def _base_artifact(
         "n_examples": config.n_examples,
         "n_seeds": len(config.random_seeds),
         "random_seeds_used": list(config.random_seeds),
-        "reproducibility_checksum": _reproducibility_checksum(
-            config, state_files, model_specs
-        ),
+        "reproducibility_checksum": _reproducibility_checksum(config, state_files, model_specs),
         "model_specs": model_specs,
         "duration_s": duration_s,
         "preconditions_checked": [check.as_dict() for check in checks],

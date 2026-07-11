@@ -30,6 +30,7 @@ fixed heuristic, is the fix being tested here on the GENERATION side specificall
 from __future__ import annotations
 
 import re
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Any, Protocol
@@ -49,7 +50,7 @@ class TextCompleter(Protocol):
 
 
 _STRATEGY_RE = re.compile(r"STRATEGY:\s*(.+?)(?:\n|$)", re.IGNORECASE)
-_CHOICE_RE = re.compile(r"CHOICE:\s*(-?\d+)", re.IGNORECASE)
+_CHOICE_RE = re.compile(r"CHOICE:\s*([^\n]+)", re.IGNORECASE)
 
 _PROPOSE_INSTRUCTIONS = (
     "You are exploring an unfamiliar interactive game one action at a time. You do not "
@@ -69,6 +70,117 @@ _REFLECT_INSTRUCTIONS = (
     "Reply in EXACTLY this format, nothing else:\n"
     "REVISED_STRATEGY: <one short sentence>\n\n"
 )
+
+
+@dataclass(frozen=True)
+class StrategyCollapseThresholds:
+    """Fixed anti-stagnation thresholds for REQ-ARC-FCP-5575.
+
+    These values are intentionally small and explicit because they gate live LLM
+    spend: once recent history already proves repeated passive behavior, the
+    router should switch to a deterministic diversity portfolio before asking the
+    model for another version of the same strategy.
+    """
+
+    window_size: int = 8
+    repeated_normalized_strategy_count: int = 3
+    max_mean_pairwise_strategy_distance: float = 0.35
+    repeated_action_proposal_count: int = 4
+    consecutive_null_outcomes: int = 4
+    min_triggered_signals: int = 3
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "window_size": self.window_size,
+            "repeated_normalized_strategy_count": self.repeated_normalized_strategy_count,
+            "max_mean_pairwise_strategy_distance": self.max_mean_pairwise_strategy_distance,
+            "repeated_action_proposal_count": self.repeated_action_proposal_count,
+            "consecutive_null_outcomes": self.consecutive_null_outcomes,
+            "min_triggered_signals": self.min_triggered_signals,
+        }
+
+
+FORCED_ANTI_STAGNATION_PORTFOLIO: tuple[dict[str, str], ...] = (
+    {
+        "name": "observation",
+        "hypothesis": "fresh visible-state observation",
+        "principle": "reserve one bounded slot for a non-click observation or low-commitment action.",
+    },
+    {
+        "name": "active_coordinate_probe",
+        "hypothesis": "fresh coordinate interaction",
+        "principle": "force at least one coordinate action away from recently repeated/passive proposals.",
+    },
+    {
+        "name": "action_type_probe",
+        "hypothesis": "different action family",
+        "principle": "force an action id that recent failed proposals did not exercise.",
+    },
+    {
+        "name": "mechanic_falsification",
+        "hypothesis": "refute the current passive mechanic guess",
+        "principle": "try the strongest non-taboo candidate that contradicts repeated waiting.",
+    },
+    {
+        "name": "recovery_reset",
+        "hypothesis": "recover from a stale local state",
+        "principle": "reserve a bounded reset/recovery-style candidate when the frontier has stalled.",
+    },
+)
+
+_NULL_OUTCOME_TOKENS = (
+    "no_change",
+    "no visible change",
+    "null",
+    "null_outcome",
+    "no_effect",
+    "same_state",
+    "same level",
+    "level_unchanged",
+    "no_level_change",
+    "stalled",
+    "unchanged",
+)
+
+
+def _normalize_strategy_text(text: Any) -> str:
+    words = re.findall(r"[a-z0-9]+", str(text or "").lower())
+    return " ".join(words)
+
+
+def _strategy_distance(left: str, right: str) -> float:
+    left_tokens = set(_normalize_strategy_text(left).split())
+    right_tokens = set(_normalize_strategy_text(right).split())
+    if not left_tokens and not right_tokens:
+        return 0.0
+    if not left_tokens or not right_tokens:
+        return 1.0
+    return 1.0 - (len(left_tokens & right_tokens) / len(left_tokens | right_tokens))
+
+
+def _outcome_is_null(outcome: Any) -> bool:
+    if isinstance(outcome, Mapping):
+        before = outcome.get("level_before")
+        after = outcome.get("level_after")
+        try:
+            if before is not None and after is not None and int(after) <= int(before):
+                return True
+        except (TypeError, ValueError):
+            pass
+        if outcome.get("changed") is False or outcome.get("effect") == "none":
+            return True
+    text = str(outcome or "").strip().lower()
+    return bool(text and any(token in text for token in _NULL_OUTCOME_TOKENS))
+
+
+def _consecutive_null_outcomes(history: Sequence[Mapping[str, Any]]) -> int:
+    count = 0
+    for row in reversed(history):
+        if _outcome_is_null(row.get("outcome")):
+            count += 1
+            continue
+        break
+    return count
 
 
 def _format_candidate_lines(candidates: Sequence[Any]) -> list[str]:
@@ -170,9 +282,20 @@ def _candidate_coordinate(candidate: Any) -> tuple[int, int] | None:
     return None
 
 
+def _candidate_action(candidate: Any) -> int:
+    if isinstance(candidate, Mapping):
+        value = candidate.get("action", candidate.get("action_id", 0))
+    else:
+        value = getattr(candidate, "action", getattr(candidate, "action_id", 0))
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
 def _candidate_signature(candidate: Any, index: int) -> str:
     coord = _candidate_coordinate(candidate)
-    action = candidate.get("action") if isinstance(candidate, Mapping) else getattr(candidate, "action", None)
+    action = _candidate_action(candidate)
     if coord is not None:
         return f"A{action}@{coord[0]},{coord[1]}"
     return f"A{action}#{index}"
@@ -187,6 +310,234 @@ def _fallback_score(candidate: Any, fields: Sequence[str]) -> float:
         except (TypeError, ValueError):
             continue
     return best
+
+
+@dataclass(frozen=True)
+class AntiStagnationDiversityController:
+    """Detect SGE strategy collapse and force a bounded diverse portfolio.
+
+    The controller is deterministic and uses only router-local history. It never
+    reads the environment's source, scorecard, level counter, or hidden success
+    flag; outcomes are reduced to coarse visible-effect labels before they reach
+    the strategy logic.
+    """
+
+    thresholds: StrategyCollapseThresholds = field(default_factory=StrategyCollapseThresholds)
+    forced_portfolio: tuple[Mapping[str, str], ...] = FORCED_ANTI_STAGNATION_PORTFOLIO
+
+    def collapse_definition(self) -> dict[str, Any]:
+        return {
+            "signals": [
+                "repeated_normalized_strategy_text",
+                "low_pairwise_strategy_distance",
+                "repeated_action_proposals",
+                "consecutive_null_outcomes",
+            ],
+            "thresholds": self.thresholds.as_dict(),
+        }
+
+    def diversity_metrics(self, history: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+        rows = list(history)[-self.thresholds.window_size :]
+        strategy_texts = [str(row.get("strategy_text", "")) for row in rows if row.get("strategy_text")]
+        normalized = [_normalize_strategy_text(text) for text in strategy_texts if _normalize_strategy_text(text)]
+        strategy_counts = Counter(normalized)
+        distances = [
+            _strategy_distance(left, right)
+            for i, left in enumerate(strategy_texts)
+            for right in strategy_texts[i + 1 :]
+        ]
+        action_signatures = [str(row.get("chosen_signature", "")) for row in rows if row.get("chosen_signature")]
+        action_counts = Counter(action_signatures)
+        return {
+            "history_window_size": len(rows),
+            "strategy_text_count": len(strategy_texts),
+            "unique_normalized_strategy_count": len(strategy_counts),
+            "max_normalized_strategy_repeat": max(strategy_counts.values(), default=0),
+            "mean_pairwise_strategy_distance": (sum(distances) / len(distances) if distances else 1.0),
+            "unique_action_signature_count": len(action_counts),
+            "max_action_signature_repeat": max(action_counts.values(), default=0),
+            "consecutive_null_outcomes": _consecutive_null_outcomes(rows),
+        }
+
+    def assess(self, history: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+        metrics = self.diversity_metrics(history)
+        signals = {
+            "repeated_normalized_strategy_text": (
+                metrics["max_normalized_strategy_repeat"]
+                >= self.thresholds.repeated_normalized_strategy_count
+            ),
+            "low_pairwise_strategy_distance": (
+                metrics["strategy_text_count"] >= 3
+                and metrics["mean_pairwise_strategy_distance"]
+                <= self.thresholds.max_mean_pairwise_strategy_distance
+            ),
+            "repeated_action_proposals": (
+                metrics["max_action_signature_repeat"]
+                >= self.thresholds.repeated_action_proposal_count
+            ),
+            "consecutive_null_outcomes": (
+                metrics["consecutive_null_outcomes"] >= self.thresholds.consecutive_null_outcomes
+            ),
+        }
+        triggered = [name for name, active in signals.items() if active]
+        return {
+            "collapse_detected": len(triggered) >= self.thresholds.min_triggered_signals,
+            "signals": signals,
+            "triggered_signals": triggered,
+            "metrics": metrics,
+            "collapse_definition": self.collapse_definition(),
+        }
+
+    def taboo_set(self, history: Sequence[Mapping[str, Any]]) -> list[str]:
+        recent = list(history)[-self.thresholds.window_size :]
+        taboo = {
+            _normalize_strategy_text(row.get("strategy_text", ""))
+            for row in recent
+            if _outcome_is_null(row.get("outcome")) and row.get("strategy_text")
+        }
+        return sorted(text for text in taboo if text)
+
+    def _recent_failed_signatures(self, history: Sequence[Mapping[str, Any]]) -> set[str]:
+        return {
+            str(row.get("chosen_signature", ""))
+            for row in list(history)[-self.thresholds.window_size :]
+            if _outcome_is_null(row.get("outcome")) and row.get("chosen_signature")
+        }
+
+    def rank_forced_portfolio(
+        self,
+        candidates: Sequence[Any],
+        *,
+        history: Sequence[Mapping[str, Any]],
+        fallback_score_fields: Sequence[str],
+        max_candidates: int,
+        seen_coordinates: set[tuple[int, int]],
+    ) -> dict[str, Any]:
+        ordered = list(candidates)
+        selected: list[Any] = []
+        selected_ids: set[int] = set()
+        selected_rows: list[dict[str, Any]] = []
+        failed_signatures = self._recent_failed_signatures(history)
+        recent_action_counts = Counter()
+        for signature in failed_signatures:
+            match = re.match(r"A(-?\d+)", signature)
+            if match:
+                recent_action_counts[int(match.group(1))] += 1
+
+        def add(candidate: Any, category: str, *, allow_failed_signature: bool = False) -> bool:
+            if id(candidate) in selected_ids or len(selected) >= max_candidates:
+                return False
+            signature = _candidate_signature(candidate, ordered.index(candidate))
+            if not allow_failed_signature and signature in failed_signatures:
+                return False
+            selected.append(candidate)
+            selected_ids.add(id(candidate))
+            selected_rows.append({"name": category, "signature": signature})
+            return True
+
+        def ranked_pool(pool: Sequence[Any], *, prefer_low_recent_action: bool = False) -> list[Any]:
+            def sort_key(candidate: Any) -> tuple[float, float, str]:
+                recent = float(recent_action_counts.get(_candidate_action(candidate), 0))
+                return (
+                    recent if prefer_low_recent_action else 0.0,
+                    -_fallback_score(candidate, fallback_score_fields),
+                    _candidate_signature(candidate, ordered.index(candidate)),
+                )
+
+            return sorted(pool, key=sort_key)
+
+        def add_from_pool(
+            pool: Sequence[Any],
+            category: str,
+            *,
+            allow_failed_signature: bool = False,
+            prefer_low_recent_action: bool = False,
+        ) -> bool:
+            for candidate in ranked_pool(pool, prefer_low_recent_action=prefer_low_recent_action):
+                if add(candidate, category, allow_failed_signature=allow_failed_signature):
+                    return True
+            return False
+
+        add_from_pool(
+            [candidate for candidate in ordered if _candidate_action(candidate) not in {0, 5, 6}],
+            "observation",
+            allow_failed_signature=True,
+        )
+
+        add_from_pool(
+            [
+                candidate
+                for candidate in ordered
+                if _candidate_action(candidate) == 6
+                and (_candidate_coordinate(candidate) not in seen_coordinates)
+            ],
+            "active_coordinate_probe",
+        )
+
+        add_from_pool(
+            [
+                candidate
+                for candidate in ordered
+                if recent_action_counts.get(_candidate_action(candidate), 0) == 0
+                and _candidate_action(candidate) not in {0, 5}
+            ],
+            "action_type_probe",
+            allow_failed_signature=True,
+            prefer_low_recent_action=True,
+        )
+
+        add_from_pool(
+            [
+                candidate
+                for candidate in ordered
+                if id(candidate) not in selected_ids and _candidate_action(candidate) not in {0, 5}
+            ],
+            "mechanic_falsification",
+        )
+
+        add_from_pool(
+            [
+                candidate
+                for candidate in ordered
+                if _candidate_action(candidate) in {0, 5}
+                or _fallback_score(candidate, ("reset_score",)) > 0.0
+            ],
+            "recovery_reset",
+            allow_failed_signature=True,
+        )
+
+        fallback_used = len({row["name"] for row in selected_rows}) < len(self.forced_portfolio)
+        if len(selected) < min(max_candidates, len(ordered)):
+            fallback_order = sorted(
+                ordered,
+                key=lambda candidate: (
+                    -_fallback_score(candidate, fallback_score_fields),
+                    _candidate_signature(candidate, ordered.index(candidate)),
+                ),
+            )
+            for candidate in fallback_order:
+                if add(candidate, "fallback_fill", allow_failed_signature=True):
+                    fallback_used = True
+                if len(selected) >= max_candidates:
+                    break
+
+        return {
+            "ranked": selected[:max_candidates],
+            "forced_portfolio_selected": selected_rows,
+            "stable_fallback_used": bool(fallback_used),
+            "diversity_after": {
+                "forced_portfolio_category_count": len(
+                    {row["name"] for row in selected_rows if row["name"] != "fallback_fill"}
+                ),
+                "selected_unique_signature_count": len({row["signature"] for row in selected_rows}),
+                "selected_count": len(selected),
+            },
+            "taboo_set": self.taboo_set(history),
+            "taboo_policy": (
+                "normalize recently failed strategy text from null outcomes; ignore matching "
+                "LLM proposals and force deterministic portfolio categories on collapse"
+            ),
+        }
 
 
 @dataclass
@@ -218,6 +569,9 @@ class SGECandidateRouter:
         "score",
     )
     suppress_repeated_coordinates: bool = True
+    anti_stagnation_controller: AntiStagnationDiversityController | None = field(
+        default_factory=AntiStagnationDiversityController
+    )
 
     history: list[dict[str, Any]] = field(default_factory=list, init=False)
     last_diagnostics: dict[str, Any] = field(default_factory=dict, init=False)
@@ -234,26 +588,105 @@ class SGECandidateRouter:
         self._step += 1
         ordered = list(candidates)
         if not ordered:
+            anti = (
+                self.anti_stagnation_controller.assess(self.history)
+                if self.anti_stagnation_controller is not None
+                else {"collapse_detected": False}
+            )
             self.last_diagnostics = {
                 "llm_strategy_proposer_used": False,
                 "reason": "no_candidates",
                 "strategy_texts": [],
                 "votes_by_index": {},
                 "reflection_note": self._reflection_note,
+                "anti_stagnation": anti,
+                "win_check_used_for_ranking": False,
             }
             return []
+
+        anti_before = (
+            self.anti_stagnation_controller.assess(self.history)
+            if self.anti_stagnation_controller is not None
+            else {"collapse_detected": False, "metrics": {}}
+        )
+        if self.anti_stagnation_controller is not None and anti_before.get("collapse_detected"):
+            forced = self.anti_stagnation_controller.rank_forced_portfolio(
+                ordered,
+                history=self.history,
+                fallback_score_fields=self.fallback_score_fields,
+                max_candidates=self.max_candidates,
+                seen_coordinates=self._seen_coordinates,
+            )
+            selected = list(forced["ranked"])
+            seen_this_call = {
+                coord
+                for candidate in selected
+                for coord in [_candidate_coordinate(candidate)]
+                if coord is not None
+            }
+            self._seen_coordinates |= seen_this_call
+            first = selected[0] if selected else ordered[0]
+            first_index = ordered.index(first)
+            forced_names = [row["name"] for row in forced["forced_portfolio_selected"]]
+            self.history.append(
+                {
+                    "step": self._step,
+                    "strategy_text": "anti_stagnation_forced:" + ",".join(forced_names),
+                    "chosen_signature": _candidate_signature(first, first_index),
+                    "votes": {},
+                    "outcome": "pending",
+                }
+            )
+            anti_diagnostics = dict(anti_before)
+            anti_diagnostics.update(
+                {
+                    "forced_portfolio": [dict(row) for row in self.anti_stagnation_controller.forced_portfolio],
+                    "forced_portfolio_selected": forced["forced_portfolio_selected"],
+                    "taboo_set": forced["taboo_set"],
+                    "taboo_policy": forced["taboo_policy"],
+                    "stable_fallback_used": forced["stable_fallback_used"],
+                    "diversity_metrics_before_after": {
+                        "before": anti_before.get("metrics", {}),
+                        "after": forced["diversity_after"],
+                    },
+                }
+            )
+            self.last_diagnostics = {
+                "llm_strategy_proposer_used": False,
+                "strategy_texts": [],
+                "votes_by_index": {},
+                "parse_failure_count": 0,
+                "completer_failure_count": 0,
+                "reflection_note": self._reflection_note,
+                "reflected_this_call": False,
+                "suppressed_coordinate_count": 0,
+                "step": self._step,
+                "anti_stagnation": anti_diagnostics,
+                "win_check_used_for_ranking": False,
+            }
+            return selected
 
         temperatures = tuple(self.temperatures[: self.k]) or (0.5,)
         candidate_lines = _format_candidate_lines(ordered)
         proposals = self.proposer.propose_many(self._context(), candidate_lines, temperatures=temperatures)
+        taboo_set = (
+            set(self.anti_stagnation_controller.taboo_set(self.history))
+            if self.anti_stagnation_controller is not None
+            else set()
+        )
 
         votes: dict[int, int] = {}
         strategy_texts: list[str] = []
         any_completer_ok = False
+        tabooed_proposals = 0
         for proposal in proposals:
             if proposal.get("completer_ok"):
                 any_completer_ok = True
             if not proposal.get("parse_ok"):
+                continue
+            normalized_strategy = _normalize_strategy_text(proposal.get("strategy_text", ""))
+            if normalized_strategy and normalized_strategy in taboo_set:
+                tabooed_proposals += 1
                 continue
             index = proposal["chosen_index"]
             if isinstance(index, int) and 0 <= index < len(ordered):
@@ -321,6 +754,16 @@ class SGECandidateRouter:
             "reflected_this_call": reflected,
             "suppressed_coordinate_count": suppressed,
             "step": self._step,
+            "anti_stagnation": {
+                **anti_before,
+                "taboo_set": sorted(taboo_set),
+                "tabooed_proposal_count": tabooed_proposals,
+                "taboo_policy": (
+                    "normalize recently failed strategy text from null outcomes; ignore matching "
+                    "LLM proposals before vote aggregation"
+                ),
+            },
+            "win_check_used_for_ranking": False,
         }
         return selected
 
@@ -341,5 +784,6 @@ class SGECandidateRouter:
                 "k": self.k,
                 "temperatures": list(self.temperatures),
                 "live_path_hook": "candidate_router.rank",
+                "anti_stagnation_controller": self.anti_stagnation_controller is not None,
             }
         ]

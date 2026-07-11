@@ -8,9 +8,18 @@ exercises the real `LocalGGUFProposer` path against the offline ARC arcade.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from carnot.agentic.arc_llm_strategy_proposer import (
+    AntiStagnationDiversityController,
+    StrategyCollapseThresholds,
     LLMStrategyProposer,
     SGECandidateRouter,
+    _candidate_action,
+    _candidate_signature,
+    _fallback_score,
+    _outcome_is_null,
+    _strategy_distance,
     parse_propose_reply,
     parse_reflect_reply,
 )
@@ -299,3 +308,269 @@ def test_portfolio_descriptors_shape():
 def test_context_without_reflection_note():
     router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=FakeCompleter([])), game_id="g42")
     assert router._context() == "Game: g42"
+
+
+# ---------------------------------------------------------------------------
+# REQ-ARC-FCP-5575 / SCENARIO-ARC-FCP-5575 anti-stagnation controller
+# ---------------------------------------------------------------------------
+
+
+def _seed_collapsed_wait_history(router: SGECandidateRouter, n: int = 4) -> None:
+    for step in range(1, n + 1):
+        router.history.append(
+            {
+                "step": step,
+                "strategy_text": "Observe the initial state and wait for automatic changes.",
+                "chosen_signature": "A1#0",
+                "outcome": "no_change",
+            }
+        )
+
+
+def test_anti_stagnation_activation_forces_diverse_portfolio_without_llm_call():
+    # REQ-ARC-FCP-5575 / SCENARIO-ARC-FCP-5575: collapsed SGE history must trigger
+    # a deterministic live-path portfolio before spending another LLM completion.
+    completer = FakeCompleter([(True, "STRATEGY: should not be called\nCHOICE: 0\n")])
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=3,
+        temperatures=(0.3, 0.6, 0.9),
+    )
+    _seed_collapsed_wait_history(router)
+    candidates = [
+        _candidate(1, 0, 0),
+        _candidate(6, 5, 5, salience_score=3.0),
+        _candidate(2, 0, 0),
+        _candidate(6, 9, 2, verifier_score=4.0),
+        _candidate(5, 0, 0, reset_score=5.0),
+    ]
+
+    ranked = router.rank(frame=None, candidates=candidates)
+
+    anti = router.last_diagnostics["anti_stagnation"]
+    assert anti["collapse_detected"] is True
+    assert completer.calls == []
+    assert {row["name"] for row in anti["forced_portfolio_selected"]} >= {
+        "observation",
+        "active_coordinate_probe",
+        "action_type_probe",
+        "mechanic_falsification",
+        "recovery_reset",
+    }
+    assert ranked
+
+
+def test_anti_stagnation_reports_diversity_increase_after_forced_portfolio():
+    # REQ-ARC-FCP-5575: the precheck needs before/after diversity metrics proving
+    # the forced portfolio increases strategy/action variety over the collapsed trace.
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=FakeCompleter([(False, "unused")])),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+    )
+    _seed_collapsed_wait_history(router)
+    candidates = [
+        _candidate(1, 0, 0),
+        _candidate(2, 0, 0),
+        _candidate(3, 0, 0),
+        _candidate(5, 0, 0, reset_score=2.0),
+        _candidate(6, 4, 4, effect_score=3.0),
+        _candidate(6, 8, 9, verifier_score=4.0),
+    ]
+
+    router.rank(frame=None, candidates=candidates)
+    metrics = router.last_diagnostics["anti_stagnation"]["diversity_metrics_before_after"]
+
+    assert metrics["before"]["unique_normalized_strategy_count"] == 1
+    assert metrics["before"]["max_normalized_strategy_repeat"] >= 4
+    assert metrics["after"]["forced_portfolio_category_count"] >= 5
+    assert metrics["after"]["selected_unique_signature_count"] > metrics["before"]["unique_action_signature_count"]
+
+
+def test_anti_stagnation_stable_fallback_when_portfolio_cannot_fill():
+    # REQ-ARC-FCP-5575: collapse handling must remain stable on tiny candidate
+    # pools and malformed/failed proposer output.
+    completer = FakeCompleter([(False, "GPU unavailable")])
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+    )
+    _seed_collapsed_wait_history(router)
+    candidates = [_candidate(6, 1, 1, salience_score=1.0)]
+
+    ranked = router.rank(frame=None, candidates=candidates)
+
+    assert ranked == candidates
+    assert router.last_diagnostics["anti_stagnation"]["collapse_detected"] is True
+    assert router.last_diagnostics["anti_stagnation"]["stable_fallback_used"] is True
+    assert completer.calls == []
+
+
+def test_anti_stagnation_prompts_do_not_leak_win_or_level_checks():
+    # REQ-ARC-FCP-5575: normal SGE prompts and reflection context must not expose
+    # oracle/win/level/source/scorecard signals to ranking.
+    completer = FakeCompleter(
+        [
+            (True, "STRATEGY: probe a visible object\nCHOICE: 0\n"),
+            (True, "REVISED_STRATEGY: try a different visible object\n"),
+        ]
+    )
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+        reflect_every=1,
+    )
+
+    router.rank(frame=None, candidates=[_candidate(6, 1, 1)])
+    prompts = "\n".join(call["prompt"].lower() for call in completer.calls)
+
+    for forbidden in ("win", "level", "oracle", "scorecard", "source"):
+        assert forbidden not in prompts
+    assert router.last_diagnostics["win_check_used_for_ranking"] is False
+
+
+def test_anti_stagnation_controller_is_reachable_from_e3_import_path():
+    # REQ-ARC-FCP-5575 / SCENARIO-ARC-FCP-5575: this must be the router object
+    # consumed by E3AgentPolicy, not a standalone experiment-only path.
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=FakeCompleter([(False, "unused")])),
+        game_id="g1",
+        anti_stagnation_controller=AntiStagnationDiversityController(),
+    )
+    repo = Path(__file__).resolve().parents[2]
+    competition_agent = (repo / "python/carnot/agentic/arc_competition_agent.py").read_text()
+    graph_explore = (repo / "python/carnot/agentic/arc_graph_explore.py").read_text()
+
+    assert "candidate_router: Any = _DEFAULT_CANDIDATE_ROUTER" in competition_agent
+    assert "candidate_router=candidate_router" in competition_agent
+    assert "candidate_router.rank(frame, out, previous_frame=previous_frame)" in graph_explore
+    assert isinstance(router.anti_stagnation_controller, AntiStagnationDiversityController)
+
+
+def test_anti_stagnation_helper_edges_for_fixed_collapse_definition():
+    # REQ-ARC-FCP-5575: edge cases in the fixed collapse signals must be explicit
+    # rather than depending on incidental parser behavior.
+    assert _strategy_distance("", "") == 0.0
+    assert _strategy_distance("observe", "") == 1.0
+    assert _outcome_is_null({"level_before": 1, "level_after": 1}) is True
+    assert _outcome_is_null({"level_before": "bad", "level_after": 1, "changed": False}) is True
+    assert _outcome_is_null({"effect": "none"}) is True
+
+    class WeirdCandidate:
+        action = "not-an-int"
+
+    assert _candidate_action(WeirdCandidate()) == 0
+    assert _candidate_signature({"action": 6, "data": {"x": "bad", "y": 1}}, 3) == "A6#3"
+    assert _candidate_signature({"action": 2, "data": {}}, 4) == "A2#4"
+    assert _fallback_score({"salience_score": "not-a-float", "score": 2.0}, ("salience_score", "score")) == 2.0
+
+
+def test_anti_stagnation_forced_portfolio_avoids_recent_failed_signature():
+    # REQ-ARC-FCP-5575: outcome-conditioned failed action signatures should not
+    # be re-selected by the active coordinate probe when an alternative exists.
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=FakeCompleter([(False, "unused")])),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+    )
+    _seed_collapsed_wait_history(router)
+    router.history.append(
+        {
+            "step": 99,
+            "strategy_text": "Observe the initial state and wait for automatic changes.",
+            "chosen_signature": "A6@5,5",
+            "outcome": "no_change",
+        }
+    )
+    candidates = [
+        _candidate(1, 0, 0),
+        _candidate(6, 5, 5, salience_score=9.0),
+        _candidate(6, 7, 7, salience_score=1.0),
+        _candidate(2, 0, 0),
+        _candidate(5, 0, 0),
+    ]
+
+    router.rank(frame=None, candidates=candidates)
+    selected = router.last_diagnostics["anti_stagnation"]["forced_portfolio_selected"]
+    active = [row for row in selected if row["name"] == "active_coordinate_probe"]
+    assert active == [{"name": "active_coordinate_probe", "signature": "A6@7,7"}]
+
+
+def test_anti_stagnation_forced_portfolio_fallback_fills_to_budget():
+    # REQ-ARC-FCP-5575: if the five-category portfolio cannot be filled, the
+    # deterministic fallback still returns a bounded stable ranking.
+    controller = AntiStagnationDiversityController(
+        thresholds=StrategyCollapseThresholds(window_size=4)
+    )
+    history = [
+        {"strategy_text": "wait", "chosen_signature": "A1#0", "outcome": "no_change"}
+        for _ in range(4)
+    ]
+    candidates = [
+        {"action": 5, "data": {"x": 1, "y": 1}, "reset_score": 1.0},
+        {"action": 5, "data": {"x": 2, "y": 2}, "reset_score": 0.5},
+    ]
+
+    forced = controller.rank_forced_portfolio(
+        candidates,
+        history=history,
+        fallback_score_fields=("reset_score", "score"),
+        max_candidates=2,
+        seen_coordinates=set(),
+    )
+
+    assert len(forced["ranked"]) == 2
+    assert forced["stable_fallback_used"] is True
+    assert any(row["name"] == "fallback_fill" for row in forced["forced_portfolio_selected"])
+
+
+def test_anti_stagnation_tabooed_proposals_do_not_vote():
+    # REQ-ARC-FCP-5575: recently failed normalized strategies are tabooed before
+    # vote aggregation, while the fallback order remains deterministic.
+    completer = FakeCompleter([(True, "STRATEGY: repeat failed tactic\nCHOICE: 1\n")])
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+    )
+    router.history.append(
+        {
+            "step": 1,
+            "strategy_text": "repeat failed tactic",
+            "chosen_signature": "A1#0",
+            "outcome": "no_change",
+        }
+    )
+    candidates = [_candidate(1, 0, 0, salience_score=2.0), _candidate(2, 0, 0, salience_score=1.0)]
+
+    ranked = router.rank(frame=None, candidates=candidates)
+
+    assert ranked[0] is candidates[0]
+    assert router.last_diagnostics["votes_by_index"] == {}
+    assert router.last_diagnostics["anti_stagnation"]["tabooed_proposal_count"] == 1
+
+
+def test_rank_respects_max_candidates_after_normal_vote():
+    # REQ-ARC-FCP-5575 regression guard: bounded normal ranking still stops at
+    # max_candidates after anti-stagnation instrumentation is added.
+    completer = FakeCompleter([(True, "STRATEGY: probe visible object\nCHOICE: 0\n")])
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+        max_candidates=1,
+    )
+    candidates = [_candidate(6, 1, 1), _candidate(6, 2, 2)]
+
+    ranked = router.rank(frame=None, candidates=candidates)
+
+    assert ranked == [candidates[0]]

@@ -178,8 +178,15 @@ def _venv_python3_cuda_check(
 
 def _qwen36_cache_check(model_specs: dict[str, object]) -> base.PreconditionCheck:
     paths: list[str] = []
+    selected_model_hf_id = model_specs.get("selected_model_hf_id")
+    if selected_model_hf_id is not None and selected_model_hf_id != REQUIRED_QWEN36_HF_ID:
+        return base.PreconditionCheck(
+            "qwen36_gguf_cache",
+            False,
+            f"selected_model_hf_id must be {REQUIRED_QWEN36_HF_ID}, got {selected_model_hf_id}",
+        )
     selected_model_path = model_specs.get("selected_model_path")
-    if model_specs.get("selected_model_hf_id") == REQUIRED_QWEN36_HF_ID and selected_model_path:
+    if selected_model_hf_id == REQUIRED_QWEN36_HF_ID and selected_model_path:
         paths.append(str(selected_model_path))
     for row in model_specs.get("sota_models_cached", []):
         if isinstance(row, dict) and row.get("hf_id") == REQUIRED_QWEN36_HF_ID:
@@ -188,11 +195,7 @@ def _qwen36_cache_check(model_specs: dict[str, object]) -> base.PreconditionChec
                     paths.append(str(row[key]))
 
     cache_root = (
-        Path.home()
-        / ".cache"
-        / "huggingface"
-        / "hub"
-        / "models--unsloth--Qwen3.6-35B-A3B-GGUF"
+        Path.home() / ".cache" / "huggingface" / "hub" / "models--unsloth--Qwen3.6-35B-A3B-GGUF"
     )
     paths.extend(str(path) for path in cache_root.glob("snapshots/**/*.gguf"))
     real_paths = sorted({path for path in paths if Path(path).is_file()})
