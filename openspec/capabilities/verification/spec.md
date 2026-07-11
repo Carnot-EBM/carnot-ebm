@@ -29835,6 +29835,136 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5567: Local SOTA Solve-Versus-Verify Asymmetry Panel
+
+The repository SHALL provide Exp 5567 at
+`python/carnot/experiment_5567_local_sota_solve_verify_asymmetry.py` and
+write
+`results/experiment_5567_local_sota_solve_verify_asymmetry.json`. Exp 5567
+SHALL consume the Exp 5566 exact ASP/FSM near-miss corpus at
+`results/experiment_5566_exact_asp_fsm_near_miss_corpus.json`, sample at least
+36 independent valid/near-miss instance pairs, and compare direct local-SOTA
+generation against local-SOTA verification of the same exact-labeled
+candidates. The exact Exp 5566 ASP/FSM validators SHALL remain the only
+correctness oracle for generated solves and verifier labels.
+
+Exp 5567 SHALL resolve headline models through the repository
+`cached_sota_pair()` path before inference. Headline `MODEL_SPECS` SHALL include
+`unsloth/Qwen3.6-35B-A3B-GGUF` and at least one of
+`unsloth/gemma-4-31B-it-GGUF` or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If this cache gate cannot provide Qwen plus a
+Gemma, Exp 5567 SHALL write a terminal artifact with
+`honest_verdict="blocked_missing_sota_cache"` or an equivalently prefixed
+blocked verdict and SHALL NOT substitute a legacy CPU model. Exp 5567 SHALL
+authenticate llama.cpp CUDA GPU offload and device identity before headline
+promotion; if CUDA/offload is unavailable, it SHALL write
+`honest_verdict="blocked_no_cuda_offload"` or an equivalently prefixed blocked
+verdict and SHALL NOT promote CPU-only receipts.
+
+For each sampled independent instance, Exp 5567 SHALL obtain one direct solve
+from each headline model and exact-validate the parsed candidate. It SHALL then
+ask each headline model to verify the valid and near-miss candidates using four
+arms: `discrete_verdict`, `criteria_decomposition`, `granular_score`, and
+`repeated_verdict_3x`. The repeated arm SHALL aggregate the three repeated
+labels per candidate before metric computation and SHALL NOT pool repeated
+calls as independent samples. Short structured responses SHALL be parsed
+independently for each arm, parser failures SHALL be counted in an error
+taxonomy, and raw response content SHALL be represented by hashes rather than
+trusted summaries.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `gate_receipt`, `MODEL_SPECS`, `model_cache_paths`,
+`live_model_invoked`, `gpu_offload_authenticated`, `device_receipt`,
+`corpus_path`, `n_independent_instances`, `family_counts`, `arms`,
+`solve_accuracy_by_model`, `verifier_metrics_by_model_and_arm`,
+`solve_verify_asymmetry`, `confidence_intervals`, `mcnemar_results`,
+`exact_validator_is_oracle`, `verifier_is_oracle`, `parser_failure_count`,
+`raw_response_hash`, `inference_duration_s`, `inference_substrate`,
+`honest_verdict`, and `panel_complete`. `exact_validator_is_oracle` SHALL be `true`;
+`verifier_is_oracle` SHALL be `false`; `inference_substrate` SHALL equal `live_local_sota_gguf_plus_exact_validator`;
+and `panel_complete` SHALL be true
+only when Qwen plus Gemma were invoked live with authenticated CUDA offload over
+at least 36 independent instances. Blocked artifacts SHALL keep
+`panel_complete=false` and preserve the gate receipt that explains the block.
+
+Exp 5567 SHALL report paired solve accuracy, verifier balanced accuracy,
+verifier false-positive rate, verifier false-negative rate, solve-minus-verify
+asymmetry, model-family deltas, latency, tokens, actual inference duration,
+paired bootstrap confidence intervals, and McNemar tests. Statistical intervals
+and tests SHALL use independent instance IDs as the paired unit, SHALL not treat
+three repeated verifier calls as three independent samples, and SHALL avoid
+sub-percent effect claims in the terminal verdict.
+
+Field principles:
+
+- `field_principles`: Keeps every headline and gate field annotated by the
+  evidence boundary it protects.
+- `gate_receipt`: Records cache, CUDA, offload, corpus, and no-legacy-model
+  gates before interpreting model quality.
+- `MODEL_SPECS`: Names the exact headline GGUF models and local paths so Qwen
+  plus Gemma cannot be silently replaced.
+- `model_cache_paths`: Pins resolved cache files without causing downloads.
+- `live_model_invoked`: Separates real local inference from blocked preflight
+  artifacts.
+- `gpu_offload_authenticated`: Prevents CPU-only llama.cpp receipts from
+  unlocking headline claims.
+- `device_receipt`: Preserves CUDA device identity and offload evidence for
+  replay.
+- `corpus_path`: Pins the Exp 5566 exact-labeled source corpus.
+- `n_independent_instances`: Defines the paired statistical denominator.
+- `family_counts`: Confirms the sample did not collapse onto one ASP/FSM
+  family.
+- `arms`: Names the four verifier prompt strategies being compared.
+- `solve_accuracy_by_model`: Measures direct generation success under the
+  exact validator.
+- `verifier_metrics_by_model_and_arm`: Measures verifier balanced accuracy,
+  FPR, and FNR against the exact oracle labels.
+- `solve_verify_asymmetry`: Reports solve accuracy minus verifier balanced
+  accuracy without implying a moat claim.
+- `confidence_intervals`: Stores paired bootstrap intervals over independent
+  instances.
+- `mcnemar_results`: Stores paired solve-versus-verify discordance tests.
+- `exact_validator_is_oracle`: Bare boolean disclosing the exact ASP/FSM
+  validators are the correctness oracle.
+- `verifier_is_oracle`: Bare boolean disclosing the LLM verifier is
+  oracle-distinct and not trusted as authority.
+- `parser_failure_count`: Keeps malformed structured responses visible.
+- `raw_response_hash`: Preserves response provenance without relying on prose
+  summaries.
+- `inference_duration_s`: Records actual model inference wall time rather than
+  artifact formatting time.
+- `inference_substrate`: Declares live local SOTA GGUF inference plus exact
+  validator scoring.
+- `honest_verdict`: Provides a terminal status that distinguishes complete,
+  blocked cache, blocked CUDA/offload, and failed parsing states.
+- `panel_complete`: Only an authenticated statistically valid panel may unlock
+  the co-evolution audit.
+
+### SCENARIO-VERIFY-5567: Authenticated Paired Panel Or Blocked Gate Receipt
+
+Given Exp 5566 has written a ready exact ASP/FSM near-miss corpus, Qwen plus at
+least one Gemma mandated GGUF are locally cached, and llama.cpp CUDA offload is
+authenticated with device identity, when Exp 5567 runs, then it samples at
+least 36 independent valid/near-miss instance pairs, invokes both headline
+models, exact-validates every parsed direct solve, evaluates valid and near-miss
+candidates under the four verifier arms, aggregates repeated calls per
+candidate, writes paired bootstrap intervals and McNemar tests, writes
+`results/experiment_5567_local_sota_solve_verify_asymmetry.json`, and sets
+`panel_complete=true`.
+
+If the SOTA cache gate lacks Qwen plus a Gemma, if CUDA/offload authentication
+fails, if the corpus is absent or unready, or if fewer than 36 independent
+instances can be sampled, then Exp 5567 SHALL still write the same terminal JSON
+path with `panel_complete=false`, a precise `blocked_*` honest verdict, no
+legacy CPU headline model, `live_model_invoked=false` unless a live attempt
+actually occurred, and a gate receipt explaining the blocked precondition.
+
+## Implementation Status (REQ-VERIFY-5567)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5567 | Implemented (`python/carnot/experiment_5567_local_sota_solve_verify_asymmetry.py`, `results/experiment_5567_local_sota_solve_verify_asymmetry.json`) | Implemented (`tests/python/test_experiment_5567_local_sota_solve_verify_asymmetry.py`) |
+
 ### REQ-VERIFY-5566: Exact ASP/FSM Near-Miss Corpus
 
 The repository SHALL provide Exp 5566 at
