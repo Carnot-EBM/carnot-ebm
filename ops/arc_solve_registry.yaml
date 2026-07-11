@@ -804,17 +804,25 @@ games:
     reproducibility_checksum: f1b529084c55d7dc1f7e2e9344bf10ac746a04f1c359db911be1f16f1182af58
 - game: wa30
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
     five blocks into five of six bay target slots (player hand-carry PLUS a passive
     color-12 helper-robot NPC that autonomously delivers blocks -- see gotcha below);
-    win = env reports frame.levels_completed==2.'
+    win = frame.levels_completed==2. L3: fresh 64-cell-timer layout split by a
+    full-height dashed fence (player+3 blocks on the left, robot+bay+2 pre-embedded
+    blocks on the right); win = frame.levels_completed==3 via the fence-socket relay
+    (see gotcha below). L2->L3 auto-transitions with no reset and no carry-over state
+    between levels (fresh timer, fresh layout) -- action sequences concatenate
+    directly for the reproduction gate.'
   solver: 'L1: results/experiment_4275 solve_trace.actions. L2: results/outer_loop_fable5_wa30_probe.json
     action_sequence (94-action full sequence: banked 33-action L1 prefix + 61-action
-    L2 suffix), claude-fable-5, 2026-07-11. No GameAdapter registered yet -- this is a
-    frozen banked trajectory, not a generalized per-game solver; a future GameAdapter
-    encoding the robot-delivery rule (not just this one trajectory) would be needed to
-    reach the live E3AgentPolicy path or to attempt L3+.'
+    L2 suffix). L3: results/outer_loop_fable5_wa30_probe_l3.json action_sequence
+    (170-action full sequence: the same 94-action L1+L2 prefix + 76-action L3
+    suffix, single continuous episode, no resets). Both L2 and L3 by claude-fable-5,
+    2026-07-11. No GameAdapter registered yet -- these are frozen banked trajectories,
+    not a generalized per-game solver; a future GameAdapter encoding the
+    robot-delivery + fence-socket rules (not just these two trajectories) would be
+    needed to reach the live E3AgentPolicy path or to attempt L4+ (bonus recon below).'
   gotchas:
   - 'L2 HELPER-ROBOT mechanic (v9, 2026-07-11, claude-fable-5, independently re-verified
     by the outer loop -- see dead_ends v9 entry below): the unexplained 4x4 color-12
@@ -826,6 +834,25 @@ games:
     single-worker lower bound was arithmetically correct but incomplete -- it never
     accounted for this second actor). None of v1-v8''s 8 attempts identified or
     interrogated this glyph.'
+  - 'L3 FENCE-SOCKET RELAY mechanic (v10, 2026-07-11, claude-fable-5, independently
+    re-verified by the outer loop -- see dead_ends v10 entry below): a full-height
+    dashed fence splits the map (player + 3 loose blocks on the left; robot + bay +
+    2 pre-embedded blocks on the right). Extracting a fence-embedded block does NOT
+    open a passage -- the fence regenerates behind it (hole hypothesis empirically
+    disproven). Instead every fence tile is a SOCKET: a carried block can be dropped
+    INTO the fence line from the player''s (left) side, and the robot autonomously
+    extracts it from the right side and delivers it to the bay like any other loose
+    block. Workers never share a side, so zero pathing collisions (unlike L2). v9''s
+    L2 solve structure (hand-carry + robot-delivery in the same open room) does NOT
+    directly apply -- L3 required discovering the socket-drop interaction first.'
+  - 'L3 secondary gotchas (v10, as-reported, not independently spot-checked by the
+    outer loop beyond the reproduction-gate replay): fence tiles accept a socketed
+    block but the player still cannot stand on one; pick up left-side blocks from
+    their WEST side so the carried ghost trails EAST (only a ghost-east carry can
+    reach a fence socket from the left half); never press ACTION5 while
+    adjacent-facing your own already-socketed block (it re-picks it back up); the
+    robot treats sockets as ordinary loose blocks (nearest-first delivery order);
+    L3''s timer drains gentler than L2''s (~0.64 cells/action vs. ~0.85).'
   - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex): a
     64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4 (not on ACTION5
     pickup/drop) -- though v9 measured the real drain as ~0.85 cells/action (not
@@ -948,6 +975,27 @@ games:
     considered; a second model with fresh eyes (or a mandate to look for unexplained
     frame elements specifically) found a mechanic 9 combined attempts (8 gpt-5.6-sol
     + 1 internal-state search) missed. levels_reproduced bumped 1 -> 2.'
+  - 'v10 (results/outer_loop_fable5_wa30_probe_l3.json, 2026-07-11, claude-fable-5,
+    same agent resumed via SendMessage with full L1/L2 context -- asked to attempt
+    L3 and to specifically verify whether its L2 solve structure still applied
+    rather than assuming so): investigated the vertical dashed fence noted in v9''s
+    0-cost L3 recon and found the FENCE-SOCKET RELAY mechanic (see gotcha above).
+    Single continuous episode, no resets, 0 game-overs, 340/400 step budget used
+    (170 interactive incl. the 94-action L1+L2 prefix replay, 170 for the
+    reproduction-gate replay). Full 170-action sequence reaches
+    frame.levels_completed==3. INDEPENDENTLY RE-VERIFIED by the outer loop before
+    accepting (same protocol as v9): extracted the artifact''s action_sequence and
+    ran arc_solver_kit.reproduce(''wa30'', ..., claimed_level=3) from 5 independent
+    fresh env.reset() calls using the project''s wa30 apply() convention -- all 5
+    trials returned reached_level=3, reproduced=True, matching the artifact''s
+    self-reported checksum. Also verified as-reported: L2->L3 auto-transitions with
+    a fresh 64-cell timer and no reset, so the L1+L2+L3 action sequences concatenate
+    directly (no separate warmup/reset needed between levels). BONUS L4 RECON (v10,
+    0 cost, as-reported/not attempted): a larger multi-agent variant -- THREE helper
+    robots, multiple small corner bays, color-5 wall segments forming a maze, 7+
+    blocks in a fenced central enclosure. The cooperative-delivery mechanic family
+    continues and escalates; a future attempt should start from the socket-relay
+    understanding rather than re-deriving from zero. levels_reproduced bumped 2 -> 3.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
@@ -1947,7 +1995,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 70
+reproducible_total_levels: 71
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
