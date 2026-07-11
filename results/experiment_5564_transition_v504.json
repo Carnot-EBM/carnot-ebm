@@ -1,0 +1,830 @@
+{
+  "arc_chain": [
+    {
+      "gate_field": "live_path_ready AND target_unsolved",
+      "principle": "The ordinary ARC floor requires an E3-reachable target before live level-up.",
+      "task_id": "exp5575-sge-anti-stagnation-live-precheck",
+      "unlocks": "exp5576-gated-sge-live-levelup"
+    },
+    {
+      "gate_field": "offline_reproduced AND registry_delta>0",
+      "principle": "ARC credit requires self-discovery, offline reproduction, and positive registry delta.",
+      "task_id": "exp5576-gated-sge-live-levelup",
+      "unlocks": "ordinary_arc_levelup_claim"
+    }
+  ],
+  "artifact_metadata": {
+    "results/experiment_5550_transition_v503.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:5dabb9b0db256e22868cc9e429aaa3c0fbe3fb966f6cb86bf6d79f7c83a76e62"
+    },
+    "results/experiment_5551_v503_source_delta_ingestion.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:313753507c390e026ecd03696df4f74805c7780370492489ece351765b583f56"
+    },
+    "results/experiment_5552_automaton_schema_row_completion_receipt.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:3cdc0c425c8247ee1287f2fd553564fb90e8f6ffa75b63ecf8819b625eb8bc63"
+    },
+    "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:8d13347f8b6767df615bcefa03ad29930e0d7436c66809531e74aed48c51acef"
+    },
+    "results/experiment_5554_sota_hard_soft_panel_v4.json": {
+      "error": "missing",
+      "exists": false,
+      "loadable": false
+    },
+    "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:e1edbf1d570e43baf06fefcc366000c9c251edb42e608d093f8582afea9fffeb"
+    },
+    "results/experiment_5556_asp_fsm_sparse_repair_scale.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:22b3ebf354b733650a0535d6e3214887f09481c9ee04614eee496bebb2adcaf2"
+    },
+    "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:7b78e40021d580da20aff3a3e9777ab3e97042b0cf5db57820bc407d76674d78"
+    },
+    "results/experiment_5558_causal_write_manage_read_csl_memory.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:28bbcace6e9237af1dd8287fdad028b78c81e38ceb9a641a2ae69ec214577930"
+    },
+    "results/experiment_5559_cross_model_sota_csl_transfer_v2.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:32710bbf667559accc5108a60c2986459d03c58f577399aea0eceff988869699"
+    },
+    "results/experiment_5560_hardware_and_timing_receipt_hygiene.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:343740628e5f4639aed73b652fdb9dcd9533dc620f29cabde087f3df7c9d47e4"
+    },
+    "results/experiment_5561_arc_fsm_target_rotation_precheck.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:c4336e2885262234d53cd1dcd613a23a857f2bd5482be05827da78c7ca9b06f5"
+    },
+    "results/experiment_5562_arc_fsm_live_levelup.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:f0fb2be33ce32d3302886b2cb041b7895af9e3a5243a4f83a22267b901b6c281"
+    },
+    "results/experiment_5563_capstone_v503.json": {
+      "error": null,
+      "exists": true,
+      "loadable": true,
+      "sha256": "sha256:efb1252ca0f35b8e0ed40cf34d12c4b2363e25dd3b58697374f6054f7eb3f66c"
+    }
+  },
+  "artifacts_read": 14,
+  "blocked_lanes": [
+    {
+      "claim_boundary": "The grammar-row chain is closed because required rows were reachable but unsupported.",
+      "classification": "blocked",
+      "evidence": {
+        "accepted_row_count": 2,
+        "automaton_row_completion_ready": false,
+        "readiness_blockers": [
+          "proposal_path_missing_required_rows"
+        ],
+        "required_row_count": 6,
+        "row_completion_support_rate": 0.333333
+      },
+      "lane": "grammar_row_completion_blocked",
+      "source_artifacts": [
+        "results/experiment_5552_automaton_schema_row_completion_receipt.json"
+      ]
+    },
+    {
+      "claim_boundary": "The GBNF row smoke was skipped by the failed Exp5552 readiness gate.",
+      "classification": "blocked",
+      "evidence": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-receipt.automaton_row_completion_ready (actual=False == expected=True)",
+        "honest_verdict": "blocked_gate_check_failed",
+        "status": "blocked"
+      },
+      "lane": "gbnf_row_smoke_gate_skip",
+      "source_artifacts": [
+        "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json"
+      ]
+    },
+    {
+      "claim_boundary": "The hard/soft panel v4 has conductor skip evidence, not a clean terminal panel artifact.",
+      "classification": "blocked",
+      "evidence": {
+        "conductor_evidence": "| 2026-07-10 23:28 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |",
+        "honest_verdict": "blocked_gate_check_failed",
+        "status": "blocked"
+      },
+      "lane": "hard_soft_panel_skipped",
+      "source_artifacts": [
+        "results/experiment_5554_sota_hard_soft_panel_v4.json"
+      ]
+    },
+    {
+      "claim_boundary": "No hardware claim is allowed until matched successful timing pairs exist.",
+      "classification": "blocked",
+      "evidence": {
+        "hardware_speedup_claim": false,
+        "matched_timing_available": false,
+        "repeated_timing_pairs": 0
+      },
+      "lane": "no_matched_hardware_speedup",
+      "source_artifacts": [
+        "results/experiment_5560_hardware_and_timing_receipt_hygiene.json"
+      ]
+    },
+    {
+      "claim_boundary": "ARC registry delta remained zero, so no level-up claim carries into .504.",
+      "classification": "blocked",
+      "evidence": {
+        "offline_reproduced": false,
+        "registry_delta": 0,
+        "reproduced_levels": 0
+      },
+      "lane": "arc_registry_delta_zero",
+      "source_artifacts": [
+        "results/experiment_5562_arc_fsm_live_levelup.json",
+        "results/experiment_5563_capstone_v503.json"
+      ]
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "claim_boundary": "Descriptor-guided repair can feed verifier stress, not timing or hardware claims.",
+      "classification": "bounded",
+      "evidence": {
+        "asp_sparse_repair_claim_allowed": true,
+        "matched_timing_available": false,
+        "speedup_claim_allowed": false
+      },
+      "lane": "sparse_repair_no_speedup",
+      "source_artifacts": [
+        "results/experiment_5556_asp_fsm_sparse_repair_scale.json"
+      ]
+    },
+    {
+      "claim_boundary": "Memory action impact carries forward, but broad CSL waits for reset-free held-out promotion.",
+      "classification": "bounded",
+      "evidence": {
+        "action_impact_delta_vs_no_memory": 0.8333333333,
+        "continuous_self_learning_evidence": true,
+        "cross_model_csl_claim_allowed": false,
+        "csl_claim_allowed": false
+      },
+      "lane": "continuous_memory_not_broad_csl",
+      "source_artifacts": [
+        "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json",
+        "results/experiment_5558_causal_write_manage_read_csl_memory.json",
+        "results/experiment_5559_cross_model_sota_csl_transfer_v2.json"
+      ]
+    },
+    {
+      "claim_boundary": "Hardware hygiene is useful only as receipt discipline until matched timing exists.",
+      "classification": "bounded",
+      "evidence": {
+        "hardware_speedup_claim": false,
+        "matched_timing_available": false,
+        "repeated_timing_pairs": 0
+      },
+      "lane": "hardware_receipt_no_speedup",
+      "source_artifacts": [
+        "results/experiment_5560_hardware_and_timing_receipt_hygiene.json"
+      ]
+    },
+    {
+      "claim_boundary": "ARC live-path provenance is preserved, but registry credit remains zero.",
+      "classification": "bounded",
+      "evidence": {
+        "offline_reproduced": false,
+        "registry_delta": 0,
+        "selected_game": "r11l",
+        "selected_level": "L3",
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "lane": "arc_live_path_no_bank",
+      "source_artifacts": [
+        "results/experiment_5561_arc_fsm_target_rotation_precheck.json",
+        "results/experiment_5562_arc_fsm_live_levelup.json"
+      ]
+    }
+  ],
+  "clean_lanes": [
+    {
+      "claim_boundary": "Exact ASP/FSM fixture evidence is clean and becomes the .504 corpus substrate.",
+      "classification": "clean",
+      "evidence": {
+        "asp_row_count": 5,
+        "exact_asp_validator_ready": true,
+        "exact_fsm_fixture_extended_ready": true,
+        "honest_verdict": "complete: exact ASP/FSM stable-model fixture ready with no LLM"
+      },
+      "lane": "exact_asp_fsm_fixture",
+      "source_artifacts": [
+        "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json"
+      ]
+    },
+    {
+      "claim_boundary": "Sparse repair is clean exact-checked repair evidence, but only as a bounded no-speedup claim.",
+      "classification": "clean_bounded",
+      "evidence": {
+        "asp_sparse_repair_claim_allowed": true,
+        "descriptor_guided_success_rate": 1.0,
+        "speedup_claim_allowed": false,
+        "stable_model_checked_rate": 1.0,
+        "unchecked_repair_count": 0
+      },
+      "lane": "bounded_sparse_repair",
+      "source_artifacts": [
+        "results/experiment_5556_asp_fsm_sparse_repair_scale.json"
+      ]
+    },
+    {
+      "claim_boundary": "The five-arm CSL tautology repair is clean, but it does not rescue cross-family transfer.",
+      "classification": "clean",
+      "evidence": {
+        "aligned_delta_over_shuffled": 0.5833333333,
+        "csl_five_arm_clean": true,
+        "duplicated_metric_pairs": [],
+        "tautology_resolved": true
+      },
+      "lane": "csl_tautology_repair",
+      "source_artifacts": [
+        "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json"
+      ]
+    },
+    {
+      "claim_boundary": "Causal write-manage-read memory changed actions, but broad CSL still needs reset-free promotion.",
+      "classification": "clean",
+      "evidence": {
+        "action_impact_delta_vs_no_memory": 0.8333333333,
+        "action_selection_changed_count": 5,
+        "csl_memory_ready": true,
+        "no_weight_mutation": true,
+        "quality_delta_vs_shuffled_memory": 1.0
+      },
+      "lane": "causal_memory_action_impact",
+      "source_artifacts": [
+        "results/experiment_5558_causal_write_manage_read_csl_memory.json"
+      ]
+    }
+  ],
+  "conductor_skip_records_read": 1,
+  "conductor_unchanged": true,
+  "experiment": "experiment_5564_transition_v504",
+  "experiment_id": "exp5564-transition-v504",
+  "failed_preconditions": [],
+  "field_principles": {
+    "arc_chain": "SGE precheck to live level-up gate map for the ordinary ARC floor.",
+    "artifacts_read": "Count of `.503` terminal records accounted for through readable artifacts, capstone metadata, or conductor skip evidence.",
+    "blocked_lanes": "Blocked `.503` prerequisites that must not become headline credit.",
+    "bounded_lanes": "Useful `.503` evidence preserved with explicit claim limits.",
+    "clean_lanes": "Completed `.503` evidence carried forward without promoting blocked or flagged claims.",
+    "conductor_unchanged": "Protected-file check for `scripts/research_conductor.py`.",
+    "field_principles": "One-line annotations for every headline and gate field.",
+    "flagged_lanes": "Adversarial or methodology flags carried forward as boundaries, not clean evidence.",
+    "hardware_claim_allowed": "Bare boolean that must remain false without matched successful timing pairs and authenticated device receipts.",
+    "honest_verdict": "Terminal summary starting with complete: or blocked: that names the `.503` to `.504` transition boundary.",
+    "inference_substrate": "Must equal `aggregation_from_upstream_artifacts` because Exp5564 is synthesis only.",
+    "milestone": "Route key for the `.504` transition receipt.",
+    "next_task_range": "Planned `.504` conductor task range.",
+    "previous_milestone": "Source milestone whose terminal facts are archived.",
+    "previous_task_range": "Closed `.503` conductor task range.",
+    "ptrm_slot_separate": "Bare boolean confirming the reserved PTRM generator slot does not count as the ordinary ARC floor.",
+    "retired_continuations": "Ordinary reruns prohibited by `.503` terminal evidence and `.504` roadmap scope.",
+    "roadmap_yaml_unchanged": "Protected-file check for `research-roadmap.yaml`.",
+    "self_learning_chain": "Memory plus KAN to reset-free harness to promotion gate map.",
+    "verifier_chain": "Corpus-to-SOTA-panel-to-co-evolution gate map for `.504` verifier work."
+  },
+  "flagged_lanes": [
+    {
+      "claim_boundary": "Cross-family CSL is a flagged null and must not receive another ordinary v3 rerun.",
+      "classification": "flagged",
+      "evidence": {
+        "aligned_memory_score": 0.1666666667,
+        "corrigendum_pending": [
+          {
+            "detail": "aligned_memory_score=0.1666666667 and no_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "aligned_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "aligned_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "no_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "no_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "shuffled_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "cross_family_delta_over_shuffled=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          }
+        ],
+        "cross_family_delta_over_shuffled": 0.0,
+        "csl_claim_allowed": false,
+        "flagged_adversarial": true,
+        "negative_transfer_rate": 0.8333333333,
+        "no_memory_score": 0.1666666667,
+        "shuffled_memory_score": 0.1666666667
+      },
+      "lane": "cross_family_csl_flagged_null",
+      "source_artifacts": [
+        "results/experiment_5559_cross_model_sota_csl_transfer_v2.json"
+      ]
+    }
+  ],
+  "hardware_claim_allowed": false,
+  "honest_verdict": "complete: archived .503 terminal evidence into .504 transition receipt; previous_task_range=exp5550-exp5563; next_task_range=exp5564-exp5577; clean evidence preserved for exact ASP/FSM fixture, bounded sparse repair, CSL tautology repair, and causal memory action impact; blocked or flagged boundaries preserved for grammar row completion, skipped hard/soft panel, cross-family CSL, unmatched hardware, and ARC registry_delta=0.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "json_terminal_artifacts_read": 13,
+  "milestone": "2026.07.504",
+  "next_task_range": "exp5564-exp5577",
+  "preconditions_checked": {
+    "conductor_unchanged": true,
+    "previous_capstone_loadable": true,
+    "previous_capstone_milestone": "2026.07.503",
+    "previous_capstone_present": true,
+    "previous_capstone_summary_exact": true,
+    "previous_capstone_task_range": "exp5550-exp5563",
+    "roadmap_loadable": true,
+    "roadmap_milestone": "2026.07.504",
+    "roadmap_next_present": false,
+    "roadmap_present": true,
+    "roadmap_yaml_unchanged": true,
+    "terminal_records_accounted": 14,
+    "terminal_records_expected": 14,
+    "vnext_names_milestone": true,
+    "vnext_present": true,
+    "vnext_task_range": "exp5564-exp5577"
+  },
+  "previous_capstone_claims": {
+    "arc_live_levelup_claim_allowed": false,
+    "arc_registry_delta": 0,
+    "asp_sparse_repair_claim_allowed": true,
+    "continuous_self_learning_evidence": true,
+    "cross_model_csl_claim_allowed": false,
+    "csl_claim_allowed": false,
+    "hardware_speedup_claim": false,
+    "sota_hard_soft_claim_allowed": false,
+    "structured_sota_claim_allowed": false
+  },
+  "previous_capstone_path": "results/experiment_5563_capstone_v503.json",
+  "previous_capstone_summary": "complete: .503 capstone read 13/14 expected artifacts; missing=0; flagged=1; blocked=2; skipped_by_gates=2; honest_nulls=1; structured_sota_claim_allowed=False; sota_hard_soft_claim_allowed=False; continuous_self_learning_evidence=True; csl_claim_allowed=False; cross_model_csl_claim_allowed=False; asp_sparse_repair_claim_allowed=True; hardware_speedup_claim=False; arc_registry_delta=0",
+  "previous_milestone": "2026.07.503",
+  "previous_task_range": "exp5550-exp5563",
+  "prompt_alias_resolution": [
+    {
+      "alias_exists": false,
+      "alias_path": "results/experiment_5555_asp_fsm_exact_fixture.json",
+      "resolved_exists": true,
+      "resolved_path": "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json",
+      "source_of_truth": "capstone_artifact_metadata"
+    },
+    {
+      "alias_exists": false,
+      "alias_path": "results/experiment_5558_causal_csl_write_manage_read_memory.json",
+      "resolved_exists": true,
+      "resolved_path": "results/experiment_5558_causal_write_manage_read_csl_memory.json",
+      "source_of_truth": "capstone_artifact_metadata"
+    },
+    {
+      "alias_exists": false,
+      "alias_path": "results/experiment_5560_hardware_timing_provenance_hygiene.json",
+      "resolved_exists": true,
+      "resolved_path": "results/experiment_5560_hardware_and_timing_receipt_hygiene.json",
+      "source_of_truth": "capstone_artifact_metadata"
+    },
+    {
+      "alias_exists": false,
+      "alias_path": "results/experiment_5562_arc_rotated_target_levelup.json",
+      "resolved_exists": true,
+      "resolved_path": "results/experiment_5562_arc_fsm_live_levelup.json",
+      "source_of_truth": "capstone_artifact_metadata"
+    }
+  ],
+  "protected_file_checks": [
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:ae93f7c947d1064b1bacfec5412266e635c48a93f7f635084a04108724eb98a3"
+    },
+    {
+      "exists": true,
+      "git_status_clean": true,
+      "path": "scripts/research_conductor.py",
+      "sha256": "sha256:687de4f577fc252de24852f60de6f55f9a08495258659115753feb33c32f3ac6"
+    }
+  ],
+  "ptrm_slot_separate": true,
+  "random_seed": 5564,
+  "reproducibility_checksum": "sha256:fbbeaabea7fefd0c9584e73f3b0f00be20f059af922d44be9e7ab7c3ece99c7d",
+  "result_path": "results/experiment_5564_transition_v504.json",
+  "retired_continuations": [
+    {
+      "continuation": "automaton_gbnf_row_completion_vnext",
+      "retirement_reason": "Exp5552 row-completion support stayed 0.333333 and blocked the downstream smoke."
+    },
+    {
+      "continuation": "hard_soft_panel_v5_on_failed_row_path",
+      "retirement_reason": "Exp5553 and Exp5554 were conductor-gated by the failed row-completion prerequisite."
+    },
+    {
+      "continuation": "cross_family_csl_transfer_v3_on_exp5559_substrate",
+      "retirement_reason": "Exp5559 was flagged and all cross-family memory arms collapsed to the same score."
+    },
+    {
+      "continuation": "hardware_speedup_from_unmatched_receipts",
+      "retirement_reason": "Exp5560 had clean hygiene but no matched authenticated timing pairs."
+    },
+    {
+      "continuation": "same_scope_arc_null_levelup_retry",
+      "retirement_reason": "Exp5562 had live-path provenance but no offline reproduction and registry_delta=0."
+    }
+  ],
+  "roadmap_doc_task_range": "exp5564-exp5577",
+  "roadmap_task_ids": [
+    "exp5564-transition-v504",
+    "exp5565-v504-source-delta-ingestion",
+    "exp5566-exact-asp-fsm-near-miss-corpus",
+    "exp5567-gated-local-sota-solve-verify-asymmetry",
+    "exp5568-gated-verifier-coevolution-trigger",
+    "exp5569-causal-memory-policy-tournament",
+    "exp5570-spline-local-kan-online-energy",
+    "exp5571-gated-reset-free-sota-continual-harness",
+    "exp5572-gated-delayed-regression-promotion",
+    "exp5573-matched-sampler-hardware-continuity",
+    "exp5574-ptrm-stochastic-generator-stage1",
+    "exp5575-sge-anti-stagnation-live-precheck",
+    "exp5576-gated-sge-live-levelup",
+    "exp5577-v504-capstone-reconciliation"
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-11",
+  "schema": "carnot.experiment_5564.transition_v504.v1",
+  "self_learning_chain": [
+    {
+      "gate_field": "policy_ready",
+      "principle": "Memory policy must improve held-out exact success and pass rollback.",
+      "task_id": "exp5569-causal-memory-policy-tournament",
+      "unlocks": "exp5571-gated-reset-free-sota-continual-harness"
+    },
+    {
+      "gate_field": "kan_ready",
+      "principle": "KAN adaptation must be local, replay-safe, and rollback-safe.",
+      "task_id": "exp5570-spline-local-kan-online-energy",
+      "unlocks": "exp5571-gated-reset-free-sota-continual-harness"
+    },
+    {
+      "gate_field": "reset_free_harness_ready",
+      "principle": "Reset-free adaptation must pass before delayed promotion checks.",
+      "task_id": "exp5571-gated-reset-free-sota-continual-harness",
+      "unlocks": "exp5572-gated-delayed-regression-promotion"
+    },
+    {
+      "gate_field": "promotion_allowed",
+      "principle": "Promotion requires forward adaptation, retention, poisoning resistance, and rollback.",
+      "task_id": "exp5572-gated-delayed-regression-promotion",
+      "unlocks": "broad_continuous_self_learning_claim_only_if_true"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:ae93f7c947d1064b1bacfec5412266e635c48a93f7f635084a04108724eb98a3"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:31cddea75f51e5c3c2d4822cab426fa332c9e0be264bb58ea02e43dd1633ba4b"
+    },
+    {
+      "exists": true,
+      "path": "results/experiment_5563_capstone_v503.json",
+      "read_only": true,
+      "sha256": "sha256:efb1252ca0f35b8e0ed40cf34d12c4b2363e25dd3b58697374f6054f7eb3f66c"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:ebe3125a7afe439b46402bbd81808f9778c98cdfcf254f1f1288a83cb32893c5"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:56e9861ebc5bed0a9f884a61999aeabe4848f74c37f0ee0d8bb7cb45fee1361a"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/traceability.md",
+      "read_only": true,
+      "sha256": "sha256:0e4404473f316c668775b10f25dc224762d7a01def37dff29acca6b20d456d15"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:9a4edd0740060ccb6e5db73fe18643822fb749b4626cc7daaa16c8b6317bdfac"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:687de4f577fc252de24852f60de6f55f9a08495258659115753feb33c32f3ac6"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5564",
+    "SCENARIO-REPORT-5564",
+    "SCENARIO-REPORT-5564-BLOCKED-INPUT",
+    "SCENARIO-REPORT-5564-FIELD-PRINCIPLES"
+  ],
+  "status": "complete",
+  "terminal_records": [
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5550_transition_v503.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: archived .502 terminal evidence into .503 transition receipt; clean lanes are duration/substrate corrigendum, grammar preflight, exact FSM, CSL residue independence, sparse FSM repair, hardware receipt hygiene, and ARC clean precheck; blocked or flagged lanes are Exp5540 no hard/soft claim, Exp5543 CSL TAUTOLOGY, Exp5544 gated transfer skip, Exp5548 ARC honest null, hardware_speedup_claim=false, and arc_registry_delta=0; next_task_range=exp5550-exp5563.",
+      "loadable": true,
+      "sha256": "sha256:5dabb9b0db256e22868cc9e429aaa3c0fbe3fb966f6cb86bf6d79f7c83a76e62",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5550-transition-v503"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5551_v503_source_delta_ingestion.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: accepted 1 non-duplicate actionable V503 source delta and kept closed scopes closed",
+      "loadable": true,
+      "sha256": "sha256:313753507c390e026ecd03696df4f74805c7780370492489ece351765b583f56",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5551-v503-source-delta-ingestion"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5552_automaton_schema_row_completion_receipt.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "blocked: automaton_row_completion_not_ready_proposal_path_missing_required_rows",
+      "loadable": true,
+      "sha256": "sha256:3cdc0c425c8247ee1287f2fd553564fb90e8f6ffa75b63ecf8819b625eb8bc63",
+      "source_kind": "json_artifact",
+      "status": "blocked",
+      "task_id": "exp5552-automaton-schema-row-completion-receipt"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "sha256": "sha256:8d13347f8b6767df615bcefa03ad29930e0d7436c66809531e74aed48c51acef",
+      "source_kind": "json_artifact",
+      "status": "blocked",
+      "task_id": "exp5553-gated-gbnf-forced-sota-row-smoke"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5554_sota_hard_soft_panel_v4.json",
+      "conductor_evidence": "| 2026-07-10 23:28 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |",
+      "exists": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": false,
+      "sha256": null,
+      "source_kind": "conductor_skip",
+      "status": "blocked",
+      "task_id": "exp5554-gated-sota-hard-soft-panel-v4"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: exact ASP/FSM stable-model fixture ready with no LLM",
+      "loadable": true,
+      "sha256": "sha256:e1edbf1d570e43baf06fefcc366000c9c251edb42e608d093f8582afea9fffeb",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5555-asp-fsm-nonmonotonic-fixture"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5556_asp_fsm_sparse_repair_scale.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: asp_fsm_sparse_repair_descriptor_signal_ready_no_speedup_claim",
+      "loadable": true,
+      "sha256": "sha256:22b3ebf354b733650a0535d6e3214887f09481c9ee04614eee496bebb2adcaf2",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5556-gated-asp-fsm-sparse-repair-scale"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: csl_five_arm_tautology_corrigendum_v2_clean",
+      "loadable": true,
+      "sha256": "sha256:7b78e40021d580da20aff3a3e9777ab3e97042b0cf5db57820bc407d76674d78",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5557-csl-five-arm-tautology-corrigendum-v2"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5558_causal_write_manage_read_csl_memory.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: causal_write_manage_read_csl_memory_ready",
+      "loadable": true,
+      "sha256": "sha256:28bbcace6e9237af1dd8287fdad028b78c81e38ceb9a641a2ae69ec214577930",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5558-gated-causal-write-manage-read-csl-memory"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5559_cross_model_sota_csl_transfer_v2.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "blocked: causal_cross_model_sota_csl_transfer_v2_claim_not_allowed",
+      "loadable": true,
+      "sha256": "sha256:32710bbf667559accc5108a60c2986459d03c58f577399aea0eceff988869699",
+      "source_kind": "json_artifact",
+      "status": "blocked",
+      "task_id": "exp5559-gated-cross-model-sota-csl-transfer-v2"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5560_hardware_and_timing_receipt_hygiene.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: hardware and timing receipt hygiene clean; matched_timing_available=false; repeated_timing_pairs=0; hardware_speedup_claim=false",
+      "loadable": true,
+      "sha256": "sha256:343740628e5f4639aed73b652fdb9dcd9533dc620f29cabde087f3df7c9d47e4",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5560-hardware-and-timing-receipt-hygiene"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5561_arc_fsm_target_rotation_precheck.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: r11l L3 FSM ARC precheck ready; no solve claimed",
+      "loadable": true,
+      "sha256": "sha256:c4336e2885262234d53cd1dcd613a23a857f2bd5482be05827da78c7ca9b06f5",
+      "source_kind": "json_artifact",
+      "status": "complete",
+      "task_id": "exp5561-arc-fsm-target-rotation-precheck"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5562_arc_fsm_live_levelup.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "honest_null: r11l L3 bounded_budget_no_target_level_reproduction; entropy=3.218; repeat_rate=0.500; registry_delta=0",
+      "loadable": true,
+      "sha256": "sha256:f0fb2be33ce32d3302886b2cb041b7895af9e3a5243a4f83a22267b901b6c281",
+      "source_kind": "json_artifact",
+      "status": "honest_null",
+      "task_id": "exp5562-gated-arc-fsm-live-levelup"
+    },
+    {
+      "accounted": true,
+      "artifact_path": "results/experiment_5563_capstone_v503.json",
+      "conductor_evidence": null,
+      "exists": true,
+      "honest_verdict": "complete: .503 capstone read 13/14 expected artifacts; missing=0; flagged=1; blocked=2; skipped_by_gates=2; honest_nulls=1; structured_sota_claim_allowed=False; sota_hard_soft_claim_allowed=False; continuous_self_learning_evidence=True; csl_claim_allowed=False; cross_model_csl_claim_allowed=False; asp_sparse_repair_claim_allowed=True; hardware_speedup_claim=False; arc_registry_delta=0",
+      "loadable": true,
+      "sha256": "sha256:efb1252ca0f35b8e0ed40cf34d12c4b2363e25dd3b58697374f6054f7eb3f66c",
+      "source_kind": "json_artifact",
+      "status": "honest_null",
+      "task_id": "exp5563-v503-capstone-reconciliation"
+    }
+  ],
+  "terminal_records_missing": [],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5564_transition_v504.py -q --no-cov",
+      "detail": "6 passed in 3.94s",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5564_transition_v504.py -m pytest tests/python/test_experiment_5564_transition_v504.py -q --no-cov -n 0",
+      "detail": "6 passed in 2.17s",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5564_transition_v504.py --fail-under=100",
+      "detail": "100% coverage for python/carnot/experiment_5564_transition_v504.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "detail": "Interrupted after 471.08s at ~19%: 7 failed, 9458 passed, 8 skipped, 272 warnings; xdist worker crashed in pre-existing Z3 verifier path tests/python/test_adaptive.py::TestApplyToPipeline::test_pipeline_without_adaptive_weights_unchanged.",
+      "outcome": "failed_interrupted"
+    }
+  ],
+  "verifier_chain": [
+    {
+      "gate_field": "corpus_ready",
+      "principle": "A complete exact corpus must exist before live SOTA inference.",
+      "task_id": "exp5566-exact-asp-fsm-near-miss-corpus",
+      "unlocks": "exp5567-gated-local-sota-solve-verify-asymmetry"
+    },
+    {
+      "gate_field": "panel_complete",
+      "principle": "Co-evolution requires an authenticated complete local-SOTA panel.",
+      "task_id": "exp5567-gated-local-sota-solve-verify-asymmetry",
+      "unlocks": "exp5568-gated-verifier-coevolution-trigger"
+    },
+    {
+      "gate_field": "verifier_coevolution_required",
+      "principle": "The task emits a trigger from cached residuals, not silent retuning.",
+      "task_id": "exp5568-gated-verifier-coevolution-trigger",
+      "unlocks": "bounded_next_action_only"
+    }
+  ]
+}
