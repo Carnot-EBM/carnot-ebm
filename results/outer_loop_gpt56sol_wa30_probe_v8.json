@@ -1,0 +1,13 @@
+{
+  "game": "wa30",
+  "starting_level": 1,
+  "max_level_reached": 1,
+  "total_env_steps_used": 43,
+  "reproduction_verified": false,
+  "action_sequence": [],
+  "turn_and_move_bundled": true,
+  "turn_only_press_costs_timer_tick": null,
+  "revised_min_cost_route_length": 80,
+  "narrative": "After the exact 33-action level-1 prefix, the rendered level-2 frame showed the solid player at lattice cell (6,9) and all 64 orange timer cells. In the clean unobstructed probe, ACTION1 changed the prior direction and immediately moved the player to (7,9) while the timer fell 64 to 63; repeating ACTION1 moved to (8,9) and 62, changing to the opposite ACTION2 moved to (9,9) and 61, and a 90-degree change to ACTION3 moved to (9,8) and 60. A repeated ACTION3 then left the player at (9,8) only because the outlined block at (9,7) blocked translation, while still reducing the timer to 59; that collision-adjacent state was excluded from the turn-cost inference. Thus there was no separate stationary turn-only press in any unobstructed direction-change scenario: turn and movement are bundled for timer accounting, so the previously exhaustive optimistic 80-movement lower bound is unchanged and remains 16 above the 64-cell timer. Level 2 is therefore still infeasible under the confirmed mechanics, and no solve or reproduction gate was attempted.",
+  "solve_provenance": "live_agent_self_discovery"
+}
