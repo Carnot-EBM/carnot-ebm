@@ -860,6 +860,21 @@ games:
     unexplored: a push-not-carry interaction, or a genuinely different
     turn-vs-move cost split (e.g. reorienting costing 0 vs 1 timer cell
     independent of translating) -- neither tested yet.'
+  - 'v7 (results/outer_loop_gpt56sol_wa30_probe_v7.json): tested the remaining
+    push-not-carry hypothesis directly -- walked the player into an untouched,
+    not-yet-picked-up block''s cell without a prior ACTION5. The block only
+    contact-highlighted (outline color 4 -> 5) in place; neither player nor block
+    entered a new lattice cell, and the timer still ticked (60 -> 59) for the
+    blocked move. REFUTED: wa30 has no push mechanic, only explicit
+    carry-via-ACTION5. Combined with v6, all three follow-up hypotheses
+    (multi-carry, ACTION6/diagonal, push) are now empirically refuted -- the
+    80-move optimistic lower bound vs. the 64-cell L2 timer is confirmed under
+    every interaction mechanic tested. The ONLY remaining untested hypothesis is
+    a turn-vs-move cost split (does reorienting the player without translating
+    cost a separate timer tick from the translate itself, or could a route be
+    restructured to avoid redundant re-orientations the current 80-move Manhattan
+    model implicitly charges for). Absent that, wa30 L2 should be treated as a
+    confirmed dead end for this project''s live-agent mechanics.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2

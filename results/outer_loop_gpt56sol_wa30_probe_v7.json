@@ -1,0 +1,14 @@
+{
+  "game": "wa30",
+  "starting_level": 1,
+  "max_level_reached": 1,
+  "total_env_steps_used": 71,
+  "reproduction_verified": false,
+  "action_sequence": [],
+  "push_confirmed": false,
+  "push_chain_confirmed": null,
+  "push_direct_placement_confirmed": null,
+  "revised_min_cost_route_length": null,
+  "narrative": "I replayed the known 33-action level-1 prefix and inspected the returned level-2 rendered frame, then replayed the prefix in a fresh environment for the live push probe. Four ordinary movement actions brought the player to (9,8), directly below the untouched outlined block at (9,7); on the very next ACTION4 movement attempt toward that block, the player remained at (9,8), the block remained at (9,7), and the orange timer decreased from 60 to 59. The block outline changed from color 4 to contact-highlight color 5 in place, but neither the player nor block entered a new lattice cell, so walking into an untouched block does not push it. Push chaining and push-only placement are therefore inapplicable, and the confirmed 80-movement optimistic carry-model bound still exceeds the 64-cell timer; only a turn-versus-move cost split remains genuinely untested.",
+  "solve_provenance": "live_agent_self_discovery"
+}
