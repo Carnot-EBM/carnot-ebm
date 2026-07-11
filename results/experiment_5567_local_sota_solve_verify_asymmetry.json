@@ -1,0 +1,685 @@
+{
+  "MODEL_SPECS": [
+    {
+      "active_params_b": 3.0,
+      "family": "qwen",
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 4.0,
+      "family": "gemma",
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "total_params_b": 26.0
+    }
+  ],
+  "arms": [
+    "discrete_verdict",
+    "criteria_decomposition",
+    "granular_score",
+    "repeated_verdict_3x"
+  ],
+  "confidence_intervals": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "asymmetry_criteria_decomposition": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "asymmetry_discrete_verdict": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "asymmetry_granular_score": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "asymmetry_repeated_verdict_3x": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "solve_accuracy": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "asymmetry_criteria_decomposition": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "asymmetry_discrete_verdict": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "asymmetry_granular_score": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "asymmetry_repeated_verdict_3x": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      },
+      "solve_accuracy": {
+        "high": 0.0,
+        "low": 0.0,
+        "mid": 0.0,
+        "n_bootstrap": 500,
+        "paired_unit": "instance_id"
+      }
+    }
+  },
+  "corpus_path": "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json",
+  "device_receipt": {
+    "devices": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "gpu_offload_authenticated": true,
+    "llama_cpp_supports_gpu_offload": true,
+    "model_receipts": [
+      {
+        "devices": [
+          {
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ],
+        "duration_s": 64.881327,
+        "gpu_offload_authenticated": true,
+        "llama_cpp_supports_gpu_offload": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "offloaded_layer_count_from_backend_log": 41,
+        "returncode": 0,
+        "stderr_tail": "ama.generate: 13 prefix-match found but partial kv removal not supported, re-evaluating full prompt\nllama_perf_context_print:        load time =     648.59 ms\nllama_perf_context_print: prompt eval time =    3655.97 ms /  7633 tokens (    0.48 ms per token,  2087.82 tokens per second)\nllama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)\nllama_perf_context_print:       total time =    3657.69 ms /  7634 tokens\nllama_perf_context_print:    graphs reused =          0\nLlama.generate: 43 prefix-match found but partial kv removal not supported, re-evaluating full prompt\nllama_perf_context_print:        load time =     648.59 ms\nllama_perf_context_print: prompt eval time =    3671.88 ms /  7649 tokens (    0.48 ms per token,  2083.13 tokens per second)\nllama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)\nllama_perf_context_print:       total time =    3674.42 ms /  7650 tokens\nllama_perf_context_print:    graphs reused =          0\nLlama.generate: 43 prefix-match found but partial kv removal not supported, re-evaluating full prompt\nllama_perf_context_print:        load time =     648.59 ms\nllama_perf_context_print: prompt eval time =    3679.69 ms /  7632 tokens (    0.48 ms per token,  2074.09 tokens per second)\nllama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)\nllama_perf_context_print:       total time =    3682.31 ms /  7633 tokens\nllama_perf_context_print:    graphs reused =          0\nLlama.generate: 43 prefix-match found but partial kv removal not supported, re-evaluating full prompt\nllama_perf_context_print:        load time =     648.59 ms\nllama_perf_context_print: prompt eval time =    3676.40 ms /  7636 tokens (    0.48 ms per token,  2077.03 tokens per second)\nllama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)\nllama_perf_context_print:       total time =    3678.59 ms /  7637 tokens\nllama_perf_context_print:    graphs reused =          0\nLlama.generate: 54 prefix-match found but partial kv removal not supported, re-evaluating full prompt\nllama_perf_context_print:        load time =     648.59 ms\nllama_perf_context_print: prompt eval time =    3676.28 ms /  7636 tokens (    0.48 ms per token,  2077.10 tokens per second)\nllama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)\nllama_perf_context_print:       total time =    3678.57 ms /  7637 tokens\nllama_perf_context_print:    graphs reused =          0\nLlama.generate: 54 prefix-match found but partial kv removal not supported, re-evaluating full prompt\nllama_perf_context_print:        load time =     648.59 ms\nllama_perf_context_print: prompt eval time =    3680.06 ms /  7636 tokens (    0.48 ms per token,  2074.97 tokens per second)\nllama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)\nllama_perf_context_print:       total time =    3682.40 ms /  7637 tokens\nllama_perf_context_print:    graphs reused =          0\nLlama.generate: 13 prefix-match found but partial kv removal not supported, re-evaluating full prompt\nllama_perf_context_print:        load time =     648.59 ms\nllama_perf_context_print: prompt eval time =     641.48 ms /  1427 tokens (    0.45 ms per token,  2224.53 tokens per second)\nllama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)\nllama_perf_context_print:       total time =     643.89 ms /  1428 tokens\nllama_perf_context_print:    graphs reused =          0\n~llama_context:      CUDA0 compute buffer size is 246.5000 MiB, matches expectation of 246.5000 MiB\n~llama_context:  CUDA_Host compute buffer size is  13.0078 MiB, matches expectation of  13.0078 MiB\n\n",
+        "torch_cuda_available": true,
+        "torch_device_count": 1,
+        "worker_ok": true
+      },
+      {
+        "devices": [
+          {
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ],
+        "duration_s": 257.29234,
+        "gpu_offload_authenticated": true,
+        "llama_cpp_supports_gpu_offload": true,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "offloaded_layer_count_from_backend_log": 31,
+        "returncode": 0,
+        "stderr_tail": "sed\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nCUDA Graph id 1083 reused\nllama_perf_context_print:        load time =     516.26 ms\nllama_perf_context_print: prompt eval time =     561.89 ms /  1617 tokens (    0.35 ms per token,  2877.77 tokens per second)\nllama_perf_context_print:        eval time =   17818.58 ms /  2047 runs   (    8.70 ms per token,   114.88 tokens per second)\nllama_perf_context_print:       total time =   21891.28 ms /  3664 tokens\nllama_perf_context_print:    graphs reused =       2038\n~llama_context:      CUDA0 compute buffer size is 266.3125 MiB, matches expectation of 266.3125 MiB\n~llama_context:  CUDA_Host compute buffer size is  29.5068 MiB, matches expectation of  29.5068 MiB\n\n",
+        "torch_cuda_available": true,
+        "torch_device_count": 1,
+        "worker_ok": true
+      }
+    ],
+    "offloaded_layer_count_from_backend_log": 41,
+    "torch_cuda_available": true,
+    "torch_device_count": 2
+  },
+  "error_taxonomy": {
+    "parser_failure": 648,
+    "solve_json_parse_failure": 72,
+    "verifier_batch_missing_item": 126,
+    "verifier_json_parse_failure": 450
+  },
+  "exact_validator_is_oracle": true,
+  "experiment": 5567,
+  "experiment_id": "exp5567-local-sota-solve-verify-asymmetry",
+  "family_counts": {
+    "contradictions": 9,
+    "defaults_exceptions": 9,
+    "fsm_transition_consistency": 9,
+    "soft_preference_optimality": 9
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Names the exact headline GGUF models and local paths so Qwen plus Gemma cannot be silently replaced.",
+    "arms": "Names the four verifier prompt strategies being compared.",
+    "confidence_intervals": "Stores paired bootstrap intervals over independent instances.",
+    "corpus_path": "Pins the Exp 5566 exact-labeled source corpus.",
+    "device_receipt": "Preserves CUDA device identity and offload evidence for replay.",
+    "exact_validator_is_oracle": "Bare boolean disclosing the exact ASP/FSM validators are the correctness oracle.",
+    "family_counts": "Confirms the sample did not collapse onto one ASP/FSM family.",
+    "field_principles": "Keeps every headline and gate field annotated by the evidence boundary it protects.",
+    "gate_receipt": "Records cache, CUDA, offload, corpus, and no-legacy-model gates before interpreting model quality.",
+    "gpu_offload_authenticated": "Prevents CPU-only llama.cpp receipts from unlocking headline claims.",
+    "honest_verdict": "Provides a terminal status that distinguishes complete, blocked cache, blocked CUDA/offload, and failed parsing states.",
+    "inference_duration_s": "Records actual model inference wall time rather than artifact formatting time.",
+    "inference_substrate": "Declares live local SOTA GGUF inference plus exact validator scoring.",
+    "live_model_invoked": "Separates real local inference from blocked preflight artifacts.",
+    "mcnemar_results": "Stores paired solve-versus-verify discordance tests.",
+    "model_cache_paths": "Pins resolved cache files without causing downloads.",
+    "n_independent_instances": "Defines the paired statistical denominator.",
+    "panel_complete": "Only an authenticated statistically valid panel may unlock the co-evolution audit.",
+    "parser_failure_count": "Keeps malformed structured responses visible.",
+    "raw_response_hash": "Preserves response provenance without relying on prose summaries.",
+    "solve_accuracy_by_model": "Measures direct generation success under the exact validator.",
+    "solve_verify_asymmetry": "Reports solve accuracy minus verifier balanced accuracy without implying a moat claim.",
+    "verifier_is_oracle": "Bare boolean disclosing the LLM verifier is oracle-distinct and not trusted as authority.",
+    "verifier_metrics_by_model_and_arm": "Measures verifier balanced accuracy, FPR, and FNR against the exact oracle labels."
+  },
+  "gate_receipt": {
+    "blocked_reason": "",
+    "cache_gate_passed": true,
+    "cached_pair_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "cached_sota_pair_called": true,
+    "corpus_gate_passed": true,
+    "legacy_cpu_model_substituted": false,
+    "offload_gate_passed": true,
+    "selected_headline_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  },
+  "gpu_offload_authenticated": true,
+  "honest_verdict": "complete: authenticated paired local SOTA solve-versus-verify panel; no sub-percent effect claims",
+  "inference_duration_s": 325.348864,
+  "inference_substrate": "live_local_sota_gguf_plus_exact_validator",
+  "latency_by_model_and_phase": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "solve_latency_s": 2.083858,
+      "total_latency_s": 48.602454,
+      "verify_latency_s": 46.518596
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "solve_latency_s": 78.483219,
+      "total_latency_s": 246.818658,
+      "verify_latency_s": 168.335439
+    }
+  },
+  "legacy_smoke_models_used": [],
+  "live_model_invoked": true,
+  "mcnemar_results": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "criteria_decomposition": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      },
+      "discrete_verdict": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      },
+      "granular_score": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      },
+      "repeated_verdict_3x": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "criteria_decomposition": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      },
+      "discrete_verdict": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      },
+      "granular_score": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      },
+      "repeated_verdict_3x": {
+        "b_solve_correct_verify_wrong": 0,
+        "c_solve_wrong_verify_correct": 0,
+        "discordant_pairs": 0,
+        "n_pairs": 36,
+        "p_value_exact": 1.0,
+        "paired_unit": "instance_id"
+      }
+    }
+  },
+  "milestone": "2026.07.504",
+  "model_cache_paths": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+  },
+  "model_family_deltas": {
+    "gemma_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "qwen_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "solve_accuracy_qwen_minus_gemma": 0.0,
+    "verifier_balanced_accuracy_qwen_minus_gemma_by_arm": {
+      "criteria_decomposition": 0.0,
+      "discrete_verdict": 0.0,
+      "granular_score": 0.0,
+      "repeated_verdict_3x": 0.0
+    }
+  },
+  "model_specs": [
+    {
+      "active_params_b": 3.0,
+      "family": "qwen",
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 4.0,
+      "family": "gemma",
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "total_params_b": 26.0
+    }
+  ],
+  "n_candidate_labels": 576,
+  "n_independent_instances": 36,
+  "panel_complete": true,
+  "parser_failure_count": 648,
+  "random_seed": 5567,
+  "raw_response_hash": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF:solve_batch::batch00": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:solve_batch::batch01": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:solve_batch::batch02": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:solve_batch::batch03": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch00::criteria_decomposition::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch00::discrete_verdict::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch00::granular_score::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch00::repeated_verdict_3x::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch00::repeated_verdict_3x::1": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch00::repeated_verdict_3x::2": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch01::criteria_decomposition::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch01::discrete_verdict::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch01::granular_score::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch01::repeated_verdict_3x::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch01::repeated_verdict_3x::1": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch01::repeated_verdict_3x::2": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch02::criteria_decomposition::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch02::discrete_verdict::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch02::granular_score::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch02::repeated_verdict_3x::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch02::repeated_verdict_3x::1": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch02::repeated_verdict_3x::2": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch03::criteria_decomposition::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch03::discrete_verdict::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch03::granular_score::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch03::repeated_verdict_3x::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch03::repeated_verdict_3x::1": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/Qwen3.6-35B-A3B-GGUF:verify_batch::batch03::repeated_verdict_3x::2": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:solve_batch::batch00": "90b5fa106c999320147e18d008e2bd977af0e77d06f405303fc07927221a4f24",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:solve_batch::batch01": "b806a38d0d02b644c848194a78af1f5f35fdaa0056a617a36c2089f70fa2b277",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:solve_batch::batch02": "412a5ae695941c3d62a94b1767f396a8e29ad461784818fc4915d9ee38c9c937",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:solve_batch::batch03": "21b3826e55cf27483372535426a04fa362b3011f8b84bd8d58df0ff695f1ac41",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch00::criteria_decomposition::0": "27d896a97ee03179dce80e4a9b62a3e86bd62d2551e3e8be06ee5cb89887c3ed",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch00::discrete_verdict::0": "26202261eadacd3afb4f5059cc00deef8817de9866758fbbdf9b370b3b2f0a11",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch00::granular_score::0": "00381c18fbb2e2a00bfb61feddf0fb6a84b4a0f7c33de97f4de66e4cd058b74a",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch00::repeated_verdict_3x::0": "154cbea425f07a6ca3aa6f499ff5bb0f2aeb7fe48fbdb8d7ab291ae15ad41198",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch00::repeated_verdict_3x::1": "985f5f5dcea32ae8f79fa4208b4fd6968fc827a177baea11f680a507d9cdda37",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch00::repeated_verdict_3x::2": "67a15eb74915c87f31e66ed8cd3f602ac74971e29067bfa676132c552ea1b008",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch01::criteria_decomposition::0": "3b9b767dcea2ac1b6a96bed34f5faeb553da81a1da805133ec4ef72e1269b5ed",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch01::discrete_verdict::0": "37af640b0e48f67ded9686d80151e031cd1abf0c151ace8dd5a47f32a3052a7e",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch01::granular_score::0": "09e4b6a7e4a8eeb9a6172680c2d66acc32c697707f7dc45e88ffebd78d8b5c97",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch01::repeated_verdict_3x::0": "b19b659dc90f215ee231559ad5d3d67af6f928b445dad47d39a003f5090c4f0a",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch01::repeated_verdict_3x::1": "8f04136f98ed679491e1747eec3c4df52557c5ae7b59d5ee12ea3fb5b3773bc7",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch01::repeated_verdict_3x::2": "9eefdac6de90370d600a7c96bab50de61e9935abc6415d46c048d4ceacea37a0",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch02::criteria_decomposition::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch02::discrete_verdict::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch02::granular_score::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch02::repeated_verdict_3x::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch02::repeated_verdict_3x::1": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch02::repeated_verdict_3x::2": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch03::criteria_decomposition::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch03::discrete_verdict::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch03::granular_score::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch03::repeated_verdict_3x::0": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch03::repeated_verdict_3x::1": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unsloth/gemma-4-26B-A4B-it-GGUF:verify_batch::batch03::repeated_verdict_3x::2": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "repeat_pooling_policy": "repeated calls are aggregated per candidate before metrics; independent_unit=instance_id",
+  "reproducibility_checksum": "89bf7e7bf0ec96166e95d11a738dbbc7c3c18a6b102f8fd765e9adc01132ba77",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5567_local_sota_solve_verify_asymmetry.json",
+  "run_date": "2026-07-11",
+  "sampled_instance_ids": [
+    "defaults_exceptions_00",
+    "defaults_exceptions_01",
+    "defaults_exceptions_02",
+    "defaults_exceptions_03",
+    "defaults_exceptions_04",
+    "defaults_exceptions_05",
+    "defaults_exceptions_06",
+    "defaults_exceptions_07",
+    "defaults_exceptions_08",
+    "contradictions_00",
+    "contradictions_01",
+    "contradictions_02",
+    "contradictions_03",
+    "contradictions_04",
+    "contradictions_05",
+    "contradictions_06",
+    "contradictions_07",
+    "contradictions_08",
+    "soft_preference_optimality_00",
+    "soft_preference_optimality_01",
+    "soft_preference_optimality_02",
+    "soft_preference_optimality_03",
+    "soft_preference_optimality_04",
+    "soft_preference_optimality_05",
+    "soft_preference_optimality_06",
+    "soft_preference_optimality_07",
+    "soft_preference_optimality_08",
+    "fsm_transition_consistency_00",
+    "fsm_transition_consistency_01",
+    "fsm_transition_consistency_02",
+    "fsm_transition_consistency_03",
+    "fsm_transition_consistency_04",
+    "fsm_transition_consistency_05",
+    "fsm_transition_consistency_06",
+    "fsm_transition_consistency_07",
+    "fsm_transition_consistency_08"
+  ],
+  "schema": "carnot.experiment_5567.local_sota_solve_verify_asymmetry.v504",
+  "solve_accuracy_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "independent_unit": "instance_id",
+      "n": 36,
+      "parser_failures": 36
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "independent_unit": "instance_id",
+      "n": 36,
+      "parser_failures": 36
+    }
+  },
+  "solve_verify_asymmetry": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "criteria_decomposition": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      },
+      "discrete_verdict": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      },
+      "granular_score": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      },
+      "repeated_verdict_3x": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "criteria_decomposition": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      },
+      "discrete_verdict": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      },
+      "granular_score": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      },
+      "repeated_verdict_3x": {
+        "negative_means_verification_easier": true,
+        "solve_accuracy": 0.0,
+        "solve_minus_verify_balanced_accuracy": 0.0,
+        "verifier_balanced_accuracy": 0.0
+      }
+    }
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5567",
+    "SCENARIO-VERIFY-5567",
+    "REQ-VERIFY-5566"
+  ],
+  "tests_run": [],
+  "token_usage_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "completion_tokens": 0,
+      "prompt_tokens": 101790,
+      "total_tokens": 101790
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "completion_tokens": 20943,
+      "prompt_tokens": 65349,
+      "total_tokens": 86292
+    }
+  },
+  "verifier_is_oracle": false,
+  "verifier_metrics_by_model_and_arm": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "criteria_decomposition": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 72,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 1,
+        "tn": 0,
+        "tp": 0
+      },
+      "discrete_verdict": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 72,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 1,
+        "tn": 0,
+        "tp": 0
+      },
+      "granular_score": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 72,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 1,
+        "tn": 0,
+        "tp": 0
+      },
+      "repeated_verdict_3x": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 216,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 3,
+        "tn": 0,
+        "tp": 0
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "criteria_decomposition": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 72,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 1,
+        "tn": 0,
+        "tp": 0
+      },
+      "discrete_verdict": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 72,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 1,
+        "tn": 0,
+        "tp": 0
+      },
+      "granular_score": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 72,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 1,
+        "tn": 0,
+        "tp": 0
+      },
+      "repeated_verdict_3x": {
+        "accuracy": 0.0,
+        "balanced_accuracy": 0.0,
+        "false_negative_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "fn": 36,
+        "fp": 36,
+        "independent_unit": "instance_id",
+        "n_candidates": 72,
+        "n_independent_instances": 36,
+        "n_repeated_calls": 216,
+        "parser_failures": 72,
+        "repeat_calls_per_candidate": 3,
+        "tn": 0,
+        "tp": 0
+      }
+    }
+  }
+}
