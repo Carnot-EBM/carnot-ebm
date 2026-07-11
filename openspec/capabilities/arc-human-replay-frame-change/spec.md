@@ -2022,7 +2022,75 @@ Required field principles:
 - `inference_substrate`: principle "must equal offline_arcade_live_agent_runtime_self_discovery_no_llm."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
 
+### REQ-ARC-FCP-5561: FSM Target Rotation Precheck
+
+Experiment 5561 SHALL write
+`results/experiment_5561_arc_fsm_target_rotation_precheck.json` before the
+next credit-bearing ARC live attempt after Exp5548's honest no-bank null. The
+workflow SHALL read `ops/arc_solve_registry.yaml` before selecting a target,
+SHALL reject target levels already reproduced by the live mechanism, and SHALL
+avoid the recent Exp5548 no-bank target unless a registry or ops-document reason
+explicitly justifies retrying it.
+
+The workflow SHALL build or reuse a simple finite-state action abstraction that
+is reachable through the live candidate-router hook, SHALL enable
+repeated-coordinate suppression before computing action entropy, and SHALL NOT
+inspect hidden game source, run exhaustive offline ground-truth BFS, or build a
+hand per-game calibration solver. The precheck is no-credit: it SHALL carry
+`solve_provenance=live_agent_self_discovery`, SHALL invoke no LLM, and SHALL
+claim readiness only when registry, target-rotation, FSM abstraction,
+suppression, and entropy gates all pass.
+
+The result artifact SHALL include `llm_invoked`,
+`no_model_specs_required`, `selected_game`, `selected_level`,
+`registry_precheck_passed`, `already_reproduced`,
+`recent_no_bank_targets_avoided`, `fsm_action_abstraction_ready`,
+`repeated_coordinate_suppression_enabled`, `action_entropy_precheck`,
+`solve_provenance`, `arc_fsm_precheck_ready`, `tests_added_or_reused`,
+`field_principles`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `llm_invoked`: principle "bare bool false proving the FSM target rotation precheck did not invoke any LLM."
+- `no_model_specs_required`: principle "bare bool true because the declared no-LLM precheck substrate has no model invocation to name."
+- `selected_game`: principle "registry-safe game id selected for the next FSM-guided live attempt, or empty string when blocked."
+- `selected_level`: principle "adjacent unreproduced frontier level label selected after registry and recent no-bank target checks."
+- `registry_precheck_passed`: principle "bare bool proving the registry was read and the selected level is not already reproduced."
+- `already_reproduced`: principle "must remain false because duplicate live levels cannot satisfy the ARC standing progress floor."
+- `recent_no_bank_targets_avoided`: principle "list of recent no-bank target markers rejected before selection unless an explicit retry reason exists."
+- `fsm_action_abstraction_ready`: principle "bare bool proving the FSM action abstraction is live-router reachable and emits bounded action phases."
+- `repeated_coordinate_suppression_enabled`: principle "bare bool proving repeated-coordinate suppression is active before action entropy is trusted."
+- `action_entropy_precheck`: principle "bare float Shannon entropy over suppressed FSM action/coordinate choices before the live attempt."
+- `solve_provenance`: principle "must equal live_agent_self_discovery even though this artifact claims no solve."
+- `arc_fsm_precheck_ready`: principle "bare bool true only when registry, rotation, FSM abstraction, suppression, entropy, and no-LLM gates pass."
+- `tests_added_or_reused`: principle "list of focused tests covering the Exp5561 schema, target rotation, FSM reachability, suppression, and artifact write."
+- `field_principles`: principle "mapping of one-line principle annotations for each headline and gate field."
+- `inference_substrate`: principle "must equal arc_live_path_precheck_no_llm."
+- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
+
 ## Scenarios
+
+### SCENARIO-ARC-FCP-5561: FSM Target Rotation Avoids Recent No-Bank Target
+
+Given Exp5548 selected `g50t:L3`, banked no reproduced levels, and recorded
+`registry_delta=0`
+And the registry records multiple adjacent unreproduced frontier targets
+When experiment 5561 runs the FSM target rotation precheck
+Then it rejects `g50t:L3` as a recent no-bank target, selects a different
+registry-safe adjacent frontier target, records
+`recent_no_bank_targets_avoided=["g50t:L3"]`, and writes
+`results/experiment_5561_arc_fsm_target_rotation_precheck.json` without a
+solve claim.
+
+Given the FSM action abstraction receives repeated click coordinates from
+multiple finite-state phases
+When experiment 5561 applies repeated-coordinate suppression through the live
+candidate-router hook
+Then selected FSM actions cover multiple coordinates, `action_entropy_precheck`
+is a float above the readiness threshold,
+`repeated_coordinate_suppression_enabled=true`, and
+`arc_fsm_precheck_ready=true` only when no LLM was invoked and all registry and
+provenance gates pass.
 
 ### SCENARIO-ARC-FCP-5548: Clean Live Attempt Banks Only Reproduced Self-Discovery
 

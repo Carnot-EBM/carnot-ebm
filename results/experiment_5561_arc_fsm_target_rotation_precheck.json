@@ -1,0 +1,331 @@
+{
+  "action_entropy_precheck": 2.0,
+  "already_reproduced": false,
+  "arc_fsm_precheck_ready": true,
+  "duration_s": 0.07094056997448206,
+  "experiment": "experiment_5561_arc_fsm_target_rotation_precheck",
+  "experiment_id": 5561,
+  "field_principles": {
+    "action_entropy_precheck": "bare float Shannon entropy over suppressed FSM action/coordinate choices before the live attempt.",
+    "already_reproduced": "must remain false because duplicate live levels cannot satisfy the ARC standing progress floor.",
+    "arc_fsm_precheck_ready": "bare bool true only when registry, rotation, FSM abstraction, suppression, entropy, and no-LLM gates pass.",
+    "field_principles": "mapping of one-line principle annotations for each headline and gate field.",
+    "fsm_action_abstraction_ready": "bare bool proving the FSM action abstraction is live-router reachable and emits bounded action phases.",
+    "honest_verdict": "one-line verdict starting complete: or blocked: without claiming a solve.",
+    "inference_substrate": "must equal arc_live_path_precheck_no_llm.",
+    "llm_invoked": "bare bool false proving the FSM target rotation precheck did not invoke any LLM.",
+    "no_model_specs_required": "bare bool true because the declared no-LLM precheck substrate has no model invocation to name.",
+    "recent_no_bank_targets_avoided": "list of recent no-bank target markers rejected before selection unless an explicit retry reason exists.",
+    "registry_precheck_passed": "bare bool proving the registry was read and the selected level is not already reproduced.",
+    "repeated_coordinate_suppression_enabled": "bare bool proving repeated-coordinate suppression is active before action entropy is trusted.",
+    "selected_game": "registry-safe game id selected for the next FSM-guided live attempt, or empty string when blocked.",
+    "selected_level": "adjacent unreproduced frontier level label selected after registry and recent no-bank target checks.",
+    "solve_provenance": "must equal live_agent_self_discovery even though this artifact claims no solve.",
+    "tests_added_or_reused": "list of focused tests covering the Exp5561 schema, target rotation, FSM reachability, suppression, and artifact write."
+  },
+  "fsm_action_abstraction_ready": true,
+  "fsm_probe": {
+    "diagnostics": {
+      "avoid_coordinates": [],
+      "fsm_phase_counts": {
+        "effect_transition": 1,
+        "observe_select": 1,
+        "reset_reinduce": 1,
+        "verify_candidate": 1
+      },
+      "fsm_phase_order": [
+        "observe_select",
+        "effect_transition",
+        "verify_candidate",
+        "reset_reinduce"
+      ],
+      "selected_signatures": [
+        "A6@28,23",
+        "A6@34,23",
+        "A6@40,23",
+        "A6@46,23"
+      ],
+      "selected_strategy_count": 4,
+      "selection_changed_by_suppression": true,
+      "strategies_used": [
+        "salience_first",
+        "action_effect_memory",
+        "verifier_router_candidate_ranking",
+        "conservative_reset_reinduction"
+      ],
+      "strategy_portfolio": [
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "salience_first",
+          "principle": "try visually salient live candidates first without spending the whole budget on one coordinate.",
+          "score_field": "salience_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "action_effect_memory",
+          "principle": "prefer candidates with observed or cached action-effect evidence.",
+          "score_field": "effect_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "verifier_router_candidate_ranking",
+          "principle": "rank compatible candidates by verifier-style confidence with stable fallback order.",
+          "score_field": "verifier_score"
+        },
+        {
+          "bound": 1,
+          "live_path_hook": "candidate_router.rank",
+          "name": "conservative_reset_reinduction",
+          "principle": "reserve a small budget for reset or reinduction-safe candidates after local evidence stalls.",
+          "score_field": "reset_score"
+        }
+      ],
+      "suppressed_coordinate_count": 2,
+      "suppression_enabled": true,
+      "unsuppressed_signatures": [
+        "A6@28,23",
+        "A6@28,23",
+        "A6@28,23",
+        "A6@46,23"
+      ]
+    },
+    "selected_rows": [
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 23
+        },
+        "effect_score": 1.0,
+        "fsm_action": "observe_select:A6@28,23",
+        "fsm_phase": "observe_select",
+        "fsm_state": 0,
+        "label": "observe-top",
+        "reset_score": 0.0,
+        "salience_score": 10.0,
+        "verifier_score": 1.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 34,
+          "y": 23
+        },
+        "effect_score": 8.0,
+        "fsm_action": "effect_transition:A6@34,23",
+        "fsm_phase": "effect_transition",
+        "fsm_state": 1,
+        "label": "effect-transition",
+        "reset_score": 1.0,
+        "salience_score": 7.0,
+        "verifier_score": 3.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 40,
+          "y": 23
+        },
+        "effect_score": 3.0,
+        "fsm_action": "verify_candidate:A6@40,23",
+        "fsm_phase": "verify_candidate",
+        "fsm_state": 2,
+        "label": "verify-candidate",
+        "reset_score": 1.0,
+        "salience_score": 6.0,
+        "verifier_score": 8.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 46,
+          "y": 23
+        },
+        "effect_score": 4.0,
+        "fsm_action": "reset_reinduce:A6@46,23",
+        "fsm_phase": "reset_reinduce",
+        "fsm_state": 3,
+        "label": "reset-reinduce",
+        "reset_score": 9.0,
+        "salience_score": 5.0,
+        "verifier_score": 4.0
+      }
+    ],
+    "suppressed_coordinate_count": 2,
+    "unsuppressed_selected_rows": [
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 23
+        },
+        "effect_score": 1.0,
+        "fsm_action": "observe_select:A6@28,23",
+        "fsm_phase": "observe_select",
+        "fsm_state": 0,
+        "label": "observe-top",
+        "reset_score": 0.0,
+        "salience_score": 10.0,
+        "verifier_score": 1.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 23
+        },
+        "effect_score": 10.0,
+        "fsm_action": "effect_transition:A6@28,23",
+        "fsm_phase": "effect_transition",
+        "fsm_state": 1,
+        "label": "effect-top-same-coordinate",
+        "reset_score": 0.0,
+        "salience_score": 9.0,
+        "verifier_score": 2.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 28,
+          "y": 23
+        },
+        "effect_score": 2.0,
+        "fsm_action": "verify_candidate:A6@28,23",
+        "fsm_phase": "verify_candidate",
+        "fsm_state": 2,
+        "label": "verify-top-same-coordinate",
+        "reset_score": 0.0,
+        "salience_score": 8.0,
+        "verifier_score": 10.0
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 46,
+          "y": 23
+        },
+        "effect_score": 4.0,
+        "fsm_action": "reset_reinduce:A6@46,23",
+        "fsm_phase": "reset_reinduce",
+        "fsm_state": 3,
+        "label": "reset-reinduce",
+        "reset_score": 9.0,
+        "salience_score": 5.0,
+        "verifier_score": 4.0
+      }
+    ]
+  },
+  "honest_verdict": "complete: r11l L3 FSM ARC precheck ready; no solve claimed",
+  "inference_substrate": "arc_live_path_precheck_no_llm",
+  "input_artifacts": [
+    "ops/arc_solve_registry.yaml",
+    "results/experiment_5548_arc_clean_live_levelup.json"
+  ],
+  "live_path_reachability": {
+    "checks": {
+      "e3_policy_accepts_candidate_router": true,
+      "fsm_router_has_rank_method": true,
+      "rich_action_candidates_accepts_candidate_router": true,
+      "stepwise_explorer_accepts_candidate_router": true
+    },
+    "ok": true
+  },
+  "llm_invoked": false,
+  "milestone": "2026.07.503",
+  "no_model_specs_required": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "exp5548_present": true,
+    "game_source_read": false,
+    "hand_built_per_game_adapter_used": false,
+    "llm_invoked": false,
+    "model_specs_present": false,
+    "offline_bfs_used": false,
+    "registry_present": true,
+    "solve_claimed": false,
+    "spec_has_req_5561": true
+  },
+  "prior_levels_reproduced": 2,
+  "random_seed": 5561,
+  "recent_no_bank_targets_avoided": [
+    "g50t:L3"
+  ],
+  "registry_precheck_passed": true,
+  "registry_total_levels": 69,
+  "repeated_coordinate_suppression_enabled": true,
+  "reproducibility_checksum": "sha256:0f2c863d8c44fe6a0b47e8947ea0cd388623687ba5794e263a8a5afd3ac3e812",
+  "result_path": "results/experiment_5561_arc_fsm_target_rotation_precheck.json",
+  "schema": "carnot.experiment_5561_arc_fsm_target_rotation_precheck.v1",
+  "selected_game": "r11l",
+  "selected_level": "L3",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5561",
+    "SCENARIO-ARC-FCP-5561"
+  ],
+  "status": "complete",
+  "target_audit": {
+    "g50t:L3": {
+      "adjacent_frontier": true,
+      "already_reproduced": false,
+      "decision": "rejected_recent_no_bank_target",
+      "game": "g50t",
+      "recent_no_bank_target": true,
+      "registry_depth": 2,
+      "target_level": 3
+    },
+    "r11l:L3": {
+      "adjacent_frontier": true,
+      "already_reproduced": false,
+      "decision": "selected",
+      "game": "r11l",
+      "recent_no_bank_target": false,
+      "registry_depth": 2,
+      "target_level": 3
+    }
+  },
+  "target_selection": {
+    "already_reproduced": false,
+    "blocked": false,
+    "prior_levels_reproduced": 2,
+    "recent_no_bank_targets_avoided": [
+      "g50t:L3"
+    ],
+    "registry_precheck_passed": true,
+    "registry_total_levels": 69,
+    "selected_game": "r11l",
+    "selected_level": "L3",
+    "selection_reason": "first_adjacent_target_after_recent_no_bank_rotation",
+    "target_audit": {
+      "g50t:L3": {
+        "adjacent_frontier": true,
+        "already_reproduced": false,
+        "decision": "rejected_recent_no_bank_target",
+        "game": "g50t",
+        "recent_no_bank_target": true,
+        "registry_depth": 2,
+        "target_level": 3
+      },
+      "r11l:L3": {
+        "adjacent_frontier": true,
+        "already_reproduced": false,
+        "decision": "selected",
+        "game": "r11l",
+        "recent_no_bank_target": false,
+        "registry_depth": 2,
+        "target_level": 3
+      }
+    },
+    "target_level": 3
+  },
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5561_arc_fsm_target_rotation_precheck.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5561_arc_fsm_target_rotation_precheck.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5561_arc_fsm_target_rotation_precheck.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
