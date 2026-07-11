@@ -1,0 +1,590 @@
+{
+  "arc_registry_before_after": {
+    "after": 75,
+    "before": 75,
+    "capstone_delta": 0,
+    "source_path": "ops/arc_solve_registry.yaml"
+  },
+  "arc_registry_delta": 0,
+  "arc_solve_provenance": {
+    "ordinary_arc": {
+      "claim_allowed": false,
+      "live_path_ready": false,
+      "offline_reproduced": false,
+      "registry_delta_counted": 0,
+      "registry_delta_raw": 0,
+      "solve_provenance": "live_agent_self_discovery",
+      "source_artifacts": [
+        "results/experiment_5575_sge_anti_stagnation_live_precheck.json",
+        "results/experiment_5576_gated_sge_live_levelup.json"
+      ],
+      "target_unsolved": true
+    },
+    "ptrm": {
+      "counts_as_ordinary_arc_slot": false,
+      "offline_reproduced": false,
+      "registry_delta_counted": 0,
+      "solve_provenance": "development_proxy",
+      "source_artifact": "results/experiment_5574_ptrm_stochastic_generator_stage1.json"
+    }
+  },
+  "artifact_metadata": {
+    "results/experiment_5564_transition_v504.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:ade0f23e9bbbdb8b596f4dc2e67398cf9c7d8ecef36aea9e65f6d200b2bfd173"
+    },
+    "results/experiment_5565_v504_source_delta_ingestion.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:c10899900614d1ed15a2786e3aaf1ec1c5ea9723d8925c58e5f36112201893f9"
+    },
+    "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:5a9a2f9d7ace916a1e5bdba417b8503bf9cd858398dfa71ee6f419a46cd3855e"
+    },
+    "results/experiment_5567_local_sota_solve_verify_asymmetry.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:d0b099bea5c5846747215c5e088d16145066c889d145fa8defd80a119699dff2"
+    },
+    "results/experiment_5568_verifier_coevolution_trigger.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:8cbba4dd6fbf0877628e46faa6e44dc535e0cc3a4cb7c9ca6b872c04507c9862"
+    },
+    "results/experiment_5569_causal_memory_policy_tournament.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:bde9f955bab82cf114e25b81810168ffb2806437286d1d4b998a50f713dbeace"
+    },
+    "results/experiment_5570_spline_local_kan_online_energy.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:8b518b45b53ce5cf8c4bd17d2d93f114e8c2f08a3ed11ff93a5218429b2fc053"
+    },
+    "results/experiment_5571_reset_free_sota_continual_harness.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:bff9853cafaaeb4707c93cf45adb4ff8d3354a991c528be275e7382fee18af83"
+    },
+    "results/experiment_5572_gated_delayed_regression_promotion.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:ed07d2598fc900f07a7f8940c8298d8ac478322ae224e8f6498b2ddb1f24e8e9"
+    },
+    "results/experiment_5573_matched_sampler_hardware_continuity.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e"
+    },
+    "results/experiment_5573_matched_sampler_hardware_continuity_raw_rows.json": {
+      "exists": true,
+      "json_type": "list",
+      "length": 12,
+      "loadable": true,
+      "sha256": "sha256:010211a89166c39a7026017b863e5e7c6a0d6c41f8d13dd112f12a95e20f3130"
+    },
+    "results/experiment_5574_ptrm_stochastic_generator_stage1.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:c06e7a91c9e344307322ed15b8665ca0cff4642fe5298fe2635ab7ee36c59a84"
+    },
+    "results/experiment_5575_sge_anti_stagnation_live_precheck.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:3d9d916503839ee1d5da8fe95c61bb8fe5189b9535af01ffc346a2ee3d5ec860"
+    },
+    "results/experiment_5576_gated_sge_live_levelup.json": {
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:882b1bcf1ec50e7ed54574004b0c4c1eb538ed8603988d64a4c0c95414d0e24a"
+    }
+  },
+  "blocked_lanes": [
+    {
+      "claim_boundary": "Reset-free promotion is blocked because live local inference/offload was not authenticated.",
+      "classification": "blocked",
+      "evidence": {
+        "continual_harness_candidate": false,
+        "honest_verdict": "blocked_no_cuda_offload",
+        "live_model_invoked": false
+      },
+      "lane": "reset_free_continual_harness",
+      "source_artifacts": [
+        "results/experiment_5571_reset_free_sota_continual_harness.json"
+      ]
+    },
+    {
+      "claim_boundary": "SGE precheck reached the path but did not make the live path ready.",
+      "classification": "blocked",
+      "evidence": {
+        "live_path_reachable": true,
+        "live_path_ready": false,
+        "target_unsolved": true
+      },
+      "lane": "sge_live_path_precheck",
+      "source_artifacts": [
+        "results/experiment_5575_sge_anti_stagnation_live_precheck.json"
+      ]
+    }
+  ],
+  "bounded_lanes": [
+    {
+      "claim_boundary": "The local SOTA panel ran, but equal/parser-failure collapse is not a positive asymmetry.",
+      "classification": "bounded",
+      "evidence": {
+        "panel_complete": true,
+        "parser_failure_count": 648,
+        "solve_verify_asymmetry_supported": false
+      },
+      "lane": "solve_verify_panel_measured_null",
+      "source_artifacts": [
+        "results/experiment_5567_local_sota_solve_verify_asymmetry.json"
+      ]
+    },
+    {
+      "claim_boundary": "Matched CPU/CUDA sampler-quality rows landed, but speedup ratios do not support a hardware speedup headline.",
+      "classification": "bounded",
+      "evidence": {
+        "board_speedup_claimed": false,
+        "hardware_speedup_claim_allowed": false,
+        "successful_matched_pairs": 6
+      },
+      "lane": "matched_sampler_quality_no_speedup",
+      "source_artifacts": [
+        "results/experiment_5573_matched_sampler_hardware_continuity.json",
+        "results/experiment_5573_matched_sampler_hardware_continuity_raw_rows.json"
+      ]
+    }
+  ],
+  "claim_boundaries": [
+    "Null, blocked, flagged, and skipped results are terminal evidence but not positive claims.",
+    "Solve-versus-verify asymmetry is not supported because the panel measured equal collapse rather than verification lift.",
+    "Verifier co-evolution is required by the clean cached residual audit.",
+    "Memory policy is not promoted because Exp5569 is adversarial-flagged.",
+    "KAN online energy is promoted only as bounded exact-feedback energy-parameter learning.",
+    "Broad CSL is false because memory policy, reset-free harness, and delayed promotion gates did not all pass.",
+    "Matched sampler-quality evidence landed, but no hardware speedup headline is allowed.",
+    "PTRM Stage 1 is complete as a development proxy and cannot count as an ARC solve.",
+    "Ordinary ARC floor is unsatisfied because no offline-reproduced live-agent registry delta landed."
+  ],
+  "clean_lanes": [
+    {
+      "claim_boundary": "Transition and source-delta receipts are readable and do not reopen closed scopes.",
+      "classification": "clean",
+      "evidence": {
+        "closed_scopes_reopened": false,
+        "source_delta_clean": true,
+        "transition_clean": true
+      },
+      "lane": "transition_and_source_delta",
+      "source_artifacts": [
+        "results/experiment_5564_transition_v504.json",
+        "results/experiment_5565_v504_source_delta_ingestion.json"
+      ]
+    }
+  ],
+  "conductor_unchanged": true,
+  "continuous_self_learning_claim_allowed": false,
+  "exclusion_manifest_updated": false,
+  "expected_task_range": "exp5564-exp5577",
+  "experiment": "experiment_5577_capstone_v504",
+  "experiment_id": "exp5577-capstone-v504",
+  "field_principles": {
+    "arc_registry_before_after": "Registry total before/after accounting; positive delta required for a solve claim.",
+    "arc_registry_delta": "Counts only offline-reproduced live-agent registry increments.",
+    "arc_solve_provenance": "ARC solve provenance audit; development_proxy cannot count as a solve.",
+    "blocked_lanes": "Terminal blocked artifacts remain blockers rather than wins.",
+    "bounded_lanes": "Useful evidence that is narrower than a headline claim.",
+    "clean_lanes": "Readable unflagged nonblocked evidence available for direct aggregation.",
+    "conductor_unchanged": "Protected-file discipline; true only when `scripts/research_conductor.py` is unchanged.",
+    "continuous_self_learning_claim_allowed": "Broad CSL requires unflagged memory policy, KAN promotion, reset-free harness, and delayed regression promotion.",
+    "exclusion_manifest_updated": "Bare boolean for whether exclusion or registry files were edited by this workflow.",
+    "expected_task_range": "Closed conductor boundary from transition through this capstone.",
+    "field_principles": "One-line annotations for every required headline and gate field.",
+    "flagged_lanes": "Adversarial or methodology-flagged evidence cannot support positive claims.",
+    "hardware_speedup_claim_allowed": "True only for matched successful hardware/device speedup above baseline, not board receipts or CPU/CUDA slowdown.",
+    "honest_verdict": "Terminal summary starting with complete: or blocked: that names the `.504` claim boundary.",
+    "inference_substrate": "Must equal aggregation_from_all_v504_artifacts because Exp5577 is synthesis only.",
+    "kan_online_energy_promoted": "True only for clean KAN online update evidence with rollback and no unsafe false-accept increase.",
+    "memory_policy_promoted": "False when the memory-policy artifact is adversarial-flagged, regardless of local policy_ready fields.",
+    "milestone": "Route key for the `.504` capstone.",
+    "missing_artifacts": "Absent expected inputs stay visible and never become success.",
+    "ops_docs_updated": "Bare boolean for whether ops status/changelog/conductor docs were edited by this workflow.",
+    "ordinary_arc_floor_satisfied": "True only when ordinary ARC live level-up produced self-discovered offline-reproduced registry delta.",
+    "promoted_lanes": "Narrow positive results promoted only when all lane-specific gates pass.",
+    "ptrm_retired": "True only when PTRM evidence explicitly retires the line.",
+    "ptrm_stage1_status": "Records PTRM Stage-1 development-proxy status separately from ARC solve credit.",
+    "research_complete_updated": "Bare boolean for whether `research-complete.yaml` was edited by this workflow.",
+    "retired_lanes": "Continuations closed by terminal null, block, or explicit retirement.",
+    "roadmap_yaml_unchanged": "Protected-file discipline; true only when `research-roadmap.yaml` is unchanged.",
+    "sge_retired": "True when the SGE live continuation is blocked or null after its precheck gate.",
+    "skipped_lanes": "Conductor gate skips stay terminal but non-positive.",
+    "solve_verify_asymmetry_supported": "True only for a clean measured positive solve-versus-verify asymmetry, not equal failure.",
+    "specs_updated": "Spec reconciliation done by this workflow; ops and traceability edits may be delegated.",
+    "tests_run": "Commands run for the capstone and whether they passed, failed, or were not applicable.",
+    "traceability_updated": "Bare boolean for whether `_bmad/traceability.md` was edited by this workflow.",
+    "upstream_artifacts_expected": "Every expected `.504` JSON artifact and sidecar before claim aggregation.",
+    "upstream_artifacts_read": "Expected upstream artifacts actually parsed.",
+    "verifier_coevolution_required": "True only when the clean co-evolution trigger artifact explicitly requires it."
+  },
+  "flagged_lanes": [
+    {
+      "claim_boundary": "The memory policy artifact is adversarial-flagged, so policy_ready cannot be promoted.",
+      "classification": "flagged",
+      "evidence": {
+        "corrigendum_pending": [
+          {
+            "detail": "backward_retention_delta=0.3333333334 and forward_transfer_delta=0.3333333334 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "policy_ready": true
+      },
+      "lane": "causal_memory_policy_tournament",
+      "source_artifacts": [
+        "results/experiment_5569_causal_memory_policy_tournament.json"
+      ]
+    }
+  ],
+  "hardware_speedup_claim_allowed": false,
+  "honest_verdict": "complete: .504 capstone read 14/14 expected artifacts; missing=0; flagged=1; blocked=2; skipped=2; promoted=4; solve_verify_asymmetry_supported=False; verifier_coevolution_required=True; memory_policy_promoted=False; kan_online_energy_promoted=True; continuous_self_learning_claim_allowed=False; hardware_speedup_claim_allowed=False; ordinary_arc_floor_satisfied=False; arc_registry_delta=0",
+  "inference_substrate": "aggregation_from_all_v504_artifacts",
+  "kan_online_energy_promoted": true,
+  "memory_policy_promoted": false,
+  "milestone": "2026.07.504",
+  "missing_artifacts": [],
+  "ops_docs_updated": false,
+  "ordinary_arc_floor_satisfied": false,
+  "promoted_lanes": [
+    {
+      "claim_boundary": "Exact ASP/FSM near-miss corpus is promoted as an authoritative verifier substrate.",
+      "classification": "promoted",
+      "evidence": {
+        "corpus_ready": true,
+        "duplicate_leakage_count": 0,
+        "n_rows": 120
+      },
+      "lane": "exact_asp_fsm_near_miss_corpus",
+      "source_artifacts": [
+        "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json"
+      ]
+    },
+    {
+      "claim_boundary": "A clean cached residual audit requires verifier co-evolution, not silent threshold retuning.",
+      "classification": "promoted",
+      "evidence": {
+        "triggered_by": [
+          "worst_family_false_accept_rate"
+        ],
+        "verifier_coevolution_required": true
+      },
+      "lane": "verifier_coevolution_trigger",
+      "source_artifacts": [
+        "results/experiment_5568_verifier_coevolution_trigger.json"
+      ]
+    },
+    {
+      "claim_boundary": "KAN online energy update is promoted as bounded energy-parameter self-learning.",
+      "classification": "promoted",
+      "evidence": {
+        "kan_online_energy_promoted": true,
+        "kan_ready": true
+      },
+      "lane": "spline_local_kan_online_energy",
+      "source_artifacts": [
+        "results/experiment_5570_spline_local_kan_online_energy.json"
+      ]
+    },
+    {
+      "claim_boundary": "PTRM Stage 1 is complete only as a development proxy, not as ARC solve credit.",
+      "classification": "promoted",
+      "evidence": {
+        "no_level_solve_claim": true,
+        "ptrm_stage1_status": "complete_development_proxy_no_solve_claim",
+        "solve_provenance": "development_proxy"
+      },
+      "lane": "ptrm_stage1_development_proxy",
+      "source_artifacts": [
+        "results/experiment_5574_ptrm_stochastic_generator_stage1.json"
+      ]
+    }
+  ],
+  "ptrm_retired": false,
+  "ptrm_stage1_status": "complete_development_proxy_no_solve_claim",
+  "random_seed": 5577,
+  "reproducibility_checksum": "sha256:78fed67b5628d2760de959e25481f67959a0dcb602c61ca7a4945a439ffa52ef",
+  "research_complete_updated": false,
+  "result_path": "results/experiment_5577_capstone_v504.json",
+  "retired_lanes": [
+    {
+      "claim_boundary": "Broad CSL is closed for .504 because memory is flagged and the reset-free/delayed gates failed.",
+      "classification": "retired",
+      "evidence": {
+        "continuous_self_learning_claim_allowed": false
+      },
+      "lane": "broad_continuous_self_learning_claim",
+      "source_artifacts": [
+        "results/experiment_5569_causal_memory_policy_tournament.json",
+        "results/experiment_5571_reset_free_sota_continual_harness.json",
+        "results/experiment_5572_gated_delayed_regression_promotion.json"
+      ]
+    },
+    {
+      "claim_boundary": "The SGE continuation is terminal for .504 after precheck block and gate skip.",
+      "classification": "retired",
+      "evidence": {
+        "sge_retired": true
+      },
+      "lane": "sge_anti_stagnation_continuation",
+      "source_artifacts": [
+        "results/experiment_5575_sge_anti_stagnation_live_precheck.json",
+        "results/experiment_5576_gated_sge_live_levelup.json"
+      ]
+    }
+  ],
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-11",
+  "schema": "carnot.experiment_5577.capstone_v504.v1",
+  "sge_retired": true,
+  "skipped_lanes": [
+    {
+      "claim_boundary": "Delayed promotion was conductor-skipped after the reset-free harness failed.",
+      "classification": "skipped",
+      "evidence": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-harness.continual_harness_candidate (actual=False == expected=True)"
+      },
+      "lane": "delayed_regression_promotion_gate",
+      "source_artifacts": [
+        "results/experiment_5572_gated_delayed_regression_promotion.json"
+      ]
+    },
+    {
+      "claim_boundary": "The live ARC level-up did not run because live_path_ready was false.",
+      "classification": "skipped",
+      "evidence": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5575-sge-anti-stagnation-live-precheck.live_path_ready (actual=False == expected=True)"
+      },
+      "lane": "sge_live_levelup_gate",
+      "source_artifacts": [
+        "results/experiment_5576_gated_sge_live_levelup.json"
+      ]
+    }
+  ],
+  "solve_verify_asymmetry_supported": false,
+  "source_context": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-program.md",
+      "read_only": true,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/prd.md",
+      "read_only": true,
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/architecture.md",
+      "read_only": true,
+      "sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:ae93f7c947d1064b1bacfec5412266e635c48a93f7f635084a04108724eb98a3"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:31cddea75f51e5c3c2d4822cab426fa332c9e0be264bb58ea02e43dd1633ba4b"
+    },
+    {
+      "exists": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "read_only": true,
+      "sha256": "sha256:fda92c3481b911acb111c0ecef7c057b10dbe15df20e42035773376734e3b1d6"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:47b5f08a8023955ed51fd51edf24e38a2418b3cc739ce0fa6e05089a30421ca9"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:151c3bb4a9f184c36da394bd01ec1ace004b7bd8100ce1612019c4ce6b355226"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:12c642bd6a487c44d2a4981380651a3d9e556cfa8b4a017416caf0d8ca0cc89a"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "read_only": true,
+      "sha256": "sha256:64d4d6008f10e715c85cafa08dac718778c383d2cbf732bac4a89d48d3664d53"
+    },
+    {
+      "exists": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "read_only": true,
+      "sha256": "sha256:4b8d592292b5c62f62d32063cbd83eb35ed25c0a265cfc3b6e5b647ed419bc78"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/traceability.md",
+      "read_only": true,
+      "sha256": "sha256:0d9819507207ac5d3fb1598828db583873479ec7f66bdd08f811f38846635913"
+    },
+    {
+      "exists": true,
+      "path": "research-complete.yaml",
+      "read_only": true,
+      "sha256": "sha256:f78969bc429f606bdb79ed3a6e80727495640da8dac133017fdefd4073650dc6"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:687de4f577fc252de24852f60de6f55f9a08495258659115753feb33c32f3ac6"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5577",
+    "SCENARIO-REPORT-5577",
+    "SCENARIO-REPORT-5577-MISSING-INPUT",
+    "SCENARIO-REPORT-5577-FIELD-PRINCIPLES"
+  ],
+  "specs_updated": [
+    "openspec/capabilities/research-reporting/spec.md"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5577_capstone_v504.py -q --no-cov",
+      "detail": "5 passed in 3.23s",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5577_capstone_v504.py -m pytest tests/python/test_experiment_5577_capstone_v504.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5577_capstone_v504.py --fail-under=100",
+      "detail": "5 passed in 2.15s; 100% coverage for python/carnot/experiment_5577_capstone_v504.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "crash_path": "z3.z3core.Z3_solver_assert / Z3_solver_check_assumptions via python/carnot/verify/z3_math_verifier.py during tests/python/test_adaptive.py",
+      "detail": "Interrupted after visible failures and a pytest-xdist worker crash in the pre-existing Z3 path; summary before interrupt: 5 failed, 7708 passed, 7 skipped, 221 warnings in 283.49s at about 15%.",
+      "failed_tests_visible": [
+        "tests/python/test_experiment_1504_thrml_carnot_simulator_parity_v3.py::test_installed_thrml_runs_energy_and_stochastic_parity",
+        "tests/python/test_experiment_2117_neuroring.py::test_experiment_2117",
+        "tests/python/test_abstention_http_rest_3810.py::test_req_spoe_3810_http_uses_configured_threshold_path_not_default",
+        "tests/python/test_abstention_http_rest_3810.py::test_scenario_spoe_3810_real_cached_http_batch_confident_and_abstain",
+        "tests/python/test_adaptive.py::TestRunComparison::test_returns_comparison_result"
+      ],
+      "outcome": "failed_interrupted"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5577_capstone_v504.py tests/python/test_experiment_5577_capstone_v504.py",
+      "detail": "All checks passed!",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "detail": "1262 tests missing spec traceability; the new tests/python/test_experiment_5577_capstone_v504.py tests include REQ-REPORT-5577/SCENARIO-REPORT-5577 refs and were not listed in the reported backlog.",
+      "outcome": "failed_preexisting_traceability_backlog"
+    },
+    {
+      "command": "ops/e2e-test-plan.md applicability review",
+      "detail": "Exp5577 is synthesis-only artifact aggregation and adds no training, sampling, PyO3, serialization, code-verification, EBRM, SMGI, or CLaRa-V runtime path covered by E2E-001 through E2E-008.",
+      "outcome": "not_applicable"
+    }
+  ],
+  "traceability_updated": false,
+  "upstream_artifacts_expected": [
+    "results/experiment_5564_transition_v504.json",
+    "results/experiment_5565_v504_source_delta_ingestion.json",
+    "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json",
+    "results/experiment_5567_local_sota_solve_verify_asymmetry.json",
+    "results/experiment_5568_verifier_coevolution_trigger.json",
+    "results/experiment_5569_causal_memory_policy_tournament.json",
+    "results/experiment_5570_spline_local_kan_online_energy.json",
+    "results/experiment_5571_reset_free_sota_continual_harness.json",
+    "results/experiment_5572_gated_delayed_regression_promotion.json",
+    "results/experiment_5573_matched_sampler_hardware_continuity.json",
+    "results/experiment_5573_matched_sampler_hardware_continuity_raw_rows.json",
+    "results/experiment_5574_ptrm_stochastic_generator_stage1.json",
+    "results/experiment_5575_sge_anti_stagnation_live_precheck.json",
+    "results/experiment_5576_gated_sge_live_levelup.json"
+  ],
+  "upstream_artifacts_read": [
+    "results/experiment_5564_transition_v504.json",
+    "results/experiment_5565_v504_source_delta_ingestion.json",
+    "results/experiment_5566_exact_asp_fsm_near_miss_corpus.json",
+    "results/experiment_5567_local_sota_solve_verify_asymmetry.json",
+    "results/experiment_5568_verifier_coevolution_trigger.json",
+    "results/experiment_5569_causal_memory_policy_tournament.json",
+    "results/experiment_5570_spline_local_kan_online_energy.json",
+    "results/experiment_5571_reset_free_sota_continual_harness.json",
+    "results/experiment_5572_gated_delayed_regression_promotion.json",
+    "results/experiment_5573_matched_sampler_hardware_continuity.json",
+    "results/experiment_5573_matched_sampler_hardware_continuity_raw_rows.json",
+    "results/experiment_5574_ptrm_stochastic_generator_stage1.json",
+    "results/experiment_5575_sge_anti_stagnation_live_precheck.json",
+    "results/experiment_5576_gated_sge_live_levelup.json"
+  ],
+  "verifier_coevolution_required": true
+}

@@ -804,7 +804,7 @@ games:
     reproducibility_checksum: f1b529084c55d7dc1f7e2e9344bf10ac746a04f1c359db911be1f16f1182af58
 - game: wa30
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 7
   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
     five blocks into five of six bay target slots (player hand-carry PLUS a passive
     color-12 helper-robot NPC that autonomously delivers blocks -- see gotcha below);
@@ -821,11 +821,15 @@ games:
     color-15 THIEF steals a pre-placed bay block and dumps it on decoy pads; win =
     frame.levels_completed==6 via dismissing the thief (a new ACTION5-on-contact-
     highlight verb) then hand-ferrying both blocks back into the bay (see gotcha
-    below). L2->L3, L3->L4, L4->L5, and L5->L6 all auto-transition with no reset
-    and no carry-over state between levels (fresh timer, fresh layout) -- action
-    sequences concatenate directly for the reproduction gate, though L6''s entry
-    can be contaminated by leftover tail actions from an L5 candidate script (see
-    gotcha below).'
+    below). L7: a compressed single-corridor thief level (2 blocks, a stacked
+    1-wide/2-tall bay, one thief) solved entirely from the accumulated L2-L6
+    toolkit with no new mechanic; win = frame.levels_completed==7 (see gotcha
+    below). L2->L3, L3->L4, L4->L5, L5->L6, and L6->L7 all auto-transition with no
+    reset and no carry-over state between levels (fresh timer, fresh layout) --
+    action sequences concatenate directly for the reproduction gate, though L6''s
+    entry specifically can be contaminated by leftover tail actions from an L5
+    candidate script (see gotcha below; L7''s entry off a clean L6 win was
+    pristine).'
   solver: 'L1: results/experiment_4275 solve_trace.actions. L2: results/outer_loop_fable5_wa30_probe.json
     action_sequence (94-action full sequence: banked 33-action L1 prefix + 61-action
     L2 suffix). L3: results/outer_loop_fable5_wa30_probe_l3.json action_sequence
@@ -849,12 +853,17 @@ games:
     is also preserved in the artifact''s candidate_a_segments field but was not
     needed). Live win WAS observed this time but the agent still did not self-run
     the gate (budget discipline); the outer loop ran it independently -- see
-    dead_ends v13 entry below). All five (L2-L6) by claude-fable-5, 2026-07-11.
+    dead_ends v13 entry below). L7: results/outer_loop_fable5_wa30_probe_l7.json
+    action_sequence (477-action full sequence: the same 415-action L1-L6 prefix,
+    now 7 consecutive identical replays, + a 62-action single-episode L7 suffix,
+    no resets, no new mechanic required). Live win observed; agent again did not
+    self-run the gate (budget discipline); the outer loop ran it independently --
+    see dead_ends v14 entry below). All six (L2-L7) by claude-fable-5, 2026-07-11.
     No GameAdapter registered yet -- these are frozen banked trajectories, not a
     generalized per-game solver; a future GameAdapter encoding the robot-delivery +
     fence-socket + multi-robot + ferry-relay + thief-dismissal rules (not just
-    these five trajectories) would be needed to reach the live E3AgentPolicy path
-    or to attempt L7+ (bonus recon below).'
+    these six trajectories) would be needed to reach the live E3AgentPolicy path
+    or to attempt L8+ (bonus recon below).'
   gotchas:
   - 'L2 HELPER-ROBOT mechanic (v9, 2026-07-11, claude-fable-5, independently re-verified
     by the outer loop -- see dead_ends v9 entry below): the unexplained 4x4 color-12
@@ -946,6 +955,22 @@ games:
     of prefix contamination, or the reproduction attempt should start from a
     timer-forced-reset L6 entry instead. L6''s timer is the tightest yet (~0.83
     cells/action, ~77 actions/episode).'
+  - 'L7 TOOLKIT-ONLY LEVEL, no new mechanic (v14, 2026-07-11, claude-fable-5, gate
+    independently RUN by the outer loop on a live-observed win -- see dead_ends
+    v14 entry below): a compressed single-corridor thief level -- 2 loose blocks,
+    a stacked 1-wide/2-tall bay at (7,3) above (8,3), decoy pads east, one thief --
+    solved in a single episode (62 actions, 0 game-overs) purely by composing
+    already-known verbs (carry/drop, the L6 thief-dismiss-on-contact-highlight)
+    with no new interaction discovered. ONE new datum: thief pickup races can be
+    LOST even from an adjacent-and-facing player position -- the thief acts on the
+    tick immediately after each player action, so a bump-then-ACTION5 attempt
+    still gives it one free tick to grab a contested block first; denying it
+    requires reaching pickup position at least 2 actions BEFORE the thief does,
+    not just being adjacent when you act. The known parked-adjacent freeze (first
+    seen on L4''s helper robots) reappears on the L7 thief after its first
+    delivery -- exploit it as a free dismissal window rather than chasing a moving
+    thief. L7''s bay is the first to stack vertically in a single column; ghost-
+    east carries along each row place both blocks without any re-siding.'
   - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex): a
     64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4 (not on ACTION5
     pickup/drop) -- though v9 measured the real drain as ~0.85 cells/action (not
@@ -1170,6 +1195,32 @@ games:
     corridor. The thief-dismiss + ferry playbook from L6 looks directly
     applicable, unlike the L4->L5 or L5->L6 transitions which each required a
     genuinely new mechanic. levels_reproduced bumped 5 -> 6.'
+  - 'v14 (results/outer_loop_fable5_wa30_probe_l7.json, 2026-07-11, claude-fable-5,
+    same agent resumed via SendMessage with full L1-L6 context, budget 750): v13''s
+    bonus recon called it exactly -- L7 needed no new mechanic and was solved in
+    ONE episode, 62 actions, 0 game-overs, the fastest level yet (477/750 budget
+    total incl. the 415-action prefix). Live win OBSERVED (levels_completed hit 7).
+    Despite the observed win and a pristine (uncontaminated) L6->L7 entry -- a
+    cleaner starting position than v13''s L6 candidate had -- the agent still did
+    NOT self-run the gate: the 477-step replay would have pushed total usage to
+    954 against the 750 budget. Handed off with reproduction_verified: false,
+    level7_win_observed_live: true, per the now-established L4-L7 pattern. The
+    outer loop ran the gate independently: extracted the 477-action action_sequence
+    and called arc_solver_kit.reproduce(''wa30'', ..., claimed_level=7) from 5
+    independent fresh env.reset() calls. All 5 returned reached_level=7,
+    reproduced=True. Also noted: the 415-action L1-L6 prefix has now replayed
+    identically 7 consecutive times across this session (v11-v14 combined),
+    reinforcing that determinism holds robustly for this game''s LEVEL-COMPLETION
+    signal even though raw frame pixels are known to animate non-deterministically
+    (per the pre-session results/experiment_headway_wa30.json finding). BONUS L8
+    RECON (v14, 0 cost, as-reported/not attempted): L8 reads as a "final exam" --
+    the largest map yet, TWO independent zones (north/south) each separated by
+    wall bands with narrow gaps, EACH zone containing its own returning color-12
+    HELPER robot AND its own color-15 THIEF, decoy pad fields, a real multi-slot
+    bay (8-slot north, ~9-slot south), 13 blocks total -- every mechanic from
+    L2-L7 appearing simultaneously. Flagged as needing a substantially larger
+    budget (900+) given the 477-action prefix alone is already heavy.
+    levels_reproduced bumped 6 -> 7.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
@@ -2169,7 +2220,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 74
+reproducible_total_levels: 75
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
