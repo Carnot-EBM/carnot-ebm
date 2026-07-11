@@ -30168,6 +30168,101 @@ SHALL write the same result path with
 |---|---|---|
 | REQ-VERIFY-5531 | Implemented (`python/carnot/experiment_5531_sparse_repair_scaleup_ci.py`, `results/experiment_5531_sparse_repair_scaleup_ci.json`) | Implemented (`tests/python/test_experiment_5531_sparse_repair_scaleup_ci.py`) |
 
+### REQ-VERIFY-5560: Hardware And Timing Receipt Hygiene
+
+The repository SHALL provide Exp 5560 at
+`python/carnot/experiment_5560_hardware_and_timing_receipt_hygiene.py` and
+write `results/experiment_5560_hardware_and_timing_receipt_hygiene.json`
+without invoking an LLM, without requiring model specifications, without
+modifying `scripts/research_conductor.py`, without changing
+`research-roadmap.yaml`, without probing host block-device paths such as
+`/dev/mmcblk*` or `/dev/disk`, without flashing any board, and without making
+a hardware speedup claim.
+
+Exp 5560 SHALL reuse the Exp 5546 hardware receipt parser output at
+`results/experiment_5546_hardware_receipt_substrate_corrigendum.json` and safe
+hardware rules. KV260 evidence SHALL remain valid only when it came from SSH,
+`xmutil`, or board-local `/dev/uio*` command kinds. PolarFire evidence SHALL
+come from SSH identity or hash-bound workload receipts. GateMate evidence
+SHALL come from authenticated DirtyJTAG/IDCODE status or other
+non-destructive identity/toolchain receipts. Device receipt rows SHALL be
+carried forward as a list with parser outcomes, safe command kinds, identity
+metadata, source artifact, and precise blockers.
+
+Exp 5560 SHALL add experiment-side launch/finish receipt examples that use a
+monotonic clock and link to an artifact checksum. These examples SHALL be
+methodology receipts only: they MAY prove that future experiment-side launch
+and finish stamps can be recorded around an artifact write, but they SHALL NOT
+upgrade any hardware-vs-baseline timing claim. Matched timing SHALL be true
+only when repeated CPU and hardware receipts cover the same workload, expose
+timing values, and link to the same artifact/workload checksums. If such pairs
+are absent, `matched_timing_available` SHALL be false,
+`repeated_timing_pairs` SHALL be 0, and `hardware_speedup_claim` SHALL be
+false.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`llm_invoked`, `no_model_specs_required`, `upstream_hardware_corrigendum`,
+`device_receipts`, `kv260_safe_path_used`,
+`forbidden_block_device_paths_used`, `parser_rows_valid`,
+`launch_finish_receipt_ready`, `monotonic_clock_used`,
+`artifact_checksum_linked`, `matched_timing_available`,
+`repeated_timing_pairs`, `hardware_speedup_claim`, `conductor_modified`,
+`roadmap_yaml_unchanged`, `tests_added_or_reused`, `field_principles`,
+`inference_substrate`, and `honest_verdict`. `llm_invoked` SHALL be false.
+`no_model_specs_required` SHALL be true. `inference_substrate` SHALL equal
+`hardware_receipt_and_timing_hygiene_no_llm`. `conductor_modified` SHALL be
+false. `hardware_speedup_claim` SHALL be false.
+
+Required field principles:
+
+- `llm_invoked`: principle "Bare false records that this hygiene artifact did not run a model."
+- `no_model_specs_required`: principle "Receipt hygiene does not require model specs because no model is invoked."
+- `upstream_hardware_corrigendum`: principle "Names the clean Exp5546 source that supplies parsed hardware rows."
+- `device_receipts`: principle "Carries per-device parser outcomes, identities, safe command kinds, and blockers forward."
+- `kv260_safe_path_used`: principle "Keeps KV260 evidence limited to SSH, xmutil, and board-local UIO paths."
+- `forbidden_block_device_paths_used`: principle "Must stay false so host storage paths cannot re-enter KV260 evidence."
+- `parser_rows_valid`: principle "Prevents malformed receipt rows from being promoted into timing evidence."
+- `launch_finish_receipt_ready`: principle "Confirms future experiment-side launch and finish stamps have a ready receipt shape."
+- `monotonic_clock_used`: principle "Launch/finish examples use monotonic time rather than wall-clock ordering."
+- `artifact_checksum_linked`: principle "Timing receipts link to artifact checksums so stamps cannot float free of evidence."
+- `matched_timing_available`: principle "True only when equivalent repeated CPU and hardware timing pairs exist."
+- `repeated_timing_pairs`: principle "Counts only matched timing pairs with timing values and shared workload/checksum evidence."
+- `hardware_speedup_claim`: principle "Must remain false without authenticated matched timing."
+- `conductor_modified`: principle "Must remain false because the conductor is outside this experiment scope."
+- `roadmap_yaml_unchanged`: principle "Confirms the active roadmap was not changed by receipt hygiene work."
+- `tests_added_or_reused`: principle "Names focused tests backing parser and timing hygiene behavior."
+- `field_principles`: principle "One-line annotations explain why each headline and gate field exists."
+- `inference_substrate`: principle "Declares hardware receipt and timing hygiene, not live inference."
+- `honest_verdict`: principle "Terminal summary states clean hygiene status and no speedup claim."
+
+### SCENARIO-VERIFY-5560: Hardware Timing Hygiene Preserves No-Speedup Boundary
+
+Given the Exp 5546 hardware receipt substrate corrigendum exists locally, when
+Exp 5560 builds its hygiene artifact, then it reuses the Exp 5546 device
+receipt rows, preserves safe KV260 command-kind validation, confirms no
+forbidden host block-device path was used, emits launch/finish receipt examples
+using a monotonic clock and artifact checksum linkage, records whether matched
+hardware-vs-baseline timing pairs exist, and writes
+`results/experiment_5560_hardware_and_timing_receipt_hygiene.json` with
+`llm_invoked=false`, `no_model_specs_required=true`,
+`matched_timing_available=false`, `repeated_timing_pairs=0`, and
+`hardware_speedup_claim=false` when no authenticated matched timing pairs are
+present.
+
+If the upstream Exp 5546 artifact is missing, contains malformed device rows,
+uses an unsafe KV260 command kind, contains host block-device evidence, lacks
+checksum-linked monotonic launch/finish receipt examples, reports any conductor
+modification, reports an active-roadmap change, or sets
+`hardware_speedup_claim=true` without matched timing pairs, then Exp 5560 SHALL
+write the same result path with precise blockers, false readiness gates where
+appropriate, and an `honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5560)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5560 | Implemented (`python/carnot/experiment_5560_hardware_and_timing_receipt_hygiene.py`, `results/experiment_5560_hardware_and_timing_receipt_hygiene.json`) | Implemented (`tests/python/test_experiment_5560_hardware_and_timing_receipt_hygiene.py`) |
+
 ### REQ-VERIFY-5546: Hardware Receipt Substrate Corrigendum
 
 The repository SHALL provide Exp 5546 at
