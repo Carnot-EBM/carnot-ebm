@@ -22053,3 +22053,90 @@ thresholds, rollback evidence, and an honest terminal verdict.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5569 | Planned (`python/carnot/experiment_5569_causal_memory_policy_tournament.py`, `results/experiment_5569_causal_memory_policy_tournament.json`) | Planned (`tests/python/test_experiment_5569_causal_memory_policy_tournament.py`) |
+
+## REQ-LEARN-5570: Active-Spline Online KAN Exact-Constraint Energy
+
+The Exp5570 workflow SHALL write
+`results/experiment_5570_spline_local_kan_online_energy.json` as a
+deterministic no-LLM online KAN energy experiment over the exact ASP/FSM
+near-miss corpus. It SHALL derive a fixed feature vector from the Exp5566
+exact ASP/FSM corpus, split at least 120 ordered rows into online sessions plus
+a never-updated holdout, and use exact validator outcomes as the only feedback.
+
+The experiment SHALL compare frozen KAN, dense-gradient online KAN, and
+active-spline-only online KAN arms under the same initialization, labels,
+bounded replay budget, and seeds. The active-spline arm SHALL mutate only
+currently activated spline coefficients, SHALL checkpoint before each promotion,
+SHALL support rollback to the pre-update checksum, and SHALL record parameter
+diffs, touched-spline fraction, update count, update latency, and checkpoint
+hashes. The dense arm may update every coefficient for the same feedback rows,
+but the frozen arm SHALL not update.
+
+The artifact SHALL include required fields `field_principles`,
+`continuous_self_learning_target`, `dataset_path`, `sessions`, `n_rows`,
+`seeds`, `arms`, `exact_feedback_only`, `weights_mutated`,
+`active_spline_update`, `touched_spline_fraction`, `update_count`,
+`parameter_diff_norm`, `update_latency_ms`, `heldout_exact_error_by_arm`,
+`forward_adaptation_delta`, `prior_family_regression`,
+`unsafe_false_accept_delta`, `replay_budget`, `checkpoint_paths`,
+`rollback_checksum_match`, `promotion_thresholds`, `inference_substrate`,
+`honest_verdict`, and `kan_ready`. It SHALL set
+`inference_substrate="online_kan_exact_constraint_energy"` and SHALL carry
+one-line principles for every required headline and gate field. `kan_ready`
+SHALL be true only when held-out exact error improves over the frozen arm with
+a paired confidence interval excluding zero, prior-family regression is <=0.02,
+unsafe false accepts do not increase, and rollback reproduces the pre-update
+checksum.
+
+### REQ-LEARN-5570 Sub-requirements
+
+- REQ-LEARN-5570-1: The dataset builder SHALL load the exact ASP/FSM corpus,
+  expose at least 120 rows, and split them into ordered online sessions plus a
+  never-updated holdout.
+- REQ-LEARN-5570-2: Every arm SHALL use the same feature matrix, exact labels,
+  replay budget, initialization seeds, and holdout rows.
+- REQ-LEARN-5570-3: The active-spline arm SHALL update only coefficients whose
+  spline bases are active for the current row or bounded replay rows.
+- REQ-LEARN-5570-4: The workflow SHALL checkpoint before each promotion and
+  SHALL prove rollback by matching the pre-update checksum; rollback reproduces the pre-update checksum exactly.
+- REQ-LEARN-5570-5: `kan_ready` SHALL remain false unless held-out exact error
+  improves over frozen with paired CI lower bound above zero, prior-family
+  regression is <=0.02, unsafe false accepts do not increase, and rollback
+  checksum reproduction passes.
+
+### SCENARIO-LEARN-5570-STREAM: Exact ASP/FSM Rows Become Sessions
+
+**Given** the Exp5566 exact ASP/FSM near-miss corpus is ready
+**When** Exp5570 builds its online dataset
+**Then** at least 120 exact-labeled rows SHALL be represented by fixed feature
+vectors, ordered sessions, and a holdout partition that is never used for
+updates.
+
+### SCENARIO-LEARN-5570-ACTIVE-SPLINE: Sparse Updates Touch Only Active Knots
+
+**Given** one online row and bounded replay rows
+**When** the active-spline arm receives exact validator feedback
+**Then** only activated spline coefficients SHALL change, and the artifact
+SHALL report a touched-spline fraction below the dense arm's full update
+fraction.
+
+### SCENARIO-LEARN-5570-ROLLBACK: Promotion Checkpoint Reproduces Pre-Update State
+
+**Given** the active-spline arm creates a checkpoint before promotion
+**When** rollback is requested
+**Then** the restored checksum SHALL match the pre-update checksum exactly.
+
+### SCENARIO-LEARN-5570-ARTIFACT: Online KAN Receipt Is Conductor Visible
+
+**Given** the frozen, dense, and active-spline arms complete all sessions
+**When** Exp5570 writes its receipt
+**Then** the JSON SHALL include required fields, field principles, exact-only
+feedback evidence, weight-mutation evidence, promotion thresholds, rollback
+evidence, the online KAN exact-constraint substrate, and an honest terminal
+verdict.
+
+## Implementation Status (Exp 5570)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5570 | Planned (`python/carnot/experiment_5570_spline_local_kan_online_energy.py`, `results/experiment_5570_spline_local_kan_online_energy.json`) | Planned (`tests/python/test_experiment_5570_spline_local_kan_online_energy.py`) |
