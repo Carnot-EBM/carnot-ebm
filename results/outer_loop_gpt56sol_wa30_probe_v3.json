@@ -1,0 +1,10 @@
+{
+  "game": "wa30",
+  "starting_level": 1,
+  "max_level_reached": 1,
+  "total_env_steps_used": 197,
+  "reproduction_verified": false,
+  "action_sequence": [],
+  "narrative": "I replayed the known 33-action level-1 prefix and explored level 2 only through rendered grids, frame.levels_completed, and action outcomes. I confirmed that the orange 64-cell bar is a movement timer, ACTION5 itself does not consume a timer cell, and every outlined block must be explicitly dropped into a distinct 4x4 target slot; four confirmed placements still left frame.levels_completed at 1, proving the fifth block is mandatory. A useful additional observation was that a carried block can remain held against the target while movement repositions the solid player before the explicit drop, which is the likely efficiency mechanism for a winning route. I also found that repeated voluntary mid-level resets can eventually clear the level-1 checkpoint, whereas the guaranteed reset after actual timer expiry preserves it; restoring the lost checkpoint consumed another 33-step prefix replay. The best continuous attempt expired at cumulative env step 197 after four placements, and the remaining 53-step global allowance was insufficient for a fresh five-block completion, so I stopped honestly without running the reproduction gate.",
+  "solve_provenance": "live_agent_self_discovery"
+}

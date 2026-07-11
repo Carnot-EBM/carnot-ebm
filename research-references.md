@@ -29238,3 +29238,94 @@ Execution-time sweep after the `.503` planner refresh checked arXiv primary page
 - **Watch-only/excluded:** Extropic TSU/XTR/Z1 writing, Logical Intelligence Kona/Aleph pages, and memory-evolution RL/fine-tuning surfaces were checked but not promoted as executable `.503` dependencies.
 
 <!-- V503-EXECUTION-REFRESH-20260710-END -->
+
+## V504 Planner Refresh - 20260711
+
+Planning-time sweep for milestone `.504` after `.503` completed. Sources checked:
+arXiv primary pages and recent 2025-2026 records for EBM reasoning, neural constraints,
+Ising/thermodynamic hardware, hallucination mitigation, KANs, constrained generation,
+and continual learning; OpenReview ICLR/ICML public pages; Semantic Scholar citation
+routes for EBT `2507.02092` and ARM-EBM `2512.15605`; Hugging Face Papers; GitHub
+repository/trending discovery; Extropic writing; Logical Intelligence public updates;
+and Carnot's accumulated reference history. Existing entries already cover EBT,
+ARM-EBM, NRGPT, Distributional EBMs, ASP+EBM, P-GCD, Gram2Token, XGrammar,
+Spilled Energy, ALMA, A-MEM, GSI-LR, ultrafast KAN online learning, p-bit FPGA
+architectures, Extropic X0/XTR-0, and Kona/Aleph architecture context. This block
+adds only non-duplicate or newly actionable deltas.
+
+### New actionable deltas
+
+- **SelfMem: Self-Optimizing Memory for AI Agents** - arXiv:2607.03726,
+  https://arxiv.org/abs/2607.03726. SelfMem exposes memory tools plus feedback so an
+  agent can evaluate and refine its own storage/retrieval strategy rather than using a
+  fixed policy. Carnot hook: replace the failed `.503` cross-family transfer rerun with a
+  bounded, local-first memory-policy tournament over the clean Exp5558 causal
+  write-manage-read substrate. Candidate policies may change memory operations, but an
+  exact energy/constraint gate controls promotion, weights remain frozen, and held-out
+  forward/backward transfer plus rollback burden decide whether a policy survives.
+- **Continual Harness: Online Adaptation for Self-Improving Foundation Agents** -
+  arXiv:2605.09998, https://arxiv.org/abs/2605.09998. The paper's reusable contribution
+  is reset-free adaptation of an agent's harness, skills, prompt, and memory from its own
+  accumulated trajectories. Its frontier-teacher relabeling path is not acceptable as a
+  Carnot dependency. Carnot hook: test reset-free, multi-session adaptation using only
+  local SOTA GGUF proposals and deterministic Carnot energy feedback; compare against a
+  reset-each-session control and require no regression on earlier constraint families.
+- **LLM-as-a-Verifier: A General-Purpose Verification Framework** - arXiv:2607.05391,
+  https://arxiv.org/abs/2607.05391; code:
+  https://github.com/llm-as-a-verifier/llm-as-a-verifier. The framework scales verifier
+  score granularity, repeated evaluations, and criteria decomposition rather than relying
+  on one discrete judge score. Carnot hook: on the exact ASP/FSM fixture, measure local
+  SOTA solve accuracy versus verification accuracy on controlled near-miss candidates;
+  ablate rubric/criteria decomposition and repetition, while keeping ASP/Z3-style exact
+  validators authoritative. This is an audit of verifier asymmetry, not permission to use
+  an LLM judge as ground truth.
+- **The Verification Horizon: No Silver Bullet for Coding Agent Rewards** -
+  arXiv:2606.26300, https://arxiv.org/abs/2606.26300. The paper characterizes verifier
+  quality along scalability, faithfulness, and robustness and argues that fixed reward
+  signals saturate or become gameable as generators improve. Carnot hook: build a
+  generator-stratified verifier stress ladder over the ASP/FSM near-miss corpus and emit a
+  co-evolution trigger only when exact-validator residuals shift materially. This directly
+  tests whether Carnot's verifier/rubric remains faithful across the mandated Qwen/Gemma
+  local families instead of assuming one static threshold transfers.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the EBT citation endpoint returned Fixed-Point Reasoners,
+  LoopUS, causal-energy parameterization, NRGPT, and System-2 workload characterization;
+  the ARM-EBM endpoint returned Distributional EBMs, LoopUS, ontology-constrained
+  reasoning, Graph Energy Matching, and false-first-step planning. These were already
+  indexed and did not create a stronger `.504` dependency than the four deltas above.
+- **OpenReview:** ICLR 2026 pages reaffirm that verification can be harder than solving
+  and that rubric conditioning matters. GSI-LR and bounded reward-model verification were
+  already indexed; no withdrawn workshop claim is used as an exact authority.
+- **Hugging Face Papers and GitHub:** the public LLM-as-a-Verifier paper page and code
+  repository supply an inspectable implementation pattern. GitHub trending/topic checks
+  did not surface a newer EBM/KAN/constraint engine that displaces Carnot's exact local
+  validators or existing llama.cpp path.
+- **Extropic:** the public writing index still tops out at the 2025 X0/XTR-0 launch
+  material. There is no new authenticated Carnot-accessible TSU execution route, so TSU
+  remains watch-only and cannot support a `.504` hardware speedup claim.
+- **Logical Intelligence:** the June 2026 formal-verification update
+  (https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation)
+  reinforces machine-checkable code verification, while Kona/Aleph remain proprietary
+  architecture context. No local authenticated benchmark or model artifact exists, so
+  Carnot must not treat the public claims as comparative evidence.
+
+### V504 planning impact
+
+- Stop the repeated grammar-row-completion and cross-family CSL continuations after their
+  `.503` blocked/flagged verdicts. Preserve them as bounded findings rather than issuing
+  another `vN+1` rerun.
+- Promote the clean ASP/FSM fixture into a solve-versus-verify asymmetry corpus with
+  exact near-miss labels, then run one local-SOTA verifier-scaling panel behind that
+  deterministic gate.
+- Make continuous self-learning reset-free and longitudinal: exact-energy-governed memory
+  policy search first, then a local-SOTA multi-session harness evaluation with frozen model
+  weights, backward-transfer, delayed-regression, rollback, and cost receipts.
+- Keep hardware work focused on a matched CPU/CUDA sampler-quality schedule derived from
+  already-cached ASP/FSM descriptors; board paths remain status receipts unless authenticated
+  matched timing becomes available.
+- Honor both ARC obligations: one ordinary live-agent self-discovery level-up attempt and the
+  separately reserved PTRM/TRM generator slot authorized by the operator on 2026-07-10.
+
+<!-- V504-PLANNER-REFRESH-20260711-END -->

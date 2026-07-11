@@ -16,15 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (49 modul
 
 ## Hostile LLM review
 
-TL;DR: **No recent ARC solve artifacts to credit. Verdict: no SELF_DISCOVERY_ADVANCE shown.**
+**TL;DR: NO RECENT SOLVES TO CREDIT OR REJECT.** Reachability lint passes, but it proves only that solver modules are on the live path—not that hidden-game solutions were self-discovered.
 
-**Per Artifact**
+Per-artifact review: none; the last-seven-days artifact set is empty.
 
-None. `RECENT ARC SOLVE ARTIFACTS (last 7d): 0 []`
-
-Recommended action: do not record any new solve capability. Keep registry unchanged.
-
-**Pattern Watch**
-
-Reachability pre-pass is clean: all solver-like ARC modules are reachable from the live entrypoints. But reachability is not evidence of autonomous solve discovery. With zero artifacts, there is no proof the live agent discovered or solved anything from its own attempts/runtime reverse-engineering in the last 7 days. Continue rejecting any future artifact that depends on source reading, offline ground-truth BFS, hand-built per-game adapters, or results not reproducible through `scripts/arc_loop_solve.py` or `python/carnot/agentic/arc_competition_agent.py`.
+**Pattern watch:** No recent artifact evidence of outer-loop solving, but also no demonstrated self-discovery advance. Continue requiring each solve artifact to show live-entrypoint provenance, agent-generated attempts, runtime observations, and the resulting adaptation—without source inspection, offline ground-truth search, or hand-built per-game logic.
 
