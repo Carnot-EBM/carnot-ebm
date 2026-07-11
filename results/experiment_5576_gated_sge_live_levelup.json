@@ -1,0 +1,33 @@
+{
+  "experiment": 5576,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-11",
+  "started_at": "2026-07-11T18:08:43.855248+00:00",
+  "finished_at": "2026-07-11T18:08:43.855248+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated SGE anti-stagnation live ARC level-up attempt",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5575-sge-anti-stagnation-live-precheck.live_path_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5575-sge-anti-stagnation-live-precheck",
+      "artifact_field": "live_path_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp5575-sge-anti-stagnation-live-precheck",
+      "artifact_field": "target_unsolved",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
