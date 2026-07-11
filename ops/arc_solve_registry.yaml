@@ -804,25 +804,34 @@ games:
     reproducibility_checksum: f1b529084c55d7dc1f7e2e9344bf10ac746a04f1c359db911be1f16f1182af58
 - game: wa30
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 4
   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
     five blocks into five of six bay target slots (player hand-carry PLUS a passive
     color-12 helper-robot NPC that autonomously delivers blocks -- see gotcha below);
     win = frame.levels_completed==2. L3: fresh 64-cell-timer layout split by a
     full-height dashed fence (player+3 blocks on the left, robot+bay+2 pre-embedded
     blocks on the right); win = frame.levels_completed==3 via the fence-socket relay
-    (see gotcha below). L2->L3 auto-transitions with no reset and no carry-over state
-    between levels (fresh timer, fresh layout) -- action sequences concatenate
-    directly for the reproduction gate.'
+    (see gotcha below). L4: THREE side-affiliated robots (west/east/south), five bays
+    totalling exactly 7 slots for 7 blocks, sealed central enclosure; win =
+    frame.levels_completed==4 via per-side socket distribution avoiding the
+    north-fence trap (see gotcha below). L2->L3 and L3->L4 both auto-transition with
+    no reset and no carry-over state between levels (fresh timer, fresh layout) --
+    action sequences concatenate directly for the reproduction gate.'
   solver: 'L1: results/experiment_4275 solve_trace.actions. L2: results/outer_loop_fable5_wa30_probe.json
     action_sequence (94-action full sequence: banked 33-action L1 prefix + 61-action
     L2 suffix). L3: results/outer_loop_fable5_wa30_probe_l3.json action_sequence
     (170-action full sequence: the same 94-action L1+L2 prefix + 76-action L3
-    suffix, single continuous episode, no resets). Both L2 and L3 by claude-fable-5,
-    2026-07-11. No GameAdapter registered yet -- these are frozen banked trajectories,
-    not a generalized per-game solver; a future GameAdapter encoding the
-    robot-delivery + fence-socket rules (not just these two trajectories) would be
-    needed to reach the live E3AgentPolicy path or to attempt L4+ (bonus recon below).'
+    suffix, single continuous episode, no resets). L4:
+    results/outer_loop_fable5_wa30_probe_l4.json action_sequence (237-action full
+    sequence: the same 170-action L1+L2+L3 prefix + 67-action L4 suffix from a clean
+    single episode; the agent deliberately did NOT run its own reproduction gate to
+    stay within its step budget, handed the candidate over, and the outer loop ran
+    the gate independently -- see dead_ends v11 entry below). All three (L2/L3/L4)
+    by claude-fable-5, 2026-07-11. No GameAdapter registered yet -- these are frozen
+    banked trajectories, not a generalized per-game solver; a future GameAdapter
+    encoding the robot-delivery + fence-socket + multi-robot rules (not just these
+    three trajectories) would be needed to reach the live E3AgentPolicy path or to
+    attempt L5+ (bonus recon below).'
   gotchas:
   - 'L2 HELPER-ROBOT mechanic (v9, 2026-07-11, claude-fable-5, independently re-verified
     by the outer loop -- see dead_ends v9 entry below): the unexplained 4x4 color-12
@@ -853,6 +862,24 @@ games:
     adjacent-facing your own already-socketed block (it re-picks it back up); the
     robot treats sockets as ordinary loose blocks (nearest-first delivery order);
     L3''s timer drains gentler than L2''s (~0.64 cells/action vs. ~0.85).'
+  - 'L4 MULTI-ROBOT / NORTH-FENCE-TRAP mechanic (v11, 2026-07-11, claude-fable-5,
+    gate independently RUN by the outer loop, not just re-verified -- see dead_ends
+    v11 entry below): THREE side-affiliated robots (west/east/south), five bays
+    totalling exactly 7 slots for 7 blocks (all 7 required; 5 or 6 placed does not
+    advance the level). Each robot only services fence sockets and bays on its own
+    side (W:3 slots incl. one outdoor block, E:2, S:2) -- there is NO north-side
+    robot or bay. Sockets placed on the NORTH fence permanently freeze ALL THREE
+    robots (they park at extraction spots flanking the north wall and never
+    recover, even once new reachable sockets appear elsewhere) -- this trap caused
+    a full episode timer-death (GAME_OVER) before the winning strategy (never
+    socket north; match sockets to per-side bay capacity) was found. Blocks CAN be
+    extracted back out of a socket by the player, but a carried block cannot change
+    which side it trails on without a floor-drop + re-pickup from the desired side
+    (5-6 extra actions per side change). The enclosure''s east fence line is
+    geometrically col 10 (interior 4 tiles wide, cols 6-9), not col 11 as a naive
+    reading suggests. Post-GAME_OVER reset restores exact fresh L4 entry state and
+    preserves the L3 checkpoint. L4''s 64-cell timer drains ~0.64-0.7 cells/action,
+    affording ~90+ actions.'
   - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex): a
     64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4 (not on ACTION5
     pickup/drop) -- though v9 measured the real drain as ~0.85 cells/action (not
@@ -996,6 +1023,33 @@ games:
     blocks in a fenced central enclosure. The cooperative-delivery mechanic family
     continues and escalates; a future attempt should start from the socket-relay
     understanding rather than re-deriving from zero. levels_reproduced bumped 2 -> 3.'
+  - 'v11 (results/outer_loop_fable5_wa30_probe_l4.json, 2026-07-11, claude-fable-5,
+    same agent resumed via SendMessage with full L1-L3 context, budget raised to
+    500 for the harder level): won L4 LIVE on a second episode (episode 1 hit the
+    north-fence-freeze trap and timer-died; see gotcha above) but deliberately did
+    NOT self-run its own reproduction gate -- the gate replay needed 170+67=237
+    steps against only 163 of the 500-step budget remaining after the live win.
+    Rather than exceed budget, it handed over the exact 237-action candidate
+    (170-action twice-verified L1-L3 prefix + 67-action clean L4 suffix) with
+    `reproduction_verified: false` self-reported, and explicit replayability
+    evidence (the winning episode was played from a post-GAME_OVER reset state
+    verified field-identical to fresh L4 entry; the L4 opening replayed
+    byte-identical twice within-session). The outer loop then RAN the gate itself
+    (not merely re-confirming a self-reported pass, since none had been claimed):
+    extracted the candidate action_sequence and called
+    arc_solver_kit.reproduce(''wa30'', ..., claimed_level=4) from 5 independent
+    fresh env.reset() calls. All 5 trials returned reached_level=4, reproduced=True,
+    matching the artifact''s self-reported checksum -- the candidate banks. This is
+    the cleanest instance yet of the intended agent/outer-loop division of labor:
+    the agent stayed honest about an unverified candidate under budget pressure
+    instead of either forcing a gate run that would overshoot budget or claiming
+    success without one. BONUS L5 RECON (v11, 0 cost, as-reported/not attempted):
+    the geometry flips -- a solid color-5 WALL (not a dashed fence) divides the
+    map, player + 6 blocks on the EAST side, a single robot + one large
+    multi-slot bay on the WEST side. Walls were never socketable in L2-L4, so L5
+    likely needs a new transfer mechanic entirely -- flagged as the next
+    session''s discovery target (est. budget ~470+: prefix 237 + play + gate
+    ~300). levels_reproduced bumped 3 -> 4.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2

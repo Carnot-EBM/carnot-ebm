@@ -30615,6 +30615,109 @@ appropriate, and an `honest_verdict` starting with `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5560 | Implemented (`python/carnot/experiment_5560_hardware_and_timing_receipt_hygiene.py`, `results/experiment_5560_hardware_and_timing_receipt_hygiene.json`) | Implemented (`tests/python/test_experiment_5560_hardware_and_timing_receipt_hygiene.py`) |
 
+### REQ-VERIFY-5573: Matched CPU/CUDA Sampler Evidence With Board Continuity
+
+The repository SHALL provide Exp 5573 at
+`python/carnot/experiment_5573_matched_sampler_hardware_continuity.py` and
+write `results/experiment_5573_matched_sampler_hardware_continuity.json`
+without modifying `scripts/research_conductor.py`, without probing KV260 host
+block-device paths such as `/dev/mmcblk*` or `/dev/disk`, without flashing any
+board, and without treating board continuity as a board speedup claim.
+
+Exp 5573 SHALL load ASP/FSM sparse repair descriptors from
+`results/experiment_5556_asp_fsm_sparse_repair_scale.json` and derive Ising
+instances from those descriptors. Before comparing samplers, it SHALL record
+CPU identity, runtime versions, free memory, CUDA identity, CUDA runtime and
+driver versions, CUDA free memory, and descriptor availability. If CUDA is
+absent, uninitialized, or unusable, the artifact SHALL emit a blocked receipt
+with no CPU-vs-CUDA speedup comparison rather than substituting a CPU fallback.
+
+When CUDA is available, Exp 5573 SHALL run matched CPU and CUDA samplers over
+at least two instance sizes, including `n >= 64` when the descriptors can be
+lifted to that size, at least three seeds, and at least 10000 post-warmup
+samples for every successful backend/instance pair. CPU and CUDA runs SHALL
+share couplings, biases, seed values, temperature schedule, warm-up count,
+thinning, post-warmup sample count, floating precision, and stopping rules.
+The artifact SHALL report energy distributions, best energy, constraint
+satisfaction, autocorrelation time, effective sample size, wall time, warm-up
+time, timing rows, and speedup only for successful matched CPU/CUDA pairs.
+
+Exp 5573 SHALL also collect independent non-destructive board continuity
+receipts. KV260 SHALL be checked by SSH-only commands and SHALL NOT access
+`mmcblk` or host disk paths. PolarFire SHALL check authenticated SSH workload
+reachability without inventing matched timing. GateMate SHALL check only
+current physical/JTAG visibility, and a software-only toolchain probe SHALL NOT
+be counted as progress. Each board lane SHALL be classified independently as
+`reached`, `unchanged_blocker`, `changed_blocker`, or `unavailable`, with
+sanitized commands and timestamps.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `preconditions`, `descriptor_source`, `instance_sizes`,
+`seeds`, `samples_per_pair`, `matched_schedule`, `cpu_device_receipt`,
+`cuda_device_receipt`, `successful_matched_pairs`, `energy_quality_metrics`,
+`autocorrelation_metrics`, `effective_sample_size`, `timing_rows`,
+`speedup_by_pair`, `hardware_speedup_claim_allowed`, `kv260_receipt`,
+`kv260_mmcblk_accessed`, `polarfire_receipt`, `gatemate_receipt`,
+`board_speedup_claimed`, `raw_rows_path`, `reproducibility_checksum`,
+`inference_substrate`, and `honest_verdict`. `inference_substrate` SHALL equal
+`matched_cpu_cuda_sampling_plus_board_status_receipts`.
+`kv260_mmcblk_accessed` SHALL be false. `board_speedup_claimed` SHALL be
+false.
+
+Required field principles:
+
+- `preconditions`: principle "Authenticates CPU, CUDA, runtime, memory, and descriptor availability before comparison."
+- `descriptor_source`: principle "Pins Ising instances to Exp5556 ASP/FSM sparse descriptors."
+- `instance_sizes`: principle "Shows the matched problem sizes, including n>=64 when descriptor lifting permits it."
+- `seeds`: principle "Records paired seed values used on both backends."
+- `samples_per_pair`: principle "Guards the >=10000 post-warmup sample floor for successful pairs."
+- `matched_schedule`: principle "Records couplings, biases, temperature, warm-up, thinning, precision, and stopping rules as shared controls."
+- `cpu_device_receipt`: principle "Authenticates the local CPU identity, runtime, and free memory."
+- `cuda_device_receipt`: principle "Authenticates CUDA identity, runtime, driver, and free memory or records a precise CUDA blocker."
+- `successful_matched_pairs`: principle "Counts only CPU/CUDA pairs that completed the same instance and schedule."
+- `energy_quality_metrics`: principle "Reports comparable energy distributions, best energy, and constraint satisfaction."
+- `autocorrelation_metrics`: principle "Reports mixing diagnostics instead of only best-case energy."
+- `effective_sample_size`: principle "Converts autocorrelation into usable sample-count evidence."
+- `timing_rows`: principle "Preserves raw per-backend timing rows before any speedup summary."
+- `speedup_by_pair`: principle "Reports CPU/CUDA speedup only for successful matched pairs."
+- `hardware_speedup_claim_allowed`: principle "True only when successful matched CPU/CUDA pairs exist; board speedup remains disallowed."
+- `kv260_receipt`: principle "SSH-only KV260 continuity evidence with sanitized commands and blocker classification."
+- `kv260_mmcblk_accessed`: principle "Bare false preserves the retired KV260 host block-device boundary."
+- `polarfire_receipt`: principle "Authenticated PolarFire workload reachability without matched timing inflation."
+- `gatemate_receipt`: principle "Current physical/JTAG visibility only, not software-only progress."
+- `board_speedup_claimed`: principle "Bare false prevents board continuity from becoming an acceleration claim."
+- `raw_rows_path`: principle "Names the raw benchmark rows used to derive summaries."
+- `reproducibility_checksum`: principle "Hashes descriptors, raw rows, receipts, schedules, and summary gates."
+- `inference_substrate`: principle "Declares matched CPU/CUDA sampling plus board status receipts."
+- `honest_verdict`: principle "Terminal complete: or blocked: verdict that distinguishes CUDA sampler evidence from board continuity."
+
+### SCENARIO-VERIFY-5573: Matched Sampler Evidence Or CUDA Blocked Receipt
+
+Given Exp 5556 descriptor output is available, when Exp 5573 runs on a host
+with CUDA available, then it builds at least two descriptor-derived Ising
+instances, runs CPU and CUDA with matched schedules over at least three seeds
+and at least 10000 post-warmup samples per successful pair, writes raw rows,
+summarizes energy quality, autocorrelation, effective sample size, timing, and
+CPU/CUDA speedup only for successful matched pairs, records non-destructive
+KV260, PolarFire, and GateMate continuity receipts, and writes
+`results/experiment_5573_matched_sampler_hardware_continuity.json` with
+`hardware_speedup_claim_allowed=true`, `kv260_mmcblk_accessed=false`,
+`board_speedup_claimed=false`, and
+`inference_substrate=matched_cpu_cuda_sampling_plus_board_status_receipts`.
+
+If CUDA is unavailable or the Exp 5556 descriptors are absent or malformed,
+then Exp 5573 SHALL write the same result path with the required fields,
+`successful_matched_pairs=0`, empty CPU/CUDA speedup rows, a precise blocked
+precondition, `hardware_speedup_claim_allowed=false`,
+`kv260_mmcblk_accessed=false`, `board_speedup_claimed=false`, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5573)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5573 | Planned (`python/carnot/experiment_5573_matched_sampler_hardware_continuity.py`, `results/experiment_5573_matched_sampler_hardware_continuity.json`) | Planned (`tests/python/test_experiment_5573_matched_sampler_hardware_continuity.py`) |
+
 ### REQ-VERIFY-5546: Hardware Receipt Substrate Corrigendum
 
 The repository SHALL provide Exp 5546 at
