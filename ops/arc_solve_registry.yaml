@@ -845,6 +845,21 @@ games:
     Manhattan distance (e.g. diagonal movement, or ACTION1-4 do turn-then-step
     rather than a pure translate). Next attempt should probe (a)/(b) directly
     rather than re-running route optimization under the same assumed cost model.'
+  - 'v6 (results/outer_loop_gpt56sol_wa30_probe_v6.json): directly, empirically tested
+    both open hypotheses from v5 instead of re-running route math. Multi-carry:
+    picking up a second block while already carrying one silently drops the first
+    (no dual-carry state observed) -- REFUTED. ACTION6 (with and without
+    {"x","y"} data): accepted by the harness but produced zero grid/timer/player
+    delta -- no coordinate-click or alternate-action mechanic exists on wa30.
+    Diagonal movement: steering toward a diagonal target still advanced exactly
+    one cardinal cell per timer tick, never both axes at once -- REFUTED. Net:
+    v5s optimistic 80-move lower bound (vs. the 64-cell budget) is now an
+    EMPIRICALLY CONFIRMED bound, not just an assumed-model one -- under every
+    mechanic tested across 6 attempts, wa30 L2s 5-block placement is infeasible
+    within its own timer via one-block-at-a-time cardinal-move carrying. Remaining
+    unexplored: a push-not-carry interaction, or a genuinely different
+    turn-vs-move cost split (e.g. reorienting costing 0 vs 1 timer cell
+    independent of translating) -- neither tested yet.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
