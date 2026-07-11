@@ -1,0 +1,230 @@
+{
+  "artifact_checksum_linked": true,
+  "blockers": [
+    {
+      "kind": "matched_timing_missing"
+    }
+  ],
+  "conductor_modified": false,
+  "device_receipts": [
+    {
+      "blocked_reason": null,
+      "classification": "timing_blocked",
+      "device": "cpu",
+      "device_identities": [
+        "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
+      ],
+      "driver_versions": {},
+      "memory": {
+        "mem_available_kib": 80653292,
+        "mem_total_kib": 131157572
+      },
+      "metadata": {
+        "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+      },
+      "parser_outcome": "parsed",
+      "safe_command_kinds": [
+        "cpu_info"
+      ],
+      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
+      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
+      "status": "reachable"
+    },
+    {
+      "blocked_reason": null,
+      "classification": "workload_blocked",
+      "device": "cuda",
+      "device_identities": [
+        "NVIDIA GeForce RTX 3090",
+        "NVIDIA GeForce RTX 3090"
+      ],
+      "driver_versions": {
+        "nvidia_driver": "610.43.02"
+      },
+      "memory": {
+        "device_memory": [
+          {
+            "free_mib": 23858,
+            "index": 0,
+            "reserved_mib": 0,
+            "total_mib": 24123
+          },
+          {
+            "free_mib": 23858,
+            "index": 1,
+            "reserved_mib": 0,
+            "total_mib": 24123
+          }
+        ],
+        "nvidia_smi": [
+          {
+            "free_mib": 24120,
+            "index": 0,
+            "total_mib": 24576
+          },
+          {
+            "free_mib": 24120,
+            "index": 1,
+            "total_mib": 24576
+          }
+        ]
+      },
+      "metadata": {
+        "device_count": 2
+      },
+      "parser_outcome": "parsed",
+      "safe_command_kinds": [
+        "cuda_runtime_info",
+        "cuda_driver_info"
+      ],
+      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
+      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
+      "status": "reachable"
+    },
+    {
+      "blocked_reason": null,
+      "classification": "timing_blocked",
+      "device": "polarfire",
+      "device_identities": [
+        "Microchip PolarFire-SoC Discovery Kit"
+      ],
+      "driver_versions": {},
+      "memory": {},
+      "metadata": {
+        "board_identity": "polarfire",
+        "hostname": "mpfs-disco-kit",
+        "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+        "machine": "riscv64",
+        "model": "Microchip PolarFire-SoC Discovery Kit"
+      },
+      "parser_outcome": "parsed",
+      "safe_command_kinds": [
+        "polarfire_ssh_identity"
+      ],
+      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
+      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
+      "status": "reachable"
+    },
+    {
+      "blocked_reason": "blocked_kv260_ssh_identity",
+      "classification": "identity_blocked",
+      "device": "kv260",
+      "device_identities": [],
+      "driver_versions": {},
+      "memory": {},
+      "metadata": {},
+      "parser_outcome": "parsed",
+      "safe_command_kinds": [
+        "kv260_ssh_identity"
+      ],
+      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
+      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
+      "status": "blocked_identity"
+    },
+    {
+      "blocked_reason": "blocked_gatemate_dirtyjtag_identity",
+      "classification": "identity_blocked",
+      "device": "gatemate",
+      "device_identities": [],
+      "driver_versions": {},
+      "memory": {},
+      "metadata": {
+        "detect_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+        "toolchain": {
+          "gmpack": {
+            "available": false,
+            "version_excerpt": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024"
+          },
+          "nextpnr_himbaechel": {
+            "available": true,
+            "version_excerpt": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+          },
+          "yosys": {
+            "available": true,
+            "version_excerpt": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+          }
+        }
+      },
+      "parser_outcome": "parsed",
+      "safe_command_kinds": [
+        "gatemate_dirtyjtag_detect",
+        "gatemate_toolchain_yosys",
+        "gatemate_toolchain_nextpnr_himbaechel",
+        "gatemate_toolchain_gmpack"
+      ],
+      "source_artifact": "results/experiment_5532_hardware_receipt_parser_repeatability.json",
+      "source_experiment_id": "exp5532-hardware-receipt-parser-repeatability",
+      "source_parser_version": "hardware_receipt_parser_repeatability.v1",
+      "status": "blocked_identity"
+    }
+  ],
+  "experiment": 5560,
+  "experiment_id": "exp5560-hardware-and-timing-receipt-hygiene",
+  "field_principles": {
+    "artifact_checksum_linked": "Timing receipts link to artifact checksums so stamps cannot float free of evidence.",
+    "conductor_modified": "Must remain false because the conductor is outside this experiment scope.",
+    "device_receipts": "Carries per-device parser outcomes, identities, safe command kinds, and blockers forward.",
+    "field_principles": "One-line annotations explain why each headline and gate field exists.",
+    "forbidden_block_device_paths_used": "Must stay false so host storage paths cannot re-enter KV260 evidence.",
+    "hardware_speedup_claim": "Must remain false without authenticated matched timing.",
+    "honest_verdict": "Terminal summary states clean hygiene status and no speedup claim.",
+    "inference_substrate": "Declares hardware receipt and timing hygiene, not live inference.",
+    "kv260_safe_path_used": "Keeps KV260 evidence limited to SSH, xmutil, and board-local UIO paths.",
+    "launch_finish_receipt_ready": "Confirms future experiment-side launch and finish stamps have a ready receipt shape.",
+    "llm_invoked": "Bare false records that this hygiene artifact did not run a model.",
+    "matched_timing_available": "True only when equivalent repeated CPU and hardware timing pairs exist.",
+    "monotonic_clock_used": "Launch/finish examples use monotonic time rather than wall-clock ordering.",
+    "no_model_specs_required": "Receipt hygiene does not require model specs because no model is invoked.",
+    "parser_rows_valid": "Prevents malformed receipt rows from being promoted into timing evidence.",
+    "repeated_timing_pairs": "Counts only matched timing pairs with timing values and shared workload/checksum evidence.",
+    "roadmap_yaml_unchanged": "Confirms the active roadmap was not changed by receipt hygiene work.",
+    "tests_added_or_reused": "Names focused tests backing parser and timing hygiene behavior.",
+    "upstream_hardware_corrigendum": "Names the clean Exp5546 source that supplies parsed hardware rows."
+  },
+  "forbidden_block_device_paths_used": false,
+  "hardware_speedup_claim": false,
+  "honest_verdict": "complete: hardware and timing receipt hygiene clean; matched_timing_available=false; repeated_timing_pairs=0; hardware_speedup_claim=false",
+  "inference_substrate": "hardware_receipt_and_timing_hygiene_no_llm",
+  "kv260_safe_path_used": true,
+  "launch_finish_receipt_examples": [
+    {
+      "artifact_checksum_field": "eedc944f02839251c708c7ae79dbdf9accf57e908a44d162e8629620a2b53424",
+      "artifact_checksum_linked": true,
+      "artifact_checksum_matches": true,
+      "artifact_file_sha256": "27bf23bddcc451e4e4295fdcc03101998cf55e17a3d397194612e0a0d6e81d6a",
+      "artifact_path": "results/experiment_5546_hardware_receipt_substrate_corrigendum.json",
+      "clock_source": "time.perf_counter",
+      "duration_s": 1.6e-07,
+      "finish_monotonic_s": 2447394.997787812,
+      "launch_monotonic_s": 2447394.997787652,
+      "receipt_name": "experiment_side_launch_finish_example"
+    }
+  ],
+  "launch_finish_receipt_ready": true,
+  "llm_invoked": false,
+  "matched_timing_available": false,
+  "milestone": "2026.07.503",
+  "monotonic_clock_used": true,
+  "no_model_specs_required": true,
+  "parser_rows_valid": true,
+  "parser_version": "hardware_and_timing_receipt_hygiene.v1",
+  "random_seed": 1543110483,
+  "repeated_timing_pairs": 0,
+  "reproducibility_checksum": "4137ab175cf07df88158283e9e05cbac84e4f23fe6e87f98d3d09918ad8cf55a",
+  "roadmap_yaml_unchanged": true,
+  "run_date": "2026-07-10",
+  "schema": "carnot.experiment_5560.hardware_and_timing_receipt_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5560",
+    "SCENARIO-VERIFY-5560"
+  ],
+  "tests_added_or_reused": [
+    "tests/python/test_experiment_5560_hardware_and_timing_receipt_hygiene.py"
+  ],
+  "upstream_hardware_corrigendum": "results/experiment_5546_hardware_receipt_substrate_corrigendum.json",
+  "upstream_hardware_corrigendum_sha256": "27bf23bddcc451e4e4295fdcc03101998cf55e17a3d397194612e0a0d6e81d6a"
+}
