@@ -1221,6 +1221,37 @@ games:
     L2-L7 appearing simultaneously. Flagged as needing a substantially larger
     budget (900+) given the 477-action prefix alone is already heavy.
     levels_reproduced bumped 6 -> 7.'
+  - 'v15 (results/outer_loop_fable5_wa30_probe_l8.json, 2026-07-11, claude-fable-5,
+    same agent resumed via SendMessage with full L1-L7 context, budget 1000): HONEST
+    NULL, no over-claim -- max_level_reached stayed 7, level8_win_observed_live:
+    false, action_sequence: [] (no candidate to gate). Three full episodes
+    (927/1000 budget incl. the 477-action prefix, 8th consecutive identical
+    replay) mapped L8''s two-zone final-exam structure and got progressively
+    closer: best single-episode state was 11 of 13 blocks simultaneously placed
+    (episode 3), with a 12th in helper-transit and the 13th on the ground at
+    timer expiry; south zone (5/5) went permanently stable in both episodes 2 and
+    3 once its thief was killed. Confirmed the zones DO interact: thieves kite
+    stolen blocks cross-zone, and helpers cross zones too late-game (bays are
+    FUNGIBLE -- any block in any bay counts, not per-zone). THREE mechanics
+    discoveries, all proven empirically and banked as gotchas above: (1)
+    LADEN-DISMISSAL IS SAFE -- ACTION5 on a thief that is currently carrying a
+    block kills the thief and the cargo drops in place as a normal block,
+    proven on both the north and south thief; (2) thieves FLEE the player one
+    tile per interleave and can never be caught in open-field pursuit -- kills
+    only land by camping the thief''s DETERMINISTIC dump patch (same tiles every
+    cycle: south (12,4)/(12,5)/(13,5)/(14,5), north (2,3)/(2,4)/(3,3)/(4,3)) and
+    striking when it walks adjacent on its own patrol, or by bump-pressuring a
+    laden thief into an involuntary cargo-abandon; (3) a zone cannot stabilize
+    while its thief lives (~10-11/13 permanent-placement churn equilibrium
+    observed) -- episode 3''s near-miss came from killing both thieves too LATE
+    in the timer, not from any flaw in the delivery logic itself. A concrete,
+    tick-budgeted recommended_next_session_plan is preserved in the artifact:
+    camp-kill south by tick ~24, camp-kill north by tick ~45, then unopposed
+    3-worker (player + both surviving helpers) ferrying to fungible bays,
+    projected to complete by tick ~110-120 against the ~125-action timer. No
+    levels_reproduced change (stays 7) -- this entry exists so a future L8
+    attempt starts from the proven blueprint instead of re-mapping the zone
+    structure and thief behavior from zero.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
