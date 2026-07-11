@@ -40319,3 +40319,111 @@ floor, no hardware claim is allowed without matched timing, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5564 | Planned (`python/carnot/experiment_5564_transition_v504.py`, `results/experiment_5564_transition_v504.json`) | Planned (`tests/python/test_experiment_5564_transition_v504.py`) |
+
+### REQ-REPORT-5565: Ingest V504 Execution-Time Source Delta
+
+The Exp5565 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-program.md`, `research-references.md`, `research-roadmap.yaml`,
+`research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, and `ops/known-issues.md`. If
+`research-roadmap-next.yaml` is absent because the conductor has already
+activated the staged roadmap, the workflow SHALL read `research-roadmap.yaml`
+instead and SHALL NOT recreate `research-roadmap-next.yaml`. It SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The workflow SHALL record that execution-time source checks covered arXiv
+records for EBM reasoning and verification, neural CSPs, Ising ML,
+hallucination mitigation, KANs, energy-guided decoding, accelerated sampling,
+and continual learning; OpenReview public pages where reachable; Extropic
+writing; Semantic Scholar public citation routes for EBT `2507.02092` and
+ARM-EBM `2512.15605`; Hugging Face Papers; GitHub; Logical Intelligence
+public pages; Carnot's full reference history; the exclusion manifest; and
+known-issues scope notes. It SHALL deduplicate accepted candidates against all
+of `research-references.md`, especially the
+`V504 Planner Refresh - 20260711` block. It SHALL append one
+`V504 Execution Refresh - 20260711` block only when a candidate is both
+non-duplicate and actionable for planned `.504` experiments `exp5566` through
+`exp5576`. If no such candidate exists, it SHALL leave
+`research-references.md` unchanged and explain the no-op in the artifact.
+
+The workflow SHALL classify unavailable hardware, proprietary systems,
+training-only/RL-only work, external text-scorer lanes, domain-specific
+benchmarks without local exact-validator use, and prior Carnot source history
+as duplicate, watch-only, or excluded rather than reopening closed scopes. The
+execution-time accepted delta for V504 is `arXiv:2607.07436`, "The Blind
+Curator: How a Biased Judge Silently Disables Skill Retirement in
+Self-Evolving Agents", only as a false-pass / defect-injection audit for
+`exp5569` and `exp5572`. It SHALL NOT reopen retired grammar-row completion,
+cross-family CSL transfer, proprietary TSU/Kona/Aleph execution, external
+generated-text scoring, broad GRPO/RL/fine-tuning, or hardware speedup claims
+without matched local timing. It SHALL declare
+`inference_substrate="web_and_repository_source_synthesis"` and SHALL write
+`results/experiment_5565_v504_source_delta_ingestion.json`.
+
+The artifact SHALL include required fields `field_principles`,
+`planner_marker_found`, `search_cutoff`, `sources_checked`,
+`primary_sources_checked`, `new_references_added`, `duplicates_suppressed`,
+`citation_trails_checked`, `research_references_updated`,
+`experiment_mappings`, `watch_only_items`, `closed_scopes_reopened`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `planner_marker_found`: principle "Bare boolean proving the V504 planner baseline was found before dedupe or reference mutation."
+- `search_cutoff`: principle "Exact execution-time cutoff prevents later source drift from being misattributed to this receipt."
+- `sources_checked`: principle "Lists each public and local source surface checked so absence or acceptance of deltas is auditable."
+- `primary_sources_checked`: principle "Separates primary source URLs from secondary mirrors so actionability does not depend on summaries alone."
+- `new_references_added`: principle "Contains only non-duplicate actionable findings accepted into the V504 execution refresh."
+- `duplicates_suppressed`: principle "Names source hits already covered by earlier Carnot reference history or the V504 planner block."
+- `citation_trails_checked`: principle "Records EBT/ARM-EBM citation-route status without fabricating citation deltas during public API rate limits."
+- `research_references_updated`: principle "Bare boolean saying whether an execution refresh block is present because at least one accepted delta exists."
+- `experiment_mappings`: principle "Maps accepted or retained source context to planned exp5566-exp5576 lanes without changing the roadmap."
+- `watch_only_items`: principle "Keeps unavailable hardware, proprietary systems, and non-local or training-only work visible without promoting them to execution dependencies."
+- `closed_scopes_reopened`: principle "Bare boolean proving duplicate, watch-only, proprietary, retired, and excluded scopes stayed closed."
+- `inference_substrate`: principle "Must equal web_and_repository_source_synthesis because Exp5565 combines live source lookup with repository dedupe and emits no model or hardware measurement."
+- `honest_verdict`: principle "Terminal summary starting with complete: or blocked: that distinguishes accepted deltas from no-op dedupe."
+
+#### SCENARIO-REPORT-5565: V504 Non-Duplicate Actionable Delta Appends Execution Refresh
+
+**Given** `research-references.md` contains the
+`V504 Planner Refresh - 20260711` marker
+**And** an execution-time source candidate is absent from the full reference
+history
+**And** the candidate maps to at least one planned `.504` experiment lane from
+`exp5566` through `exp5576`
+**When** the Exp5565 workflow runs
+**Then** it appends one `V504 Execution Refresh - 20260711` block, records the
+candidate in `new_references_added`, sets `research_references_updated=true`,
+sets `planner_marker_found=true`, keeps `closed_scopes_reopened=false`,
+declares `inference_substrate=web_and_repository_source_synthesis`, and writes
+`results/experiment_5565_v504_source_delta_ingestion.json`.
+
+#### SCENARIO-REPORT-5565-NOOP: Duplicate Or Non-Executable Source Leaves References Unchanged
+
+**Given** the V504 planner marker is present
+**And** every checked source candidate is already indexed, watch-only,
+excluded, proprietary, unavailable, training-only, or non-executable for local
+`.504` work
+**When** the Exp5565 workflow runs
+**Then** it does not append a new execution refresh block, records suppressed
+sources in `duplicates_suppressed` or `watch_only_items`, sets
+`research_references_updated=false`, keeps `closed_scopes_reopened=false`, and
+emits a complete no-op artifact.
+
+#### SCENARIO-REPORT-5565-FIELD-PRINCIPLES: Source Delta Fields Stay Annotated
+
+**Given** the Exp5565 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `closed_scopes_reopened` is false,
+`inference_substrate` is `web_and_repository_source_synthesis`,
+`planner_marker_found` is a boolean, and `honest_verdict` has a terminal
+prefix.
+
+## Implementation Status (REQ-REPORT-5565)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5565 | Planned (`python/carnot/experiment_5565_v504_source_delta_ingestion.py`, `results/experiment_5565_v504_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5565_v504_source_delta_ingestion.py`) |

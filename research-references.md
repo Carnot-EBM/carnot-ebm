@@ -29329,3 +29329,18 @@ adds only non-duplicate or newly actionable deltas.
   separately reserved PTRM/TRM generator slot authorized by the operator on 2026-07-10.
 
 <!-- V504-PLANNER-REFRESH-20260711-END -->
+
+## V504 Execution Refresh - 20260711
+
+Execution-time sweep after the `.504` planner refresh checked arXiv primary pages, OpenReview public surfaces, Hugging Face Papers, Semantic Scholar EBT/ARM-EBM routes, GitHub, Extropic writing, Logical Intelligence public pages, local duplicate history, the exclusion manifest, and known-issues scope notes. Only non-duplicate actionable deltas are listed below.
+
+### New actionable delta
+- **The Blind Curator: How a Biased Judge Silently Disables Skill Retirement in Self-Evolving Agents** (arXiv:2607.07436, https://arxiv.org/abs/2607.07436; HF mirror https://huggingface.co/papers/2607.07436): Add a false-pass defect-injection audit to Exp5569 and Exp5572 so memory-skill retirement cannot be credited by cap eviction or a biased judge that silently lets bad skills pass. This sharpens the existing poisoning, stale-memory, rollback, and unsafe-false-accept gates; it does not reopen cross-family CSL, external LLM-judge authority, GRPO/RL/fine-tuning, or any retired grammar scope.
+
+### Execution impact
+- **Plan impact:** No roadmap edit is required. The accepted delta maps to the already-planned reset-free memory-policy and delayed-promotion gates.
+- **Duplicates suppressed:** SelfMem, Continual Harness, LLM-as-a-Verifier, Verification Horizon, ultrafast KAN online learning, PTRM, Loop/Think/Generalize, SGE, p-bit/thermodynamic hardware, ConstraintBench, Budget-Curated Memory, SEVA, MARCH, EBT, and ARM-EBM were already covered or stayed non-promoted.
+- **Closed scope:** closed_scopes_reopened=false. Retired grammar-row completion, cross-family CSL, external generated-text scoring, broad GRPO/RL/fine-tuning, proprietary TSU/Kona/Aleph execution, and hardware speedup claims without matched timing remain closed.
+- **Watch-only/excluded:** Lattice Deduction Transformers, FineVerify/CAPS/RuVerBench/GradeSQL, ArchEval, Extropic TSU/XTR/Z1, Logical Intelligence Kona/Aleph, and fresh Ising/sampling theory were checked but not promoted as executable `.504` dependencies.
+
+<!-- V504-EXECUTION-REFRESH-20260711-END -->
