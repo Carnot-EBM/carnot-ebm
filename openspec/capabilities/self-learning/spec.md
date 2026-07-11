@@ -21837,3 +21837,119 @@ an honest terminal verdict.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5558 | Planned (`python/carnot/experiment_5558_causal_write_manage_read_csl_memory.py`, `results/experiment_5558_causal_write_manage_read_csl_memory.json`) | Planned (`tests/python/test_experiment_5558_causal_write_manage_read_csl_memory.py`) |
+
+## REQ-LEARN-5559: Causal Cross-Model SOTA CSL Transfer v2
+
+The Exp5559 workflow SHALL write
+`results/experiment_5559_cross_model_sota_csl_transfer_v2.json` only when
+`results/experiment_5558_causal_write_manage_read_csl_memory.json` is readable
+and reports `csl_claim_allowed=true`. It SHALL reuse the Exp5558 causal memory
+fixture as external memory, SHALL NOT mutate model weights, and SHALL test
+whether causal CSL memory produced through one mandated local SOTA GGUF model
+family transfers to a different mandated local SOTA GGUF target family.
+
+The workflow SHALL resolve the mandated local SOTA GGUF model IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through `cached_sota_pair()` or the current
+local-GGUF resolver pattern, and SHALL NOT call `AutoTokenizer.from_pretrained`
+for any GGUF repository. It SHALL record unavailable mandated models
+explicitly. Legacy small GGUFs MAY be used only for CPU smoke tests and SHALL
+NOT contribute to headline transfer scores.
+
+The experiment SHALL separate source models and target models in the artifact.
+When at least two different mandated model families are locally available and
+GPU/offload preconditions pass, it SHALL ask the source family to emit
+verifier-accepted external memory rows from the Exp5558 causal fixture, then
+evaluate the target family under no-memory, shuffled-memory, stale-memory, and
+aligned causal-memory arms on the same decision IDs. Prompts and outputs SHALL
+record hashes. The stale-memory arm SHALL expose forgotten stale or
+contradicted Exp5558 rows and SHALL measure whether the target rejects them.
+The shuffled-memory arm SHALL break the causal context link. The aligned
+causal-memory arm SHALL read only current, prior, context-matching memory.
+
+The artifact SHALL include required fields `model_specs`,
+`upstream_causal_memory`, `live_model_invoked`, `source_models`,
+`target_models`, `no_memory_score`, `shuffled_memory_score`,
+`stale_memory_score`, `aligned_memory_score`,
+`cross_family_delta_over_shuffled`, `negative_transfer_rate`,
+`stale_evidence_rejection_rate`, `no_weight_mutation`,
+`measured_duration_s`, `gpu_offload_evidence`, `csl_claim_allowed`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`. It SHALL set
+`inference_substrate="live_local_sota_gguf_cross_model_csl_transfer_or_gate_skip"`.
+It SHALL set `csl_claim_allowed=true` only when Exp5558 allows a CSL claim,
+source and target families differ, aligned causal memory beats shuffled memory
+on the target family, stale evidence is fully rejected, negative transfer is
+zero, GPU/offload evidence is present, live local SOTA GGUF calls were invoked,
+and no model weights mutated.
+
+### REQ-LEARN-5559 Sub-requirements
+
+- REQ-LEARN-5559-1: The workflow SHALL fail closed when Exp5558 is missing,
+  unreadable, or does not report `csl_claim_allowed=true`.
+- REQ-LEARN-5559-2: `model_specs` SHALL list all three mandated SOTA GGUF IDs,
+  local availability, family, role, quantization, helper provenance, and file
+  receipts, with unavailable models visible.
+- REQ-LEARN-5559-3: Source attempts SHALL record source model, candidate causal
+  memory row, prompt hash, output hash, verifier acceptance, and an
+  external-memory-only receipt.
+- REQ-LEARN-5559-4: Target evaluations SHALL score the same Exp5558 decision
+  IDs under no-memory, shuffled-memory, stale-memory, and aligned causal-memory
+  arms.
+- REQ-LEARN-5559-5: `cross_family_delta_over_shuffled` SHALL equal
+  `aligned_memory_score - shuffled_memory_score`, rounded deterministically.
+- REQ-LEARN-5559-6: `csl_claim_allowed` SHALL remain false unless aligned
+  causal memory beats shuffled memory, `negative_transfer_rate=0`,
+  `stale_evidence_rejection_rate=1`, live local SOTA GGUF calls occurred,
+  GPU/offload evidence is clean, and model-file receipts did not change.
+
+### SCENARIO-LEARN-5559-UPSTREAM-GATE: Exp5558 Must Allow CSL
+
+**Given** the Exp5558 causal write-manage-read memory artifact exists
+**When** Exp5559 evaluates preconditions
+**Then** it SHALL record the upstream path, loadability, `csl_claim_allowed`,
+`csl_memory_ready`, and fixture hash
+**And** it SHALL skip live target evaluation when Exp5558 does not allow the
+CSL claim.
+
+### SCENARIO-LEARN-5559-CROSS-FAMILY: Aligned Causal Memory Beats Shuffled
+
+**Given** source-model attempts have produced verifier-accepted external
+causal memory from one mandated SOTA GGUF family
+**When** a target model from another mandated SOTA GGUF family evaluates the
+same Exp5558 decisions under no-memory, shuffled-memory, stale-memory, and
+aligned causal-memory arms
+**Then** `cross_family_delta_over_shuffled` SHALL be positive before
+`csl_claim_allowed` can be true.
+
+### SCENARIO-LEARN-5559-STALE-AND-NEGATIVE-GATES: Unsafe Transfer Fails Closed
+
+**Given** stale or contradicted Exp5558 memory is exposed to the target family
+**When** the target accepts stale memory or aligned causal memory causes
+negative transfer
+**Then** `csl_claim_allowed` SHALL remain false
+**And** the artifact SHALL preserve `stale_evidence_rejection_rate` and
+`negative_transfer_rate` as the blocking evidence.
+
+### SCENARIO-LEARN-5559-NO-WEIGHT-MUTATION: Transfer Is External-Memory Only
+
+**Given** source and target models have local GGUF file receipts before the run
+**When** source attempts and target evaluations complete
+**Then** model-file receipts SHALL match after the run, no adapter or training
+write SHALL be reported, `no_weight_mutation` SHALL be true, and any positive
+transfer claim SHALL be attributed only to external causal memory.
+
+### SCENARIO-LEARN-5559-ARTIFACT: Causal Transfer Receipt Is Conductor Visible
+
+**Given** Exp5558 is clean and Exp5559 evaluates or gate-skips the live path
+**When** Exp5559 writes its receipt
+**Then** the JSON SHALL include the upstream artifact path, live invocation
+status, separated source and target models, four target arm scores, transfer
+and safety gates, tests, field principles, no-weight-mutation evidence,
+GPU/offload evidence, and an honest terminal verdict.
+
+## Implementation Status (Exp 5559)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5559 | Planned (`python/carnot/experiment_5559_cross_model_sota_csl_transfer_v2.py`, `results/experiment_5559_cross_model_sota_csl_transfer_v2.json`) | Planned (`tests/python/test_experiment_5559_cross_model_sota_csl_transfer_v2.py`) |
