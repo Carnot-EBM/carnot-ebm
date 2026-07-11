@@ -21953,3 +21953,103 @@ GPU/offload evidence, and an honest terminal verdict.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5559 | Planned (`python/carnot/experiment_5559_cross_model_sota_csl_transfer_v2.py`, `results/experiment_5559_cross_model_sota_csl_transfer_v2.json`) | Planned (`tests/python/test_experiment_5559_cross_model_sota_csl_transfer_v2.py`) |
+
+## REQ-LEARN-5569: Causal Memory Policy Tournament With Bounded Self-Optimization
+
+The Exp5569 workflow SHALL write
+`results/experiment_5569_causal_memory_policy_tournament.json` as a
+deterministic no-LLM tournament over bounded write/manage/read/forget memory
+policies. It SHALL extend the Exp5558 causal write-manage-read fixture from a
+fixed policy and short horizon into at least five deterministic multi-session
+streams with at least 120 total events drawn from exact ASP and exact FSM
+families. Future labels SHALL NOT enter memory construction; memory operations
+may use only prior events and past exact-energy feedback. All model and
+verifier weights SHALL remain frozen.
+
+The tournament SHALL compare no-memory, shuffled-memory, static causal,
+always-full, and self-optimized causal arms over at least five seeds. The
+self-optimized causal arm SHALL select only among bounded memory operations:
+write verified evidence, read matching memory, forget stale or contradicted
+memory, reject poisoned memory, and rollback to the last clean checkpoint. It
+SHALL optimize these operations using only past exact-energy feedback and SHALL
+not tune model weights, verifier weights, labels, or future outcomes. The
+tournament SHALL measure forward transfer, backward retention, action-impact
+delta, memory precision, retrieval cost, write amplification, and rollback
+burden. It SHALL include delayed evaluation and a poisoned-memory positive
+control, and a promoted policy SHALL pass rollback to the last clean checkpoint.
+
+The artifact SHALL include required fields `continuous_self_learning_target`,
+`sessions`, `n_events`, `seeds`, `arms`, `future_label_leakage_count`,
+`policy_search_space`, `weights_mutated`, `forward_transfer_delta`,
+`backward_retention_delta`, `action_impact_delta`, `memory_precision`,
+`retrieval_cost`, `write_amplification`, `poisoning_control`,
+`rollback_success`, `promotion_thresholds`, `policy_ready`,
+`field_principles`, `inference_substrate`, and `honest_verdict`. It SHALL set
+`inference_substrate="deterministic_exact_feedback_memory_policy_search"` and
+SHALL carry one-line principles for every required headline and gate field.
+`policy_ready` SHALL be true only when the optimized causal arm improves
+held-out exact success over static causal with a confidence interval excluding
+zero, does not regress prior families by more than 0.02, and passes rollback.
+The promotion summary SHALL expose the phrase "confidence interval excluding zero"
+so audit readers can find the statistical gate directly.
+
+### REQ-LEARN-5569 Sub-requirements
+
+- REQ-LEARN-5569-1: The session builder SHALL create at least five sessions
+  and at least 120 total events from exact ASP and exact FSM families, and
+  SHALL report `future_label_leakage_count=0`.
+- REQ-LEARN-5569-2: The tournament SHALL evaluate no-memory,
+  shuffled-memory, static causal, always-full, and self-optimized causal arms
+  on the same delayed held-out events for at least five seeds.
+- REQ-LEARN-5569-3: The optimized arm SHALL select only among the bounded
+  memory operations listed in `policy_search_space` and SHALL use only past
+  exact-energy feedback for operation choice.
+- REQ-LEARN-5569-4: The artifact SHALL report forward transfer, backward
+  retention, action-impact delta, memory precision, retrieval cost, write
+  amplification, and rollback burden from recomputable row evidence.
+- REQ-LEARN-5569-5: The poisoned-memory positive control SHALL inject a
+  harmful memory row, detect the induced failure risk, roll back to the last
+  clean checkpoint, and report `rollback_success=true` before promotion.
+- REQ-LEARN-5569-6: `policy_ready` SHALL remain false unless the optimized
+  causal arm beats static causal on held-out exact success with CI lower bound
+  above zero, has `prior_family_regression_max <= 0.02`, passes rollback, has
+  zero future-label leakage, and mutates no weights.
+
+### SCENARIO-LEARN-5569-STREAM: Exact ASP/FSM Sessions Avoid Future Labels
+
+**Given** deterministic ASP and FSM session families with known exact labels
+**When** Exp5569 builds the tournament stream
+**Then** at least five sessions and 120 events SHALL be produced
+**And** memory construction SHALL use only event fields available at or before
+the current event time
+**And** `future_label_leakage_count` SHALL equal zero.
+
+### SCENARIO-LEARN-5569-TOURNAMENT: Optimized Bounded Policy Beats Static
+
+**Given** all five arms evaluate the same delayed held-out events across at
+least five seeds
+**When** the optimized causal arm uses past exact-energy feedback to choose
+bounded memory operations
+**Then** its held-out exact success SHALL exceed the static causal arm with a
+confidence interval lower bound above zero before `policy_ready` can be true.
+
+### SCENARIO-LEARN-5569-ROLLBACK: Poisoned Memory Requires Clean Checkpoint
+
+**Given** a poisoned memory row is injected as a positive control
+**When** the optimized policy detects poisoned exact-energy feedback
+**Then** it SHALL rollback to the last clean checkpoint
+**And** the poisoned row SHALL not persist into delayed evaluation.
+
+### SCENARIO-LEARN-5569-ARTIFACT: Tournament Receipt Is Conductor Visible
+
+**Given** the bounded tournament completes all seeds and arms
+**When** Exp5569 writes its receipt
+**Then** the JSON SHALL include required fields, field principles, the
+deterministic exact-feedback substrate, no-weight-mutation evidence, promotion
+thresholds, rollback evidence, and an honest terminal verdict.
+
+## Implementation Status (Exp 5569)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5569 | Planned (`python/carnot/experiment_5569_causal_memory_policy_tournament.py`, `results/experiment_5569_causal_memory_policy_tournament.json`) | Planned (`tests/python/test_experiment_5569_causal_memory_policy_tournament.py`) |
