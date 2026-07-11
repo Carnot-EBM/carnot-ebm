@@ -10771,3 +10771,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-11 16:10 UTC | Gated delayed-regression and rollback promotion de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-ha |
 | 2026-07-11 16:12 UTC | Gated delayed-regression and rollback promotion de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-ha |
 | 2026-07-11 16:14 UTC | Gated delayed-regression and rollback promotion de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-ha |
+| 2026-07-11 16:30 UTC | Matched CPU CUDA sampler-quality benchmark and boa | OK | 86 passed, 1 warning in 9.38s |
