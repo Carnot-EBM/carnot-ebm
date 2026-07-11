@@ -29344,3 +29344,66 @@ Execution-time sweep after the `.504` planner refresh checked arXiv primary page
 - **Watch-only/excluded:** Lattice Deduction Transformers, FineVerify/CAPS/RuVerBench/GradeSQL, ArchEval, Extropic TSU/XTR/Z1, Logical Intelligence Kona/Aleph, and fresh Ising/sampling theory were checked but not promoted as executable `.504` dependencies.
 
 <!-- V504-EXECUTION-REFRESH-20260711-END -->
+
+## V505 Planner Refresh - 20260711
+
+Planning-time sweep for milestone `.505` after all `.504` experiments completed. The
+search covered arXiv primary records for EBM reasoning, neural constraints, Ising and
+thermodynamic sampling, hallucination mitigation, KANs, constrained decoding, and
+continual learning; OpenReview; Semantic Scholar citation routes for EBT `2507.02092`
+and ARM-EBM `2512.15605`; Hugging Face Papers; GitHub discovery; Extropic writing; and
+Logical Intelligence public updates. Existing Carnot entries already cover the main
+2025–2026 verification, KAN, EBM, p-bit, PTRM, SGE, and memory-agent lines. Only two
+non-duplicate sources changed the executable plan.
+
+### New actionable deltas
+
+- **PACE: Two-Timescale Self-Evolution for Small Language Model Agents** —
+  arXiv:2605.23019, https://arxiv.org/abs/2605.23019. PACE separates lower-risk prompt
+  or memory-policy refinement from higher-risk control-logic changes, advancing to the
+  second timescale only after the first saturates and accepting changes on held-out
+  validation. Carnot hook: combine the clean `.504` spline-local KAN updater with a
+  corrected causal-memory policy in a two-timescale controller. Promote low-risk policy
+  changes first; unlock active-spline energy changes only after saturation; require exact
+  held-out validation, backward retention, and rollback. Carnot does not inherit an
+  external teacher or model-weight update.
+- **EvoPolicyGym: Evaluating Autonomous Policy Evolution in Interactive
+  Environments** — arXiv:2607.02440, https://arxiv.org/abs/2607.02440. The useful
+  evaluation pattern is a fixed interaction budget plus trajectory-level accounting of
+  policy changes, validation decisions, and downstream effects rather than reporting only
+  a terminal score. Carnot hook: give the two-timescale self-learning experiment an
+  immutable decision ledger, fixed adaptation budget, per-change attribution, delayed
+  regression checks, and server-style held-out fixtures controlled by exact validators.
+
+### Citation-trail and secondary-source status
+
+- **EBT and ARM-EBM citation trails:** the newly visible items did not supply a stronger
+  executable dependency than Carnot's already-indexed exact-verification, fixed-point,
+  ontology, distributional-energy, and constrained-reasoning work.
+- **OpenReview, Hugging Face Papers, and GitHub:** recent verifier, constrained-decoding,
+  KAN, and agent-memory items were duplicates of indexed lines or lacked a local artifact
+  that would displace the exact ASP/FSM validator and llama.cpp paths. No repository was
+  adopted merely because it was newly trending.
+- **Extropic:** public writing still exposes no authenticated local TSU execution route
+  beyond the already-indexed X0/XTR-0 material. It remains watch-only.
+- **Logical Intelligence:** Kona 1.0 and formal-verification posts remain useful
+  architectural context, but no local weights, verifier artifact, or reproducible hardware
+  benchmark is available for a Carnot headline claim.
+
+### V505 planning impact
+
+- Repair and positively control the `.504` response parser before remeasuring local-SOTA
+  solve-versus-verify asymmetry; the prior 648 parser failures are infrastructure evidence,
+  not a verifier result.
+- Use a two-timescale, exact-gated controller for the required continuous self-learning
+  lane, with the memory-policy metric tautology corrected before it can become a gate.
+- Adjudicate the existing PTRM Stage-1 checkpoint on preregistered leave-one-game-out data;
+  do not spend the reserved slot retraining the same substrate.
+- Replace the retired SGE continuation with the expressly untried epistemic object-model
+  MCTS candidate path, while retaining live-agent self-discovery and registry reproduction
+  as the only ARC solve authority.
+- Extend matched CPU/CUDA sampling to a crossover sweep at larger problem sizes; board
+  lanes remain authenticated continuity receipts and may not support an unmatched speedup
+  claim.
+
+<!-- V505-PLANNER-REFRESH-20260711-END -->
