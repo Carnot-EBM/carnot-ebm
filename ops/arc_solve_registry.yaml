@@ -875,6 +875,20 @@ games:
     restructured to avoid redundant re-orientations the current 80-move Manhattan
     model implicitly charges for). Absent that, wa30 L2 should be treated as a
     confirmed dead end for this project''s live-agent mechanics.'
+  - 'v8 (results/outer_loop_gpt56sol_wa30_probe_v8.json): tested the last remaining
+    hypothesis directly -- issued ACTION1-4 across multiple direction-change
+    scenarios (continue-straight, 180-degree reversal, 90-degree turn) and compared
+    player grid-cell deltas against timer deltas for each. Every unobstructed
+    direction-change press translated the player one cell AND consumed exactly one
+    timer tick in the SAME call -- no separate stationary turn-only press exists;
+    turn and move are bundled. CONFIRMED (not refuted, not worse): the 80-move
+    optimistic lower bound is exactly correct as originally computed. wa30 L2 is now
+    a FULLY SETTLED dead end for one-block-at-a-time cardinal-move carrying -- all
+    four follow-up hypotheses (multi-carry, ACTION6/diagonal, push, turn-vs-move
+    split) across v5-v8 are empirically refuted or confirmed-neutral. No further
+    interaction-mechanic probing is expected to move this; a future attempt would
+    need either an entirely different theory of the puzzle (not yet conceived) or
+    to accept the 4/5-placement ceiling and move effort to a different game.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
