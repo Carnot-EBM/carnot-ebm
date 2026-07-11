@@ -1,275 +1,298 @@
-# Carnot Research Roadmap vNEXT: Verification Co-evolution, Reset-free Self-learning, and Live Generation
+# Research Roadmap vNEXT — Milestone 2026.07.505
 
-**Created:** 2026-07-11
-**Milestone:** 2026.07.504
-**Status:** Planned; activates only after milestone 2026.07.503 is reconciled
-**Task range:** exp5564-exp5577
-**Execution file:** `research-roadmap-next.yaml`
-**Supersedes:** the completed 2026.07.503 roadmap (exp5550-exp5563)
+**Title:** Parser-Grounded Verifier Co-evolution, Two-Timescale Self-Learning, PTRM Adjudication, Epistemic ARC, and Sampling Crossover  
+**Status:** Proposed  
+**Task range:** Exp5578–Exp5591  
+**Execution manifest:** `research-roadmap-next.yaml`
 
-## Executive decision
+## Milestone thesis
 
-Milestone `.503` closed three attractive but non-working continuations and exposed a more useful path.
-Grammar-row completion is not ready, the local-SOTA hard/soft panel therefore remains blocked, and the
-cross-family CSL v2 result was a tautological null. Those lanes must not receive another version-number
-rerun. In contrast, `.503` established two clean substrates worth extending: an exact ASP/FSM fixture with
-a bounded sparse-repair signal, and causal write-manage-read memory with a real action-impact delta.
+Milestone `.504` established useful substrates, but it did not establish its two central
+headline claims. The local-SOTA panel executed on both mandated model families with
+authenticated GPU offload, yet all 648 candidate parses failed; solve and verification
+accuracy therefore both collapsed to zero. The causal memory tournament completed, but
+its two headline deltas were arithmetically identical and was adversarially flagged as a
+tautology. By contrast, active-spline KAN learning and matched CPU/CUDA sampler quality
+were clean, PTRM Stage 1 created a faithful stochastic substrate, and the capstone correctly
+refused solve/verify, broad self-learning, hardware-speedup, and ARC-level-up claims.
 
-Milestone `.504` turns those substrates into a longitudinal program:
+`.505` repairs those measurement foundations before extending them. It then asks five
+bounded questions:
 
-1. measure whether local SOTA models can verify controlled near-misses better than they can solve them,
-   while keeping the exact ASP/FSM validator authoritative;
-2. let the verifier and the energy/memory policy co-evolve under exact feedback, including a real
-   spline-local parameter update and delayed-regression gate; and
-3. test whether better candidate diversity reaches the live ARC path, while separately honoring the
-   operator-reserved PTRM generator build and producing matched sampler-quality hardware evidence.
+1. Does a positively controlled parser support a real local-SOTA solve-versus-verify
+   asymmetry measurement?
+2. Can exact counterexamples drive safe verifier extension rather than another external
+   text-scoring rerun?
+3. Can corrected memory evidence and active-spline KAN updates form a two-timescale,
+   reset-free learner that passes delayed-regression and rollback gates?
+4. Does the existing PTRM checkpoint show preregistered leave-one-game-out benefit, and
+   can a separately ordinary live ARC track improve candidate discovery with an epistemic
+   object-model MCTS mechanism?
+5. At what problem size, if any, does matched CUDA sampling cross over CPU while preserving
+   sample quality?
 
-This is a 14-experiment, four-phase milestone. It includes two infrastructure/evidence slots, one
-execution-time SOTA-ingestion slot, a dedicated continuous self-learning phase, one ordinary ARC live
-level-up slot, and one separate `arc-trm-generator` slot.
+## What milestone `.504` proved
 
-## What milestone 2026.07.503 proved
-
-| Evidence | Result | `.504` consequence |
+| Evidence | Terminal fact | Consequence for `.505` |
 |---|---|---|
-| Exp5552/5553/5554 grammar row path | Automaton row completion was blocked at 0.333 support; the GBNF smoke and panel v4 were gate-skipped. | Retire the row-completion continuation. Use independent exact ASP/FSM instances and ordinary structured responses; do not depend on the missing grammar backend. |
-| Exp5555 exact ASP/FSM fixture | Defaults, contradictions, and soft-preference fixtures were exact and clean. | Promote the fixture into a controlled valid/near-miss solve-versus-verify corpus. |
-| Exp5556 sparse ASP/FSM repair | Bounded positive repair evidence landed; no speedup claim. | Reuse its descriptor path for verifier stress and matched CPU/CUDA sampling, not another scale-only rerun. |
-| Exp5557 CSL corrigendum | The five-arm tautology was repaired; aligned memory exceeded shuffled and no-memory controls. | The causal substrate is usable, but still does not constitute broad continuous learning. |
-| Exp5558 causal memory | Write-manage-read action impact was +0.8333 and policy quality exceeded always-full memory by +0.3333. | Search memory policies longitudinally, with held-out transfer and rollback. |
-| Exp5559 cross-model CSL v2 | Flagged/blocked: every arm was 0.1667 and cross-family delta was 0.0. | Do not issue a v3 cross-family rerun. Test within-system reset-free adaptation with exact feedback instead. |
-| Exp5560 hardware timing hygiene | Receipt was clean, but no authenticated matched timing pairs existed. | Run a same-seed, same-schedule CPU/CUDA comparison; boards remain continuity receipts unless matched execution is available. |
-| Exp5561/5562 ARC | The rotated target precheck was clean, but the live attempt produced no target reproduction and registry delta 0. | Continue the mandatory ARC floor with a mechanism that directly addresses observed strategy collapse, not more budget on the same policy. |
-| Exp5563 capstone | Structured-SOTA, broad CSL, hardware speedup, and ARC-delta claims were all false; exact fixtures and causal memory were true. | Narrow the milestone around verifier co-evolution, genuine online adaptation, and candidate generation. |
+| Exp5566 exact ASP/FSM corpus | 120 exact-labeled rows were clean. | Keep the corpus and oracle fixed; do not regenerate the benchmark. |
+| Exp5567 local-SOTA panel | Qwen3.6 and Gemma-4-26B-A4B ran with authenticated offload, but `parser_failure_count=648`; all accuracy cells were zero. | Treat the result as a parser/instrumentation failure. Repair, positively control, then remeasure once. |
+| Exp5568 co-evolution audit | The trigger fired on a worst-family false-accept rate of 1.0, but the upstream parser collapse made the threshold non-transferable. | Recompute only from clean remeasurement and extend exact predicates, not an LLM judge. |
+| Exp5569 memory tournament | `policy_ready=true`, but the artifact was flagged because forward and backward deltas were identically `0.3333333334`. | Issue a row-level metric corrigendum before the memory policy can gate learning. |
+| Exp5570 spline-local KAN | Active-spline exact-energy learning was clean and `kan_ready=true`. | Reuse the shipped updater; do not retrain an unrelated KAN. |
+| Exp5571/5572 reset-free lane | Live harness blocked on no authenticated CUDA offload; promotion was gate-skipped. | Use a fresh native CUDA llama-server receipt and then run the cached delayed gate. |
+| Exp5573 sampling | Six quality-matched pairs passed; CUDA was roughly four times slower at n=32/64. | Search for a crossover at larger n; no current speedup claim is allowed. |
+| Exp5574 PTRM | Stochastic trajectories, history/intent, and dynamic halting worked, but LOO was not run and depth increased overthinking. | Use the checkpoint for decision-grade LOO evaluation; do not retrain Stage 1. |
+| Exp5575/5576 ordinary ARC | The SGE controller was reachable, but global pre-existing gates failed and the live task skipped; capstone retired the continuation. | Do not rerun SGE. Use the known-untried epistemic object-model MCTS path. |
+| Exp5577 capstone | 14/14 artifacts reconciled; solve/verify, broad CSL, speedup, and ordinary ARC claims remained false. | Carry these boundaries forward verbatim and require explicit promotion evidence. |
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1 — verification is exact only after structure exists
+### Gap 1 — verification evidence is not yet measurement-valid
 
-Carnot can validate an ASP/FSM candidate exactly, but `.503` could not reliably create the required
-structured rows. The PRD's verifiable-reasoning vision needs an honest separation between solving,
-verification, and exact authority. `.504` therefore asks a falsifiable question: on the same controlled
-instances, how often can the mandated local SOTA models identify a near-miss they could not themselves
-solve? Criteria decomposition and repeated scoring are diagnostics; the exact ASP/FSM validator remains
-the oracle.
+Carnot has an exact ASP/FSM oracle, but `.504` never obtained parseable local-SOTA
+candidates. The PRD requires evidence that verifier feedback is useful on model-produced
+work, not merely that an exact checker exists. `.505` first establishes deterministic
+parser fixtures and mutation-based positive controls, then remeasures two mandated local
+GGUF families. Only clean residuals may drive a counterexample-guided exact verifier
+extension.
 
-### Gap 2 — continuous self-learning is still memory-only and short-horizon
+### Gap 2 — continuous self-learning is not yet longitudinally promotable
 
-The clean `.503` result changed memory actions but did not update the energy landscape, did not persist
-through multiple sessions, and did not prove backward retention. FR-11 requires more. `.504` adds a bounded
-SelfMem-style policy tournament, a spline-local KAN energy update with replay and rollback, a reset-free
-local-SOTA harness, and a delayed-regression promotion gate. No frontier teacher or cloud labeler is used.
+The KAN updater is clean, but the memory policy was flagged and live reset-free execution
+never began. FR-11 needs persistent adaptation with safety and non-forgetting, not a
+one-session component score. `.505` follows PACE with two risk levels: low-risk causal
+memory-policy changes first, then higher-risk active-spline energy changes only after the
+first timescale saturates. EvoPolicyGym-style fixed budgets and decision ledgers make every
+accepted or rejected update attributable. A fresh native CUDA path and delayed adversarial
+replay decide whether the controller is promotable.
 
-### Gap 3 — global candidate generation still does not reach new live states
+### Gap 3 — learned candidate generation still has no held-out or live-level gain
 
-The live ARC registry did not move. The first real SGE run exposed strategy collapse into repetitive
-"wait" proposals, while four deterministic TRM pilots failed to generalize. `.504` addresses those exact
-failure modes with (a) an anti-stagnation strategy-diversity controller that the live E3 path can reach and
-(b) the separately reserved PTRM stage: stochastic multi-trajectory recursion, history/intent conditioning,
-ACT-style halting, and Carnot-verifier selection. Neither task receives solve credit unless the live agent
-self-discovers and the registry reproduces the level.
+PTRM has a usable Stage-1 checkpoint but no leave-one-game-out verdict. The ordinary ARC
+registry also stayed flat, and SGE is retired. `.505` separates the obligations: PTRM gets
+one reserved held-out adjudication slot, while ordinary ARC gets an expressly untried
+epistemic object-model MCTS precheck and gated live-agent self-discovery attempt. Neither
+offline adapters nor source-aware solvers can receive solve credit.
 
 ## 2025–2026 research incorporated
 
-The planning refresh was added to `research-references.md` before this roadmap was designed.
+The `V505 Planner Refresh - 20260711` block was added to `research-references.md` before
+this design.
 
-| Source | Action in `.504` |
+| Source | Action in `.505` |
 |---|---|
-| SelfMem, arXiv:2607.03726 | Bounded memory-policy tournament with exact-energy promotion and rollback. |
-| Continual Harness, arXiv:2605.09998 | Reset-free multi-session harness adaptation, replacing its external teacher with local exact feedback. |
-| LLM-as-a-Verifier, arXiv:2607.05391 | Discrete, criteria-decomposed, granular, and repeated local-verifier arms on an exact corpus. |
-| Verification Horizon, arXiv:2606.26300 | Generator-stratified scalability, faithfulness, and robustness audit plus an explicit co-evolution trigger. |
-| Ultrafast KAN online learning, arXiv:2602.02056 | Active-spline-only online energy update with bounded update cost. |
-| PTRM, arXiv:2605.19943; Loop, Think, & Generalize, arXiv:2604.07822 | Stochastic trajectories, verifier selection, history conditioning, ACT halting, and overthinking curves in the reserved TRM slot. |
-| SGE, arXiv:2603.02045 | Anti-collapse diversity forcing in the already-real local strategy proposer. |
-| p-bit FPGA and thermodynamic scaling work | Matched sample-quality and autocorrelation receipts before any hardware speedup claim. |
+| PACE, arXiv:2605.23019 | Risk-separated memory-policy and active-spline update timescales, with held-out admission and rollback. |
+| EvoPolicyGym, arXiv:2607.02440 | Fixed interaction/adaptation budget, immutable per-change decision ledger, and delayed outcome attribution. |
+| LLM-as-a-Verifier and Verification Horizon, already indexed | Parser-grounded remeasurement followed by exact-residual stress and co-evolution; no LLM judge authority. |
+| PTRM and Loop, Think, & Generalize, already indexed | Decision-grade LOO comparison and overthinking/halting analysis on the existing stochastic checkpoint. |
+| Epistemic object-model planning line recorded in `ops/known-issues.md` | Uncertainty-aware MCTS over object-centric runtime rollouts and causal probes, on the live E3 path. |
+| p-bit/Ising accelerator literature, already indexed | Quality-matched CPU/CUDA crossover sweep before any acceleration claim. |
 
-Semantic Scholar citation trails for EBT (`2507.02092`) and ARM-EBM (`2512.15605`) were checked; the
-actionable cited work was already indexed. Extropic's public writing still exposes no authenticated TSU
-execution path, and Logical Intelligence's Kona/Aleph material remains architecture context rather than a
-local benchmark dependency.
+The EBT (`2507.02092`) and ARM-EBM (`2512.15605`) citation routes yielded no stronger
+new dependency. Extropic exposes no authenticated local TSU route, and Kona remains
+proprietary architecture context rather than local comparative evidence.
 
 ## Target architecture
 
 ```text
-                      EXACT AUTHORITY / FEEDBACK
-                 +--------------------------------+
-                 | ASP/FSM validator + energy     |
-                 | valid rows + controlled misses |
-                 +---------------+----------------+
-                                 |
-                                 v
-+----------------------+   +-----+------------------+   +----------------------+
-| Local SOTA GGUF      |-->| Solve-vs-verify panel |-->| Verifier co-evolution|
-| Qwen3.6-35B-A3B      |   | criteria/repeat arms  |   | trigger by generator |
-| Gemma-4-31B / 26B-A4B|   | LLM is not the oracle|   | family + difficulty  |
-+----------------------+   +-----------+------------+   +----------+-----------+
-                                    |                           |
-                                    v                           v
-                         +----------+-----------------------------+
-                         | Continuous self-learning controller    |
-                         | memory-policy tournament                |
-                         | active-spline KAN update + replay       |
-                         | reset-free sessions + rollback          |
-                         +----------------+-------------------------+
-                                          |
-                          +---------------+----------------+
-                          |                                |
-                          v                                v
-              +-----------+-------------+      +-----------+-------------+
-              | Live ARC candidate path |      | Sampling backends       |
-              | SGE anti-stagnation      |      | matched CPU / CUDA      |
-              | PTRM reserved generator |      | board continuity receipt|
-              | E3 -> reproduce -> bank |      | no unmatched speedup    |
-              +-------------------------+      +-------------------------+
+             EXACT ASP/FSM AUTHORITY + CONTROLLED CORPUS
+                              |
+                    +---------v----------+
+                    | parser fixtures +  |
+                    | positive controls  |
+                    +---------+----------+
+                              |
+          +-------------------v-------------------+
+          | local SOTA solve/verify remeasurement|
+          | Qwen3.6 + Gemma-4, llama.cpp CUDA     |
+          +-------------------+-------------------+
+                              |
+                    clean exact residuals
+                              |
+          +-------------------v-------------------+
+          | counterexample-guided exact verifier |
+          | predicate extension + held-out replay|
+          +-------------------+-------------------+
+                              |
+     +------------------------v-------------------------+
+     | two-timescale continuous self-learning controller|
+     |  1. causal memory policy (low risk)               |
+     |  2. active-spline KAN energy update (higher risk) |
+     | fixed budget -> ledger -> held-out -> rollback     |
+     +------------------------+--------------------------+
+                              |
+                 fresh native CUDA SOTA sessions
+                              |
+                    +---------v----------+
+                    | delayed regression |
+                    | poison + rollback  |
+                    +--------------------+
+
+  +--------------------------+       +----------------------------+
+  | reserved PTRM LOO track  |       | ordinary live ARC track    |
+  | existing checkpoint      |       | EOM-MCTS precheck -> live  |
+  | no solve credit          |       | reproduce -> registry      |
+  +--------------------------+       +----------------------------+
+
+  +---------------------------------------------------------------+
+  | matched sampler crossover: CPU <-> CUDA + board continuity    |
+  +---------------------------------------------------------------+
 ```
 
-The exact validator provides labels and promotion feedback. It does not generate a solution, and an LLM
-judge is never treated as an oracle. The continuous controller may alter memory operations and KAN spline
-parameters, but promotion requires held-out improvement, backward-retention bounds, and successful
-rollback. ARC credit remains on the live agent's own attempt stream plus runtime reverse engineering.
+## Phase 0 — evidence lock and execution freshness (Exp5578–5579)
 
-## Phase 0 — evidence lock and source delta (Exp5564–5565)
+**Exp5578 — `.504` to `.505` transition.** Aggregate the 14 terminal artifacts and lock
+the parser, memory, live-CUDA, PTRM, ARC, and hardware boundaries. This is the first
+infrastructure slot and may not reinterpret the parser collapse as a scientific result.
 
-**Exp5564 — transition `.503` into `.504`.** Aggregate the 14 completed artifacts, preserve blocks and
-flags, and lock the new task range and gates. This is an evidence receipt, not a re-analysis of failed
-lanes.
+**Exp5579 — execution-time source delta.** Recheck all required source surfaces after the
+planner marker and append only non-duplicate actionable evidence. This is the milestone's
+bleeding-edge ingestion slot; an honest no-op is acceptable.
 
-**Exp5565 — execution-time source delta.** Repeat the mandated source sweep at execution time and append
-only non-duplicate actionable deltas. No new source is allowed to silently reopen retired grammar or
-cross-family CSL scopes.
+## Phase 1 — parser-grounded verification (Exp5580–5582)
 
-## Phase 1 — verifier asymmetry and co-evolution (Exp5566–5568)
+**Exp5580 — parser forensics and positive control.** Replay cached Exp5567 responses,
+classify every failure mode, introduce a deterministic parser cascade, and prove it on
+synthetic valid/malformed fixtures plus hand-checked cached samples. It makes no model
+calls and cannot claim improved model quality.
 
-**Exp5566 — exact ASP/FSM near-miss corpus.** Build at least 120 rows across defaults, contradictions,
-soft preferences, and transition consistency. Pair valid solutions with one- and two-edit corruptions,
-label them with the exact validator, and prove mutation-distance and class-balance controls.
+**Exp5581 — clean local-SOTA remeasurement.** Behind parser gates, rerun the fixed 36-row
+panel using `unsloth/Qwen3.6-35B-A3B-GGUF` and at least one of
+`unsloth/gemma-4-31B-it-GGUF` or `unsloth/gemma-4-26B-A4B-it-GGUF`. Use cached model paths,
+native llama.cpp GPU offload, exact validation, paired uncertainty, and an explicit parser
+failure ceiling. This is the only remeasurement attempt; a repeated parser collapse retires
+the scope.
 
-**Exp5567 — local-SOTA solve-versus-verify panel.** Behind the corpus gate, run at least 36 exact-labeled
-instances on Qwen3.6-35B-A3B and one Gemma-4 flagship GGUF. Compare direct solving with discrete,
-criteria-decomposed, granular-score, and repeated-verification arms. Use McNemar/paired bootstrap intervals;
-do not claim sub-percent effects. Exact validation decides correctness.
+**Exp5582 — counterexample-guided exact verifier extension.** Reuse only clean cached
+residuals. Mine bounded, human-auditable exact predicate candidates, train/select on one
+split, and require zero unsafe false accepts on held-out families. This extends exact
+constraint coverage; it is not PHASE D, an EBRM/uPRM, or an external generated-text scorer.
 
-**Exp5568 — verifier co-evolution trigger.** Reuse cached outputs only. Stratify residuals by generator,
-constraint family, corruption distance, and verifier arm; assess faithfulness, robustness, and scaling. Emit
-a machine-readable trigger rather than silently retuning a threshold.
+## Phase 2 — two-timescale continuous self-learning (Exp5583–5586)
 
-## Phase 2 — reset-free continuous self-learning (Exp5569–5572)
+**Exp5583 — causal-memory metric corrigendum.** Recompute independent forward transfer,
+backward retention, forgetting, and policy-cost metrics from row-level evidence. Add a
+permutation control proving the metrics are not algebraic aliases. The policy is usable
+only if the tautology disappears and causal controls still pass.
 
-**Exp5569 — causal memory-policy tournament.** Extend Exp5558 with bounded write/manage/read/forget
-policies over a multi-session stream. Compare no memory, shuffled memory, static causal memory, always-full,
-and self-optimized causal memory. The policy may change; model weights remain frozen.
+**Exp5584 — two-timescale exact-gated controller.** Combine the corrected memory policy
+with the shipped active-spline KAN updater. Use a fixed adaptation budget and immutable
+decision ledger. Admit low-risk memory changes first; unlock spline updates only after
+preregistered memory-policy saturation; validate every change on held-out exact fixtures;
+and prove checkpoint rollback. This is the milestone's required continuous self-learning
+experiment.
 
-**Exp5570 — spline-local KAN energy update.** Use exact ASP/FSM feedback to update only activated spline
-coefficients online, with replay and checkpoint rollback. Compare static KAN, dense-update KAN, and
-active-spline KAN. This is the milestone's first genuine energy-parameter self-learning test.
+**Exp5585 — reset-free live local-SOTA sessions.** Behind controller readiness, start a
+fresh native CUDA llama-server on unique ports and authenticate real offload before any
+session. Compare reset-free, reset-each-session, and shuffled-feedback arms over consecutive
+constraint families using a mandated flagship GGUF. Model weights remain frozen.
 
-**Exp5571 — reset-free local-SOTA harness.** If the memory and KAN gates pass, run consecutive constraint
-families without resetting the harness. Compare reset-free adaptation to reset-each-session and shuffled
-feedback using at least Qwen3.6-35B-A3B. The local model remains frozen; only the governed harness and
-energy calibrator adapt.
+**Exp5586 — delayed promotion and poisoning gate.** Reuse cached checkpoints after an
+intervening session, inject stale/contradictory memory and exact-label corruption, test
+rollback, and reconcile forward adaptation with backward retention. It makes no new model
+calls and alone decides the broad continuous-self-learning claim.
 
-**Exp5572 — delayed-regression promotion gate.** Re-evaluate cached checkpoints after an intervening
-session, inject stale/contradictory memory, verify rollback, and decide whether a continuous-self-learning
-claim is allowed. This task makes no new model calls.
+## Phase 3 — generator adjudication, live ARC, and hardware (Exp5587–5590)
 
-## Phase 3 — hardware and live generation (Exp5573–5577)
+**Exp5587 — reserved PTRM leave-one-game-out adjudication.** Use the Exp5574 checkpoint
+and preregistered protocol across multiple held-out games and seeds. Compare stochastic
+PTRM, non-recursive, deterministic-recursive, and majority-selection controls; measure
+per-action accuracy, calibration, trajectory diversity, compute, halting, and overthinking.
+Reach the held-out verdict and retire the PTRM generator line if it again has no signal.
+This `track: arc-trm-generator` slot does not count as ordinary ARC.
 
-**Exp5573 — matched sampler-quality and hardware continuity.** Run identical seeds, schedules, sample
-counts, and ASP/FSM-derived Ising instances on CPU and CUDA. Measure energy distribution, best energy,
-autocorrelation/effective sample size, wall time, device identity, and warm-up. Board lanes report current
-KV260, PolarFire, and GateMate reachability without repeating prohibited destructive media access. A
-speedup claim is impossible without matched successful pairs.
+**Exp5588 — epistemic object-model MCTS live precheck.** Implement the known-untried
+object-centric runtime model, epistemic uncertainty score, causal probe bank, and MCTS
+selection behind the real E3 router. Registry-precheck an unsolved level and prove the live
+agent can reach the mechanism without game source, exhaustive BFS, or a hand GameAdapter.
 
-**Exp5574 — reserved PTRM generator stage.** Implement and train the first faithful Stage-1 substrate:
-Gaussian noise at each recursion step, multiple trajectories, history/intent conditioning, dynamic halting,
-overthinking curves, and Carnot-verifier selection. Run a bounded positive control and emit a checkpoint
-and held-out protocol. This is `track: arc-trm-generator`; it does not consume the ordinary ARC floor and
-does not claim a hidden-game solve.
+**Exp5589 — gated ordinary ARC level-up.** Run the prechecked mechanism on a fresh
+llama.cpp port using a mandated local SOTA GGUF. Only the agent's own attempts and runtime
+reverse engineering count. Offline reproduction and a positive registry delta are required;
+a repeated null retires this EOM-MCTS continuation.
 
-**Exp5575 — SGE anti-stagnation live-path precheck.** Add a strategy-collapse detector and diversity-forcing
-portfolio to the real `LLMStrategyProposer`/`SGECandidateRouter`, prove E3 reachability with fake-completer
-tests, and select a registry-valid unsolved target. This directly addresses the observed passive-wait
-collapse rather than increasing budget.
+**Exp5590 — matched CPU/CUDA crossover and board continuity.** Sweep n=128, 256, 512,
+and 1024 with identical seeds, schedules, sample counts, warm-up rules, and quality metrics.
+Estimate the first quality-preserving crossover, if any. Use SSH-only KV260 checks, a real
+PolarFire workload receipt, and no GateMate detect rerun unless a new physical/JTAG change
+is documented.
 
-**Exp5576 — gated live ARC level-up.** Run the anti-stagnation portfolio with a mandated local SOTA GGUF on
-the prechecked target. Only `live_agent_self_discovery` from its own attempts/runtime RE may receive credit;
-offline reproduction and registry delta are mandatory. The same null retires this SGE continuation.
+## Phase 4 — capstone and reconciliation (Exp5591)
 
-**Exp5577 — capstone reconciliation.** Read every artifact, apply every gate, separate clean, bounded,
-blocked, flagged, and skipped evidence, and update private specs/traceability/ops docs. Broad claims require
-their own explicit evidence fields.
+**Exp5591 — `.505` capstone.** Read all 14 artifacts, apply structured gates, separate
+clean/bounded/blocked/flagged/skipped evidence, reconcile private specs and ops documents,
+and emit explicit claim booleans. This is the second infrastructure slot.
 
-## Dependency graph and gates
+## Dependency graph
 
 ```text
-Exp5564 transition ------------------------------+
-Exp5565 source delta ----------------------------+-------------------------+
-                                                                           |
-Exp5566 exact corpus --[corpus_ready]--> Exp5567 SOTA panel                |
-                                      --[panel_complete]--> Exp5568 trigger|
-                                                                           |
-Exp5569 memory tournament --[policy_ready]--+                               |
-                                            +--> Exp5571 reset-free SOTA ---+
-Exp5570 KAN update --------[kan_ready]-------+             |                 |
-                                                          +--> Exp5572 -----+
-                                                                           |
-Exp5573 matched hardware --------------------------------------------------+
-Exp5574 PTRM reserved slot ------------------------------------------------+
-                                                                           |
-Exp5575 SGE precheck --[live_path_ready AND target_unsolved]--> Exp5576 ---+
-                                                                           |
-All terminal/blocked/skipped artifacts --------------------------> Exp5577
+Exp5578 transition ------------------------------------------------------+
+Exp5579 source delta ---------------------------------------------------+
+                                                                         |
+Exp5580 parser repair --[ready AND positive_control>=0.95]--> Exp5581    |
+Exp5581 remeasure --[complete AND parser_failure_rate<=0.05]--> Exp5582  |
+                                                                         |
+Exp5583 memory corrigendum --[clean AND policy_ready]--> Exp5584         |
+Exp5584 two-timescale --[controller_ready]-------------> Exp5585         |
+Exp5585 live sessions --[reset_free_candidate]---------> Exp5586         |
+                                                                         |
+Exp5587 PTRM LOO --------------------------------------------------------+
+                                                                         |
+Exp5588 EOM-MCTS precheck --[live_path_ready AND target_unsolved]        |
+                                           +-------------> Exp5589 ------+
+                                                                         |
+Exp5590 sampler crossover -----------------------------------------------+
+                                                                         |
+All terminal/blocked/skipped artifacts -----------------------> Exp5591
 ```
 
-Structured gates in `research-roadmap-next.yaml` are conjunctive. A failed prerequisite skips the
-downstream agent call; the downstream script must not fabricate a result. Gates test deliverable readiness,
-not favorable scientific outcomes.
+All structured gates are conjunctive. A failed gate skips the downstream agent call and
+preserves the upstream scientific result. A task must never fabricate a favorable field to
+make a downstream task execute.
 
 ## Hardware requirements
 
 | Experiments | Required resources | Expected wall time | Failure behavior |
 |---|---|---:|---|
-| 5564–5566, 5568–5570, 5572, 5575, 5577 | CPU, existing artifacts, local tests | 20–60 min each | Emit a bounded/blocked receipt if required artifacts are absent. |
-| 5567 | RTX 3090-class CUDA, cached Qwen3.6-35B-A3B plus one Gemma-4 flagship GGUF, llama.cpp GPU offload | 90–150 min | `blocked_missing_sota_cache` or `blocked_no_cuda_offload`; no CPU fallback headline. |
-| 5571 | RTX 3090-class CUDA, cached mandated SOTA GGUF, exact ASP/FSM feedback | 90–180 min | Block if live local inference/offload is not authenticated. |
-| 5573 | CPU plus CUDA GPU; optional authenticated SSH to KV260/PolarFire and physical GateMate visibility | 60–120 min | Preserve independent lane receipts. Never access KV260 `mmcblk`; never claim board speedup from unmatched runs. |
-| 5574 | RTX 3090-class CUDA, PyTorch training, human-win trajectory corpus | 3–8 h | Write the precondition receipt first; block rather than shrinking into another toy deterministic pilot. |
-| 5576 | RTX 3090-class CUDA on a fresh non-default llama-server port, offline ARC kit, live E3 path | 60–180 min | Block on missing target/runtime; null is valid and retires this continuation if unchanged. |
+| 5578–5580, 5582–5584, 5586, 5591 | CPU, existing artifacts, local tests | 20–90 min | Emit bounded/blocked evidence if prerequisites are absent. |
+| 5581 | Dual RTX 3090-class CUDA; cached Qwen3.6 and Gemma-4 GGUFs; llama.cpp | 2–4 h | Block on missing cache or unauthenticated offload; do not use a legacy model for headline cells. |
+| 5585 | RTX 3090-class CUDA; fresh native llama-server; exact feedback | 2–4 h | Block before inference if native CUDA/offload receipt fails. |
+| 5587 | RTX 3090-class CUDA; Exp5574 checkpoint; PyTorch | 3–8 h | Preserve the preregistered LOO denominator; do not shrink into a smoke test. |
+| 5588 | CPU tests and live E3 routing fixtures | 1–3 h | Block if E3 reachability, registry precheck, or no-leak controls fail. |
+| 5589 | RTX 3090-class CUDA; mandated local SOTA GGUF; offline ARC kit | 1–4 h | Gate-skip on failed precheck; otherwise honest null is valid and retirement-bearing. |
+| 5590 | CPU plus RTX 3090 CUDA; optional authenticated board access | 2–6 h | Keep backend lanes independent; no speedup from failed or unmatched rows. |
 
-### Current attached-board constraints
+### Attached-board constraints
 
-- **KV260:** use SSH-only probes; never touch `mmcblk` or perform destructive boot-media work.
-- **PolarFire SoC:** workload reachability exists, but no matched end-to-end timing pair exists yet.
-- **GateMate:** physical/JTAG setup remains the blocker; do not repeat a software-only probe as evidence of
-  progress unless physical visibility changed.
-- **Extropic TSU:** no local authenticated device or API is available; it remains watch-only.
+- **KV260:** SSH-only. Never inspect or write `/dev/mmcblk*`; a timeout is a valid reachability receipt.
+- **PolarFire SoC:** use an authenticated workload/hash receipt, not reachability alone.
+- **GateMate:** do not repeat the unchanged software detect path. Probe only after a documented physical,
+  cable, power, or JTAG change; otherwise emit a continuity note.
+- **Extropic TSU:** no authenticated local device/API exists, so it remains watch-only.
 
-## Claim policy
+## Claim and retirement policy
 
-- No grammar-forced structured-SOTA claim; the `.503` row path is closed.
-- No LLM-verifier-as-oracle claim; exact ASP/FSM validation is authoritative.
-- No broad continuous-self-learning claim without Exp5572 passing forward adaptation, backward retention,
-  delayed regression, poisoning resistance, and rollback.
-- No hardware speedup claim without matched successful runs and authenticated device receipts.
-- No ARC solve claim without `solve_provenance: live_agent_self_discovery`, offline reproduction, and a
-  positive registry delta.
-- The PTRM slot is a training-stage experiment and cannot count as the ordinary ARC level-up slot.
+- No solve-versus-verify claim unless parser positive controls pass and production parser failures stay at
+  or below 5% on both mandated model families.
+- No verifier co-evolution claim from parser failures or an LLM judge; only exact-label residuals and
+  held-out unsafe-false-accept evidence count.
+- No broad continuous-self-learning claim unless Exp5586 passes forward adaptation, backward retention,
+  delayed regression, poisoning resistance, budget accounting, and rollback with frozen LLM weights.
+- No PTRM continuation after another preregistered held-out null; the reserved slot must reach a verdict.
+- No ARC solve claim without `solve_provenance: live_agent_self_discovery`, offline reproduction, and
+  positive registry delta. PTRM does not satisfy the ordinary ARC floor.
+- No hardware speedup claim without successful quality-matched pairs and authenticated device timing.
+- Same-verdict reruns named in `prior_failures` are retirement-bearing through
+  `retire_if_same_verdict: true`.
 
-## Explicitly deferred or retired
+## Explicitly closed or deferred
 
-- Automaton/GBNF row-completion vN+1 and hard/soft panel v5.
-- Cross-family CSL transfer v3 on the Exp5559 substrate.
-- Offline ground-truth BFS, per-game calibration adapters, or any ARC solver unreachable from E3.
-- Another deterministic fixed-depth TRM action-classification or sequence-refinement pilot.
-- Hardware speedup from receipt-only board probes or unmatched timing.
-- Kona/Aleph or Extropic comparative claims without local authenticated execution.
-
-## Exit criteria
-
-The milestone is complete when all 14 tasks have terminal artifacts and Exp5577 has reconciled them. A
-scientific null or a correctly skipped gate is terminal. The milestone advances Carnot only if it leaves
-behind at least one of: a trustworthy solve-versus-verify asymmetry measurement, a promotable online energy
-update, a reset-free non-regressing harness, a faithful PTRM Stage-1 substrate, a live ARC registry delta,
-or a matched hardware sampler-quality receipt. Otherwise the capstone must narrow or retire the associated
-lane rather than renaming it for `.505`.
+- PHASE D external generated-text energy scorers, EBRM/uPRM/ARM-EBM reruns, and broad LoRA/RL reward-model
+  training remain retired.
+- Grammar/automaton row-completion vN+1 work and cross-family CSL v3 remain retired.
+- SGE anti-stagnation and more-budget continuations are retired after `.504`.
+- Offline ground-truth BFS, game-source inspection, hand GameAdapters, and duplicate ARC level solves are
+  prohibited as live solve evidence.
+- Proprietary TSU/Kona comparative claims are deferred until authenticated local artifacts exist.
+- No active `research-roadmap.yaml` or conductor source modification is part of this proposal.
