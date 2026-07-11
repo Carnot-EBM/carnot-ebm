@@ -10768,3 +10768,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-11 15:31 UTC | Causal SelfMem policy tournament on multi-session  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-11 15:49 UTC | Spline-local KAN online energy adaptation with rep | OK | 88 passed, 1 warning in 11.34s |
 | 2026-07-11 16:08 UTC | Gated reset-free local SOTA continual harness | OK | 87 passed, 1 warning in 13.37s |
+| 2026-07-11 16:10 UTC | Gated delayed-regression and rollback promotion de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-ha |
