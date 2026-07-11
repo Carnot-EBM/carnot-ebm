@@ -804,7 +804,7 @@ games:
     reproducibility_checksum: f1b529084c55d7dc1f7e2e9344bf10ac746a04f1c359db911be1f16f1182af58
 - game: wa30
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
     five blocks into five of six bay target slots (player hand-carry PLUS a passive
     color-12 helper-robot NPC that autonomously delivers blocks -- see gotcha below);
@@ -814,9 +814,13 @@ games:
     (see gotcha below). L4: THREE side-affiliated robots (west/east/south), five bays
     totalling exactly 7 slots for 7 blocks, sealed central enclosure; win =
     frame.levels_completed==4 via per-side socket distribution avoiding the
-    north-fence trap (see gotcha below). L2->L3 and L3->L4 both auto-transition with
-    no reset and no carry-over state between levels (fresh timer, fresh layout) --
-    action sequences concatenate directly for the reproduction gate.'
+    north-fence trap (see gotcha below). L5: a solid, non-socketable color-5 wall
+    with a single 2-row gap, player+6 blocks east, one robot roaming both sides + an
+    8-slot bay west; win = frame.levels_completed==5 via player-ferry-to-gap +
+    robot-relay-through-gap (see gotcha below). L2->L3, L3->L4, and L4->L5 all
+    auto-transition with no reset and no carry-over state between levels (fresh
+    timer, fresh layout) -- action sequences concatenate directly for the
+    reproduction gate.'
   solver: 'L1: results/experiment_4275 solve_trace.actions. L2: results/outer_loop_fable5_wa30_probe.json
     action_sequence (94-action full sequence: banked 33-action L1 prefix + 61-action
     L2 suffix). L3: results/outer_loop_fable5_wa30_probe_l3.json action_sequence
@@ -826,12 +830,19 @@ games:
     sequence: the same 170-action L1+L2+L3 prefix + 67-action L4 suffix from a clean
     single episode; the agent deliberately did NOT run its own reproduction gate to
     stay within its step budget, handed the candidate over, and the outer loop ran
-    the gate independently -- see dead_ends v11 entry below). All three (L2/L3/L4)
-    by claude-fable-5, 2026-07-11. No GameAdapter registered yet -- these are frozen
-    banked trajectories, not a generalized per-game solver; a future GameAdapter
-    encoding the robot-delivery + fence-socket + multi-robot rules (not just these
-    three trajectories) would be needed to reach the live E3AgentPolicy path or to
-    attempt L5+ (bonus recon below).'
+    the gate independently -- see dead_ends v11 entry below). L5:
+    results/outer_loop_fable5_wa30_probe_l5.json action_sequence (359-action full
+    sequence: the same 237-action L1-L4 prefix + a 113-action episode-3 suffix
+    exactly as played, hitting a 600-step budget cap 2-4 robot-presses short of the
+    6th deposit, + a 9-action hand-engineered parity-safe tail to fund the robot''s
+    final delivery; no live win was observed in-session, the candidate was handed
+    over as unverified, and the outer loop ran the gate independently -- see
+    dead_ends v12 entry below). All four (L2/L3/L4/L5) by claude-fable-5,
+    2026-07-11. No GameAdapter registered yet -- these are frozen banked
+    trajectories, not a generalized per-game solver; a future GameAdapter encoding
+    the robot-delivery + fence-socket + multi-robot + ferry-relay rules (not just
+    these four trajectories) would be needed to reach the live E3AgentPolicy path or
+    to attempt L6+.'
   gotchas:
   - 'L2 HELPER-ROBOT mechanic (v9, 2026-07-11, claude-fable-5, independently re-verified
     by the outer loop -- see dead_ends v9 entry below): the unexplained 4x4 color-12
@@ -880,6 +891,26 @@ games:
     reading suggests. Post-GAME_OVER reset restores exact fresh L4 entry state and
     preserves the L3 checkpoint. L4''s 64-cell timer drains ~0.64-0.7 cells/action,
     affording ~90+ actions.'
+  - 'L5 WALL-GAP FERRY-RELAY mechanic (v12, 2026-07-11, claude-fable-5, gate
+    independently RUN by the outer loop on an UNVERIFIED candidate, not just
+    re-checking an observed win -- see dead_ends v12 entry below): the color-5 wall
+    is solid and NOT socketable (unlike L3''s fence); the only crossing is a
+    single 2-row gap (tile rows 7-8, col 9) into a pocket opening west toward an
+    8-slot bay. A single robot roams BOTH sides through the gap and reliably makes
+    every bay deposit; the optimal player role is pure-ferry (carry all 6 east-side
+    blocks to gap-side drop points, let the robot relay them the rest of the way).
+    Robot freeze is state-dependent, not block-specific: it can park adjacent to a
+    pickable block and stall for dozens of presses, and stealing its locked target
+    unfreezes it instantly, yet the identical block/tile was picked up cleanly by
+    the robot later in the same episode. New failure mode vs. L2-L4: blocking the
+    robot head-on in the 1-tile gap corridor makes it ABANDON its carried cargo
+    mid-transit and re-path. Bay col-3 slots fill first and wall off col-2 access
+    from the east side -- col-2 must be approached via col-1 (outside the bay
+    border) with a ghost-east carry, or left entirely to the robot. NEVER press
+    ACTION5 while facing an adjacent block or carried ghost unless the toggle is
+    intended -- two of three L5 episodes were damaged by exactly this fumble (one
+    briefly un-placed an already-delivered block). L5''s timer is the roomiest yet
+    (~0.51 cells/action, ~125 actions/episode).'
   - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex): a
     64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4 (not on ACTION5
     pickup/drop) -- though v9 measured the real drain as ~0.85 cells/action (not
@@ -1050,6 +1081,33 @@ games:
     likely needs a new transfer mechanic entirely -- flagged as the next
     session''s discovery target (est. budget ~470+: prefix 237 + play + gate
     ~300). levels_reproduced bumped 3 -> 4.'
+  - 'v12 (results/outer_loop_fable5_wa30_probe_l5.json, 2026-07-11, claude-fable-5,
+    same agent resumed via SendMessage with full L1-L4 context, budget raised to
+    600): unlike v11, did NOT observe a live win in-session -- hit the 600-step cap
+    mid-episode-3 with 5 of 6 blocks placed and the robot 2-4 presses from
+    depositing the 6th, ~11 actions of level timer still unspent. Per instruction,
+    stopped rather than overshoot the budget to find out. Handed over a candidate:
+    the 237-action verified prefix + the 113-action episode-3 suffix EXACTLY as
+    played, plus a 9-action HAND-ENGINEERED tail (step off/face away from its own
+    placed block so ACTION5 pumps can''t toggle it, then 8 ACTION5 presses to fund
+    the robot''s remaining deliveries) -- constructed from determinism evidence
+    (the prefix had replayed identically 3 times this session) rather than from a
+    live-observed completion. This is meaningfully weaker evidence than v11''s
+    candidate (which came from an actually-observed live win, just not
+    gate-verified) -- v12''s tail was a projection, not a replay of real play.
+    Explicitly flagged reproduction_verified: false and level5_win_observed_live:
+    false in the artifact -- no overclaim. The outer loop ran the gate on exactly
+    this reasoning (a genuinely uncertain candidate, not a rubber-stamp): extracted
+    the 359-action full sequence and called arc_solver_kit.reproduce(''wa30'', ...,
+    claimed_level=5) from 5 independent fresh env.reset() calls. All 5 returned
+    reached_level=5, reproduced=True -- the hand-engineered tail was correct and
+    the candidate banks. Also newly confirmed: the robot-freeze mechanic first seen
+    in L4 is state-dependent, not block-specific (the identical block/tile froze
+    the robot once and was picked cleanly later in the same episode), and a new
+    failure mode -- head-on corridor blocking makes the robot abandon carried
+    cargo -- was discovered and is not yet a proven trap the way L4''s north-fence
+    freeze was (no episode was lost to it specifically). levels_reproduced bumped
+    4 -> 5.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
@@ -2049,7 +2107,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 72
+reproducible_total_levels: 73
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
