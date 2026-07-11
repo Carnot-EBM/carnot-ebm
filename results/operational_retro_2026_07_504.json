@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.504",
+  "generated_at": "2026-07-11T18:38:33Z",
+  "retro_type": "operational_in_progress",
+  "summary": "No data available this milestone: the authoritative timing window contains 0 completed experiments, 0 minutes of wall time, and 0 compute-bound entries. No slowest compute-bound run, GPU-utilization judgment, or DualGPURunner engagement result can be derived.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "Operational timing observability is unavailable because neither the live commit scan nor disk-mtime reconstruction produced a milestone-scoped experiment entry."
+  ],
+  "improvements_suggested": [
+    "Emit a milestone-keyed timing receipt at experiment start and completion so closeout does not depend solely on reconstruction.",
+    "Validate timing-receipt assembly before retrospective generation and surface an empty milestone window immediately.",
+    "Store compute-bound and parallel-model markers in every timing receipt so GPU and DualGPURunner checks can be evaluated directly."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Persist experiment start and completion timestamps under the active milestone key.",
+    "Add a closeout preflight that stops retrospective analysis when the assembled timing window is empty.",
+    "Capture compute-bound and model-parallelism metadata alongside each timing row."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No efficiency estimate is supportable without milestone-scoped experiment entries. The defensible operational lesson is to make timing capture durable before the next retrospective.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}
