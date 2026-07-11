@@ -804,16 +804,44 @@ games:
     reproducibility_checksum: f1b529084c55d7dc1f7e2e9344bf10ac746a04f1c359db911be1f16f1182af58
 - game: wa30
   reproducibility: reproduced
-  levels_reproduced: 1
-  win_condition: first-solve L1; ACTION + kind sequence replays offline.
-  solver: results/experiment_4275 solve_trace.actions.
+  levels_reproduced: 2
+  win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
+    five blocks into five of six bay target slots (player hand-carry PLUS a passive
+    color-12 helper-robot NPC that autonomously delivers blocks -- see gotcha below);
+    win = env reports frame.levels_completed==2.'
+  solver: 'L1: results/experiment_4275 solve_trace.actions. L2: results/outer_loop_fable5_wa30_probe.json
+    action_sequence (94-action full sequence: banked 33-action L1 prefix + 61-action
+    L2 suffix), claude-fable-5, 2026-07-11. No GameAdapter registered yet -- this is a
+    frozen banked trajectory, not a generalized per-game solver; a future GameAdapter
+    encoding the robot-delivery rule (not just this one trajectory) would be needed to
+    reach the live E3AgentPolicy path or to attempt L3+.'
   gotchas:
-  - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex, not yet
-    adaptered): a 64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4
-    (not on ACTION5 pickup/drop). Five outlined blocks must each be carried and
-    explicitly dropped into one of five distinct target slots; a temporary overlap
-    is not a placement, only frame.levels_completed advancing is ground truth; all
-    five are required (four confirmed insufficient, v3/v4).'
+  - 'L2 HELPER-ROBOT mechanic (v9, 2026-07-11, claude-fable-5, independently re-verified
+    by the outer loop -- see dead_ends v9 entry below): the unexplained 4x4 color-12
+    object near the bay is a passive NPC that advances one tile per PLAYER action
+    (any of ACTION1-5 counts, not just movement) toward the nearest loose block, picks
+    it up, carries it to the bay, and deposits it in an empty slot -- and its deposits
+    count as placements exactly like a player-drop. This makes L2 a two-worker
+    cooperative puzzle, not the single-worker puzzle assumed by v1-v8 (whose 80-move
+    single-worker lower bound was arithmetically correct but incomplete -- it never
+    accounted for this second actor). None of v1-v8''s 8 attempts identified or
+    interrogated this glyph.'
+  - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex): a
+    64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4 (not on ACTION5
+    pickup/drop) -- though v9 measured the real drain as ~0.85 cells/action (not
+    exactly 1:1), giving a real budget closer to ~72-75 ticks, not a strict 64
+    (unverified by the outer loop independently; reported as-observed by v9). Five
+    outlined blocks must each be carried/delivered and explicitly dropped into one of
+    five distinct target slots; a temporary overlap is not a placement, only
+    frame.levels_completed advancing is ground truth; all five are required (four
+    confirmed insufficient, v3/v4).'
+  - 'L2 (v9, as-reported, not independently spot-checked by the outer loop): a carried
+    block hovers on the pickup side and its destination cell must ALSO be free or the
+    move is blocked -- route around already-filled slots. Contact-highlight recolors a
+    block outline (3=player-adjacent, 5=robot-adjacent), which can fool a naive
+    frame-color block detector. Timer expiry is GAME_OVER; a reset restores L2 fully
+    (in-progress placements do NOT persist across episodes) while preserving the L1
+    checkpoint. frame.frame can contain 2 animation sub-frames -- parse the LAST one.'
   - 'Carry-while-repositioning (holding a block against the target while moving
     before the explicit drop) does NOT save timer budget vs. drop-then-repick (v4
     refuted this efficiency hypothesis empirically).'
@@ -888,7 +916,38 @@ games:
     split) across v5-v8 are empirically refuted or confirmed-neutral. No further
     interaction-mechanic probing is expected to move this; a future attempt would
     need either an entirely different theory of the puzzle (not yet conceived) or
-    to accept the 4/5-placement ceiling and move effort to a different game.'
+    to accept the 4/5-placement ceiling and move effort to a different game.
+    RETRACTED 2026-07-11 by v9 (see below) -- the "settled dead end" conclusion was
+    correct GIVEN the single-worker model tested, but that model was incomplete.'
+  - 'v9 BREAKTHROUGH (results/outer_loop_fable5_wa30_probe.json, 2026-07-11,
+    claude-fable-5, run as a deliberate model-comparison probe after v1-v8''s dead
+    end): given the confirmed mechanics but explicitly NOT the v1-v8 "infeasible"
+    conclusion, and asked to look for anything the other model''s 8 attempts might
+    have missed rather than re-testing already-refuted hypotheses, this attempt
+    investigated the one unexplained glyph in the L2 frame -- a solid color-12 4x4
+    tile near the bay -- and found it is a passive HELPER ROBOT (see the gotcha
+    above). Delivered B3/B4/B1 via the robot in parallel while hand-carrying B5/B2,
+    reaching frame.levels_completed==2 in 61 L2 actions (165 total interactive
+    steps, 259/400 budget used). SOLVE_PROVENANCE: live_agent_self_discovery, hard
+    constraints respected (no game source, no env._game, no set_level) per the
+    artifact''s self-report AND per the outer loop''s own read of the artifact.
+    INDEPENDENTLY RE-VERIFIED by the outer loop (not just trusted from the agent''s
+    self-report, per CLAUDE.md''s cross-check-surprising-results discipline): the
+    outer loop extracted the artifact''s 94-action action_sequence and re-ran
+    arc_solver_kit.reproduce(''wa30'', ..., claimed_level=2) itself, from 5
+    independent fresh env.reset() calls using the project''s own wa30 apply()
+    convention (scripts/experiments/exp_headway_wa30.py) -- all 5 trials returned
+    reached_level=2, reproduced=True, matching the artifact''s self-reported
+    reproducibility_checksum. This directly overturns the v1-v8 "fully settled dead
+    end" and the earlier pre-session results/experiment_headway_wa30.json finding
+    (a 40000-node internal-state best-first search, using full env._game visibility
+    into the exact win-condition score, that never advanced score past 1/9 -- most
+    likely because its heuristic did not model the robot as a delivery agent, so it
+    never prioritized the sub-goal of activating it). Lesson for future registry
+    entries: an "exhaustive" mechanic sweep is only as exhaustive as the hypotheses
+    considered; a second model with fresh eyes (or a mandate to look for unexplained
+    frame elements specifically) found a mechanic 9 combined attempts (8 gpt-5.6-sol
+    + 1 internal-state search) missed. levels_reproduced bumped 1 -> 2.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
@@ -1888,7 +1947,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 69
+reproducible_total_levels: 70
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
