@@ -1,0 +1,434 @@
+{
+  "action_entropy": 3.21830271715894,
+  "arc_live_levelup_ready": true,
+  "attempt_budget": 48,
+  "attempts": 46,
+  "duplicate_prevented": false,
+  "duration_s": 5.560256930999458,
+  "exact_replay_result": {
+    "gate": {
+      "claimed_level": 2,
+      "game": "r11l",
+      "mode": "standard_reproduction_gate_not_run_no_new_target_candidate",
+      "reached_level": 2,
+      "reproduced": false
+    },
+    "offline_reproduced": false,
+    "registry_delta": 0,
+    "reproduced_levels": 0
+  },
+  "experiment": "experiment_5562_arc_fsm_live_levelup",
+  "experiment_id": 5562,
+  "field_principles": {
+    "action_entropy": "Shannon entropy over executed live action/coordinate choices as a bare float.",
+    "arc_live_levelup_ready": "bare bool proving Exp5561, registry reread, live-reachability, no-LLM metadata, and duplicate gates allowed runtime.",
+    "attempts": "bare int count of live-agent runtime actions executed; zero means the duplicate or readiness gate prevented runtime.",
+    "field_principles": "mapping of one-line principle annotations for each headline and gate field.",
+    "honest_verdict": "one-line verdict starting complete:, honest_null:, duplicate_prevented:, or blocked:.",
+    "inference_substrate": "must equal arc_live_agent_self_discovery_no_llm.",
+    "llm_invoked": "bare bool false proving the credited FSM live attempt did not invoke any LLM.",
+    "llm_strategy_proposer_used": "bare bool false proving no LLM strategy proposer text contributed to the credited solver path.",
+    "no_model_specs_required": "bare bool true because this no-LLM live-agent substrate has no model invocation to name.",
+    "offline_reproduced": "true only when the live-discovered trajectory passes the post-solve offline reproduction gate.",
+    "random_seed": "deterministic seed used for target recheck, bounded live routing, trajectory logging, and checksum replay.",
+    "registry_delta": "bare int registry total delta; nonzero only when the accepted reproduction gate passes after live discovery.",
+    "repeated_coordinate_rate": "fraction of executed coordinate actions that repeated an earlier executed coordinate.",
+    "reproduced_levels": "integer new levels banked from the live-discovered trajectory; success requires at least one.",
+    "reproducibility_checksum": "content-addressed hash over target, seed, trajectory metrics, duplicate gate, and banking result to catch silent drift.",
+    "selected_game": "Exp5561-selected registry-safe game id rechecked immediately before the live attempt.",
+    "selected_level": "Exp5561-selected adjacent unreproduced frontier level label, or the duplicate-prevented target label.",
+    "solve_provenance": "must equal live_agent_self_discovery so only the live runtime's own attempts and runtime reverse engineering receive solve credit.",
+    "tests_added_or_reused": "list of focused tests covering the Exp5562 schema, duplicate prevention, live trajectory metrics, checksum, and banking gate.",
+    "trajectory_path": "path to the detailed live trajectory or duplicate-prevented trajectory receipt.",
+    "upstream_arc_precheck": "path to the Exp5561 gate that selected the target and proved FSM live-path reachability before runtime."
+  },
+  "fsm_action_abstraction_ready": true,
+  "game_source_read": false,
+  "hand_built_per_game_adapter_used": false,
+  "honest_verdict": "honest_null: r11l L3 bounded_budget_no_target_level_reproduction; entropy=3.218; repeat_rate=0.500; registry_delta=0",
+  "inference_substrate": "arc_live_agent_self_discovery_no_llm",
+  "input_artifacts": [
+    "results/experiment_5561_arc_fsm_target_rotation_precheck.json",
+    "ops/arc_solve_registry.yaml"
+  ],
+  "llm_invoked": false,
+  "llm_strategy_proposer_used": false,
+  "milestone": "2026.07.503",
+  "no_model_specs_required": true,
+  "offline_bfs_used": false,
+  "offline_reproduced": false,
+  "post_levels_reproduced": 2,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "OPENCODE.md": true,
+    "exp5561_precheck_present": true,
+    "exp5561_ready": true,
+    "fsm_action_abstraction_ready": true,
+    "game_source_read": false,
+    "hand_built_per_game_adapter_used": false,
+    "llm_invoked": false,
+    "llm_strategy_proposer_used": false,
+    "model_specs_present": false,
+    "offline_arcade_available": true,
+    "offline_bfs_used": false,
+    "registry_present": true,
+    "registry_target_duplicate_prevented": false,
+    "spec_has_req_5562": true
+  },
+  "prior_levels_reproduced": 2,
+  "random_seed": 5561,
+  "registry_after_levels": 69,
+  "registry_before_levels": 69,
+  "registry_delta": 0,
+  "registry_updated": false,
+  "repeated_coordinate_rate": 0.5,
+  "repeated_coordinate_suppression_enabled": true,
+  "repeated_coordinate_suppression_events": 0,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:bcd28365eb389dbe6365a0b4ba4a5beb987445c3c012c6bd30795b1e042b996a",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "r11l",
+    "mode": "standard_reproduction_gate_not_run_no_new_target_candidate",
+    "reached_level": 2,
+    "reproduced": false
+  },
+  "result_path": "results/experiment_5562_arc_fsm_live_levelup.json",
+  "runtime_reverse_engineering": [
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 1,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 2,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 3,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 4,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 5,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 6,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 7,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 8,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 9,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 10,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 11,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 12,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 13,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 14,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 15,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 16,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 17,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 18,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 19,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 20,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 21,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 22,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 23,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 24,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 25,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 26,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 27,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 28,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 29,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 30,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 31,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 32,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 33,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 34,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 35,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 36,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 37,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 38,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 39,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 40,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 41,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 42,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 43,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 44,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 45,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 46,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 47,
+      "suppressed_coordinate_count": 0
+    },
+    {
+      "fsm_phase": "unclassified_fsm_phase",
+      "signal": "fsm_candidate_router_runtime_induction",
+      "step": 48,
+      "suppressed_coordinate_count": 0
+    }
+  ],
+  "schema": "carnot.experiment_5562_arc_fsm_live_levelup.v1",
+  "selected_game": "r11l",
+  "selected_level": "L3",
+  "selected_target_level": 3,
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5562",
+    "SCENARIO-ARC-FCP-5562"
+  ],
+  "status": "honest_null",
+  "target_selection": {
+    "arc_live_levelup_ready": true,
+    "blocked": false,
+    "blocker": "",
+    "duplicate_prevented": false,
+    "fsm_action_abstraction_ready": true,
+    "prior_levels_reproduced": 2,
+    "random_seed": 5561,
+    "registry_before_levels": 69,
+    "selected_game": "r11l",
+    "selected_level": "L3",
+    "selection_reason": "exp5561_fsm_target_survived_registry_reread",
+    "target_audit": {
+      "r11l:L3": {
+        "already_reproduced": false,
+        "decision": "selected",
+        "game": "r11l",
+        "registry_depth": 2,
+        "target_level": 3
+      }
+    },
+    "target_level": 3
+  },
+  "terminal_state": {
+    "max_level": 2,
+    "status": "budget_exhausted",
+    "target_level": 3
+  },
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5562_arc_fsm_live_levelup.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5562_arc_fsm_live_levelup.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5562_arc_fsm_live_levelup.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "trajectory_path": "results/experiment_5562_arc_fsm_live_levelup_trajectory.json",
+  "upstream_arc_precheck": "results/experiment_5561_arc_fsm_target_rotation_precheck.json"
+}

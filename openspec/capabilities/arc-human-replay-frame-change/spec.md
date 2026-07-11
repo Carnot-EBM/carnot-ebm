@@ -2068,7 +2068,94 @@ Required field principles:
 - `inference_substrate`: principle "must equal arc_live_path_precheck_no_llm."
 - `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
 
+### REQ-ARC-FCP-5562: Gated FSM Live Level-Up Attempt
+
+Experiment 5562 SHALL write
+`results/experiment_5562_arc_fsm_live_levelup.json` after the Exp5561-selected
+FSM ARC target is rechecked against the registry. The workflow SHALL run a live
+level-up attempt only when Exp5561 reports `arc_fsm_precheck_ready=true`, the
+selected target is still adjacent and unreproduced, and the FSM action
+abstraction remains live-router reachable. If the registry now records the
+selected target level as already reproduced, the workflow SHALL emit a
+duplicate-prevented artifact, SHALL NOT run the live attempt, and SHALL leave
+`registry_delta=0`.
+
+The credited attempt SHALL use only the live agent's own runtime attempts and
+runtime-reachable FSM induction/routing. It SHALL NOT inspect hidden game
+source, run an offline solver or exhaustive offline ground-truth BFS as solve
+evidence, use an LLM strategy proposer, read hidden-source mechanics, or treat
+LLM proposer text as the credited solver path. If the live agent reaches a new
+candidate level, post-solve banking SHALL run only after that live path has
+found the solution. A level-up claim SHALL be accepted only when
+`solve_provenance=live_agent_self_discovery`, `offline_reproduced=true`, and
+`reproduced_levels>=1`; otherwise the artifact SHALL emit an honest null and
+leave `registry_delta=0`.
+
+The result artifact SHALL include `llm_invoked`,
+`no_model_specs_required`, `upstream_arc_precheck`, `solve_provenance`,
+`llm_strategy_proposer_used`, `random_seed`, `reproducibility_checksum`,
+`selected_game`, `selected_level`, `attempts`, `trajectory_path`,
+`action_entropy`, `repeated_coordinate_rate`, `offline_reproduced`,
+`reproduced_levels`, `registry_delta`, `arc_live_levelup_ready`,
+`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `llm_invoked`: principle "bare bool false proving the credited FSM live attempt did not invoke any LLM."
+- `no_model_specs_required`: principle "bare bool true because this no-LLM live-agent substrate has no model invocation to name."
+- `upstream_arc_precheck`: principle "path to the Exp5561 gate that selected the target and proved FSM live-path reachability before runtime."
+- `solve_provenance`: principle "must equal live_agent_self_discovery so only the live runtime's own attempts and runtime reverse engineering receive solve credit."
+- `llm_strategy_proposer_used`: principle "bare bool false proving no LLM strategy proposer text contributed to the credited solver path."
+- `random_seed`: principle "deterministic seed used for target recheck, bounded live routing, trajectory logging, and checksum replay."
+- `reproducibility_checksum`: principle "content-addressed hash over target, seed, trajectory metrics, duplicate gate, and banking result to catch silent drift."
+- `selected_game`: principle "Exp5561-selected registry-safe game id rechecked immediately before the live attempt."
+- `selected_level`: principle "Exp5561-selected adjacent unreproduced frontier level label, or the duplicate-prevented target label."
+- `attempts`: principle "bare int count of live-agent runtime actions executed; zero means the duplicate or readiness gate prevented runtime."
+- `trajectory_path`: principle "path to the detailed live trajectory or duplicate-prevented trajectory receipt."
+- `action_entropy`: principle "Shannon entropy over executed live action/coordinate choices as a bare float."
+- `repeated_coordinate_rate`: principle "fraction of executed coordinate actions that repeated an earlier executed coordinate."
+- `offline_reproduced`: principle "true only when the live-discovered trajectory passes the post-solve offline reproduction gate."
+- `reproduced_levels`: principle "integer new levels banked from the live-discovered trajectory; success requires at least one."
+- `registry_delta`: principle "bare int registry total delta; nonzero only when the accepted reproduction gate passes after live discovery."
+- `arc_live_levelup_ready`: principle "bare bool proving Exp5561, registry reread, live-reachability, no-LLM metadata, and duplicate gates allowed runtime."
+- `tests_added_or_reused`: principle "list of focused tests covering the Exp5562 schema, duplicate prevention, live trajectory metrics, checksum, and banking gate."
+- `field_principles`: principle "mapping of one-line principle annotations for each headline and gate field."
+- `inference_substrate`: principle "must equal arc_live_agent_self_discovery_no_llm."
+- `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, duplicate_prevented:, or blocked:."
+
 ## Scenarios
+
+### SCENARIO-ARC-FCP-5562: FSM Live Attempt Banks Only Reproduced Self-Discovery
+
+Given Exp5561 reports `arc_fsm_precheck_ready=true` and selects `r11l:L3`
+And the registry still records `r11l` below L3
+When Exp5562 runs one bounded FSM live attempt with no LLM proposer
+Then the artifact records `upstream_arc_precheck` pointing to Exp5561,
+`solve_provenance=live_agent_self_discovery`,
+`llm_invoked=false`, `llm_strategy_proposer_used=false`,
+`no_model_specs_required=true`,
+`inference_substrate=arc_live_agent_self_discovery_no_llm`, trajectory metrics,
+and no `model_specs` or `target_model`.
+
+Given the live runtime discovers a candidate level-up trajectory
+When the post-solve offline reproduction gate verifies at least one new level
+Then Exp5562 updates the registry according to repository practice and emits
+`complete:`, `offline_reproduced=true`, `reproduced_levels>=1`, and matching
+`registry_delta`.
+
+Given the live runtime does not discover a reproducible new level
+When the bounded live budget is exhausted
+Then Exp5562 emits `honest_null:`, records the same trajectory and metric fields,
+sets `offline_reproduced=false`, `reproduced_levels=0`, and leaves
+`registry_delta=0`.
+
+Given the registry now records the Exp5561-selected target level as already
+reproduced
+When Exp5562 performs the immediate duplicate recheck
+Then it emits a duplicate-prevented artifact with `attempts=0`,
+`arc_live_levelup_ready=false`, a reproducible trajectory receipt, and does not
+rerun the solve.
 
 ### SCENARIO-ARC-FCP-5561: FSM Target Rotation Avoids Recent No-Bank Target
 
