@@ -240,9 +240,7 @@ def test_scenario_verify_humaneval_2838_live_success_maps_pass_at_1_fields(
         "n_seeds": 2,
     }
     assert artifact["model_specs"]["scorer_or_generator_model_paths_used"] == ["/cache/model.gguf"]
-    assert artifact["field_provenance"]["pass_at_1_vanilla"]["satisfied_by"] == (
-        "measured output"
-    )
+    assert artifact["field_provenance"]["pass_at_1_vanilla"]["satisfied_by"] == ("measured output")
 
 
 def test_req_verify_humaneval_2838_default_probe_uses_venv_python3_cuda(
@@ -299,9 +297,9 @@ def test_req_verify_humaneval_2838_default_probe_uses_venv_python3_cuda(
     ]
     assert checks[0].resource == "cuda"
     assert checks[0].available is True
-    assert '.venv/bin/python3 -c "import torch; assert torch.cuda.is_available()"' in checks[
-        0
-    ].detail
+    assert (
+        '.venv/bin/python3 -c "import torch; assert torch.cuda.is_available()"' in checks[0].detail
+    )
     assert checks[1].resource == "qwen36_gguf_cache"
     assert checks[1].available is True
     assert checks[2:] == [PreconditionCheck("humaneval_dataset", True, "loaded 164 rows")]
@@ -335,6 +333,11 @@ def test_req_verify_humaneval_2838_default_probe_uses_venv_python3_cuda(
         }
     )
     assert cached_qwen.available is True
+
+    monkeypatch.setattr(mod.Path, "home", staticmethod(lambda: tmp_path / "empty-home"))
+    uncached_qwen = mod._qwen36_cache_check({"selected_model_hf_id": mod.REQUIRED_QWEN36_HF_ID})
+    assert uncached_qwen.available is False
+    assert "no real" in uncached_qwen.detail
 
 
 def test_req_verify_humaneval_2838_cli_builds_requested_config(

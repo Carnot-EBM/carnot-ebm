@@ -834,3 +834,9 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 
 
 ### Phase 4 Metric Inaccessibility
 We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+
+### Phase 4 Metric Inaccessibility
+We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+
+### Phase 4 Metric Inaccessibility
+We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.

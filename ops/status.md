@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-10 (Milestone 2026.07.503 Planning Staged)
+**Last Updated:** 2026-07-11 (Exp 5574 ARC pTRM Stage-1 Regression Fix)
+
+## Session 2026-07-11 - Exp 5574 ARC pTRM Stage-1 Regression Fix
+
+Fixed the ARC pTRM Stage-1 test failures by implementing the previously empty
+`python/carnot/agentic/arc_ptrm_stage1_generator.py` module instead of
+reverting prior work. The module now provides replay-action normalization,
+won-session K-window dataset construction with held-out leakage accounting,
+fail-closed precondition receipts, seeded stochastic recursive trajectory
+generation with dynamic halting, an oracle-distinct action-language verifier,
+artifact validation, and a tiny checkpointed runner for
+`results/experiment_5574_ptrm_stochastic_generator_stage1.json`.
+
+Reconciled `openspec/capabilities/arc-trm-generator/spec.md` to implemented
+status and recorded traceability for `REQ-ARC-PTRM-5574-1` through
+`REQ-ARC-PTRM-5574-5`. Validation so far: focused ARC pTRM tests pass
+(`12 passed`), focused Ruff check passed, and scoped Coverage.py reports 100%
+for `arc_ptrm_stage1_generator.py` (`464` statements, `0` missing).
+`scripts/research_conductor.py` was not modified.
 
 ## Session 2026-07-10 - Milestone 2026.07.503 Planning Staged
 

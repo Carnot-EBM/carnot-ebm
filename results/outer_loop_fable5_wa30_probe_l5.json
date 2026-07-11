@@ -1,0 +1,1240 @@
+{
+  "game": "wa30",
+  "model": "claude-fable-5",
+  "starting_level": 4,
+  "max_level_reached": 4,
+  "level5_win_observed_live": false,
+  "level5_state_at_budget_cap": "FIVE of six blocks placed in bay slots (6,2),(6,3),(7,3),(8,3),(9,3); the sixth block was in the helper robots hands 2-4 presses from depositing into a free col-2 slot when the 600-step budget hit; the level timer itself still had ~6 cells (~11 actions) of headroom. No win claimed.",
+  "reproduction_verified": false,
+  "candidate_win_sequence_note": "PROBABLE-WIN CANDIDATE, UNVERIFIED: 237-action L1-L4 prefix (5x gate-verified by team lead) + the 113-action episode-3 suffix exactly as played + a 9-action tail ([1] to step off/face away from the players (6,2) block so pumps cannot toggle it, then 8 ACTION5 pumps to fund the robots final 2-4 presses). Rationale: the environment is fully deterministic (the 237-prefix replayed identically 3 sessions in a row; episode openings replayed byte-identically), so a fresh replay reaches the same 5-placed + robot-mid-delivery state, and the pump tail lets the robot complete deposit #6. CAUTION: the last 6 actions of the episode-3 suffix are ACTION5 presses made while facing the players own placed block at (6,2) -- they toggle it up/down (even count, ends placed); do not trim or extend them without preserving parity. Run arc_solver_kit.reproduce(wa30, labels, apply_fn, claimed_level=5) to confirm or falsify.",
+  "action_sequence": [
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 5
+    }
+  ],
+  "l5_episode3_suffix": [
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    4,
+    4,
+    5,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    5,
+    2,
+    4,
+    5,
+    1,
+    1,
+    1,
+    1,
+    3,
+    5,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    2,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    4,
+    4,
+    4,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    5,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    1,
+    1,
+    3,
+    3,
+    3,
+    2,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ],
+  "total_env_steps_used": 600,
+  "env_steps_breakdown": {
+    "interactive_session": 600,
+    "of_which_l1_l4_prefix_replay": 237,
+    "of_which_l5_episode1_recon": 125,
+    "of_which_l5_episode2_near_miss": 125,
+    "of_which_l5_episode3_final": 113,
+    "reproduction_gate_replay": 0,
+    "env_resets": 3,
+    "game_overs": 2
+  },
+  "novel_hypothesis_tested": "L5 divides the map with a solid color-5 wall pierced by a single 2-row gap at tile rows 7-8, col 9, leading into a 3-sided pocket that opens west toward the bay. Unlike L3s fence, the wall is NOT socketable -- blocks cross by being physically carried through the gap. The winning economy is a FERRY-AND-RELAY: the player ferries the six east-side blocks to drop points at or west of the gap, and the single robot (which freely roams BOTH sides through the gap) shuttles every drop to the 8-slot bay. Three robot-behavior discoveries: (1) the robot can freeze indefinitely while parked adjacent to a pickable block (observed 35 consecutive no-op presses), and STEALING its locked target unfreezes it instantly -- yet the same block at the same tile was picked up cleanly later, so the freeze is state-dependent, not block-specific; (2) when the player blocks its carry path head-on in the 1-tile corridor, the robot may ABANDON its cargo in place and re-path; (3) the robot greedily re-targets the nearest loose block at all times, so player drops can and should be used to steer its work queue.",
+  "narrative": "Replayed the 237-action verified prefix (re-confirming the L4 candidate en route). Episode 1 (recon): confirmed the gap is passable both ways, measured the L5 timer drain at ~0.51 cells/action (~125 actions/episode -- the roomiest level yet), discovered the robot freeze + steal-unfreeze mechanic, and lost the episode to an ACTION5 pickup/drop toggle fumble while facing a carried blocks ghost (3/6 placed). Episode 2: near-miss at 5/6 -- a mid-corridor robot interception led to a desynced sequence that briefly UN-placed an already-delivered block; the last block was never fetched. Episode 3 (fumble-proofed pure-ferry script): player ferried all six blocks to gap-side drop points, robot made every bay deposit; five placed by step 594, and the budget cap landed with the sixth deposit 2-4 robot-presses away. The handed-over candidate appends a parity-safe pump tail to fund those presses. All hard constraints respected; no win claimed without the gate.",
+  "l5_gotchas": [
+    "The wall is solid and NOT socketable; the only crossing is the 2-tile gap at rows 7-8, col 9.",
+    "The robot roams both sides through the gap and does all bay deposits reliably; the optimal player role is pure ferry to gap-side drop points.",
+    "NEVER press ACTION5 while facing an adjacent block or carried ghost unless you intend to toggle pickup/drop -- two episodes were damaged by toggle fumbles (one un-placed a delivered block).",
+    "The robot may abandon cargo mid-corridor if the player blocks it head-on; use the two gap rows as one-way lanes (player row 8, robot row 7 or vice versa).",
+    "Steal-unlock: if the robot parks adjacent to a block without extracting for many presses, pick its target up yourself -- it re-targets instantly.",
+    "Bay col-3 slots fill first and wall off col-2 access from the east; col-2 slots must be approached via col-1 (outside the bay border) with a ghost-east carry, or left to the robot.",
+    "L5 timer drain ~0.51 cells/action (~125 actions/episode); post-GAME_OVER reset restores the exact fresh L5 entry and preserves the L4 checkpoint (verified field-by-field)."
+  ],
+  "solve_provenance": "live_agent_self_discovery",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "random_seed": 0,
+  "random_seed_note": "Deterministic offline environment; no RNG used by the agent.",
+  "reproducibility_checksum": "1d891a238b5e0eede615257fc5cc07f1c5f0d2a626241759b4fd381da6821ac3",
+  "run_date": "2026-07-11T17:00:12Z",
+  "duration_s": 1482.0,
+  "hard_constraints_respected": {
+    "no_game_source_read": true,
+    "no_env_internal_access": true,
+    "no_set_level_or_state_injection": true,
+    "only_frames_levels_completed_and_action_outcomes": true
+  },
+  "duration_note": "Wall-clock of the interactive REPL session (process elapsed time), covering prefix replay + three L5 episodes."
+}

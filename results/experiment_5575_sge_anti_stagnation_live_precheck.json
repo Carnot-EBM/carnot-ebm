@@ -1,0 +1,207 @@
+{
+  "experiment": "experiment_5575_sge_anti_stagnation_live_precheck",
+  "experiment_id": 5575,
+  "run_date": "2026-07-11",
+  "field_principles": {
+    "llm_invoked": "bare bool false proving Exp5575 is a deterministic precheck and spends no live LLM inference.",
+    "prior_trace_path": "path to the recorded SGE trace used only for collapse diagnosis, not solve credit.",
+    "collapse_definition": "fixed thresholds declared before evaluating the prior trace.",
+    "collapse_detected_on_prior_trace": "bare bool true only when the fixed repeated-strategy, pairwise-distance, repeated-action, and null-outcome signals trip the collapse gate.",
+    "diversity_metrics_before_after": "records strategy/action diversity before and after forced anti-stagnation routing.",
+    "forced_portfolio": "bounded live-path-compatible strategy categories spanning observation, coordinate probe, action-type probe, mechanic falsification, and recovery/reset.",
+    "taboo_policy": "outcome-conditioned taboo set derived only from recently failed normalized strategies.",
+    "e3_import_path": "exact submitted path proving E3AgentPolicy reaches SGECandidateRouter through candidate_router.rank.",
+    "live_path_reachable": "bare bool proving the controller is reachable through the scored E3 candidate-router hook.",
+    "verifier_is_oracle": "must be false because precheck readiness cannot use oracle or hidden-source verifiers.",
+    "win_check_used_for_ranking": "must be false because strategy ranking cannot inspect win, level-completion, scorecard, or source signals.",
+    "registry_precheck": "structured evidence that registry depth was read and duplicate or exhausted targets were rejected before target selection.",
+    "target_game": "registry-safe game id selected for the next SGE live attempt.",
+    "target_level": "adjacent unreproduced frontier level selected after duplicate and exhaustion checks.",
+    "prior_levels_reproduced": "registry depth before the attempted target; target_level must be greater.",
+    "action_budget": "bounded action budget chosen before live inference.",
+    "tests_run": "exact test commands proving fake-completer behavior and full Python suite status.",
+    "positive_control_passed": "bare bool true only when fake-completer collapse activation and E3 reachability tests pass.",
+    "solve_provenance": "must equal live_agent_self_discovery because the follow-up live attempt must be the scored runtime own discovery path.",
+    "inference_substrate": "must equal deterministic_live_path_precheck_no_llm.",
+    "target_unsolved": "a target already reproduced at the requested level cannot receive duplicate solve credit.",
+    "live_path_ready": "live inference requires tested E3 reachability, a new mechanism, and no oracle leakage.",
+    "honest_verdict": "one-line verdict starting complete: or blocked: without claiming a solve."
+  },
+  "llm_invoked": false,
+  "prior_trace_path": "results/outer_loop_sge_smoke_test.json",
+  "collapse_definition": {
+    "signals": [
+      "repeated_normalized_strategy_text",
+      "low_pairwise_strategy_distance",
+      "repeated_action_proposals",
+      "consecutive_null_outcomes"
+    ],
+    "thresholds": {
+      "window_size": 8,
+      "repeated_normalized_strategy_count": 3,
+      "max_mean_pairwise_strategy_distance": 0.35,
+      "repeated_action_proposal_count": 4,
+      "consecutive_null_outcomes": 4,
+      "min_triggered_signals": 3
+    }
+  },
+  "collapse_detected_on_prior_trace": true,
+  "collapse_signals_on_prior_trace": {
+    "repeated_normalized_strategy_text": false,
+    "low_pairwise_strategy_distance": true,
+    "repeated_action_proposals": true,
+    "consecutive_null_outcomes": true
+  },
+  "diversity_metrics_before_after": {
+    "before": {
+      "history_window_size": 8,
+      "strategy_text_count": 3,
+      "unique_normalized_strategy_count": 3,
+      "max_normalized_strategy_repeat": 1,
+      "mean_pairwise_strategy_distance": 0.24725274725274723,
+      "unique_action_signature_count": 2,
+      "max_action_signature_repeat": 4,
+      "consecutive_null_outcomes": 8
+    },
+    "after": {
+      "forced_portfolio_category_count": 5,
+      "selected_unique_signature_count": 6,
+      "selected_count": 6
+    }
+  },
+  "forced_portfolio": [
+    {
+      "name": "observation",
+      "hypothesis": "fresh visible-state observation",
+      "principle": "reserve one bounded slot for a non-click observation or low-commitment action."
+    },
+    {
+      "name": "active_coordinate_probe",
+      "hypothesis": "fresh coordinate interaction",
+      "principle": "force at least one coordinate action away from recently repeated/passive proposals."
+    },
+    {
+      "name": "action_type_probe",
+      "hypothesis": "different action family",
+      "principle": "force an action id that recent failed proposals did not exercise."
+    },
+    {
+      "name": "mechanic_falsification",
+      "hypothesis": "refute the current passive mechanic guess",
+      "principle": "try the strongest non-taboo candidate that contradicts repeated waiting."
+    },
+    {
+      "name": "recovery_reset",
+      "hypothesis": "recover from a stale local state",
+      "principle": "reserve a bounded reset/recovery-style candidate when the frontier has stalled."
+    }
+  ],
+  "forced_portfolio_selected_in_positive_control": [
+    {
+      "name": "observation",
+      "signature": "A3#4"
+    },
+    {
+      "name": "active_coordinate_probe",
+      "signature": "A6@5,5"
+    },
+    {
+      "name": "action_type_probe",
+      "signature": "A6@9,2"
+    },
+    {
+      "name": "mechanic_falsification",
+      "signature": "A2#1"
+    },
+    {
+      "name": "recovery_reset",
+      "signature": "A5#5"
+    },
+    {
+      "name": "fallback_fill",
+      "signature": "A1#0"
+    }
+  ],
+  "taboo_policy": {
+    "description": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals and force deterministic portfolio categories on collapse",
+    "taboo_set_size_on_positive_control": 3,
+    "taboo_set_preview": [
+      "wait for the system to process the pending basic interaction as instructed by the reflection",
+      "wait for the system to process the pending interaction as advised",
+      "wait for the system to process the pending interaction as instructed by the reflection"
+    ]
+  },
+  "e3_import_path": "E3AgentPolicy.__init__(candidate_router) -> StepwiseExplorer(candidate_router) -> arc_graph_explore.rich_action_candidates -> candidate_router.rank(frame,out,previous_frame)",
+  "live_path_reachable": true,
+  "verifier_is_oracle": false,
+  "win_check_used_for_ranking": false,
+  "registry_precheck": {
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "selected_target": "g50t:L3",
+    "current_levels_reproduced": 2,
+    "requested_level": 3,
+    "already_reproduced_at_requested_level": false,
+    "recent_exhaustion_review": [
+      {
+        "target": "g50t:L3",
+        "recently_exhausted": true,
+        "recent_dead_end_markers": [
+          "Exp4981 g50t no-bank no_grounded_l3_delta: complete_g50t_no_new_level_residual_no_grounded_l3_delta."
+        ],
+        "new_mechanism": "SGECandidateRouter anti-stagnation forced diversity controller for the recorded passive-wait collapse",
+        "excluded": false
+      }
+    ],
+    "excluded_duplicate_targets": [],
+    "excluded_recently_exhausted_without_new_mechanism": [],
+    "target_unsolved": true
+  },
+  "target_game": "g50t",
+  "target_level": 3,
+  "prior_levels_reproduced": 2,
+  "action_budget": 46,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_arc_llm_strategy_proposer.py -q --no-cov",
+      "status": "passed",
+      "summary": "35 passed"
+    },
+    {
+      "command": "PYTHONPATH=python .venv/bin/coverage run --source=python/carnot/agentic -m pytest -q -o addopts= tests/python/test_arc_llm_strategy_proposer.py && .venv/bin/coverage report -m python/carnot/agentic/arc_llm_strategy_proposer.py",
+      "status": "passed",
+      "summary": "35 passed; arc_llm_strategy_proposer.py 312 statements, 0 missed, 100% coverage"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "status": "failed_interrupted_after_unrelated_failures",
+      "summary": "16 failed, 10807 passed, 31 skipped before KeyboardInterrupt at 10:37; included Z3 segfault in z3_math_verifier and missing onnx/onnxruntime failures"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/agentic/arc_llm_strategy_proposer.py tests/python/test_arc_llm_strategy_proposer.py",
+      "status": "passed",
+      "summary": "All checks passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "status": "failed_preexisting_traceability_backlog",
+      "summary": "1262 tests missing spec traceability; new SGE tests include REQ-ARC-FCP-5575/SCENARIO-ARC-FCP-5575 references"
+    }
+  ],
+  "positive_control_passed": true,
+  "solve_provenance": "live_agent_self_discovery",
+  "inference_substrate": "deterministic_live_path_precheck_no_llm",
+  "target_unsolved": true,
+  "live_path_ready": false,
+  "honest_verdict": "blocked: full tests/python and global spec-coverage gates failed outside SGE path; anti-stagnation controller and registry precheck passed but live inference is not ready",
+  "implementation_files": [
+    "python/carnot/agentic/arc_llm_strategy_proposer.py",
+    "tests/python/test_arc_llm_strategy_proposer.py",
+    "openspec/capabilities/arc-human-replay-frame-change/spec.md"
+  ],
+  "protected_files_unchanged_by_this_task": {
+    "scripts/research_conductor.py": true,
+    "ops/changelog.md": true,
+    "ops/status.md": true,
+    "_bmad/traceability.md": true
+  }
+}

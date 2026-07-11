@@ -1,6 +1,18 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-07-09
+**Last Updated:** 2026-07-11
+
+**Operational Note:** 2026-07-11 Exp 5574 ARC pTRM Stage-1 regression fix
+implemented `REQ-ARC-PTRM-5574-1` through `REQ-ARC-PTRM-5574-5` in
+`python/carnot/agentic/arc_ptrm_stage1_generator.py` after the module had been
+left empty. The focused tests in
+`tests/python/test_arc_ptrm_stage1_generator.py` cover replay-action
+normalization, held-out leakage prevention, precondition/blocking receipts,
+seeded stochastic recursion, oracle-distinct verifier selection, artifact
+validation, and the tiny checkpointed runner. Validation: targeted tests pass
+(`12 passed`), focused Ruff check passed, and scoped Coverage.py reports 100%
+for the new module (`464` statements, `0` missing). No changes were made to
+`scripts/research_conductor.py`.
 
 **Operational Note:** 2026-07-05 Exp 5258 V481 execution-refresh test fix
 normalized the Semantic Scholar LoopUS citation sample while preserving the

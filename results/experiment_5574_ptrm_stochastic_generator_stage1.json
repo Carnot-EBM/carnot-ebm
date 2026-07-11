@@ -1,0 +1,686 @@
+{
+  "checkpoint_path": "results/trm_runs/experiment_5574_ptrm_stage1/checkpoint.pt",
+  "checkpoint_sha256": "d051f0d2c6dcbee3df68d95dc8f4785773bc23592dac0711193c09b8c7fece03",
+  "controls": {
+    "deterministic_fixed_depth": {
+      "final_energy": 1.654266595840454,
+      "final_exact_window_accuracy": 0.00244140625,
+      "final_per_action_accuracy": 0.26263427734375,
+      "halting_distribution": {
+        "6": 2048
+      },
+      "recursion_depth_metrics": {
+        "1": {
+          "energy": 1.6452758312225342,
+          "exact_window_accuracy": 0.00048828125,
+          "per_action_accuracy": 0.2698974609375
+        },
+        "2": {
+          "energy": 1.6452597379684448,
+          "exact_window_accuracy": 0.00048828125,
+          "per_action_accuracy": 0.2674560546875
+        },
+        "3": {
+          "energy": 1.6471153497695923,
+          "exact_window_accuracy": 0.00048828125,
+          "per_action_accuracy": 0.26409912109375
+        },
+        "4": {
+          "energy": 1.649565577507019,
+          "exact_window_accuracy": 0.0009765625,
+          "per_action_accuracy": 0.26171875
+        },
+        "5": {
+          "energy": 1.6520605087280273,
+          "exact_window_accuracy": 0.00146484375,
+          "per_action_accuracy": 0.26263427734375
+        },
+        "6": {
+          "energy": 1.654266595840454,
+          "exact_window_accuracy": 0.00244140625,
+          "per_action_accuracy": 0.26263427734375
+        }
+      }
+    },
+    "non_recursive": {
+      "energy": 1.6336174011230469,
+      "exact_window_accuracy": 0.0009765625,
+      "per_action_accuracy": 0.2803955078125
+    }
+  },
+  "dataset_hashes": {
+    "all_shards_match_manifest": true,
+    "example_count": 180144,
+    "heldout_windows": 2048,
+    "manifest_sha256": "e00b609586fbf631c5bd6c7e4e24b80c13cd5fe499ee30eb5abc402a4a7f6839",
+    "schema": "carnot.arc_human_replay.frame_action_delta.v1",
+    "session_count": 339,
+    "shard_count": 44,
+    "shards": [
+      {
+        "manifest_sha256": "ab201b50cef5494eedc6f202cd90b228fce50c94baa579fc62ab22c6c4bf2aa5",
+        "matches_manifest": true,
+        "path": "shards/train-00000.jsonl",
+        "rows": 4096,
+        "sha256": "ab201b50cef5494eedc6f202cd90b228fce50c94baa579fc62ab22c6c4bf2aa5"
+      },
+      {
+        "manifest_sha256": "abd0e7eb24cd393e360b60bc59931d0643a117cad1a2af97cecc8717cbb2bfd0",
+        "matches_manifest": true,
+        "path": "shards/train-00001.jsonl",
+        "rows": 4096,
+        "sha256": "abd0e7eb24cd393e360b60bc59931d0643a117cad1a2af97cecc8717cbb2bfd0"
+      },
+      {
+        "manifest_sha256": "4912cb19458447401e21f1317df94c70669e21ebccf9d02fde520a1ff8c65437",
+        "matches_manifest": true,
+        "path": "shards/train-00002.jsonl",
+        "rows": 4096,
+        "sha256": "4912cb19458447401e21f1317df94c70669e21ebccf9d02fde520a1ff8c65437"
+      },
+      {
+        "manifest_sha256": "4c4829688ec606fef793fff8b8965f6e52d6d018189575ce26b49429ad45b5f4",
+        "matches_manifest": true,
+        "path": "shards/train-00003.jsonl",
+        "rows": 4096,
+        "sha256": "4c4829688ec606fef793fff8b8965f6e52d6d018189575ce26b49429ad45b5f4"
+      },
+      {
+        "manifest_sha256": "d5f04484805f3d2e4197691746605ba3d986964f41ae1412f7627793a1f5ff73",
+        "matches_manifest": true,
+        "path": "shards/train-00004.jsonl",
+        "rows": 4096,
+        "sha256": "d5f04484805f3d2e4197691746605ba3d986964f41ae1412f7627793a1f5ff73"
+      },
+      {
+        "manifest_sha256": "8f52b88948c2e4f7fbb468ba97923342884def3e87b93586c6b96667c06bac1f",
+        "matches_manifest": true,
+        "path": "shards/train-00005.jsonl",
+        "rows": 4096,
+        "sha256": "8f52b88948c2e4f7fbb468ba97923342884def3e87b93586c6b96667c06bac1f"
+      },
+      {
+        "manifest_sha256": "f168e7598508b8677ec74e5bfa0a05a3d1a0ec5fd5154ebe2d4e6cc7e7094adb",
+        "matches_manifest": true,
+        "path": "shards/train-00006.jsonl",
+        "rows": 4096,
+        "sha256": "f168e7598508b8677ec74e5bfa0a05a3d1a0ec5fd5154ebe2d4e6cc7e7094adb"
+      },
+      {
+        "manifest_sha256": "56613f612be8594cbccc8364db74d4155a9f9082d5049c548f168f1851bca000",
+        "matches_manifest": true,
+        "path": "shards/train-00007.jsonl",
+        "rows": 4096,
+        "sha256": "56613f612be8594cbccc8364db74d4155a9f9082d5049c548f168f1851bca000"
+      },
+      {
+        "manifest_sha256": "5e23303015dab7f28e7914f733553feb98dad26e9d31f5b3c98e464d205ecc43",
+        "matches_manifest": true,
+        "path": "shards/train-00008.jsonl",
+        "rows": 4096,
+        "sha256": "5e23303015dab7f28e7914f733553feb98dad26e9d31f5b3c98e464d205ecc43"
+      },
+      {
+        "manifest_sha256": "d6af5ab7a5d7e5c38da1cca972b94a9c819c39daee8bec1e3e9de296631108fc",
+        "matches_manifest": true,
+        "path": "shards/train-00009.jsonl",
+        "rows": 4096,
+        "sha256": "d6af5ab7a5d7e5c38da1cca972b94a9c819c39daee8bec1e3e9de296631108fc"
+      },
+      {
+        "manifest_sha256": "f8c6b34ede3f174bc9e2aa4b6739c50736f4db308da695c00a7073efe560e9ec",
+        "matches_manifest": true,
+        "path": "shards/train-00010.jsonl",
+        "rows": 4096,
+        "sha256": "f8c6b34ede3f174bc9e2aa4b6739c50736f4db308da695c00a7073efe560e9ec"
+      },
+      {
+        "manifest_sha256": "e4ede63e17a52f93ab3c6444177258887de781c7be18a43a68a629f90ab7a8dd",
+        "matches_manifest": true,
+        "path": "shards/train-00011.jsonl",
+        "rows": 4096,
+        "sha256": "e4ede63e17a52f93ab3c6444177258887de781c7be18a43a68a629f90ab7a8dd"
+      },
+      {
+        "manifest_sha256": "fb0bf96a2ed8f49c68f475e3fd35bfe5a30a263851be509b68befa2c9941b8da",
+        "matches_manifest": true,
+        "path": "shards/train-00012.jsonl",
+        "rows": 4096,
+        "sha256": "fb0bf96a2ed8f49c68f475e3fd35bfe5a30a263851be509b68befa2c9941b8da"
+      },
+      {
+        "manifest_sha256": "fb23bf2b707515f3d363929d80add185120b068c6b19231cf5c6a84898df3eb2",
+        "matches_manifest": true,
+        "path": "shards/train-00013.jsonl",
+        "rows": 4096,
+        "sha256": "fb23bf2b707515f3d363929d80add185120b068c6b19231cf5c6a84898df3eb2"
+      },
+      {
+        "manifest_sha256": "9d459fd3d8cd1092cc20a102d329da03669ef632f3e396ee31ec2448558a72ed",
+        "matches_manifest": true,
+        "path": "shards/train-00014.jsonl",
+        "rows": 4096,
+        "sha256": "9d459fd3d8cd1092cc20a102d329da03669ef632f3e396ee31ec2448558a72ed"
+      },
+      {
+        "manifest_sha256": "afc77179851040116a6ea33283d16634b5ba91bc7e3bd4ccaacbc5a7af11faf5",
+        "matches_manifest": true,
+        "path": "shards/train-00015.jsonl",
+        "rows": 4096,
+        "sha256": "afc77179851040116a6ea33283d16634b5ba91bc7e3bd4ccaacbc5a7af11faf5"
+      },
+      {
+        "manifest_sha256": "34ab59d45ae907d1ac7e6d1e71c7a7d807eb1bc2c68f62c881a5cfba91a5c4a7",
+        "matches_manifest": true,
+        "path": "shards/train-00016.jsonl",
+        "rows": 4096,
+        "sha256": "34ab59d45ae907d1ac7e6d1e71c7a7d807eb1bc2c68f62c881a5cfba91a5c4a7"
+      },
+      {
+        "manifest_sha256": "d77e858311de17e165705f48319f80bc5a2926b425d36b825c529aaa5f729569",
+        "matches_manifest": true,
+        "path": "shards/train-00017.jsonl",
+        "rows": 4096,
+        "sha256": "d77e858311de17e165705f48319f80bc5a2926b425d36b825c529aaa5f729569"
+      },
+      {
+        "manifest_sha256": "6512ae5caaee7c8aea7b76ec076757d5925a0502ebb793c927c5701843df6d05",
+        "matches_manifest": true,
+        "path": "shards/train-00018.jsonl",
+        "rows": 4096,
+        "sha256": "6512ae5caaee7c8aea7b76ec076757d5925a0502ebb793c927c5701843df6d05"
+      },
+      {
+        "manifest_sha256": "6f73984d1e2ece1b3b49209bcacb8c67f3799c9c0290b139919f3ea0b2fe6de7",
+        "matches_manifest": true,
+        "path": "shards/train-00019.jsonl",
+        "rows": 4096,
+        "sha256": "6f73984d1e2ece1b3b49209bcacb8c67f3799c9c0290b139919f3ea0b2fe6de7"
+      },
+      {
+        "manifest_sha256": "f6eb750aed78432b8be2d92e906315a03b425b8212133d774a913af32d810235",
+        "matches_manifest": true,
+        "path": "shards/train-00020.jsonl",
+        "rows": 4096,
+        "sha256": "f6eb750aed78432b8be2d92e906315a03b425b8212133d774a913af32d810235"
+      },
+      {
+        "manifest_sha256": "473b6f5f594bbc71968f43d80b92b09951f8bafdca4cee360d3c6cfddb2ad995",
+        "matches_manifest": true,
+        "path": "shards/train-00021.jsonl",
+        "rows": 4096,
+        "sha256": "473b6f5f594bbc71968f43d80b92b09951f8bafdca4cee360d3c6cfddb2ad995"
+      },
+      {
+        "manifest_sha256": "26c26092b738fce308e4330fa8ac919f5a8adecccd3ebdbf0e9b664112fd68bc",
+        "matches_manifest": true,
+        "path": "shards/train-00022.jsonl",
+        "rows": 4096,
+        "sha256": "26c26092b738fce308e4330fa8ac919f5a8adecccd3ebdbf0e9b664112fd68bc"
+      },
+      {
+        "manifest_sha256": "14b6388df38438af7fa8c36de602fe21e7139ac9915f2c93797cd6f9dd3a8eac",
+        "matches_manifest": true,
+        "path": "shards/train-00023.jsonl",
+        "rows": 4096,
+        "sha256": "14b6388df38438af7fa8c36de602fe21e7139ac9915f2c93797cd6f9dd3a8eac"
+      },
+      {
+        "manifest_sha256": "b2c28ef509081aa820a7a82c2a5e6293c7769b61da69775cf7dc2d198d8d1221",
+        "matches_manifest": true,
+        "path": "shards/train-00024.jsonl",
+        "rows": 4096,
+        "sha256": "b2c28ef509081aa820a7a82c2a5e6293c7769b61da69775cf7dc2d198d8d1221"
+      },
+      {
+        "manifest_sha256": "7874b8ecf1e23e90189c2c4b6340a66540b7c720ae0da8e4fa690532b6542bab",
+        "matches_manifest": true,
+        "path": "shards/train-00025.jsonl",
+        "rows": 4096,
+        "sha256": "7874b8ecf1e23e90189c2c4b6340a66540b7c720ae0da8e4fa690532b6542bab"
+      },
+      {
+        "manifest_sha256": "401f47210562c189366200d492c33ceccba52ab2d72dd19ee1c6a2c0e85a8027",
+        "matches_manifest": true,
+        "path": "shards/train-00026.jsonl",
+        "rows": 4096,
+        "sha256": "401f47210562c189366200d492c33ceccba52ab2d72dd19ee1c6a2c0e85a8027"
+      },
+      {
+        "manifest_sha256": "21e3f9090bd4b102b91fef0dabd1455ef124c38327d2e08462995f624971a9a4",
+        "matches_manifest": true,
+        "path": "shards/train-00027.jsonl",
+        "rows": 4096,
+        "sha256": "21e3f9090bd4b102b91fef0dabd1455ef124c38327d2e08462995f624971a9a4"
+      },
+      {
+        "manifest_sha256": "0a90e5e776522bc92637598af34d3f73b7aef9a35098c0b5e3b7b8a0fe36b9c9",
+        "matches_manifest": true,
+        "path": "shards/train-00028.jsonl",
+        "rows": 4096,
+        "sha256": "0a90e5e776522bc92637598af34d3f73b7aef9a35098c0b5e3b7b8a0fe36b9c9"
+      },
+      {
+        "manifest_sha256": "03de8619f4c682ac03344ea9c11d82b1dd0527b46a7d153305f16930bf24a8c0",
+        "matches_manifest": true,
+        "path": "shards/train-00029.jsonl",
+        "rows": 4096,
+        "sha256": "03de8619f4c682ac03344ea9c11d82b1dd0527b46a7d153305f16930bf24a8c0"
+      },
+      {
+        "manifest_sha256": "08fc77c0fc5d5a80a84a54db29755091d85b345660143b329e72f10aa00633c5",
+        "matches_manifest": true,
+        "path": "shards/train-00030.jsonl",
+        "rows": 4096,
+        "sha256": "08fc77c0fc5d5a80a84a54db29755091d85b345660143b329e72f10aa00633c5"
+      },
+      {
+        "manifest_sha256": "db4f05aa975b31c2a1ceee41f4be2642344335b13d282982077d8efe91b4d1a3",
+        "matches_manifest": true,
+        "path": "shards/train-00031.jsonl",
+        "rows": 4096,
+        "sha256": "db4f05aa975b31c2a1ceee41f4be2642344335b13d282982077d8efe91b4d1a3"
+      },
+      {
+        "manifest_sha256": "eea82a756aaaf07aa170236b7ec3195ccebc2bf010eb6b1380dc84298cc07220",
+        "matches_manifest": true,
+        "path": "shards/train-00032.jsonl",
+        "rows": 4096,
+        "sha256": "eea82a756aaaf07aa170236b7ec3195ccebc2bf010eb6b1380dc84298cc07220"
+      },
+      {
+        "manifest_sha256": "73825d14dcd096d915e0d93259f442ab1bb95a7b56f1b672d5a3858d83f303ef",
+        "matches_manifest": true,
+        "path": "shards/train-00033.jsonl",
+        "rows": 4096,
+        "sha256": "73825d14dcd096d915e0d93259f442ab1bb95a7b56f1b672d5a3858d83f303ef"
+      },
+      {
+        "manifest_sha256": "008600163c4b421da297a19c0aec5a6938ff1abb65c39ae28568a06f71c42865",
+        "matches_manifest": true,
+        "path": "shards/train-00034.jsonl",
+        "rows": 4096,
+        "sha256": "008600163c4b421da297a19c0aec5a6938ff1abb65c39ae28568a06f71c42865"
+      },
+      {
+        "manifest_sha256": "0eee604d33ee72a2ee6ab821820a0d802bc28a31d71a93d041cd9d57b44ec9ad",
+        "matches_manifest": true,
+        "path": "shards/train-00035.jsonl",
+        "rows": 4096,
+        "sha256": "0eee604d33ee72a2ee6ab821820a0d802bc28a31d71a93d041cd9d57b44ec9ad"
+      },
+      {
+        "manifest_sha256": "e93e099f37007131e2e133e4fefe28c1a299cfd46670fd7d8b71431727175552",
+        "matches_manifest": true,
+        "path": "shards/train-00036.jsonl",
+        "rows": 4096,
+        "sha256": "e93e099f37007131e2e133e4fefe28c1a299cfd46670fd7d8b71431727175552"
+      },
+      {
+        "manifest_sha256": "73678aa5ab1423bed133608b4f19eba4d27c604ee7289514f8c3ed0eda93f941",
+        "matches_manifest": true,
+        "path": "shards/train-00037.jsonl",
+        "rows": 4096,
+        "sha256": "73678aa5ab1423bed133608b4f19eba4d27c604ee7289514f8c3ed0eda93f941"
+      },
+      {
+        "manifest_sha256": "14c88c9e7954cdffe4e39aa96f98f8b844e9c4c42babd8b98240638a90f4d1eb",
+        "matches_manifest": true,
+        "path": "shards/train-00038.jsonl",
+        "rows": 4096,
+        "sha256": "14c88c9e7954cdffe4e39aa96f98f8b844e9c4c42babd8b98240638a90f4d1eb"
+      },
+      {
+        "manifest_sha256": "e7def1e2ce41daae9f700c3f6d9a962058b6b69b1f3fc143c3e8e90dec11b5ff",
+        "matches_manifest": true,
+        "path": "shards/train-00039.jsonl",
+        "rows": 4096,
+        "sha256": "e7def1e2ce41daae9f700c3f6d9a962058b6b69b1f3fc143c3e8e90dec11b5ff"
+      },
+      {
+        "manifest_sha256": "fd8234f910db17da56fe42981eb9c30863be9a0473bab3e4d8fb5ae6c0bd2ac4",
+        "matches_manifest": true,
+        "path": "shards/train-00040.jsonl",
+        "rows": 4096,
+        "sha256": "fd8234f910db17da56fe42981eb9c30863be9a0473bab3e4d8fb5ae6c0bd2ac4"
+      },
+      {
+        "manifest_sha256": "e3be4e0c37e0388bcf6b5c8a43e5d5ecdb840e09d03bb78687aec58c2570e0e7",
+        "matches_manifest": true,
+        "path": "shards/train-00041.jsonl",
+        "rows": 4096,
+        "sha256": "e3be4e0c37e0388bcf6b5c8a43e5d5ecdb840e09d03bb78687aec58c2570e0e7"
+      },
+      {
+        "manifest_sha256": "03a20d9a8d2846f004a4c33e707d41ba78671a52b300cc6ad62540050f951953",
+        "matches_manifest": true,
+        "path": "shards/train-00042.jsonl",
+        "rows": 4096,
+        "sha256": "03a20d9a8d2846f004a4c33e707d41ba78671a52b300cc6ad62540050f951953"
+      },
+      {
+        "manifest_sha256": "b581e8a44c220b7ab489e68f7c72c3aa281cc323bed5270961ecdacdb0da0533",
+        "matches_manifest": true,
+        "path": "shards/train-00043.jsonl",
+        "rows": 4016,
+        "sha256": "b581e8a44c220b7ab489e68f7c72c3aa281cc323bed5270961ecdacdb0da0533"
+      }
+    ],
+    "stage1_window_sample_sha256": "a6e2c618324b2cf34fd9d6173862e4823063ffbe87d44ba013f8003ba4cd815d",
+    "train_windows": 8192,
+    "won_session_count": 335
+  },
+  "dynamic_halting": true,
+  "dynamic_halting_enabled": true,
+  "field_principles": {
+    "checkpoint_path": "A checkpoint makes the Stage-1 substrate inspectable and reusable by the next gate.",
+    "checkpoint_sha256": "The checkpoint hash prevents accidental or silent checkpoint substitution.",
+    "controls": "Matched controls separate PTRM-specific effects from generic sequence-model capacity.",
+    "dataset_hashes": "Corpus hashes make the training split reproducible and catch silent replay-shard drift.",
+    "dynamic_halting": "Recorded to preserve the bounded Stage-1 ARC pTRM claim boundary.",
+    "dynamic_halting_enabled": "ACT-style halting prevents fixed-depth recursion from hiding overthinking behavior.",
+    "field_principles": "Every gate and headline field carries the reason it exists, so compliance is auditable.",
+    "gpu_device_receipt": "GPU provenance distinguishes the requested 3090-class run from a CPU toy pilot.",
+    "heldout_games": "Non-overlapping held-out games are the Stage-1 guard against training-game memorization.",
+    "heldout_generalization_signal": "Records bounded held-out evidence without inflating it into a hidden-game solve.",
+    "history_conditioned": "Recorded to preserve the bounded Stage-1 ARC pTRM claim boundary.",
+    "history_intent_conditioned": "History and intent are the explicit fix for the v4 under-determined static-frame failure.",
+    "honest_verdict": "Terminal verdict summarizes the bounded result without overclaiming.",
+    "inference_substrate": "Explicit substrate prevents adversarial verification from assuming GGUF live inference.",
+    "intent_conditioned": "Recorded to preserve the bounded Stage-1 ARC pTRM claim boundary.",
+    "leakage_count": "A nonzero training row from a held-out game invalidates the leave-one-game-out protocol.",
+    "loo_verdict_reached": "Retirement is only triggered after the preregistered LOO verdict, not a bounded smoke signal.",
+    "model_architecture": "Records whether the run is the requested PTRM substrate rather than another fixed-depth toy.",
+    "no_level_solve_claim": "Prevents public-game training from being misreported as an ARC-AGI-3 level solve.",
+    "overthinking_curve": "The curve records the peak-depth and post-peak degradation instead of assuming deeper is better.",
+    "parameter_count": "Capacity is part of the comparison against prior 4.2M-param deterministic pilots.",
+    "positive_control_passed": "A null is uninterpretable unless the harness can detect a known synthetic win.",
+    "preconditions": "Missing GPU, data, disk, or sentinel-scope checks must produce a blocked artifact instead of fabrication.",
+    "prior_pilot_receipts": "Names the four deterministic pilot failures and the root cause this run changes.",
+    "recursion_depth_metrics": "Accuracy and energy by depth expose whether more recursion helps or hurts.",
+    "retire_trm_generator_line": "Operator rule: retire only if the registered LOO verdict again has no signal.",
+    "solve_provenance": "Development proxy provenance keeps this out of live hidden-game solve accounting.",
+    "stage1_training_complete": "The explicit terminal flag says whether Stage 1 trained rather than only preflighted.",
+    "stochastic_noise_schedule": "Gaussian noise per recursion step is the PTRM change being tested.",
+    "track": "Separates this reserved ARC TRM-generator slot from the general ARC level-up floor.",
+    "training_duration_s": "Real bounded training takes wall-clock time; duration helps detect fabricated GPU work.",
+    "trajectories_per_input": "Multiple sampled trajectories are required before verifier selection can add value.",
+    "verifier_is_oracle": "False records that the selector is not the correctness oracle for hidden-game solves.",
+    "verifier_selection_method": "Selection must be via an oracle-distinct Carnot verifier, not held-out target labels."
+  },
+  "gpu_device_receipt": {
+    "device_count": 2,
+    "devices": [
+      {
+        "index": 0,
+        "memory_total_gb": 23.55810546875,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "index": 1,
+        "memory_total_gb": 23.55810546875,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "nvidia_smi_returncode": 18,
+    "nvidia_smi_stderr": "",
+    "nvidia_smi_stdout": "Failed to initialize NVML: Driver/library version mismatch\nNVML library version: 610.43",
+    "torch_cuda_available": true,
+    "torch_version": "2.11.0+cu128"
+  },
+  "halting_distribution": {
+    "1": 11,
+    "4": 1,
+    "6": 2036
+  },
+  "heldout_games": [
+    "sk48",
+    "m0r0",
+    "cn04"
+  ],
+  "heldout_generalization_signal": "no_bounded_signal_not_preregistered",
+  "heldout_protocol": {
+    "heldout_games": [
+      "sk48",
+      "m0r0",
+      "cn04"
+    ],
+    "heldout_windows": 2048,
+    "loo_verdict_reached": false,
+    "note": "Bounded Stage-1 substrate run; preregistered multi-seed LOO verdict is preserved.",
+    "train_windows": 8192,
+    "type": "bounded_leave_games_out"
+  },
+  "history_conditioned": true,
+  "history_intent_conditioned": true,
+  "honest_verdict": "complete: stage1_ptrm_substrate_trained_remaining_loo_gate_preserved",
+  "inference_substrate": "trained_ptrm_offline_development_proxy",
+  "intent_conditioned": true,
+  "leakage_count": 0,
+  "loo_verdict_reached": false,
+  "model_architecture": {
+    "act_halting": true,
+    "action_vocab_size": 8,
+    "hidden_dim": 128,
+    "history_length": 8,
+    "max_depth": 6,
+    "name": "PTRMActionSequenceGenerator",
+    "sequence_length": 8
+  },
+  "model_specs": {
+    "framework": "torch",
+    "model": "PTRMActionSequenceGenerator",
+    "torch_version": "2.11.0+cu128"
+  },
+  "no_level_solve_claim": true,
+  "overthinking_curve": [
+    {
+      "accuracy": 0.270263671875,
+      "depth": 1,
+      "energy": 1.6453397274017334
+    },
+    {
+      "accuracy": 0.26812744140625,
+      "depth": 2,
+      "energy": 1.645265817642212
+    },
+    {
+      "accuracy": 0.26422119140625,
+      "depth": 3,
+      "energy": 1.6472034454345703
+    },
+    {
+      "accuracy": 0.2608642578125,
+      "depth": 4,
+      "energy": 1.6496357917785645
+    },
+    {
+      "accuracy": 0.26165771484375,
+      "depth": 5,
+      "energy": 1.6521546840667725
+    },
+    {
+      "accuracy": 0.26318359375,
+      "depth": 6,
+      "energy": 1.654368281364441
+    }
+  ],
+  "parameter_count": 98385,
+  "positive_control_passed": true,
+  "preconditions": {
+    "blocked": false,
+    "checks": [
+      {
+        "available": true,
+        "devices": [
+          {
+            "index": 0,
+            "memory_total_gb": 23.55810546875,
+            "name": "NVIDIA GeForce RTX 3090"
+          },
+          {
+            "index": 1,
+            "memory_total_gb": 23.55810546875,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ],
+        "required": true,
+        "resource": "cuda_3090_class_torch",
+        "torch_cuda_available": true
+      },
+      {
+        "available": true,
+        "example_count": 180144,
+        "manifest_sha256": "e00b609586fbf631c5bd6c7e4e24b80c13cd5fe499ee30eb5abc402a4a7f6839",
+        "path": "data/arc_public_demo_human_replay_corpus/manifest.json",
+        "resource": "human_replay_manifest",
+        "shard_count": 44
+      },
+      {
+        "available": true,
+        "free_gb": 1379.387004852295,
+        "required_gb": 2.0,
+        "resource": "disk_budget"
+      },
+      {
+        "available": true,
+        "exists": true,
+        "path": "results/trm_runs/DO_NOT_RELAUNCH",
+        "resource": "sudoku_do_not_relaunch_scope",
+        "scope": "sudoku_extreme_verifier_graft_only"
+      }
+    ],
+    "sentinel_applies_to_arc": false
+  },
+  "prior_pilot_receipts": [
+    {
+      "changed_by_stage1": "full K-window sequence generation with history and stochastic recursion",
+      "pilot": "v1_single_frame_action_type",
+      "verdict": "inconclusive_recursion_above_matched_baseline_below_majority"
+    },
+    {
+      "changed_by_stage1": "sequence-level generator plus verifier-selected stochastic trajectories",
+      "pilot": "v2_history_single_step",
+      "verdict": "recursive_arm_underperformed_non_recursive_history_baseline"
+    },
+    {
+      "changed_by_stage1": "not a fixed-depth deterministic action-classifier rerun",
+      "pilot": "v3_multiseed_single_step",
+      "verdict": "0_of_10_significant_for_recursion"
+    },
+    {
+      "changed_by_stage1": "adds recent history, explicit intent, PTRM noise, ACT halting, and verifier selection",
+      "pilot": "v4_full_k8_static_frame",
+      "verdict": "0_of_3_significant_with_both_arms_near_chance"
+    }
+  ],
+  "random_seeds_used": [
+    5574
+  ],
+  "recursion_depth_metrics": {
+    "1": {
+      "energy": 1.6453397274017334,
+      "exact_window_accuracy": 0.00048828125,
+      "per_action_accuracy": 0.270263671875
+    },
+    "2": {
+      "energy": 1.645265817642212,
+      "exact_window_accuracy": 0.00048828125,
+      "per_action_accuracy": 0.26812744140625
+    },
+    "3": {
+      "energy": 1.6472034454345703,
+      "exact_window_accuracy": 0.0009765625,
+      "per_action_accuracy": 0.26422119140625
+    },
+    "4": {
+      "energy": 1.6496357917785645,
+      "exact_window_accuracy": 0.0009765625,
+      "per_action_accuracy": 0.2608642578125
+    },
+    "5": {
+      "energy": 1.6521546840667725,
+      "exact_window_accuracy": 0.001953125,
+      "per_action_accuracy": 0.26165771484375
+    },
+    "6": {
+      "energy": 1.654368281364441,
+      "exact_window_accuracy": 0.00244140625,
+      "per_action_accuracy": 0.26318359375
+    }
+  },
+  "reproducibility_checksum": "4233d4847eb66b8be66a3b3d8b4d2baec4c18e6c4d8109911d3bfce2c1294d4e",
+  "resource_receipt": {
+    "disk_free_gb": 1379.3864097595215,
+    "gpu_device_receipt": {
+      "device_count": 2,
+      "devices": [
+        {
+          "index": 0,
+          "memory_total_gb": 23.55810546875,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "index": 1,
+          "memory_total_gb": 23.55810546875,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "nvidia_smi_returncode": 18,
+      "nvidia_smi_stderr": "",
+      "nvidia_smi_stdout": "Failed to initialize NVML: Driver/library version mismatch\nNVML library version: 610.43",
+      "torch_cuda_available": true,
+      "torch_version": "2.11.0+cu128"
+    }
+  },
+  "retire_trm_generator_line": false,
+  "solve_provenance": "development_proxy",
+  "stage1_training_complete": true,
+  "stochastic_noise_schedule": {
+    "per_recursion_step": true,
+    "seeded": true,
+    "std": 0.15,
+    "type": "gaussian"
+  },
+  "track": "arc-trm-generator",
+  "training_curves": [
+    {
+      "epoch": 1,
+      "non_recursive_train_loss": 1.5677617192268372,
+      "ptrm_train_loss": 1.5135624930262566,
+      "seed": 5574
+    }
+  ],
+  "training_duration_s": 14.246149032842368,
+  "trajectories_per_input": 6,
+  "trajectory_diversity": {
+    "mean_unique_trajectories": 6.0,
+    "min_unique_trajectories": 6,
+    "trajectories_per_input": 6
+  },
+  "verifier_is_oracle": false,
+  "verifier_selection_method": {
+    "description": "smoothed action-language verifier fit only on training-game human-winning windows",
+    "name": "carnot_action_language_model",
+    "selection_eval": {
+      "first_sample_per_action_accuracy": 0.2216796875,
+      "mean_first_verifier_score": -2.1360938999267285,
+      "mean_selected_verifier_score": -1.6463428524375745,
+      "n_inputs": 128,
+      "selected_per_action_accuracy": 0.228515625,
+      "trajectory_diversity": {
+        "mean_unique_trajectories": 6.0,
+        "min_unique_trajectories": 6,
+        "trajectories_per_input": 6
+      },
+      "verifier_selection_uplift": 0.0068359375
+    },
+    "validation": {
+      "method": "bigram_action_language_corruption",
+      "n_trials": 64,
+      "pairwise_human_preferred_rate": 0.921875,
+      "verifier_is_oracle": false
+    }
+  },
+  "verifier_selection_uplift": 0.0068359375
+}

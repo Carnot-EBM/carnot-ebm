@@ -804,7 +804,7 @@ games:
     reproducibility_checksum: f1b529084c55d7dc1f7e2e9344bf10ac746a04f1c359db911be1f16f1182af58
 - game: wa30
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
     five blocks into five of six bay target slots (player hand-carry PLUS a passive
     color-12 helper-robot NPC that autonomously delivers blocks -- see gotcha below);
@@ -817,10 +817,15 @@ games:
     north-fence trap (see gotcha below). L5: a solid, non-socketable color-5 wall
     with a single 2-row gap, player+6 blocks east, one robot roaming both sides + an
     8-slot bay west; win = frame.levels_completed==5 via player-ferry-to-gap +
-    robot-relay-through-gap (see gotcha below). L2->L3, L3->L4, and L4->L5 all
-    auto-transition with no reset and no carry-over state between levels (fresh
-    timer, fresh layout) -- action sequences concatenate directly for the
-    reproduction gate.'
+    robot-relay-through-gap (see gotcha below). L6: INVERTS the robot premise -- a
+    color-15 THIEF steals a pre-placed bay block and dumps it on decoy pads; win =
+    frame.levels_completed==6 via dismissing the thief (a new ACTION5-on-contact-
+    highlight verb) then hand-ferrying both blocks back into the bay (see gotcha
+    below). L2->L3, L3->L4, L4->L5, and L5->L6 all auto-transition with no reset
+    and no carry-over state between levels (fresh timer, fresh layout) -- action
+    sequences concatenate directly for the reproduction gate, though L6''s entry
+    can be contaminated by leftover tail actions from an L5 candidate script (see
+    gotcha below).'
   solver: 'L1: results/experiment_4275 solve_trace.actions. L2: results/outer_loop_fable5_wa30_probe.json
     action_sequence (94-action full sequence: banked 33-action L1 prefix + 61-action
     L2 suffix). L3: results/outer_loop_fable5_wa30_probe_l3.json action_sequence
@@ -837,12 +842,19 @@ games:
     6th deposit, + a 9-action hand-engineered parity-safe tail to fund the robot''s
     final delivery; no live win was observed in-session, the candidate was handed
     over as unverified, and the outer loop ran the gate independently -- see
-    dead_ends v12 entry below). All four (L2/L3/L4/L5) by claude-fable-5,
-    2026-07-11. No GameAdapter registered yet -- these are frozen banked
-    trajectories, not a generalized per-game solver; a future GameAdapter encoding
-    the robot-delivery + fence-socket + multi-robot + ferry-relay rules (not just
-    these four trajectories) would be needed to reach the live E3AgentPolicy path or
-    to attempt L6+.'
+    dead_ends v12 entry below). L6: results/outer_loop_fable5_wa30_probe_l6.json
+    action_sequence, "Candidate B" (415-action full sequence: the same 359-action
+    L1-L5 prefix + a 56-action winning-episode script replayed directly, no resets;
+    a fallback "Candidate A" -- the literal 3-episode live path with 2 resets --
+    is also preserved in the artifact''s candidate_a_segments field but was not
+    needed). Live win WAS observed this time but the agent still did not self-run
+    the gate (budget discipline); the outer loop ran it independently -- see
+    dead_ends v13 entry below). All five (L2-L6) by claude-fable-5, 2026-07-11.
+    No GameAdapter registered yet -- these are frozen banked trajectories, not a
+    generalized per-game solver; a future GameAdapter encoding the robot-delivery +
+    fence-socket + multi-robot + ferry-relay + thief-dismissal rules (not just
+    these five trajectories) would be needed to reach the live E3AgentPolicy path
+    or to attempt L7+ (bonus recon below).'
   gotchas:
   - 'L2 HELPER-ROBOT mechanic (v9, 2026-07-11, claude-fable-5, independently re-verified
     by the outer loop -- see dead_ends v9 entry below): the unexplained 4x4 color-12
@@ -911,6 +923,29 @@ games:
     intended -- two of three L5 episodes were damaged by exactly this fumble (one
     briefly un-placed an already-delivered block). L5''s timer is the roomiest yet
     (~0.51 cells/action, ~125 actions/episode).'
+  - 'L6 THIEF-INVERSION mechanic (v13, 2026-07-11, claude-fable-5, live win OBSERVED
+    this time but the gate still independently RUN by the outer loop, not just
+    re-checked -- see dead_ends v13 entry below): the color-15 robot INVERTS the
+    L2/L3/L5 helper premise -- it is a THIEF. The west bay starts with one block
+    already correctly placed; the thief autonomously extracts it, hauls it east
+    through a wall tunnel, and dumps it on unbordered color-2 DECOY pad tiles that
+    accept a block but never advance the level (every 2-block pad configuration was
+    empirically refuted). The win requires a brand-new verb, robot DISMISSAL: stand
+    adjacent facing the thief (it contact-highlights with a color-11 outline,
+    exactly like a block does -- a naive color-15-only detector will miss it in
+    this state) and press ACTION5, which removes it from the level permanently; no
+    other interaction affects it. Then hand-ferry BOTH blocks back through the
+    row-6 wall tunnel (player-passable; the adjacent row-5 opening is NOT --
+    passability must be checked per-tile, not inferred from wall texture) into the
+    west bay, restoring the stolen block to its EXACT original slot plus the
+    second block in an adjacent slot; the level completed on the second placement.
+    Also structurally important: the L1-L5 prefix can bleed leftover tail actions
+    into the L6 entry state (this session''s prefix carried 5 stray pumps from the
+    L5 candidate''s engineered tail, costing 6 timer cells and advancing the
+    thief''s position) -- any L6 candidate script must be phase-robust to this kind
+    of prefix contamination, or the reproduction attempt should start from a
+    timer-forced-reset L6 entry instead. L6''s timer is the tightest yet (~0.83
+    cells/action, ~77 actions/episode).'
   - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex): a
     64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4 (not on ACTION5
     pickup/drop) -- though v9 measured the real drain as ~0.85 cells/action (not
@@ -1108,6 +1143,33 @@ games:
     cargo -- was discovered and is not yet a proven trap the way L4''s north-fence
     freeze was (no episode was lost to it specifically). levels_reproduced bumped
     4 -> 5.'
+  - 'v13 (results/outer_loop_fable5_wa30_probe_l6.json, 2026-07-11, claude-fable-5,
+    same agent resumed via SendMessage with full L1-L5 context, budget raised to
+    700, going in BLIND -- no bonus recon existed from v12 since L5 ended right at
+    its budget cap): three episodes to discover and win L6''s thief-inversion
+    mechanic (see gotcha above), live win OBSERVED at step 558/700
+    (levels_completed hit 6). Two candidates were preserved: "Candidate B" (the
+    359-action verified prefix + the 56-action winning script replayed directly,
+    phase-robustness argued from the thief parking at the same tile across both
+    observed entry variants) and a fallback "Candidate A" (the literal 3-episode
+    live path including 2 resets, guaranteed-correct but requiring the gate''s
+    apply_fn to special-case a reset label between segments). Despite the win
+    being live-observed this time (stronger evidence than v12''s L5 candidate),
+    the agent still did NOT self-run the gate -- the replay cost (415 steps) would
+    have pushed total usage to 974 against the 700 budget -- and handed off with
+    reproduction_verified: false. The outer loop tried Candidate B first (the
+    simpler, preferred one): extracted its 415-action action_sequence and called
+    arc_solver_kit.reproduce(''wa30'', ..., claimed_level=6) from 5 independent
+    fresh env.reset() calls. All 5 returned reached_level=6, reproduced=True on
+    the FIRST candidate tried -- Candidate B''s phase-robustness argument held, and
+    Candidate A''s more complex reset-segmented replay was never needed. Also
+    re-confirmed en route: the v12 L5 engineered tail still reaches L6 on a second
+    independent prefix replay. BONUS L7 RECON (v13, 0 cost, as-reported/not
+    attempted): a compressed single-corridor thief level -- a tall two-row bay
+    west, two blocks, one thief, decoy pads east, massive walls above/below the
+    corridor. The thief-dismiss + ferry playbook from L6 looks directly
+    applicable, unlike the L4->L5 or L5->L6 transitions which each required a
+    genuinely new mechanic. levels_reproduced bumped 5 -> 6.'
 - game: s5i5
   reproducibility: reproduced
   levels_reproduced: 2
@@ -2107,7 +2169,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 73
+reproducible_total_levels: 74
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

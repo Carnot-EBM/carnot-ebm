@@ -2124,7 +2124,102 @@ Required field principles:
 - `inference_substrate`: principle "must equal arc_live_agent_self_discovery_no_llm."
 - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, duplicate_prevented:, or blocked:."
 
+### REQ-ARC-FCP-5575: SGE Anti-Stagnation Live-Path Precheck
+
+Experiment 5575 SHALL write
+`results/experiment_5575_sge_anti_stagnation_live_precheck.json` before any
+follow-up SGE live inference spend. The workflow SHALL read the recorded SGE
+trace at `results/outer_loop_sge_smoke_test.json`, define fixed collapse
+thresholds before evaluation, and detect collapse using repeated normalized
+strategy text, low pairwise strategy distance, repeated action proposals, and
+consecutive null outcomes. It SHALL implement the anti-stagnation diversity
+controller inside the existing `LLMStrategyProposer`/`SGECandidateRouter`
+candidate-router path consumed by `E3AgentPolicy`, not as a standalone router.
+
+When collapse is detected, the live-path router SHALL force a bounded portfolio
+spanning observation, active coordinate probe, action-type probe, mechanic
+falsification, and recovery/reset hypotheses. The controller SHALL apply an
+outcome-conditioned taboo set against recently failed normalized strategies and
+SHALL remain stable when the LLM proposer fails or returns malformed output. It
+SHALL NOT use win-check, level-completion, hidden-source, scorecard, or oracle
+signals for strategy generation, ranking, or readiness.
+
+The precheck workflow SHALL read `ops/arc_solve_registry.yaml`, reject targets
+already reproduced at the requested level, reject recently exhausted targets
+unless the anti-stagnation controller is the new mechanism that justifies a
+retry, select one unsolved adjacent frontier target and action budget, and emit
+`live_path_ready=true` only when tests pass, the submitted E3 import path reaches
+the controller, the controller activates on the recorded SGE trace, no oracle
+leakage exists, and `target_unsolved=true`.
+
+The result artifact SHALL include `field_principles`, `llm_invoked`,
+`prior_trace_path`, `collapse_definition`,
+`collapse_detected_on_prior_trace`, `diversity_metrics_before_after`,
+`forced_portfolio`, `taboo_policy`, `e3_import_path`,
+`live_path_reachable`, `verifier_is_oracle`,
+`win_check_used_for_ranking`, `registry_precheck`, `target_game`,
+`target_level`, `prior_levels_reproduced`, `action_budget`,
+`tests_run`, `positive_control_passed`, `solve_provenance`,
+`inference_substrate`, `target_unsolved`, `live_path_ready`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `llm_invoked`: principle "bare bool false proving Exp5575 is a deterministic precheck and spends no live LLM inference."
+- `prior_trace_path`: principle "path to the recorded SGE trace used only for collapse diagnosis, not solve credit."
+- `collapse_definition`: principle "fixed thresholds declared before evaluating the prior trace."
+- `collapse_detected_on_prior_trace`: principle "bare bool true only when the fixed repeated-strategy, pairwise-distance, repeated-action, and null-outcome signals trip the collapse gate."
+- `diversity_metrics_before_after`: principle "records strategy/action diversity before and after forced anti-stagnation routing."
+- `forced_portfolio`: principle "bounded live-path-compatible strategy categories spanning observation, coordinate probe, action-type probe, mechanic falsification, and recovery/reset."
+- `taboo_policy`: principle "outcome-conditioned taboo set derived only from recently failed normalized strategies."
+- `e3_import_path`: principle "exact submitted path proving E3AgentPolicy reaches SGECandidateRouter through candidate_router.rank."
+- `live_path_reachable`: principle "bare bool proving the controller is reachable through the scored E3 candidate-router hook."
+- `verifier_is_oracle`: principle "must be false because precheck readiness cannot use oracle or hidden-source verifiers."
+- `win_check_used_for_ranking`: principle "must be false because strategy ranking cannot inspect win, level-completion, scorecard, or source signals."
+- `registry_precheck`: principle "structured evidence that registry depth was read and duplicate or exhausted targets were rejected before target selection."
+- `target_game`: principle "registry-safe game id selected for the next SGE live attempt."
+- `target_level`: principle "adjacent unreproduced frontier level selected after duplicate and exhaustion checks."
+- `prior_levels_reproduced`: principle "registry depth before the attempted target; target_level must be greater."
+- `action_budget`: principle "bounded action budget chosen before live inference."
+- `tests_run`: principle "exact test commands proving fake-completer behavior and full Python suite status."
+- `positive_control_passed`: principle "bare bool true only when fake-completer collapse activation and E3 reachability tests pass."
+- `solve_provenance`: principle "must equal live_agent_self_discovery because the follow-up live attempt must be the scored runtime's own discovery path."
+- `inference_substrate`: principle "must equal deterministic_live_path_precheck_no_llm."
+- `target_unsolved`: principle "a target already reproduced at the requested level cannot receive duplicate solve credit."
+- `live_path_ready`: principle "live inference requires tested E3 reachability, a new mechanism, and no oracle leakage."
+- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
+
 ## Scenarios
+
+### SCENARIO-ARC-FCP-5575: SGE Anti-Stagnation Controller Is E3-Reachable
+
+Given the prior SGE trace repeatedly proposes passive waiting strategies with
+null outcomes
+When the fixed Exp5575 collapse thresholds are evaluated
+Then repeated normalized strategy text, low pairwise strategy distance, repeated
+action proposals, and consecutive null outcomes are reported, and
+`collapse_detected_on_prior_trace=true`.
+
+Given collapse has been detected inside `SGECandidateRouter`
+When the live candidate-router hook ranks candidates for `E3AgentPolicy`
+Then no live LLM completion is required for the collapsed step, the forced
+portfolio emits observation, active coordinate probe, action-type probe,
+mechanic falsification, and recovery/reset hypotheses, and diversity metrics
+increase relative to the collapsed history.
+
+Given recent failed strategies exist in router history
+When the controller builds its taboo set
+Then taboo entries are normalized from outcome-conditioned failed strategies
+only, malformed or failed LLM completions degrade to deterministic fallback
+ranking, and prompts/ranking diagnostics contain no win-check, level-completion,
+hidden-source, scorecard, or oracle signal.
+
+Given the ARC registry records the candidate target depth
+When Exp5575 performs the registry precheck
+Then it selects only a deeper unreproduced adjacent frontier target, records
+`target_unsolved=true`, and sets `live_path_ready=true` only if tests pass, the
+E3 import path reaches the controller, collapse controls activate on the prior
+trace, and oracle leakage gates remain false.
 
 ### SCENARIO-ARC-FCP-5562: FSM Live Attempt Banks Only Reproduced Self-Discovery
 

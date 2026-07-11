@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-07-11 (Exp 5574 ARC pTRM Stage-1 regression fix -- codex)
+
+- Fixed the ARC pTRM Stage-1 test failures by implementing
+  `python/carnot/agentic/arc_ptrm_stage1_generator.py`, which had been left
+  empty, without reverting prior work and without modifying
+  `scripts/research_conductor.py`.
+- Added the bounded Stage-1 API for replay-action normalization, won-session
+  K-window dataset construction, fail-closed precondition receipts, seeded
+  stochastic recursive trajectory generation, oracle-distinct verifier
+  selection, artifact validation, and a tiny checkpointed runner.
+- Expanded `tests/python/test_arc_ptrm_stage1_generator.py` to cover the
+  public contract and defensive branches. Focused tests pass (`12 passed`),
+  focused Ruff check passed, and scoped Coverage.py reports 100% for the new
+  module (`464` statements, `0` missing).
+- Reconciled `openspec/capabilities/arc-trm-generator/spec.md`,
+  `_bmad/traceability.md`, and `ops/status.md` for
+  `REQ-ARC-PTRM-5574-1` through `REQ-ARC-PTRM-5574-5`.
+
 ## 2026-07-10 (Milestone 2026.07.503 planning staged -- codex)
 
 - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
