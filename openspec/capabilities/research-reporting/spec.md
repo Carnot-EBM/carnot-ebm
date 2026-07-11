@@ -40095,3 +40095,106 @@ emits a complete no-op artifact.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5551 | Implemented (`python/carnot/experiment_5551_v503_source_delta_ingestion.py`, `results/experiment_5551_v503_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5551_v503_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5563: V503 Capstone Reconciliation Preserves Claim Boundaries
+
+The Exp5563 workflow SHALL write
+`results/experiment_5563_capstone_v503.json` after reading every existing
+`.503` result artifact from Exp5550 through Exp5562, including the
+`results/experiment_5562_arc_fsm_live_levelup_trajectory.json` sidecar, and
+after accounting for the conductor-gated Exp5554 hard/soft panel skip from
+`ops/conductor-log.md`. It SHALL read, but SHALL NOT update,
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
+operator delegates final docs/status reconciliation to a separate conductor
+step. It SHALL NOT modify `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The workflow SHALL record clean, flagged, blocked, skipped-by-gate, and
+honest-null outcomes separately. It SHALL keep structured SOTA and SOTA
+hard/soft claims false when row completion failed in Exp5552, the GBNF row
+smoke was conductor-gated in Exp5553, or the Exp5554 panel was skipped. It
+SHALL preserve the repaired five-arm and causal write-manage-read CSL evidence
+from clean Exp5557 and Exp5558, but SHALL keep broad CSL and cross-model CSL
+claims false when Exp5559 is flagged or has zero cross-family delta. It SHALL
+allow only the bounded ASP/FSM sparse-repair claim from clean Exp5556 and SHALL
+not convert that evidence into timing or hardware speedup. It SHALL keep
+hardware speedup false without matched timing from Exp5560. It SHALL keep ARC
+live level-up false when Exp5562 has `registry_delta=0` or lacks offline
+reproduction, even if the live-path provenance is otherwise clean.
+
+The artifact SHALL include required fields `milestone`, `task_range`,
+`artifacts_expected`, `artifacts_read`, `missing_artifacts`,
+`flagged_artifacts`, `blocked_artifacts`, `skipped_by_gates`, `honest_nulls`,
+`structured_sota_claim_allowed`, `sota_hard_soft_claim_allowed`,
+`continuous_self_learning_evidence`, `csl_claim_allowed`,
+`cross_model_csl_claim_allowed`, `asp_sparse_repair_claim_allowed`,
+`hardware_speedup_claim`, `arc_registry_delta`,
+`arc_live_levelup_claim_allowed`, `docs_updated`, `roadmap_yaml_unchanged`,
+`conductor_unchanged`, `field_principles`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `milestone`: principle "Route key for the `.503` capstone."
+- `task_range`: principle "Closed conductor boundary from transition through this capstone."
+- `artifacts_expected`: principle "Count of expected upstream `.503` artifacts and sidecars before claim aggregation."
+- `artifacts_read`: principle "Count of expected upstream JSON artifacts actually parsed."
+- `missing_artifacts`: principle "Unaccounted absent or unreadable evidence stays visible and never becomes success."
+- `flagged_artifacts`: principle "Adversarial or methodology-flagged artifacts cannot support headline claims."
+- `blocked_artifacts`: principle "Terminal blocked artifacts remain blockers even when useful diagnostics exist."
+- `skipped_by_gates`: principle "Conductor gate skips stay separate from missing files and clean nulls."
+- `honest_nulls`: principle "Executed clean nulls are recorded without treating them as failures or wins."
+- `clean_artifacts`: principle "Readable unflagged nonblocked nonnull artifacts available for bounded aggregation."
+- `structured_sota_claim_allowed`: principle "False unless row completion, grammar-forced rows, and schema/exact validation all pass."
+- `sota_hard_soft_claim_allowed`: principle "False unless a clean hard/soft panel explicitly allows the claim."
+- `continuous_self_learning_evidence`: principle "True only for clean five-arm plus causal memory evidence, separate from transfer claims."
+- `csl_claim_allowed`: principle "Broad CSL claim gate; false when cross-model transfer is flagged, skipped, or zero-delta."
+- `cross_model_csl_claim_allowed`: principle "False unless clean cross-family transfer beats shuffled/no-memory controls without negative-transfer spikes."
+- `asp_sparse_repair_claim_allowed`: principle "Bounded exact-checked ASP/FSM repair evidence only, not a speedup claim."
+- `hardware_speedup_claim`: principle "Must remain false without matched hardware-vs-baseline timing receipts."
+- `arc_registry_delta`: principle "Counts only offline-reproduced live-agent registry increments."
+- `arc_live_levelup_claim_allowed`: principle "False unless live_agent_self_discovery, offline reproduction, and positive registry delta all hold."
+- `docs_updated`: principle "Files updated by this workflow; ops/status, ops/changelog, and traceability remain delegated."
+- `roadmap_yaml_unchanged`: principle "Protected-file discipline; true only when `research-roadmap.yaml` is unchanged."
+- `conductor_unchanged`: principle "Protected-file discipline; true only when `scripts/research_conductor.py` is unchanged."
+- `field_principles`: principle "One-line annotations for every headline and gate field."
+- `inference_substrate`: principle "Must equal aggregation_from_upstream_artifacts because Exp5563 is synthesis only."
+- `honest_verdict`: principle "Terminal summary starting with complete: or blocked: that names the `.503` claim boundary."
+
+#### SCENARIO-REPORT-5563: Capstone Aggregates V503 Without Laundering Flags
+
+**Given** the existing Exp5550 through Exp5562 `.503` artifacts are readable
+**And** Exp5552 is blocked, Exp5553 is a conductor pre-gate skip, Exp5554 is
+conductor-skipped, Exp5559 is adversarial-flagged and zero-delta, and Exp5562
+is an honest ARC no-bank null
+**When** the Exp5563 capstone workflow runs
+**Then** it writes `results/experiment_5563_capstone_v503.json`, records the
+flagged, blocked, skipped, and honest-null rows separately, keeps structured
+SOTA, SOTA hard/soft, broad CSL, cross-model CSL, hardware speedup, and ARC
+live level-up claims false, preserves clean causal CSL evidence, preserves the
+bounded ASP/FSM sparse-repair claim, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and keeps protected
+files unchanged.
+
+#### SCENARIO-REPORT-5563-MISSING-INPUT: Unaccounted Missing Inputs Fail Closed
+
+**Given** one or more expected non-gated Exp5550 through Exp5562 artifacts is
+missing or unreadable
+**When** the Exp5563 capstone workflow runs
+**Then** it emits a terminal `blocked:` artifact, records the path in
+`missing_artifacts`, keeps headline claim booleans false except independently
+clean bounded evidence, and does not modify protected files.
+
+#### SCENARIO-REPORT-5563-FIELD-PRINCIPLES: Required Fields Stay Annotated
+
+**Given** the Exp5563 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, no speedup or ARC level-up claim is allowed without
+its required receipts, and `honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5563)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5563 | Implemented (`python/carnot/experiment_5563_capstone_v503.py`, `results/experiment_5563_capstone_v503.json`) | Implemented (`tests/python/test_experiment_5563_capstone_v503.py`) |
