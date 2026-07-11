@@ -29835,6 +29835,117 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5566: Exact ASP/FSM Near-Miss Corpus
+
+The repository SHALL provide Exp 5566 at
+`python/carnot/experiment_5566_exact_asp_fsm_near_miss_corpus.py`, write
+`results/experiment_5566_exact_asp_fsm_near_miss_corpus.json`, and write a
+reusable deterministic corpus at
+`results/experiment_5566_exact_asp_fsm_near_miss_corpus.jsonl` for
+exact-labeled ASP/FSM valid and controlled near-miss rows. Exp 5566 SHALL use
+the Exp 5555 ASP stable-model evaluator and the upstream exact FSM
+parser/validator as the only label authority. It SHALL NOT use Exp 5552's missing grammar backend,
+SHALL NOT invoke an LLM, SHALL NOT use a heuristic as the authority, and SHALL
+NOT modify `scripts/research_conductor.py`.
+
+The corpus SHALL contain at least 120 rows and SHALL cover at least four
+families: defaults/exceptions (`defaults_exceptions`), contradictions
+(`contradictions`), soft-preference optimality
+(`soft_preference_optimality`), and FSM transition consistency
+(`fsm_transition_consistency`). Each family SHALL have at least 30 exact-validated
+rows before percentage-point comparisons are allowed. Rows SHALL be balanced
+between valid candidates and invalid controlled near-misses, with invalid rows
+formed by deterministic one-edit or two-edit corruptions. Every row SHALL record
+its family, partition, label, exact validator backend, mutation operators,
+mutation distance, candidate hash, and exact validation decision. The train,
+dev, and test partitions SHALL be leak-checked by candidate hash, and
+`duplicate_leakage_count` SHALL be zero before the corpus can be ready.
+
+Exp 5566 SHALL exact-validate every row. Valid positive controls SHALL be
+accepted by the exact validator and invalid positive controls SHALL be rejected
+by the exact validator before `corpus_ready` can be true. The terminal artifact
+SHALL record corpus hashes, class balance, family counts, label counts, mutation
+operator counts, mutation distance counts, partition counts, and the exact
+validator substrate. The artifact SHALL include at minimum these top-level
+fields: `field_principles`, `corpus_path`, `corpus_sha256`,
+`source_fixture_path`, `exact_validator_backend`, `exact_validator_is_oracle`,
+`llm_invoked`, `n_instances`, `family_counts`, `label_counts`,
+`mutation_operator_counts`, `mutation_distance_counts`, `partition_counts`,
+`duplicate_leakage_count`, `valid_acceptance_rate`, `invalid_rejection_rate`,
+`positive_control_passed`, `tests_run`, `inference_substrate`,
+`honest_verdict`, `n_rows`, and `corpus_ready`.
+`source_fixture_path` SHALL equal
+`results/experiment_5555_asp_fsm_nonmonotonic_fixture.json`;
+`exact_validator_is_oracle` SHALL be `true`; `llm_invoked` SHALL be `false`;
+`inference_substrate` SHALL equal `deterministic_exact_fixture_no_llm`; and
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Field principles:
+
+- `field_principles`: Keeps every headline and gate field annotated by its
+  evidence boundary.
+- `corpus_path`: Locates the reusable exact-labeled corpus artifact.
+- `corpus_sha256`: Pins the reusable corpus bytes to a stable digest.
+- `source_fixture_path`: Pins generation to the exact ASP/FSM fixture source.
+- `exact_validator_backend`: Names the deterministic exact validators used as
+  authority.
+- `exact_validator_is_oracle`: Bare boolean disclosing that labels come from an
+  exact fixture oracle, not a learned verifier.
+- `llm_invoked`: Prevents the corpus from being mistaken for live model
+  inference.
+- `n_instances`: Counts exact-labeled independent rows available for
+  comparisons.
+- `family_counts`: Confirms the four required families meet their row floors.
+- `label_counts`: Confirms valid and invalid classes are balanced.
+- `mutation_operator_counts`: Audits which controlled corruptions generated the
+  near misses.
+- `mutation_distance_counts`: Audits one-edit and two-edit invalid controls
+  separately from valid identity rows.
+- `partition_counts`: Confirms train, dev, and test partitions are populated.
+- `duplicate_leakage_count`: Gates readiness on no duplicate candidate leakage
+  across partitions.
+- `valid_acceptance_rate`: Positive control rate for exact acceptance of valid
+  rows.
+- `invalid_rejection_rate`: Positive control rate for exact rejection of
+  invalid near misses.
+- `positive_control_passed`: Bare boolean requiring valid acceptance and invalid
+  rejection controls to pass.
+- `tests_run`: Records the focused verification commands used for this
+  artifact.
+- `inference_substrate`: Declares deterministic exact fixture validation with no
+  LLM.
+- `honest_verdict`: Provides a terminal evidence boundary without model quality
+  or speedup claims.
+- `n_rows`: The exact corpus must meet the preregistered scale floor.
+- `corpus_ready`: Only a complete leak-free corpus with passing exact controls
+  may unlock live inference.
+
+### SCENARIO-VERIFY-5566: Exact Near-Miss Corpus Is Ready Only After Controls
+
+Given the Exp 5555 exact ASP/FSM fixture is ready, when Exp 5566 runs, then it
+builds at least 120 deterministic corpus rows across defaults/exceptions,
+contradictions, soft-preference optimality, and FSM transition consistency,
+records balanced valid and invalid labels, records one-edit and two-edit
+corruption metadata, exact-validates every row with deterministic fixture
+validators, writes the reusable corpus under `results/`, writes
+`results/experiment_5566_exact_asp_fsm_near_miss_corpus.json`, and sets
+`corpus_ready=true` only when duplicate leakage is zero, every required family
+has at least 30 rows, valid controls are accepted, invalid controls are
+rejected, and the corpus hash matches the written corpus bytes.
+
+If the source fixture is absent or unready, if any required family is under the
+30-row floor, if valid and invalid labels are not balanced, if a duplicate
+candidate leaks across partitions, if a valid row is rejected, or if an invalid
+near miss is accepted, then Exp 5566 SHALL keep `corpus_ready=false`, preserve
+the diagnostic counts, and emit a terminal `complete:` or `blocked:` verdict
+without invoking an LLM.
+
+## Implementation Status (REQ-VERIFY-5566)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5566 | Planned (`python/carnot/experiment_5566_exact_asp_fsm_near_miss_corpus.py`, `results/experiment_5566_exact_asp_fsm_near_miss_corpus.json`) | Planned (`tests/python/test_experiment_5566_exact_asp_fsm_near_miss_corpus.py`) |
+
 ### REQ-VERIFY-5501: Helper-Contract Hierarchical Claim Fixture V499
 
 The repository SHALL provide Exp 5501 at
