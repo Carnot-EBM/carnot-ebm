@@ -1,18 +1,10 @@
 {
   "game": "g50t",
   "model": "claude-fable-5",
-  "starting_level": 2,
+  "starting_level": 3,
   "max_level_reached": 3,
-  "total_env_steps_used": 394,
-  "step_accounting_note": "377 env.step calls mechanically counted (48-action verified prefix replays x3 incl. gate, exploration, solve runs, reproduction gate) + >=17 uncounted from the initial STEP-0 prefix replay through the banked apply_g50t_label busy-wait apply_fn; true total possibly slightly above 394 but well under the 500 budget.",
-  "reproduction_verified": true,
-  "reproduction_gate_result": {
-    "game": "g50t",
-    "reached_level": 3,
-    "claimed_level": 3,
-    "reproduced": true,
-    "mode": "offline_reproduction_gate_no_quota"
-  },
+  "total_env_steps_used": 557,
+  "reproduction_verified": false,
   "action_sequence": [
     4,
     4,
@@ -133,22 +125,16 @@
     1,
     1
   ],
-  "action_sequence_note": "118 GameAction numbers (1=up,2=down,3=left,4=right,5=commit/rewind) from a fresh env.reset(): first 48 = banked L1+L2 prefix (results/arc_loop_solve_g50t.json), then L3 solve = run A (12: park ghost on right cars call plate), run B (28: 6 delay no-ops then park ghost on left cars bottom plate via the opened bottom band), run C (30: race ahead of ghost B through the (20,50) choke, climb the left shaft, enter the goal ring at (20,20) once ghost B pulls the left car down).",
-  "levels_won_this_session": [
-    3
-  ],
-  "novel_mechanics_found": "Level 3 introduces several mechanics not present in L1/L2 banked knowledge: (1) a per-level ACTION TIMER rendered as the bottom status row depleting 1 cell per 2 actions (64 cells = ~128 action budget); (2) a mobile x-colored BLOCKER (5x5 head + 3-wide tongue on a horizontal track spanning the corridor rows 20-24) that docks in the right shaft blocking descent, and slides one dock left toward the player when the player enters its track band - clearing the right shaft; (3) two-position ELEVATOR CARS ('+' colored 5x5 blocks on vertical wires) that block passages at their default dock and slide one quantum away while a body stands on their call plate, snapping back the moment the plate is released; (4) full CLONE COMMIT/REWIND semantics for ACTION5: pressing 5 commits the current trajectory, rewinds the active player to level spawn, and the committed ghost (rendered in color 2) REPLAYS its trajectory one action per subsequent player action, then parks at its endpoint FOREVER - parked ghosts hold plates (this is what 'clone holds the plate' meant in the L2 registry notes); 3 run slots total (2 commits + final run), shown top-left; committing an EMPTY trajectory (5 at spawn with no moves) does NOT consume a slot; (5) the goal is the 7x7 ring with a center dot at (19,19)-(25,25): the win fired exactly when the active player filled its 5x5 interior (top-left (20,20)), consistent with the registry's player==target+offset predicate.",
-  "narrative": "Replayed the banked 48-action prefix to a verified levels_completed=2 start, then explored L3 purely from frames. Mapped the level as floor color 5 / void 0 with a 6-cell move quantum, found the goal ring chamber sealed on all sides except a southern passage blocked by the left elevator car, and the bottom band blocked by the right elevator car. Discovered the plate/car magnet mechanic by stepping on the right car's call plate and watching the car rise and snap back; discovered ACTION5's commit/rewind-ghost semantics by direct experiment (burning one slot on a wasted trajectory in the first instance, which made that instance unwinnable - 3 bodies are needed: two permanent plate holders + the runner). Restarted on a truly fresh env (note: env.reset() alone did NOT clear ghost/timer state; a new arc.make() env was required), then executed a 3-run plan: ghost A parks on the right car's upper plate (holding the bottom band open), ghost B - padded with 6 no-op delay moves so the runner stays ahead of it - crosses the opened bottom band and parks on the left car's bottom plate (pulling the left car down and opening the goal chamber), and the final run races ahead of ghost B through the one-node choke at (20,50), climbs the left shaft, waits out nothing (timing worked out exactly), and enters the goal ring: levels_completed 2 -> 3, game advanced to level 4. Self-ran the mandatory offline reproduction gate from a fresh reset: reached_level=3, reproduced=True. Stopped after L3: level 4 (glimpsed) adds a horizontal-track car plus two new cage-like ring structures on tracks in a new color - solving it needs its own multi-run discovery plus a longer gate replay, beyond the remaining step budget.",
+  "levels_won_this_session": [],
+  "novel_mechanics_found": "Level 4 has a color-8 sliding blocker whose right endpoint is entered at player top-left (32,26): occupation shifts the blocker one six-cell quantum and clears the left shaft, but it snaps back as soon as the body leaves, requiring a committed clone holder. The color-15 paired rail sockets are clone-selective: a live body entering the upper socket at (26,38) remains there, while a replaying clone that enters it and then executes RIGHT is rerouted to the lower parallel socket at (26,50). Inputs that have no movement effect do not reliably advance clone replay, so successful movement is the usable replay clock. After both clone slots have been used, ACTION5 clears the clones and rewinds to the level spawn but does not restore the level timer.",
+  "narrative": "Resolved and replayed the registry prefix from a genuinely fresh environment: all 118 labels used exactly 118 env.step calls and the rendered frame confirmed levels_completed=3. I mapped level 4 through frames and two live clone programs, discovering the pressure-held color-8 door and the clone-only color-15 reroute. A corrected 154-action full candidate attempted to hold the blocker, route a second clone into the lower goal corridor, and clock that clone onto the goal; the mandatory fresh-reset reproduction gate reached only level 3 (reproduced=false for claimed level 4). I stopped at 557 total calls because another fresh-prefix attempt plus verification could not fit under the 600-step cap; no level-4 win was observed live or reproduced.",
   "gotchas": [
-    "env.reset() on an existing offline-arcade env does NOT fully reset g50t: a committed ghost and the depleted action timer survived into the 'fresh' game; create a brand-new env via arc.make() for a genuinely clean instance.",
-    "ACTION5 at spawn with an empty trajectory is a free no-op (does not consume one of the 3 run slots).",
-    "The 3 run slots are the binding resource: L3 needs BOTH non-final slots spent on plate-holders; any wasted commit makes the instance unwinnable (no un-commit exists short of a full level reset).",
-    "Ghosts replay one action per player action and PARK at their endpoint forever; a ghost parked on a corridor node is a permanent wall - choose commit endpoints that are plates, not thoroughfares (my first wasted ghost parked at (44,50) and would have blocked the bottom-band route).",
-    "Ghosts replaying the same corridor as your live run WILL share nodes with you; pad the committed trajectory with blocked-direction no-op presses (e.g. 3 at spawn) to control relative timing - 6 pad moves kept the runner safely ahead of ghost B on the shared route.",
-    "The x blocker never overlapped/killed the player in ~30 turns of contact-adjacent behavior; it acts as a sliding door, not a hazard, and actually HELPS by vacating the right shaft when approached from the middle shaft.",
-    "The per-level action timer (~128 actions) is generous but real; the full 3-run L3 solve used ~71 actions (~36 cells), so heavily exploratory instances should be restarted rather than finished.",
-    "The elevator cars snap back the instant their plate is released - there is no transient window; every opened passage needs a permanent holder while you transit.",
-    "Multi-line def blocks pasted into the interactive Python REPL silently mangle (NameError/SyntaxError aftermath caused one wasted commit press); use exec-single-string for helper definitions when driving the env interactively."
+    "The 118-action resolver prefix was replayed on a fresh env and reached levels_completed=3 exactly; it consumed one env.step per label in this session.",
+    "The color-8 blocker only stays shifted while a body occupies its right endpoint at player top-left (32,26); leaving the endpoint closes the left shaft immediately.",
+    "Blocked/no-effect actions did not continue advancing an already committed clone during live probing; use successful oscillating moves as the replay clock.",
+    "The upper color-15 socket behaves differently for the live body and a replaying clone: RIGHT is a live no-op there, but the same recorded RIGHT rerouted the clone from (26,38) to (26,50).",
+    "ACTION5 after two commits clears both ghosts and rewinds the active body to spawn, but the depleted bottom-row timer is preserved, so it is not a full retry.",
+    "The final fresh-reset candidate routed a clone toward the lower goal but did not win; a clone on the goal is insufficient by itself, or the reroute/replay timing needs an additional active-body interaction."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
