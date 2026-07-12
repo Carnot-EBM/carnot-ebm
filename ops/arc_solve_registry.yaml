@@ -2026,7 +2026,7 @@ games:
     reproducibility_checksum: a3d057dcd66e4e3b31e5cb3eaa73f5a45c7c9f8ec6d62dec8d94492660d49648
 - game: su15
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 7
   mechanic_class: drag_merge_fruit_target
   win_condition: 'L1 click-to-connect diagonal plus L2 staged drag/merge: merge eight level-0 fruits into one level-3 fruit and drag its center into the xkstxyqbs target zone centered near (33,27). L3 (2026-07-11, claude-fable-5): the same drag/merge physics generalizes, but delivery targets
     are the big 9-colored round BLOBS on the field, not the top hollow boxes
@@ -2074,6 +2074,31 @@ games:
     counters: a completed b-fruit hops 8px/click vs. the hunter''s 4px/click
     and could outrun it to the blob; body-blocking; an unknown anti-hunter
     mechanic.'
+  - 'L4-L7 SOLVED round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): confirms the "outrun the hunter" hypothesis above was the
+    right unlock -- L4 hunter evasion is an axis-speed race, the highest-tier
+    fruit outruns the 7-colored hunter with repeated 8px axial hops
+    (long axis-aligned hops create separation; diagonal hops often do not),
+    letting a decoy fruit be parked at the far edge while the other half is
+    built. L5 introduces TWO hunters that FUSE into an e-colored composite
+    thief when they converge (the composite hides under a fruit and
+    repeatedly downgrades it); L5''s resource meter is nearly exact so avoid
+    extra failed clicks. L6 adds high tiers c/8 plus a hunter-processing
+    socket: an 8 can be downgraded to c then to the required b via timed
+    collision/withdrawal, with the level transition resolving one tick
+    later. L7 is a synchronized race: four 6-fruits form one b in four
+    actions while the hunter converts 8->c->b in parallel; both b fruits can
+    then be delivered before the next attack (needs two hops for the right
+    b, via (48,24) then (44,22) -- clicking (44,22) directly from spawn is
+    outside pull range and wastes the critical timing window). Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay via the
+    fixed resolver (labels are dict-shaped, needed JSON normalization), all
+    5 confirmed reached_level=7, state=GameState.NOT_FINISHED. L8 was
+    scouted (three hunters, two c goals, four blobs, an e goal; two hunters
+    fuse on tick 6; careless clicks within radius of both c fruits merge
+    them back into an 8) but not won this session -- a genuine
+    simultaneous-control wall (keeping both c fruits separated and safe
+    while preserving the fused e and avoiding the third hunter).'
   dead_ends:
   - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
   - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
@@ -3449,7 +3474,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 131
+reproducible_total_levels: 135
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
