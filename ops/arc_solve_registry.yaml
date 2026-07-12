@@ -800,6 +800,30 @@ games:
     guess was roughly right). The L3 choreography tooling (an offline
     simulator, a greedy+noise planner, and a beam-searched endgame) did
     transfer to the L4 attempt as predicted.'
+  - 'L5 progress round 3 (2026-07-12, gpt-5.6-sol via codex, round-3 breadth
+    campaign): still HONEST NULL, frontier stays at level 4 -- but the
+    round-2 L5 sketch (two black CARRIER pieces, fuse-then-deliver) is
+    refined with the exact selection/control model. The small black/yellow
+    diamond seen on a handle is not decorative: it is the SELECTED-state
+    rendering of a carrier handle, while green/yellow diamonds are
+    unselected handles. The board has a two-handle carrier and a
+    three-handle carrier; overlapping black-backed colored cargo attaches it
+    to the carrier, and overlapping another cargo stacks/fuses the payload.
+    A click inside a DIFFERENT handle diamond silently switches
+    carrier/handle control (no separate select action). Cargo/socket
+    contact is highly alignment-sensitive, and several same-color-looking
+    and cross-color-looking dotted glyphs are decoys/blockers, not valid
+    delivery targets. Confirms the round-2 "hard 60-click meter" (the next
+    action past 60 level actions is GAME_OVER). Eight live L5 attempts this
+    round recovered and optimized the round-2 near-route into an exact
+    60-click candidate; it replays deterministically through the full
+    meter but does not advance frame.levels_completed past 4. Stopped at
+    583 total env.step calls (117 short of the 700-call round-3 budget) so
+    the remaining calls were insufficient for a fresh from-L4
+    reproduction-gate re-run; no new win claimed, reproduction_verified is
+    correctly reported false by the source agent. Next attempt should
+    revisit delivery ORDER/alignment tolerance now that the carrier-control
+    model is fully known, not the carrier mechanic itself.'
   dead_ends:
   - 'Exp4862 first standing-loop attempt with _r11l featurize enabled failed
     before search: the stale models/arc_verifier_r11l.json checkpoint expected
