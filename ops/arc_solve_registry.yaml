@@ -2521,7 +2521,9 @@ games:
     reproducibility_checksum: a3d057dcd66e4e3b31e5cb3eaa73f5a45c7c9f8ec6d62dec8d94492660d49648
 - game: su15
   reproducibility: reproduced
-  levels_reproduced: 8
+  levels_reproduced: 9
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: drag_merge_fruit_target
   win_condition: 'L1 click-to-connect diagonal plus L2 staged drag/merge: merge eight level-0 fruits into one level-3 fruit and drag its center into the xkstxyqbs target zone centered near (33,27). L3 (2026-07-11, claude-fable-5): the same drag/merge physics generalizes, but delivery targets
     are the big 9-colored round BLOBS on the field, not the top hollow boxes
@@ -2674,6 +2676,42 @@ games:
     resource. Fresh reproduce() gate reconfirmed level 8 (no regression).
     No new level banked; frontier stays at level 8, but this is the
     deepest verified L9 progress recorded so far.'
+  - 'L9 SOLVED round 7, FULL GAME CLEAR (2026-07-12, claude-fable-5, the
+    seventh L9 attempt, results/outer_loop_fable5_su15_probe_round7_20260712.json):
+    L9 is the FINAL level (win_levels=9) and the round-6 near-miss''s
+    framing of a "final 7 merge" was a red herring -- the actual win
+    condition never required separating the fused hunter composite from
+    the goal fruit at all. Opened with the known-good line (merge the
+    two 6s into f, stage and deep-socket f, kite the 8 away from a
+    hunter), at which point a single 7 hunter contacted the 8 and
+    converted it directly to c (no e needed) with an ~11px knockback.
+    All four hunters then converged on the loose c; DECISIVE new
+    mechanic: a click''s drag resolves BEFORE hostile attacks within
+    the SAME transition, so towing c on every single transition fully
+    suppresses degradation regardless of how many hunters are latched
+    or occluded on it. Deliberately baiting all four hunters onto
+    kited-c made them mass-lunge and fully occlude underneath it; the
+    complete four-hunter d composite then formed SPONTANEOUSLY inside
+    that occluded pile (7+7->e twice, e+e->d) with zero explicit
+    hostile choreography. d itself is pullable like a fruit. The win
+    fired the instant the c+d stack (d riding occluded beneath c) was
+    towed into a socket while f already sat in its own socket -- no
+    separate delivery of d was needed or possible, since c and d share
+    a center and any click catches both. Two dead-end branches (letting
+    a latched/occluded hostile sit through one un-towed transition
+    degraded c->b, flipping all sockets red) were both recovered via
+    ACTION7 undo, which costs zero resource meter (env-step only, no
+    refund of the undone click, but no NEW cost either) -- undo-probing
+    dangerous transitions is essentially free. Total session cost: 164
+    live actions (19-action continuation past the 145-action L8 prefix,
+    5 of them free undos), only 18 of 64 meter cells spent -- the prior
+    rounds'' meter exhaustion came from kiting/failed clicks, not
+    intrinsic level cost. The source agent ran its own fresh-reset
+    arc_solver_kit.reproduce() gate on all 164 actions and got
+    reached_level=9, and the outer loop independently re-verified
+    regardless: 5x fresh env.reset() + replay via a new resolver
+    priority branch, all 5 confirmed level=9, state=GameState.WIN. The
+    game is fully solved.'
   dead_ends:
   - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
   - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
@@ -4532,7 +4570,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 159
+reproducible_total_levels: 160
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

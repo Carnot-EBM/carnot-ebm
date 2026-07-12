@@ -1039,7 +1039,30 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "su15" and _as_int(entry.get("levels_reproduced")) >= 9:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_su15_probe_round7_20260712.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        if adapter is None:
+            raise RuntimeError("su15 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "su15" and _as_int(entry.get("levels_reproduced")) >= 8:
+        # NOTE: unreachable for the live registry entry (which is >=9 as of the
+        # round-7 full-game-clear win); retained as historical dead code
+        # documenting the round-6 (level-8) resolution.
         from carnot.agentic.arc_game_adapters import get_adapter
 
         adapter = get_adapter(game)
