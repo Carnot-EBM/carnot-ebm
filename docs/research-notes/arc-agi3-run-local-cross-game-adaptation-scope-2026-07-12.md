@@ -238,6 +238,32 @@ either way. Measure, matched-compute, same methodology as `exp4582`:
   this is the check most likely to kill the feature outright, and should run FIRST,
   cheaply, before the more expensive validation work in 2.4.
 
+### 2.4 RESULT (2026-07-12) — honest null, CI includes zero
+
+Built `python/carnot/experiment_5578_run_local_ledger_concurrent_ab.py` per this
+section's design (real `threading.Thread`s, one process, matched-compute
+control-vs-treatment, `n_bootstrap=2000`). Full result:
+`results/experiment_5578_run_local_ledger_concurrent_ab.json`,
+`honest_verdict: complete: run_local_ledger_ab_honest_null_ci_includes_zero`.
+
+- Roster: `bp35, dc22, g50t, re86, s5i5, sk48` (6 games, budget 300 actions/game).
+- `levels_gained_delta_mean = 0.0`, `levels_gained_delta_ci = [0.0, 0.0]` — the CI
+  does not exclude the no-mechanism baseline; no detectable effect.
+- Positive controls both passed: `ledger_lost_update_check_passed: true` (the
+  thread-safety requirement holds under real concurrent writes) and
+  `confidence_gate_fired_at_least_once: true` (the mechanism is wired correctly
+  and does activate) — so this is a genuine null on EFFICACY, not a broken
+  harness silently reporting nothing.
+- Consistent with the adjacent `exp4582` null this note's §2.4 predicted as
+  plausible up front.
+
+**Per this section's own rollout order (§4 step 5): retire per the
+Failed-Experiment Rerun Discipline.** `CARNOT_ARC_RUN_LOCAL_ADAPTATION` stays
+OFF by default; do not flip it on. Do not re-propose this exact measurement
+(same roster, same budget, same outcome proxy) without a stated difference —
+a larger roster, more trials, a different outcome proxy, or a changed
+component, per the experiment's own `recommendation` field.
+
 ## 3. Explicitly out of scope for a first version
 
 - No persistence back to `ops/arc_solve_registry.yaml` from the live path, ever.

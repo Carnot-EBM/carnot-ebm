@@ -1,0 +1,218 @@
+{
+  "experiment": "experiment_5578_run_local_ledger_concurrent_ab",
+  "schema": "carnot.exp5578.run_local_ledger_concurrent_ab.v1",
+  "result_path": "results/experiment_5578_run_local_ledger_concurrent_ab.json",
+  "honest_verdict": "complete: run_local_ledger_ab_honest_null_ci_includes_zero",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a measured null is complete (negative-but-real), never partial"
+    },
+    "inference_substrate": {
+      "principle": "no LLM/proposer invoked (StepwiseExplorer explore-phase only, proposer=None) -- pure CPU search, declared honestly rather than defaulted to a GGUF substrate that was never loaded"
+    },
+    "verifier_is_oracle": {
+      "principle": "False -- this measures whether a learned routing signal adds value, not whether the executable win-check agrees with itself"
+    },
+    "roster": {
+      "principle": "diverse mechanic_class/action-model spread so a positive result cannot be an artifact of a narrow/repeated test roster (SS2.5)"
+    },
+    "levels_gained_delta_ci": {
+      "principle": "paired bootstrap CI on (treatment - control) per game; a claim requires the CI to exclude 0.0, same bar exp4582 used for the closely-related idea"
+    },
+    "ledger_lost_update_check_passed": {
+      "principle": "positive control -- confirms the thread-safety claim under THIS run's real concurrency, separate from the efficacy question"
+    },
+    "no_regression_fallback": {
+      "principle": "CARNOT_ARC_RUN_LOCAL_ADAPTATION stays off by default regardless of this result until an operator reviews it -- this script never flips the flag"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "roster": [
+    "bp35",
+    "dc22",
+    "g50t",
+    "re86",
+    "s5i5",
+    "sk48"
+  ],
+  "budget_per_game": 300,
+  "control_results": {
+    "sk48": {
+      "game": "sk48",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "unknown",
+      "feature_router_approach": "default_graph_explore",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "dc22": {
+      "game": "dc22",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "click_graph",
+      "feature_router_approach": "diversity_graph_explore",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "g50t": {
+      "game": "g50t",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "keyboard_graph",
+      "feature_router_approach": "systematic_bfs",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "re86": {
+      "game": "re86",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "avatar_navigation",
+      "feature_router_approach": "goal_distance_astar",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "click_connect",
+      "feature_router_approach": "goal_distance_astar",
+      "strategy_route_run_local_applied": true,
+      "error": null
+    },
+    "bp35": {
+      "game": "bp35",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "click_graph",
+      "feature_router_approach": "diversity_graph_explore",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    }
+  },
+  "treatment_results": {
+    "sk48": {
+      "game": "sk48",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "unknown",
+      "feature_router_approach": "default_graph_explore",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "dc22": {
+      "game": "dc22",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "click_graph",
+      "feature_router_approach": "diversity_graph_explore",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "g50t": {
+      "game": "g50t",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "keyboard_graph",
+      "feature_router_approach": "systematic_bfs",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "re86": {
+      "game": "re86",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "avatar_navigation",
+      "feature_router_approach": "goal_distance_astar",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "click_connect",
+      "feature_router_approach": "goal_distance_astar",
+      "strategy_route_run_local_applied": true,
+      "error": null
+    },
+    "bp35": {
+      "game": "bp35",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "feature_router_mechanic_class": "click_graph",
+      "feature_router_approach": "diversity_graph_explore",
+      "strategy_route_run_local_applied": false,
+      "error": null
+    }
+  },
+  "levels_gained_delta_mean": 0.0,
+  "levels_gained_delta_ci": [
+    0.0,
+    0.0
+  ],
+  "actions_to_first_levelup_delta_mean": null,
+  "actions_to_first_levelup_delta_n": 0,
+  "ledger_lost_update_check_passed": true,
+  "confidence_gate_fired_at_least_once": true,
+  "recommendation": "No positive effect detected above noise on this roster/budget -- consistent with exp4582's null on the closely-related full-solver-swap idea. Per the Failed-Experiment Rerun Discipline: do not re-propose this exact measurement without a stated difference (larger roster, more trials, a different outcome proxy, or a changed component). Keep CARNOT_ARC_RUN_LOCAL_ADAPTATION off by default; retire or revise the mechanism per operator judgment.",
+  "no_regression_fallback": "CARNOT_ARC_RUN_LOCAL_ADAPTATION stays off by default",
+  "n_bootstrap": 2000,
+  "control_wall_clock_s": 1098.63,
+  "treatment_wall_clock_s": 1268.93,
+  "random_seed": 5578,
+  "duration_s": 2367.562,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "run_local_ledger_import": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "1cf33cd8a2e903a45dec19f556857ae48c69a91520656628aac91fe88dffde95"
+}
