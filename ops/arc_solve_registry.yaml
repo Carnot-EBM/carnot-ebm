@@ -718,7 +718,7 @@ general_gotchas:
 games:
 - game: r11l
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: click_template_handle_average
   win_condition: >-
     L1 click-to-template placement plus L2 handle-average placement: each
@@ -824,6 +824,23 @@ games:
     correctly reported false by the source agent. Next attempt should
     revisit delivery ORDER/alignment tolerance now that the carrier-control
     model is fully known, not the carrier mechanic itself.'
+  - 'L5 SOLVED round 4 (2026-07-12, gpt-5.6-sol via codex, round-4 breadth
+    campaign, results/outer_loop_fable5_r11l_probe.json): directly answers
+    round 3''s "revisit delivery ORDER" recommendation -- the decisive
+    mechanic was SELECTION OCCLUSION, not alignment tolerance. After cargo
+    attaches to a handle, clicking an OVERLAPPED handle center does not
+    select that handle -- it instead moves the currently-selected handle.
+    The fix: move the visible selected handle away FIRST to expose the
+    buried handle underneath, which then allows all carrier handles to be
+    routed independently. Cargo pairing: 8+9 belongs at the left-center
+    socket, b+e at the upper-right socket (complementary 5x5 masks +
+    matching two-color dotted sockets); the three other dotted glyphs are
+    decoys. With correct ordering, both carriers fuse and deliver within
+    the 60-click meter -- advanced live on L5 tail click 56. Fresh-reset
+    reproduce() gate replayed all 199 labels and returned
+    reached_level=5/reproduced=true. Independently re-verified by the
+    outer loop: 5x fresh env.reset() + replay via a new resolver priority
+    branch, all 5 confirmed level=5, state=GameState.NOT_FINISHED.'
   dead_ends:
   - 'Exp4862 first standing-loop attempt with _r11l featurize enabled failed
     before search: the stale models/arc_verifier_r11l.json checkpoint expected
@@ -3906,7 +3923,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 147
+reproducible_total_levels: 148
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
