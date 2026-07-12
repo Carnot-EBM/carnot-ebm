@@ -198,6 +198,24 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    task alone; report the delta and require an explicit operator decision before touching the frozen
    live-submission config, since that is a settled decision per the (retired but still-referenced) ARC-AGI-3
    Submission Sprint Forcing Function rule 4.
+
+   **UPDATE 2026-07-12 (raises this task's priority — independent corroboration from a SECOND, mechanistically
+   different source):** operator question "how do we use the top 3 leader projects to overcome our generator
+   wall?" surfaced that the ARC-AGI-3 Milestone-1 1st-place team ("Duck Harness", Tufa Labs — see
+   `docs/research-notes/arc-agi3-milestone1-winners-sota-ingestion-2026-07-11.md`) independently converges on
+   the exact same underlying principle this task tests, via a completely different mechanism: instead of
+   internal chain-of-thought tokens, their harness gives the generator up to 12 TOOL-CALLING turns per
+   action-decision (write Python, inspect `current_frame`/`history`/`transitions` via a sandboxed REPL, only
+   commit a real environment action once satisfied) — i.e. orientation-time compute before commitment,
+   implemented as an external loop rather than internal reasoning tokens. Two structurally different
+   mechanisms (GPT-5.6's internal reasoning-effort scaling vs Duck's external tool-loop) independently
+   converging on "give the generator space to orient/verify before committing" is meaningfully stronger
+   evidence than either alone, and directly informs precondition (b)'s fallback: **if MTP decoding turns out
+   incompatible with native `/think` mode, Duck's tool-loop pattern is a fallback that gets the same benefit
+   WITHOUT requiring native reasoning-token support** — a bounded external tool-calling loop before the
+   `/no_think` model commits an action, rather than needing the model's own CoT. Add this as a second arm to
+   test if precondition (a) fails, instead of just emitting `blocked_think_mode_incompatible_with_mtp` and
+   stopping.
 8. **(Heavier lift — real training infra, a 3090; not a cheap pilot) TRM-as-generator: PTRM-style
    stochastic multi-trajectory recursion + Carnot-verifier selection, history/intent-conditioned.**
    `prior_failures:` full writeup `docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md`,

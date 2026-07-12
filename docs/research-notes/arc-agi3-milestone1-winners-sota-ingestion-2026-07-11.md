@@ -227,3 +227,43 @@ data (disabled LLM-judge + confidence-gate, kept only the deterministic no-op fi
 single most directly citable piece of external evidence for this project's whole thesis. Operator
 decision: port into our own E3AgentPolicy (O2 above), not fork forge's codebase — see O2's
 "Operator decision" note for the rationale.
+
+**2026-07-12 addendum #2 — "does embracing forge address our generator wall?" / "how do we use the
+top 3 to overcome the generator wall?" (operator follow-up):** No, O2/forge does not — it is a
+selection-side intervention, and this project's own repeatedly-confirmed diagnosis (`ops/known-
+issues.md`: "generation-not-selection diagnosis this project already reached," corroborated by
+ZendoWorld arXiv:2607.08233 and by `project_arc_live_agent_learning_gaps`'s perception-binding-
+constraint finding) is that the wall is in candidate GENERATION, not in picking among an
+already-generated pool. A better selector cannot recover an action that was never proposed.
+
+Re-auditing the three winners specifically through the generation lens (not the selection lens O1/
+O2 came from) surfaces three real, distinct levers:
+
+1. **Duck Harness's iterative tool-loop — the sharpest finding, and it strengthens an existing
+   staged task rather than creating a new one.** `ops/known-issues.md` task 7 (staged, unrun) tests
+   `/think` vs `/no_think` on our frozen live generator, motivated by GPT-5.6's finding that
+   reasoning effort scales ARC-3 score ~26x (Low->Max) vs only ~1.3x on static ARC-1 — evidence from
+   one source. Duck Harness independently converges on the SAME underlying principle by a completely
+   different mechanism: not internal chain-of-thought tokens, but up to 12 tool-calling turns per
+   action-decision (write Python, inspect state via a sandboxed REPL, only commit a real action once
+   satisfied) — orientation-time compute before commitment, external instead of internal. Two
+   structurally different mechanisms converging on the same fix is materially stronger evidence than
+   either alone, and directly gives task 7 a fallback design: if MTP decoding turns out incompatible
+   with native `/think` mode (a real risk the task already flags), Duck's tool-loop pattern gets the
+   same benefit WITHOUT needing native reasoning-token support — a bounded external tool-loop before
+   a `/no_think` model commits an action. See the 2026-07-12 update appended directly to task 7 in
+   `ops/known-issues.md`.
+2. **Duck's object-segmentation perception (O4 above)** — still valid, still upstream of generation:
+   if perception is genuinely the binding constraint, no amount of orientation-time compute helps a
+   generator that cannot see object identity/structure to begin with. Already folded into the
+   already-top-priority tasks 1-2.
+3. **Reki's saliency-based generation-stage action prioritization** (`rarity*0.5 + size_tier*0.5`,
+   from `_salient_click_coordinate`) is a second, independent real-world implementation of the same
+   *generation-stage* bias already staged as task 2 (which explicitly frames itself as changing what
+   gets tried first, not post-hoc ranking a fixed pool) — corroboration from a second top-3 team,
+   worth citing when task 2 is built.
+
+**forge contributes essentially nothing to the generation side** — its candidate generation is the
+weakest of the three (N samples via temperature from ONE prompt, low diversity per the O1-O2
+audit), and everything forge does well (the arbiter, the ablation data) is selection-side. Consistent
+with forge placing 3rd, not 1st: the team that invested in generation quality (Duck) won.
