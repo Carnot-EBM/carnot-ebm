@@ -2547,6 +2547,28 @@ games:
     using the untouched 8 for c also risks the first e degrading c to b.
     The session was testing the complementary ordering (form d first, then
     deliver c) when the timeout hit. Frontier stays at level 8.'
+  - 'L9 progress round 6, still HONEST NULL, closest attempt yet (2026-07-12,
+    gpt-5.6-sol via codex, round-6 breadth campaign,
+    results/outer_loop_fable5_su15_probe.json): the strongest line so far
+    -- merged the two 6 pieces into f, socketed f, converted 8 into c, and
+    COLLAPSED THREE OF THE FOUR HUNTERS in one transition while preserving
+    BOTH required fruits (c and f) intact. The final visible 7 could not
+    be merged before the resource meter expired. New mechanic findings:
+    (1) sockets can capture a fruit strongly enough that later pulls at
+    nearby coordinates stop moving it -- socketing c before the hostile
+    fusion completes can strand the remaining hunters; (2) hunter
+    composites can be FULLY OCCLUDED by a fruit (three of four visible 7
+    hunters vanished behind c+one-7 in one rendered transition, no
+    separate e/d pixels visible) -- rendered-frame hunter counts can
+    undercount; (3) moving the socketed f DEEPER into its socket advanced
+    the hostile collision and immediately degraded c to b -- socket
+    overlap is NOT protection, contrary to what round 5''s framing implied;
+    (4) the bottom resource meter is not 1 cell per env.step -- failed or
+    long-distance clicks consume MULTIPLE cells, and ACTION7''s undo
+    restores the prior board transition but does NOT restore that spent
+    resource. Fresh reproduce() gate reconfirmed level 8 (no regression).
+    No new level banked; frontier stays at level 8, but this is the
+    deepest verified L9 progress recorded so far.'
   dead_ends:
   - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
   - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
