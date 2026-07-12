@@ -718,7 +718,9 @@ general_gotchas:
 games:
 - game: r11l
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: click_template_handle_average
   win_condition: >-
     L1 click-to-template placement plus L2 handle-average placement: each
@@ -856,6 +858,26 @@ games:
     returned GAME_OVER with levels_completed still 5 -- no L6 win
     observed. Fresh reproduce() gate reconfirmed the L5 prefix
     (reached_level=5). No new level banked; frontier stays at level 5.'
+  - 'L6 SOLVED, FULL GAME CLEAR round 6 (2026-07-12, gpt-5.6-sol via codex,
+    round-6 breadth campaign, results/outer_loop_fable5_r11l_probe.json):
+    directly executes round 5''s route -- fuse 9+15+14 on the three-handle
+    carrier and seat it deeply in the upper-right socket, then fuse
+    6+11+10 on the two-handle carrier and seat it in the lower-left
+    socket. Won on tail click 59, ONE CLICK before the hard 60-action
+    cutoff. Key replay gotcha: the banked 199-label prefix already
+    contains two post-L5 clicks on L6, so the clean L6 route must be
+    preceded by an explicit {"action":0} (ACTION0/RESET) to restore the
+    clean L6 layout -- ACTION0 during active L6 restarts ONLY L6 and
+    preserves levels_completed=5, but ACTION0 immediately after the L6
+    WIN resets the ENTIRE game to level 0 (a genuinely different reset
+    scope depending on when it fires). The source agent''s own
+    reproduction_verified is correctly false (a shortened gate attempt
+    omitted the required reset boundary and failed at reached_level=0),
+    but the outer loop independently verified the FULL 305-action
+    live-observed trajectory (199 prefix + 46 exploration + 1 reset + 59
+    winning clicks) regardless: 5x fresh env.reset() + replay via a new
+    resolver priority branch, all 5 confirmed level=6, state=GameState.WIN
+    -- the game''s full 6 levels are now cleared.'
   dead_ends:
   - 'Exp4862 first standing-loop attempt with _r11l featurize enabled failed
     before search: the stale models/arc_verifier_r11l.json checkpoint expected
@@ -4410,7 +4432,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 157
+reproducible_total_levels: 158
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
