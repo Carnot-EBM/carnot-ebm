@@ -3477,7 +3477,7 @@ games:
     reproducibility_checksum: ed33631efac8e242fdca278ede5688eb5ab946c0111af6466f86f8d9c9359bf5
 - game: g50t
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 4
   win_condition: 'L1-L2: see historical gotchas. L3 (2026-07-11, claude-fable-5):
     a full clone-commit/rewind puzzle -- ACTION5 commits the current trajectory
     (rewinding the player to spawn) and the committed ghost replays it one action
@@ -3578,6 +3578,30 @@ games:
     reproduction gate at level 3. Next attempt should route the SECOND
     clone through the socket AS A CLONE (not live) to exploit the
     lower-socket reroute toward the goal corridor.'
+  - 'L4 SOLVED round 5 (2026-07-12, claude-fable-5, first fable-5 leg of the
+    campaign, results/outer_loop_fable5_g50t_probe.json): directly executes
+    round 4''s "route the second clone through the socket AS A CLONE"
+    recommendation. Reframes the color-15 object entirely: it is a REMOTELY
+    CONTROLLED OCCUPANCY ELEVATOR, not a portal or a simple clone-selective
+    reroute -- a body waiting in the upper car at (26,38) is carried to the
+    lower car at (26,50) exactly when another body occupies the far-right
+    endpoint at (50,26). Winning choreography: clone A holds the color-8
+    door, clone B reaches the remote endpoint, and the active runner enters
+    the upper car on clone B''s final replay tick, rides down, and exits
+    left onto the goal. Solved live with a 31-action synchronized
+    three-body suffix; fresh-reset reproduce() gate replayed the resulting
+    149-action full sequence and returned reached_level=4, reproduced=true.
+    Independently re-verified by the outer loop: 5x fresh env.reset() +
+    replay via a new resolver priority branch, all 5 confirmed level=4,
+    state=GameState.NOT_FINISHED. L5 was mapped (two snapping color-11
+    shaft gates, a vertical color-8 bottom-corridor gate, and another
+    remote color-15 elevator; blocked-direction inputs are replayable
+    timing holds; the first clone must remain on the top color-11 endpoint
+    through tick 6 before continuing toward the vertical gate) but not
+    solved -- earlier live timing probes depleted the per-level timer
+    before the corrected 55-action choreography could be attempted, and
+    remaining budget could not fund another 149-action verified prefix.
+    Frontier stays at level 4.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
@@ -4141,7 +4165,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 154
+reproducible_total_levels: 155
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
