@@ -4764,6 +4764,55 @@ games:
     EARLIER, while the player is still under the x=6/x=7 shields --
     this avoids the lethal lateral step from x=5 that has killed every
     attempt at this exact point across two rounds now.'
+  - 'MAJOR CORRECTION + hard timer discovered, round 8 (2026-07-12,
+    claude-fable-5, results/outer_loop_fable5_bp35_probe_round8_20260712.json):
+    round 7''s lead was correct and confirmed live -- clicking switch 2
+    from (6,31) after only TWO lefts (not four) lands ALIVE at (6,30),
+    bypassing the notch entirely. But the deeper finding is that
+    **the historical "lethal right step out of the notch" was a MYTH**:
+    bp35 L6 has a HARD, INVISIBLE ACTION-COUNT TIMER that ends the game
+    at EXACTLY total action 228 from reset, independent of player
+    position or action type -- reproduced 3 times in three different
+    situations (mid ACTION7 undo-rewind, mid a click-sweep, and
+    decisively via a pure ACTION5 no-op wait control at high ground
+    with ZERO state change). This retroactively invalidates the
+    round-6/round-7 "stepping right from x=5 is lethal" conclusion:
+    those attempts died to the clock at action 228, not to the step
+    itself -- this session stepped right out of the notch TWICE and
+    stayed alive. That leaves only 63 usable L6 actions after the
+    164-action prefix; every route must be planned as a speedrun (no-
+    ops, clicks, and ACTION7 undos all burn the same budget). From the
+    live notch, mapped real new territory: pocket (5-7,30) -> float up
+    column 8 to a lip perch (8,23) -> chimney float through the
+    consumed switch 1 to a row-21 corridor (cols 2-7), reachable by
+    ~action 189 (timer-safe with ~38 actions to spare). The corridor
+    itself dead-ends (row 20 sealed above, (1,21) walled, an
+    exhaustive ~60-cell click-sweep of statics/goal-room/sub-floor all
+    inert) -- the goal room has no clickable entrance found from below
+    row 20. Also confirmed: ACTION1/ACTION2 both move LEFT (not inert
+    as previously assumed); ACTION7 is a deep per-action undo (26+
+    presses, full position+state restore, crosses the gravity flip)
+    but each press burns timer budget just like any other action;
+    after GAME_OVER, never call env.reset() in place -- the prefix
+    desyncs and dies at level 0 (build a fresh Arcade env instead, as
+    this session did for its 2nd and 3rd runs). Independently
+    re-verified by the outer loop: the saved 232-action sequence is
+    itself Run 1 (the FIRST timer-death trace, prefix + 68-action
+    corridor exploration ending at action 228), and a fresh env.reset()
+    + full replay correctly reproduces that exact death: level=0,
+    state=GameState.GAME_OVER -- matches the session''s own
+    run_breakdown exactly, confirming this is an honest diagnostic
+    trace, not a fabrication. The prefix alone (first 164 labels)
+    still independently matches the known-good level-5-verified
+    sequence. No new level banked; frontier stays at level 5.
+    ROUND-9 MOVE (untested, genuinely 50/50 now that the "pillar
+    extent" evidence is debunked): from the corridor at (7,21), step
+    RIGHT to (8,21) -- column 8 above the (8,22) lip is open there, and
+    the float goes up toward the OPEN X-hazard at (8,13). If hazards
+    are solid-blocking, this perches at (8,14) with row 13 (and the
+    sealed upper-left region, switch 3 at (8,1)) finally reachable; if
+    hazards are overlap-lethal, it is a real death. Fits the timer
+    easily (~action 190, leaving ~38 actions of margin).'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
