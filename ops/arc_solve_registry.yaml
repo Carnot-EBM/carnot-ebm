@@ -2370,6 +2370,48 @@ games:
     leaving only ~75 actions for exploration; a next attempt should
     either get a larger budget or find an L7-scoped keyhole reset (the
     L6 keyhole reset only resets L6, not L7).'
+  - 'L7 east screen reached and mapped, still HONEST NULL, round 8
+    (2026-07-12, claude-fable-5, results/outer_loop_fable5_lf52_probe_round8_20260712.json):
+    with a 950-action budget (vs round 7''s 690), reached the east
+    screen and made five hard decodes. FOUND THE L7-SCOPED RESET round
+    7 was hunting for: ACTION5 is functional in L7 despite
+    frame.available_actions omitting it -- it arms a keyhole overlay
+    (state_key bool zvcnglshzcx flips True, padlock glyphs render on the
+    two sealed west chambers), and clicking the keyhole at px (7,56)
+    [grid (0,8)] resets all six carriers to the L7 start config without
+    replaying the 615-action prefix; the banked L6 solution used this
+    same A5+keyhole idiom at index 442, so it is likely a standing
+    per-level mechanic worth checking on every future level. CORRECTED
+    round 7''s ACTION7 finding: it is a clean single-step UNDO of the
+    last effective carrier move, not an ambiguous drift/no-op -- round
+    7 misread it because the undone moves were off-view EAST-carrier
+    moves it couldn''t see. EAST RAIL NETWORK FULLY MAPPED BLIND via the
+    adapter''s state_key (no click budget spent probing it randomly): one
+    shared row-2 line x16-22, with south spurs ONLY at even columns
+    (16->y3, 18->y4, 20->y5, 22->y4; odd columns 17/19/21 verified
+    spur-less). The four east carriers are interchangeable walkers on
+    this one network. NO rail reaches the east peg at (22,6) or any
+    cell adjacent to it -- parking all four carriers at all four spur
+    ends simultaneously unlocks nothing. Decoded the general movement
+    grammar from the banked L6 tail: pieces move via LEAPFROG PAIR
+    jumps (click source, click a landing 2 cells away crossing one
+    occupied cell, partners alternate), carriers are mobile landing
+    cells, and the camera only follows a CARGO-LOADED carrier. Negative
+    results this round: the west screen provably has no first move
+    (exhaustively pair-click tested); ACTION6 accepts x>63 with no
+    error but no out-of-view click produced any state change (world-
+    mapped clicking remains unresolved, not disproven); the row-0 pixel
+    bar is a cosmetic action odometer, not a selection signal.
+    Independently re-verified by the outer loop: replayed both the
+    615-action L6 prefix alone and the full 718-action session sequence
+    from fresh env.reset() -- both confirmed level=6,
+    state=GameState.NOT_FINISHED, matching the session''s own report
+    exactly. No new level banked; frontier stays at level 6. Next-round
+    priority: with no rail reaching the east peg and no first move on
+    the west screen, find what makes ANY piece mobile -- try east-
+    carrier configurations not yet attempted (all four at column TOPS,
+    or specific row-2 formations) while watching the two sealed west
+    chambers for wall changes.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
