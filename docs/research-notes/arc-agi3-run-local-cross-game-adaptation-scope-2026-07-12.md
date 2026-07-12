@@ -29,7 +29,7 @@ read as shipped or as changing current live-agent behavior.
 
 ## 2. What "dynamic extension during submissions" would actually require
 
-### 2.0 Preconditions (BOTH run down 2026-07-12 — see findings below; #2 still needs operator sign-off)
+### 2.0 Preconditions (BOTH CLEARED 2026-07-12 — see findings + operator ruling below)
 
 **Does one Kaggle submission process play the FULL hidden game roster sequentially in
 one long-lived Python process, or does the harness spawn a fresh process per game?**
@@ -127,6 +127,28 @@ might reasonably take either form: (a) approve based on the harness-architecture
 evidence above, (b) ask ARC Prize / Kaggle support directly for an explicit ruling
 before shipping anything, or (c) decline and keep the live agent per-game-only
 indefinitely. All three are legitimate; none of them is mine to pick.
+
+**OPERATOR RULING (2026-07-12) — precondition 2 CLEARED, option (a).** Operator
+directive, quoted in full because it's the load-bearing rationale for everything
+built after this point: *"knowing the rules of a game or a class of games and how to
+play them is not the same as memorization, it is learning and adapting which is the
+spirit of the challenge. starting from a completely naive position would also
+preclude the use of LLMs entirely. as such, we assert that as long as we are not
+playing back a prerecorded sequence of events into a game that we pretrained offline,
+we are fine."* The operative distinction: **FORBIDDEN** = replaying a literal,
+memorized action sequence into a game the agent (or the outer loop) was pretrained
+against offline — this is exactly the `GameAdapter`/registry-solution pattern already
+excluded from the live path by the "ARC Live-Path Reachability Discipline." **PERMITTED**
+= learning and adapting behavior at the level of a game's RULES or a CLASS of games'
+shared structure — genre/mechanic-level inference, which is what both the existing
+per-game wiring (commit `ecb2b7bf9`) and this run-local cross-game ledger do. The
+operator's second point is independently correct and worth preserving as reasoning,
+not just as a conclusion: the live agent already uses an LLM generator carrying
+enormous pretrained prior knowledge (physics intuition, spatial reasoning, common game
+grammars) from its training corpus — "fully naive per game" was never actually true of
+this architecture, so genre-level adaptation within or across games in a run is
+continuous with what the agent already does, not a new category of concern. This
+clears the path to implementation; §2.1-2.3 below now proceed on that basis.
 
 ### 2.1 Component: `RunLocalMechanicLedger`
 
