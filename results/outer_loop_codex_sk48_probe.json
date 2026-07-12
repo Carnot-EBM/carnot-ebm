@@ -3,7 +3,7 @@
   "model": "gpt-5.6-sol",
   "starting_level": 2,
   "max_level_reached": 2,
-  "total_env_steps_used": 547,
+  "total_env_steps_used": 580,
   "reproduction_verified": true,
   "action_sequence": [
     {"action": 1},
@@ -52,14 +52,14 @@
     {"action": 4}
   ],
   "levels_won_this_session": [],
-  "novel_mechanics_found": "Level 2 introduces a second, dark-headed vertical manipulator holding a red/green segmented column of colored blocks. Blocks on that helper cannot be pulled horizontally in the ordinary way. A horizontal contact followed by perpendicular vertical motion detaches and carries the contacted block; a carried block pushed into the anchored column can displace lower blocks, so solving requires two-arm transfer, collision clearance, and removal of the cyan decoy before delivering gray-maroon-white.",
-  "narrative": "The 44-action banked prefix replayed from reset and reached level 2, and the final reproduce() gate independently passed for claimed level 2. I explored the next level through rendered frames only. Earlier levels use a sticky telescoping horizontal arm to sort blocks into the bottom-strip order, but level 2 adds an anchored vertical helper and a cyan decoy; I established how to detach gray and how carried blocks displace the helper's column, but did not complete the required gray-maroon-white sort. I stopped after the reserved reproduction gate rather than claim an unobserved level-up.",
+  "novel_mechanics_found": "Level 3 adds a brown-headed, vertically connected colored chain that is absent from level 2. ACTION1/2 move the left head by one six-pixel lattice row, while ACTION3/4 retract or retain horizontal chain segments. Touching the connected chain at E couples the objects: a subsequent downward move drags the entire brown-headed colored chain down one lattice row. Direct ACTION6 clicks on the brown head and bottom reference head produced no visible effect.",
+  "narrative": "The verified 44-action prefix reached levels_completed=2 both live and through the mandatory fresh-reset reproduction gate. I explored level 3 by comparing its rendered layout with the known L1/L2 routes, testing retained-segment color visitation in the bottom reference order and in the connected-chain reverse order from fresh prefix replays. Those candidates did not level up; the important new behavior was physical coupling and whole-chain dragging after contact with the previously unexplained brown-headed chain. I stopped at the verified L2 ceiling with 20 steps remaining because another fresh L3 candidate plus its reproduction gate could not fit within the 600-step budget.",
   "gotchas": [
-    "Rendered action results may contain a stack of animation frames; use the final 64x64 frame for the current visual state.",
-    "ACTION1/ACTION2 move the magenta horizontal manipulator vertically; ACTION4 extends its arm and ACTION3 retracts it. ACTION5 and ACTION6 were observed no-ops on level 2.",
-    "An extension stops immediately before a block; retraction pulls only when contact has actually been established, and required extension count depends on the block's horizontal distance.",
-    "On level 2, the tiny dark cap and red/green vertical segments are active mechanics, not decoration: they form a second manipulator that anchors the colored column.",
-    "A block anchored to the vertical helper can be detached by contacting it horizontally and then moving the horizontal manipulator perpendicular to the helper; collision with intervening anchored blocks can block vertical motion or displace the lower column."
+    "A horizontal color contact is not enough by itself: retracting all the way discards the useful retained-chain configuration; L1/L2 retain one or more segments between row changes.",
+    "Level 3's brown 2x2 head and its 2/3 connector glyphs are functional: contact can couple the movable chain to the whole vertical colored chain, which then moves as a unit.",
+    "Calling env.reset() after reaching level 3 returned a frame still reporting levels_completed=2, but the next action could drop the run to level 0; use a fresh environment plus the full verified prefix for trustworthy L3 trials.",
+    "ACTION6 clicks at visible head coordinates were frame-identical no-ops in the tested states.",
+    "The stable rendered grid is the last item of frame.frame; individual actions can contain multiple animation frames."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
