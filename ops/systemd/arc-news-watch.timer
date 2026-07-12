@@ -1,0 +1,13 @@
+[Unit]
+Description=Daily timer for Carnot ARC-AGI-3 competition news watch
+
+[Timer]
+# Once daily, off the :00 mark to avoid thundering-herd load on the source
+# sites; Persistent=true catches up on a missed run if the machine was
+# asleep/off at the scheduled time (e.g. after a reboot).
+OnCalendar=*-*-* 09:07:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target
