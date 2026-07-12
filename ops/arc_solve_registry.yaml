@@ -1761,8 +1761,10 @@ games:
     reproducibility_checksum: 56999ad4baf4c1047acc3713b12dbfaed8755fe389645efd65189afc03fb2b57
 - game: sc25
   reproducibility: reproduced
-  levels_reproduced: 5
-  levels_live_recorded: 5
+  levels_reproduced: 6
+  levels_live_recorded: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   win_condition: 'Two-phase FSM per level: toggle corrected offline cast-grid cells
     until the visible reference pattern/spell fires, then tank-control navigate the
     player to the visible exit.'
@@ -1863,6 +1865,38 @@ games:
     southwest-socket trap (now a known dead-end to route around, not an
     unknown), the next attempt has meaningfully more margin than v18/v19
     had.'
+  - 'L6 SOLVED, FULL GAME CLEAR round 4 (2026-07-12, gpt-5.6-sol via codex,
+    round-4 breadth campaign, results/outer_loop_fable5_sc25_probe.json --
+    note the codex agent wrote to the fable5-named path, not the
+    codex-named path this campaign''s prompt template expects): routes
+    AROUND v20''s southwest-socket trap entirely rather than escaping it.
+    Key reframe: the persistent northern 9/a sprite is NOT the controllable
+    player or decoration -- after the first B-cast teleport creates a
+    movable 9/a copy elsewhere, the ORIGINAL northern sprite stays fixed as
+    the WIN-CONDITION SILHOUETTE (overlap it to win). Route: break both
+    linked-color boxes (6dd6 removes the color-13 east-channel wall, 6cc6
+    removes the color-12 north-shaft wall), collect both +10 pickups, then
+    cast B directly from the second pickup (full-size, not mini -- this is
+    what avoids the southwest mini-socket lock) to teleport straight to the
+    junction, then move up/right/up through the newly-cleared shaft to
+    overlap the fixed northern silhouette. This IS the win condition for
+    the whole six-level game, not just another level: the live frame
+    reached levels_completed=6 with terminal WIN after 206 calls (well
+    under the 700-call budget), and a fresh-reset reproduce(...,
+    claimed_level=6) independently replayed the same 206-call trajectory
+    and returned reached_level=6/reproduced=true.
+    Independently re-verified by the outer loop: 5x fresh env.reset() +
+    replay via a new resolver priority branch, all 5 confirmed level=6,
+    state=GameState.WIN. Two resolver/parser bugs were fixed to make this
+    replay work: (1) python/carnot/experiment_4460_submission_package_prep.py
+    resolve_replay_plan had an UNCONDITIONAL sc25 branch that always
+    returned the 16-label L1-only plan regardless of the claimed level
+    (this round-4 agent hit it live and worked around it by calling
+    experiment_4468.SC25_PLANS_BY_LEVEL[5] directly) -- fixed to be
+    level-aware via SC25_PLANS_BY_LEVEL. (2) experiment_4341_e3_sc25_
+    reproduction.py label_to_action_data did not recognize the "wait"
+    label (an explicit ACTION5 press used to resolve cast animations,
+    distinct from "warmup") -- fixed by aliasing it alongside "warmup".'
   mechanic_class: two_phase_cast_grid_then_tank_exit
   latest_exp4468_reproduce:
     artifact: results/experiment_4468_bank_sc25_provisional_levels.json
@@ -3834,7 +3868,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 146
+reproducible_total_levels: 147
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

@@ -295,17 +295,43 @@ def resolve_replay_plan(
             exp4421.RESULT_RELATIVE_PATH,
             exp4421.apply_s5i5_label,
         )
-    if game == "sc25":
-        from carnot.experiment_4341_e3_sc25_reproduction import (
-            L1_SOLUTION_LABELS,
-            _apply_sc25_label,
+    if game == "sc25" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot.experiment_4468_bank_sc25_provisional_levels import (
+            apply_sc25_label,
         )
 
+        rel_path = "results/outer_loop_fable5_sc25_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        # action_sequence[0] is "warmup"; the replay harness applies
+        # warmup_label separately, so strip it from the label list.
+        labels = [str(label) for label in raw_labels[1:]]
         return ReplayPlan(
             game,
-            [str(label) for label in L1_SOLUTION_LABELS],
-            "python/carnot/experiment_4341_e3_sc25_reproduction.py",
-            _apply_sc25_label,
+            labels,
+            rel_path,
+            apply_sc25_label,
+            warmup_label="warmup",
+        )
+    if game == "sc25":
+        # NOTE: this branch was previously unconditional and always returned
+        # the L1-only plan regardless of the claimed level -- a real bug
+        # (round-4 codex session on sc25, 2026-07-12, worked around it by
+        # calling SC25_PLANS_BY_LEVEL[5] directly). Fixed to be level-aware.
+        from carnot.experiment_4341_e3_sc25_reproduction import L1_SOLUTION_LABELS
+        from carnot.experiment_4468_bank_sc25_provisional_levels import (
+            SC25_PLANS_BY_LEVEL,
+            apply_sc25_label,
+        )
+
+        level = _as_int(entry.get("levels_reproduced")) or 1
+        level = max(1, min(level, max(SC25_PLANS_BY_LEVEL)))
+        plan_labels = SC25_PLANS_BY_LEVEL.get(level, L1_SOLUTION_LABELS)
+        return ReplayPlan(
+            game,
+            [str(label) for label in plan_labels],
+            "python/carnot/experiment_4468_bank_sc25_provisional_levels.py",
+            apply_sc25_label,
             warmup_label="warmup",
         )
     if game == "ar25" and _as_int(entry.get("levels_reproduced")) >= 8:

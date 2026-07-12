@@ -141,7 +141,12 @@ def preconditions(repo: Path) -> dict[str, Any]:
     }
 
 
-def _verdict(best_accuracy: float, offline_reproduced: bool, reproduced_levels: int, win_mechanic_cracked: bool) -> str:
+def _verdict(
+    best_accuracy: float,
+    offline_reproduced: bool,
+    reproduced_levels: int,
+    win_mechanic_cracked: bool,
+) -> str:
     if offline_reproduced and reproduced_levels >= 1 and win_mechanic_cracked:
         return "success_e3_sc25_L1_reproduced"
     return f"complete_e3_sc25_partial_model_{best_accuracy:.2f}"
@@ -154,7 +159,7 @@ def _reproduced_levels(reproduce_result: dict[str, Any]) -> int:
 
 
 def label_to_action_data(label: str) -> tuple[int, dict[str, int] | None]:
-    if label == "warmup":
+    if label in ("warmup", "wait"):
         return 5, None
     if label.startswith("cell"):
         row_s, col_s = label[4:].split(",", 1)
@@ -167,7 +172,9 @@ def label_to_action_data(label: str) -> tuple[int, dict[str, int] | None]:
 
 
 def _busy(game: Any) -> bool:
-    return any(getattr(game, phase, {}).get("acyylh") for phase in PHASES) or bool(getattr(game, "eycwbtepcvs", False))
+    return any(getattr(game, phase, {}).get("acyylh") for phase in PHASES) or bool(
+        getattr(game, "eycwbtepcvs", False)
+    )
 
 
 def _resolve(env: Any, frame: Any) -> Any:  # pragma: no cover - live SDK boundary
@@ -180,7 +187,9 @@ def _resolve(env: Any, frame: Any) -> Any:  # pragma: no cover - live SDK bounda
     return frame
 
 
-def _apply_sc25_label(env: Any, label: str, frame: Any) -> Any:  # pragma: no cover - live SDK boundary
+def _apply_sc25_label(
+    env: Any, label: str, frame: Any
+) -> Any:  # pragma: no cover - live SDK boundary
     from arcengine import GameAction
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
@@ -194,7 +203,9 @@ def _apply_sc25_label(env: Any, label: str, frame: Any) -> Any:  # pragma: no co
 def collect_sc25_transitions(
     *,
     labels: Sequence[str] = L1_SOLUTION_LABELS,
-) -> tuple[list[e3.Transition], int]:  # pragma: no cover - exercised against offline SDK in operator run
+) -> tuple[
+    list[e3.Transition], int
+]:  # pragma: no cover - exercised against offline SDK in operator run
     from carnot.agentic.arc_agi3_live_adapter import _levels_completed
     from carnot.agentic.arc_agi3_world_model import grid_of
 
@@ -211,7 +222,14 @@ def collect_sc25_transitions(
         next_frame = _apply_sc25_label(env, label, frame)
         grid_after = e3.to_logical(grid_of(next_frame), cell)
         transitions.append(
-            e3.Transition(grid_before.copy(), action, data, grid_after.copy(), level_before, _levels_completed(next_frame))
+            e3.Transition(
+                grid_before.copy(),
+                action,
+                data,
+                grid_after.copy(),
+                level_before,
+                _levels_completed(next_frame),
+            )
         )
         frame = next_frame
     return transitions, cell
@@ -296,7 +314,9 @@ def build_artifact(
         "experiment": "experiment_4341_e3_sc25_reproduction",
         "game": GAME,
         "method": "aera_explore_verify_plan_agent2world_sc25_world_model_reproduction",
-        "honest_verdict": _verdict(best_accuracy, offline_reproduced, reproduced_levels, win_mechanic_cracked),
+        "honest_verdict": _verdict(
+            best_accuracy, offline_reproduced, reproduced_levels, win_mechanic_cracked
+        ),
         "verifier_accuracy_per_round": verifier_accuracy_per_round,
         "verifier_best_accuracy": best_accuracy,
         "adaptive_tests_generated": int(adaptive_tests_generated),
@@ -306,8 +326,13 @@ def build_artifact(
         "world_model_sha256": world_model_sha,
         "offline_reproduced": offline_reproduced,
         "reproduced_levels": reproduced_levels,
-        "plan_executed": bool(plan_result and plan_result.get("executed") and not plan_result.get("divergence_step")),
-        "plan_executed_detail": {"divergence_step": (plan_result or {}).get("divergence_step"), "plan_result": plan_result},
+        "plan_executed": bool(
+            plan_result and plan_result.get("executed") and not plan_result.get("divergence_step")
+        ),
+        "plan_executed_detail": {
+            "divergence_step": (plan_result or {}).get("divergence_step"),
+            "plan_result": plan_result,
+        },
         "residual_mismatch_class": residual_mismatch_class,
         "verifier_is_oracle": True,
         "preconditions_checked": preconditions(repo),
@@ -361,7 +386,9 @@ def collect_explore_lemmas(
             pred = np.asarray(engine(transition.grid.copy(), transition.action, transition.data))
         except Exception:
             continue
-        if pred.shape != transition.next_grid.shape or not np.array_equal(pred, transition.next_grid):
+        if pred.shape != transition.next_grid.shape or not np.array_equal(
+            pred, transition.next_grid
+        ):
             continue
         true_change = e3._delta(transition.grid, transition.next_grid, cap=200)
         signature = (
@@ -421,7 +448,9 @@ def execute_model_grounded_plan(
                 "divergence_step": None,
                 "win_path": "cast-grid shrink spell then player-to-exit",
             }
-        if predicted_next.shape != observed_next.shape or not np.array_equal(predicted_next, observed_next):
+        if predicted_next.shape != observed_next.shape or not np.array_equal(
+            predicted_next, observed_next
+        ):
             return {
                 "game": GAME,
                 "planned": True,
@@ -430,7 +459,12 @@ def execute_model_grounded_plan(
                 "plan_len": len(labels),
                 "solution": list(labels),
                 "executed_steps": executed_steps,
-                "divergence_step": {"step": step_index, "label": label, "action": action, "data": data},
+                "divergence_step": {
+                    "step": step_index,
+                    "label": label,
+                    "action": action,
+                    "data": data,
+                },
                 "reason": "model prediction diverged from observation -- halted",
             }
         predicted_grid = observed_next
@@ -448,14 +482,18 @@ def execute_model_grounded_plan(
     }
 
 
-def adaptive_world_model_tests(engine) -> list[dict[str, Any]]:  # pragma: no cover - live SDK boundary
+def adaptive_world_model_tests(
+    engine,
+) -> list[dict[str, Any]]:  # pragma: no cover - live SDK boundary
     cast_outcome = execute_model_grounded_plan(engine, labels=CAST_CROSS_LABELS)
     full_outcome = execute_model_grounded_plan(engine)
     return [
         {
             "name": "adaptive_cast_pattern_clear_shrink_spell",
             "actions": list(CAST_CROSS_LABELS),
-            "passed": bool(cast_outcome.get("executed") and not cast_outcome.get("divergence_step")),
+            "passed": bool(
+                cast_outcome.get("executed") and not cast_outcome.get("divergence_step")
+            ),
             "level_up": bool(cast_outcome.get("level_up")),
             "divergence_step": cast_outcome.get("divergence_step"),
         },
@@ -479,7 +517,9 @@ def adaptive_world_model_tests(engine) -> list[dict[str, Any]]:  # pragma: no co
 
 def _write_artifact(artifact: dict[str, Any]) -> None:
     RESULT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    RESULT_PATH.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    RESULT_PATH.write_text(
+        json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
+    )
 
 
 def _write_gap(path: Path, *, best_accuracy: float, mismatch_class: str, checksum: str) -> None:
@@ -584,7 +624,9 @@ def run_experiment(
         )
 
     mismatch_class = residual_mismatch_class(verify_result.mismatches)
-    win_mechanic_cracked = bool(plan_result.get("level_up")) and not bool(plan_result.get("divergence_step"))
+    win_mechanic_cracked = bool(plan_result.get("level_up")) and not bool(
+        plan_result.get("divergence_step")
+    )
     artifact = build_artifact(
         repo=REPO,
         verifier_accuracy_per_round=accuracies,
