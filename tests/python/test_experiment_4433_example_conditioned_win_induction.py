@@ -470,3 +470,95 @@ def test_req_report_4433_g50t_predicate_uses_target_offset() -> None:
     assert mod.g50t_is_win_features(non_win_features) is False
     assert mod.g50t_goal_distance_features(win_features) == 0
     assert mod.g50t_goal_distance_features(non_win_features) == 6
+
+
+class _FakeSettlingState:
+    def __init__(self, *, jqpwhiraaj: bool) -> None:
+        self.jqpwhiraaj = jqpwhiraaj
+
+
+class _FakeGame:
+    def __init__(self, *, qgzorkgosv: bool, jqpwhiraaj: bool) -> None:
+        self.qgzorkgosv = qgzorkgosv
+        self.vgwycxsxjz = _FakeSettlingState(jqpwhiraaj=jqpwhiraaj)
+
+
+class _FakeFrame:
+    def __init__(self, state: Any) -> None:
+        self.state = state
+
+
+class _FakeEnv:
+    """Fake env.step() sequence for apply_g50t_label's settling loop.
+
+    Regression fixture for the round-11/round-12 g50t incident
+    (ops/arc_solve_registry.yaml g50t gotcha "L7 FULL GAME CLEAR"): the
+    settling loop used to keep calling env.step() with the same label even
+    after a genuine GameState.WIN frame, and the extra post-win step
+    returned a degenerate/empty terminal sentinel that round 11 mistook for
+    a broken candidate. apply_g50t_label must stop calling env.step() the
+    instant it observes GameState.WIN.
+    """
+
+    def __init__(self, frames: Sequence[_FakeFrame], *, settling_after: int = 0) -> None:
+        self._frames = list(frames)
+        self._settling_after = settling_after
+        self.step_calls = 0
+        # Only consulted when the settling loop actually runs (i.e. the
+        # first frame is not already GameState.WIN and not yet settled).
+        self._game = _FakeGame(qgzorkgosv=False, jqpwhiraaj=False)
+
+    def step(self, _action: Any, data: Any = None) -> _FakeFrame:
+        del data
+        frame = self._frames[min(self.step_calls, len(self._frames) - 1)]
+        self.step_calls += 1
+        if self.step_calls < self._settling_after:
+            self._game.vgwycxsxjz.jqpwhiraaj = True
+        else:
+            self._game.vgwycxsxjz.jqpwhiraaj = False
+        return frame
+
+
+def test_apply_g50t_label_stops_on_immediate_win(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Regression: a WIN on the FIRST step must not trigger any further env.step()."""
+
+    from arcengine import GameState
+
+    win_frame = _FakeFrame(GameState.WIN)
+    # A second frame the fix must never reach for; if the settling loop
+    # incorrectly fired again it would return this degenerate sentinel.
+    degenerate_frame = _FakeFrame(GameState.GAME_OVER)
+    env = _FakeEnv([win_frame, degenerate_frame])
+
+    monkeypatch.setattr(
+        "carnot.agentic.arc_agi3_live_adapter._game_action",
+        lambda action_enum, action_id: action_id,
+    )
+
+    result = mod.apply_g50t_label(env, "4")
+
+    assert result is win_frame
+    assert env.step_calls == 1
+
+
+def test_apply_g50t_label_stops_on_win_inside_settling_loop(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Regression: a WIN observed mid-settling-loop must halt further steps too."""
+
+    from arcengine import GameState
+
+    not_finished = _FakeFrame(GameState.NOT_FINISHED)
+    win_frame = _FakeFrame(GameState.WIN)
+    degenerate_frame = _FakeFrame(GameState.GAME_OVER)
+    env = _FakeEnv([not_finished, win_frame, degenerate_frame], settling_after=2)
+
+    monkeypatch.setattr(
+        "carnot.agentic.arc_agi3_live_adapter._game_action",
+        lambda action_enum, action_id: action_id,
+    )
+
+    result = mod.apply_g50t_label(env, "4")
+
+    assert result is win_frame
+    assert env.step_calls == 2

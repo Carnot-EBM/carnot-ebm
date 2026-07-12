@@ -4176,21 +4176,33 @@ games:
     reproducibility_checksum: ed33631efac8e242fdca278ede5688eb5ab946c0111af6466f86f8d9c9359bf5
 - game: g50t
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 7
+  full_game_clear: true
+  final_game_state: GameState.WIN
   win_condition: 'L1-L2: see historical gotchas. L3 (2026-07-11, claude-fable-5):
     a full clone-commit/rewind puzzle -- ACTION5 commits the current trajectory
     (rewinding the player to spawn) and the committed ghost replays it one action
     per subsequent player action, then parks forever at its endpoint; parked
     ghosts standing on elevator-car call plates hold those plates open. Win = the
-    active player fills the interior of a 7x7 goal ring. See gotcha below for the
-    full mechanic set.'
+    active player fills the interior of a 7x7 goal ring. L7 (2026-07-12, gpt-5.6-sol
+    via codex, round 12): two paired color-15 SWAP sockets, the second gated by a
+    phase-synchronized activation. See gotcha below for the full mechanic set. g50t
+    is a 7-level game (per results/arc3_win_condition_survey.json n_levels=7); L7 is
+    the FULL GAME CLEAR.'
   solver: 'L1-L2: GameAdapter _g50t in python/carnot/agentic/arc_game_adapters.py
     plus scripts/arc_loop_solve.py --game g50t. L3:
     results/outer_loop_fable5_g50t_probe.json action_sequence (118-action full
     sequence: the same 48-action L1-L2 prefix + a 70-action three-run L3 solve),
     claude-fable-5, 2026-07-11. Self-run reproduction gate (reached_level=3,
     reproduced=True) AND independently re-verified by the outer loop (5x fresh
-    env.reset() + reproduce() via exp4433.apply_g50t_label).'
+    env.reset() + reproduce() via exp4433.apply_g50t_label). L7 (full game clear):
+    results/outer_loop_round12_g50t_probe_20260712.json action_sequence (331-action
+    full sequence: the 288-action L6-verified prefix + a 43-action L7 tail),
+    gpt-5.6-sol via codex, 2026-07-12. Self-reported reproduction_verified=false
+    (session ran out of step budget for its own gate) but independently re-verified
+    by the outer loop: 5x fresh arc.make(''g50t'')+reset() replays via the resolver
+    priority branch (levels_reproduced>=7), all 5 confirmed state=GameState.WIN,
+    level=7, levels_completed=7, win_levels=7, is_empty()=False.'
   gotchas:
   - 'L3 CLONE-COMMIT/GHOST mechanic (2026-07-11, claude-fable-5, independently
     re-verified by the outer loop): ACTION5 commits the player''s trajectory so
@@ -4449,6 +4461,34 @@ games:
     resource, or a genuine but mis-signaled terminal state), and
     otherwise continue mapping the right-pair phase synchronization
     live (it was described but not executed) toward a real win.'
+  - 'L7 FULL GAME CLEAR (2026-07-12, gpt-5.6-sol via codex, round 12,
+    results/outer_loop_round12_g50t_probe_20260712.json): root-caused round 11''s
+    degenerate-frame false-negative and won for real. ROOT CAUSE: the resolver''s
+    exp4433.apply_g50t_label helper has a settling loop that re-submits the SAME
+    label while an internal transition/settling flag is set; that loop does not
+    check for GameState.WIN, so a step submitted AFTER a genuine win response
+    fires one more env.step(), which returns the empty/degenerate terminal
+    sentinel (levels_completed=0, win_levels=0, is_empty=True) that round 11
+    mistook for a broken candidate. FIX (2026-07-12, outer loop): patched
+    apply_g50t_label in
+    python/carnot/experiment_4433_example_conditioned_win_induction.py to check
+    frame.state == GameState.WIN immediately after the first step (and again
+    inside the settling loop) and return immediately without any further
+    env.step() calls once WIN is observed. THE WIN ITSELF: round 12 live-executed
+    (not just theorized) the right-pair phase synchronization step by step,
+    watching every frame for a sane level/state before proceeding. Clone 1''s
+    10-move program (left swap + top gate) parked at (13,1); clone 2''s 14-move
+    program parked at (49,1). The right swap fired live at active-run move 14,
+    when the active player reached (49,37) on the same tick clone 2''s program
+    activated the remote plate at (49,1) -- confirming round 11''s phase-sync
+    hypothesis was mechanically correct, only the harness''s post-WIN polling was
+    wrong. Outer loop independently re-verified 5x fresh via the patched apply
+    function + a new resolver priority branch (g50t levels_reproduced>=7): all 5
+    trials state=GameState.WIN, level=7, levels_completed=7, win_levels=7,
+    is_empty()=False. g50t has n_levels=7 total (survey-confirmed) -- this is the
+    full game clear, not a partial level. Self-reported reproduction_verified was
+    false only because the source session ran out of its own step budget for a
+    third fresh-reset gate, not because the win was in doubt.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
@@ -5466,7 +5506,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 174
+reproducible_total_levels: 175
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
