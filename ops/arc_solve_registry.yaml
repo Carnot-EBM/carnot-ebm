@@ -2115,7 +2115,7 @@ games:
     full-clear session above.
 - game: lf52
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
@@ -2211,6 +2211,37 @@ games:
     skip the PNG-rendering step entirely and reason from raw grid arrays
     (as most other games'' sessions do) to leave more budget for actual L5
     exploration.'
+  - 'L5 SOLVED round 5 (2026-07-12, claude-fable-5, first fable-5 leg of the
+    campaign, results/outer_loop_fable5_lf52_probe.json): directly executes
+    round 3''s "skip PNG rendering, reason from raw grid arrays" fix --
+    zero rendering tooling built, zero resets, zero wasted jumps. L5''s
+    endgame is a TORCH-FERRY LOGISTICS puzzle on a closed rectangular rail
+    network (top+bottom horizontal big rails joined by three vertical
+    rails A/B/C spaced exactly one jump-pitch from the socket columns).
+    The single east-network carrier ferries ONE movable torch; parking it
+    on a vertical rail at a peg''s row band (or a horizontal rail at a
+    peg''s column) creates a temporary crossable obstacle exactly between
+    two socket cells, letting a lone peg traverse box-to-box in any
+    direction. The win is a GLOBAL reduce-to-one plan: 5 pegs (the
+    west-screen survivor + 4 hub pegs) need 4 peg-over-peg removals, each
+    meeting point arranged so the JUMPER survives on a cell from which its
+    next leg is reachable. Confirmed the west and east rail networks are
+    PERMANENTLY DISCONNECTED -- the west torch-carrier can never reach the
+    east hub, so the endgame must be solved with the east carrier''s torch
+    plus the 4 fixed hub torches alone. Won live at step 312 (of a
+    214-action verified prefix + a fully-planned-before-touching-anything
+    endgame); fresh-reset reproduce() gate confirmed reached_level=5.
+    Independently re-verified by the outer loop: 5x fresh env.reset() +
+    replay via a new resolver priority branch, all 5 confirmed level=5,
+    state=GameState.NOT_FINISHED. L6 was previewed (not attempted): a
+    color-8 quad block is ITSELF selectable/movable via the same jump
+    mechanic (can jump down over an adjacent peg; that peg can jump up
+    over it -- unknown whether its jumps remove crossed pegs), plus a
+    DOUBLE-socket carrier (two 4x4 sockets in one border), no torches
+    visible in the opening view. NOTE: the prior L3-line content of this
+    artifact filename was preserved verbatim at
+    results/outer_loop_fable5_lf52_probe_l3_20260711.json before being
+    overwritten by this session.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
@@ -4247,7 +4278,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 156
+reproducible_total_levels: 157
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
