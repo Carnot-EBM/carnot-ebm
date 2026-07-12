@@ -1,9 +1,9 @@
 {
   "game": "r11l",
   "model": "claude-fable-5",
-  "starting_level": 4,
+  "starting_level": 5,
   "max_level_reached": 5,
-  "total_env_steps_used": 700,
+  "total_env_steps_used": 672,
   "reproduction_verified": true,
   "action_sequence": [
     "{\"action\":6,\"data\":{\"x\":38,\"y\":18}}",
@@ -206,19 +206,17 @@
     "{\"action\":6,\"data\":{\"x\":47,\"y\":19}}",
     "{\"action\":6,\"data\":{\"x\":45,\"y\":13}}"
   ],
-  "levels_won_this_session": [
-    5
-  ],
-  "novel_mechanics_found": "L5 cargo halves are paired by complementary 5x5 masks and matching two-color dotted sockets: 8+9 belongs at the left-center socket and b+e at the upper-right socket; the three other dotted glyphs are decoys. The decisive hidden interaction is selection occlusion: after cargo attaches, clicking an overlapped handle center does not select that handle and instead moves the currently selected handle. Moving the visible selected handle away first exposes the buried handle, allowing all carrier handles to be routed independently. With this ordering, both carriers can fuse and deliver their payloads within the 60-click meter; the level advanced on L5 tail action 56.",
-  "narrative": "Fresh-replayed the resolver's 141-action prefix and confirmed levels_completed=4 before exploration. Used rendered-frame deltas to pair the four cargo halves, optimized the two-handle carrier's 8+9 delivery to 17 clicks, then mapped the three-handle b+e route. Two near-routes failed because cargo visually covered a handle and a supposed selection click moved the already-selected handle; the final route moved that handle clear first, exposed the others, and advanced live to level 5 on tail click 56 (two pre-batched clicks then landed harmlessly in L6). The mandatory fresh-reset reproduce gate replayed all 199 labels and returned reached_level=5, reproduced=true. Stopped immediately after the gate because it consumed the exact 700-step session budget.",
+  "levels_won_this_session": [],
+  "novel_mechanics_found": "L6 expands the cargo mechanic from complementary pairs to two apparent three-part payloads. Rendered colors identify 9+15+14 for the upper-right socket and 6+11+10 for the lower-left socket; solid colors 8, 13, and 12 are decoys, and the orange+magenta dotted socket is impossible because no solid orange cargo exists. Three cargo glyphs visibly fuse and travel together. L6 retains the 60-action hard cutoff and the selection-occlusion mechanic: a green handle can look exposed yet its first destination may still intersect the fused payload and be silently rejected.",
+  "narrative": "Fresh-replayed the resolver's 199 labels and confirmed levels_completed=5 before exploration. Across five rendered-frame-only L6 routes, identified the two three-color payloads, fused both, mapped the decoys, and reduced the route to the 60-action cutoff. The best live run placed the 9+15+14 payload deeply into the upper-right dotted socket and the 6+11+10 payload over the lower-left socket, but action 60 still returned GAME_OVER with levels_completed=5; no L6 win was observed. A final fresh reproduce gate replayed the original 199-label prefix and returned reached_level=5, reproduced=true. Step accounting is 199 initial confirmation + 274 exploration/reset calls + 199 gate calls = 672.",
   "gotchas": [
-    "L5 has a hard 60-action meter; rejected destinations, selection clicks, and no-ops all consume it.",
-    "The four solid cargo halves pair by complementary mask and socket colors: 8+9 to the left-center socket, b+e to the upper-right socket. Three other dotted glyphs are blockers/decoys.",
-    "Cargo attaches on carrier overlap and complementary halves fuse on the same carrier; socket contact is sufficient and does not require centering the carrier handles on the socket.",
-    "A handle hidden under attached cargo is not selectable at its nominal center. Clicking there moves the current handle instead, often producing a plausible but doomed route. Move the selected/visible handle away until the buried green diamond is exposed, then select it.",
-    "Handle moves remain radius-8 Euclidean teleports. Diagonals such as (1,8), (2,8), and (7,4) exceed radius 8 and are silently rejected even when they look like an 8-cell move.",
-    "The verified 58-click L5 tail actually levels up on tail action 56; the final two labels execute on L6 but preserve levels_completed=5 and are included because they were already batched in the live winning sequence and reproduced exactly.",
-    "The session step accounting is exact: 141 initial prefix confirmation + 360 calls in the persistent exploration process (including its own 141-prefix replay and three RESET actions) + 199 reproduction-gate calls = 700."
+    "L6 has a hard 60-action meter. Action 60 returns GAME_OVER unless the win has already registered; rejected destinations, selection clicks, and no-ops all consume the meter.",
+    "The apparent real payloads are 9+15+14 to the upper-right dotted socket and 6+11+10 to the lower-left dotted socket. Solid 8, 13, and 12 are decoys; the orange+magenta dotted glyph is also a decoy/impossible target.",
+    "The three-handle carrier should collect 9, then 15, then 14. The two-handle carrier efficiently collects 6, then 11, then 10.",
+    "After cargo fusion, a handle center or its intended destination can be occluded even when some green pixels remain visible. A failed selection leaves the previous handle selected, while a blocked move is a silent no-op; always verify the blue-line endpoint before batching more clicks.",
+    "Move the currently selected exposed handle far enough to shift the fused payload away before selecting a buried handle. In the upper route, moving the 42,19 handle toward 50,13 exposes the other endpoints.",
+    "Handle moves remain radius-8 Euclidean teleports. Diagonals such as (3,7), (4,6), and (5,6) are legal; (4,7), (6,6), and (7,4) are silently rejected.",
+    "A normal RESET action restarts L6 without replaying levels 1-5, but the final replay artifact intentionally remains the original 199-label verified prefix because no L6 win was observed."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }

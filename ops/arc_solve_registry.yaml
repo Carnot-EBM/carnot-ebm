@@ -841,6 +841,21 @@ games:
     reached_level=5/reproduced=true. Independently re-verified by the
     outer loop: 5x fresh env.reset() + replay via a new resolver priority
     branch, all 5 confirmed level=5, state=GameState.NOT_FINISHED.'
+  - 'L6 progress round 5, still HONEST NULL (2026-07-12, claude-fable-5, first
+    fable-5 leg of the campaign, results/outer_loop_fable5_r11l_probe.json):
+    L6 expands the cargo mechanic from complementary PAIRS (L5) to two
+    apparent THREE-PART payloads: rendered colors identify 9+15+14 for the
+    upper-right socket and 6+11+10 for the lower-left socket; solid colors
+    8, 13, and 12 are decoys, and the orange+magenta dotted socket is
+    impossible (no solid orange cargo exists). Three cargo glyphs visibly
+    fuse and travel together. Reconfirms the L5 selection-occlusion
+    mechanic generalizes to L6: a green handle can look exposed yet its
+    first destination may still intersect the fused payload and be
+    silently rejected. The best live run placed both fused payloads deep
+    into their respective sockets, but action 60 (the hard cutoff)
+    returned GAME_OVER with levels_completed still 5 -- no L6 win
+    observed. Fresh reproduce() gate reconfirmed the L5 prefix
+    (reached_level=5). No new level banked; frontier stays at level 5.'
   dead_ends:
   - 'Exp4862 first standing-loop attempt with _r11l featurize enabled failed
     before search: the stale models/arc_verifier_r11l.json checkpoint expected
