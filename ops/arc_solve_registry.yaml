@@ -4376,6 +4376,50 @@ games:
     resolver priority branch (using the resolver-registered
     exp4433.apply_g50t_label function), all 5 confirmed level=6,
     state=GameState.NOT_FINISHED.'
+  - 'L7 mapped, HONEST NULL -- unverified candidate produced a
+    DEGENERATE frame, not a real win, round 11 (2026-07-12,
+    gpt-5.6-sol via codex, results/outer_loop_round11_g50t_probe_20260712.json):
+    real live progress mapping L7 -- two paired color-15 SWAP sockets
+    were found and live-verified. The left pair (13,25)<->(13,13) is
+    activated by the autonomous color-14 runner reaching (1,25) after
+    the color-11 toggle at (19,37) is opened; any entity parked in one
+    socket teleports to the other (live-verified: the active player
+    was transferred (13,25)->(13,13)). The right pair (49,37)<->(49,49)
+    requires PHASE SYNCHRONIZATION -- an entity must occupy (49,37)
+    exactly when a different entity first activates the remote plate
+    at (49,1), or the swap fires on empty sockets. A color-8 plate at
+    (13,1) opens the top gate from (31,1) to (25,1) (live-verified via
+    clone parking). L7 has its own hard action-count clock, distinct
+    from the external session budget: an over-long 131-action
+    exploratory program hit it and forced GAME_OVER at internal action
+    130 (blocked moves consume this clock without advancing the runner
+    or ghosts). The session then constructed a COMPACT 43-action
+    candidate tail (untested, explicitly proposed as a hypothesis for
+    outer-loop verification, not a claimed win) chaining the mapped
+    mechanics: clone 1 through the left swap and top gate, clone 2
+    through the right plate, with the active run timed to reach
+    (49,37) on the same tick clone 2 activates (49,1). THE OUTER LOOP
+    TESTED THIS CANDIDATE DIRECTLY: replaying the full 331-action
+    sequence (288-action verified prefix + the 43-action candidate)
+    reaches state=GameState.WIN -- but with levels_completed=0,
+    win_levels=0, and is_empty()=True (a completely EMPTY frame, shape
+    (0,)). This does NOT match the pattern of every genuine win banked
+    this session (which always show levels_completed equal to the
+    achieved level with a normally-populated frame). Stepping back one
+    action (to the 330th of 331) shows level=6, state=NOT_FINISHED,
+    frame normally populated -- the FINAL single action in the
+    candidate is what triggers the degenerate state. This is almost
+    certainly an environment-level artifact (e.g. an internal action-
+    limit/gateway exhaustion sentinel), NOT a genuine level-7
+    completion, and must NOT be banked or trusted as a win. No new
+    level banked; frontier stays at level 6. Next attempt should NOT
+    blindly replay this exact 43-action tail expecting a win -- if
+    revisiting it, isolate and test each of its final few actions
+    individually to identify what specifically triggers the
+    degenerate-frame response (a malformed action, an exhausted
+    resource, or a genuine but mis-signaled terminal state), and
+    otherwise continue mapping the right-pair phase synchronization
+    live (it was described but not executed) toward a real win.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
