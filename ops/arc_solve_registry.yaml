@@ -4135,6 +4135,23 @@ games:
     executed. No new level banked; frontier stays at level 7 -- but the
     first rectangle''s full route is now solved, leaving only the second
     rectangle''s crossing as the remaining work.'
+  - 'L8 progress round 6, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex,
+    round-6 breadth campaign, results/outer_loop_fable5_re86_probe.json):
+    a NEGATIVE finding that rules out a shortcut hypothesis, not new route
+    progress. Tested whether the individual per-fixture flatten/paint steps
+    in round 5''s route are strictly necessary, or whether each rectangle
+    could be deformed DIRECTLY from spawn to 22x4 and routed through the
+    same corridor/compress/cross/restore sequence, skipping the initial
+    per-fixture paint step (170 actions vs round 5''s 269-action tail).
+    Placing both pieces at the expected target lattice positions via this
+    shortened route did NOT trigger a win -- confirms the per-fixture paint
+    steps round 5 used are load-bearing, not incidental overhead. A
+    live-frame diagnostic process crashed at call 709 while expanding its
+    own rendered-grid output, ending the session early (91 calls
+    remaining, short of the 519 needed to restore the verified prefix). No
+    new level banked; frontier stays at level 7. Next attempt should
+    return to round 5''s FULL per-fixture route (not the shortcut) for the
+    second rectangle''s crossing.'
   - 'L6 (previewed for free in a PRIOR session, not attempted at the time --
     solved by the entry above): 8 rings (four 9-colored, four 11-colored in a
     rectangle) plus color-1 objects that are a genuinely NEW element not seen
