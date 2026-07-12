@@ -3687,6 +3687,37 @@ games:
     directly, OR (if returning to offline search) budget hard limits
     for translating a found abstract plan into real actions and
     executing it live BEFORE the session ends, not after.'
+  - '"OTHER LAUNCH SOURCE" QUESTION ANSWERED, plus displaced, still
+    HONEST NULL, round 8 (2026-07-12, gpt-5.6-sol via codex, direct
+    live exploration this time, results/outer_loop_codex_ka59_probe_round8_20260712.json):
+    finally answers round 6''s open question. THE UPPER 6x6 cycling
+    stack IS relocatable (unlike the lower cycling stack, which is
+    confirmed immovable): with the horizontal 6x3 helper positioned at
+    x=51-56,y=6-8, ACTION3 launches the upper stack LEFT by 15 pixels,
+    from x=45-50 to x=30-35. From there, routing the vertical 3x6
+    helper through the central three-column opening lets it launch the
+    RELOCATED upper stack left AGAIN through the color-15 partition,
+    into the plus chamber at x=15-20. With the relocated stack
+    overlapping the plus and its cycling phase returning to all-d, the
+    plus itself launches DOWNWARD through the previously-sealed
+    horizontal partition, from y=9-17 to y=21-29 -- directly verified
+    in the frame diff (45 color-11 pixels moved). This is the first
+    time the plus has ever been moved. While routing the horizontal
+    helper below the displaced plus to attempt a second downward
+    launch, the level''s own action/life counter reached zero and
+    forced GAME_OVER at action 559 (a real level-internal counter, not
+    the external 700-call session budget -- confirmed the game itself
+    terminates the attempt, not a session limit). Independently
+    re-verified by the outer loop: the full 560-action sequence
+    replays cleanly from a fresh env.reset() to level=0,
+    state=GameState.GAME_OVER, exactly matching the session''s own
+    narrative (the prefix''s first 358 actions match the known-good L6
+    sequence verbatim). No new level banked; frontier stays at level
+    6. Next attempt should NOT re-derive this route -- reproduce only
+    the successful tail (relocate stack, launch plus down), then
+    deliberately time the all-d cycling phase and conserve the level''s
+    internal counter for whatever the second downward launch (or
+    another plus interaction) requires.'
 - game: ft09
   reproducibility: reproduced
   levels_reproduced: 6
