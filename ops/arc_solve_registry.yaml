@@ -4297,6 +4297,50 @@ games:
     beyond single-click interactions: multi-click quad sequences or
     timing, tick-bar-value-dependent interactions, or re-examining
     L1-L5 mechanics for a forward-carrying mechanism.'
+  - 'D/8-TWIN LEAD CLOSED, NEW ROUTE FOUND but not yet won, round 9
+    (2026-07-12, gpt-5.6-sol via codex, results/outer_loop_codex_dc22_probe_round9_20260712.json,
+    solve_provenance: development_proxy -- this round used direct
+    inspection of the offline game''s own transition source plus an
+    OFFLINE source-state BFS to derive a candidate route, NOT pure
+    live-play observation; the route below is unverified against the
+    live environment): closes round 8''s open question definitively --
+    inspection of the exact transition code confirms only the LM
+    checker ever receives the level-start color-cycle tag, quad clicks
+    always advance it by exactly one variant regardless of click
+    order/timing, the click path never branches on the current
+    fail-timer value, and on_set_level resets all per-level
+    attachment/control state. NO D/8 twin can be created by any
+    click sequence, timing pattern, or tick-bar value -- this entire
+    line of investigation (round 7''s leading hypothesis through round
+    8''s exhaustive elimination) is now closed for good. THE REAL
+    MECHANISM: the wide 8-bar latch is POLYMORPHIC -- at its home
+    center it attaches the big 8-ring (as previously known), but when
+    the bare C-structure is driven four control positions LEFT, its
+    center instead aligns with a separate, previously-untested 20x20
+    object (brixto-orckhi) at (0,24), and the SAME latch click attaches
+    THAT long bridge instead of the 8-ring. An offline collision/
+    support search over the exact level state found that carrying the
+    attached bridge via the existing D-pad control path (right 5, up 3,
+    left 2, up 3, ending at (12,0)) connects R1 to the goal room: from
+    the C/B checker at R1''s (4,4), down 2, east 14, north 1, east 7
+    reaches the goal at (46,6). A live attempt at this route FAILED
+    because of a wrong assumption, not a wrong mechanism: R1''s C/B
+    checker at (4,4) is NOT physically reachable directly north from
+    the R2 socket at (6,18) (walls held the avatar at (4,16)) -- the
+    correct path must first descend from R2 and shelf-ride east to LM
+    (round 7''s actions 449-483 already encode this leg), THEN select
+    9/A and teleport to the launcher, before executing the
+    now-grounded bridge-control sequence. Independently re-verified by
+    the outer loop: the full 517-action attempt replays cleanly to
+    level=5, state=GameState.NOT_FINISHED -- matches the session''s own
+    report exactly, no hidden win, no regression. No new level banked;
+    frontier stays at level 5. NEXT ATTEMPT should be a pure LIVE
+    execution of the corrected route (R2->LM via shelf machine->9/A
+    teleport to launcher->four-left C-drive->latch onto the bridge->
+    right5,up3,left2,up3->teleport/walk to R1''s C/B checker->down2,
+    east14,north1,east7 to goal) to confirm this mechanism actually
+    wins the level -- this is the strongest lead this game has had
+    across all 9 rounds.'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
