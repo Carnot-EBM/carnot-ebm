@@ -855,6 +855,23 @@ games:
     stepped on (unknown function; do not assume every ring-shaped object is
     a real counter reset). L4''s winning line has near-zero counter slack --
     the final ring must be collected on the LAST approach, not early.'
+  - 'L5 progress round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): L5 splits shape/rotation control across two distinct tiles --
+    the upper black-dot tile cycles shape while a small blue/black tile in
+    the lower-left chamber rotates the selected shape. Target shape is the
+    six-cell X.X/XX./.XX in color 8; the black tile exposes its 180-degree
+    orientation and the lower tile advances orientation on alternating
+    re-entries. Verified the pinwheel''s C->9->E->8 color route and found a
+    direct pinwheel-to-upper-ring launcher. The upper B-ring initially looked
+    inert but is directional/delayed: vertical entry does NOT reset the
+    counter, but traversing/departing it HORIZONTALLY after the pinwheel
+    launcher resets the counter to 42 -- this exposes a likely
+    three-reset choreography (left ring, upper directional ring, bottom
+    ring), not yet executed end-to-end. Lost the live instance to GAME_OVER
+    during exploration; env.reset() on the reused env did NOT restore a
+    replayable fresh state (ended at level 0 despite replaying the exact
+    244-action prefix) -- same class of gotcha as the general_gotchas
+    fresh-env warning, worth re-emphasizing here. No new level banked.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
@@ -1681,6 +1698,23 @@ games:
     the prefix (307) + this validated 42-label line (~100) + the projected
     finish (~110) fits comfortably in a fresh 700-step session -- this is
     estimated to be one session from banking L6.'
+  - 'v19 (results/outer_loop_codex_sc25_probe.json, 2026-07-11, gpt-5.6-sol via
+    codex, post-wa30 breadth campaign round 2, honest partial, NOT banked --
+    levels_reproduced stays 5): followed v18''s projected path and got
+    FURTHER but still did not close it out. This session broke BOTH the
+    6dd6-linked AND the 6cc6-linked obstacles, collected BOTH energy
+    pickups, and decoded the remaining pad route -- but the final optimized
+    attempt exhausted the exact 700-call campaign budget while routing
+    F-to-B through east/southwest/junction options: energy reached zero
+    during the last shaft approach and the frame went GAME_OVER before any
+    L6 win. v18''s "one session from banking L6" estimate was optimistic by
+    a thin margin, not wrong in direction -- TWO consecutive sessions have
+    now reached the doorstep and run out of energy/budget at the very last
+    step. Next attempt should treat energy conservation on the final
+    approach as the binding constraint (not route-finding, which is now
+    fully mapped) -- consider whether the L5 prefix replay cost (~307 of
+    700 steps) can be trimmed, or whether an alternate pickup order
+    preserves more energy for the final shaft.'
   mechanic_class: two_phase_cast_grid_then_tank_exit
   latest_exp4468_reproduce:
     artifact: results/experiment_4468_bank_sc25_provisional_levels.json
@@ -1894,7 +1928,7 @@ games:
     reproducibility_checksum: a988ffc5568e397a431e2637bb40e290f262d42710ae272ea570f0e023caf3bb
 - game: sp80
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: spill_splitter_placement
   win_condition: 'L1 move-right x3 then commit; L2 splitter placements route the spill into all three repwkzbkhxl target blocks without touching the wall: len3 at (0,3), len5 at (4,3), len3 at (8,5). L3-L4 (2026-07-11,
     claude-fable-5): the same spill-routing physics escalates -- flow direction
@@ -1938,13 +1972,29 @@ games:
     per-piece positional caps (e.g. L3 bars cannot rise above grid-row 4);
     measure piece and target positions from the frame programmatically,
     off-by-one eyeballing wastes commits.'
-  - 'L5 (well-mapped this session, unsolved, not banked -- preserved for a
-    future attempt): both tower vines were routed into all three arch holes
-    with zero strays (verified in the spill animation) and the commit STILL
-    failed -- there is a genuinely undiscovered extra win condition. L5
-    introduces a new selectable L-shaped color-15 piece with an invisible
-    x>=14 movement boundary, and the wall sculpture has a matching
-    side-facing 3px notch the piece cannot currently reach. Candidate next
+  - 'L5 SOLVED (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign round 2): the color-15 L-piece is a fluid elbow/diverter, NOT a
+    key inserted into the wall sculpture -- at its x=14 minimum, a splitter
+    branch entering its lower-right leg is redirected horizontally into the
+    wall notch. Winning positions: color-15 elbow at x=14,y=35; 12px bar at
+    x=20..31,y=47; 15px bar at x=23..37,y=29; 9px bar at x=41..49,y=47;
+    commit with ACTION5. The frame after the L4 win still visually shows the
+    prior layout even though levels_completed is already 4 -- the NEXT
+    action initializes L5''s stable rendering. Independently re-verified by
+    the outer loop: 5x fresh env.reset() + replay via the fixed resolver,
+    all 5 confirmed reached_level=5, state=GameState.NOT_FINISHED. L6 was
+    explored (two oriented color-15 elbows, a vertical color-8 splitter, an
+    embedded-source horizontal splitter, two left sockets, one right socket,
+    a bottom arch) but not won this session -- several geometry-consistent
+    placements tried, none completed the level.'
+  - 'L5 (well-mapped in a PRIOR session, unsolved at the time, not banked
+    then -- superseded by the entry above): both tower vines were routed
+    into all three arch holes with zero strays (verified in the spill
+    animation) and the commit STILL failed -- there is a genuinely
+    undiscovered extra win condition. L5 introduces a new selectable
+    L-shaped color-15 piece with an invisible x>=14 movement boundary, and
+    the wall sculpture has a matching side-facing 3px notch the piece
+    cannot currently reach. Candidate next
     leads: whether the piece must sit somewhere specific, whether a stream
     must touch the piece, or whether the piece must ride a bar. Game has 6
     total levels (win_levels=6).'
@@ -2199,7 +2249,9 @@ games:
     reproducibility_checksum: 2bb0e6bf3879475ffa98e60970f85ab259b894b69d7c4d4065aa483cf97c2ebb
 - game: cn04
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: marker_pair_shape_alignment
   win_condition: 'L1 adapter-free seed plus L2 marker-pair shape alignment: every original 8/13 marker on each visible sprite must overlap exactly one same-colored marker from another visible sprite. L2 positions 0002 at (4,5), 0003 at (8,6), 0004 at (3,3), and 0005 at (12,8) with all rotations normalized to 0. L4-L5 (2026-07-11, claude-fable-5): the same marker-pair-coverage win condition escalates from
     rigid rotation (L4) to variant-shape cycling (L5) -- see gotcha below.'
@@ -2222,6 +2274,22 @@ games:
   - ACTION5 can rotate the selected sprite and advance the level on the same action, so count only the offline reproduction gate's reached_level.
   - ACTION6 display coordinates must land on non-transparent rendered sprite pixels after camera.display_to_grid mapping.
   - Use fresh-env branching; reuse-one-env replay can stop at the L1 seed even though the full L1+L2 label sequence reproduces on a fresh offline arcade.
+  - 'FULL CLEAR, L6 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign round 2): L6 is a five-sprite marker-pair puzzle. The G-hook
+    and n-glyph rotate through four ACTION5 orientations; the tall bar is a
+    rigid two-marker connector; the three-marker arm stretches one marker
+    3px per press through 4 stops, ping-ponging; the winding snake grows
+    non-uniformly from 2 to 6 markers via ACTION5, and DESELECTING/
+    RESELECTING it appears to reset or reverse its ping-pong direction (do
+    not predict remaining presses from the direction observed before
+    deselecting). Solved via an exact-cover constraint search over marker
+    constellations, then executed the placement live. The source agent
+    honestly flagged the win as reproduction_verified=false (only 5 of 700
+    steps remained after the live win, not enough for a fresh gate) -- the
+    outer loop independently ran the canonical reproduction gate AND 4
+    additional fresh env.reset()+replay trials before recording anything:
+    all 5 returned reached_level=6 AND state=GameState.WIN. cn04 is a
+    confirmed full clear.'
   - 'L4-L5 SHAPE-VARIANT ESCALATION mechanic (2026-07-11, claude-fable-5,
     independently re-verified by the outer loop): the core loop is consistent
     across L4-L6 -- ACTION6-click selects a sprite (revealing its 8-colored
@@ -2275,7 +2343,7 @@ games:
     reproducibility_checksum: b818a5fd174436b543c9b6663ab33d9cfe15b4435b7358ebbe6728215bc38043
 - game: m0r0
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: graph_explore
   win_condition: 'first-solve L1 adapter-free (E1); L2 deepened by visible two-sprite
     coalescence predicate over active pikgci sprites while avoiding visible spswjz
@@ -2336,12 +2404,28 @@ games:
     level''s sprite art (4px at L3, 5px at L4). The frame view can scroll/shift;
     model the world from the CURRENT frame every step (closed-loop), not a
     cached static map -- open-loop execution diverged twice this session.'
-  - 'L5 (scouted this session, unsolved, not banked -- preserved for a future
-    attempt): two rooms with internal wall bands containing large colored slabs
-    (e/c/f) and small matching-color 4x4 blocks; neither slabs nor blocks are
-    click-selectable and ACTION5 is a no-op. Best hypothesis: touching a small
-    block acts as a key that opens its matching-color slab gate. Sprites start
-    at bottom corners with a 4px movement quantum; whether the mirror-control
+  - 'L5 SOLVED (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth campaign
+    round 2): the small colored blocks are TEMPORARY PRESSURE PLATES, not
+    keys -- a player standing on a plate removes every large barrier of the
+    matching color, and those barriers return immediately when the plate is
+    released. A restored barrier can close AROUND an occupying sprite
+    without resetting it (a useful pin). Horizontal controls are REVERSED
+    vs the L3/L4 description at L5 (ACTION3 converges, ACTION4 diverges).
+    Solution staging: lower f plate -> right c plate -> right e plate ->
+    upper f plate -> coalescence in the open top corridor. Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay via the
+    fixed resolver, all 5 confirmed reached_level=5,
+    state=GameState.NOT_FINISHED. L6 was explored (a click-selectable
+    driveable 2x2 color-9 object, an electric-reset checkerboard seam) but
+    not won this session -- the central seam reset all level state on every
+    attempted route.'
+  - 'L5 (scouted in a PRIOR session, unsolved at the time, not banked then --
+    superseded by the entry above): two rooms with internal wall bands
+    containing large colored slabs (e/c/f) and small matching-color 4x4
+    blocks; neither slabs nor blocks are click-selectable and ACTION5 is a
+    no-op. Best hypothesis: touching a small block acts as a key that opens
+    its matching-color slab gate. Sprites start at bottom corners with a 4px
+    movement quantum; whether the mirror-control
     mapping still applies was not verified.'
   dead_ends:
   - 'Exp4905 m0r0 no-bank duplicate_depth: complete_m0r0_no_new_level_residual_duplicate_depth.'
@@ -2401,6 +2485,18 @@ games:
     on the glyph, blocks, guide, and reel in all tested locations. No new
     level banked this session (levels_reproduced stays 2); the resolver fix
     is the genuine deliverable.'
+  - 'L3 progress round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): L3 introduces a SECOND, dark-headed vertical manipulator
+    holding a red/green segmented column of colored blocks (a decoy cyan
+    block is also present). Blocks on this second helper cannot be pulled
+    horizontally the ordinary way; a horizontal contact followed by
+    perpendicular vertical motion detaches and CARRIES the contacted block,
+    and a carried block pushed into the anchored column can displace lower
+    blocks. Established how to detach gray and how carried blocks displace
+    the helper column, but did not complete the required gray-maroon-white
+    sort before stopping (chose not to claim an unobserved level-up). No new
+    level banked; this is a genuine two-arm-transfer mechanism, not yet
+    solved end-to-end.'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -2705,7 +2801,9 @@ games:
     reproducibility_checksum: 38f84bff53c439eb5a215a982c10bae07493c5b13923e255c02e02e920020462
 - game: vc33
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 7
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: config_support_clearance
   win_condition: 'L1+L2 support-clearance config: controlled support clicks shift paired wall segments until the active colored piece no longer has a blocking wall aligned with its target-color sprite; the executable ielczunthe predicate then fires next_level on replay. L3-L4 (2026-07-11,
     claude-fable-5): the same mechanic is a FLUID-PUMP puzzle -- pieces float
@@ -2728,6 +2826,25 @@ games:
   - vc33 ACTION6 expects display coordinates; the L2 left-edge support controls at display y=25 and y=45 map to grid y=12 and y=22.
   - 'The L2 delta is not symmetric with L1: only the middle-lower support twice and the bottom support five times reaches the support-clearance predicate.'
   - The learned verifier is a routing/checkpoint artifact only; the executable reproduction gate remains the oracle-distinct authority.
+  - 'FULL CLEAR, L5-L7 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign round 2): the fluid-pump mechanic scales up per level. L5''s
+    apparent one-quantum dead end resolves by treating the middle pockets
+    as TRANSIT-ONLY -- both pieces must cross the center door, continue
+    outward through the outer transit doors, and align from the outer
+    sides at fluid quantities 14 and 16 (the middle pockets cap at 13,
+    below the visible target). L6 is a three-pocket T-junction: route
+    upper-left -> shared lower reservoir -> upper-right before aligning.
+    L7 (the final level) expands to five reservoirs and three pieces: use
+    the long central reservoir as a transfer spine, swap the top-right and
+    lower-left pieces through it, admit the lower-right piece, then
+    simultaneously align the three colors at reservoir quantities 5/9/9.
+    Pump quantum is 3px on L5-L6 but 2px on L7. The source agent honestly
+    flagged its L7 solve as reproduction_verified=false (budget-constrained:
+    only 38 of 700 steps remained after the L1-L6 gate, not enough for a
+    second full gate) -- the outer loop independently ran the canonical
+    reproduction gate AND 4 additional fresh env.reset()+replay trials
+    before recording anything: all 5 returned reached_level=7 AND
+    state=GameState.WIN. vc33 is a confirmed full clear.'
   - 'L3-L4 FLUID-PUMP mechanic (2026-07-11, claude-fable-5, independently
     re-verified by the outer loop): black cells are fluid; colored pieces
     float on the surface with a bar riding the fluid level. 9-5-9 support
@@ -2825,6 +2942,21 @@ games:
     two new cage-like ring structures on tracks in a new color. Needs its own
     multi-run discovery pass plus a longer gate replay; the remaining session
     budget did not cover both.'
+  - 'L4 progress round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): identified the control mechanism -- the blue color-8 horizontal
+    assembly''s small 3x3 right-hand "tongue" is traversable (looks like part
+    of the barrier) and acts as a hold-to-open control: entering it from
+    (32,26)-ish shifts the 5x5 blocker head one 6-cell dock right and opens
+    the sealed left shaft, but the shift persists ONLY while a body remains on
+    the tongue and snaps back on release (a committed clone must park there
+    permanently). Ruled out: touching both barrier ends, synchronized blocked
+    moves, parking ghosts at the blue ends or the color-15 top node. The
+    color-15 top 3x3 node is also traversable but parking there produced no
+    observed effect on the two lower color-15 cage/track structures (still
+    unresolved). Both clone slots got irreversibly committed to exploration
+    before the tongue trick was found, so the live instance became
+    unsolvable this session -- next attempt should route a clone to the
+    tongue FIRST, before any other exploration. No new level banked.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
@@ -2908,6 +3040,20 @@ games:
     the probed state (likely condition-gated); portal checkers and a B goal
     reappear. A full L5 solve plus its 280+-step gate did not fit the
     500-step session budget.'
+  - 'L5 progress round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): a DIFFERENT L5 button layout than the scouting above found (the
+    AA99 quadrants direct a movable color-8 piece in 4px steps). New mechanism:
+    maneuvering the 8 piece into the color-12 slab then clicking 8 changes its
+    shape and LATCHES it to the slab -- subsequent directional clicks drag the
+    combined 8/12 structure, letting the slab be routed around obstacles as a
+    temporary bridge between the separated start and upper regions. Using this,
+    reached the upper region, crossed via the checker portal to the lower west
+    region, opened the row-44 wall bridge (the 2-button incrementally opens it
+    from both ends, briefly yields a full bridge, then closes from the middle
+    outward), and reached its far-right endpoint. Remaining unsolved
+    dependency: the lower color-15 route stays dotted/non-walkable, blocking
+    the solid F bar and the B-button-shifted shelf below it. No new level
+    banked; this is meaningfully further than the prior scouting pass.'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
@@ -3203,15 +3349,30 @@ games:
     a door in one run and silently failed (door stayed shut, action consumed)
     in another -- prefer opening doors from beside them and re-verify the door
     actually opened before walking onto it.'
-  - 'L5 (mapped this session, unsolved, not banked -- preserved for a future
-    attempt): a wider multi-screen tower with chained E-door descents. Every
-    currently-known descent branch dead-ends: one door hides a 1-tile sealed
-    soft-lock pocket, and the bottom trap pair has upward-facing pillar eyes
-    directly beneath BOTH doors (opening either kills). The second gravity
-    switch needed to route back up to the diamond chamber (behind a
-    pillar-guarded 3x2 E block in a top-left chamber) was never found.
-    Candidate unexplored leads: a sealed X-room chamber, the col-2 shaft
-    bottom, and whether pocket floors are hidden E caps openable from inside.'
+  - 'L5 progress round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): found the previously-missing SECOND gravity switch (bottom-right
+    of the trap-pair screen, visible after one leftward move past the deep
+    remote-door descent, screen coords ~x=51,y=59 then ~x=51,y=53 after the
+    camera drops). Reaching it requires opening a remote E door then moving
+    laterally into its column (opened one-cell E pockets ARE traversable
+    sideways despite looking soft-locked). CAUSE OF DEATH IDENTIFIED: clicking
+    the switch from either door-aligned column (player near x=22 or x=27)
+    causes instant death (gravity reversal carries the player into a pillar);
+    the switch is already visible ONE ACTION EARLIER while the player is still
+    near x=33, which is the likely safe click timing -- untested this session
+    (the death consumed the remaining live budget before a retry). No new
+    level banked; this narrows the L5 search space substantially for the next
+    attempt.'
+  - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
+    partially superseded by the entry above): a wider multi-screen tower with
+    chained E-door descents. Every then-known descent branch dead-ended: one
+    door hides a 1-tile sealed soft-lock pocket, and the bottom trap pair has
+    upward-facing pillar eyes directly beneath BOTH doors (opening either
+    kills). The second gravity switch needed to route back up to the diamond
+    chamber (behind a pillar-guarded 3x2 E block in a top-left chamber) was
+    never found THEN (now found, see above). Candidate unexplored leads: a
+    sealed X-room chamber, the col-2 shaft bottom, and whether pocket floors
+    are hidden E caps openable from inside.'
   dead_ends:
   - bp35: registry_prechecked:GAP-4480-BP35-GOAL-DIRECTED-NAVIGATION
   - bp35: prior no-grounded-next-level-adapter dead-end retired by grounded L2 tail
@@ -3235,7 +3396,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 122
+reproducible_total_levels: 128
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
