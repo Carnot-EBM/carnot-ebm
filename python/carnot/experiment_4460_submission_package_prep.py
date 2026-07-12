@@ -403,7 +403,28 @@ def resolve_replay_plan(
             "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
             _apply_ar25_label,
         )
+    if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 7:
+        from arcengine import GameAction
+        from carnot.agentic.arc_agi3_live_adapter import _game_action
+        from carnot.experiment_4340_e3_explore_verify_plan_ka59 import _label_to_action_data
+
+        rel_path = "results/outer_loop_codex55_ka59_probe_round9_20260712.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+
+        def _apply_ka59_extended_label_v4(env: Any, label: str, _frame: Any) -> Any:
+            if label.startswith("6:"):
+                _, x_str, y_str = label.split(":")
+                action, data = 6, {"x": int(x_str), "y": int(y_str)}
+            else:
+                action, data = _label_to_action_data(env, label)
+            return env.step(_game_action(GameAction, action), data=data)
+
+        return ReplayPlan(game, labels, rel_path, _apply_ka59_extended_label_v4)
     if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 6:
+        # NOTE: unreachable for the live registry entry (which is >=7 as of the
+        # round-9 full-game-clear win); retained as historical dead code
+        # documenting the round-6-and-earlier (level-6) resolution.
         from arcengine import GameAction
         from carnot.agentic.arc_agi3_live_adapter import _game_action
         from carnot.experiment_4340_e3_explore_verify_plan_ka59 import _label_to_action_data
