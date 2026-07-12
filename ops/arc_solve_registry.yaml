@@ -3590,7 +3590,7 @@ games:
     reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
 - game: bp35
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: goal_directed_navigation_local_obstacle_clear
   win_condition: >-
     L1 goal-directed upward-gravity navigation plus L2 same-row blocker clears,
@@ -3664,6 +3664,23 @@ games:
     (the death consumed the remaining live budget before a retry). No new
     level banked; this narrows the L5 search space substantially for the next
     attempt.'
+  - 'L5 SOLVED round 3 (2026-07-12, gpt-5.6-sol via codex): the missing return
+    route was solved. The second gravity switch must be clicked from the
+    CENTER SAFE COLUMN before entering either pillar-aligned trap-door
+    column (confirming the x=33 safe-timing hypothesis above was on the
+    right track, though the exact mechanism is column-position, not just
+    timing). After reversing upward, the two open-X toggle blocks below
+    hanging pillars must first be SOLIDIFIED -- they become a protective
+    ceiling permitting the left-shaft ascent. The final 3x2 E barrier is a
+    horizontal tunnel: enter from its lower-right cell, remove only the
+    LOWER row right-to-left, and leave the upper row intact as a shield
+    against three hanging pillar eyes. Independently re-verified by the
+    outer loop: 5x fresh env.reset() + replay via the fixed resolver, all 5
+    confirmed reached_level=5, state=GameState.NOT_FINISHED. L6 was
+    previewed for 7 actions (not solved): provisionally reuses the shield
+    mechanic -- solidifying its two lower X blocks before the first gravity
+    flip creates a safe landing shelf, but stepping LEFT off that shelf is
+    lethal (untested which other direction is safe).'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
@@ -3697,7 +3714,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 143
+reproducible_total_levels: 144
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
