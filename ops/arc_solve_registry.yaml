@@ -1528,7 +1528,7 @@ games:
     maze/grab-tick interception). levels_reproduced bumped 8 -> 9 (FULL CLEAR).'
 - game: s5i5
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 4
   mechanic_class: config_toggle_marker_coverage
   win_condition: 'L1 marker coverage plus L2 dynamic marker-control coverage: discover 0064ocqkuqacti controlled markers, 0087vvmblxkzdi target markers, and pigtralzpb/uricqfoplr control links from the offline env, then click each control edge until every marker reaches an axis-aligned target. L3
     (2026-07-11, claude-fable-5): a linkage machine of six two-half shrink/grow
@@ -1549,7 +1549,12 @@ games:
     2026-07-11. Self-run reproduction gate (reached_level=3, reproduced=True)
     AND independently re-verified by the outer loop (5x fresh env.reset() +
     reproduce() via the registered GameAdapter''s apply(), not the older
-    lookup-table function).'
+    lookup-table function). L4: results/outer_loop_codex_s5i5_probe.json
+    action_sequence (120-click full sequence, gpt-5.6-sol via codex,
+    2026-07-12, round-3 breadth campaign). Self-run reproduction gate
+    (reached_level=4, reproduced=True) AND independently re-verified by the
+    outer loop (5x fresh env.reset() + replay via the registered
+    GameAdapter''s apply(), dict-normalized labels).'
   reproduce: Exp4873 results/experiment_4873_levelup_attempt.json re-gated results/arc_loop_solve_s5i5.json offline_reproduced=True, reached_level=2, banked +1, checksum 608084647e52e0487704cc51ab2ad6f287ac782fb54e152db1ca73f5f4554f11.
   gotchas:
   - next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance.
@@ -1598,6 +1603,30 @@ games:
     EXISTING banked L3 prefix (unaffected by this session''s null) and
     confirmed it still reproduces cleanly (3x fresh env.reset(), all 3
     reached_level=3).'
+  - 'L4 SOLVED round 3 (2026-07-12, gpt-5.6-sol via codex, round-3 breadth
+    campaign): confirms round 2''s exchange-order hypothesis was correct in
+    spirit but the actual fix is different -- rejected the "all shelves
+    rise above the marker" assumption entirely and instead retracted the
+    long inner-left shelf DOWNWARD seven bands while still narrow, passing
+    beside the marker before it widens; parked at rows 45-47 it stays below
+    the marker bar and its later growth clips harmlessly against the fixed
+    UI instead of blocking the central actuator. This removes the apparent
+    eight-grow hard cap entirely: cascade only the OTHER three shelves
+    upward and all eleven marker grows reach the diamond. Won live at
+    action 120 (87-action banked L3 prefix + 33 new L3-continuation/L4
+    actions is NOT the split -- see solver note); fresh-reset reproduce()
+    gate passed on the exact 120-action sequence. Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay via the
+    new resolver branch (dict-normalized labels, same pattern as
+    bp35/re86), all 5 confirmed level=4, state=GameState.NOT_FINISHED.
+    L5 was explored but not won: couples same-color actuators at DIFFERENT
+    locations -- E moves a D marker right while its vertical twin pushes
+    the 9-rail up; C lowers that marker while its twin column creates the
+    rail collision; A separates/recombines a carried D center from an
+    empty diamond socket; the movable 9-column pushes an F block one
+    quantum before it becomes a hard stop. No line was found that
+    simultaneously clears the E/9 and C/9 couplings before the per-level
+    click budget became the limiting risk; frontier stays at level 4.'
   dead_ends:
   - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.'
   - Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.
@@ -3759,7 +3788,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 144
+reproducible_total_levels: 145
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
