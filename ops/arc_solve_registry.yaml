@@ -718,20 +718,31 @@ general_gotchas:
 games:
 - game: r11l
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: click_template_handle_average
   win_condition: >-
     L1 click-to-template placement plus L2 handle-average placement: each
     non-dirwzt roefwu piece must collide with its flkdtg template; pieces with
-    multiple roefwulewcui handles move to the average of handle centers.
+    multiple roefwulewcui handles move to the average of handle centers. L3
+    (2026-07-11, claude-fable-5): two pieces (2 handles and 4 handles) must
+    each reach a dotted template via handle-average positioning; win is
+    template OVERLAP, not exact centering. See gotcha below for the full
+    handle-physics model and the RESET-based recovery discipline.
   action_model: >-
     ACTION6 click-only. Clicking a handle selects it; clicking elsewhere moves
     the selected handle to the click minus half-handle size, and grouped pieces
-    recompute from the average of their handle centers.
-  solver: >-
-    GameAdapter _r11l in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_r11l.json 24-label L2
-    reproduction gate.
+    recompute from the average of their handle centers. L3+: handle moves are
+    radius-8-Euclidean teleports onto open cells (hopping over walls is legal;
+    only the destination is checked).
+  solver: 'L1-L2: GameAdapter _r11l in python/carnot/agentic/arc_game_adapters.py
+    + scripts/arc_loop_solve.py; results/arc_loop_solve_r11l.json 24-label L2
+    reproduction gate. L3: results/outer_loop_fable5_r11l_probe.json
+    action_sequence (82-label full sequence: the same 24-label L1-L2 prefix +
+    58 clicks solving L3, the third of three exploration episodes -- the
+    first two ended in diagnosed, RESET-recovered GAME_OVERs and are NOT
+    included in this clean sequence), claude-fable-5, 2026-07-11. Self-run
+    reproduction gate (reached_level=3, reproduced=True) AND independently
+    re-verified by the outer loop (5x fresh env.reset() + reproduce()).'
   reproduce: >-
     Exp4862 results/experiment_4862_levelup_attempt.json re-gates
     results/arc_loop_solve_r11l.json offline_reproduced=True,
@@ -743,6 +754,34 @@ games:
   - L2 has grouped pieces controlled by multiple handles; moving a handle to the
     template corner is not enough because the piece origin is the average of all
     handle centers.
+  - 'L3 HANDLE-PHYSICS + RESET-RECOVERY mechanic (2026-07-11, claude-fable-5,
+    independently re-verified by the outer loop): the black diamond shown on
+    a handle is just its SELECTION highlight, not a special/locked handle. A
+    handle move is a radius-8-EUCLIDEAN teleport to any open destination cell
+    (hopping over walls in between is legal -- only the destination matters);
+    a move is silently rejected (click consumed, no move) if the destination
+    is >8 away, on a wall, has a footprint clipping a wall/template dot, or
+    lands within Chebyshev distance 2 of ANY other handle (including the
+    other piece''s). After every handle move the piece recomputes to
+    floor(mean(handle centers)) -- if THAT position overlaps wall terrain it
+    is an INSTANT GAME_OVER, so the piece''s trajectory must be planned, not
+    just the handles''. A col-0 stripe is a 64-click per-level budget
+    (selects, rejected clicks, and no-op moves all count) that causes
+    GAME_OVER at zero. GameAction.RESET (not env.reset()) is the safe
+    recovery from BOTH mid-level trouble and GAME_OVER -- it restarts the
+    CURRENT level cleanly (fresh budget, pieces reset, levels_completed
+    preserved); env.reset() after a GAME_OVER leaves a broken state and must
+    not be used for recovery. Wires (color-1 lines linking handles to their
+    piece) occupy and block cells but redraw as things move, so a blocked
+    destination often clears after moving something else first.'
+  - 'L4 (previewed, not attempted this session -- preserved for a future
+    attempt): a much bigger jump -- THREE pieces with 2-3 colors each, six
+    handles total, and multiple color-matched templates (expect a
+    handle-color-to-piece-color assignment problem via wire colors on top of
+    a bigger routing problem). The L3 choreography tooling (an offline
+    simulator, a greedy+noise planner, and a beam-searched endgame) is
+    described in the artifact narrative and should transfer directly to a
+    future L4 attempt.'
   dead_ends:
   - 'Exp4862 first standing-loop attempt with _r11l featurize enabled failed
     before search: the stale models/arc_verifier_r11l.json checkpoint expected
@@ -757,23 +796,32 @@ games:
     verifier_checkpoint: null
 - game: ls20
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 4
   mechanic_class: clean_navigation_shape_color_rotation_step_counter
   win_condition: >-
     L1 first-solve navigation plus L2 clean-nav target match: enter each
     rjlbuycveu target only when the player shape/color/rotation tuple equals
     the paired kvynsvxbpi target tuple. L2 requires rotation index 3 at the
     target and two visible npxgalaybz counter resets before the step counter
-    expires.
+    expires. L3-L4 (2026-07-11, claude-fable-5): the same tuple-match win
+    condition generalizes -- the boxed glyph is both the required-tuple
+    display AND the physical target. See gotcha below for the mechanic set
+    (launcher strips, pinwheel/pad state changers, the step-counter/death/
+    restart economy).
   action_model: >-
     Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right over the
     five-pixel grid. L2 route: reach the rhsxkxzdjz rotation trigger, re-enter
     it until rotation index 3, collect the lower and upper npxgalaybz step
     resets, then enter the target.
-  solver: >-
-    GameAdapter _ls20 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_ls20.json 58-label L2
-    gate.
+  solver: 'L1-L2: GameAdapter _ls20 in python/carnot/agentic/arc_game_adapters.py
+    + scripts/arc_loop_solve.py; results/arc_loop_solve_ls20.json 58-label L2
+    gate. L3-L4: results/outer_loop_fable5_ls20_probe.json action_sequence
+    (244-action full sequence: the same 58-action L1-L2 prefix + 186 actions
+    solving L3 and L4, including one deliberate counter-death-and-restart
+    embedded mid-sequence to learn the restart semantics), claude-fable-5,
+    2026-07-11. Self-run reproduction gate (reached_level=4, reproduced=True)
+    AND independently re-verified by the outer loop (5x fresh env.reset() +
+    reproduce()).'
   reproduce: >-
     Exp4630 results/experiment_4630_levelup_selfplay.json re-gated
     results/arc_loop_solve_ls20.json offline_reproduced=True,
@@ -788,6 +836,25 @@ games:
   - L2 has a 42-step counter with two-step decrement, so the lower and upper
     npxgalaybz reset pickups are load-bearing.
   - The target blocks movement until shape/color/rotation all match.
+  - 'L3-L4 mechanic set (2026-07-11, claude-fable-5, independently re-verified
+    by the outer loop): LAUNCHER STRIPS (1px color-1 bars embedded in wall
+    edges) auto-slide the player to the corridor end the instant the
+    adjacent floor cell is ENTERED (arrival, not a press) -- free, no extra
+    counter cost, and slides do not chain through other pad cells; L4 is
+    built from eight of these forming a one-way expressway maze. PINWHEEL
+    tiles cycle player COLOR one step per entry in a fixed order
+    (C->9->E->8->C), entry direction irrelevant. DOTTED PADS morph the
+    SHAPE/rotation state each entry -- a pure 90-degree-CW rotator on L3, a
+    shape-cycler on L4 (plan exactly one entry from the fresh state to hit
+    the target shape). The bottom-HUD step counter drains per action
+    (level-specific rate: 2/move on L3, 1/move on L4; blocked moves drain
+    too); at 0 the NEXT action restarts the level (fresh counter/rings/
+    color/shape/position) and consumes one of three life tokens (tokens
+    restore on level-up). Genuine B-ring pickups reset the counter to 42 --
+    but a visually similar ring at the bottom of L4 did NOT reset it when
+    stepped on (unknown function; do not assume every ring-shaped object is
+    a real counter reset). L4''s winning line has near-zero counter slack --
+    the final ring must be collected on the LAST approach, not early.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
@@ -804,7 +871,9 @@ games:
     reproducibility_checksum: f1b529084c55d7dc1f7e2e9344bf10ac746a04f1c359db911be1f16f1182af58
 - game: wa30
   reproducibility: reproduced
-  levels_reproduced: 7
+  levels_reproduced: 9
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
     five blocks into five of six bay target slots (player hand-carry PLUS a passive
     color-12 helper-robot NPC that autonomously delivers blocks -- see gotcha below);
@@ -824,12 +893,22 @@ games:
     below). L7: a compressed single-corridor thief level (2 blocks, a stacked
     1-wide/2-tall bay, one thief) solved entirely from the accumulated L2-L6
     toolkit with no new mechanic; win = frame.levels_completed==7 (see gotcha
-    below). L2->L3, L3->L4, L4->L5, L5->L6, and L6->L7 all auto-transition with no
-    reset and no carry-over state between levels (fresh timer, fresh layout) --
-    action sequences concatenate directly for the reproduction gate, though L6''s
-    entry specifically can be contaminated by leftover tail actions from an L5
-    candidate script (see gotcha below; L7''s entry off a clean L6 win was
-    pristine).'
+    below). L8: the "final exam" -- TWO independent-but-interacting zones
+    (north/south), each with its own helper AND its own thief, 13 blocks, decoy
+    pads, two fungible bays; win = frame.levels_completed==8 via the double-kill
+    blueprint (camp each thief''s dump patch, kill it laden, then unopposed
+    3-worker ferrying) -- see gotcha below. L9 (THE FINALE -- completing it fully
+    clears the game): combines a serpentine one-exit maze containing the thief, a
+    fence-socket relay row, a solid wall, three (fungible) bays, nine blocks, and
+    two role-specialized helpers; win = frame.levels_completed==9 AND
+    game_state==GameState.WIN, via a ~44-tick maze free-work window followed by
+    intercepting the post-maze thief on its deterministic big-bay grab-tick (see
+    gotcha below). L2->L3, L3->L4, L4->L5, L5->L6, L6->L7, L7->L8, and L8->L9 all
+    auto-transition with no reset and no carry-over state between levels (fresh
+    timer, fresh layout) -- action sequences concatenate directly for the
+    reproduction gate, though L6''s entry specifically can be contaminated by
+    leftover tail actions from an L5 candidate script (see gotcha below; L7''s,
+    L8''s, and L9''s entries off clean prior wins were all pristine).'
   solver: 'L1: results/experiment_4275 solve_trace.actions. L2: results/outer_loop_fable5_wa30_probe.json
     action_sequence (94-action full sequence: banked 33-action L1 prefix + 61-action
     L2 suffix). L3: results/outer_loop_fable5_wa30_probe_l3.json action_sequence
@@ -858,12 +937,32 @@ games:
     now 7 consecutive identical replays, + a 62-action single-episode L7 suffix,
     no resets, no new mechanic required). Live win observed; agent again did not
     self-run the gate (budget discipline); the outer loop ran it independently --
-    see dead_ends v14 entry below). All six (L2-L7) by claude-fable-5, 2026-07-11.
-    No GameAdapter registered yet -- these are frozen banked trajectories, not a
-    generalized per-game solver; a future GameAdapter encoding the robot-delivery +
-    fence-socket + multi-robot + ferry-relay + thief-dismissal rules (not just
-    these six trajectories) would be needed to reach the live E3AgentPolicy path
-    or to attempt L8+ (bonus recon below).'
+    see dead_ends v14 entry below). L8:
+    results/outer_loop_fable5_wa30_probe_l8_v2.json action_sequence (604-action
+    full sequence: the same 477-action L1-L7 prefix, now 9 consecutive identical
+    replays, + a 127-action single clean episode executing the double-kill
+    blueprint designed by the PRIOR L8 attempt''s honest null -- see dead_ends v16
+    entry below; the first L8 attempt, results/outer_loop_fable5_wa30_probe_l8.json,
+    is preserved as a non-banked honest-null artifact per dead_ends v15). Live win
+    observed; agent again did not self-run the gate (budget discipline); the outer
+    loop ran it independently. L9 (THE FINALE, FULL GAME CLEAR):
+    results/outer_loop_fable5_wa30_probe_l9.json action_sequence (670-action full
+    sequence: the same 604-action L1-L8 prefix, now 10 consecutive identical
+    replays, + a 66-action winning episode -- the third episode of a three-episode
+    arc; episodes 1-2 are preserved in the artifact''s l9_episode_logs for
+    reference). Live win observed with game_state==GameState.WIN; agent again did
+    not self-run the gate (budget discipline); the outer loop ran it
+    independently -- see dead_ends v17 entry below, and additionally confirmed
+    game_state==GameState.WIN directly (not just the level counter) given the
+    magnitude of a full-clear claim. All eight (L2-L9) by claude-fable-5,
+    2026-07-11. No GameAdapter registered yet -- these are frozen banked
+    trajectories, not a generalized per-game solver; wa30 is now a FULL CLEAR
+    (9/9) via this project''s live-agent self-discovery process end-to-end, with
+    every level reproduction-gated -- a future GameAdapter encoding the full
+    mechanic set (robot-delivery, fence-socket, multi-robot, ferry-relay,
+    thief-dismissal, double-kill, maze/grab-tick-intercept) would be needed to
+    reach the live E3AgentPolicy path, but is no longer required for the
+    development-proxy record: the game is solved.'
   gotchas:
   - 'L2 HELPER-ROBOT mechanic (v9, 2026-07-11, claude-fable-5, independently re-verified
     by the outer loop -- see dead_ends v9 entry below): the unexplained 4x4 color-12
@@ -971,6 +1070,56 @@ games:
     delivery -- exploit it as a free dismissal window rather than chasing a moving
     thief. L7''s bay is the first to stack vertically in a single column; ghost-
     east carries along each row place both blocks without any re-siding.'
+  - 'L8 DOUBLE-KILL / TWO-ZONE mechanic (v15 honest-null design + v16 confirmed
+    execution, 2026-07-11, claude-fable-5, gate independently RUN by the outer
+    loop -- see dead_ends v15/v16 entries below): the "final exam" level -- two
+    zones (north/south) joined by two wall-band gaps, EACH zone with its own
+    color-12 HELPER and its own color-15 THIEF, 13 blocks total, decoy pad
+    fields, and two bays. The zones interact: thieves kite stolen blocks
+    cross-zone, and helpers cross zones too late-game, making the two bays
+    FUNGIBLE (any block delivered to either bay counts, not just its own zone''s).
+    LADEN-DISMISSAL IS SAFE: ACTION5 on a thief that is currently carrying a
+    block kills the thief and drops the cargo in place as a normal block
+    (verified on both thieves). Thieves FLEE the player one tile per interleave
+    and can never be caught in open-field pursuit; kills only land by CAMPING
+    each thief''s deterministic dump-patch tiles (same tiles every cycle: south
+    (12,4)/(12,5)/(13,5)/(14,5), north (2,3)/(2,4)/(3,3)/(4,3)) and striking when
+    it walks adjacent on its own patrol, or by bump-pressuring a laden thief into
+    an involuntary cargo-abandon. A zone cannot stabilize while its thief lives
+    (~10-11/13 permanent-placement churn equilibrium with both thieves alive).
+    THE WINNING BLUEPRINT: kill the south thief as early as its patch timing
+    allows (~tick 17-24), kill the north thief next (~tick 35-45), then run
+    unopposed 3-worker (player + both surviving helpers) ferrying to the
+    fungible bays for the remaining ~90 timer ticks -- a first attempt reached
+    11/13 blocks purely because both kills landed too late in the timer, not
+    from any flaw in the delivery logic; a second attempt executing the exact
+    same blueprint with earlier kill timing (ticks 17 and 36) won cleanly in one
+    127-action episode with ~90 ticks to spare. NEVER press ACTION5 while facing
+    a placed bay block -- a real execution risk (5 self-yank incidents in the
+    exploratory first attempt, 0 in the disciplined second attempt that verified
+    facing + faced-tile before every single press).'
+  - 'L9 FINALE mechanic (v17, 2026-07-11, claude-fable-5, gate independently RUN
+    by the outer loop AND game_state==GameState.WIN independently confirmed --
+    see dead_ends v17 entry below): the finale composites the whole series --
+    a serpentine one-exit MAZE (a linear corridor chain) occupying the south
+    half with the thief spawned at its far end, a fence-socket relay row (the
+    L3 mechanic returns), a solid wall, three bays (one large, two small, all
+    fungible), nine blocks, and TWO role-specialized helpers. Three findings:
+    (1) the maze has exactly ONE exit tile; the thief needs ~44 ticks to
+    serpentine out, a large free-work window before it becomes a threat at all
+    -- racing it to the mouth to cork it is a 1-tick coin flip and NOT the
+    reliable play; (2) once out, the POST-MAZE thief ignores loose blocks
+    entirely and BEELINES the large bay -- its first grab-tick there is
+    deterministic and is the highest-probability kill of the level (a laden-
+    or grab-tick dismissal here recovers the block before it ever leaves its
+    slot); (3) one of the two helpers is a FENCE-EXTRACTION SPECIALIST, not a
+    general deliverer: it idles until a block is socketed into the row-3
+    fence, then extracts it from the far side and delivers it to the bay that
+    is otherwise geometrically unreachable directly by the player -- socketing
+    is therefore mandatory routing for that bay, not merely an alternative to
+    hand-delivery. Win condition is BOTH frame.levels_completed==9 AND
+    game_state==GameState.WIN (verified as a matching pair, not just the level
+    counter).'
   - 'L2 mechanic (outer-loop probes v1-v5, 2026-07-11, gpt-5.6-sol via codex): a
     64-cell orange bar is a MOVEMENT timer that depletes on ACTION1-4 (not on ACTION5
     pickup/drop) -- though v9 measured the real drain as ~0.85 cells/action (not
@@ -1252,16 +1401,123 @@ games:
     levels_reproduced change (stays 7) -- this entry exists so a future L8
     attempt starts from the proven blueprint instead of re-mapping the zone
     structure and thief behavior from zero.'
+  - 'v16 (results/outer_loop_fable5_wa30_probe_l8_v2.json, 2026-07-11,
+    claude-fable-5, same agent resumed via SendMessage, instructed to execute
+    v15''s recommended_next_session_plan precisely, budget 800): WON. A single
+    clean 127-action episode with 0 resets and 0 game-overs, executing the exact
+    camp-and-kill-early blueprint v15 designed: south thief killed at tick 17
+    (target window 18-24), north thief killed at tick 36 (target 35-45), both
+    laden-dismissals with cargo surviving in place, then ~90 ticks of unopposed
+    3-worker ferrying (player placed 4, the two helpers placed 9 combined
+    including cross-zone fungible-bay deliveries) -- win fired on the 13th
+    placement. Confirms v15''s diagnosis exactly: the first attempt''s near-miss
+    (11/13) was pure kill-timing, not a flawed delivery plan -- no new mechanic
+    was needed once both thieves died early enough. Also notable: 0 self-yank
+    incidents this run vs. 5 in the exploratory first attempt, from strict
+    verify-facing-before-every-ACTION5 discipline. Live win OBSERVED but the
+    agent again did not self-run the gate (604-step replay would have pushed
+    total usage to 1208 against an 800 budget) -- handed off with
+    reproduction_verified: false per the now 6-times-clean L4-L8 pattern. The
+    outer loop ran the gate independently: extracted the 604-action
+    action_sequence and called arc_solver_kit.reproduce(''wa30'', ...,
+    claimed_level=8) from 5 independent fresh env.reset() calls. All 5 returned
+    reached_level=8, reproduced=True. The 477-action L1-L7 prefix has now
+    replayed identically 9 consecutive times this session. BONUS L9 RECON (v16,
+    0 cost, as-reported/not attempted): L9 is the FINALE -- completing it fully
+    clears wa30. A composite of the whole series: the L3 socket-fence returns, a
+    solid wall column, THREE bays, nine blocks, two helpers, and one thief
+    spawned deep inside a large maze occupying the south half (initially
+    contained by distance). Flagged as needing a substantially larger budget
+    (1000-1200) given the 604-action prefix alone is already heavy.
+    levels_reproduced bumped 7 -> 8.'
+  - 'v17 -- FULL GAME CLEAR (results/outer_loop_fable5_wa30_probe_l9.json,
+    2026-07-11, claude-fable-5, same agent resumed via SendMessage with full
+    L1-L8 context, budget 1200): WON. A three-episode arc (810/1200 budget incl.
+    the 604-action prefix, 10th consecutive identical replay). Episode 1 (recon):
+    an east-side triple-ferry opening accidentally socketed a block into the
+    fence, revealing the NE helper''s fence-extraction role; lost the endgame to
+    the thief''s bay raids at 7/9 placed. Episode 2: deliberate socket-relay
+    opening (5 placed by tick 29), then raced the thief to the maze mouth and
+    lost the cork by ONE tick; ended 6/9. Episode 3 (winning, 66 actions):
+    byte-identical opening through tick 29, then abandoned the mouth-race
+    strategy entirely in favor of the discovered post-maze beeline behavior --
+    shadowed the thief to the big bay and killed it AT ITS FIRST GRAB-TICK
+    (tick 48), before the stolen block ever left its slot. Zero opposition
+    after; the west helper and the player split the final two ferries, 9th
+    placement landed at tick ~66 with 4 timer cells to spare:
+    frame.levels_completed==9, game_state==GameState.WIN. Live win OBSERVED but
+    the agent again did not self-run the gate (670-step replay would have
+    pushed total usage to 1480 against a 1200 budget) -- handed off with
+    reproduction_verified: false per the now 7-times-clean L4-L9 pattern. Given
+    the magnitude of a FULL GAME CLEAR claim, the outer loop verified more
+    rigorously than the routine 5x reproduce() pattern: extracted the 670-action
+    action_sequence and replayed it directly (not just via the reproduce()
+    wrapper) from 5 independent fresh env.reset() calls, checking BOTH
+    frame.levels_completed AND the raw frame.state attribute. All 5 trials
+    returned reached_level=9 AND state=GameState.WIN, corroborating the win on
+    two independent signals, not just the level counter -- then additionally
+    re-confirmed via the standard arc_solver_kit.reproduce(claimed_level=9)
+    wrapper for consistency with every other level''s record. SESSION ARC: wa30
+    entered this project''s corpus registered as a "fully settled dead end" at
+    L1 (8 refuted mechanic-probe attempts by a different model, gpt-5.6-sol via
+    codex, earlier the same day) and leaves it as a FULL 9/9 CLEAR -- every
+    level solved by live-agent self-discovery (no source reading, no state
+    injection), every level independently reproduction-gated by the outer loop
+    before being counted, across 9 distinct mechanics (single-carry, helper
+    robot, fence-socket relay, multi-robot + trap, wall-gap ferry, thief
+    inversion + dismissal, toolkit composition, double-kill blueprint, and
+    maze/grab-tick interception). levels_reproduced bumped 8 -> 9 (FULL CLEAR).'
 - game: s5i5
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: config_toggle_marker_coverage
-  win_condition: 'L1 marker coverage plus L2 dynamic marker-control coverage: discover 0064ocqkuqacti controlled markers, 0087vvmblxkzdi target markers, and pigtralzpb/uricqfoplr control links from the offline env, then click each control edge until every marker reaches an axis-aligned target.'
-  action_model: ACTION6 click-only; GameAdapter _s5i5 derives display click points from the current level's resize controls rather than hardcoding the L1 h_extend/v_extend pair.
-  solver: GameAdapter _s5i5 in python/carnot/agentic/arc_game_adapters.py plus scripts/arc_loop_solve.py --game s5i5.
+  win_condition: 'L1 marker coverage plus L2 dynamic marker-control coverage: discover 0064ocqkuqacti controlled markers, 0087vvmblxkzdi target markers, and pigtralzpb/uricqfoplr control links from the offline env, then click each control edge until every marker reaches an axis-aligned target. L3
+    (2026-07-11, claude-fable-5): a linkage machine of six two-half shrink/grow
+    buttons driving six colored bars with chain-carried cargo; win = two
+    tip-riding markers dock into diamond sockets flanking a fixed central
+    block that refuses sliding structures through it (see gotcha below).'
+  action_model: 'ACTION6 click-only; GameAdapter _s5i5 derives display click points
+    from the current level''s resize controls rather than hardcoding the L1
+    h_extend/v_extend pair. Its apply() accepts the generic
+    {"action":6,"data":{"x":...,"y":...}} JSON label shape -- the OLDER
+    exp4421.apply_s5i5_label lookup-table function (keyed by a fixed label
+    set) does NOT handle raw new click coordinates and should not be used to
+    replay L3+ artifacts.'
+  solver: 'L1-L2: GameAdapter _s5i5 in python/carnot/agentic/arc_game_adapters.py
+    plus scripts/arc_loop_solve.py --game s5i5. L3:
+    results/outer_loop_fable5_s5i5_probe.json action_sequence (87-click full
+    sequence: the same 39-click L1-L2 prefix + 48 L3 clicks), claude-fable-5,
+    2026-07-11. Self-run reproduction gate (reached_level=3, reproduced=True)
+    AND independently re-verified by the outer loop (5x fresh env.reset() +
+    reproduce() via the registered GameAdapter''s apply(), not the older
+    lookup-table function).'
   reproduce: Exp4873 results/experiment_4873_levelup_attempt.json re-gated results/arc_loop_solve_s5i5.json offline_reproduced=True, reached_level=2, banked +1, checksum 608084647e52e0487704cc51ab2ad6f287ac782fb54e152db1ca73f5f4554f11.
   gotchas:
   - next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance.
+  - 'L3 LINKAGE-MACHINE mechanic (2026-07-11, claude-fable-5, independently
+    re-verified by the outer loop): six two-half buttons (left=shrink,
+    right=grow) drive six colored bars, several of which CHAIN-CARRY cargo --
+    a vertical bar carries a horizontal rail on its top, a horizontal bar
+    carries a hanging column at its tip, one bar pushes another assembly
+    sideways, another pushes an assembly up (moving a bar moves its cargo;
+    plan corridor clearance for the CARGO, not just the bar itself). A fixed
+    central block physically REFUSES to let sliding structures pass through
+    it -- this forces a dependency-ordered plan (retract, lift cargo above
+    the block, slide clear, reposition, then extend the two tip-markers into
+    their diamond sockets). The win fires on the exact click that completes
+    coverage.'
+  - 'L4 (explored deeply this session, HONEST NULL, not banked -- preserved
+    for a future attempt, full button map in the artifact): four towers with
+    cantilever shelves that widen as they rise; shelves cannot share a row
+    band, so clearing the lane for a marker box needs a top-down escort
+    cascade. The marker box was walked up 8 bands but its own carrier bar
+    hard-caps 3 bands short of the target socket; there is NO hang/carry
+    transfer (retracting the bar drops the box even while docked under a
+    shelf), and shelves cannot rise high enough to leave room for all 4 in
+    the available bands above the target. The missing final mechanism is
+    genuinely undiscovered -- this is a real gap, not unexplored budget. A
+    per-level click-budget bar (row 63, ~1 cell per 2 clicks) is also real
+    and was nearly exhausted this session.'
   dead_ends:
   - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.'
   - Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.
@@ -1293,18 +1549,49 @@ games:
     reproducibility_checksum: 0b0e0a84b86476ac8666433e7dddb7fe4bf8d7b8c3d102ab1ade076cbee4ee0f
 - game: lp85
   reproducibility: reproduced
-  levels_reproduced: 5
-  win_condition: align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite
-    at (+1,+1) via button rotations.
-  action_model: click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).
-  solver: scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372
+  levels_reproduced: 7
+  win_condition: 'align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite
+    at (+1,+1) via button rotations. L6-L7 add per-sprite hidden IDENTITY state (period-3
+    cycling) on top of the visible click-button mechanic -- identical rendered arrangements
+    can hide different identity states, so frame-only dedup is insufficient -- a directed
+    ternary Gray-code sweep over the identity controls is required to find the L7 win.'
+  action_model: 'click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).
+    L7 requires cycling four independently-controlled sprite identities (period 3 each)
+    via a ternary Gray-code sweep, since two different action histories can render
+    identically while differing in win eligibility.'
+  solver: 'scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372
     extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py.
-  reproduce: Exp4372 per_target_scorecard lp85 offline_reproduced=True, new_reproduced_level=5;
+    L6-L7 solved live by gpt-5.6-sol via codex (2026-07-11) -- L6 replayed from a
+    non-registry provenance candidate tail, L7 found via directed ternary Gray-code
+    sweep over the four identity controls; full 96-click sequence banked in
+    results/outer_loop_codex_lp85_probe.json.'
+  reproduce: 'Exp4372 per_target_scorecard lp85 offline_reproduced=True, new_reproduced_level=5;
     reproduction-gated. Prior results/arc_loop_solve_lp85.json remains the L4 gate.
+    L6-L7 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth campaign): the
+    agent self-ran reproduce() from a fresh reset (reproduction_verified: true in
+    its own artifact) -- the outer loop independently re-verified per project
+    discipline: 5x additional fresh env.reset() + replay via the GameAdapter,
+    all 5 confirmed reached_level=7, state=GameState.NOT_FINISHED (more levels
+    remain -- L8 was explored but not won this session).'
   gotchas:
   - deepcopy-injection WORKS for lp85 (unlike sc25).
   - dedup by goal-relevant key (goal positions), not full grid hash, or the search
     explodes (26k states -> fails).
+  - 'L6-L7 (2026-07-11, gpt-5.6-sol via codex): the action that wins a level
+    immediately renders the NEXT level, so the solved board state is never
+    externally visible -- do not search for a "solved" frame, search for the
+    frame-after-next. The left-edge vertical strip records clicks and changes
+    the frame even when the puzzle arrangement cycles back to a prior visible
+    state; exclude it when comparing visible puzzle states or dedup will
+    undercount. L8 (previewed, not attempted this session): three magenta
+    movable pieces, three magenta-corner sockets, row switches that alter
+    relative piece spacing, and a shared wrapping conveyor that can move a
+    piece OUT of a completed socket rather than locking it in place --
+    simultaneous three-piece alignment, not sequential, is required.'
+  - 'resolve_replay_plan had NO branch at all for lp85 (fell through entirely
+    to the stale L5 SCORECARD_PLAN_SOURCES entry); added a priority branch for
+    levels_reproduced>=7 resolving the correct 96-click full sequence
+    (verified 3x fresh reset -> level=7 through the fixed resolver).'
   dead_ends:
   - 'Exp5026 lp85 no-bank no_grounded_l6_delta: complete_lp85_no_new_level_residual_no_grounded_l6_delta.'
   - 'Exp5040 lp85 no-bank no_grounded_l6_delta: complete_lp85_no_new_level_residual_no_grounded_l6_delta.'
@@ -1350,6 +1637,22 @@ games:
   - live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c)
     = (24+5c,49+5r).
   - spell fire clears the cast pattern; multi-frame fireball animation must resolve.
+  - 'L6 mechanics (2026-07-11, claude-fable-5, honest partial -- NOT banked, see
+    dead_ends entry below): the 9/a 4x4 sprite is the tank-controlled player
+    (its 9-half shows facing); moves are 4px with no separate rotation press.
+    A right-edge ''ee'' bar is a 64-row ENERGY budget draining ~1/action;
+    GameAction.RESET (not env.reset()) recovers cleanly to a fresh L6 with
+    full energy from both mid-level trouble and GAME_OVER, same as r11l. The
+    F-spell toggles the player between 4x4 and 2x2 mini forms (the mini fits
+    2px-wide pipes the full player cannot enter). The B-spell teleports to
+    whichever of three corner pads is currently LIT -- both B and F casts
+    advance which pad is lit, so the destination is state-dependent, not
+    positional. THE KEY MECHANIC: casting a spell while standing ADJACENT to
+    a matching-color box breaks it, dissolving every obstacle elsewhere made
+    of the box''s CONTENT color and spawning a +10 energy pickup in its
+    place (confirmed: a 6-spell adjacent to the 6dd6 box destroyed it and
+    removed the separate ddd wall blocking the east channel). Spells cast
+    away from a matching box fizzle silently, wasting energy.'
   dead_ends:
   - Plain replay-from-reset BFS stalled because it did not treat the cast-grid shrink
     spell as the L1 win-mechanic precursor.
@@ -1361,6 +1664,23 @@ games:
     filled_artifact: results/experiment_4469_generic_cast_grid_fsm_operator.json
     filled_summary: sc25 L1 re-solved through generic cast_grid_phase_fsm_world_model
   - 'Exp4991 sc25 no-bank no_grounded_l6_delta: complete_sc25_no_new_level_residual_no_grounded_l6_delta.'
+  - 'v18 (results/outer_loop_fable5_sc25_probe.json, 2026-07-11, claude-fable-5,
+    honest partial, NOT banked -- levels_reproduced stays 5): the L6 wall that
+    stopped exp4537/exp4549/exp4991 is now cracked mechanically (see the L6
+    gotcha above) -- none of the mechanics were previously known. A VALIDATED
+    42-label sequence (replayed twice, identical) reaches the deepest grounded
+    L6 state achieved so far, starting from the banked L5 prefix: the 6dd6 box
+    broken, the ddd channel-wall dissolved, the first energy pickup collected,
+    and the mini-player positioned with 30 energy remaining. Stopped there
+    (624/700 env steps) rather than risk an unverifiable finish: the L5 prefix
+    replay alone costs ~307 steps (the structural budget bottleneck for this
+    game), leaving too little margin to also reach and verify the projected
+    finish (teleport east, break the symmetric 6cc6 box on the hypothesis that
+    it removes the cccc shaft barrier the same way 6dd6 removed ddd, walk the
+    cleared shaft to the a-filled reservoir, gate the result). Next attempt:
+    the prefix (307) + this validated 42-label line (~100) + the projected
+    finish (~110) fits comfortably in a fresh 700-step session -- this is
+    estimated to be one session from banking L6.'
   mechanic_class: two_phase_cast_grid_then_tank_exit
   latest_exp4468_reproduce:
     artifact: results/experiment_4468_bank_sc25_provisional_levels.json
@@ -1408,17 +1728,33 @@ games:
     reproducibility_checksum: 17fd7df2396eda695bb2b749e9303c6dc4d08fc8f72c26714a2f8565c67d84c7
 - game: cd82
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: palette_region_fill
   win_condition: 'L1 keyboard basket commit plus L2 palette-region fill: canvas
-    sprite xytrjjbyib must match target eoqnvkspoa-* under cd82_goal_mask.'
+    sprite xytrjjbyib must match target eoqnvkspoa-* under cd82_goal_mask. L3-L6
+    (2026-07-11, claude-fable-5, FULL GAME CLEAR): each level composes layered
+    stencil paint-coats over a 10x10 canvas plus a hidden secondary-stamp verb
+    (see gotcha below); L6''s target additionally requires leaving a region
+    UNPAINTED, achieved purely by coat ordering. Win = frame.levels_completed==6
+    AND game_state==GameState.WIN.'
   action_model: Mixed keyboard+click. ACTION1-4 move the basket/selector among
     eight regions; ACTION5 commits a region fill; ACTION6 clicks palette
     pqkenviek colors discovered from live sprite centers; the adapter settles
     animation flags edjesyzxk/yfobpcuef after actions.
-  solver: GameAdapter _cd82 in python/carnot/agentic/arc_game_adapters.py via
-    python/carnot/agentic/arc_cd82_adapter_logic.py + scripts/arc_loop_solve.py;
-    results/arc_loop_solve_cd82.json 20-label L2 gate.
+  solver: 'L1-L2: GameAdapter _cd82 in python/carnot/agentic/arc_game_adapters.py
+    via python/carnot/agentic/arc_cd82_adapter_logic.py + scripts/arc_loop_solve.py;
+    results/arc_loop_solve_cd82.json 20-label L2 gate. L3-L6:
+    results/outer_loop_fable5_cd82_probe.json action_sequence (84-label full
+    sequence: the same 20-label L1-L2 prefix + 64 labels solving L3 through L6 --
+    the FULL REMAINDER of the game -- in one session), claude-fable-5,
+    2026-07-11. Self-run reproduction gate (reached_level=6, reproduced=True)
+    AND independently re-verified by the outer loop -- given the magnitude of a
+    full-clear claim, checked BOTH frame.levels_completed AND the raw frame.state
+    attribute directly (not just the reproduce() wrapper) across 5 independent
+    fresh env.reset() trials: all 5 returned reached_level=6 AND
+    state=GameState.WIN.'
   reproduce: Exp4525 results/experiment_4525_levelup_attempt.json re-gated results/arc_loop_solve_cd82.json
     offline_reproduced=True, reached_level=2, banked +1 over the current L1
     registry row, checksum c895c4d33839b1dcc996e287071fb10f4733aa9e2958d661989ac9c2856a034b. Prior Exp4504 also recorded this L2 before
@@ -1428,27 +1764,62 @@ games:
     hardcoded coordinates drift.
   - Fill predicate is masked by cd82_goal_mask(), not full-canvas equality.
   - Settle animation flags edjesyzxk/yfobpcuef before hashing or verifier checks.
+  - 'L3-L6 STENCIL + HIDDEN-STAMP mechanic (2026-07-11, claude-fable-5,
+    independently re-verified by the outer loop on both level-counter and
+    game_state signals): the floating region selector walks 8 fixed anchor
+    positions around a 10x10 canvas (a 3x3 grid minus center, saturating at
+    edges -- NOT a wrap-around ring), each anchor holding a fixed geometric
+    stencil (N/S/E/W = half-canvas; NE/SW/SE/NW = diagonal-split triangles).
+    ACTION5 floods the current stencil with the selected palette color;
+    last-writer-wins, so targets are composed as layered paint coats. THE KEY
+    HIDDEN MECHANIC (undiscoverable from ACTION1-5 alone, required from L3
+    onward): each of the four edge anchors (N/E/S/W) displays a small notched
+    "handle" box beside its main stencil box; clicking that small box (ACTION6
+    at its own screen coords, distinct from the big stencil box) stamps a
+    SECONDARY small rectangle at a fixed canvas position -- the only way to
+    paint fine detail. Clicking canvas cells directly, or clicking the target
+    picture, both do nothing (confirmed inert). Level transitions lag one
+    frame (the winning stamp does not immediately show the new board), and the
+    terminal WIN frame has ZERO grid layers -- naive frame[-1] indexing crashes
+    on it; the final level required one extra arbitrary action to surface
+    GameState.WIN. The selector and palette both reset to their defaults (N
+    anchor, color F) at every new level. A 64-cell tick-bar timer resets on
+    level-up and never ran out this session (~60 actions/level budgeted safe,
+    but true exhaustion behavior remains unverified).'
   dead_ends:
   - Exp4525 arc_loop_solve --game cd82 --target-level 3 replays to L2 only; the
-    current adapter has no grounded L3 delta.
+    prior adapter had no grounded L3 delta -- retired by the 2026-07-11
+    full-clear session above.
 - game: lf52
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
     five fozwvlovdui pegs and one hupkpseyuim2 carrier on a rail; repeated
     select-handle jumps remove crossed pegs until one remains and next_level
-    fires.
+    fires. L3 (2026-07-11, claude-fable-5): the whole game is revealed to be
+    multi-screen rail-carrier PEG SOLITAIRE with a built-in move oracle (see
+    gotcha below); win = global reduce-to-ONE-peg via a planned multi-jump line
+    across a network of rails and an inverted-U duct linking two screens.
   action_model: >-
     ACTION6 selects a peg or an exposed jump handle. ACTION1-4 move the rail
     carrier so a rail cell becomes a legal landing square. L2 tail:
     select/jump top pegs at (14,16)->(26,16) and (26,16)->(38,16), move the
     carrier along the rail, jump (38,16)->(50,16), rail-carry the remaining peg
-    to the lower row, then jump (38,52)->(50,52).
+    to the lower row, then jump (38,52)->(50,52). L3+: ACTION6 on a peg paints
+    its own legal-landing preview (a built-in move oracle -- see gotcha below);
+    ALL carriers move simultaneously on each ACTION1-4 press, each in whatever
+    direction its own rail allows.
   solver: >-
-    GameAdapter _lf52 in python/carnot/agentic/arc_game_adapters.py plus
+    L1-L2: GameAdapter _lf52 in python/carnot/agentic/arc_game_adapters.py plus
     scripts/arc_loop_solve.py --game lf52 --target-level 2 --no-hazard-prune.
+    L3: results/outer_loop_fable5_lf52_probe.json action_sequence (146-label full
+    sequence: the same 42-label L1-L2 prefix from results/arc_loop_solve_lf52.json
+    + 104 labels of live L3 play, including a stranded-board auto-reset the agent
+    recovered from), claude-fable-5, 2026-07-11. Self-run reproduction gate
+    (reached_level=3, reproduced=True) AND independently re-verified by the outer
+    loop (5x fresh env.reset() + reproduce()) before being counted.
   reproduce: >-
     Exp4690 results/experiment_4690_levelup_selfplay.json re-gated
     results/arc_loop_solve_lf52.json offline_reproduced=True, reached_level=2,
@@ -1459,6 +1830,31 @@ games:
     after a jump, creating legal landing cells that are not static dots.
   - The learned verifier checkpoint routes/ranks future search only; the
     executable offline reproduction gate remains the oracle-distinct authority.
+  - 'L3 MOVE-ORACLE + STRANDING mechanic (2026-07-11, claude-fable-5,
+    independently re-verified by the outer loop): ACTION6 on a peg paints a
+    selection ring plus color-2 markers on every LEGAL landing square -- a peg
+    with no legal moves gives a totally silent click (only the move-counter
+    pixel changes) -- so the game enumerates its own moves; use this as a free
+    move-enumerator before planning. Jumps are 2-cell hops over an adjacent peg
+    (the crossed peg is removed). A peg can jump INTO an aligned carrier socket
+    over a crossed peg, ride it across screens (the camera follows and scrolls
+    -- all click coordinates are VIEW-relative, re-verify positions after any
+    scroll), and jump back out. If no legal moves remain with more than one peg
+    left, all pegs recolor and the level AUTO-RESETS to its start (no timer,
+    unlimited retries) -- but greedy local merges can strand isolated pairs
+    (two pegs separated by one empty socket can never interact unaided), so
+    plan the full reduce-to-one line globally before making the first jump
+    rather than merging greedily.'
+  - 'L4 (partially cracked live this session, not banked -- preserved for a
+    future attempt, action prefix in the artifact''s l4_partial_progress_labels
+    field): introduces TORCHES (color-15 boxes with color-7 cores) -- crossable
+    but indestructible jump obstacles that let a SOLO peg travel by hopping over
+    them (the torch survives), breaking the classic rule that a lone peg is
+    stuck. The entrance-hall torch-hop chain, a carrier relay, and an east-wing
+    vertical torch-ladder cascade merging two pegs into a third carrier were all
+    solved live; a dense central hub (2+ more pegs, a 4th carrier, multi-screen
+    geometry) needs systematic re-mapping in a fresh session -- stopped rather
+    than risk a stranding reset burning the remaining budget.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
@@ -1498,17 +1894,60 @@ games:
     reproducibility_checksum: a988ffc5568e397a431e2637bb40e290f262d42710ae272ea570f0e023caf3bb
 - game: sp80
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 4
   mechanic_class: spill_splitter_placement
-  win_condition: 'L1 move-right x3 then commit; L2 splitter placements route the spill into all three repwkzbkhxl target blocks without touching the wall: len3 at (0,3), len5 at (4,3), len3 at (8,5).'
-  action_model: Keyboard ACTION1-4 move the selected splitter after display-rotation remapping; ACTION6 selects splitter sprites from offline-derived display centers; ACTION5 commits the spill. L2 tail selects the two len3 splitters and moves them to the derived target placements.
-  solver: GameAdapter _sp80 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_sp80.json 33-label L2 gate.
+  win_condition: 'L1 move-right x3 then commit; L2 splitter placements route the spill into all three repwkzbkhxl target blocks without touching the wall: len3 at (0,3), len5 at (4,3), len3 at (8,5). L3-L4 (2026-07-11,
+    claude-fable-5): the same spill-routing physics escalates -- flow direction
+    alternates per level (L3 upward from towers, L4 downward from a ceiling
+    spout), and L4 introduces a bar with an embedded second source. See gotcha
+    below for the full flow-physics model.'
+  action_model: 'Keyboard ACTION1-4 move the selected splitter after display-rotation remapping; ACTION6 selects splitter sprites from offline-derived display centers; ACTION5 commits the spill. L2 tail selects the two len3 splitters and moves them to the derived target placements. L3+: ACTION1-4 move the currently-selected piece (no rotation observed); commits are cheap to
+    retry (the spill animates, drains, and pieces keep their positions on
+    failure) but appear resource-limited via a per-commit border-pixel counter
+    that resets each level.'
+  solver: 'L1-L2: GameAdapter _sp80 in python/carnot/agentic/arc_game_adapters.py
+    + scripts/arc_loop_solve.py; results/arc_loop_solve_sp80.json 33-label L2
+    gate. L3-L4: results/outer_loop_fable5_sp80_probe.json action_sequence
+    (195-action full sequence: the same 33-action L1-L2 prefix + 162 actions
+    solving L3 and L4 in one session), claude-fable-5, 2026-07-11. Self-run
+    reproduction gate (reached_level=4, reproduced=True) AND independently
+    re-verified by the outer loop (5x fresh env.reset() + reproduce(), with
+    each dict-shaped label properly JSON-serialized before replay).'
   reproduce: Exp4535 results/experiment_4535_levelup_attempt.json re-gated results/arc_loop_solve_sp80.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum 747d4797b8e298a6728efeb2bbd71b0ffa8359567c07d453d643e6e4a340743e.
   gotchas:
   - L2 has dojfslwbg=180, so external keyboard directions and click coordinates are display-rotated before the game maps them back to grid space.
   - The win predicate is not just visible piece placement; ACTION5 starts a spill, and success requires every repwkzbkhxl block to be marked while no waoewejnqzc wall is touched.
   - Failed commit states can spend search time in spill animation; use a bounded spill predicate to evaluate candidate placements before replay-gating.
   - Use fresh-env branching for this adapter; replaying L1 on a reused advanced sp80 env does not reconstruct the L2 start state that the reproduction gate sees from a pristine offline arcade.
+  - 'L3-L4 SPILL-ROUTING PHYSICS mechanic (2026-07-11, claude-fable-5,
+    independently re-verified by the outer loop): flow direction alternates
+    per level (L3 towers shoot vines UPWARD; L4 flips to a ceiling spout
+    pouring DOWNWARD; L5 reverts to upward). SPLITTER BARS: a stream hitting
+    a bar runs along its far side to both ends and re-emits 3px branch
+    streams just past each end (streams merge when feeding the same bar).
+    The blue border/ceiling band AND the grey floor are BOTH lethal on
+    contact -- every stream must terminate inside a target; branches pushed
+    off the board EDGE (not into a wall) vanish harmlessly and are the only
+    safe disposal in L3. THE SUBTLE KILLER, vertical clearance: a bar''s
+    run occupies the 3 pixel-rows on its far side, so parking a bar exactly
+    one cell beyond another bar''s face BLOCKS that bar''s run from
+    spreading, silently deleting its branch outputs (cost a failed commit
+    in L4). EMBEDDED SOURCES (new at L4): a long bar can carry its own 3px
+    source segment that drips a stream wherever the bar is moved -- a
+    second, movable spout. Pieces move on per-piece 3px sub-lattices with
+    per-piece positional caps (e.g. L3 bars cannot rise above grid-row 4);
+    measure piece and target positions from the frame programmatically,
+    off-by-one eyeballing wastes commits.'
+  - 'L5 (well-mapped this session, unsolved, not banked -- preserved for a
+    future attempt): both tower vines were routed into all three arch holes
+    with zero strays (verified in the spill animation) and the commit STILL
+    failed -- there is a genuinely undiscovered extra win condition. L5
+    introduces a new selectable L-shaped color-15 piece with an invisible
+    x>=14 movement boundary, and the wall sculpture has a matching
+    side-facing 3px notch the piece cannot currently reach. Candidate next
+    leads: whether the piece must sit somewhere specific, whether a stream
+    must touch the piece, or whether the piece must ride a bar. Game has 6
+    total levels (win_levels=6).'
   dead_ends:
   - Exp4535 arc_loop_solve --game sp80 --target-level 3 replays to L2 only; the current adapter has no grounded L3 splitter-placement delta.
   - 'Exp4925 sp80 no-bank duplicate_depth: complete_sp80_no_new_level_residual_duplicate_depth.'
@@ -1523,15 +1962,54 @@ games:
     reproducibility_checksum: a3d057dcd66e4e3b31e5cb3eaa73f5a45c7c9f8ec6d62dec8d94492660d49648
 - game: su15
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: drag_merge_fruit_target
-  win_condition: 'L1 click-to-connect diagonal plus L2 staged drag/merge: merge eight level-0 fruits into one level-3 fruit and drag its center into the xkstxyqbs target zone centered near (33,27).'
-  action_model: 'ACTION6 click-only; L2 tail uses 14 discovered drag/merge clicks: (40,40),(17,40),(15,56),(48,55),(31,39),(24,39),(39,54),(31,54), (23,54),(16,54),(20,47),(27,40),(33,33),(33,27).'
-  solver: GameAdapter _su15 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_su15.json 21-label L2 gate.
+  win_condition: 'L1 click-to-connect diagonal plus L2 staged drag/merge: merge eight level-0 fruits into one level-3 fruit and drag its center into the xkstxyqbs target zone centered near (33,27). L3 (2026-07-11, claude-fable-5): the same drag/merge physics generalizes, but delivery targets
+    are the big 9-colored round BLOBS on the field, not the top hollow boxes
+    (which are only goal displays) -- see gotcha below for the full physics
+    model.'
+  action_model: 'ACTION6 click-only; L2 tail uses 14 discovered drag/merge clicks: (40,40),(17,40),(15,56),(48,55),(31,39),(24,39),(39,54),(31,54), (23,54),(16,54),(20,47),(27,40),(33,33),(33,27). L3+: ACTION1-5 are confirmed no-ops; all gameplay is ACTION6 clicks that pull nearby fruit
+    toward the click point.'
+  solver: 'L1-L2: GameAdapter _su15 in python/carnot/agentic/arc_game_adapters.py
+    + scripts/arc_loop_solve.py; results/arc_loop_solve_su15.json 21-label L2
+    gate. L3: results/outer_loop_fable5_su15_probe.json action_sequence
+    (39-action full sequence: the same 21-action L1-L2 prefix + 18 clicks
+    solving L3), claude-fable-5, 2026-07-11. Self-run reproduction gate
+    (reached_level=3, reproduced=True) AND independently re-verified by the
+    outer loop (5x fresh env.reset() + reproduce()).'
   reproduce: Exp4546 results/experiment_4546_levelup_attempt.json re-gated results/arc_loop_solve_su15.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum 1b1702434993f3b26f1cf41595267aa8df107e403c5041d2373bd2b8962950fe.
   gotchas:
   - Click radius is 8 and each ACTION6 animates four drag ticks, so L2 requires staged drag/merge clicks; pair-merge clicks alone do not combine distant level-1 pieces.
   - The win predicate counts the center of a level-3 fruit inside xkstxyqbs, not merely creating a level-3 fruit elsewhere.
+  - 'L3 DRAG/MERGE PHYSICS mechanic (2026-07-11, claude-fable-5, independently
+    re-verified by the outer loop): a click pulls every fruit within radius
+    ~8 of the click point toward it (min-8px moves); two same-tier fruits
+    pulled to the same point MERGE into the next tier (mass-doubling,
+    a->6->f->b). DELIVER TO THE BLOBS, NOT THE TOP BOXES: the top hollow
+    boxes are goal displays only; the actual delivery targets are the big
+    9-colored round blobs on the field (partial overlap of a fruit onto its
+    matching-order blob suffices). A RESOURCE METER (row 63, 64px) costs
+    ~1-2 per successful drag but 3-13 (escalating) per FAILED click, with
+    exhaustion causing GAME_OVER; a click fails if it catches two
+    different-tier fruits within its ~9-10.5px interference radius (wider
+    than the ~8px pull radius), or if a diagonal drag would clip a field
+    boundary -- decompose into axis moves near edges. Repeated failures on
+    the same fruit trigger an escalating lockout; never immediately retry a
+    failed click. env.reset() restarts the CURRENT level with a fresh meter
+    (levels_completed persists) -- but critically, after a reset do NOT
+    replay the L1/L2 prefix, the game resumes mid-level and replaying stray
+    clicks scrambles the fresh board.'
+  - 'L4 (attacked across 4 runs, not cracked, honest partial -- preserved for
+    a future attempt, full hunter dossier and a 14-click candidate line in
+    the artifact): introduces a HUNTER sprite that moves ~4px per ANY player
+    click (beelines the current biggest fruit) and degrades it one tier on
+    contact. L4 gives exactly 8 unit-fruits for an 8-unit goal, so ANY
+    hunter contact makes the level unwinnable -- all 4 attempted strategies
+    (sanctuary test -- debunked, blobs are not safe; speed race; bottom-edge
+    caravan; merge-cascade-as-transport) lost 1-3 units to grazing. Untested
+    counters: a completed b-fruit hops 8px/click vs. the hunter''s 4px/click
+    and could outrun it to the blob; body-blocking; an unknown anti-hunter
+    mechanic.'
   dead_ends:
   - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
   - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
@@ -1564,6 +2042,39 @@ games:
     L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter
     sets branch_mode=''fresh_env'' (fresh env per candidate eval) -> L3 reproduces.
     deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25).'
+  - 'L6 mechanics (2026-07-11, claude-fable-5, honest null -- NOT banked, see
+    dead_ends entry below): confirms and extends gotcha #7 -- env.reset() is
+    parity-poisoned; after any death, rebuild with a NEW env via arc.make()
+    and replay the 93-label prefix, never chain resets. Enemies tick once per
+    SUCCESSFUL player move only (ACTION5/ACTION6 and blocked moves do not
+    advance them, though blocked moves still burn the row-63 move meter) --
+    there is no wait-verb. c-colored PATROLLERS move on fixed lines; one
+    (c1) has a period-4 vertical patrol crossing the goal corridor (verified
+    over 16 ticks, zero stalls); another (c2) ghosts through 8-blocks.
+    8-colored CHARGER blocks have an f-pixel fire-direction flag: entering
+    their fire line is an instant kill that also displaces the charger to
+    the impact cell, leaving a passage-sealing remnant; a charger''s exact
+    disarm/trigger rule was not fully pinned down. Co-location with any
+    patroller (including a mover-mover swap) is instant death.'
+  dead_ends:
+  - 'v19 (results/outer_loop_fable5_tu93_probe.json, 2026-07-11, claude-fable-5,
+    honest null, NOT banked -- levels_reproduced stays 5): the richest
+    adversary dossier of the session, delivered as a PROOF the level is
+    currently a genuine two-lock wall, not merely unexplored. Lock 1: the
+    goal corridor''s crossing cell is guarded by c1 (period-4, occupies the
+    cell on every ODD tick); the movement lattice is bipartite, so every
+    possible path arrives at that cell on an odd tick -- breaking this needs
+    a wait-verb, and none exists (ACTION5/ACTION6 are inert, blocked moves
+    do not advance enemies). Lock 2: the only bypass passage sits inside an
+    armed charger''s instant-kill fire line, and its disarm approaches are
+    themselves flanked by a second lethal charger and an unreachable island.
+    Three exploratory deaths (each recovered via the parity-poisoned-reset
+    protocol above) mapped this thoroughly. Three concrete unlock hypotheses
+    are logged in the artifact for a future attempt (most promising:
+    whether entering a charger''s full column from ABOVE, not just its fire
+    line, pre-fires it harmlessly -- one mid-run vacancy is best explained
+    this way). Stopped at 324/700 env steps because the ANALYSIS was
+    exhausted, not the budget.'
   latest_exp4436_reproduce:
     artifact: results/experiment_4436_deepen_plus_primitive_consolidation.json
     offline_reproduced: true
@@ -1594,6 +2105,8 @@ games:
   reproducibility: reproduced
   mechanic_class: program_editor
   levels_reproduced: 7
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   win_condition: 'MATCH a movable object to a target on FIVE attributes simultaneously:
     x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw
     = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation
@@ -1661,6 +2174,17 @@ games:
   - "tn36 is a multi-attribute alignment puzzle (move+scale+rotate+property to match\
     \ a target), far harder than lp85's +1,+1 position-match \u2014 blind graph-explore\
     \ can't drive 5 attributes onto a target."
+  - 'FULL CLEAR CONFIRMED (2026-07-11, gpt-5.6-sol via codex, part of the post-wa30
+    breadth campaign): the already-banked 102-action prefix was never checked
+    against the terminal game state -- replaying it lands on
+    frame.levels_completed==7 AND game_state==GameState.WIN, i.e. tn36 was
+    already fully cleared by the existing banked sequence; this session found
+    no new level to win (levels_reproduced correctly stays 7). Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay, all 5
+    returned reached_level=7 AND state=GameState.WIN. Nine further ACTION6
+    clicks after the WIN frame were tested and confirmed inert (the
+    post-terminal frame reports levels_completed=0/win_levels=0, which is
+    post-game behavior, not a lost solve or a hidden 8th level).'
   dead_ends:
   - 'Exp4980 tn36 no-bank no_grounded_l8_delta: complete_tn36_no_new_level_residual_no_grounded_l8_delta.'
   latest_exp4980_levelup_attempt:
@@ -1675,17 +2199,58 @@ games:
     reproducibility_checksum: 2bb0e6bf3879475ffa98e60970f85ab259b894b69d7c4d4065aa483cf97c2ebb
 - game: cn04
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 5
   mechanic_class: marker_pair_shape_alignment
-  win_condition: 'L1 adapter-free seed plus L2 marker-pair shape alignment: every original 8/13 marker on each visible sprite must overlap exactly one same-colored marker from another visible sprite. L2 positions 0002 at (4,5), 0003 at (8,6), 0004 at (3,3), and 0005 at (12,8) with all rotations normalized to 0.'
-  action_model: ACTION1-4 move the selected visible sprite; ACTION5 rotates a singleton selected sprite or cycles a stacked variant; ACTION6 selects a visible sprite through camera-derived display coordinates.
-  solver: GameAdapter _cn04 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py with branch_mode='fresh_env'; results/arc_loop_solve_cn04.json 43-label L2 gate.
+  win_condition: 'L1 adapter-free seed plus L2 marker-pair shape alignment: every original 8/13 marker on each visible sprite must overlap exactly one same-colored marker from another visible sprite. L2 positions 0002 at (4,5), 0003 at (8,6), 0004 at (3,3), and 0005 at (12,8) with all rotations normalized to 0. L4-L5 (2026-07-11, claude-fable-5): the same marker-pair-coverage win condition escalates from
+    rigid rotation (L4) to variant-shape cycling (L5) -- see gotcha below.'
+  action_model: 'ACTION1-4 move the selected visible sprite; ACTION5 rotates a
+    singleton selected sprite or cycles a stacked variant; ACTION6 selects a
+    visible sprite through camera-derived display coordinates. L4+: ACTION5
+    semantics are PER-SPRITE and PER-LEVEL -- rigid 90-degree rotation on L4,
+    but shape-VARIANT cycling starting at L5 (see gotcha below).'
+  solver: 'L1-L3: GameAdapter _cn04 in python/carnot/agentic/arc_game_adapters.py
+    + scripts/arc_loop_solve.py with branch_mode=''fresh_env''; results/arc_loop_solve_cn04.json
+    43-label L2 gate. L4-L5: results/outer_loop_fable5_cn04_probe.json
+    action_sequence (219-action full sequence: the same 63-action L1-L3 prefix
+    + 156 actions solving L4 and L5 in one session), claude-fable-5,
+    2026-07-11. Self-run reproduction gate (reached_level=5, reproduced=True)
+    AND independently re-verified by the outer loop (5x fresh env.reset() +
+    reproduce()).'
   reproduce: Exp4915 results/experiment_4915_levelup_attempt.json re-gated results/arc_loop_solve_cn04.json offline_reproduced=True, reached_level=3, banked +1, checksum 98a1e05492d2083832b4218271dc72102521b3424be591e5ad286436543af75c.
   gotchas:
   - The win predicate is marker-pair coverage, not full-canvas equality; every same-colored 8/13 marker must be paired exactly twice.
   - ACTION5 can rotate the selected sprite and advance the level on the same action, so count only the offline reproduction gate's reached_level.
   - ACTION6 display coordinates must land on non-transparent rendered sprite pixels after camera.display_to_grid mapping.
   - Use fresh-env branching; reuse-one-env replay can stop at the L1 seed even though the full L1+L2 label sequence reproduces on a fresh offline arcade.
+  - 'L4-L5 SHAPE-VARIANT ESCALATION mechanic (2026-07-11, claude-fable-5,
+    independently re-verified by the outer loop): the core loop is consistent
+    across L4-L6 -- ACTION6-click selects a sprite (revealing its 8-colored
+    3x3 markers; unselected sprites hide markers), ACTION1-4 translate the
+    selection in 3px steps, and the level completes the INSTANT every marker
+    on every sprite coincides with exactly one marker from another sprite
+    (paired markers render green, live feedback -- survey by clicking each
+    sprite before planning). L4: ACTION5 rigidly rotates 90 degrees; solved
+    as vector algebra (a closed 4-cycle of marker-offset vectors). L5 BREAKS
+    the rotation assumption: ACTION5 instead cycles each sprite through a
+    FORM CATALOG (e.g. a snake ping-pongs through lengths 3-7 with a black
+    growth-head marker that vanishes at max length; other sprites include
+    zero-marker EMPTY forms in their cycle). Solve by exhaustively cataloging
+    every sprite''s form catalog empirically (a handful of ACTION5 presses
+    per sprite), then constraint-solving for the unique feasible
+    configuration covering every marker 1:1 -- rigid pairing under a single
+    fixed form is provably infeasible once variant cycling is active. One
+    documented anomaly: a transient ALL-GREEN state did not fire the win
+    once (suspected subtle mis-pairing after an accidental displacement);
+    tearing one sprite away and rebuilding the identical configuration fired
+    the win immediately -- if everything looks paired but nothing fires, try
+    a rebuild before assuming the model is wrong.'
+  - 'L6 (reconned this session, not attempted -- preserved for a future
+    attempt): five sprites with richer growth grammars, including a
+    marker-arm that stretches 3px per press (ping-pong) and a snake that
+    grows 2-to-6 markers along a winding path with a wandering head. Rigid
+    current-form pairing is PROVABLY infeasible; map all five form catalogs
+    first (~25 presses), then re-run the same constraint-solve pattern used
+    for L5 (a generic solver script from this session should transfer).'
   dead_ends:
   - Pre-adapter arc_loop_solve --game cn04 returned needs_per_game_RE; broad graph exploration preserved L1 but did not derive the L2 marker-pair delta.
   - 'Exp5012 cn04 no-bank no_grounded_l4_delta: complete_cn04_no_new_level_residual_no_grounded_l4_delta.'
@@ -1710,14 +2275,74 @@ games:
     reproducibility_checksum: b818a5fd174436b543c9b6663ab33d9cfe15b4435b7358ebbe6728215bc38043
 - game: m0r0
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 4
   mechanic_class: graph_explore
-  win_condition: first-solve L1 adapter-free (E1); L2 deepened by visible two-sprite coalescence predicate over active pikgci sprites while avoiding visible spswjz hazards and wahtyt/xbso blockers.
-  solver: results/arc_explore_trajectory_m0r0.json L1 prefix + GameAdapter _m0r0 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver.solve_level, branch_mode='fresh_env'; results/experiment_4515_deepen_graph_explore_l2.json.
+  win_condition: 'first-solve L1 adapter-free (E1); L2 deepened by visible two-sprite
+    coalescence predicate over active pikgci sprites while avoiding visible spswjz
+    hazards and wahtyt/xbso blockers. L3-L4 (2026-07-11, claude-fable-5): m0r0 is a
+    tandem two-sprite maze with X-mirrored horizontal controls and driveable
+    hazards; win is still coalescence (both sprites on one cell), reached via
+    parking the hazards/guard out of the way and a converge move. See gotcha below
+    for the full mechanic set.'
+  action_model: 'ACTION1/2 move BOTH player sprites together (shared vertical);
+    ACTION3/4 are X-MIRRORED (one sprite moves left while the other moves right,
+    or vice versa -- this is how they desynchronize to reach different cells).
+    ACTION6 on a 9-hazard SELECTS it (freezing the players) and hands ACTION1-4
+    control to the hazard until a player sprite is clicked again.'
+  solver: 'L1-L2: results/arc_explore_trajectory_m0r0.json L1 prefix + GameAdapter
+    _m0r0 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver.solve_level,
+    branch_mode=''fresh_env''; results/experiment_4515_deepen_graph_explore_l2.json
+    (38-label L1-L2 line; note the generic resolver''s 15-label prefix only
+    reaches L1). L3-L4: results/outer_loop_fable5_m0r0_probe.json action_sequence
+    (205-action full sequence: the same 38-action L1-L2 prefix + 167 actions
+    solving L3 and L4 in one session), claude-fable-5, 2026-07-11. Self-run
+    reproduction gate (reached_level=4, reproduced=True) AND independently
+    re-verified by the outer loop -- which first found a REAL BUG in the
+    canonical m0r0_apply (python/carnot/agentic/arc_m0r0_adapter_logic.py): it
+    silently dropped ACTION6''s click data entirely (only ever passed the bare
+    action id), so any click-dependent sequence crashed with KeyError(''x'')
+    through the live adapter path. Root-caused and fixed (data now threaded
+    through via env.step(..., data=parsed.get("data"))); 5x fresh env.reset() +
+    reproduce() then passed cleanly via the corrected adapter.'
   reproduce: Exp4515 offline_reproduced=True, reproduced_levels=2, reached_level=2; checksum e28e4e26efc7b2aac4651f35ca7c191141c4808a7416029ae2870c40d25cb04c.
   gotchas:
   - L2 predicate is visible-state coalescence, not a hidden register; the adapter derives player, hazard, and blocker cells from current_level sprites.
   - Use the prior banked L1 prefix before solving L2; reset L1 includes rotated obstacle state, while the registered deepen target is the already reproduced L1->L2 increment.
+  - 'CRITICAL adapter bug fixed 2026-07-11: m0r0_apply
+    (python/carnot/agentic/arc_m0r0_adapter_logic.py) called
+    env.step(action_id) with NO data argument, unconditionally discarding any
+    {"data": {"x":..., "y":...}} payload on a label -- this module predated the
+    L3/L4 discovery that this game needs ACTION6 clicks at all (its docstring
+    says "graph-explore L1->L2 deepening", i.e. click-free). Any click-dependent
+    action sequence run through the live GameAdapter path (not just this one)
+    would have crashed with KeyError(''x'') deep in the engine. Fixed to pass
+    parsed.get("data") through; this is a genuine live-path fix, not just a
+    registry bookkeeping correction.'
+  - 'L3-L4 mechanics (2026-07-11, claude-fable-5, independently re-verified by
+    the outer loop): TANDEM MIRRORED CONTROLS -- one action moves both player
+    sprites; vertical is shared, horizontal is X-mirrored (one press converges
+    them together, the other diverges them apart) -- desynchronize by pinning
+    one sprite against a safe blocker while the other moves. CLICK-SELECTABLE
+    DRIVEABLE HAZARDS -- ACTION6 on a 9-colored guard selects it (players freeze)
+    and hands ACTION1-4 control to the hazard like a vehicle; L3 requires parking
+    all three guards in dead-end nubs off the only through-routes. ACTIVE GUARD
+    RETURN (L4) -- a parked guard walks back to its post over several actions, so
+    displacement is a timing race, not permanent; the guard''s own body can be
+    used as a movable PIN to block one sprite''s vertical move (this is how the
+    L4 row-alignment trick worked). ELECTRIC FENCES -- the checkered 858585 bands
+    at L4 are not walls; pressing into one instantly resets BOTH sprites to
+    level-start (level continues, not a game-over) -- this destroyed one fully
+    planned sequence before being understood. Movement quantum scales with the
+    level''s sprite art (4px at L3, 5px at L4). The frame view can scroll/shift;
+    model the world from the CURRENT frame every step (closed-loop), not a
+    cached static map -- open-loop execution diverged twice this session.'
+  - 'L5 (scouted this session, unsolved, not banked -- preserved for a future
+    attempt): two rooms with internal wall bands containing large colored slabs
+    (e/c/f) and small matching-color 4x4 blocks; neither slabs nor blocks are
+    click-selectable and ACTION5 is a no-op. Best hypothesis: touching a small
+    block acts as a key that opens its matching-color slab gate. Sprites start
+    at bottom corners with a 4px movement quantum; whether the mirror-control
+    mapping still applies was not verified.'
   dead_ends:
   - 'Exp4905 m0r0 no-bank duplicate_depth: complete_m0r0_no_new_level_residual_duplicate_depth.'
   latest_exp4905_levelup_attempt:
@@ -1760,6 +2385,22 @@ games:
   - 'sk48: L2 tail is banked only through the standing GameAdapter/live-path loop'
   - 'sk48: registry_prechecked:sk48: recently_deepened_or_operator_skip_list'
   - 'Exp4992 sk48 no-bank no_grounded_l3_delta: complete_sk48_no_new_level_residual_no_grounded_l3_delta.'
+  - 'gpt-5.6-sol via codex (2026-07-11, post-wa30 breadth campaign, codex leg):
+    RESOLVER BUG FOUND AND FIXED -- resolve_replay_plan fell through to the
+    stale 14-action arc_explore_trajectory_sk48.json (L1 only) instead of the
+    correct 44-action results/arc_loop_solve_sk48.json (reaches L2); a fresh
+    sk48 branch now resolves the correct source (verified 5x fresh reset ->
+    level=2). On L3 (a pinned-vertical-stack variant of the L1/L2 horizontal
+    chain reorder): a horizontal tether threaded through a colored segment
+    carries every intersected segment into the next free row on a vertical
+    move; fully retracting the tether detaches the carried group so another
+    row can be selected; a small color-B glyph above the stack appears to
+    anchor/stop upward movement. Reached a stable partial 8,C arrangement
+    while separating 9 but did not find a level-3 win within budget (546
+    steps used). ACTION5 and coordinate-click ACTION6 were frame-level no-ops
+    on the glyph, blocks, guide, and reel in all tested locations. No new
+    level banked this session (levels_reproduced stays 2); the resolver fix
+    is the genuine deliverable.'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -1781,18 +2422,33 @@ games:
     reproducibility_checksum: 5cb2f61eac942ca68ceb3bb5c61f30013ffc7349bb237f64b794647ed3594e55
 - game: ar25
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 8
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: reflection_mirror_object_alignment
-  win_condition: 'L1 object reflection plus L2 vertical mirror/object alignment plus L3 horizontal-axis reflection coverage: move the horizontal 0002nuguepuujf axis from y=16 to y=9, place the L-shaped object at (11,14), and place the two-row object at (3,14) so reflections cover every fixed 0001sruqbuvukh target cell.'
-  action_model: 'Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling. L3 tail: ACTION1 x7 moves the selected horizontal axis up, ACTION5 selects the L-shaped object, ACTION4 x7 and ACTION2 x7 place it, ACTION5 selects the two-row object, then ACTION3 x12 and ACTION2 x5 place it.'
-  solver: GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py plus scripts/arc_loop_solve.py --game ar25 --target-level 3 --no-hazard-prune.
-  reproduce: Exp4728 results/experiment_4728_levelup_selfplay.json re-gated results/arc_loop_solve_ar25.json offline_reproduced=True, reached_level=3, banked +1 over the prior L2 registry row, checksum e151b688ff427f35e2db3d547fe09909dc8b5008ac3adf8dbf788ad7bf0c58b3.
+  win_condition: 'L1 object reflection plus L2 vertical mirror/object alignment plus L3 horizontal-axis reflection coverage: move the horizontal 0002nuguepuujf axis from y=16 to y=9, place the L-shaped object at (11,14), and place the two-row object at (3,14) so reflections cover every fixed 0001sruqbuvukh target cell. L4-L8 escalate the same reflection-alignment mechanic: multiple mirror axes (horizontal and vertical) must be positioned simultaneously, and later boards present glyphs that LOOK like one decorative irregular shape but are actually several disconnected, independently-selectable sprites -- each component must be cycled to via ACTION5 and placed into its own same-orientation target orbit around the inferred symmetry axes.'
+  action_model: 'Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling (cycles horizontal mirror, then vertical mirror, then each disconnected movable sprite separately). L3 tail: ACTION1 x7 moves the selected horizontal axis up, ACTION5 selects the L-shaped object, ACTION4 x7 and ACTION2 x7 place it, ACTION5 selects the two-row object, then ACTION3 x12 and ACTION2 x5 place it. L4-L8: decompose each disconnected glyph into its component sprites and place each into its matching target orbit; L5 has a one-column anchor gotcha (large sprite starts at logical column 14, not 15 -- move left 10, not 11). Full 253-action winning sequence in results/outer_loop_codex_ar25_probe.json. ACTION6/ACTION7 are non-load-bearing (ACTION7 pops a hidden undo stack, deliberately excluded).'
+  solver: GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py (apply=_apply_ar25_label) plus scripts/arc_loop_solve.py --game ar25 --target-level 3 --no-hazard-prune for the L1-L3 base; L4-L8 solved live by gpt-5.6-sol via codex (2026-07-11) reading target symmetry and decomposing disconnected sprites, action_sequence banked in results/outer_loop_codex_ar25_probe.json.
+  reproduce: 'Exp4728 results/experiment_4728_levelup_selfplay.json re-gated results/arc_loop_solve_ar25.json offline_reproduced=True, reached_level=3 (L1-L3 base). FULL CLEAR (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth campaign): the agent solved L4-L8 live but reported the 253-action full sequence as an "optimized reconstruction" it had NOT itself gate-verified (reproduction_verified: false in its artifact) -- the outer loop independently ran kit.reproduce(''ar25'', labels, _apply_ar25_label, claimed_level=8) AND 5x additional fresh env.reset()+replay trials before banking; all 6 runs (1 gate + 5 trials) returned reached_level=8 AND state=GameState.WIN. ar25 is now a confirmed full clear.'
   learned_verifier_checkpoint: models/arc_verifier_ar25.json
   gotchas:
   - The L3 axis sprite is selected at level entry; moving it horizontally is ignored by the environment, so ACTION1 x7 is the load-bearing axis delta.
   - The L3 target decomposes into two reflected object masks around y=9; moving only the axis does not win.
   - ACTION7 pops a hidden undo stack and remains excluded from the banked path.
   - The learned verifier checkpoint routes/ranks future search only; the executable offline reproduction gate remains the oracle-distinct authority.
+  - 'FULL CLEAR CONFIRMED (2026-07-11, gpt-5.6-sol via codex): resolve_replay_plan
+    had an unconditional ar25 branch that always returned the stale L1-only
+    plan regardless of levels_reproduced; a priority branch for
+    levels_reproduced>=8 now resolves the correct 253-action full-clear
+    sequence from results/outer_loop_codex_ar25_probe.json (verified 3x fresh
+    reset -> level=8/WIN through the fixed resolver). L5''s large sprite
+    starts at logical column 14 (not 15) -- 10 left-moves wins, 11 leaves the
+    right contour uncovered. After the live level-8 terminal frame, one
+    additional ACTION5 produced an empty frame with levels_completed=0 --
+    that is post-terminal behavior, not a lost solve or a hidden 9th level.
+    The banked 253-action sequence is a reconstruction the source agent did
+    NOT itself gate-verify; the outer loop independently confirmed it (gate +
+    5x fresh replay, 6/6 clean) before recording this as reproduced.'
   dead_ends:
   - 're86: registry_prechecked:bp35: no_grounded_next_level_adapter'
   - 're86: registry_prechecked:lf52: recently_deepened_or_operator_skip_list'
@@ -1844,13 +2500,28 @@ games:
     reproducibility_checksum: 80c3407496706b32fd1eaa057b1da9f5ef8b56c0be32ccc59cf80b08872a5a43
 - game: ka59
   reproducibility: reproduced
-  levels_reproduced: 1
+  levels_reproduced: 4
   win_condition: 'E3 executable-world-model L1: use the selected 3x3 block to push
     the second block through the central wall, place the left block on the left target,
-    then place the pushed block on the right target.'
-  action_model: mixed keyboard+click [4,4,4,3,2,3,3,3,C:1,1,4]; C:1 dynamically clicks
-    the second movable block after the first block is placed.
-  solver: results/experiment_4350_e3_explore_verify_plan_ka59.json + results/arc_e3/ka59/world_model.py
+    then place the pushed block on the right target. L2-L4 (2026-07-11,
+    claude-fable-5): ka59 is a "sokoban-with-ballistics" -- clicking an e-framed
+    block selects it, then pushing it into an adjacent object LAUNCHES that object
+    on a fixed-length flight (the pusher never moves); targets are shape-matched
+    hollow outlines whose interior dimensions equal the object''s outer dimensions;
+    a level completes when every object rests in its matching target. See gotcha
+    below for the three flight-physics rules L2-L4 are built from.'
+  action_model: 'mixed keyboard+click [4,4,4,3,2,3,3,3,C:1,1,4]; C:1 dynamically clicks
+    the second movable block after the first block is placed. L2-L4 extends this with
+    plain ACTION1-5 move/select labels and explicit "6:x:y" ACTION6 coordinate-click
+    labels (frame pixel coords) for selecting e-framed blocks -- see
+    experiment_4460_submission_package_prep.py:resolve_replay_plan''s ka59 branch for
+    the exact apply-function extension needed to replay these.'
+  solver: 'L1: results/experiment_4350_e3_explore_verify_plan_ka59.json + results/arc_e3/ka59/world_model.py.
+    L2-L4: results/outer_loop_fable5_ka59_probe.json action_sequence (201-action full
+    sequence: the same 11-action L1 prefix + 190 actions solving L2, L3, and L4 in one
+    session), claude-fable-5, 2026-07-11, independently re-verified by the outer loop
+    (5x fresh env.reset() + reproduce(), using an apply_fn extended to parse the new
+    "6:x:y" click-label shape the canonical _apply_ka59_label does not recognize).'
   reproduce: arc_solver_kit.reproduce(ka59, ['4', '4', '4', '3', '2', '3', '3', '3',
     'C:1', '1', '4'], Exp4350 apply) reproduced=True L1; checksum 3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06.
   generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ka59
@@ -1866,23 +2537,62 @@ games:
     through the central wall; ordinary movement cannot cross it.
   - Clicks must be derived from the current offline camera/grid offset and movable
     sprite centers, not hardcoded live pixels.
+  - 'L2-L4 FLIGHT-PHYSICS mechanic (2026-07-11, claude-fable-5, independently
+    re-verified by the outer loop): pushing a block launches it on a flight (the
+    pusher stays put), governed by three rules: (1) WALL-EXTENSION -- a flight
+    landing on an illegal (wall/void) tile continues in the same direction until
+    clear, which is the only way to cross a multi-row wall; (2) BACKTRACK-CLAMP --
+    a flight that would exit the arena entirely clamps back to the last legal
+    position instead (L4''s win is DESIGNED around this: a push overshoots past
+    the room ceiling and clamps exactly into the target); (3) CHAIN-SHOVE -- a
+    block sitting in a flight''s landing footprint does NOT stop or extend the
+    flight, it gets displaced instead -- do not rely on blocks as flight-stoppers
+    (this cost the exploring session one failed L4 attempt). Selection only works
+    on e-framed (color 14) blocks; color-11 plus-crosses are pushable but NOT
+    selectable. ACTION5 is a no-op. The step-budget HUD consumes 1 pixel per 2
+    actions (~128 actions/level budget), refilling on level-up.'
+  - 'L5 (scouted this session, unsolved, not banked -- preserved for a future
+    attempt): a genuinely new timing/extraction mechanic -- a vertical channel
+    holds a 6-row two-color (c/d) stack whose color boundary self-cycles one row
+    per ANY action (including sideways moves and clicks, period ~6) -- there is no
+    way to "wait" without advancing the phase. Pushing the stack launches all 6
+    rows with the color composition FROZEN at the strike phase. A 3-cell legend
+    beside a 3x3 target box gives a mod-3 phase readout, presumably specifying the
+    required delivery composition, but the exact win condition was not determined
+    -- remaining session budget could not both crack it and gate-verify it.'
 - game: ft09
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: local_constraint_color_cycle
   win_condition: >-
     L1+L2 local-constraint color-cycle plus L3: every visible bsT 3x3
     predicate is satisfied by setting adjacent Hkx/NTi cells to either match or
     differ from the predicate center color before the move counter expires.
+    L4-L6 (2026-07-11, claude-fable-5, FULL GAME CLEAR, 6 total levels):
+    the same predicate-constraint language generalizes, and L5-L6 add
+    Lights-Out-style flipper cells (see gotcha below). Win =
+    frame.levels_completed==6 AND game_state==GameState.WIN.
   action_model: >-
     ACTION6 click on display coordinates derived from the level camera. The L3
     delta clicks the forced Hkx cells at (28,20), (44,28), (28,36), (44,36),
     (20,44), (20,52), (28,52), (36,52), (20,4), (28,4), (36,4), (20,12),
-    (12,20), and (12,28).
-  solver: >-
-    GameAdapter _ft09 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_ft09.json 25-label L3
-    gate.
+    (12,20), and (12,28). L4-L6: click coordinates are 1:1 display=grid (only
+    L3 used the halving camera); a plain cell click cycles its color one step
+    per the level's legend, a flipper cell click flips itself plus whichever
+    neighbors its internal mark diagrams.
+  solver: 'L1-L3: GameAdapter _ft09 in python/carnot/agentic/arc_game_adapters.py
+    + scripts/arc_loop_solve.py; results/arc_loop_solve_ft09.json 25-label L3
+    gate. L4-L6: results/outer_loop_fable5_ft09_probe.json action_sequence
+    (83-action full sequence: the same 25-action L1-L3 prefix + 58 actions
+    solving L4, L5, and L6 -- the FULL REMAINDER of the game -- in one
+    session), claude-fable-5, 2026-07-11. Self-run reproduction gate
+    (reached_level=6, reproduced=True) AND independently re-verified by the
+    outer loop -- given the magnitude of a full-clear claim, checked BOTH
+    frame.levels_completed AND the raw frame.state attribute across 5
+    independent fresh env.reset() trials: all 5 returned reached_level=6 AND
+    state=GameState.WIN.'
   reproduce: >-
     Exp4642 results/experiment_4642_levelup_selfplay.json re-gated
     results/arc_loop_solve_ft09.json offline_reproduced=True, reached_level=3,
@@ -1897,6 +2607,27 @@ games:
     bsT predicates; using raw grid coordinates leaves most cells unchanged.
   - This is a fallback bank after preferred targets failed bounded attempts, so
     the rotation exception is recorded in the experiment artifact.
+  - 'L4-L6 CONSTRAINT/LIGHTS-OUT mechanic (2026-07-11, claude-fable-5,
+    independently re-verified by the outer loop on both level-counter and
+    game_state signals): PREDICATE cells display a 3x3 ring pattern around
+    their center where each ring position means: black(0) = that neighbor
+    must MATCH the predicate''s center color; ''2'' = must DIFFER; ''3'' = no
+    constraint (out-of-board or another predicate). A top-right legend column
+    lists the level''s color cycle; clicking a plain cell cycles it one step.
+    Starting at L5, FLIPPER cells appear: clicking one flips itself plus
+    whichever neighbors are indicated by small marks drawn INSIDE the cell --
+    the mark positions are a literal diagram of the flip mask (L5: a centered
+    cross = flips all 4 orthogonal neighbors; L6''s finale: every cell is a
+    flipper, but the mark sits top-center = flips self + NORTH only, not the
+    L5 cross -- READ the mark, never assume the previous level''s mask
+    transfers). Flips onto predicate cells or off-board simply vanish
+    (predicates never change). Multi-flipper levels are GF(2) LINEAR SYSTEMS
+    -- solve with Gaussian elimination, not greedy clicking. A wrong
+    flip-model batch is recoverable without a reset: the mismatch pattern
+    between predicted and actual post-click state uniquely identifies the
+    true mask, letting a correct re-solve proceed from the live state (this
+    is exactly how L6 was won, after an initial 11-click batch assumed the
+    wrong mask and produced 9 mismatches).'
   dead_ends:
   - r11l adapter-free L2 bounded search did not bank.
   - g50t adapter-free L2 bounded search exhausted the bounded frontier.
@@ -1916,6 +2647,8 @@ games:
   reproducibility: reproduced
   mechanic_class: config_substitution
   levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   win_condition: 'EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.'
   action_model: 'keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element''s value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).'
   solver: 'GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode=''fresh_env''). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.'
@@ -1928,6 +2661,18 @@ games:
   - 'Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2''s 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.'
   - 'gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent ''wins'' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode=''fresh_env'' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.'
   - hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).
+  - 'FULL CLEAR CONFIRMED (2026-07-11, gpt-5.6-sol via codex, part of the post-wa30
+    breadth campaign): the already-banked 127-action prefix was never checked
+    against the terminal game state -- replaying it lands on a rendered YOU WIN
+    screen with frame.levels_completed==6 AND game_state==GameState.WIN, i.e.
+    tr87 was already fully cleared by the existing banked sequence; this session
+    found no new level to win (levels_reproduced correctly stays 6, still the
+    deepest single-game solve at 6 levels / 5 distinct mechanics). Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay via
+    resolve_replay_plan, all 5 returned reached_level=6 AND state=GameState.WIN.
+    Acting after the WIN screen returns an empty terminal frame with
+    levels_completed displaying as 0 -- post-game behavior, not a lost solve or
+    a hidden 7th level.'
   - 'L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6''s 3+3 rules (~2s, cached per level).'
   - 'PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER''S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter''s exact path (replay the banked solution) when RE-ing a deeper level.'
   generic_glyph_rewrite_reproduce: Exp4456 closed tr87 LOO through glyph_rewrite_rule_verifier without tr87 adapter.
@@ -1960,17 +2705,57 @@ games:
     reproducibility_checksum: 38f84bff53c439eb5a215a982c10bae07493c5b13923e255c02e02e920020462
 - game: vc33
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 4
   mechanic_class: config_support_clearance
-  win_condition: 'L1+L2 support-clearance config: controlled support clicks shift paired wall segments until the active colored piece no longer has a blocking wall aligned with its target-color sprite; the executable ielczunthe predicate then fires next_level on replay.'
-  action_model: ACTION6 click-only on display coordinates derived from the camera transform. L1 clicks lower_click (61,33) three times. L2 clicks the support controls at (1,25) twice and (1,45) five times.
-  solver: GameAdapter _vc33 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_vc33.json 10-label L2 gate.
+  win_condition: 'L1+L2 support-clearance config: controlled support clicks shift paired wall segments until the active colored piece no longer has a blocking wall aligned with its target-color sprite; the executable ielczunthe predicate then fires next_level on replay. L3-L4 (2026-07-11,
+    claude-fable-5): the same mechanic is a FLUID-PUMP puzzle -- pieces float
+    on fluid and win by aligning their bar with a same-colored door segment.
+    See gotcha below for the full physics model.'
+  action_model: 'ACTION6 click-only on display coordinates derived from the camera transform. L1 clicks lower_click (61,33) three times. L2 clicks the support controls at (1,25) twice and (1,45) five times. L3+: clicking a
+    9-pad pump pulls one fixed quantum of fluid toward that side (level-specific
+    size: 2px on L3, 3px on L4/L5); clicking an open transit door crosses
+    adjacent floating pieces.'
+  solver: 'L1-L2: GameAdapter _vc33 in python/carnot/agentic/arc_game_adapters.py
+    + scripts/arc_loop_solve.py; results/arc_loop_solve_vc33.json 10-label L2
+    gate. L3-L4: results/outer_loop_fable5_vc33_probe.json action_sequence
+    (66-action full sequence: the same 10-action L1-L2 prefix + 56 actions
+    solving L3 and L4 in one session), claude-fable-5, 2026-07-11. Self-run
+    reproduction gate (reached_level=4, reproduced=True) AND independently
+    re-verified by the outer loop (5x fresh env.reset() + reproduce()).'
   reproduce: Exp4654 results/experiment_4654_levelup_selfplay.json re-gated results/arc_loop_solve_vc33.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436.
   learned_verifier_checkpoint: models/arc_verifier_vc33.json trained by scripts/arc_loop_solve.py on the vc33 L1+L2 positive steps-to-go trace and the recorded preferred target dead-end notes.
   gotchas:
   - vc33 ACTION6 expects display coordinates; the L2 left-edge support controls at display y=25 and y=45 map to grid y=12 and y=22.
   - 'The L2 delta is not symmetric with L1: only the middle-lower support twice and the bottom support five times reaches the support-clearance predicate.'
   - The learned verifier is a routing/checkpoint artifact only; the executable reproduction gate remains the oracle-distinct authority.
+  - 'L3-L4 FLUID-PUMP mechanic (2026-07-11, claude-fable-5, independently
+    re-verified by the outer loop): black cells are fluid; colored pieces
+    float on the surface with a bar riding the fluid level. 9-5-9 support
+    feet are directional pumps -- clicking one pulls one fixed quantum of
+    fluid toward that side (2px on L3, 3px on L4/L5); a pump refuses
+    silently if the source pocket is empty or the destination pocket is at
+    wall-top capacity. Pieces win by getting their bar to align with a
+    same-colored door segment embedded in a wall (L3: all pieces
+    simultaneously; L4: instant win on the aligning pump click). TRANSIT
+    DOORS (color-1 wall segments) OPEN only when both adjacent pockets''
+    surfaces sit exactly at the sill; clicking an open door crosses every
+    sill-adjacent floating piece through the wall -- if pieces flank the
+    door on both sides, they SWAP simultaneously (exploitable as a
+    maneuver, a hazard if unintended). The top 7-colored row is a
+    WASTED-CLICK budget (only no-op clicks burn it); exhausting it is
+    GAME OVER with levels_completed RESET TO 0, not a level restart --
+    never burn it deliberately.'
+  - 'L5 (heavily analyzed this session, honest null, not banked -- preserved
+    for a future attempt): physics rotates 90 degrees from L1-L4 (gravity
+    rightward, pumps on the right edge -- this retroactively explains why
+    L1/L2''s controls were edge clicks). A ONE-WAY check-valve pump makes
+    the fluid economy directional; proven by unit-conservation (total fluid
+    = 31 quanta, the valve caps the middle pocket at 13) that BOTH nominal
+    bar==door targets are unreachable as stated. The piece-swap door
+    maneuver works mechanically but same-side, opposite-side, and
+    crossed-color door alignments were all tested and none fired the win
+    predicate -- the true L5 win condition remains undiscovered. Do not
+    re-derive the unit-conservation proof; it is preserved in the artifact.'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0 and cn04 standing-loop L3 probes repeated their prior L2 gates.
@@ -1995,9 +2780,51 @@ games:
     reproducibility_checksum: ed33631efac8e242fdca278ede5688eb5ab946c0111af6466f86f8d9c9359bf5
 - game: g50t
   reproducibility: reproduced
-  levels_reproduced: 2
-  solver: GameAdapter _g50t in python/carnot/agentic/arc_game_adapters.py plus scripts/arc_loop_solve.py --game g50t.
-  gotchas: []
+  levels_reproduced: 3
+  win_condition: 'L1-L2: see historical gotchas. L3 (2026-07-11, claude-fable-5):
+    a full clone-commit/rewind puzzle -- ACTION5 commits the current trajectory
+    (rewinding the player to spawn) and the committed ghost replays it one action
+    per subsequent player action, then parks forever at its endpoint; parked
+    ghosts standing on elevator-car call plates hold those plates open. Win = the
+    active player fills the interior of a 7x7 goal ring. See gotcha below for the
+    full mechanic set.'
+  solver: 'L1-L2: GameAdapter _g50t in python/carnot/agentic/arc_game_adapters.py
+    plus scripts/arc_loop_solve.py --game g50t. L3:
+    results/outer_loop_fable5_g50t_probe.json action_sequence (118-action full
+    sequence: the same 48-action L1-L2 prefix + a 70-action three-run L3 solve),
+    claude-fable-5, 2026-07-11. Self-run reproduction gate (reached_level=3,
+    reproduced=True) AND independently re-verified by the outer loop (5x fresh
+    env.reset() + reproduce() via exp4433.apply_g50t_label).'
+  gotchas:
+  - 'L3 CLONE-COMMIT/GHOST mechanic (2026-07-11, claude-fable-5, independently
+    re-verified by the outer loop): ACTION5 commits the player''s trajectory so
+    far, rewinds the live player to level spawn, and the committed ghost
+    (color 2) replays that exact trajectory one action per subsequent player
+    action, then parks at its endpoint FOREVER -- a parked ghost is a permanent
+    wall/plate-holder, not a temporary one. There are 3 total run slots (2
+    commits + the final run); committing an EMPTY trajectory (ACTION5 at spawn
+    with no prior moves) is free and does not consume a slot, but a wasted
+    non-empty commit (e.g. parking a ghost mid-corridor instead of on a needed
+    plate) makes the instance unwinnable with no un-commit available -- only a
+    fresh level restart recovers. Two-position elevator "+"-colored cars on
+    vertical wires block passages at their default dock and slide one quantum
+    open only while a body stands on their call plate, snapping back instantly
+    the moment the plate is released (no transient window) -- L3 needs BOTH
+    non-final run slots spent parking ghosts on plates simultaneously. Ghosts
+    replaying the same corridor as the live run can share nodes with it; pad a
+    committed trajectory with blocked-direction no-op presses to control
+    relative timing so the live runner stays ahead. An x-colored mobile 5x5
+    blocker on a horizontal track is a sliding DOOR (vacates a shaft when
+    approached), not a hazard. The action timer (~128 actions/level) is
+    generous -- a full 3-run solve used only ~71 actions.'
+  - 'CRITICAL harness gotcha: env.reset() on an existing offline-arcade env does
+    NOT fully reset g50t -- a committed ghost and the depleted action timer can
+    leak into the "fresh" game. A genuinely clean instance requires a brand-new
+    env via arc.make(), not just env.reset() on a reused env.'
+  - 'L4 (glimpsed, not attempted this session): adds a horizontal-track car plus
+    two new cage-like ring structures on tracks in a new color. Needs its own
+    multi-run discovery pass plus a longer gate replay; the remaining session
+    budget did not cover both.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
@@ -2048,21 +2875,57 @@ games:
     reproducibility_checksum: a7c1cdc39245f128b86eaeebd2b49377e05647d2551d95af317e0051a5282798
 - game: dc22
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 4
   mechanic_class: config_toggle_navigation
-  win_condition: 'L1+L2 toggle-navigation predicate: keyboard moves jfva through the maze while ACTION6 clicks visible buezna sys_click sprites to toggle same-letter blocker and support sprites; next_level counts only after the offline frame level counter advances.'
-  action_model: Keyboard ACTION1-4 move jfva; ACTION6 click payloads are display coordinates derived from the visible buezna sprite centers. Exp4666 accepts the 93-label standing-loop path from results/arc_loop_solve_dc22.json only through arc_solver_kit.reproduce.
-  solver: GameAdapter _dc22 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_dc22.json L2 gate.
-  reproduce: Exp4666 results/experiment_4666_levelup_selfplay.json re-gated results/arc_loop_solve_dc22.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum ec16d760881f77cc0d6ca85258a579c643c70d18193f57f7a66b55678aaceaf0.
+  win_condition: 'L1+L2 toggle-navigation predicate: keyboard moves jfva through the maze while ACTION6 clicks visible buezna sys_click sprites to toggle same-letter blocker and support sprites; next_level counts only after the offline frame level counter advances. L3: reached by the same banked 132-label sequence
+    (previously unrecorded in this registry''s levels_reproduced count -- see v1 outer-loop entry below). L4: keyboard piece becomes a color-14 2x2 block; the two 6/7 checker tiles are a PORTAL PAIR (stand on one, click the 6-shape button, teleport to the twin) -- the ONLY way to reach the west stack, since shelf-shift shifts (B-button) are right-only/one-way; win = step onto the color-11 B block (see gotcha below).'
+  action_model: Keyboard ACTION1-4 move jfva (2px/step; ACTION1=up,2=down,3=left,4=right); ACTION6 click payloads are display coordinates derived from the visible buezna sprite centers (for L4+, right-panel button centers -- {action:6,x,y} suffices, extra grid/sprite keys in banked labels are ignored by the apply convention).
+  solver: 'GameAdapter _dc22 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_dc22.json L1-L3 gate (132-label). L4:
+    results/outer_loop_fable5_dc22_probe.json action_sequence (212-label full sequence: the same 132-label L1-L3 prefix + an 80-label L4 suffix discovered and reproduction-gated live in a single session by claude-fable-5, 2026-07-11, as part of the post-wa30 breadth campaign). Both independently re-verified by the
+    outer loop (5x fresh env.reset() + reproduce() each) before being counted.'
+  reproduce: Exp4666 results/experiment_4666_levelup_selfplay.json re-gated results/arc_loop_solve_dc22.json offline_reproduced=True, reached_level=3 (self-reported by the artifact; the registry''s levels_reproduced field had never been updated to reflect this -- a genuine staleness gap, not a fabrication, closed 2026-07-11), checksum ec16d760881f77cc0d6ca85258a579c643c70d18193f57f7a66b55678aaceaf0.
   learned_verifier_checkpoint: models/arc_verifier_dc22.json trained by scripts/arc_loop_solve.py on the dc22 L1+L2 positive steps-to-go trace and the recorded off-path/dead-end evidence.
   gotchas:
   - dc22 was on the operator skip list for rotation discipline; Exp4666 records this as a fallback_exception because it was the only available standing-loop artifact with offline_reproduced=true and a verifier checkpoint ahead of the registry.
   - The learned verifier is a routing/checkpoint artifact only; the executable reproduction gate remains the oracle-distinct authority.
+  - 'L4 PORTAL-PAIR mechanic (2026-07-11, claude-fable-5, independently re-verified
+    by the outer loop): the west stack (zone2 -> shelf2 -> bottom bar -> B goal)
+    is unreachable by walking (shelf shifts are right-only with wraparound, a
+    one-way topology). The fix is a teleport verb: standing on either 6/7
+    checker tile and clicking the right-panel 6-shape button (display (52,19))
+    teleports the piece to the twin checker. The B-shape button (46,28) shifts
+    both 1/12-colored shelves right by 2 (refused as a no-op if the standing
+    piece would lose support). The 2-square button (56,28) runs a multi-stage,
+    monotonic material exchange between two bars -- fully opening one fully
+    walls the other, so bar-usage order must be planned ahead. A row-63 tick
+    counter fills across some actions (64-cap, resets per level); never hit
+    the cap this session, unknown consequence if it does.'
+  - 'L5 (scouted this session, unsolved, not banked -- preserved for a future
+    attempt): a 9-button (52,41) transfers solidity between two dithered
+    color-9 bridge regions (east/west stacks); a second dither pair uses
+    color-15/F; a right AA99 button (49,29) rotates a color-8 piece inside a
+    black void; a left AA99 button (44,29) and an 8-button (52,35) no-op''d in
+    the probed state (likely condition-gated); portal checkers and a B goal
+    reappear. A full L5 solve plus its 280+-step gate did not fit the
+    500-step session budget.'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
   - lp85, tr87, and tn36 reproduced only prior-or-lower registry depths during this milestone's bounded probes.
   - 'Exp4894 dc22 no-bank duplicate_depth: complete_dc22_no_new_level_residual_duplicate_depth.'
+  - '2026-07-11 outer-loop breadth campaign (claude-fable-5, post-wa30): found the
+    registry''s levels_reproduced=2 was STALE -- the already-banked
+    results/arc_loop_solve_dc22.json (same exp4666 artifact cited above) actually
+    self-reports reached_level=3/offline_reproduced=true, and had for some time;
+    this simply was never reflected in the registry''s levels_reproduced field.
+    Independently re-verified the 132-label prefix reaches L3 (3/3 fresh
+    env.reset() + reproduce() trials via GameAdapter _dc22), then verified the
+    NEW 212-label L4 candidate (5/5 trials). levels_reproduced corrected+bumped
+    2 -> 4 in one step (+1 stale-correction, +1 genuine new level). Also fixed
+    experiment_4460_submission_package_prep.py:resolve_replay_plan, which had no
+    branch for dc22 (a GameAdapter-backed game) and so silently could not be
+    spot-checked by arc_count_integrity_lint.py -- added a dc22 branch mirroring
+    the existing tu93 special case.'
   latest_exp4666_levelup_selfplay:
     artifact: results/experiment_4666_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_dc22.json
@@ -2083,22 +2946,38 @@ games:
     reproducibility_checksum: 0144dae3ea506ee4cde0088fd7861286e2400a6345f535debd78f6c3b788c3b8
 - game: sb26
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 8
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: color_match_slot_sequence
   win_condition: >-
     L1 flat ordered color-to-slot match plus L2 nested-frame color-match
     sequence: root frame consumes colors 12 and 15, a pre-placed vgszefyyyp
     branch descends to the lower frame for 8, 9, 14, and 11, then the root tail
-    consumes 6 before ACTION5 validates and next_level fires.
+    consumes 6 before ACTION5 validates and next_level fires. L3-L8 (2026-07-11,
+    claude-fable-5, FULL GAME CLEAR, 8 total levels): the same DFS-consumption
+    grammar generalizes and escalates every level -- see gotcha below for the
+    full mechanic set, culminating in L8's mutual-recursion finale. Win =
+    frame.levels_completed==8 AND game_state==GameState.WIN.
   action_model: >-
     ACTION6 item click then ACTION6 slot click; ACTION5 validates. L2 tail uses
     display-center clicks derived from the offline environment source:
     (32,59)->(23,23), (18,59)->(29,23), (11,59)->(23,37),
     (46,59)->(29,37), (25,59)->(35,37), (53,59)->(41,37),
-    (39,59)->(41,23), then validate.
-  solver: >-
-    GameAdapter _sb26 in python/carnot/agentic/arc_game_adapters.py plus
-    scripts/arc_loop_solve.py --game sb26 --target-level 2 --no-hazard-prune.
+    (39,59)->(41,23), then validate. L3+: placed items are re-selectable --
+    clicking a placed item then an OCCUPIED slot swaps the two items (no reset
+    needed to fix mistakes); a wrong ACTION5 validation is penalty-free.
+  solver: 'L1-L2: GameAdapter _sb26 in python/carnot/agentic/arc_game_adapters.py
+    plus scripts/arc_loop_solve.py --game sb26 --target-level 2
+    --no-hazard-prune. L3-L8: results/outer_loop_fable5_sb26_probe.json
+    action_sequence (136-action full sequence: the same 24-action L1-L2 prefix
+    + 112 actions solving L3 through L8 -- the FULL REMAINDER of the game --
+    in one session), claude-fable-5, 2026-07-11. Self-run reproduction gate
+    (reached_level=8, reproduced=True) AND independently re-verified by the
+    outer loop -- given the magnitude of a full-clear claim, checked BOTH
+    frame.levels_completed AND the raw frame.state attribute across 5
+    independent fresh env.reset() trials: all 5 returned reached_level=8 AND
+    state=GameState.WIN.'
   reproduce: >-
     Exp4678 results/experiment_4678_levelup_selfplay.json re-gated
     results/arc_loop_solve_sb26.json offline_reproduced=True, reached_level=2,
@@ -2109,6 +2988,28 @@ games:
     through it and only counts the real lngftsryyw item slots in DFS order.
   - The learned verifier checkpoint routes/ranks future search only; the
     executable offline reproduction gate remains the oracle-distinct authority.
+  - 'L3-L8 DFS-CONSUMPTION grammar (2026-07-11, claude-fable-5, independently
+    re-verified by the outer loop on both level-counter and game_state
+    signals): the top legend row(s) give a color SEQUENCE that ACTION5
+    validation consumes via a depth-first walk of nested frames. SOLID tray
+    tiles are consumable colors; HOLLOW tray tiles are branch/descent markers.
+    A placed SOLID item visibly turns HOLLOW if its color matches an existing
+    subframe -- that is how you learn it became a branch connective rather
+    than a consumed color (an L4 surprise). Pre-placed solid items already
+    sitting inside subframes DO count in the DFS sequence at their position;
+    pre-placed hollow items are branch connectives only. THE PUZZLE KEY: a
+    mismatch between slot count and legend length means some subframe is
+    visited more than once (multiple branch items pointing at the same
+    subframe, or -- at the finale -- mutual recursion with the root itself).
+    Escalations: L5 has two branch items to the SAME subframe (consumed
+    twice); L6 has three parallel subframes each with a pre-placed in-sequence
+    item; L7 chains root->subframe->subframe to depth 3; L8 (the finale) adds
+    a branch of the ROOT ITSELF inside a child frame, creating an
+    infinite-periodic mutually-recursive traversal stream, satisfied by a
+    two-row 12-entry legend matching its first 12 elements. Click coordinates
+    must always come from the CURRENT frame render -- tray item positions
+    shift between levels, and stale coordinates silently miss (clicks on
+    empty tray gaps are harmless no-ops, which can mask the miss).'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
@@ -2149,20 +3050,38 @@ games:
     reproducibility_checksum: bdae6a8349846c9a4aa7eb2367ad8eaf94d80e565064cb4b8f4a48bb81ea7daa
 - game: re86
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 5
   mechanic_class: pattern_match_sprite_resize
   win_condition: >-
     L1 sprite-overlay pattern match plus L2 verifier-derived post-L1 overlay
     resize/move sequence. The generic sprite_overlay_resize_verifier runs on
-    the offline post-L1 state and derives the second target mask tail.
+    the offline post-L1 state and derives the second target mask tail. L3-L5
+    (2026-07-11, claude-fable-5): the game is a select/move/paint
+    piece-placement constraint puzzle -- every 3x3 ring target must have its
+    center covered by a piece stroke of the ring's OWN color, all
+    simultaneously. See gotcha below for the full mechanic set (paint swatches,
+    hidden occluded targets).
   action_model: >-
     Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right, ACTION5
     cycles the active overlay source. L2 tail moves the active source downward
     and left, cycles, positions the next source upward/left, cycles again, then
-    moves the final source down/left to cover the L2 target pixels.
+    moves the final source down/left to cover the L2 target pixels. L3+: the
+    single black pixel embedded in the active piece is the selection cursor;
+    ACTION5 cycles which piece is selected, ACTION1-4 move it in exactly
+    3-pixel steps (targets must land on the piece anchor's mod-3 lattice). No
+    coordinate clicks in this game.
   solver: >-
-    GameAdapter _re86 in python/carnot/agentic/arc_game_adapters.py plus
+    L1-L2: GameAdapter _re86 in python/carnot/agentic/arc_game_adapters.py plus
     scripts/arc_loop_solve.py --game re86 --target-level 2 --no-hazard-prune.
+    L3-L5: results/outer_loop_fable5_re86_probe.json action_sequence
+    (276-action full sequence: the same 56-action L1-L2 prefix + 220 actions
+    solving L3, L4, and L5 in one session), claude-fable-5, 2026-07-11. Agent
+    self-ran the reproduction gate on the 185-action L1-L4 prefix
+    (reached_level=4, reproduced=True) but handed off the full 276-action L5
+    win as live-observed-not-self-gated (budget). The outer loop independently
+    re-verified BOTH: 5x fresh env.reset() + reproduce() on the 185-action L4
+    prefix, and separately 5x on the full 276-action L5 sequence -- all 10
+    trials passed at their respective claimed levels.
   reproduce: >-
     Exp4702 results/experiment_4702_levelup_selfplay.json re-gated
     results/arc_loop_solve_re86.json offline_reproduced=True, reached_level=2,
@@ -2173,6 +3092,28 @@ games:
     verifier only at reset repeats L1 and does not expose the L2 target mask.
   - The learned verifier checkpoint routes/ranks future search only; the
     executable offline reproduction gate remains the oracle-distinct authority.
+  - 'L3-L5 PIECE-PLACEMENT + HIDDEN-TARGET mechanic (2026-07-11, claude-fable-5,
+    independently re-verified by the outer loop): the single black pixel
+    embedded in a piece is its selection cursor (mid-stroke for lines/plus/X,
+    the exact center for diamonds). Win requires every 3x3 ring target''s
+    center pixel to be covered by a piece stroke of the ring''s OWN color,
+    ALL simultaneously -- the win fires instantly on the final placement.
+    PAINT SWATCHES (new at L4): framed 4x4 color boxes at the board edges
+    repaint a piece to the swatch''s color the instant ANY pixel of it touches
+    the fill, including accidentally in transit -- route planning must avoid
+    wrong-colored swatches (one accidental clip cost a 22-action detour this
+    session). HIDDEN TARGETS (new at L5): ring targets can start a level
+    OCCLUDED under a piece''s own spawn position -- the level looks
+    unsatisfiable until pieces are moved off their spawns and target detection
+    is re-run; solve the final placement as a small constraint system
+    (Manhattan-distance-r to each target) rather than trial-and-error. Ring
+    centers are pre-colored with their required color as a preview, but that
+    alone is not proof of coverage -- check stroke-adjacent pixels too.'
+  - 'L6 (previewed for free this session, not attempted -- preserved for a
+    future attempt): 8 rings (four 9-colored, four 11-colored in a rectangle)
+    plus color-1 objects that are a genuinely NEW element not seen in L1-L5
+    (possibly obstacles or a new piece type) -- needs its own investigation
+    before attempting a solve.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter
   - lf52: recently_deepened_or_operator_skip_list
@@ -2202,19 +3143,34 @@ games:
     reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
 - game: bp35
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 4
   mechanic_class: goal_directed_navigation_local_obstacle_clear
   win_condition: >-
     L1 goal-directed upward-gravity navigation plus L2 same-row blocker clears,
     shelf transfers, and a final support clear above the color-14 goal tile.
+    L3-L4 (2026-07-11, claude-fable-5): bp35 is revealed to be a 9-level
+    vertical-tower gravity puzzle. L3 wins by walking into a color-7 goal
+    diamond via a toggle-block staircase + door ascent; L4 wins by a 4-switch
+    gravity-routing chain ending with the player falling UP into a floating
+    diamond. See gotcha below for the five core mechanics (gravity switches,
+    goal diamonds, toggle blocks, pillar hazards, E-tile doors).
   action_model: >-
     ACTION3/ACTION4 move horizontally; ACTION6 clicks camera-relative blockers.
     The L2 delta clears same-row blockers before lateral moves, avoids spike
     support columns, traverses the right-hand bypass, then clears the blocker at
-    grid (5,9) to fall into the goal.
+    grid (5,9) to fall into the goal. L3+: all ACTION6 clicks are camera-relative
+    display coordinates and the camera RE-CENTERS after any vertical movement --
+    never reuse a click coordinate computed before a fall/rise.
   solver: >-
-    GameAdapter _bp35 in python/carnot/agentic/arc_game_adapters.py plus
+    L1-L2: GameAdapter _bp35 in python/carnot/agentic/arc_game_adapters.py plus
     scripts/arc_loop_solve.py --game bp35 --target-level 2 --no-hazard-prune.
+    L3-L4: results/outer_loop_fable5_bp35_probe.json action_sequence (121-action
+    full sequence: the same 57-action L1-L2 prefix + 64 actions solving L3 and
+    L4 in one session), claude-fable-5, 2026-07-11. Self-run reproduction gate
+    (reached_level=4, reproduced=True) AND independently re-verified by the
+    outer loop (5x fresh env.reset() + reproduce(), via the registered
+    GameAdapter with each dict-shaped label properly JSON-serialized before
+    replay).
   reproduce: >-
     Exp4714 results/experiment_4714_levelup_selfplay.json re-gated
     results/arc_loop_solve_bp35.json offline_reproduced=True, reached_level=2,
@@ -2228,6 +3184,34 @@ games:
     grounded.
   - The learned verifier checkpoint routes/ranks future search only; the
     executable offline reproduction gate remains the oracle-distinct authority.
+  - 'L3-L4 core mechanics (2026-07-11, claude-fable-5, independently re-verified
+    by the outer loop): bp35 has 9 total levels (win_levels=9). GRAVITY SWITCHES
+    (color-8 framed blocks, often buried inside solid wall -- clicking any
+    unexplained glyph paid off again here) flip GLOBAL gravity and are ONE-SHOT
+    (consumed on use, the cell becomes air); levels budget a limited number of
+    flips, so plan the full switch sequence before triggering any. GOAL DIAMONDS
+    (small color-7 sprites) complete the level on touch, even mid-fall. TOGGLE
+    BLOCKS (color-12 5x5) flip solid<->open (open renders as a 3x3 color-12 X)
+    on every click at any range -- open is safely passable, solid is a walkable
+    ceiling/shelf, useful for walking safely under pillar traps. PILLARS
+    (color-15 with a B0B eye pair at one end) kill on contact with the eye end
+    only (the eye faces away from the anchor wall); the anchor end and sides are
+    inert. E-TILE DOORS (color-14) are one-shot and reveal a shaft of UNKNOWN
+    depth -- some are real passages, at least one was a 1-tile sealed pocket
+    that permanently soft-locks the level (only env.reset() recovers). Door-open
+    click semantics are not fully understood: an identical-looking click opened
+    a door in one run and silently failed (door stayed shut, action consumed)
+    in another -- prefer opening doors from beside them and re-verify the door
+    actually opened before walking onto it.'
+  - 'L5 (mapped this session, unsolved, not banked -- preserved for a future
+    attempt): a wider multi-screen tower with chained E-door descents. Every
+    currently-known descent branch dead-ends: one door hides a 1-tile sealed
+    soft-lock pocket, and the bottom trap pair has upward-facing pillar eyes
+    directly beneath BOTH doors (opening either kills). The second gravity
+    switch needed to route back up to the diamond chamber (behind a
+    pillar-guarded 3x2 E block in a top-left chamber) was never found.
+    Candidate unexplored leads: a sealed X-room chamber, the col-2 shaft
+    bottom, and whether pocket floors are hidden E caps openable from inside.'
   dead_ends:
   - bp35: registry_prechecked:GAP-4480-BP35-GOAL-DIRECTED-NAVIGATION
   - bp35: prior no-grounded-next-level-adapter dead-end retired by grounded L2 tail
@@ -2251,7 +3235,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 75
+reproducible_total_levels: 122
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

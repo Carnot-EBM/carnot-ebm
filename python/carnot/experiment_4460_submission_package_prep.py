@@ -57,32 +57,23 @@ FIELD_PRINCIPLES = {
     },
     "total_reproduced_levels_in_package": {
         "principle": (
-            "bare int: env-match-validated reproduced levels in the package "
-            "(target >> 13)"
+            "bare int: env-match-validated reproduced levels in the package (target >> 13)"
         )
     },
     "prior_submitted_baseline_levels": {
         "principle": "bare int = 13; the baseline the package must beat"
     },
-    "beats_prior_baseline": {
-        "principle": "bare bool: total_reproduced_levels_in_package > 13"
-    },
+    "beats_prior_baseline": {"principle": "bare bool: total_reproduced_levels_in_package > 13"},
     "per_game_replay_validation": {
         "principle": (
             "list of {game, replays_ok, reproduced_levels, env_matched} -- the "
             "audit trail; quarantined games excluded from the count"
         )
     },
-    "submitted_to_leaderboard": {
-        "principle": "bare bool MUST be false -- the task never submits"
-    },
-    "verifier_is_oracle": {
-        "principle": "true: execution-grounded reproduction re-validation"
-    },
+    "submitted_to_leaderboard": {"principle": "bare bool MUST be false -- the task never submits"},
+    "verifier_is_oracle": {"principle": "true: execution-grounded reproduction re-validation"},
     "random_seed": {"principle": "determinism"},
-    "reproducibility_checksum": {
-        "principle": "content hash of the package manifest"
-    },
+    "reproducibility_checksum": {"principle": "content hash of the package manifest"},
 }
 
 ReproduceEntryFn = Callable[[Mapping[str, Any], Path], Mapping[str, Any]]
@@ -108,7 +99,11 @@ def _sha256(value: Any) -> str:
 
 
 def _checksum_is_hex(value: Any) -> bool:
-    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(ch in "0123456789abcdef" for ch in value)
+    )
 
 
 def _duration(started_at: float, ended_at: float) -> float:
@@ -155,9 +150,13 @@ def load_registry(root: Path = REPO_ROOT) -> dict[str, Any]:
     return loaded if isinstance(loaded, dict) else {"games": []}
 
 
-def precondition_probe(root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - import boundary
+def precondition_probe(
+    root: Path = REPO_ROOT,
+) -> dict[str, Any]:  # pragma: no cover - import boundary
     env_dir = root / "environment_files"
-    offline_env_files_present = env_dir.is_dir() and any(path.is_dir() for path in env_dir.iterdir())
+    offline_env_files_present = env_dir.is_dir() and any(
+        path.is_dir() for path in env_dir.iterdir()
+    )
     try:
         import carnot.agentic.arc_solver_kit  # noqa: F401
 
@@ -227,23 +226,60 @@ def _scorecard_plan(root: Path, rel_path: str, row_key: str, game: str) -> list[
     rows = artifact.get(row_key)
     if isinstance(rows, list):
         for row in rows:
-            if isinstance(row, Mapping) and row.get("game") == game and isinstance(row.get("plan"), list):
+            if (
+                isinstance(row, Mapping)
+                and row.get("game") == game
+                and isinstance(row.get("plan"), list)
+            ):
                 return [str(label) for label in row["plan"]]
     return []
 
 
-def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> ReplayPlan:  # pragma: no cover
+def resolve_replay_plan(
+    entry: Mapping[str, Any], root: Path = REPO_ROOT
+) -> ReplayPlan:  # pragma: no cover
     """SCENARIO-REPORT-4460: find the banked labels and apply function for one game."""
 
     game = str(entry.get("game") or "")
+    if game == "s5i5" and _as_int(entry.get("levels_reproduced")) >= 3:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_s5i5_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("s5i5 adapter missing")
+        # The artifact stores labels as dicts; the adapter's apply() expects a
+        # JSON-STRING label (json.loads(label)), so str(dict) would produce
+        # Python-repr syntax, not valid JSON (same gotcha as bp35/re86).
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "s5i5":
         from carnot import experiment_4421_config_rule_solve_unseen as exp4421
 
         artifact = _load_json(root / exp4421.RESULT_RELATIVE_PATH)
         labels = artifact.get("solver", {}).get("solution") or exp4421.derive_s5i5_l1_path()
-        return ReplayPlan(game, [str(label) for label in labels], exp4421.RESULT_RELATIVE_PATH, exp4421.apply_s5i5_label)
+        return ReplayPlan(
+            game,
+            [str(label) for label in labels],
+            exp4421.RESULT_RELATIVE_PATH,
+            exp4421.apply_s5i5_label,
+        )
     if game == "sc25":
-        from carnot.experiment_4341_e3_sc25_reproduction import L1_SOLUTION_LABELS, _apply_sc25_label
+        from carnot.experiment_4341_e3_sc25_reproduction import (
+            L1_SOLUTION_LABELS,
+            _apply_sc25_label,
+        )
 
         return ReplayPlan(
             game,
@@ -252,8 +288,23 @@ def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> Rep
             _apply_sc25_label,
             warmup_label="warmup",
         )
+    if game == "ar25" and _as_int(entry.get("levels_reproduced")) >= 8:
+        from carnot.experiment_4339_e3_explore_verify_plan_ar25 import _apply_ar25_label
+
+        rel_path = "results/outer_loop_codex_ar25_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            _apply_ar25_label,
+        )
     if game == "ar25":
-        from carnot.experiment_4339_e3_explore_verify_plan_ar25 import L1_SOLUTION_LABELS, _apply_ar25_label
+        from carnot.experiment_4339_e3_explore_verify_plan_ar25 import (
+            L1_SOLUTION_LABELS,
+            _apply_ar25_label,
+        )
 
         return ReplayPlan(
             game,
@@ -261,8 +312,32 @@ def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> Rep
             "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
             _apply_ar25_label,
         )
+    if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 4:
+        from arcengine import GameAction
+        from carnot.agentic.arc_agi3_live_adapter import _game_action
+        from carnot.experiment_4340_e3_explore_verify_plan_ka59 import _label_to_action_data
+
+        rel_path = "results/outer_loop_fable5_ka59_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+
+        def _apply_ka59_extended_label(env: Any, label: str, _frame: Any) -> Any:
+            # The outer-loop L2-L4 exploration introduced a "6:x:y" coordinate-click
+            # label shape that the original _label_to_action_data (which only knows
+            # plain ints and the "C:" dynamic-click prefix) does not parse.
+            if label.startswith("6:"):
+                _, x_str, y_str = label.split(":")
+                action, data = 6, {"x": int(x_str), "y": int(y_str)}
+            else:
+                action, data = _label_to_action_data(env, label)
+            return env.step(_game_action(GameAction, action), data=data)
+
+        return ReplayPlan(game, labels, rel_path, _apply_ka59_extended_label)
     if game == "ka59":
-        from carnot.experiment_4350_e3_explore_verify_plan_ka59 import L1_SOLUTION_LABELS, _apply_ka59_label
+        from carnot.experiment_4350_e3_explore_verify_plan_ka59 import (
+            L1_SOLUTION_LABELS,
+            _apply_ka59_label,
+        )
 
         return ReplayPlan(
             game,
@@ -270,6 +345,13 @@ def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> Rep
             "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py",
             _apply_ka59_label,
         )
+    if game == "g50t" and _as_int(entry.get("levels_reproduced")) >= 3:
+        from carnot import experiment_4433_example_conditioned_win_induction as exp4433
+
+        rel_path = "results/outer_loop_fable5_g50t_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        return ReplayPlan(game, labels, rel_path, exp4433.apply_g50t_label)
     if game == "g50t":
         from carnot import experiment_4433_example_conditioned_win_induction as exp4433
 
@@ -278,6 +360,22 @@ def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> Rep
             [str(label) for label in exp4433.G50T_L1_SOLUTION],
             "results/experiment_4443_bank_g50t_example_conditioned_win.json",
             exp4433.apply_g50t_label,
+        )
+    if game == "vc33" and _as_int(entry.get("levels_reproduced")) >= 4:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_vc33_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("vc33 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
         )
     if game == "vc33":
         from carnot import experiment_4446_drive_generic_first_contact_bank as exp4446
@@ -304,6 +402,268 @@ def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> Rep
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "lp85" and _as_int(entry.get("levels_reproduced")) >= 7:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_lp85_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("lp85 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "sk48" and _as_int(entry.get("levels_reproduced")) >= 2:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/arc_loop_solve_sk48.json"
+        artifact = _load_json(root / rel_path)
+        labels = artifact.get("solution_labels") or [
+            str(label) for label in artifact.get("solution") or []
+        ]
+        if adapter is None:
+            raise RuntimeError("sk48 adapter missing")
+        return ReplayPlan(
+            game,
+            [str(label) for label in labels],
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "dc22" and _as_int(entry.get("levels_reproduced")) >= 4:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_dc22_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("dc22 adapter missing")
+        return ReplayPlan(
+            game,
+            [str(label) for label in labels],
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "lf52" and _as_int(entry.get("levels_reproduced")) >= 3:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_lf52_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("lf52 adapter missing")
+        return ReplayPlan(
+            game,
+            [str(label) for label in labels],
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "bp35" and _as_int(entry.get("levels_reproduced")) >= 4:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_bp35_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("bp35 adapter missing")
+        # The artifact stores labels as dicts (e.g. {"action": 4}); the adapter's
+        # apply() expects a JSON-STRING label (it does json.loads(str(label))),
+        # so str(dict) would produce Python-repr syntax, not valid JSON.
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "m0r0" and _as_int(entry.get("levels_reproduced")) >= 3:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_m0r0_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("m0r0 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "cd82" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_cd82_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("cd82 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "cn04" and _as_int(entry.get("levels_reproduced")) >= 5:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_cn04_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("cn04 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "ft09" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_ft09_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("ft09 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "sp80" and _as_int(entry.get("levels_reproduced")) >= 4:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_sp80_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("sp80 adapter missing")
+        # The artifact stores labels as dicts; the adapter's apply() expects a
+        # JSON-STRING label (same gotcha as bp35/re86/s5i5).
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "r11l" and _as_int(entry.get("levels_reproduced")) >= 3:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_r11l_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("r11l adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "su15" and _as_int(entry.get("levels_reproduced")) >= 3:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_su15_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("su15 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "ls20" and _as_int(entry.get("levels_reproduced")) >= 4:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_ls20_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("ls20 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "sb26" and _as_int(entry.get("levels_reproduced")) >= 8:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_sb26_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("sb26 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "re86" and _as_int(entry.get("levels_reproduced")) >= 5:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_re86_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("re86 adapter missing")
+        # The artifact stores labels as dicts (e.g. {"action": 4}); the adapter's
+        # apply() expects a JSON-STRING label, so str(dict) would produce
+        # Python-repr syntax, not valid JSON (same gotcha as bp35).
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
 
     from carnot import experiment_4426_arc_registry_repro_audit as audit
 
@@ -311,7 +671,9 @@ def resolve_replay_plan(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> Rep
     return ReplayPlan(game, [str(label) for label in labels], source, audit._generic_apply_label)
 
 
-def reproduce_registry_entry(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover
+def reproduce_registry_entry(
+    entry: Mapping[str, Any], root: Path = REPO_ROOT
+) -> dict[str, Any]:  # pragma: no cover
     from carnot.agentic import arc_solver_kit
 
     game = str(entry.get("game") or "")
@@ -436,7 +798,9 @@ def _package_manifest(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]
     return manifest
 
 
-def _operator_checklist(*, total: int, baseline: int, manifest: Sequence[Mapping[str, Any]]) -> list[str]:
+def _operator_checklist(
+    *, total: int, baseline: int, manifest: Sequence[Mapping[str, Any]]
+) -> list[str]:
     return [
         "Review this JSON artifact and the package_manifest rows before submitting.",
         f"Confirm total_reproduced_levels_in_package={total} is greater than prior baseline {baseline}.",
@@ -456,7 +820,9 @@ def compute_reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
     return _sha256(
         {
             "package_manifest": artifact.get("package_manifest", []),
-            "total_reproduced_levels_in_package": artifact.get("total_reproduced_levels_in_package"),
+            "total_reproduced_levels_in_package": artifact.get(
+                "total_reproduced_levels_in_package"
+            ),
             "prior_submitted_baseline_levels": artifact.get("prior_submitted_baseline_levels"),
             "submitted_to_leaderboard": artifact.get("submitted_to_leaderboard"),
             "random_seed": artifact.get("random_seed"),
@@ -532,7 +898,9 @@ def build_artifact(
         "per_game_replay_validation": [dict(row) for row in validation_rows],
         "package_manifest": manifest,
         "quarantined_games": quarantined,
-        "operator_checklist": _operator_checklist(total=total, baseline=baseline, manifest=manifest),
+        "operator_checklist": _operator_checklist(
+            total=total, baseline=baseline, manifest=manifest
+        ),
         "operator_note_path": OPERATOR_NOTE_RELATIVE_PATH,
         "submitted_to_leaderboard": False,
         "verifier_is_oracle": True,
@@ -555,7 +923,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
             errors.append(f"missing {field}")
     if not _terminal_prefixed(artifact.get("honest_verdict")):
         errors.append("honest_verdict must be terminal-prefixed")
-    if not isinstance(artifact.get("inference_substrate"), str) or not artifact.get("inference_substrate"):
+    if not isinstance(artifact.get("inference_substrate"), str) or not artifact.get(
+        "inference_substrate"
+    ):
         errors.append("inference_substrate must be non-empty string")
     if type(artifact.get("submission_package_ready")) is not bool:
         errors.append("submission_package_ready must be bare bool")
@@ -589,14 +959,20 @@ def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
         raise ValueError("; ".join(errors))
     path = root / RESULT_RELATIVE_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
+    )
     return path
 
 
 def write_operator_note(root: Path, artifact: Mapping[str, Any]) -> Path:
     path = root / OPERATOR_NOTE_RELATIVE_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
-    manifest = artifact.get("package_manifest") if isinstance(artifact.get("package_manifest"), list) else []
+    manifest = (
+        artifact.get("package_manifest")
+        if isinstance(artifact.get("package_manifest"), list)
+        else []
+    )
     lines = [
         "# ARC-AGI-3 Operator Submission Package Prep (Exp 4460)",
         "",

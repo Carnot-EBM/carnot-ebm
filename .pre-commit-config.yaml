@@ -91,10 +91,27 @@ repos:
         #   default behaviour is to error on each. We don't gain much from
         #   stub-installing every transitive — strict typing inside our
         #   own modules is what matters.
-        # --explicit-package-bases: avoids "Source file found twice" when
-        #   mypy walks both `python/carnot/` (the package source) and any
-        #   accidentally-discovered alternate import path.
-        entry: .venv/bin/mypy --ignore-missing-imports --explicit-package-bases python/carnot
+        # --explicit-package-bases + cwd=python/, target=carnot: running
+        #   from the repo root with target `python/carnot` made mypy treat
+        #   BOTH the repo root (cwd, implicit base under
+        #   explicit-package-bases with no mypy_path set) AND `python/`
+        #   (the real package root, matching the editable-install .pth)
+        #   as valid package bases for the SAME files, so every file
+        #   resolved to two conflicting module names
+        #   ("python.carnot.foo" vs "carnot.foo") and mypy aborted with
+        #   "Source file found twice" on whichever file its directory walk
+        #   happened to hit first — non-deterministic and, in practice,
+        #   ALWAYS before it ever reached real project code. Adding
+        #   mypy_path=python does not fix this (it only adds a second
+        #   candidate base on top of the cwd-implicit one, shifting which
+        #   file wins the race instead of removing the ambiguity).
+        #   Running with cwd=python/ so `carnot` is the only base mypy can
+        #   infer removes the ambiguity outright. Fixed 2026-07-11 — see
+        #   pyproject.toml's [tool.mypy] python_version comment for the
+        #   sibling fix (this bug was also masking a python_version=3.11
+        #   vs installed-3.12-numpy-stub mismatch that only surfaced once
+        #   this crash was cleared).
+        entry: bash -c 'cd python && ../.venv/bin/mypy --ignore-missing-imports --explicit-package-bases carnot'
         language: system
         types: [python]
         pass_filenames: false

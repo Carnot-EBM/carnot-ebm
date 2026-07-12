@@ -40,7 +40,9 @@ RESULT_RELATIVE_PATH = "results/experiment_5251_token_guard_carnot_pilot_v480.js
 SPEC_REFS = ("REQ-VERIFY-5251", "SCENARIO-VERIFY-5251")
 RANDOM_SEED = 5251
 INFERENCE_SUBSTRATE = "live_llm_inference_local_gguf_sota"
-DEFAULT_LLAMA_COMPLETION = Path("/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion")
+DEFAULT_LLAMA_COMPLETION = Path(
+    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion"
+)
 MANDATED_HEADLINE_MODELS = (
     "unsloth/Qwen3.6-35B-A3B-GGUF",
     "unsloth/gemma-4-31B-it-GGUF",
@@ -265,8 +267,18 @@ class LlamaCompletionRunner:
             stderr = proc.stderr
             returncode = int(proc.returncode)
         except subprocess.TimeoutExpired as exc:
-            stdout = str(exc.stdout or "")
-            stderr = f"{exc.stderr or ''}\ntimeout_s={self.timeout_s}"
+            exc_stdout = (
+                exc.stdout.decode("utf-8", errors="replace")
+                if isinstance(exc.stdout, bytes)
+                else exc.stdout
+            )
+            exc_stderr = (
+                exc.stderr.decode("utf-8", errors="replace")
+                if isinstance(exc.stderr, bytes)
+                else exc.stderr
+            )
+            stdout = exc_stdout or ""
+            stderr = f"{exc_stderr or ''}\ntimeout_s={self.timeout_s}"
             returncode = -124
         duration = time.monotonic() - started
         raw = f"{stdout}\n{stderr}"
@@ -451,9 +463,7 @@ def check_final_answer(fixture: PilotFixture, response: str) -> FinalCheck:
     unsupported_nums = unsupported_numbers_for(fixture.prompt, response)
     finals = final_numbers(response)
     accuracy = bool(finals) and any(
-        close_number(answer, expected)
-        for answer in finals
-        for expected in fixture.expected_numbers
+        close_number(answer, expected) for answer in finals for expected in fixture.expected_numbers
     )
     answer_mismatch = 0 if accuracy else 1
     unsupported_count = len(unsupported_semantic) + len(unsupported_nums)
@@ -494,7 +504,9 @@ def repair_fragment_prompt(fixture: PilotFixture, rejected: str, reasons: Sequen
 
 
 def gated_final_prompt(fixture: PilotFixture, accepted_fragments: Sequence[str]) -> str:
-    context = "\n".join(f"- {fragment}" for fragment in accepted_fragments) or "- no fragment accepted"
+    context = (
+        "\n".join(f"- {fragment}" for fragment in accepted_fragments) or "- no fragment accepted"
+    )
     return (
         "Solve the problem using only the accepted fragments and the original problem. "
         "End with 'FINAL: <number>'.\n\n"
@@ -514,7 +526,10 @@ def run_fixture_pair(
     baseline_check = check_final_answer(fixture, baseline_receipt.text)
 
     first_fragment = generator.generate(
-        fragment_prompt(fixture), max_tokens=128, seed=seed + 1, tag=f"{fixture.fixture_id}:fragment0"
+        fragment_prompt(fixture),
+        max_tokens=128,
+        seed=seed + 1,
+        tag=f"{fixture.fixture_id}:fragment0",
     )
     first_gate = score_fragment(fixture, first_fragment.text, prior_fragments=[])
     regeneration_count = 0
@@ -619,7 +634,10 @@ def build_blocked_artifact(
             "value": "blocked_precondition: do not headline; fix local CUDA GGUF runtime before retesting",
             "principle": FIELD_PRINCIPLES["consumer_recommendation"],
         },
-        "accuracy_change": {"value": 0.0, "principle": "Blocked runs have no measured accuracy delta."},
+        "accuracy_change": {
+            "value": 0.0,
+            "principle": "Blocked runs have no measured accuracy delta.",
+        },
         "rows": [],
     }
     artifact["schema_errors"] = artifact_schema_errors(artifact)
@@ -637,8 +655,12 @@ def build_complete_artifact(
 ) -> JsonDict:
     baseline_unsupported = sum(row["baseline"]["check"]["unsupported_claim_count"] for row in rows)
     gated_unsupported = sum(row["gated"]["final_check"]["unsupported_claim_count"] for row in rows)
-    baseline_violations = sum(row["baseline"]["check"]["deterministic_violation_count"] for row in rows)
-    gated_violations = sum(row["gated"]["final_check"]["deterministic_violation_count"] for row in rows)
+    baseline_violations = sum(
+        row["baseline"]["check"]["deterministic_violation_count"] for row in rows
+    )
+    gated_violations = sum(
+        row["gated"]["final_check"]["deterministic_violation_count"] for row in rows
+    )
     baseline_accuracy = sum(1 for row in rows if row["baseline"]["check"]["accuracy"]) / len(rows)
     gated_accuracy = sum(1 for row in rows if row["gated"]["final_check"]["accuracy"]) / len(rows)
     regeneration_count = sum(row["gated"]["regeneration_count"] for row in rows)
@@ -650,7 +672,9 @@ def build_complete_artifact(
     harmful = unsupported_delta > 0 or violation_delta > 0 or accuracy_change < 0
     if helped:
         verdict_tail = "fragment self-checking helped on this bounded panel"
-        recommendation = "keep_as_pilot: fragment gate reduced unsupported claims without accuracy loss"
+        recommendation = (
+            "keep_as_pilot: fragment gate reduced unsupported claims without accuracy loss"
+        )
     elif harmful:
         verdict_tail = "fragment self-checking was harmful on this bounded panel"
         recommendation = "redesign_or_retire: fragment gate worsened at least one primary metric"
@@ -673,9 +697,8 @@ def build_complete_artifact(
         "headline_model": selected_model.get("hf_id"),
         "model_name": selected_model.get("name"),
         "model_path": selected_model.get("model_path"),
-        "quantization": selected_model.get("quantization") or infer_quantization(
-            str(selected_model.get("model_path") or "")
-        ),
+        "quantization": selected_model.get("quantization")
+        or infer_quantization(str(selected_model.get("model_path") or "")),
         "runtime_command": list(preconditions.runtime_command),
         "seed": RANDOM_SEED,
         "prompt_checksums": prompt_checksums,
@@ -691,7 +714,10 @@ def build_complete_artifact(
         "duration_s": round(float(duration_s), 6),
         "random_seed": RANDOM_SEED,
         "preconditions_checked": preconditions.checks,
-        "honest_verdict": {"value": f"complete: {verdict_tail}", "principle": FIELD_PRINCIPLES["honest_verdict"]},
+        "honest_verdict": {
+            "value": f"complete: {verdict_tail}",
+            "principle": FIELD_PRINCIPLES["honest_verdict"],
+        },
         "inference_substrate": wrapped(INFERENCE_SUBSTRATE, "inference_substrate"),
         "model_specs": wrapped(model_value, "model_specs"),
         "retired_phase_d_path_reopened": wrapped(False, "retired_phase_d_path_reopened"),
@@ -758,7 +784,10 @@ def select_headline_model(specs: Sequence[JsonDict]) -> JsonDict | None:
     for preferred in ("unsloth/gemma-4-26B-A4B-it-GGUF", "unsloth/Qwen3.6-35B-A3B-GGUF"):
         for spec in specs:
             if spec.get("hf_id") == preferred:
-                return {**spec, "quantization": infer_quantization(str(spec.get("model_path") or ""))}
+                return {
+                    **spec,
+                    "quantization": infer_quantization(str(spec.get("model_path") or "")),
+                }
     return None
 
 
@@ -876,7 +905,11 @@ def run_pilot(
 
 def main() -> None:  # pragma: no cover - exercised by live artifact command.
     artifact = run_pilot(write=True)
-    print(json.dumps({"result_path": RESULT_RELATIVE_PATH, "honest_verdict": artifact["honest_verdict"]}))
+    print(
+        json.dumps(
+            {"result_path": RESULT_RELATIVE_PATH, "honest_verdict": artifact["honest_verdict"]}
+        )
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entrypoint.

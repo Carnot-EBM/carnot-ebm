@@ -819,6 +819,7 @@ def _operation_expr(operation: str, x: Any, z3: Any) -> Any:
         return x + 2
     if op == "abs":
         return z3.If(x >= 0, x, -x)
+    raise ValueError(f"unsupported operation: {operation}")
 
 
 def _eval_operation(operation: str, x_value: int) -> int:
@@ -831,6 +832,7 @@ def _eval_operation(operation: str, x_value: int) -> int:
         return x_value + 2
     if op == "abs":
         return abs(x_value)
+    raise ValueError(f"unsupported operation: {operation}")
 
 
 def _canonical_operation(text: str) -> str:

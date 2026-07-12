@@ -192,7 +192,12 @@ class Phase4Sampler(SamplerBackend):
             {"beta": float(beta), "n_steps": int(n_steps)},
         )
 
-    def sample(
+    def sample(  # type: ignore[override]
+        # Deliberately dual-mode: dispatches to the SamplerBackend
+        # (biases, couplings, n_samples, config) protocol call when args/
+        # "config" are present, else to latent-chain sampling below. A
+        # duck-typed polymorphic signature the SamplerBackend ABC can't
+        # express without @overload; not a real interface violation.
         self,
         energy_fn: Any,
         init_state: Any = None,
