@@ -892,7 +892,9 @@ games:
     verifier_checkpoint: null
 - game: ls20
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 7
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: clean_navigation_shape_color_rotation_step_counter
   win_condition: >-
     L1 first-solve navigation plus L2 clean-nav target match: enter each
@@ -1084,6 +1086,33 @@ games:
     the outer loop independently verified regardless: 5x fresh
     env.reset() + replay via a new resolver priority branch, all 5
     confirmed level=6, state=GameState.NOT_FINISHED.'
+  - 'L7 SOLVED, FULL GAME CLEAR, round 9 (2026-07-12, gpt-5.6-sol via
+    codex, results/outer_loop_codex55_ls20_probe_round9_20260712.json):
+    first attempt at fresh L7 territory, and it turned out to be the
+    final level. L7 introduces FOG OF WAR (distant targets/controls/
+    rings/geometry are not simultaneously visible, requiring compact
+    state dumps while moving) around a single target at (29,50)
+    requiring internal tuple (shape=0,color=3,rotation=2). The 42-unit
+    counter now drains by 2 per attempted movement (not 1), including
+    BLOCKED wall moves. Six reset rings were mapped (five used live).
+    Three directional pusher/launcher objects partition the maze into
+    otherwise-disconnected regions: an upper pusher carries the player
+    DOWN into an isolated right corridor, a vertical pusher ejects the
+    player UPWARD, and a lower horizontal pusher returns the player
+    LEFT -- these are forced one-way transports, not tuple controls.
+    Rotation is set by synchronizing with a moving pinwheel at x=54
+    (following it upward on two consecutive valid moves advanced
+    rotation 0->1->2); color and shape use static controls entered
+    multiple times modulo their cycle length (shape needed five entries
+    mod 6, color three entries mod 4). Won live: navigated the fogged
+    maze via the pusher network, synchronized rotation, cycled color
+    and shape to the target tuple, and entered the sole target --
+    levels_completed advanced to 7 with GameState.WIN at action 672.
+    The source agent''s own reproduction_verified is honestly false
+    (budget ran out after the win), but the outer loop independently
+    re-verified regardless: 5x fresh env.reset() + replay via a new
+    resolver priority branch, all 5 confirmed level=7,
+    state=GameState.WIN. ls20 is fully solved.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
@@ -5238,7 +5267,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 169
+reproducible_total_levels: 170
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
