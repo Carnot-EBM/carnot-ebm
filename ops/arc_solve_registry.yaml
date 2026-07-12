@@ -914,6 +914,27 @@ games:
     replayable fresh state (ended at level 0 despite replaying the exact
     244-action prefix) -- same class of gotcha as the general_gotchas
     fresh-env warning, worth re-emphasizing here. No new level banked.'
+  - 'L5 progress round 3 (2026-07-12, gpt-5.6-sol via codex, round-3 breadth
+    campaign, on a RELAUNCH after the first attempt burned ~19 of its 40
+    minutes on an unrelated REPL block-format stall before real exploration
+    even started, then timed out with no artifact -- this fresh 50-minute
+    session, with no memory of the stall, replayed the 244-action prefix
+    cleanly). Still HONEST NULL, frontier stays at level 4 -- but CONFIRMS
+    round 2''s exact diagnosis: found a 62-action route consuming all three
+    counter rings in a viable order, cycling color C->9->E->8, entering the
+    lower tuple-control pad, and reaching the target -- but the one- and
+    two-entry lower-pad orientations were both rejected live. The failure
+    matches round 2''s prediction precisely: "a separate upper black-dot
+    tile must select the six-cell target SHAPE before lower-pad
+    ORIENTATION" -- this candidate omitted the upper selector step
+    entirely, only driving the lower orientation tile. A fresh reproduce()
+    gate on the full 308-action candidate deterministically reached level
+    4 (not 5), confirming the omission rather than a flaky replay. Also
+    independently reconfirmed: the counter drains 2 of 42 units per
+    keypress, movement is 5-pixel cells, and all three B-rings reset the
+    counter when approached in the viable direction. Next attempt: insert
+    an upper black-dot tile visit (shape selection) BEFORE the lower-pad
+    orientation sequence, keeping the same ring/pinwheel choreography.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
