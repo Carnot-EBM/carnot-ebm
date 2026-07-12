@@ -4870,7 +4870,7 @@ games:
     reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
 - game: bp35
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   mechanic_class: goal_directed_navigation_local_obstacle_clear
   win_condition: >-
     L1 goal-directed upward-gravity navigation plus L2 same-row blocker clears,
@@ -5116,6 +5116,30 @@ games:
     too -- and should instead search for a genuinely different descent
     path from (3,12), or investigate whether switch 3 needs to be
     clicked from a different position/timing before descending.'
+  - 'L6 SOLVED round 10 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_codex55_bp35_probe_round10_20260712.json): the
+    genuinely-different descent path round 9 called for. THE SAFE
+    ROUTE is through the FAR-RIGHT row-13 opening (columns 7/8), not
+    columns 2, 3, 4, or 5 -- all four of those were independently
+    confirmed lethal across this and prior rounds (columns 2/3 by
+    round 9; columns 4/5 newly confirmed lethal this round, both dying
+    at world row 14). Leave row-13 columns 7 and 8 open during the
+    switch-3 ascent; entering column 7 on the return drops safely to
+    (7,15), and column 8 remains alive at (8,15). Only row-20 column 4
+    needs solidifying before the ascent (columns 2/3 are unnecessary
+    setup that wastes timer budget). From (8,15): LEFT,LEFT,LEFT to
+    (5,19) (RIGHT is blocked at (6,19)); reopen row-20 column 4 and
+    move LEFT to land safely at (4,21); the lower return from there is
+    fully reversible -- 4x RIGHT to (8,31), then 6x LEFT touches the
+    goal. Removing four unnecessary setup clicks (row-20 cols 2/3,
+    row-13 cols 7/8 re-sealing) shaved the route from switch-3-at-204
+    down to switch-3-at-200, landing the full win at action 225 --
+    THREE ACTIONS before the hard 228-action timer that has killed
+    every over-long attempt on this game. Independently re-verified by
+    the outer loop: 5x fresh env.reset() + replay via a new resolver
+    priority branch, all 5 confirmed level=6, state=GameState.NOT_FINISHED
+    (the source agent''s own reproduction_verified is honestly false --
+    budget ran out after the win, only 78 of 950 calls remained).'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
@@ -5149,7 +5173,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 167
+reproducible_total_levels: 168
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
