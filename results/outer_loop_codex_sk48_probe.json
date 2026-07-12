@@ -3,7 +3,7 @@
   "model": "gpt-5.6-sol",
   "starting_level": 2,
   "max_level_reached": 2,
-  "total_env_steps_used": 546,
+  "total_env_steps_used": 547,
   "reproduction_verified": true,
   "action_sequence": [
     {"action": 1},
@@ -52,14 +52,14 @@
     {"action": 4}
   ],
   "levels_won_this_session": [],
-  "novel_mechanics_found": "Level 3 changes the familiar horizontal reorder into a pinned vertical stack. The patterned reel can thread a horizontal tether through a colored segment; a vertical move then carries every intersected segment into the next free row, while fully retracting the tether detaches the carried group so another row can be selected. The small color-B glyph above the stack appears to anchor or stop upward movement. ACTION5 and coordinate-click ACTION6 were tested on the glyph, blocks, guide, and reel and were frame-level no-ops.",
-  "narrative": "The generic resolver returned only the stale 14-action L1 artifact, so I followed the registry's named results/arc_loop_solve_sk48.json fallback and confirmed its 44-action sequence reaches level 2. On level 3 I explored all direction verbs, ACTION5, and clicks using only rendered frame deltas. I learned how to separate the bottom C segment, detach it by fully retracting the reel, and build a stable partial 8,C arrangement while separating 9, but did not observe a level-3 win. I stopped before the 600-step cap so the highest complete 44-action sequence could be replayed through the mandatory fresh-reset gate; that gate reproduced level 2 successfully.",
+  "novel_mechanics_found": "Level 2 introduces a second, dark-headed vertical manipulator holding a red/green segmented column of colored blocks. Blocks on that helper cannot be pulled horizontally in the ordinary way. A horizontal contact followed by perpendicular vertical motion detaches and carries the contacted block; a carried block pushed into the anchored column can displace lower blocks, so solving requires two-arm transfer, collision clearance, and removal of the cyan decoy before delivering gray-maroon-white.",
+  "narrative": "The 44-action banked prefix replayed from reset and reached level 2, and the final reproduce() gate independently passed for claimed level 2. I explored the next level through rendered frames only. Earlier levels use a sticky telescoping horizontal arm to sort blocks into the bottom-strip order, but level 2 adds an anchored vertical helper and a cyan decoy; I established how to detach gray and how carried blocks displace the helper's column, but did not complete the required gray-maroon-white sort. I stopped after the reserved reproduction gate rather than claim an unobserved level-up.",
   "gotchas": [
-    "resolve_replay_plan returned the older 14-action L1 source even for levels_reproduced=2; the registry-named results/arc_loop_solve_sk48.json contains the working 44-action L2 prefix.",
-    "ACTION1/ACTION2 move the reel vertically and ACTION3/ACTION4 retract/extend it horizontally, but a colored segment moves vertically only when the tether intersects its row.",
-    "A partial retraction may only erase surplus tether pixels; fully retract before moving the reel independently to select another segment row.",
-    "Trying to lift an intersected segment into an occupied/pinned row is a no-op; separate lower segments into free rows before recombining them.",
-    "ACTION5 and ACTION6 clicks produced no rendered change on level 3 in the tested locations."
+    "Rendered action results may contain a stack of animation frames; use the final 64x64 frame for the current visual state.",
+    "ACTION1/ACTION2 move the magenta horizontal manipulator vertically; ACTION4 extends its arm and ACTION3 retracts it. ACTION5 and ACTION6 were observed no-ops on level 2.",
+    "An extension stops immediately before a block; retraction pulls only when contact has actually been established, and required extension count depends on the block's horizontal distance.",
+    "On level 2, the tiny dark cap and red/green vertical segments are active mechanics, not decoration: they form a second manipulator that anchors the colored column.",
+    "A block anchored to the vertical helper can be detached by contacting it horizontally and then moving the horizontal manipulator perpendicular to the helper; collision with intervening anchored blocks can block vertical motion or displace the lower column."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }

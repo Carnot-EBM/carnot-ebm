@@ -361,6 +361,22 @@ def resolve_replay_plan(
             "results/experiment_4443_bank_g50t_example_conditioned_win.json",
             exp4433.apply_g50t_label,
         )
+    if game == "vc33" and _as_int(entry.get("levels_reproduced")) >= 7:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_vc33_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("vc33 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "vc33" and _as_int(entry.get("levels_reproduced")) >= 4:
         from carnot.agentic.arc_game_adapters import get_adapter
 
@@ -491,6 +507,22 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "m0r0" and _as_int(entry.get("levels_reproduced")) >= 5:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_m0r0_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("m0r0 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "m0r0" and _as_int(entry.get("levels_reproduced")) >= 3:
         from carnot.agentic.arc_game_adapters import get_adapter
 
@@ -523,6 +555,22 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "cn04" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_cn04_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("cn04 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "cn04" and _as_int(entry.get("levels_reproduced")) >= 5:
         from carnot.agentic.arc_game_adapters import get_adapter
 
@@ -548,6 +596,26 @@ def resolve_replay_plan(
         labels = [str(label) for label in artifact.get("action_sequence") or []]
         if adapter is None:
             raise RuntimeError("ft09 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "sp80" and _as_int(entry.get("levels_reproduced")) >= 5:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_sp80_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("sp80 adapter missing")
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
         return ReplayPlan(
             game,
             labels,
