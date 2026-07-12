@@ -2362,6 +2362,25 @@ games:
     (not a current-level restart, unlike earlier levels) -- the L9
     environment entered GAME_OVER after repeated rewind experiments;
     frontier stays at level 8.'
+  - 'L9 progress round 4, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex,
+    round-4 breadth campaign, results/outer_loop_fable5_su15_probe.json):
+    verified 145-action prefix reaches level 8 on every fresh replay and
+    the reproduce() gate passed at level 8 (reconfirms round 3''s win, no
+    regression). Four forward boards investigated L9: the best live board
+    simultaneously produced c and f, socketed/kited c, and retained an e
+    plus a 7, but never formed the required d -- protecting c let a lower
+    hunter degrade f, while redirecting with f let the nearby e degrade c
+    (a genuine timing/geometry conflict, not a missing action sequence).
+    New mechanic detail: the 7/e/d display is an ACTIVE HOSTILE-FUSION
+    CHAIN -- two 7 hunters can overlap and become a nine-pixel e while
+    their contact converts the movable 8 into the required c. Hunter
+    targeting is local/active rather than a simple highest-value rule
+    (different predators can simultaneously pursue nearby c and f pieces).
+    ACTION7''s one-step undo does NOT refund the bottom resource meter
+    (a real cost round 3 did not establish). The two 6 pieces must be
+    displaced or merged immediately because one lower hunter''s natural
+    route to the 8 crosses them after roughly five actions. No new level
+    banked; frontier stays at level 8.'
   dead_ends:
   - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
   - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
