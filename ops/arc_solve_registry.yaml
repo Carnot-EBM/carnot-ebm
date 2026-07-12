@@ -4903,6 +4903,40 @@ games:
     sealed upper-left region, switch 3 at (8,1)) finally reachable; if
     hazards are overlap-lethal, it is a real death. Fits the timer
     easily (~action 190, leaving ~38 actions of margin).'
+  - 'ROUND-9 MOVE CONFIRMED SAFE, switch 3 reached, still HONEST NULL
+    (2026-07-12, gpt-5.6-sol via codex, results/outer_loop_codex_bp35_probe_round9_20260712.json):
+    resolves round 8''s 50/50 -- stepping RIGHT from world (7,21) to
+    (8,21) is SAFE, floating to a new alive perch at (8,18). Major
+    further progress from there: sealing the row-13 X hazards creates a
+    traversable ceiling (LEFT from (7,18) floats to (6,14), crossing
+    beneath the sealed floor to (2,14)); reopening the row-13 X at
+    column 2 while standing at (2,14) is ALSO safe and floats the
+    player UP through the opening to (2,11) -- open X cells are
+    therefore not intrinsically overlap-lethal in this controlled
+    transition, another correction to earlier assumptions. Six RIGHT
+    moves from (2,11) zigzag up to (8,7), making switch 3 at world
+    (8,1) clickable; it was clicked and consumed at total action 204,
+    reversing gravity downward -- the FIRST time this game has reached
+    switch 3. On the downward return, entering column 2 is lethal
+    because its row-13 cell remains open: the player falls onto
+    hzusueifitk at world (2,15) and dies at action 210 -- a REAL hazard
+    death, confirmed independent of the action-228 timer (died at 210,
+    well before 228). The session proposed a "corrected" candidate
+    (stop at (3,12), descend via the column-3 floor onto the sealed
+    row-20 shelf instead of column 2) but explicitly could not execute
+    it live (budget exhausted at 807/950). The outer loop independently
+    tested BOTH the live-verified prefix AND the full proposed fix: the
+    first 209 actions replay cleanly to level=5,
+    state=GameState.NOT_FINISHED (matches the session''s own report
+    exactly), but the FULL 221-action sequence INCLUDING the proposed
+    column-3 fix also DIES -- GameState.GAME_OVER, level=0. The
+    proposed fix does NOT work; the real safe descent route from
+    (3,12) after switch 3 remains genuinely unsolved. No new level
+    banked; frontier stays at level 5. Next attempt should NOT retry
+    this exact column-3 substitution -- it is now a confirmed dead end
+    too -- and should instead search for a genuinely different descent
+    path from (3,12), or investigate whether switch 3 needs to be
+    clicked from a different position/timing before descending.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
