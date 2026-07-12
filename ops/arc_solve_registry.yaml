@@ -1553,6 +1553,27 @@ games:
     genuinely undiscovered -- this is a real gap, not unexplored budget. A
     per-level click-budget bar (row 63, ~1 cell per 2 clicks) is also real
     and was nearly exhausted this session.'
+  - 'L4 progress round 2, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex,
+    post-wa30 breadth campaign, on a RELAUNCH after the first attempt hit a
+    1800s process timeout right before writing its result -- that transcript
+    had claimed a level-4 win, but per this project''s discipline a claim
+    with no persisted artifact does not count; this fresh session, with no
+    memory of the first, did not replicate it). Sharper mechanism than the
+    prior entry: each successful marker-bar GROW raises the D marker by one
+    3-row band AND simultaneously widens all four B-colored cantilever
+    shelves by 3 cells toward the center (tower buttons only reposition a
+    shelf vertically, they do NOT widen it). A grow becomes a complete no-op
+    if any newly-widened shelf or the rising marker would collide with
+    another shelf, a colored tower column, or the marker corridor -- making
+    shelf ORDER, not just position, load-bearing. Reached an 8-grow state
+    (shelves at y=6,9,12,15, D at (31,19)) and found a specific, actionable
+    hypothesis the prior entry lacked: the two inner shelves likely must
+    EXCHANGE vertical order while still narrow (around grow 4) -- after grow
+    8 their widths overlap and the order becomes irreversible. No level-4
+    win this session; the outer loop independently regression-checked the
+    EXISTING banked L3 prefix (unaffected by this session''s null) and
+    confirmed it still reproduces cleanly (3x fresh env.reset(), all 3
+    reached_level=3).'
   dead_ends:
   - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.'
   - Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.
