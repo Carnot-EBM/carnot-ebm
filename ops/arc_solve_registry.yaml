@@ -4306,7 +4306,9 @@ games:
     reproducibility_checksum: bdae6a8349846c9a4aa7eb2367ad8eaf94d80e565064cb4b8f4a48bb81ea7daa
 - game: re86
   reproducibility: reproduced
-  levels_reproduced: 7
+  levels_reproduced: 8
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: pattern_match_sprite_resize
   win_condition: >-
     L1 sprite-overlay pattern match plus L2 verifier-derived post-L1 overlay
@@ -4455,6 +4457,28 @@ games:
     new level banked; frontier stays at level 7. Next attempt should
     return to round 5''s FULL per-fixture route (not the shortcut) for the
     second rectangle''s crossing.'
+  - 'L8 SOLVED, FULL GAME CLEAR, round 7 (2026-07-12, gpt-5.6-sol via
+    codex, results/outer_loop_fable5_re86_probe_round7_20260712.json):
+    round 6''s own diagnosis was correct -- returned to round 5''s FULL
+    per-fixture route (not the shortcut round 6 ruled out) and it
+    worked. Confirmed the load-bearing mechanic precisely: a 22x4
+    outline must be shifted LEFT to x=3..24 before descending from its
+    color swatch; the tempting x=6..27 position is adjacency-unsafe --
+    collision adjacency there reaches the neighboring swatch and
+    silently repaints it, which is what caused round 6''s null. Applying
+    that one-step safety shift independently to the color-11 rectangle
+    (routed to a 7x19 outline at x=9..15,y=39..57) and the color-6
+    rectangle (routed to a 16x10 outline at x=6..21,y=45..54), via the
+    shared corridor (x=36..57,y=15..18) and palette-wall opening
+    (x=44..49), placed both target geometries simultaneously.
+    levels_completed advanced from 7 to 8 on action 689 of a 689-action
+    sequence (519-action banked L7 prefix + 170-action L8 tail). The
+    source agent''s own reproduction_verified is honestly false (only 10
+    of 700 calls remained after the win), but the outer loop
+    independently verified regardless: 5x fresh env.reset() + replay via
+    a new resolver priority branch (dict-shaped labels, JSON-normalized),
+    all 5 confirmed level=8, state=GameState.WIN -- L8 is the FINAL
+    level; the game is fully solved.'
   - 'L6 (previewed for free in a PRIOR session, not attempted at the time --
     solved by the entry above): 8 rings (four 9-colored, four 11-colored in a
     rectangle) plus color-1 objects that are a genuinely NEW element not seen
@@ -4686,7 +4710,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 162
+reproducible_total_levels: 163
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
