@@ -1,0 +1,18 @@
+# ARC-AGI-3 Competition News Watch
+
+Daily automated check (systemd timer `arc-news-watch.timer`, see `scripts/arc_news_watch.py`) for ARC Prize / ARC-AGI-3 competition announcements, ahead of the November 2026 Kaggle submission deadline. Entries below are appended, never rewritten, per the project's never-prune documentation discipline.
+
+## 2026-07-12 03:19 UTC -- NEW
+
+- ARC-AGI-3 scoring changed: the per-level human baseline moved from the second-best human run to the median human run, and the per-level score cap increased from 100% to 115%. [ARC Prize announcement](https://arcprize.org/blog/arc-agi-3-human-dataset)
+
+- Kaggle switched evaluation hardware from H100s to RTX 6000 Pro after an H100 stockout. Maximum notebook runtime increased from six to nine hours; a separate ARC-AGI-3 runtime setting initially remained at six hours but was fixed May 19. [Accelerator update](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/697720), [runtime update](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/697944), [runtime fix](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/699208)
+
+- Kaggle accidentally allowed five daily submissions from May 27 through June 8. The intended one-submission-per-day cap was restored, and surplus submissions after each team’s first successful daily submission were slated for invalidation. [Official correction](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/705405)
+
+- Milestone eligibility is based on the public leaderboard, and open-source publication is due by 23:59 UTC on the applicable milestone date. [Leaderboard clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/703056), [deadline clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/713634)
+
+- The Kaggle competition does not apply the technical report’s five-times-human-action cutoff; that cutoff applies only to the ARC Prize Verified leaderboard. Kaggle instead relies on its compute limit. [Official host clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/713921)
+
+- The post-Milestone public leaderboard now has a three-way tie at 1.56: Mathurin Ache, anngle, and NoOneAhead. [Current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
