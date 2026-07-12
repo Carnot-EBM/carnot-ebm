@@ -952,6 +952,18 @@ games:
     counter when approached in the viable direction. Next attempt: insert
     an upper black-dot tile visit (shape selection) BEFORE the lower-pad
     orientation sequence, keeping the same ring/pinwheel choreography.'
+  - 'L5 progress round 4, TIMED OUT (2026-07-12, gpt-5.6-sol via codex,
+    round-4 breadth campaign): the 2400s session TIMED OUT before writing
+    an artifact -- no JSON result exists, nothing verified or banked. The
+    live transcript shows the session died around its own step 417 (frame
+    level dropped to 0, indicating a GAME_OVER/reset), then hit an
+    unrelated IndexError crash in its own PNG-rendering debug script
+    (`IndexError: tuple index out of range` in a locally-written save()
+    helper) that appears to have stalled recovery for the remainder of the
+    budget. This is an agent-tooling bug, not a game-mechanic finding --
+    round 3''s "insert the upper black-dot selector before lower-pad
+    orientation" hypothesis remains UNTESTED by this session. Frontier
+    stays at level 4.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
