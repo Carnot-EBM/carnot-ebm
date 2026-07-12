@@ -2186,7 +2186,9 @@ games:
     reproducibility_checksum: 9dbb41f8fb53f3bc34ee92bc4864bc985e199933ea2407b031a6b5fe82bfea84
 - game: tu93
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 9
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: graph_explore
   win_condition: L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed
     best-first search (player->goal Manhattan).
@@ -2237,6 +2239,27 @@ games:
     before replay), all 5 confirmed reached_level=6,
     state=GameState.NOT_FINISHED. L7 was visually inspected but not explored
     (only 2 of 700 steps remained after the gate).'
+  - 'FULL CLEAR, L7-L9 round 3 (2026-07-12, gpt-5.6-sol via codex): live-won
+    all three remaining levels in one session. L7 (14 moves): the color-13
+    direction-marked runner is dormant until the player enters its line, then
+    its marker changes state and it traverses the maze one node per
+    successful player move. L8 (23 more moves): requires deliberately
+    ACTIVATING the L7 runner, retreating around a cleared charger loop, and
+    returning to the goal route with a safe lead -- the runner is a tool to
+    use, not just a hazard. L9 (29-move tail, terminal level): adds three
+    autonomous color-12 patrollers with distinct bouncing cycles, requiring a
+    timed loop, an upper bypass, and a side detour; a right-facing charger
+    fires through the goal cell and kills on apparent goal entry -- the
+    actual dependency is to clear a lower vertical charger sideways, then
+    clear the goal-line charger from below, THEN enter the goal. The source
+    agent honestly flagged the win as reproduction_verified=false (a
+    dedicated reproduce() gate could not fit in the remaining 700-step
+    budget after the 186-action live-replay confirmation), despite observing
+    the live win, a deterministic fresh-prefix replay through action 186,
+    and a post-win empty terminal frame consistent with full-game
+    completion. The outer loop independently ran 5x fresh env.reset() +
+    replay via the fixed resolver before recording anything: all 5 confirmed
+    reached_level=9 AND state=GameState.WIN. tu93 is a confirmed full clear.'
   dead_ends:
   - 'v19 (results/outer_loop_fable5_tu93_probe.json, 2026-07-11, claude-fable-5,
     honest null, NOT banked -- levels_reproduced stays 5): the richest
@@ -3565,7 +3588,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 138
+reproducible_total_levels: 141
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
