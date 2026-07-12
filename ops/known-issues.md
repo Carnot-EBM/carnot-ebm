@@ -257,6 +257,60 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    deterministic, fixed-depth, non-history-conditioned reimplementations don't replicate the effect on this
    specific interactive-action-sequence task.
 
+9. **(New 2026-07-11, cheap, reuses an existing code shape) InertClickPruner — extend the
+   HazardMovePruner pattern to the inert/no-op-click axis.** Full writeup + citations:
+   `docs/research-notes/arc-agi3-milestone1-winners-sota-ingestion-2026-07-11.md` (O1), from a
+   read-only audit of the ARC-AGI-3 Milestone-1 winners' open-sourced code (operator directive:
+   "can we clone those locally... spot any energy model opportunities?"). The 2nd-place team
+   ("Reki") independently built a "dead-signature" mechanism: after every click, track the clicked
+   component's structural signature `(color, size, is_rect, twin_count)`; if a click on that
+   signature never changes the frame (twice), suppress it for the rest of the level (except any
+   signature that was EVER effective, protected permanently). This is architecturally identical to
+   our existing `python/carnot/agentic/arc_hazard_pruner.py` `HazardMovePruner` (which learns
+   LETHAL nav moves from the search's own observed avatar-removal deaths, trust+specificity gated,
+   refits at 50 samples) but on the INERT-click axis instead of the lethal-move axis — we have no
+   live-path equivalent for clicks. Build `InertClickSigPruner` reusing `HazardMovePruner`'s
+   trust+specificity gating discipline (NOT Reki's greedy `K=2` threshold — the audit flagged that
+   as over-aggressive, mis-protecting context-dependent signatures and over-suppressing "twin"
+   tiles that behave differently by position). Feeds `StepwiseExplorer._candidates` the same way
+   `HazardMovePruner` feeds the offline solver's move list.
+10. **(New 2026-07-11, folds into task 2 above, do not run as a separate experiment) Extend the
+    classical color-blob segmentation front-end (task 2) with translation-invariant object-hash
+    tracking + containment/adjacency.** Full writeup: same SOTA-ingestion note (O4). The 1st-place
+    team ("Duck Harness", Tufa Labs) independently built essentially the same classical
+    connected-component segmentation idea already staged as task 2 above (citing arXiv:2512.24156)
+    — a SECOND, independent real-world implementation from a different top-3 team is corroborating
+    evidence the lever is worth taking seriously. Duck's implementation
+    (`external/duck-harness/inference/utils/segmentation.py`, cloned read-only for this audit) adds
+    two concrete details task 2's cited paper doesn't fully specify: (a) a translation-invariant
+    shape hash (sha1 of normalized color+cell pattern) that tracks object IDENTITY across frames,
+    not just position — directly attacks the GAP-4891 / `project_arc_live_agent_learning_gaps`
+    binding constraint (frame-only order-1 features at LOO=chance); (b) an explicit containment
+    tree (`children`) and adjacency list on top of the raw blob list. When task 2 is implemented,
+    add these two as explicit sub-components rather than stopping at size/color salience tiers.
+11. **(New 2026-07-11, genuinely new but small, directly in-thesis) Hallucination-consistency
+    checks: claimed-diff vs measured-diff, goal-hypothesis vs observed transitions.** Full writeup:
+    same SOTA-ingestion note (O3, and O5 as its time-extended follow-on — do not build O5's NL
+    hypothesis memory ahead of this task, per the note's fragility section). Two independent
+    findings from the audit: Reki's model self-reports `board_change_assessment` (what it thinks
+    changed) alongside the REAL pixel diff (`changed_pixels`), but the two are never cross-checked;
+    Duck's "scientist note" world model carries a free-text Goal/Action hypothesis regenerated each
+    turn but never checked against the actual observed level-up/no-change reward transitions. Both
+    are a literal, unexploited instance of this project's founding thesis (verify a claim against
+    ground truth) sitting inside two independently-built winning pipelines. Build a lightweight
+    consistency energy: `distance(claimed_diff_description, measured_pixel_diff)` for the first
+    case, and a "does this goal-hypothesis correctly predict the sign of the last N
+    level-up/no-op transitions" scorer for the second — both cheap, deterministic vetoes on a
+    generator's self-report, not a second expensive LLM call (which is exactly the cost item
+    forge's own ablation found not worth paying — see the SOTA note's headline finding).
+    **Corroborating framing note (not a separate task):** forge's (3rd place) own winning
+    configuration explicitly DISABLED their LLM-judge candidate arbiter and LLM confidence-gate for
+    cost while KEEPING only the deterministic `changed_pixels==0` filter — independent, real-world,
+    competitive-pressure confirmation of "cheap real verifier beats expensive LLM judge" from a
+    top-3 team. Their disabled arbiter slot (candidate generation -> separate scoring) is
+    architecturally the exact slot our verifier-routed search already fills; cite this in any
+    future paper-v6 verifier-moat section as external corroboration, no new build required.
+
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
 (exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect
