@@ -1858,7 +1858,7 @@ games:
     full-clear session above.
 - game: lf52
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 4
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
@@ -1921,6 +1921,26 @@ games:
     solved live; a dense central hub (2+ more pegs, a 4th carrier, multi-screen
     geometry) needs systematic re-mapping in a fresh session -- stopped rather
     than risk a stranding reset burning the remaining budget.'
+  - 'L4 SOLVED round 2, L5 progress (2026-07-11, gpt-5.6-sol via codex, post-wa30
+    breadth campaign, on a RELAUNCH after the first attempt hit a 1800s process
+    timeout): the dense central hub previewed above (a three-peg deadlock) is a
+    TWO-CARRIER RELAY: lower the peg-loaded vertical carrier until a surviving
+    torch is adjacent, align the empty horizontal carrier as the landing socket,
+    hop the peg through the indestructible torch into that carrier, then shuttle
+    it between torch columns to merge the two isolated pegs. Self-run
+    reproduction gate passed (reached_level=4, reproduced=true) AND
+    independently re-verified by the outer loop: 5x fresh env.reset() + replay
+    via the fixed resolver, all 5 confirmed reached_level=4,
+    state=GameState.NOT_FINISHED. L5 introduces a genuinely MOVABLE torch: a
+    carrier can transport a torch through rail junctions, and the carried torch
+    remains a valid jump obstacle when aligned. Discovered and exercised this
+    rail vehicle, merged the two initially visible pegs, and scrolled into a
+    larger hub with four remaining pegs, several fixed torches, and another
+    carrier -- but two mapping attempts both stranded all four pegs via local
+    merges. No L5 win this session (29 of 700 calls unused; another
+    reset+remap+verify pass could not fit). A large "keyhole" reset structure
+    was also found (clicking it resets L5) -- distinct from the peg-stranding
+    auto-reset.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
@@ -3510,7 +3530,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 137
+reproducible_total_levels: 138
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
