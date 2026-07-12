@@ -2173,7 +2173,7 @@ games:
     reproducibility_checksum: a3d057dcd66e4e3b31e5cb3eaa73f5a45c7c9f8ec6d62dec8d94492660d49648
 - game: su15
   reproducibility: reproduced
-  levels_reproduced: 7
+  levels_reproduced: 8
   mechanic_class: drag_merge_fruit_target
   win_condition: 'L1 click-to-connect diagonal plus L2 staged drag/merge: merge eight level-0 fruits into one level-3 fruit and drag its center into the xkstxyqbs target zone centered near (33,27). L3 (2026-07-11, claude-fable-5): the same drag/merge physics generalizes, but delivery targets
     are the big 9-colored round BLOBS on the field, not the top hollow boxes
@@ -2246,6 +2246,31 @@ games:
     them back into an 8) but not won this session -- a genuine
     simultaneous-control wall (keeping both c fruits separated and safe
     while preserving the fused e and avoiding the third hunter).'
+  - 'L8 SOLVED round 3 (2026-07-12, gpt-5.6-sol via codex, round-3 breadth
+    campaign): cracks round 2''s simultaneous-control wall -- L8 is a
+    SPLIT-DELIVERY RACE: merge the two b blocks into the first c, kite it
+    up the extreme left edge while the two hunters fuse and the 8 is
+    processed into the second c, then send that second c along the top
+    edge to the far-right 9 socket. The round-2 hazard (clicking within
+    attraction range of both c pieces merges them back into an 8) is real
+    and must be avoided by routing them along opposite edges (left vs
+    top), not through the center. Solved live with a 13-action
+    continuation after the banked 132-action L1-L7 prefix, then
+    independently replayed the same continuation in a SEPARATE fresh
+    environment after its own full prefix -- both runs reached
+    levels_completed=8. The source agent''s own reproduction_verified is
+    correctly reported false (budget ran out before the full 145-action
+    reproduce() gate could be re-run), but the outer loop independently
+    verified: 5x fresh env.reset() + replay via a new resolver priority
+    branch (results/outer_loop_codex_su15_probe.json, dict-normalized
+    labels), all 5 confirmed level=8, state=GameState.NOT_FINISHED. L9
+    was explored but not won: ACTION7 is a true one-step undo, two 6
+    blocks merge into f, four hunters must apparently satisfy an
+    additional d-shaped hunter-fusion requirement that stayed unsatisfied
+    this session, and a final-level reset performs a FULL-GAME reset
+    (not a current-level restart, unlike earlier levels) -- the L9
+    environment entered GAME_OVER after repeated rewind experiments;
+    frontier stays at level 8.'
   dead_ends:
   - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
   - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
@@ -3788,7 +3813,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 145
+reproducible_total_levels: 146
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

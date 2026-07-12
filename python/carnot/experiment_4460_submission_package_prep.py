@@ -843,10 +843,34 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "su15" and _as_int(entry.get("levels_reproduced")) >= 8:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_su15_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        if adapter is None:
+            raise RuntimeError("su15 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "su15" and _as_int(entry.get("levels_reproduced")) >= 7:
         from carnot.agentic.arc_game_adapters import get_adapter
 
         adapter = get_adapter(game)
+        # NOTE: results/outer_loop_codex_su15_probe.json was overwritten by the
+        # round-3 (>=8) attempt at this same path; this branch is unreachable
+        # for the live registry entry (which is >=8) and is retained only as
+        # historical dead code documenting the round-2 (level-7) resolution.
         rel_path = "results/outer_loop_codex_su15_probe.json"
         artifact = _load_json(root / rel_path)
         raw_labels = artifact.get("action_sequence") or []
