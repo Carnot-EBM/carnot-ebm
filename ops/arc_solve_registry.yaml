@@ -892,7 +892,7 @@ games:
     verifier_checkpoint: null
 - game: ls20
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: clean_navigation_shape_color_rotation_step_counter
   win_condition: >-
     L1 first-solve navigation plus L2 clean-nav target match: enter each
@@ -1033,6 +1033,29 @@ games:
     prefix. No L5 win observed or claimed; frontier stays at level 4. Next
     attempt should finance color 8 via the newly-found top-middle ring
     reset (not the upper-left ring) to close the one-action gap.'
+  - 'L5 SOLVED round 7 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_fable5_ls20_probe_round7_20260712.json): round 6''s
+    targeted hypothesis was correct -- financed color 8 via the
+    newly-found top-middle ring instead of the upper-left ring, closing
+    the one-action gap that blocked every prior attempt. After the third
+    pinwheel entry set color 8 at x29,y25, ACTION4,ACTION4 reaches the
+    launcher placement at x39,y5 and the next ACTION4 collects the
+    top-middle green-center ring; the ring can be entered on the EXACT
+    action that decrements the counter from 2 to 0, resetting it to 42
+    before the next-action-death rule fires (a precise timing window not
+    previously exploited). From there the upper-left ring financed two
+    upper-pad contacts (shape 4->5->0), the lower contact sequence 443
+    set rotation 2, and the lower-left ring financed a bottom-corridor
+    launcher that placed the completed target tuple one move below the
+    target; the final action entered the target with tuple
+    (shape=0,color=3,rotation=2) and levels_completed advanced to 5. The
+    full winning sequence is 303 actions (244-action banked prefix + a
+    59-action L5 tail). The source agent''s own reproduction_verified is
+    honestly false (only 153 of 547 used calls remained under the
+    700-call cap, short of the 303 needed for a fresh-reset gate), but
+    the outer loop independently verified regardless: 5x fresh
+    env.reset() + replay via a new resolver priority branch, all 5
+    confirmed level=5, state=GameState.NOT_FINISHED.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
@@ -4642,7 +4665,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 160
+reproducible_total_levels: 161
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
