@@ -3344,7 +3344,7 @@ games:
     reproducibility_checksum: a13c3bf2d2b789492b1977b2d1d2965656582466da28eef26fd29aed7c396ceb
 - game: sk48
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: chain_color_reorder
   win_condition: >-
     L1 chain navigation plus L2 chain-segment color/order matching: replay the
@@ -3505,6 +3505,31 @@ games:
     independently re-verified regardless: 5x fresh env.reset() +
     replay via a new resolver priority branch, all 5 confirmed
     level=4, state=GameState.NOT_FINISHED.'
+  - 'L5 SOLVED round 9 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_codex55_sk48_probe_round9_20260712.json): first
+    attempt at fresh L5 territory. L5 returns to a SINGLE checked
+    horizontal chain/guide pair (unlike L4''s two simultaneous pairs),
+    but splits the movable rack with a FIXED BLOCKER at x=29: the
+    target guide order is 8->9->8, with three 9-blocks starting left
+    of the blocker and three 8-blocks starting right of it. The
+    blocker prevents forward extension across it on the rack row and
+    also prevents a long cross-divider carrier from moving
+    perpendicularly into that row -- the chain must detour vertically
+    around it, staging blocks on different rows before assembling the
+    target via endpoint passage and selective retraction. New
+    boundary-jamming subtlety confirmed: during horizontal retraction,
+    a covered block whose push is blocked by the PLAYFIELD BOUNDARY
+    stays fixed while the chain retracts through it, but during
+    perpendicular row movement, an analogous blocked push cancels the
+    ENTIRE row move instead (an asymmetry between the two movement
+    types). levels_completed advanced to 5 at full-sequence label 144
+    (106-action L4 prefix + a 38-action L5 tail). The source agent ran
+    its own fresh-environment reproduction gate on the full 144-action
+    sequence and independently got the same result
+    (reproduction_verified: true), and the outer loop independently
+    re-verified regardless: 5x fresh env.reset() + replay via a new
+    resolver priority branch, all 5 confirmed level=5,
+    state=GameState.NOT_FINISHED.'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -5294,7 +5319,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 171
+reproducible_total_levels: 172
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
