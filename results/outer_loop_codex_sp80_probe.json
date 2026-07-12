@@ -1,10 +1,10 @@
 {
   "game": "sp80",
   "model": "gpt-5.6-sol",
-  "starting_level": 4,
+  "starting_level": 5,
   "max_level_reached": 5,
-  "total_env_steps_used": 613,
-  "reproduction_verified": true,
+  "total_env_steps_used": 673,
+  "reproduction_verified": false,
   "action_sequence": [
     {
       "action": 4
@@ -961,17 +961,16 @@
       "action": 5
     }
   ],
-  "levels_won_this_session": [
-    5
-  ],
-  "novel_mechanics_found": "The L5 color-15 L-piece is a fluid elbow/diverter, not a key to insert into the matching wall sculpture. At its x=14 minimum, a splitter branch entering its lower-right leg is redirected horizontally into the wall notch. L6 adds two oppositely oriented elbows, a vertical splitter, three side-facing sockets, a bottom arch, and a movable horizontal splitter with an embedded source.",
-  "narrative": "Replayed the 195-action verified prefix to level 4, then reproduced the previously known three-hole L5 routing and investigated the unexplained L-piece directly. A four-destination cascade solved L5 live at action 278: the left source first split into the elbow and a 15-pixel splitter feeding holes 1 and 2, while the right source split into holes 2 and 3. I explored L6 through action 335 and mapped its new pieces and outlets, but several geometry-consistent arrangements did not win, so I stopped to preserve gate budget. A fresh reset reproduction gate replayed the exact 278-action sequence and reached level 5.",
+  "levels_won_this_session": [],
+  "novel_mechanics_found": "Level 6 has a finite whole-level action budget, not merely a per-commit counter: after 79 exploratory suffix actions, an ordinary movement action ended the episode and returned an empty terminal frame. The selected piece renders as color 9 (unselected splitters are color 8 and unselected elbows color 15), which makes rendered-frame-only position tracking reliable.",
+  "narrative": "Replayed the resolver's 278-action prefix from a fresh reset and confirmed levels_completed=5 before exploring. On level 6 I tested four rendered-geometry routing families: centered and horizontally shifted embedded-source splitters, both assignments of the oppositely oriented elbows to the side branches, and a target-aligned vertical splitter at x=14,y=26. None won; the live episode terminated on exploratory suffix action 79. I then spent the remaining viable gate budget on a compressed 38-action non-crossing candidate, but reproduce() replayed the full 316-action sequence from a fresh reset and reached only level 5. I stopped at 673 total steps because the remaining 27 steps cannot replay the 278-action starting prefix for another valid attempt.",
   "gotchas": [
-    "The frame returned by the winning L4 action still visually shows the prior layout even though levels_completed is already 4; the next action initializes the stable L5 rendering and is also applied to the new level.",
-    "L5 winning positions: color-15 elbow at x=14,y=35; 12px bar at x=20..31,y=47; 15px bar at x=23..37,y=29; 9px bar at x=41..49,y=47. Commit with ACTION5.",
-    "The elbow x>=14 movement cap is intentional: at x=14 an incoming x=17..19 branch enters its lower-right leg and exits left into the wall notch at x=8..10; trying to move the piece into the notch is a dead end.",
-    "L6 alternates back to downward flow and exposes two oriented color-15 elbows, a vertical color-8 splitter, an embedded-source horizontal splitter, two left sockets, one right socket, and a bottom arch. Tested both elbows adjacent to the left sockets plus several x-placements of the horizontal splitter and y=20 for the vertical splitter; none completed the level.",
-    "A border/floor counter changes during ordinary movement and selection actions, not only commits; do not assume those pixels count commit attempts."
+    "The verified prefix is 278 actions and reaches levels_completed=5 with the stable L6 frame already visible; budget calculations must reserve another 278 actions for any fresh-reset gate.",
+    "L6 direction mapping is ACTION1=up, ACTION2=down, ACTION3=left, ACTION4=right; each successful move shifts the selected piece by three rendered pixels. ACTION6 selects by rendered coordinates and ACTION5 commits.",
+    "Initial L6 movable objects are: right-turn elbow bbox x=29..34,y=17..22 (initially selected), vertical splitter x=44..46,y=14..25, embedded-source horizontal splitter x=23..37,y=32..34, and left-turn elbow x=29..34,y=44..49.",
+    "The attractive non-crossing candidate still fails: embedded-source bar x=23..37,y=20..22; right-turn elbow x=38..43,y=29..34; left-turn elbow x=17..22,y=29..34; vertical splitter x=14..16,y=26..37; then ACTION5.",
+    "Also tested the centered bar at y=17 and y=20 with the elbows assigned to the opposite side branches, plus one-cell left and right shifts of the bar with matching elbow shifts; all commits remained at level 5.",
+    "The border-band pixels change during selection and movement as well as commits. In this trajectory the 79th suffix action returned an empty terminal frame even though levels_completed had remained 5, so do not spend the action budget on long reversible positioning sweeps."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
