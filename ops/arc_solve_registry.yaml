@@ -2497,7 +2497,9 @@ games:
     reproducibility_checksum: b818a5fd174436b543c9b6663ab33d9cfe15b4435b7358ebbe6728215bc38043
 - game: m0r0
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: graph_explore
   win_condition: 'first-solve L1 adapter-free (E1); L2 deepened by visible two-sprite
     coalescence predicate over active pikgci sprites while avoiding visible spswjz
@@ -2573,6 +2575,27 @@ games:
     driveable 2x2 color-9 object, an electric-reset checkerboard seam) but
     not won this session -- the central seam reset all level state on every
     attempted route.'
+  - 'FULL CLEAR, L6 round 3 (2026-07-12, gpt-5.6-sol via codex): the color-9
+    object previewed above is a MOVABLE PLUG at the only safe opening in the
+    lethal central checkerboard seam -- driving it left exposes a lower
+    cross-room passage (the seam itself is not survivable, but this specific
+    plug marks a bypass). The object also serves as a REUSABLE DIRECTIONAL
+    PIN, used three different ways in one solve: below the left player it
+    holds the upper C pressure plate while the right player descends through
+    the opened C gate; beside the left player it permits only the right
+    player to cross the exposed seam; below the right player on the lower E
+    plate it holds that plate while the left player descends through the E
+    gate. Routing the left player onto the pinned right player completes the
+    level. The source agent honestly flagged the win as
+    reproduction_verified=false -- a compressed 297-action gate attempt
+    returned reached_level=0/reproduced=false, and with no budget left to
+    disambiguate "genuine reset" from "the harness reports 0 for the
+    empty terminal-win frame" (both look identical), the artifact keeps the
+    full 401-action live-observed trajectory rather than the failed
+    compressed candidate. Independently re-verified by the outer loop: 5x
+    fresh env.reset() + replay via the fixed resolver (the FULL 401-action
+    sequence, not the failed compression), all 5 confirmed reached_level=6
+    AND state=GameState.WIN. m0r0 is a confirmed full clear.'
   - 'L5 (scouted in a PRIOR session, unsolved at the time, not banked then --
     superseded by the entry above): two rooms with internal wall bands
     containing large colored slabs (e/c/f) and small matching-color 4x4
@@ -3638,7 +3661,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 142
+reproducible_total_levels: 143
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
