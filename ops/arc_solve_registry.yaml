@@ -4581,6 +4581,34 @@ games:
     the notch is LETHAL, killing both attempts at that exact point. The
     exit from this protected notch is the concrete unresolved blocker. No
     new level banked; frontier stays at level 5.'
+  - 'L6 notch exit still unresolved, round 7 (2026-07-12, gpt-5.6-sol via
+    codex, results/outer_loop_fable5_bp35_probe_round7_20260712.json):
+    ruled out several exits from the protected x=5 notch rather than
+    finding one. At the notch, ACTION1/ACTION2/ACTION5 do not move the
+    player or change puzzle state (only the UI/action index changes);
+    the consumed second cyan switch cannot be re-clicked; and neither
+    the visible goal diamond nor the blocking cell immediately left of
+    the player responds to clicks. Reopening the lower X shield above
+    the right shaft converts it back into a pillar hazard (closing it
+    restores the shield) -- toggling it alone does not make the right
+    exit safe. NEW MECHANIC: ACTION7 is a bounded live-play UNDO, not a
+    no-op -- repeated presses decremented the world action index and
+    reversed the two most recent X-toggle state changes, though the
+    observable undo window closed after six reversible actions in this
+    trial; it appears usable only before GAME_OVER, not to recover a
+    dead game. Session cost broke down as 164 calls for the mandatory
+    gate + 164 for L6 component mapping + 178 to reconstruct/checkpoint
+    the safe notch route + 178 replay + 16 notch probes = exactly 700,
+    the standing session cap. Independently re-verified by the outer
+    loop: the saved 194-action action_sequence (dict-shaped labels,
+    JSON-normalized before replay) replayed cleanly from a fresh
+    env.reset() to level=5, state=GameState.NOT_FINISHED -- matches the
+    session''s own report exactly, no hidden win, no regression. No new
+    level banked; frontier stays at level 5. STRONGEST LEAD for next
+    attempt: click the second gravity switch one or two columns
+    EARLIER, while the player is still under the x=6/x=7 shields --
+    this avoids the lethal lateral step from x=5 that has killed every
+    attempt at this exact point across two rounds now.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
