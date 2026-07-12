@@ -241,6 +241,26 @@ def resolve_replay_plan(
     """SCENARIO-REPORT-4460: find the banked labels and apply function for one game."""
 
     game = str(entry.get("game") or "")
+    if game == "s5i5" and _as_int(entry.get("levels_reproduced")) >= 7:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_s5i5_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("s5i5 adapter missing")
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "s5i5" and _as_int(entry.get("levels_reproduced")) >= 4:
         from carnot.agentic.arc_game_adapters import get_adapter
 
