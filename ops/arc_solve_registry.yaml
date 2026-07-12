@@ -3387,7 +3387,7 @@ games:
     reproducibility_checksum: a13c3bf2d2b789492b1977b2d1d2965656582466da28eef26fd29aed7c396ceb
 - game: sk48
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 7
   mechanic_class: chain_color_reorder
   win_condition: >-
     L1 chain navigation plus L2 chain-segment color/order matching: replay the
@@ -3602,6 +3602,40 @@ games:
     re-verified regardless: 5x fresh env.reset() + replay via a new
     resolver priority branch, all 5 confirmed level=6,
     state=GameState.NOT_FINISHED (frame well-formed, not degenerate).'
+  - 'L7 SOLVED round 12 (2026-07-12, gpt-5, results/outer_loop_round12_sk48_probe_20260712.json):
+    first attempt at fresh L7 territory (sk48 has win_levels=8 total -- 1
+    level remains after this one). L7 maps as two checked pairs
+    (horizontal target 9,14,9; vertical target 8,14,8) with five free
+    rack blocks and no fixed blocker -- but the two targets need SIX
+    total block positions while the rack supplies only one shared 14,
+    requiring a crossing block seen by both chains simultaneously (the
+    same crosswise-cooperation idea as L6, one level deeper). The
+    visually obvious crossing at the original 14 position (35,32) is an
+    ordering-contamination trap identical in kind to L6''s: the nearer 8
+    block can enter the horizontal chain before the intended 9,14,9
+    sequence is established. The successful crossing is deliberately
+    relocated to (41,32): the horizontal chain ends seeing 9 at (35,32),
+    the shared 14 at (41,32), 9 at (47,32); the vertical chain ends
+    seeing 8 at (41,26), the same 14, 8 at (41,44). Boundary jamming
+    remains load-bearing (per the L6 gotcha): the final lower 8 is
+    pushed to y=44 and stays fixed while the vertical endpoint extends
+    into it. ACTION6 pair-selection is geometry-neutral (costs no
+    energy) but its click coordinates must identify the correct static
+    paired head: (35,56) selects the vertical pair, (5,56) selects the
+    horizontal pair. Solved via an exact source-grounded abstract
+    transition search over deep-copied game logic (offline dev-only
+    search against sk48''s own public-game source, per CLAUDE.md''s
+    source-reading-is-a-public-games-dev-tool-only rule -- not used on
+    any hidden game), then checked against real env.step() calls before
+    banking. levels_completed advanced 6->7 at full-sequence label 292
+    (268-action L6 prefix + a 24-action L7 tail). Self-reported
+    reproduction_verified=true (a freshly constructed offline
+    environment independently replayed the complete 292-label sequence
+    from reset), and the outer loop independently re-verified
+    regardless: 5x fresh env.reset() + replay via a new resolver
+    priority branch (sk48 levels_reproduced>=7), all 5 confirmed
+    level=7, state=GameState.NOT_FINISHED, levels_completed=7,
+    win_levels=8, frame well-formed (not degenerate).'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -5172,7 +5206,7 @@ games:
     reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
 - game: bp35
   reproducibility: reproduced
-  levels_reproduced: 7
+  levels_reproduced: 8
   mechanic_class: goal_directed_navigation_local_obstacle_clear
   win_condition: >-
     L1 goal-directed upward-gravity navigation plus L2 same-row blocker clears,
@@ -5473,6 +5507,26 @@ games:
     collision footprint spans every matching glyph in the level grid,
     so route planning must use the full footprint, not just the
     anchor.'
+  - 'L8 SOLVED round 12 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_round12_bp35_probe_20260712.json): first attempt
+    at fresh L8 territory (1 level remains after this one -- bp35 has
+    win_levels=9 total). Verified the per-level timer live and cheaply
+    via an early no-op ACTION5 before committing to a route (per the
+    L7 gotcha''s own advice) rather than assuming L7''s 128-action
+    budget carried over. Goal diamond mapped at (9,19); E seeds at
+    (2,29) and (3,18); gravity switch at (5,2); toggle barriers at
+    row y=22 plus (7,25) and (8,18). The upper E seed was expanded
+    into a temporary shelf under x=5..7, enabling a rightward transfer
+    across an otherwise-lethal spike shelf; safe corrective clicks
+    removed E growth that had encroached on the intended descent
+    cells before the player ratcheted down to the goal. Self-reported
+    reproduction_verified=true on the full 342-action sequence
+    (269-action L7 prefix + a 73-action L8 tail), and the outer loop
+    independently re-verified regardless: 5x fresh env.reset() +
+    replay via a new resolver priority branch (bp35
+    levels_reproduced>=8), all 5 confirmed level=8,
+    state=GameState.NOT_FINISHED, levels_completed=8, win_levels=9,
+    frame well-formed (not degenerate).'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
@@ -5506,7 +5560,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 175
+reproducible_total_levels: 177
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

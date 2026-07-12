@@ -1,0 +1,30 @@
+{
+  "experiment": "experiment_5581_genre_prior_distillation_heuristic_pilot",
+  "run_date": "2026-07-12",
+  "honest_verdict": "complete: heuristic_shared_phrase_mining_finds_zero_genuine_mechanic_content_conclusive_negative",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "solve_provenance": "development_proxy",
+  "duration_s": 0.9,
+  "random_seed": 5581,
+  "reproducibility_checksum": "see python/carnot/agentic/arc_genre_prior_distillation.py build_genre_prior_index() reproducibility_checksum field for the underlying deterministic mining checksum",
+  "scope_doc": "docs/research-notes/arc-agi3-registry-genre-prior-distillation-scope-2026-07-12.md",
+  "what_ran": "python/carnot/agentic/arc_genre_prior_distillation.py main() (build_genre_prior_index + write_genre_prior_index) against the live ops/arc_solve_registry.yaml, using the default heuristic_shared_phrase_propose propose_fn (plain 4-9 word near-verbatim phrase overlap across >=2 non-near-duplicate games within the same coarse mechanic class).",
+  "raw_candidate_count": 604,
+  "classes_with_candidates": ["avatar_navigation", "click_connect", "config_toggle", "unknown"],
+  "manual_inspection_method": "Filtered candidates against an 18-token boilerplate marker list (outer loop, reproduction, verified, checksum, env.reset, fresh env, action_sequence, codex, fable, gpt-5, session, artifact, budget, honest_verdict, registry, resolver, gamestate, confirmed reached, checkpoint, executable), then manually read every one of the 140 surviving 'non-boilerplate' candidates across all 4 classes.",
+  "post_filter_candidate_count": 140,
+  "genuine_mechanic_content_candidates_found": 0,
+  "finding": "Every single one of the 604 raw candidates, including all 140 that survived an 18-token boilerplate-marker filter, is drawn from the outer loop's own formulaic verification/status narration style -- date/round-number scaffolding ('round 9 2026 07 12 gpt 5 6 sol via'), status phrases ('frontier stays at level', 'no new level banked', 'still honest null', 'see gotcha below for the full'), and verification-methodology phrasing ('all 5 confirmed level', 'levels completed advanced to') -- not one candidate expresses actual game-mechanic content (a color, an object behavior, a spatial relationship, a timing rule). This is not sparse signal, it is a clean zero.",
+  "why_this_happened": "Registry gotchas prose mixes two kinds of content in the same free-text fields: (a) game-mechanic description, which is necessarily game-specific in its literal wording (exact colors, coordinates, object names differ per game even when the underlying mechanic class matches -- e.g. dc22's 'color-15 swap sockets at (13,25)' vs g50t's 'color-15 SWAP sockets... (13,25)<->(13,13)' share vocabulary but not exact multi-word phrasing beyond short fragments), and (b) the outer loop's own verification/session narration, which is written in a HIGHLY repetitive template across every entry ('independently re-verified by the outer loop: Nx fresh env.reset()...', 'frontier stays at level N', date-stamped round numbers) because the same author (this outer loop) writes every gotcha with the same habitual phrasing. Literal n-gram overlap mining is structurally biased toward surfacing (b), the exact opposite of what a genre-prior index needs.",
+  "conclusion_for_scope_doc": "Sharpens docs/research-notes/arc-agi3-registry-genre-prior-distillation-scope-2026-07-12.md section 2.1 from 'expected to find few or zero candidates' (a hedge) to a confirmed, decisive negative: the lexical/heuristic propose_fn as implemented is NOT a viable path to a genuine genre-prior index on this corpus, not merely a weak first pass. An LLM-assisted (semantic) mining pass -- reading each game's gotchas and abstracting the MEANING of the mechanic, not matching its literal wording -- is a necessary next step for this capability to produce anything useful, not an optional upgrade. The harness built in arc_genre_prior_distillation.py (load/group/filter/write, the >=2-distinct-non-near-duplicate-games independence filter) is retained as correct, reusable infrastructure: propose_fn is a pluggable callable specifically so a semantic/LLM-backed proposer can be substituted without touching the harness. ops/arc_genre_priors.yaml is deliberately NOT checked in from this pilot run since its content would be pure noise if later consumed by a live-path integration.",
+  "next_step_not_taken_this_session": "Swap in an LLM-backed propose_fn (reading each mechanic-class group's gotchas and asking for a genuine class-level generalization, still gated by the same >=2-distinct-games independence filter already built) and re-run. Deferred rather than rushed in the same session per the effort already spent reaching a clean, well-evidenced conclusion on the mechanical baseline first.",
+  "methodology_note": "This is offline, dev-only tooling development (development_proxy), not a live-agent solve or a verifier claim; no live env.step() calls, no ARC scoring, no GPU/LLM inference. duration_s reflects the actual wall-clock of running main() against the live registry.",
+  "field_provenance": {
+    "raw_candidate_count": {
+      "principle": "Records the mining pass's actual output size so the 'found nothing useful' conclusion is falsifiable against a real number, not asserted from vibes."
+    },
+    "genuine_mechanic_content_candidates_found": {
+      "principle": "The single load-bearing number for this pilot's verdict -- distinguishes 'weak signal, some real content' from 'zero real content,' which changes the recommended next step from 'tune the heuristic' to 'the mechanism class needs to change.'"
+    }
+  }
+}
