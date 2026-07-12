@@ -3231,6 +3231,27 @@ games:
     before the tongue trick was found, so the live instance became
     unsolvable this session -- next attempt should route a clone to the
     tongue FIRST, before any other exploration. No new level banked.'
+  - 'L4 progress round 3 (2026-07-12, gpt-5.6-sol via codex, round-3 breadth
+    campaign): HONEST OVER-BUDGET NULL -- refines round 2''s tongue mechanic
+    with exact coordinates/behavior (enter the center color-8 assembly from
+    (32,20) by moving down; while occupied the left head shifts x=8->x=14
+    and opens the x=8 shaft, snapping back on release) and maps further
+    past the opened shaft: a rightward middle corridor, a vertical color-15
+    rail near x=26, and a lower corridor/target near y=50 -- but the
+    attempted tail (right-right-right, down-down, left-left-left) did not
+    win. New mechanic: ACTION5 issued after both normal commit slots are
+    used does NOT create a fourth ghost -- it clears all committed ghosts
+    and resets the CURRENT level while preserving levels_completed, a
+    cheap current-level retry that avoids replaying the banked L1-L3
+    prefix. Self-flagged over-budget: two asynchronous 118-step prefix
+    replays were initially uncollected and omitted from provisional
+    accounting; corrected total session usage was 833 steps against the
+    600-step round-3 budget. The source agent explicitly marked this an
+    honest over-budget null that must not be treated as a valid campaign
+    advance -- no new level banked, reproducible_total_levels unaffected.
+    Next attempt: budget-account async replay collection correctly BEFORE
+    exploring past the tongue, and continue past the lower color-15
+    rail/corridor toward the unresolved goal approach.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
