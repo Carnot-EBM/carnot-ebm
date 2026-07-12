@@ -2201,7 +2201,9 @@ games:
     reproducibility_checksum: a988ffc5568e397a431e2637bb40e290f262d42710ae272ea570f0e023caf3bb
 - game: sp80
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: spill_splitter_placement
   win_condition: 'L1 move-right x3 then commit; L2 splitter placements route the spill into all three repwkzbkhxl target blocks without touching the wall: len3 at (0,3), len5 at (4,3), len3 at (8,5). L3-L4 (2026-07-11,
     claude-fable-5): the same spill-routing physics escalates -- flow direction
@@ -2293,6 +2295,22 @@ games:
     level 5 -- filling all four visible sockets is confirmed INSUFFICIENT
     while any stray stream remains; at least one final routing or hidden
     condition is still unresolved. No new level banked.'
+  - 'L6 SOLVED, FULL GAME CLEAR round 5 (2026-07-12, claude-fable-5, first
+    fable-5 leg of the campaign, results/outer_loop_fable5_sp80_probe.json):
+    resolves round 4''s "at least one final routing or hidden condition is
+    still unresolved" with a precise geometric diagnosis, not a new
+    mechanic. Round 4''s layout already colored all four sockets, but the
+    right branch struck the SOLID TOP of the right socket at y=29..31 even
+    though the socket glyph visibly changed color (a glyph-color change
+    does not mean the stream actually entered through the open side).
+    Moving only the right-turn elbow down exactly ONE 3-pixel cell
+    (y=29..34 -> y=32..37) shifts the outflow to y=32..34, through the
+    socket''s actual open side, and wins live. Compressed to a 37-action
+    suffix after the 278-action prefix (315 total); fresh-reset reproduce()
+    passed with reached_level=6. Independently re-verified by the outer
+    loop: 5x fresh env.reset() + replay via a new resolver priority branch,
+    all 5 confirmed level=6, state=GameState.WIN -- the game''s full 6
+    levels are now cleared.'
   - 'L5 (well-mapped in a PRIOR session, unsolved at the time, not banked
     then -- superseded by the entry above): both tower vines were routed
     into all three arch holes with zero strays (verified in the spill
@@ -4103,7 +4121,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 152
+reproducible_total_levels: 153
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

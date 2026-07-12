@@ -2,9 +2,9 @@
   "game": "sp80",
   "model": "claude-fable-5",
   "starting_level": 5,
-  "max_level_reached": 5,
-  "total_env_steps_used": 639,
-  "reproduction_verified": false,
+  "max_level_reached": 6,
+  "total_env_steps_used": 634,
+  "reproduction_verified": true,
   "action_sequence": [
     {
       "action": 4
@@ -959,18 +959,144 @@
     },
     {
       "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 25,
+        "y": 33
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 30,
+        "y": 45
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 45,
+        "y": 16
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
     }
   ],
-  "levels_won_this_session": [],
-  "novel_mechanics_found": "Level 6 elbow routing depends on one-cell alignment: a downward stream aimed at an elbow's vertical stem can spill down its inner side as well as turn, while offsetting the elbow so the stream meets its horizontal arm can eliminate one leakage path and fill previously unreachable side sockets. Five ACTION5 commits on the same level ended the episode with GAME_OVER, confirming that commit attempts are a scarce resource independently of the longer whole-level action limit. Filling all four visible sockets was still insufficient while a stray stream remained, and a clean symmetric-offset candidate did not pass the fresh-reset gate, so at least one final routing or hidden condition remains unresolved.",
-  "narrative": "Replayed the resolver's exact 278-action prefix from a fresh reset and confirmed levels_completed=5. On level 6, an initial spill mapped the two downward sources and the splitter/elbow behavior. The previously attractive non-crossing layout filled only the right and bottom sockets because the left elbow was flush against the vertical splitter; offsetting that elbow by one cell filled all four visible sockets, but the animation still showed an extra downward spill missing the bottom cup. A symmetric offset of the other elbow was attempted on the fifth commit, which ended the live episode before any level-up. I then compressed the hypothesized corrected layout to a 36-action one-commit suffix and ran reproduce() from a fresh reset; it reached only level 5, so no additional level is claimed. I stopped at 639 steps because the remaining 61-step budget cannot replay the 278-action prefix for another valid level-6 attempt or gate.",
+  "levels_won_this_session": [
+    6
+  ],
+  "novel_mechanics_found": "Level 6's final failure was caused by socket-mouth alignment, not a hidden object: with the right-turn elbow at y=29..34, its rightward spill runs at y=29..31 and strikes the socket's solid top wall even though all four socket glyphs visibly change color. Moving that elbow down exactly one 3-pixel cell to y=32..37 shifts the outflow to y=32..34, through the socket's open side, removes the stray/wall contact, and wins.",
+  "narrative": "Replayed the resolver's exact 278-action prefix from a fresh reset and confirmed levels_completed=5. I reconstructed the strongest prior L6 layout and instrumented its spill animation from rendered frames: it colored all four sockets but the right branch hit the solid top of the right socket at y=29..31. Moving only the right-turn elbow down one cell aligned that branch with the socket opening at y=32..34 and produced a live level-6 win. I compressed the solution to a 37-action suffix and ran reproduce() from a fresh reset; it reached level 6 with reproduced=true, completing the game's six levels in 634 total env.step() calls including exploration and the gate.",
   "gotchas": [
     "The resolver prefix is 278 actions and was directly confirmed from a fresh reset to reach levels_completed=5; any further reproduction gate needs at least those 278 calls.",
     "L6 directions are ACTION1=up, ACTION2=down, ACTION3=left, ACTION4=right; ACTION6 selects by rendered coordinate and ACTION5 commits.",
     "The vertical splitter cannot move left of x=14..16, so clearance from the left-turn elbow must be created by offsetting the elbow rather than moving the splitter toward the sockets.",
     "With the horizontal bar at x=23..37,y=20..22, place the left-turn elbow at x=20..25,y=29..34 rather than x=17..22: this changes the stream/elbow contact from the vertical stem to the horizontal arm and allows both left sockets to fill.",
-    "The analogous clean candidate used the right-turn elbow at x=35..40,y=29..34, left-turn elbow at x=20..25,y=29..34, vertical splitter at x=14..16,y=26..37, and embedded-source horizontal bar at x=23..37,y=20..22; its one-commit fresh-reset gate still reached only level 5.",
-    "The fifth ACTION5 commit on L6 returned GAME_OVER at levels_completed=5, so use failed commits sparingly even when the whole-level movement budget has not been exhausted."
+    "The winning positions are: right-turn elbow x=35..40,y=32..37; left-turn elbow x=20..25,y=29..34; vertical splitter x=14..16,y=26..37; embedded-source horizontal bar x=23..37,y=20..22; then ACTION5.",
+    "Coloring all four socket glyphs is not sufficient evidence of a clean route: a stream striking a socket's solid wall can color the whole glyph. Inspect whether the stream enters through the 3-pixel mouth; the right socket's mouth is y=32..34.",
+    "L6 has scarce failed commits and a finite whole-level action budget, so use the 37-action one-commit suffix rather than iterating commits."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
