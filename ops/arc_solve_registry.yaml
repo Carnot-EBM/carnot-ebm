@@ -1566,7 +1566,9 @@ games:
     reproducibility_checksum: 0b0e0a84b86476ac8666433e7dddb7fe4bf8d7b8c3d102ab1ade076cbee4ee0f
 - game: lp85
   reproducibility: reproduced
-  levels_reproduced: 7
+  levels_reproduced: 8
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   win_condition: 'align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite
     at (+1,+1) via button rotations. L6-L7 add per-sprite hidden IDENTITY state (period-3
     cycling) on top of the visible click-button mechanic -- identical rendered arrangements
@@ -1594,6 +1596,18 @@ games:
   - deepcopy-injection WORKS for lp85 (unlike sc25).
   - dedup by goal-relevant key (goal positions), not full grid hash, or the search
     explodes (26k states -> fails).
+  - 'FULL CLEAR, L8 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign round 2): L8 has three same-colored 2x2 tokens and three targets
+    disguised as sets of four tiny 1x1 corner dots. Paired glyphs at right are
+    reversible per-row spacing controls; paired glyphs at bottom advance/
+    reverse a shared wrapping conveyor. Row settings synchronize each token''s
+    socket-arrival phase (top-left once, middle-right x3, bottom-right x3
+    makes two conveyor advances align all three simultaneously). Self-run
+    reproduction gate passed cleanly this time (reproduced=true,
+    reached_level=8) AND the outer loop independently re-verified: 5x fresh
+    env.reset() + replay via the fixed resolver, all 5 confirmed
+    reached_level=8 AND state=GameState.WIN. The winning frame itself reports
+    win_levels=8 -- lp85 is a confirmed full clear, no further level exists.'
   - 'L6-L7 (2026-07-11, gpt-5.6-sol via codex): the action that wins a level
     immediately renders the NEXT level, so the solved board state is never
     externally visible -- do not search for a "solved" frame, search for the
@@ -2074,7 +2088,7 @@ games:
     reproducibility_checksum: 9dbb41f8fb53f3bc34ee92bc4864bc985e199933ea2407b031a6b5fe82bfea84
 - game: tu93
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   mechanic_class: graph_explore
   win_condition: L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed
     best-first search (player->goal Manhattan).
@@ -2106,6 +2120,25 @@ games:
     the impact cell, leaving a passage-sealing remnant; a charger''s exact
     disarm/trigger rule was not fully pinned down. Co-location with any
     patroller (including a mover-mover swap) is instant death.'
+  - 'L6 SOLVED round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): the two-lock wall in v19 below was broken -- it is a
+    CHARGER-ORDERING dependency puzzle, not a genuine dead end. Direction-
+    marked color-8 chargers are not walls: horizontal entry REMOVES a
+    vertical charger and occupies its cell, but another aligned charger can
+    fire through that contact cell and kill the player, so chargers must be
+    cleared in dependency order. Winning order: remove the two upper vertical
+    chargers, enter the bottom corridor, remove the two supporting bottom
+    chargers, then remove the central horizontal and vertical chargers. A
+    two-move loop on the now-cleared bottom track shifts the patroller phase
+    (the c1 period-4 guard from v19) so the only return cell is safe -- this
+    confirms v19''s "entering a charger''s column from above pre-fires it
+    harmlessly" hypothesis was the right unlock direction. Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay via the
+    fixed resolver (the artifact stores bare-int labels, not the expected
+    JSON-object shape -- fixed the resolver to json.dumps({"action": ...})
+    before replay), all 5 confirmed reached_level=6,
+    state=GameState.NOT_FINISHED. L7 was visually inspected but not explored
+    (only 2 of 700 steps remained after the gate).'
   dead_ends:
   - 'v19 (results/outer_loop_fable5_tu93_probe.json, 2026-07-11, claude-fable-5,
     honest null, NOT banked -- levels_reproduced stays 5): the richest
@@ -2596,7 +2629,7 @@ games:
     reproducibility_checksum: 80c3407496706b32fd1eaa057b1da9f5ef8b56c0be32ccc59cf80b08872a5a43
 - game: ka59
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   win_condition: 'E3 executable-world-model L1: use the selected 3x3 block to push
     the second block through the central wall, place the left block on the left target,
     then place the pushed block on the right target. L2-L4 (2026-07-11,
@@ -2647,15 +2680,35 @@ games:
     on e-framed (color 14) blocks; color-11 plus-crosses are pushable but NOT
     selectable. ACTION5 is a no-op. The step-budget HUD consumes 1 pixel per 2
     actions (~128 actions/level budget), refilling on level-up.'
-  - 'L5 (scouted this session, unsolved, not banked -- preserved for a future
-    attempt): a genuinely new timing/extraction mechanic -- a vertical channel
-    holds a 6-row two-color (c/d) stack whose color boundary self-cycles one row
-    per ANY action (including sideways moves and clicks, period ~6) -- there is no
-    way to "wait" without advancing the phase. Pushing the stack launches all 6
-    rows with the color composition FROZEN at the strike phase. A 3-cell legend
-    beside a 3x3 target box gives a mod-3 phase readout, presumably specifying the
-    required delivery composition, but the exact win condition was not determined
-    -- remaining session budget could not both crack it and gate-verify it.'
+  - 'L5 SOLVED, L6 progress round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30
+    breadth campaign): confirmed the scouted stack cycles one c-row per
+    directional action (period 6, matching the "no way to wait" finding below).
+    Approaching the stack at the correct spacing FREEZES its phase; the next
+    push launches the six-row object over the ceiling. The 3x3 modulo glyph
+    beside the socket encodes the stack''s c-row count MODULO 3 (confirms the
+    "mod-3 phase readout" hypothesis below) -- push the glyph left to clear the
+    socket, then move the selected e-framed 3x3 block left into the vacated
+    socket to win. L5 begins behind a completed-level transition frame: one
+    further action is required to reveal it. L6 adds phase-dependent transport:
+    striking the lower cycling stack can route the selected block through a
+    six-row wall into an isolated upper chamber -- explored through action 293
+    but the plus-shaped object got stuck isolated in the upper-left chamber
+    with no observable escape (three-pixel void strips make that chamber
+    one-way); stopped there rather than force it. Independently re-verified by
+    the outer loop: 5x fresh env.reset() + replay via the fixed resolver, all 5
+    confirmed reached_level=5, state=GameState.NOT_FINISHED. No L6 win banked
+    this session.'
+  - 'L5 (scouted in a PRIOR session, unsolved at the time, not banked then --
+    confirmed correct by the entry above): a genuinely new timing/extraction
+    mechanic -- a vertical channel holds a 6-row two-color (c/d) stack whose
+    color boundary self-cycles one row per ANY action (including sideways
+    moves and clicks, period ~6) -- there is no way to "wait" without
+    advancing the phase. Pushing the stack launches all 6 rows with the color
+    composition FROZEN at the strike phase. A 3-cell legend beside a 3x3
+    target box gives a mod-3 phase readout, presumably specifying the required
+    delivery composition, but the exact win condition was not determined THEN
+    (now solved, see above) -- remaining session budget could not both crack
+    it and gate-verify it.'
 - game: ft09
   reproducibility: reproduced
   levels_reproduced: 6
@@ -3396,7 +3449,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 128
+reproducible_total_levels: 131
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

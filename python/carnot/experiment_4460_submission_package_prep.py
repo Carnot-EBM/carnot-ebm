@@ -312,6 +312,24 @@ def resolve_replay_plan(
             "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
             _apply_ar25_label,
         )
+    if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 5:
+        from arcengine import GameAction
+        from carnot.agentic.arc_agi3_live_adapter import _game_action
+        from carnot.experiment_4340_e3_explore_verify_plan_ka59 import _label_to_action_data
+
+        rel_path = "results/outer_loop_codex_ka59_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+
+        def _apply_ka59_extended_label_v2(env: Any, label: str, _frame: Any) -> Any:
+            if label.startswith("6:"):
+                _, x_str, y_str = label.split(":")
+                action, data = 6, {"x": int(x_str), "y": int(y_str)}
+            else:
+                action, data = _label_to_action_data(env, label)
+            return env.step(_game_action(GameAction, action), data=data)
+
+        return ReplayPlan(game, labels, rel_path, _apply_ka59_extended_label_v2)
     if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 4:
         from arcengine import GameAction
         from carnot.agentic.arc_agi3_live_adapter import _game_action
@@ -403,6 +421,28 @@ def resolve_replay_plan(
             exp4446.RESULT_RELATIVE_PATH,
             exp4446.apply_vc33_label,
         )
+    if game == "tu93" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_tu93_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        # This artifact stores labels as bare ints; the adapter's apply() does
+        # json.loads(label)["action"], which requires a JSON-object string.
+        labels = [
+            label if isinstance(label, str) else json.dumps({"action": int(label)})
+            for label in raw_labels
+        ]
+        if adapter is None:
+            raise RuntimeError("tu93 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "tu93" and _as_int(entry.get("levels_reproduced")) >= 5:
         from carnot import experiment_4436_deepen_plus_primitive_consolidation as exp4436
         from carnot.agentic.arc_game_adapters import get_adapter
@@ -415,6 +455,22 @@ def resolve_replay_plan(
             game,
             [str(label) for label in labels],
             f"{exp4436.TU93_L4_SOURCE_RELATIVE_PATH}+TU93_L5_SUFFIX_ACTIONS",
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "lp85" and _as_int(entry.get("levels_reproduced")) >= 8:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_lp85_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("lp85 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )

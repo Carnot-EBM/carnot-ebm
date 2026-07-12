@@ -1,0 +1,23 @@
+{
+  "game": "ka59",
+  "model": "gpt-5.6-sol",
+  "starting_level": 4,
+  "max_level_reached": 5,
+  "total_env_steps_used": 527,
+  "reproduction_verified": true,
+  "action_sequence": [
+    "4", "4", "4", "3", "2", "3", "3", "3", "C:1", "1", "4", "1", "1", "1", "1", "3", "6:19:44", "1", "1", "1", "6:44:47", "3", "3", "3", "3", "6:37:43", "2", "3", "6:17:47", "1", "1", "1", "6:19:20", "1", "1", "1", "3", "3", "3", "6:17:41", "2", "3", "3", "3", "6:41:34", "4", "4", "4", "4", "4", "2", "2", "6:37:46", "2", "2", "4", "4", "4", "4", "4", "3", "3", "3", "3", "3", "3", "3", "3", "3", "2", "2", "2", "2", "2", "2", "2", "2", "4", "1", "1", "1", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "1", "3", "3", "3", "3", "3", "3", "3", "2", "3", "3", "3", "2", "2", "6:30:33", "3", "3", "3", "3", "2", "6:18:51", "2", "2", "4", "1", "6:24:33", "6:18:33", "1", "1", "4", "4", "2", "6:21:57", "3", "1", "1", "1", "4", "6:24:27", "4", "4", "4", "4", "4", "2", "2", "6:18:48", "2", "4", "4", "4", "4", "4", "4", "1", "5", "3", "3", "2", "2", "2", "4", "1", "6:39:27", "2", "6:33:54", "1", "1", "1", "4", "2", "1", "2", "1", "2", "3", "2", "2", "2", "4", "1", "6:39:27", "3", "3", "2", "2", "2", "4", "1", "1", "1", "1", "1", "1", "1", "6:36:57", "1", "4", "6:36:21", "2", "2", "2", "4", "4", "4", "4", "4", "5", "3", "4", "3", "4", "3", "4", "3", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "2", "3", "3", "3"
+  ],
+  "levels_won_this_session": [5],
+  "novel_mechanics_found": "L5 begins behind a completed-level transition frame: one further action is required to reveal it. Its 6x6 c/d stack cycles through one additional c-row on each directional action (period 6); approaching the stack at the correct spacing freezes a phase, and the next push launches the six-row object over the ceiling. A dynamic 3x3 modulo glyph beside the socket encodes the stack's c-row count modulo 3. The glyph itself is ballistic: push it left to clear the socket, then move the selected e-framed 3x3 block left into the vacated socket to win. L6 adds phase-dependent transport: striking the lower cycling stack can route the selected block through a six-row wall into an isolated upper chamber while leaving the stack behind.",
+  "narrative": "Replayed the resolver's 201-action prefix from a fresh reset and confirmed frame.levels_completed == 4. After probing the six stack phases, I froze and extracted the L5 stack, navigated the selected block around the ceiling, launched the derived glyph left, and moved the block into its socket; the live frame advanced to 5 at action 234. I continued through action 293 on L6. The chosen lower-stack phase routed the block into the upper-right chamber, where I filled the square socket, but the three-pixel void strips made that chamber one-way and left the plus-shaped object isolated in the upper-left chamber. With no observable escape from that branch, I stopped and ran reproduce() on the 234-action prefix; it reached level 5 with reproduced=true.",
+  "gotchas": [
+    "The frame returned by the L4 winning action is still the completed L4 board even though levels_completed is already 4; one additional action reveals L5.",
+    "Directional actions advance L5/L6 color phases, but ineffective ACTION6 clicks do not; clicks can therefore hold a phase while consuming an env.step call.",
+    "A first contact with the cycling L5 stack freezes/arms it and a subsequent push performs the long extraction; apparent blocked approaches can be phase-sensitive.",
+    "In L5 the 3x3 c/d glyph begins immediately beside and partly over the socket border. Launch it left first; the selected e block then needs only the final leftward move into the cleared socket.",
+    "L6 contains three-pixel color-2 void strips, not walkable corridors. The selected 3x3 block cannot cross them or contact the upper cycling stacks through them.",
+    "L6 lower-stack transport is phase/direction sensitive and can be one-way. The phase used in this run sent the block to the upper-right chamber before the left plus target was solved, which appears to be an unrecoverable ordering trap."
+  ],
+  "solve_provenance": "live_agent_self_discovery"
+}
