@@ -1,9 +1,9 @@
 {
   "game": "lp85",
   "model": "gpt-5.6-sol",
-  "starting_level": 5,
-  "max_level_reached": 7,
-  "total_env_steps_used": 700,
+  "starting_level": 7,
+  "max_level_reached": 8,
+  "total_env_steps_used": 649,
   "reproduction_verified": true,
   "action_sequence": [
     "{\"x\": 2, \"y\": 30}",
@@ -101,19 +101,28 @@
     "{\"x\": 20, \"y\": 33}",
     "{\"x\": 20, \"y\": 20}",
     "{\"x\": 20, \"y\": 20}",
-    "{\"x\": 29, \"y\": 43}"
+    "{\"x\": 29, \"y\": 43}",
+    "{\"x\": 49, \"y\": 24}",
+    "{\"x\": 53, \"y\": 29}",
+    "{\"x\": 53, \"y\": 29}",
+    "{\"x\": 53, \"y\": 29}",
+    "{\"x\": 53, \"y\": 34}",
+    "{\"x\": 53, \"y\": 34}",
+    "{\"x\": 53, \"y\": 34}",
+    "{\"x\": 31, \"y\": 57}",
+    "{\"x\": 31, \"y\": 57}"
   ],
   "levels_won_this_session": [
-    6,
-    7
+    8
   ],
-  "novel_mechanics_found": "Level 7 has four independently cycled sprite identities with period three: identical rendered color arrangements can hide different identity states, so frame deduplication alone is insufficient. Level 8 reveals three magenta movable pieces, three magenta-corner sockets, row switches that alter relative piece spacing, and a shared wrapping conveyor that can move a piece out of a socket rather than locking it.",
-  "narrative": "The 52-click registry prefix reproduced level 5. A prior non-registry project provenance artifact supplied an L6 candidate tail; I replayed it live, observed level 6, then independently explored L7 from rendered frames. A directed ternary Gray-code sweep over the four identity controls found the L7 win, and the resulting 96-click full sequence passed reproduce() from a fresh reset with reached_level 7. I spent the remaining budget investigating L8, routed individual magenta pieces into sockets at several intermediate states, but did not find a simultaneous three-piece alignment before the 700-step session cap.",
+  "novel_mechanics_found": "Level 8 contains three same-colored 2x2 tokens and three targets disguised as sets of four tiny 1x1 corner dots. The paired glyphs at right are reversible per-row spacing controls, while the paired glyphs at bottom advance or reverse a shared wrapping conveyor. The row settings synchronize each token's socket-arrival phase: top-left once, middle-right three times, and bottom-right three times make two conveyor advances align all three simultaneously.",
+  "narrative": "The resolver's 96-click prefix was replayed unchanged and confirmed levels_completed=7 before exploration. Frame-only probing identified the three corner-marked sockets and showed that row shifts alter relative conveyor arrival phases; after an exploratory episode hit the level action limit, a clean episode synchronized the three phases and observed the terminal level-8 win live. The reduced 105-click full line then passed reproduce() from a fresh reset with reached_level=8 and reproduced=true; the winning frame reports state=WIN and win_levels=8, so no further level remains.",
   "gotchas": [
     "The action that wins a level immediately renders the next level, so the solved board is not externally visible.",
-    "The left-edge vertical strip records clicks and changes the frame even when the puzzle arrangement cycles back; exclude it when comparing visible puzzle states.",
-    "On L7, two action histories can render identically while differing in sprite identity and win eligibility.",
-    "On L8, the shared conveyor wraps pieces out of completed sockets; sockets do not lock pieces in place."
+    "On L8, the three targets are the 2x2 empty regions enclosed by four tiny corner pixels; the larger paired glyphs are controls, not targets.",
+    "The right-side left/right halves reversibly shift row spacing, and the bottom left/right halves advance/reverse the global conveyor.",
+    "Tokens do not lock when they enter a socket; all three must occupy their sockets on the same conveyor phase.",
+    "L8 has a bounded action counter and returns GAME_OVER when exhausted, so cancel exploratory control pairs and replay the reduced configuration on a clean episode."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }

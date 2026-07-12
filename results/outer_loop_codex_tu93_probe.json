@@ -1,0 +1,29 @@
+{
+  "game": "tu93",
+  "model": "gpt-5.6-sol",
+  "starting_level": 5,
+  "max_level_reached": 6,
+  "total_env_steps_used": 698,
+  "reproduction_verified": true,
+  "action_sequence": [
+    4, 2, 2, 4, 1, 4, 2, 2, 3, 3, 2, 4, 4, 2, 4, 1, 4, 2, 1, 4,
+    4, 2, 4, 4, 1, 4, 4, 1, 1, 1, 4, 1, 3, 3, 1, 3, 3, 2, 4, 2,
+    3, 3, 3, 2, 4, 2, 4, 4, 3, 4, 4, 4, 1, 1, 4, 2, 1, 3, 1, 3,
+    1, 3, 2, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 2, 2, 2, 1, 1, 2, 2,
+    4, 2, 2, 4, 4, 4, 1, 2, 1, 1, 2, 1, 3, 3, 3, 2, 2, 4, 3, 3,
+    3, 4, 4, 4, 3, 4, 2, 2, 3, 2, 3, 3, 4, 4, 3, 4, 1, 3, 3, 1,
+    3, 1, 1, 1, 3
+  ],
+  "levels_won_this_session": [6],
+  "novel_mechanics_found": "The player's otherwise-unexplained off-center color-4 pixel points left, drawing attention to charger contact behavior. Direction-marked color-8 chargers are not walls: horizontal entry removes a vertical charger and occupies its cell. However, another aligned charger can fire through that contact cell and kill the player, so L6 requires clearing chargers in dependency order. The successful order removes the two upper vertical chargers, enters the bottom corridor, removes the two supporting bottom chargers, then removes the central horizontal and vertical chargers. A two-move loop on the now-cleared bottom track shifts the patroller phase so the only return cell is safe.",
+  "narrative": "The resolver's 93-action prefix was replayed from a fresh environment and confirmed to reach levels_completed=5. Live frame-only exploration found that the prior apparent two-lock dead end is a charger-ordering puzzle: chargers can be entered and removed horizontally, but supporting chargers and a moving patroller make the naive order lethal. After clearing all six chargers in dependency order and inserting two parity-adjusting track loops, the player reached the goal and advanced to level 6. The complete 125-action sequence then passed reproduce('tu93', ..., claimed_level=6) from a fresh reset. The reproduction gate left only two of the 700 allowed steps, so level 7 could only be inspected visually, not meaningfully explored.",
+  "gotchas": [
+    "tu93 reset is parity-poisoned; every recovery used a newly constructed env and fresh scorecard rather than env.reset() reuse.",
+    "The 93-action resolver prefix reaches levels_completed=5 at prefix action 93; the verified L6 suffix is 32 actions.",
+    "Blocked moves consume the row-63 meter but do not advance patrollers, so they cannot serve as wait actions.",
+    "A charger that appears safely removable can still be backed by an aligned charger that fires through the contacted cell; clear the supporting charger first.",
+    "The bottom horizontal patroller can be visually hidden while overlapping a charger and reappear on its next tick; route using its inferred phase, not only the currently visible color-12 pixels.",
+    "The successful suffix contains two separate two-move loops: one before descending into the bottom corridor and one before climbing back out, both needed to avoid patroller collisions."
+  ],
+  "solve_provenance": "live_agent_self_discovery"
+}
