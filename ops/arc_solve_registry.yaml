@@ -3187,6 +3187,17 @@ games:
     with 132 calls unused. No fresh reproduce() gate run (even the 358-call
     starting prefix alone exceeded the remaining budget). No new level
     banked.'
+  - 'L7 progress round 5, TOOLING FAILURE (2026-07-12, claude-fable-5, first
+    fable-5 leg of the campaign): confirmed the 358-action prefix replays
+    cleanly to level 6, but immediately after that this session''s own
+    frame-only diagnostic printer crashed -- it assumed a single 64x64
+    grid, but ka59''s rendered frame is a TWO-LAYER 64x64 tensor, which
+    terminated the live environment before any post-prefix exploration.
+    Replaying the prefix a second time would have exceeded the 700-step
+    budget, so the session stopped without attempting L7. This is an
+    agent-tooling bug (two-layer frame handling), not a game finding --
+    a future attempt (any agent) must handle ka59''s multi-layer frame
+    shape explicitly. Frontier stays at level 6.'
 - game: ft09
   reproducibility: reproduced
   levels_reproduced: 6
