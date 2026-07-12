@@ -228,11 +228,26 @@ def _route_explore_budget(route: dict[str, Any]) -> int:
     return SUBMITTED_GRAPH_EXPLORE_BUDGET
 
 
-def _recommend_live_approach(game_id: str, *, mechanic: Optional[str] = None) -> dict[str, Any]:
-    """Return the solve-learning recommendation, falling back to the lightweight strategy router."""
+def _recommend_live_approach(
+    game_id: str,
+    *,
+    mechanic: Optional[str] = None,
+    early_play_signature: Any = None,
+) -> dict[str, Any]:
+    """Return the solve-learning recommendation, falling back to the lightweight strategy router.
+
+    `early_play_signature` (a list of {action_id, data, before, after} rows built purely from this
+    game's OWN observed transitions, no game-identity lookup) threads through to
+    `arc_solve_learning.recommend_approach`'s behavioral `feature_router` payload — this is the
+    genre/mechanic-class-from-play-experience signal, distinct from (and available even when) the
+    identity-keyed `mechanic=` hint and the games-registry similarity engine are both blind to a
+    truly hidden game.
+    """
 
     try:
-        rec = arc_solve_learning.recommend_approach(game_id, mechanic=mechanic)
+        rec = arc_solve_learning.recommend_approach(
+            game_id, mechanic=mechanic, early_play_signature=early_play_signature
+        )
         if isinstance(rec, dict) and isinstance(rec.get("strategy"), dict):
             return rec
     except Exception as exc:
@@ -241,6 +256,40 @@ def _recommend_live_approach(game_id: str, *, mechanic: Optional[str] = None) ->
             "strategy": arc_strategy_router.route_for_game(game_id, mechanic=mechanic),
         }
     return {"strategy": arc_strategy_router.route_for_game(game_id, mechanic=mechanic)}
+
+
+# REQ-CAPSTONE-4582 (live wiring): how many of the game's OWN early observed transitions to
+# summarize into a behavioral mechanic-class signature before biasing the live search. Matches
+# `arc_solve_learning.extract_early_play_signature`'s own default `k`.
+_FEATURE_ROUTER_EARLY_PLAY_K = 8
+
+# Minimum `feature_router.confidence` (learned win-rate margin for the routed approach, from
+# `arc_solve_learning.learn_feature_router_policy`) required before the classified mechanic is
+# allowed to change live search behavior. Below this it is observational only (still stored on
+# `self.feature_router`). Conservative given exp4582's null on the closely-related full-solver-swap
+# version of this idea -- see `_maybe_route_from_transitions`'s docstring.
+_FEATURE_ROUTER_MIN_CONFIDENCE = 0.5
+
+
+def _early_play_rows(
+    transitions: Any, *, k: int = _FEATURE_ROUTER_EARLY_PLAY_K
+) -> list[dict[str, Any]]:
+    """Convert this game's own collected `Transition`s into the row shape
+    `arc_solve_learning.extract_early_play_signature` expects. Purely behavioral: uses only the
+    grids/actions this specific live play session has already observed, never a game-identity
+    lookup and never the executable win-check."""
+
+    rows: list[dict[str, Any]] = []
+    for transition in list(transitions)[:k]:
+        rows.append(
+            {
+                "action_id": getattr(transition, "action", None),
+                "data": getattr(transition, "data", None),
+                "before": getattr(transition, "grid", None),
+                "after": getattr(transition, "next_grid", None),
+            }
+        )
+    return rows
 
 
 def _load_submitted_candidate_router() -> Any | None:
@@ -2251,6 +2300,8 @@ class E3AgentPolicy:
         )
         self.approach_recommendation["strategy"] = self.strategy_route
         self._route_from_frame_checked = False
+        self._feature_router_checked = False
+        self.feature_router: dict[str, Any] | None = None
         self.mechanic_detector = mechanic_detector or _frame_only_mechanic_hint
         self.dsl_model = ObjectDeltaModel(self.short)
         self.dsl_energy: Optional[dict[str, Any]] = None
@@ -2389,6 +2440,72 @@ class E3AgentPolicy:
             )
         )
         if routed.get("name") != self.strategy_route.get("name"):
+            self.strategy_route = routed
+            recommendation["strategy"] = routed
+            self.approach_recommendation = recommendation
+            self.explore_budget = min(self.explore_budget, _route_explore_budget(routed))
+
+    def _maybe_route_from_transitions(self) -> None:
+        """REQ-CAPSTONE-4582 (live wiring): once enough of THIS game's own transitions have been
+        observed, classify their behavioral signature (avatar motion / click-connect / config-toggle
+        / hidden-carry-state / keyboard-vs-click effect density -- see
+        `arc_solve_learning.extract_early_play_signature`) and use it to bias search the same way
+        `_maybe_route_from_frame`'s frame-only hint already does: by adjusting whether the
+        goal-distance heuristic portfolio applies and re-deriving the explore budget from it.
+
+        This infers a KIND of game from how it has behaved so far in THIS live session -- never a
+        game-identity lookup, never the executable win-check, never a per-game answer -- and is a
+        strict prioritization signal over the explorer's own existing candidate generation, not a
+        replacement for it. Fires once per game, guarded by `_feature_router_checked`.
+
+        HONEST PRIOR RESULT (do not silently contradict it): `results/experiment_4582_feature_router_
+        transfer.json` measured the CLOSELY-RELATED idea of switching the entire offline solver
+        approach by classified mechanic and found NO value on the public held-out-variant methodology
+        (transfer_delta=0.0, did not beat a random-route positive control; chosen_submitted_config:
+        unchanged). What this method wires is narrower -- it never swaps solvers, it only adjusts one
+        existing budget-sizing flag inside the SAME unified E3AgentPolicy cascade -- but it inherits
+        the same classifier, so it is gated on `_FEATURE_ROUTER_MIN_CONFIDENCE` and treated as
+        provisional/observational (always populates `self.feature_router` for visibility) rather than
+        trusted to move the scored win rate until it has its own controlled measurement."""
+
+        if self._feature_router_checked:
+            return
+        if len(self.transitions) < _FEATURE_ROUTER_EARLY_PLAY_K:
+            return
+        self._feature_router_checked = True
+        try:
+            rows = _early_play_rows(self.transitions)
+            recommendation = _recommend_live_approach(self.short, early_play_signature=rows)
+        except Exception:
+            return
+        feature_router = (
+            recommendation.get("feature_router") if isinstance(recommendation, dict) else None
+        )
+        if not isinstance(feature_router, dict) or not feature_router.get("enabled"):
+            return
+        self.feature_router = feature_router
+        mechanic_class = str(feature_router.get("mechanic_class") or "")
+        approach = str(feature_router.get("approach") or "")
+        confidence = float(feature_router.get("confidence") or 0.0)
+        if not mechanic_class or mechanic_class == "unknown" or not approach:
+            return
+        if confidence < _FEATURE_ROUTER_MIN_CONFIDENCE:
+            # Classified, stored on self.feature_router for observability, but not confident
+            # enough to change live search behavior -- see the confidence-gate rationale above.
+            return
+        # The behavioral 7-class taxonomy (avatar_navigation / click_connect / config_toggle /
+        # hidden_carry_state / keyboard_graph / click_graph) is deliberately NOT the same vocabulary
+        # as arc_strategy_router's 5 STRATEGY_CLASSES (program_editor / graph_explore / ...) -- an
+        # unrecognized mechanic name there silently no-ops to the graph_explore default. The one
+        # concrete, already-load-bearing knob both sides share is `uses_goal_distance_heuristic`
+        # (it gates the explore-budget portfolio in `_route_explore_budget`); only
+        # `goal_distance_astar` genuinely implies avatar/goal-distance structure is present.
+        wants_goal_distance = approach == "goal_distance_astar"
+        if bool(self.strategy_route.get("uses_goal_distance_heuristic")) != wants_goal_distance:
+            routed = dict(self.strategy_route)
+            routed["uses_goal_distance_heuristic"] = wants_goal_distance
+            routed["feature_router_mechanic_class"] = mechanic_class
+            routed["feature_router_approach"] = approach
             self.strategy_route = routed
             recommendation["strategy"] = routed
             self.approach_recommendation = recommendation
@@ -2747,6 +2864,7 @@ class E3AgentPolicy:
             self.transitions.append(transition)
             self._dsl_transitions.append((g0, _action_key(aid, data), g1))
             self._observe_active_probe_transition(transition)
+            self._maybe_route_from_transitions()
         boundary_events = self._observe_level_boundary(latest, frames_seen=len(frames))
         if boundary_events and latest is not None:
             try:
