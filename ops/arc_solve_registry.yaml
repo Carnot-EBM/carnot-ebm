@@ -718,7 +718,7 @@ general_gotchas:
 games:
 - game: r11l
   reproducibility: reproduced
-  levels_reproduced: 3
+  levels_reproduced: 4
   mechanic_class: click_template_handle_average
   win_condition: >-
     L1 click-to-template placement plus L2 handle-average placement: each
@@ -774,14 +774,32 @@ games:
     not be used for recovery. Wires (color-1 lines linking handles to their
     piece) occupy and block cells but redraw as things move, so a blocked
     destination often clears after moving something else first.'
-  - 'L4 (previewed, not attempted this session -- preserved for a future
-    attempt): a much bigger jump -- THREE pieces with 2-3 colors each, six
-    handles total, and multiple color-matched templates (expect a
-    handle-color-to-piece-color assignment problem via wire colors on top of
-    a bigger routing problem). The L3 choreography tooling (an offline
-    simulator, a greedy+noise planner, and a beam-searched endgame) is
-    described in the artifact narrative and should transfer directly to a
-    future L4 attempt.'
+  - 'L4 SOLVED round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign): three movable multicolor pieces controlled by SEVEN handles
+    (2/3/2 split, not six as guessed in the preview below) -- each piece must
+    touch its uniquely color-matched dotted socket, while five ADDITIONAL
+    unmatched dotted glyphs are real landing blockers/decoys (not just
+    template noise). Solved on a clean 59-click attempt. Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay via the
+    fixed resolver, all 5 confirmed reached_level=4,
+    state=GameState.NOT_FINISHED. L5 was substantially scouted (three
+    explorations) but not won: introduces two black CARRIER pieces (2 and 3
+    purple-centered handles) that pick up partially-colored black cargo on
+    overlap, after which the payload moves with the carrier; complementary
+    solid halves must be FUSED first (orange+maroon, cyan+tan) before
+    delivery to a matching two-color dotted template -- the orange/maroon
+    pair was successfully fused and delivered (consuming six dots of each
+    color) and the cyan/tan pair was fused and routed toward its
+    upper-right template, but the final optimized attempt exhausted L5''s
+    hard 60-click meter during the last delivery. No L5 win this session;
+    the frontier stays at level 4.'
+  - 'L4 (previewed in a PRIOR session, not attempted at the time -- solved by
+    the entry above): a much bigger jump -- THREE pieces with 2-3 colors each,
+    six handles total (revised to seven, see above), and multiple
+    color-matched templates (the handle-color-to-piece-color assignment
+    guess was roughly right). The L3 choreography tooling (an offline
+    simulator, a greedy+noise planner, and a beam-searched endgame) did
+    transfer to the L4 attempt as predicted.'
   dead_ends:
   - 'Exp4862 first standing-loop attempt with _r11l featurize enabled failed
     before search: the stale models/arc_verifier_r11l.json checkpoint expected
@@ -3474,7 +3492,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 135
+reproducible_total_levels: 136
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
