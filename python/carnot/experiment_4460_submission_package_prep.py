@@ -1151,7 +1151,26 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "ls20" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_ls20_probe_round8_20260712.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("ls20 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "ls20" and _as_int(entry.get("levels_reproduced")) >= 5:
+        # NOTE: unreachable for the live registry entry (which is >=6 as of the
+        # round-8 L6 win); retained as historical dead code documenting the
+        # round-7 (level-5) resolution.
         from carnot.agentic.arc_game_adapters import get_adapter
 
         adapter = get_adapter(game)
