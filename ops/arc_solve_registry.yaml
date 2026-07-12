@@ -1768,6 +1768,27 @@ games:
     fully mapped) -- consider whether the L5 prefix replay cost (~307 of
     700 steps) can be trimmed, or whether an alternate pickup order
     preserves more energy for the final shaft.'
+  - 'v20 (results/outer_loop_codex_sc25_probe.json, 2026-07-12, gpt-5.6-sol via
+    codex, honest partial, NOT banked -- levels_reproduced stays 5): directly
+    answers v19''s own recommendation -- found a genuine ENERGY SAVINGS.
+    Disambiguated all three L6 spells from rendered outcomes (cross =
+    4x4/2x2 size toggle, middle pattern = teleport, vertical pattern = the
+    6 box-breaking spell) and discovered the prior 42-label partial''s two
+    opening cross casts are UNNECESSARY: deleting them and redundant
+    same-spell selector clicks reaches the same first-box/pickup state with
+    42 energy remaining instead of 30 -- a 12-energy savings exactly on the
+    margin v19 needed. This session shortened the route, broke both 6dd6
+    and 6cc6, dissolved both remote color walls, and collected both +10
+    pickups, reaching 32 energy after the second pickup -- but got trapped
+    in the southwest mini socket on the live line (once the mini-player
+    occupies the 2x2 southwest socket, repeated B casts remain locked to
+    that pad rather than expanding out). A 215-call reproduce() attempt
+    tried to skip the socket via a double size-spell cast at the east box;
+    gate returned reached_level=5/reproduced=false. No new level banked,
+    but between the confirmed 12-energy savings and the newly-identified
+    southwest-socket trap (now a known dead-end to route around, not an
+    unknown), the next attempt has meaningfully more margin than v18/v19
+    had.'
   mechanic_class: two_phase_cast_grid_then_tank_exit
   latest_exp4468_reproduce:
     artifact: results/experiment_4468_bank_sc25_provisional_levels.json
@@ -3519,6 +3540,21 @@ games:
     paint swatches -- 9/11/8/14/6 -- and three overlapping selectable
     pieces; touching the 9 swatch repaints the selected color-10 plus to 9)
     but not attempted this session.'
+  - 'L7 progress round 3, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex):
+    fully decoded the L7 assignment -- the 37-pixel-wide plus fits the four
+    color-8 sockets, the small plus fits the three color-11 sockets after
+    asymmetric deformation, and the rectangle resizes to 19x7 for the two
+    color-9 sockets (found the initially-overlooked fourth color-8 socket).
+    Confirmed rectangle collisions are perimeter-preserving resizes in exact
+    3-pixel quanta (13x13 -> 16x10, and the inverse sequence -> 7x19) and
+    that the deformation fixture pins strokes independently (an obstructed
+    horizontal stroke can stay fixed while a vertical stroke and the
+    selection marker keep moving). An early wrong assignment and a color-14
+    repaint trap consumed too much of the per-level move bar; the live
+    attempt timed out (empty terminal frame, levels_completed=0) during the
+    final rectangle route with no win observed. No new level banked; the
+    full color assignment is now known, so a future attempt should route
+    directly to it without the early-assignment exploration cost.'
   - 'L6 (previewed for free in a PRIOR session, not attempted at the time --
     solved by the entry above): 8 rings (four 9-colored, four 11-colored in a
     rectangle) plus color-1 objects that are a genuinely NEW element not seen

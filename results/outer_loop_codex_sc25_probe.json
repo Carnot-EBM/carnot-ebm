@@ -3,7 +3,7 @@
   "model": "gpt-5.6-sol",
   "starting_level": 5,
   "max_level_reached": 5,
-  "total_env_steps_used": 700,
+  "total_env_steps_used": 648,
   "reproduction_verified": false,
   "action_sequence": [
     "warmup",
@@ -111,16 +111,19 @@
     "move1"
   ],
   "levels_won_this_session": [],
-  "novel_mechanics_found": "Confirmed the projected symmetric-box rule: after F advances the lit-pad phase and B teleports to the east pad, a 6-spell cast adjacent to the 6cc6 box destroys it, removes the remote color-12 shaft barrier, and spawns a +10 energy pickup. Also grounded that B alone does not rotate away from the currently lit target in this trajectory; the reliable routing primitive is F then B, with the observed target order east, southwest, junction. Color-5 background is impassable despite looking empty, so the cleared shaft must be entered from the junction pad rather than walked to from the east box.",
-  "narrative": "The cumulative banked prefix was replayed from a fresh reset and reached levels_completed=5 twice, including an optimized rendered-frame-only replay costing 125 calls. On L6 I reproduced the prior partial, broke both the 6dd6-linked and 6cc6-linked obstacles, collected both energy pickups, and decoded the remaining pad route. The final optimized attempt exhausted the exact 700-call campaign budget while trying F-to-B routing through east, southwest, and junction; energy reached zero during the last shaft approach and the frame became GAME_OVER before any L6 win, so no new level is claimed and no reproduction gate was run.",
+  "novel_mechanics_found": "Disambiguated all three L6 spells from rendered outcomes: the cross toggles 4x4/2x2 size, the middle pattern teleports, and the vertical pattern is the box-breaking 6 spell. The two opening cross casts in the prior 42-label partial are unnecessary; deleting them and redundant same-spell selector clicks reaches the same first-box/pickup state with 42 rather than 30 energy. Consecutive B casts initially route SE -> junction -> SW, but once the mini-player occupies the 2x2 southwest socket, an attempted expansion is spatially blocked and repeated B casts remain locked to that pad.",
+  "narrative": "The cumulative L5 prefix replayed from a fresh reset in 125 frame-only env.step calls and reached levels_completed=5. On L6 I shortened the known first-box route, then broke both 6dd6 and 6cc6, dissolved both remote color walls, collected both +10 pickups, and reached the post-second-pickup state with 32 energy. A later live line became trapped in the southwest mini socket; I then spent the reserved budget on a 215-call fresh-reset reproduce(..., claimed_level=6) candidate that tried to skip that socket by double-casting the size spell at the east box, but the gate returned reached_level=5 and reproduced=false. I stopped at 648/700 with no new level claimed.",
   "gotchas": [
     "The resolver-selected sc25 plan only contains the L1 sequence; the actual L2-L5 cumulative prefix is experiment_4468.SC25_PLANS_BY_LEVEL[5].",
     "The repository apply helper reads env._game to settle animations, so this probe used only rendered-frame stability and direct action outcomes to comply with the hidden-state restriction.",
     "Completed spells take effect on the final cast-cell action; replay can wait only after completed spells instead of after every selector/cell toggle, reducing the fresh L5 prefix from 217 to 125 env.step calls.",
-    "F followed by B is the grounded way to advance the pad phase and teleport; repeated B casts target the same lit southwest pad and waste energy.",
-    "After the east 6cc6 box is broken, do not try to walk left through color-5 background. Return via F then B to the junction pad and enter the cleared x=33..36 shaft from there.",
-    "Energy often drops by two for cast-cell and blocked-move actions. A nominal 14-row bar was insufficient for two spell patterns plus the shaft walk; at zero the rendered grid becomes shape (0,) and frame.levels_completed reports 0.",
-    "The clean projected finish after the first pickup is: F+B to east, three left moves, 6-spell, one left move for +10, then F+B to southwest, F+B to junction, and route into the shaft. It needs additional energy optimization before it can win."
+    "The action_sequence records the 103 symbolic L5 labels; the frame-only apply convention adds two ACTION5 animation ticks after each of the 11 completed spell patterns (125 actual env.step calls).",
+    "The prior partial's first two cross casts only toggle mini then full and can be removed; also omit a selector click when recasting the currently selected spell.",
+    "Spell identity is load-bearing: click1,1 plus the cross pattern toggles size; click4,12 plus the L pattern teleports; click4,23 plus the vertical pattern breaks an adjacent 6-colored box.",
+    "From a clean L6 start, B1 reaches SE, B2 reaches junction, and B3 reaches SW. Cross+B from the first pickup reaches SE, permitting three left presses to stand adjacent to 6cc6.",
+    "Do not cast the size toggle while still inside the southwest 2x2 socket: expansion is blocked, and subsequent B casts observed in that state repeatedly targeted southwest.",
+    "The speculative double-size-cast-at-east shortcut did not reproduce L6 in the fresh gate; do not treat it as a solved pad-phase transition.",
+    "After 6cc6 breaks, the color-12 shaft barrier disappears and the player collects the pickup with one left press, leaving 32 energy on the optimized live line. The remaining unsolved problem is returning to junction without entering the southwest mini socket."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
