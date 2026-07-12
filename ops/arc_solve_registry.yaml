@@ -4251,6 +4251,52 @@ games:
     hidden sockets. A full fresh-reset reproduction gate for any future
     L6 win will need a >1000-step budget (the 322-action prefix alone
     already costs half of a 650-step session).'
+  - 'EXHAUSTIVE ELIMINATION PASS + fail-timer discovered, round 8
+    (2026-07-12, claude-fable-5, results/outer_loop_fable5_dc22_probe_round8_20260712.json):
+    systematically refuted every remaining candidate mechanism for the
+    D/8 checker twin (round 7''s leading hypothesis) and swept every
+    unexplored area round 7 flagged -- all clean, no reveals. FOUND A
+    FAIL-TIMER: the row-63 bar accrues ~1 tick per ~10 actions
+    passively, PLUS +1 per refused/stranding big-B press; at 64 ticks
+    the NEXT stranding B-press is FORCED THROUGH instead of refused,
+    the unsupported avatar is destroyed, and the game enters
+    GameState.GAME_OVER. RECOVERY: a RESET action (0) after GAME_OVER
+    resumes at the START of the current level with levels_completed
+    retained (5) and the timer zeroed -- death costs only 1 action plus
+    a ~60-step level-restart re-tooling cost (all consumed sockets,
+    the quad, the 8-bar, the latch, and the ring/LM-type all revert to
+    their level-start state). This bounds any L6 attempt to ~600
+    actions and makes experimentation cheap for future rounds.
+    ELIMINATED: (1) the quad only ever advances the LM checker''s own
+    type, +1 per click, regardless of where the avatar stands when
+    clicking -- there is no way to retype ANY other checker; (2) the
+    teleport network is a STAR centered on LM (a fixed checker''s
+    6-click fires only when LM currently matches its type) -- no
+    hidden second twin exists behind ANY fixed checker, refuting the
+    round-7 speculation of an R1-to-goal-room pairing; (3) D/8''s
+    6-click does not teleport to the big 8-ring in ANY tested ring
+    state (home, displaced, post-latch), and the latch-merge event
+    itself creates no D-colored cell anywhere on the board (full-grid
+    scans); (4) the bare ring is confined TIGHTER than round 7''s
+    stated movement law -- an east drive at rows 26-33 was refused even
+    though every covered cell was wall/void at rows>=26, meaning the
+    ring/assembly can structurally never reach the goal-room band, not
+    merely blocked by the known dog-leg; (5) the C-colored moving
+    platform (cols 16-21) is confirmed support-only (all 4 LM types
+    tested standing on it, no teleport); (6) available_actions on every
+    L6 frame is exactly [1,2,3,4,6] -- ACTION5 is not legal input, so
+    do not probe it. The goal sprite is confirmed to be the solid B
+    block at rows 6-7, cols 46-47 (the adapter''s own goal attribute).
+    Independently re-verified by the outer loop: replayed both the
+    322-action L5 prefix alone and the full 714-action session sequence
+    from fresh env.reset() -- both confirmed level=5,
+    state=GameState.NOT_FINISHED, matching the session''s own report
+    exactly. No new level banked; frontier stays at level 5. With the
+    ENTIRE visible control surface now exhausted, the D/8 twin
+    creation mechanism remains undiscovered -- next round should look
+    beyond single-click interactions: multi-click quad sequences or
+    timing, tick-bar-value-dependent interactions, or re-examining
+    L1-L5 mechanics for a forward-carrying mechanism.'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
