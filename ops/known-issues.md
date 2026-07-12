@@ -351,6 +351,36 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     `operator_override: "2026-07-12 operator directive (standing): explicit decision to port the
     energy-scorer opportunity into our own E3AgentPolicy stack rather than fork forge's codebase —
     not a doomed-rerun risk, this is new measurement work with no prior attempt on file."`
+13. **(New 2026-07-12, HIGH PRIORITY — the frozen live generator's sizing constraint appears to be
+    stale, not just conservative) Re-verify the Kaggle VRAM budget and A/B a larger generator before
+    trusting the current 9B choice.** Operator question: "are we still using qwen-3.5-9B when the
+    leaders are using the larger and newer qwen-3.6-27B and Gemma-4-31b models?" Investigation (codex
+    web search against Kaggle's own discussion API + CMS pages, not third-party summaries) found: (1)
+    Kaggle switched the ARC-AGI-3 competition's accelerator pool from H100 to `g4-standard-48` on
+    **2026-05-07** (Kaggle staff post, thread 697720/697944) — Google Cloud's own machine-type docs
+    identify `g4-standard-48` as **one NVIDIA RTX PRO 6000 Blackwell Server Edition GPU with 96GB
+    GDDR7** (the "48" is vCPU count, not VRAM GB — do not confuse with a 48GB card). (2) Our own
+    `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` is dated **six weeks
+    AFTER** that swap and still frames the constraint as "T4 16GB vs L4 24GB" — the 16GB assumption
+    that sized the frozen `Qwen3.5-9B-MTP` generator (`frozen_generator` in
+    `python/carnot/agentic/arc_competition_agent.py`, 11.5GB footprint) was already stale when it was
+    written, not something that changed since. (3) forge's own winning, SCORED Kaggle notebook (3rd
+    place, LB 0.86 — see `docs/research-notes/arc-agi3-milestone1-winners-sota-ingestion-2026-07-11.md`)
+    explicitly ran Gemma-4-31B-it via local vLLM on "RTX Pro 6000" inside their submission — direct,
+    real-world confirmation the 96GB hardware is genuinely usable and scores successfully in this
+    competition, not just a visible-dev-notebook artifact. Caveat (honestly unresolved): the
+    investigation could NOT find explicit Kaggle staff text confirming the hidden/graded execution
+    backend is bit-identical to the visible notebook environment — forge's own successful scored
+    result is strong indirect evidence, not a documentation-level confirmation. **Operator decision
+    2026-07-12: queue as a task, do not investigate further or touch the frozen config this session.**
+    When picked up: (a) get a more rigorous confirmation of the scored-backend hardware if possible;
+    (b) offline A/B a larger generator (Gemma-4-31B-it or Qwen3.6-27B-class, matching what 2-3 of the
+    three winners actually ran) against the current Qwen3.5-9B-MTP on held-out games, OFFLINE ONLY per
+    the same discipline as task 7; (c) check MTP speculative-decoding compatibility at the larger size
+    — part of why 9B was fast is MTP draft-model support, verify a 31B-class GGUF has a compatible
+    self-draft setup before assuming the speedup carries over; (d) do NOT flip the frozen
+    live-submission generator based on this task alone — report the delta and require an explicit
+    operator decision, same discipline as task 7's frozen-stack guard.
 
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
