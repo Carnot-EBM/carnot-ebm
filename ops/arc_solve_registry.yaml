@@ -4063,6 +4063,45 @@ games:
     g50t has two distinct label appliers registered in this codebase and
     only the resolver''s is authoritative), all 5 confirmed level=5,
     state=GameState.NOT_FINISHED.'
+  - 'L6 first attempt, HONEST NULL with real progress, round 8
+    (2026-07-12, gpt-5.6-sol via codex, results/outer_loop_codex_g50t_probe_round8_20260712.json):
+    first-ever attempt at fresh L6 territory. L6 introduces a color-14
+    AUTONOMOUS RUNNER at (55,19) on a hidden rectangular track -- it
+    advances one step per SUCCESSFUL player move and reverses direction
+    when blocked; blocked player actions consume budget but do NOT
+    advance the runner or level timing. Two ordinary color-8 plates at
+    (43,25) and (31,25) move top gates from y=7 to y=13; the gates must
+    stay CONTINUOUSLY open while the runner passes through, because
+    closing a gate on the runner CRUSHES AND REMOVES IT (a real hazard,
+    not just a blocker). Mapped the minimal stable two-holder solution:
+    clone A (LEFTx2, UP, LEFTx2, ACTION5) parks at (31,25) holding that
+    plate; clone B (LEFTx2, UP, ACTION5) parks at (43,25) holding the
+    other. With both gates held open, six successful active moves
+    carried the runner cleanly through both. The runner then contacts
+    color-11 toggles at (19,7) and (1,7) as it passes, moving remote
+    barriers from y=25 to y=19 and opening corresponding player cells
+    on row 25 -- but because the runner BOUNCES back and forth across
+    the top track, it re-contacts these same toggles on its return
+    pass, closing what it just opened. This makes the lower-row player
+    traversal PHASE-SENSITIVE: the player must synchronize its own
+    moves to the runner''s successful-move-driven position, not just
+    reach the corridor whenever convenient. A third color-11 trigger at
+    (13,49) controls a horizontal barrier at (31,49) but was not
+    reached live before the session budget ended. The final
+    synchronization attempt failed because intended wait moves at
+    (19,31) were blocked (blocked actions do not advance the runner),
+    so the corridor''s open window had already closed by the time the
+    player arrived. Independently re-verified by the outer loop: the
+    full 291-action sequence (204-action prefix + 87-action L6
+    exploration, including an in-level ACTION5 reset used to recover
+    from the crushed-runner probe) replays cleanly from a fresh
+    env.reset() to level=5, state=GameState.NOT_FINISHED via the
+    resolver''s registered exp4433.apply_g50t_label function -- matches
+    the session''s own report exactly. No new level banked; frontier
+    stays at level 5. Next attempt should apply the now-solved
+    two-holder gate technique directly (no need to re-derive it) and
+    focus purely on timing the row-25 player traversal to the runner''s
+    open-window phase.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
