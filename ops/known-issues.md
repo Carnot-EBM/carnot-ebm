@@ -303,13 +303,36 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     level-up/no-op transitions" scorer for the second — both cheap, deterministic vetoes on a
     generator's self-report, not a second expensive LLM call (which is exactly the cost item
     forge's own ablation found not worth paying — see the SOTA note's headline finding).
-    **Corroborating framing note (not a separate task):** forge's (3rd place) own winning
-    configuration explicitly DISABLED their LLM-judge candidate arbiter and LLM confidence-gate for
-    cost while KEEPING only the deterministic `changed_pixels==0` filter — independent, real-world,
-    competitive-pressure confirmation of "cheap real verifier beats expensive LLM judge" from a
-    top-3 team. Their disabled arbiter slot (candidate generation -> separate scoring) is
-    architecturally the exact slot our verifier-routed search already fills; cite this in any
-    future paper-v6 verifier-moat section as external corroboration, no new build required.
+    **Corroborating evidence:** forge's (3rd place) own winning configuration explicitly DISABLED
+    their LLM-judge candidate arbiter and LLM confidence-gate for cost while KEEPING only the
+    deterministic `changed_pixels==0` filter — independent, real-world, competitive-pressure
+    confirmation of "cheap real verifier beats expensive LLM judge" from a top-3 team. Their
+    disabled arbiter slot (candidate generation -> separate scoring) is architecturally the exact
+    slot our verifier-routed search already fills. Task 12 below is the follow-through on this
+    (actually measuring whether OUR version of that slot earns its keep) rather than just a
+    citation.
+12. **(New 2026-07-12, operator-decided direction: "which of the top 3 has the best EBM
+    opportunity" -> forge, ported into our own agent) Controlled A/B: our candidate-scoring stack
+    vs bare control, forge's exact ablation methodology.** Full writeup:
+    `docs/research-notes/arc-agi3-milestone1-winners-sota-ingestion-2026-07-11.md` (O2, updated
+    2026-07-12). Of the three winners, forge is the only one with an EXPLICIT external
+    candidate-generation-then-selection seam (Duck's model reasons/searches internally inside one
+    Python-writing turn; Reki emits one plan per call — neither has a clean external hook without a
+    control-flow redesign). forge's arbiter slot maps directly onto our own
+    `python/carnot/agentic/arc_competition_agent.py` candidate pipeline
+    (`candidate_router: "cross_game_discriminative_v3_tiebreaker"` + a DAgger-trained value head +
+    `goal_energy_candidate_guidance_enabled` + `world_model_dsl_wired` — materially richer than
+    forge's single arbiter already). The codebase separately defines `bare_control_config`
+    (`candidate_router: None`, `goal_energy_enabled: False`,
+    `goal_energy_candidate_guidance_enabled: False`) — the exact on/off toggle forge's own ablation
+    used — but a search of `results/*.json` found no dedicated experiment that runs forge's ablation
+    methodology (matched action budget, same games, full stack vs bare control, report the
+    level-up/action-efficiency delta) against our own stack. This is NOT a new scorer build — it is
+    the missing measurement that would let us honestly cite our scoring stack as "the arbiter forge
+    wanted but couldn't afford" rather than an architecturally-plausible-but-unverified claim.
+    `operator_override: "2026-07-12 operator directive (standing): explicit decision to port the
+    energy-scorer opportunity into our own E3AgentPolicy stack rather than fork forge's codebase —
+    not a doomed-rerun risk, this is new measurement work with no prior attempt on file."`
 
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning

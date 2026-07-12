@@ -64,25 +64,42 @@ offline solver's move list. Trust+specificity-gated (our existing pattern is mor
 Reki's greedy `K=2` threshold — see the fragility note below).
 **Priority:** high — cheap, general, oracle-distinct, directly reuses an existing code shape.
 
-### O2. Replace forge's disabled arbiter slot with a real energy scorer
+### O2. Benchmark our own candidate-scoring stack with forge's exact ablation methodology (UPDATED 2026-07-12 — operator decision: port into our own agent, not fork forge)
 **Source:** forge's `_select_candidate_with_arbiter` — a second LLM call that judges N sampled
 candidate plans and picks one, DISABLED in their winning config for cost. Their static fallback
 score (`_candidate_static_score`) is a hand-tuned keyword/heuristic formula, also effectively
 retired in spirit (kept as a fallback only).
 **Why this matters:** this is architecturally the EXACT slot our verifier-routed search already
 fills — candidate generation, then a separate scoring/selection step — except forge's options were
-"expensive LLM judge" or "brittle hand-tuned heuristic," and they had to pick the cheap option. We
-have a third option they didn't: an oracle-distinct energy scorer (goal-energy + world-model trust
-+ action-effect scorer), cheap AND real.
-**Candidate design:** not a new build — this is a mapping/positioning exercise. Frame our existing
-`WorldModelVerifier` + goal-energy signal explicitly as "the arbiter forge wanted but couldn't
-afford," and use forge's own ablation numbers as a citable efficiency argument in any future
-paper-v6 verifier-moat section.
-**Priority:** high for the framing/citation value; the underlying energy machinery already exists,
-so the "build" cost here is near zero — mostly a positioning + a small evaluation task (does our
-existing scorer, dropped into forge's candidate-then-score slot, actually do better than their
-disabled arbiter on their own eval harness? — see O5 below for the harder generalization of this
-question).
+"expensive LLM judge" or "brittle hand-tuned heuristic," and they had to pick the cheap option.
+
+**Correction after reading our own code (2026-07-12): we are not missing this slot, we already have
+a RICHER version of it, unbenchmarked against its own bare-control baseline.**
+`python/carnot/agentic/arc_competition_agent.py`'s frozen live config already wires
+`candidate_router: "cross_game_discriminative_v3_tiebreaker"` (a real, named, cross-game trained
+discriminative router) PLUS `value_head_checkpoint` (a DAgger-trained value head) PLUS
+`goal_energy_candidate_guidance_enabled` PLUS `world_model_dsl_wired` — a materially richer
+scoring stack than forge's single arbiter. The codebase ALSO already defines a `bare_control_config`
+(same file, `candidate_router: None`, `goal_energy_enabled: False`, `goal_energy_candidate_guidance_
+enabled: False`) — the exact on/off toggle forge's own ablation used, sitting unused for this
+purpose. A search of `results/*.json` for a genuine controlled A/B (full stack vs bare control,
+matched compute/action-budget) found submission-package-prep artifacts recording WHICH config was
+submitted, but no dedicated experiment that runs forge's own ablation methodology against our own
+stack and reports the delta.
+**Candidate design:** NOT a new scorer build (the energy machinery already exists) — a controlled
+A/B experiment, matched to forge's own methodology (same action budget, same games, full stack vs
+`bare_control_config`), reporting level-up rate / action-efficiency delta. This gives us the number
+forge's own ablation gave THEM (justifying their cut) but for our own stack, which is the honest
+prerequisite before citing our scorer as "the arbiter forge wanted but couldn't afford" in any
+future paper-v6 verifier-moat section — right now that claim is architecturally plausible but
+empirically unverified on our own agent.
+**Operator decision (2026-07-12):** port into our own E3AgentPolicy stack (this task), not fork
+forge's codebase directly. Rationale: our agent already has the search graph, RESET-replay
+navigation, and reproduction-gated registry infrastructure none of the three winners have; forking
+forge would mean maintaining a second, less mature harness and inheriting their weaker
+low-diversity single-prompt candidate generation.
+**Priority:** high — cheap (mostly measurement, not construction), directly answers whether our
+existing scoring stack earns its keep, and is a prerequisite for citing it as a moat.
 
 ### O3. Hallucination-consistency checks: claimed-diff vs measured-diff, goal-hypothesis vs transitions
 **Source:** two independent instances. (a) Reki's `board_change_assessment` (the model self-reports
@@ -193,8 +210,20 @@ don't lose, exploration findings" discipline — see each report for exact file 
 
 Five candidates (O1–O5), priority-ordered above. O1 (InertClickPruner) and O4 (fold Duck's
 object-segmentation into the already-staged task 2) are the cheapest and most directly actionable —
-both extend existing code shapes rather than requiring new architecture. O2 is mostly a
-framing/citation exercise against already-existing machinery. O3 is genuinely new but small and
-directly in-thesis. O5 is real but should not be built ahead of O3. Queued as new tasks in
-`ops/known-issues.md`'s active ARC priority list (below the existing task 8) so the planner picks
-them up under the November-2026 standing floor.
+both extend existing code shapes rather than requiring new architecture. O2 is a measurement task
+against already-existing machinery (our `candidate_router`/value-head/goal-energy stack vs the
+already-defined `bare_control_config`, forge's own ablation methodology applied to our own agent —
+not a citation exercise, an unrun experiment). O3 is genuinely new but small and directly in-thesis.
+O5 is real but should not be built ahead of O3. Queued as new tasks in `ops/known-issues.md`'s
+active ARC priority list (below the existing task 8) so the planner picks them up under the
+November-2026 standing floor.
+
+**2026-07-12 addendum — "which winner has the best EBM opportunity" (operator follow-up):**
+forge, specifically because it is the only one of the three with an EXPLICIT external
+candidate-generation-then-selection seam (O2) — Duck's model reasons/searches internally inside a
+single Python-writing turn, and Reki's model just emits one plan per call, so neither has a clean
+external hook to slot a scorer into without redesigning their control flow. forge's own ablation
+data (disabled LLM-judge + confidence-gate, kept only the deterministic no-op filter) is also the
+single most directly citable piece of external evidence for this project's whole thesis. Operator
+decision: port into our own E3AgentPolicy (O2 above), not fork forge's codebase — see O2's
+"Operator decision" note for the rationale.
