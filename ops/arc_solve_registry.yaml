@@ -1015,6 +1015,24 @@ games:
     next attempt should either fix the lower-left ring''s up-up-left
     exit timing on this route, or return to round 3''s pinwheel/lower-pad
     line with the selector fix. Frontier stays at level 4.'
+  - 'L5 attempt round 6, still HONEST NULL (2026-07-12, gpt-5.6-sol via
+    codex, round-6 breadth campaign, results/outer_loop_fable5_ls20_probe.json):
+    reconstructed the launcher graph from rendered frames and independently
+    consumed all three reset-ring types live, including a newly-discovered
+    top-middle green-center ring (enter horizontally from the west after a
+    launcher places the player at x39,y5; resets the counter to 21 -- new
+    mechanic, distinct from the upper-left and lower-left rings). Pinned
+    down the exact reason a compact color-8-first splice fails: the third
+    pinwheel entry leaves the player at x29,y25 with only 10 counter
+    actions remaining, but the forced launcher/upper-corridor route to the
+    upper-left ring needs 11 actions -- one action short. Reconfirmed the
+    banked split-transform mechanic live (upper-pad state [110,011,101]
+    plus lower contact sequence 443 -> target shape [101,110,011]). Stopped
+    at 654/700 calls with insufficient budget for either the known
+    50-plus-action L5 route or a reproduction gate on the 244-action
+    prefix. No L5 win observed or claimed; frontier stays at level 4. Next
+    attempt should finance color 8 via the newly-found top-middle ring
+    reset (not the upper-left ring) to close the one-action gap.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
