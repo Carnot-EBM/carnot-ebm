@@ -173,7 +173,9 @@ def _advance_state(
 ) -> tuple[tuple[str, int, int], ...] | None:
     moved: list[tuple[str, int, int]] = []
     for name, x, y in players:
-        nx, ny = _move_cell((x, y), _delta_for_player(name, action), grid_size=grid_size, walls=walls)
+        nx, ny = _move_cell(
+            (x, y), _delta_for_player(name, action), grid_size=grid_size, walls=walls
+        )
         if (nx, ny) in bad_cells:
             return None
         moved.append((name, nx, ny))
@@ -219,8 +221,12 @@ def m0r0_action_labels(env: Any, frame: Any = None, path: tuple[str, ...] = ()) 
     plan = m0r0_visible_plan_actions(game)
     if plan:
         return [m0r0_label(plan[0])]
-    actions = list(getattr(frame, "available_actions", []) or getattr(game, "available_actions", []) or [])
-    moves = [int(action) for action in actions if int(action) in MOVEMENT_ACTIONS] or list(MOVEMENT_ACTIONS)
+    actions = list(
+        getattr(frame, "available_actions", []) or getattr(game, "available_actions", []) or []
+    )
+    moves = [int(action) for action in actions if int(action) in MOVEMENT_ACTIONS] or list(
+        MOVEMENT_ACTIONS
+    )
     return [m0r0_label(action) for action in moves]
 
 
@@ -228,7 +234,8 @@ def m0r0_apply(env: Any, label: str, frame: Any) -> Any:
     del frame
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
-    return env.step(_game_action(GameAction, int(json.loads(label)["action"])))
+    parsed = json.loads(label)
+    return env.step(_game_action(GameAction, int(parsed["action"])), data=parsed.get("data"))
 
 
 def m0r0_state_key(game: Any, frame: Any = None) -> tuple[tuple[str, Any], ...]:
