@@ -3,7 +3,7 @@
   "model": "claude-fable-5",
   "starting_level": 8,
   "max_level_reached": 8,
-  "total_env_steps_used": 792,
+  "total_env_steps_used": 775,
   "reproduction_verified": true,
   "action_sequence": [
     {
@@ -1023,8 +1023,8 @@
     }
   ],
   "levels_won_this_session": [],
-  "novel_mechanics_found": "Level 9's 7/e/d display is an active hostile-fusion chain: two 7 hunters can overlap and become a nine-pixel e while their contact converts the movable 8 into the required c. ACTION7 is a true one-step board undo, but it does not refund the bottom resource meter. Hunter targeting is local/active rather than a simple highest-value rule: different predators can simultaneously pursue nearby c and f pieces. The two 6 pieces must be displaced or merged immediately because one lower hunter's natural route to the 8 crosses them after roughly five actions.",
-  "narrative": "The verified 145-action prefix reached levels_completed=8 on every fresh replay, and the final reproduce() gate passed at level 8. Four forward boards investigated Level 9. The best live board simultaneously produced c and f, socketed/kited c, and retained an e plus a 7, but never formed the required d: protecting c let a lower hunter degrade f, while redirecting with f let the nearby e degrade c. I stopped at a genuine timing/geometry wall and used the remaining budget to gate the unchanged eight-level maximum.",
+  "novel_mechanics_found": "Level 9's sockets can capture a fruit strongly enough that later pulls at nearby coordinates stop moving it, so socketing c before the hostile fusion is complete can strand the remaining hunters. Hunter composites can be fully occluded by a fruit: in one rendered transition three of four visible 7 hunters vanished while c and one 7 remained, with no separately visible e/d pixels. Moving the socketed f deeper inside its socket advanced the hostile collision and immediately changed c into a b, confirming that socket overlap is not protection. The bottom resource meter is not one cell per env.step: failed or long-distance clicks can consume multiple cells, and ACTION7 restores the prior board transition but not that resource.",
+  "narrative": "The 145-action banked prefix was confirmed from a fresh reset before exploration. Three forward Level 9 boards were investigated using only rendered grids and action outcomes. The strongest line merged the two 6 pieces into f, socketed f, converted 8 into c, and collapsed three of the four hunters in one transition while preserving both required fruits; the final visible 7 could not be merged before the resource meter expired. No Level 9 win was observed, so the maximum remains 8. A final fresh-reset reproduce() gate replayed the 145-action sequence to levels_completed=8 and passed; total usage was 775 env.step calls.",
   "gotchas": [
     "Level 9 requires c, f, and d for three 9 sockets; producing/socketing c and f alone does not win.",
     "Two 6 blocks merge into f. A hunter contact can degrade f back to 6 and then to a; socket overlap does not make a fruit safe.",
@@ -1034,6 +1034,10 @@
     "On the best board, c could be kited from about (37,17) along (29,17),(21,17),(13,21),(6,25),(6,33),(6,40), but the predators remained active and the fruit was not permanently safe on a socket.",
     "ACTION7 rewinds one rendered board step without advancing hunters, but the bottom resource meter remains consumed; repeated rewinds are not free.",
     "Clicks near two different fruit tiers can fail from attraction-radius interference; this made simultaneous c/f juggling especially tight.",
+    "A fruit placed well inside a 9 socket may stop responding to outward pulls; do not fully socket c until the d fusion is settled.",
+    "A composite hunter can be completely hidden underneath c; absence of visible e/d-colored pixels does not prove the fusion failed.",
+    "The bottom resource meter can drain by more than one cell per env.step, including on failed coordinate pulls, so env-step budget and in-game move budget must be tracked separately.",
+    "A useful observed partial line after the prefix was (26,46),(20,49),(14,53),(28,48),(22,44): it sockets f, produces c, and clusters the hunters, but still needs a safe final d-fusion and delivery continuation.",
     "At the final level, a new env.reset() is not a cheap current-level retry in prior provenance, so each clean attempt required replaying the full 145-action prefix."
   ],
   "solve_provenance": "live_agent_self_discovery"
