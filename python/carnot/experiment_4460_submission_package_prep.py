@@ -679,6 +679,22 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "sk48" and _as_int(entry.get("levels_reproduced")) >= 7:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_round12_sk48_probe_20260712.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        if adapter is None:
+            raise RuntimeError("sk48 adapter missing")
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "sk48" and _as_int(entry.get("levels_reproduced")) >= 6:
         from carnot.agentic.arc_game_adapters import get_adapter
 
@@ -892,6 +908,26 @@ def resolve_replay_plan(
         return ReplayPlan(
             game,
             [str(label) for label in labels],
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "bp35" and _as_int(entry.get("levels_reproduced")) >= 8:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_round12_bp35_probe_20260712.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("bp35 adapter missing")
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
             rel_path,
             adapter.apply,
             warmup_label=adapter.warmup_label,
