@@ -4079,7 +4079,7 @@ games:
     reproducibility_checksum: ed33631efac8e242fdca278ede5688eb5ab946c0111af6466f86f8d9c9359bf5
 - game: g50t
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   win_condition: 'L1-L2: see historical gotchas. L3 (2026-07-11, claude-fable-5):
     a full clone-commit/rewind puzzle -- ACTION5 commits the current trajectory
     (rewinding the player to spawn) and the committed ghost replays it one action
@@ -4281,6 +4281,33 @@ games:
     two-holder gate technique directly (no need to re-derive it) and
     focus purely on timing the row-25 player traversal to the runner''s
     open-window phase.'
+  - 'L6 SOLVED round 9 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_codex55_g50t_probe_round9_20260712.json): solved
+    the phase-synchronization problem round 8 left open. Counting
+    successful active moves after both holder commits, the runner
+    toggles the x=19 row-25 barrier at n=8 (open), n=14 (closed), n=30
+    (open); the player reaches (19,31) exactly at n=14 when it CLOSES
+    -- the fix is a genuinely LEGAL local oscillation, (19,31)<->(19,37)
+    via DOWN/UP, cycled through n=30 and crossing at n=31 once it
+    reopens. The x=1 barrier similarly toggles at n=11/33/55; from
+    (7,25) the player uses a RIGHT/LEFT oscillation through n=55 and
+    crosses at n=56. Toggle changes happen AFTER the active player''s
+    movement check on the same successful tick, which is why the
+    crossing always lands one tick after the reopen. A third color-11
+    trigger at (13,49) moves a final barrier from (31,49) to (25,49);
+    critically, this toggle SURVIVES the third ACTION5 commit (which
+    clears both parked holders, closes the color-8 gates, and returns
+    the player to spawn) -- the final barrier stays latched open,
+    enabling a direct nine-move route from spawn to the target.
+    levels_completed advanced to 6 on action 288. The source agent ran
+    its own fresh-environment reproduction gate (a brand-new
+    arc.make(''g50t'') + one reset, per this game''s standing harness
+    gotcha) on all 288 actions and independently got the same result
+    (reproduction_verified: true), and the outer loop independently
+    re-verified regardless: 5x fresh env.reset() + replay via a new
+    resolver priority branch (using the resolver-registered
+    exp4433.apply_g50t_label function), all 5 confirmed level=6,
+    state=GameState.NOT_FINISHED.'
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
@@ -5267,7 +5294,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 170
+reproducible_total_levels: 171
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

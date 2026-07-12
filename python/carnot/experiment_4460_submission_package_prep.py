@@ -493,7 +493,17 @@ def resolve_replay_plan(
             "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py",
             _apply_ka59_label,
         )
+    if game == "g50t" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot import experiment_4433_example_conditioned_win_induction as exp4433
+
+        rel_path = "results/outer_loop_codex55_g50t_probe_round9_20260712.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        return ReplayPlan(game, labels, rel_path, exp4433.apply_g50t_label)
     if game == "g50t" and _as_int(entry.get("levels_reproduced")) >= 5:
+        # NOTE: unreachable for the live registry entry (which is >=6 as of the
+        # round-9 L6 win); retained as historical dead code documenting the
+        # round-7 (level-5) resolution.
         from carnot import experiment_4433_example_conditioned_win_induction as exp4433
 
         rel_path = "results/outer_loop_fable5_g50t_probe_round7_20260712.json"
