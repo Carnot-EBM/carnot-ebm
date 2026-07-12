@@ -1578,7 +1578,9 @@ games:
     maze/grab-tick interception). levels_reproduced bumped 8 -> 9 (FULL CLEAR).'
 - game: s5i5
   reproducibility: reproduced
-  levels_reproduced: 7
+  levels_reproduced: 8
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: config_toggle_marker_coverage
   win_condition: 'L1 marker coverage plus L2 dynamic marker-control coverage: discover 0064ocqkuqacti controlled markers, 0087vvmblxkzdi target markers, and pigtralzpb/uricqfoplr control links from the offline env, then click each control edge until every marker reaches an axis-aligned target. L3
     (2026-07-11, claude-fable-5): a linkage machine of six two-half shrink/grow
@@ -1706,6 +1708,24 @@ games:
     controls with the residual budget, stopped at 670/700 total calls with
     30 remaining, insufficient for a solve attempt or gate. Frontier stays
     at level 7.'
+  - 'L8 SOLVED, FULL GAME CLEAR round 5 (2026-07-12, claude-fable-5, first
+    fable-5 leg of the campaign, results/outer_loop_fable5_s5i5_probe.json):
+    directly executes round 4''s decoded L8 controls -- couples EVERY
+    same-colored structure on the board: the paired 9/7 controls reshape
+    the upper carriage, 8/A reshape the lower carriage, and E
+    simultaneously lowers the diamond carrier and extends the chamber''s E
+    arm. The central B glyph rotates the four-color chamber cross, and a
+    remote move is globally blocked unless that color''s chamber arm has
+    clearance. Key discovery: an arm aimed through the bottom opening may
+    continue extending OFF-SCREEN after its visible pixels reach row 62,
+    letting E carry the diamond all the way to the lower socket (this
+    off-screen continuation is what round 4 had not yet found). Won live
+    at action 382 (311-action prefix + 71 exploration/solve steps); a
+    fresh reproduce() replay of the full 382-action sequence reached
+    claimed_level=8, completing the game''s 8 win levels. Independently
+    re-verified by the outer loop: 5x fresh env.reset() + replay via a new
+    resolver priority branch, all 5 confirmed level=8, state=GameState.WIN
+    -- the game''s full 8 levels are now cleared.'
   dead_ends:
   - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.'
   - Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.
@@ -4121,7 +4141,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 153
+reproducible_total_levels: 154
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
