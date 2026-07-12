@@ -2155,7 +2155,7 @@ games:
     full-clear session above.
 - game: lf52
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
@@ -2282,6 +2282,33 @@ games:
     artifact filename was preserved verbatim at
     results/outer_loop_fable5_lf52_probe_l3_20260711.json before being
     overwritten by this session.'
+  - 'L6 SOLVED round 6 (2026-07-12, gpt-5.6-sol via codex, round-6 breadth
+    campaign, results/outer_loop_fable5_lf52_probe_l6_20260712.json):
+    scouted the color-8 quad block (jumps over a peg WITHOUT removing
+    it -- a movable, indestructible obstacle, not a second peg type) and
+    discovered the double-socket carrier is not an exit ramp: seven
+    eastward rail moves reveal a SECOND hidden chamber (another peg, two
+    fixed torches, a rectangular rail loop) -- L6 is multi-screen, unlike
+    single-screen L5. Found a keyhole click that resets ONLY L6 (the
+    banked 312-step L5-verified prefix survives it), enabling cheap
+    in-level retries. An early routing attempt through the left elevator
+    produced an offscreen disposal/stranded dead end; the fix routes the
+    block through the right torch and continues east from the lower
+    junction. Winning line: bridge the narrow wall with the block, remove
+    the narrow peg, return the survivor through the same carrier, remove
+    the central peg, route the block to column 26 so the survivor lines
+    up and removes the bottom peg. levels_completed hit 6 live at session
+    step 615 (312-action L5-verified prefix + a 303-action L6 route). The
+    source agent spent its last ~85 calls scouting L7 rather than gating
+    L6, so its own reproduction_verified is honestly false (a full
+    replay-plus-gate would exceed the 700-call session cap) -- the codex
+    process was later killed by its 40-minute wall-clock timeout mid-L7
+    exploration, before it could write a result artifact. The outer loop
+    recovered the raw 615-action sequence from the process''s own saved
+    candidate file, reconstructed a proper artifact, added a new resolver
+    priority branch, and independently verified via 5x fresh env.reset()
+    + replay: all 5 trials confirmed level=6, state=GameState.NOT_FINISHED
+    (more levels remain beyond 6; L7 was reached but not explored).'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
@@ -4450,7 +4477,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 158
+reproducible_total_levels: 159
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
