@@ -2470,6 +2470,41 @@ games:
     something not yet tried at all -- the next attempt should broaden
     search strategy rather than retry any of these three now-closed
     directions.'
+  - 'REMAINING TWO HYPOTHESES ALSO REFUTED, still HONEST NULL, round 10
+    (2026-07-12, gpt-5.6-sol via codex, results/outer_loop_codex55_lf52_probe_round10_20260712.json):
+    closes round 9''s two remaining candidates. SUB-CELL PIXEL OFFSETS:
+    double-clicked every single integer pixel across the full 6x6
+    world-coordinate footprint of the off-screen east carrier
+    (x=137-142,y=29-34) and the east peg (x=137-142,y=41-46) -- all 144
+    clicks were adapter-state-silent (only the cosmetic row-0 odometer
+    changed). MULTI-CLICK DRAG-LIKE GESTURES: three bidirectional
+    one-pixel click sweeps across the visible west ferry and its
+    adjacent rail cell (72 clicks), plus continuous one-pixel vertical
+    paths between the off-screen peg and carrier in both directions,
+    plus a 39-click right-to-left screen-pan-like sweep -- none
+    produced a drag, selection, or any non-cosmetic state change. New
+    finding along the way: ACTION7''s undo window is narrower than
+    previously documented -- it undoes an east-only carrier move only
+    when pressed IMMEDIATELY after it; even adapter-state-SILENT
+    ACTION6 clicks in between clear the pending undo, and a second
+    ACTION7 press is not a redo (no deeper undo stack exists).
+    Independently re-verified by the outer loop: the full 947-action
+    sequence replays cleanly from a fresh env.reset() to level=6,
+    state=GameState.NOT_FINISHED (both the 615-action prefix alone and
+    the full sequence checked separately) -- matches the session''s own
+    report exactly. No new level banked; frontier stays at level 6.
+    With direct pair-clicking, off-screen cell-center clicking,
+    cross-screen dependencies, sub-cell pixel offsets, AND drag-like
+    gestures all now systematically ruled out across two full rounds,
+    the honest state is: no click-based interaction on the visible or
+    inferred-off-screen board produces ANY state change beyond the
+    cosmetic row-0 odometer. The next attempt should stop testing
+    click variants entirely and instead reconsider whether L7''s unlock
+    requires something structurally different -- e.g. a specific
+    sequence/timing of otherwise-inert clicks (not yet tested as a
+    SEQUENCE, only individually), or re-examining whether the west
+    screen becomes reachable only via a route through the L6 mechanics
+    themselves rather than anything on the L7 board.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
