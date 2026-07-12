@@ -1,10 +1,10 @@
 {
   "game": "su15",
   "model": "gpt-5.6-sol",
-  "starting_level": 3,
-  "max_level_reached": 7,
-  "total_env_steps_used": 445,
-  "reproduction_verified": true,
+  "starting_level": 7,
+  "max_level_reached": 8,
+  "total_env_steps_used": 735,
+  "reproduction_verified": false,
   "action_sequence": [
     {"action": 6, "data": {"x": 10, "y": 53}},
     {"action": 6, "data": {"x": 16, "y": 47}},
@@ -137,11 +137,24 @@
     {"action": 6, "data": {"x": 48, "y": 24}},
     {"action": 6, "data": {"x": 44, "y": 22}},
     {"action": 6, "data": {"x": 18, "y": 27}},
-    {"action": 6, "data": {"x": 23, "y": 20}}
+    {"action": 6, "data": {"x": 23, "y": 20}},
+    {"action": 6, "data": {"x": 10, "y": 42}},
+    {"action": 6, "data": {"x": 3, "y": 42}},
+    {"action": 6, "data": {"x": 3, "y": 35}},
+    {"action": 6, "data": {"x": 3, "y": 28}},
+    {"action": 6, "data": {"x": 3, "y": 21}},
+    {"action": 6, "data": {"x": 18, "y": 22}},
+    {"action": 6, "data": {"x": 18, "y": 16}},
+    {"action": 6, "data": {"x": 24, "y": 11}},
+    {"action": 6, "data": {"x": 31, "y": 12}},
+    {"action": 6, "data": {"x": 38, "y": 12}},
+    {"action": 6, "data": {"x": 45, "y": 12}},
+    {"action": 6, "data": {"x": 52, "y": 14}},
+    {"action": 6, "data": {"x": 56, "y": 19}}
   ],
-  "levels_won_this_session": [4, 5, 6, 7],
-  "novel_mechanics_found": "L4 hunter evasion is an axis-speed race: a highest-tier fruit can outrun a 7-colored hunter with repeated 8-pixel axial hops, allowing a decoy f to be parked at the far edge while the other half is built. L5 introduces two hunters; making them converge fuses them into an e-colored composite thief. The composite follows the active fruit and repeatedly degrades it, but L5 supplies exactly enough surplus mass to survive those losses. L6 introduces high tiers c and 8 plus a hunter-processing/socket interaction: an 8 can be downgraded to c and then to the required b through timed collision/withdrawal, with the level transition resolving one tick later. L7 is a synchronized race: four 6 fruits form one b in four actions while the hunter converts 8 to c to b; both b fruits can then be delivered before the next attack. L8 scouting found three hunters, two c goals, four blobs, and an e goal; two hunters fuse on tick 6, while careless clicks within radius of both c fruits merge them back into an 8.",
-  "narrative": "Replayed and confirmed the 39-action banked prefix to Level 3, then solved Levels 4 through 7 by rendered-frame experimentation. Level 4 required kiting the hunter with a far-edge f decoy; Level 5 required hunter fusion plus exact mass accounting; Level 6 exposed a timed high-tier downgrade/socket mechanic; and Level 7 compressed construction and delivery into an eight-action race. A fresh reproduction gate replayed the full 132-action sequence and reached Level 7. I then investigated Level 8 but stopped at a genuine simultaneous-control wall: keeping both c fruits separated and safe while preserving the fused e and avoiding the third hunter remained unresolved.",
+  "levels_won_this_session": [8],
+  "novel_mechanics_found": "Level 8 is a split-delivery race: merge the two b blocks into the first c, kite it up the extreme left edge while two hunters fuse and the 8 is processed into the second c, then send that second c along the top edge to the far-right 9 socket. Clicking within attraction range of both c pieces merges them back into an 8. Level 9 revealed that ACTION7 is a true one-step undo, two 6 blocks merge into f, four hunters must apparently satisfy an additional d-shaped requirement, and final-level reset performs a full-game reset rather than restarting the current level.",
+  "narrative": "The 132-action verified prefix reached Level 7 twice. I solved Level 8 live with a 13-action continuation and replayed that continuation successfully in a separately created environment after its own full prefix, reaching levels_completed=8 both times. I did not have enough budget left to run the required reproduce() gate on all 145 actions, so reproduction_verified is intentionally false. On Level 9 I produced and socketed c and f, discovered the still-unsatisfied d-shaped hunter-fusion requirement and ACTION7 undo, then stopped when the final-level environment entered GAME_OVER after repeated rewind experiments.",
   "gotchas": [
     "The Level 4 hunter advances about four pixels per axis toward the active/highest fruit; long axis-aligned 8-pixel fruit hops create separation, while diagonal hops often do not.",
     "A hunter collision may be rendered as partial occlusion for one frame; the fruit can survive if moved continuously, but an unmoved fruit is downgraded on the following action.",
@@ -149,8 +162,12 @@
     "In Level 5 the resource meter is nearly exact: the verified line reaches the final target with only the last few meter cells remaining; avoid extra failed clicks.",
     "Level 6 collision resolution can be deferred: the verified tail reaches the win after a far failed click following the final c/hunter positioning.",
     "Level 7 needs two hops for the right b, via (48,24) then (44,22); clicking (44,22) directly from its spawn is outside pull range and wastes the critical timing window.",
-    "Level 8: after the two b fruits merge into one c and the 8 is downgraded into the other c, never click a point within pull radius of both c fruits or they merge back into an 8.",
-    "env.reset() restarts the current level without replaying earlier levels; only a fresh environment should receive the full banked prefix."
+    "Level 8: after the two b fruits merge into one c and the 8 is processed into the other c, never click a point within pull radius of both c fruits or they merge back into an 8.",
+    "The Level 8 winning continuation is (10,42), (3,42), (3,35), (3,28), (3,21), (18,22), (18,16), (24,11), (31,12), (38,12), (45,12), (52,14), (56,19).",
+    "ACTION7 is one-step undo on Level 9; it restores the previous rendered state without advancing hunters.",
+    "env.reset() restarted the current level through Level 8, but calling it after entering the final Level 9 performed a full reset to Level 0.",
+    "Level 9 has three 9 sockets and visible c, f, and d-shaped requirements. Socketing c and f alone does not win; the four 7 hunters must apparently be fused/arranged to satisfy d as well.",
+    "Level 9 timing is unforgiving: a hunter degrades c to b to f, and a nearby hunter can destroy a socketed f within a few valid clicks."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
