@@ -2651,6 +2651,18 @@ games:
     sort before stopping (chose not to claim an unobserved level-up). No new
     level banked; this is a genuine two-arm-transfer mechanism, not yet
     solved end-to-end.'
+  - 'L3 progress round 3, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex):
+    tested retained-segment color visitation in the bottom reference order and
+    in the connected-chain reverse order from fresh prefix replays -- neither
+    leveled up. New finding: a brown-headed, vertically-connected colored
+    chain (present in L3, absent in L2) exhibits PHYSICAL COUPLING -- touching
+    the connected chain at its E segment couples the objects, so a subsequent
+    downward move drags the entire brown-headed chain down one lattice row.
+    ACTION1/2 move the left head one 6px lattice row; ACTION3/4
+    retract/retain horizontal chain segments. Direct ACTION6 clicks on the
+    brown head and bottom reference head produced no visible effect. No new
+    level banked; stopped at the verified L2 ceiling with budget remaining
+    for analysis but not for another fresh L3 candidate plus its gate.'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -2750,7 +2762,7 @@ games:
     reproducibility_checksum: 80c3407496706b32fd1eaa057b1da9f5ef8b56c0be32ccc59cf80b08872a5a43
 - game: ka59
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   win_condition: 'E3 executable-world-model L1: use the selected 3x3 block to push
     the second block through the central wall, place the left block on the left target,
     then place the pushed block on the right target. L2-L4 (2026-07-11,
@@ -2819,6 +2831,26 @@ games:
     the outer loop: 5x fresh env.reset() + replay via the fixed resolver, all 5
     confirmed reached_level=5, state=GameState.NOT_FINISHED. No L6 win banked
     this session.'
+  - 'L6 SOLVED round 3 (2026-07-12, gpt-5.6-sol via codex): the escape from the
+    "isolated" chamber above was found -- the lower cycling stack transport is
+    NOT a fixed one-way trap, it is itself BALLISTIC. Launching the stack left
+    TWICE relocates the elevator from x=42 to x=12; phase-0 alignment then
+    sends the selected 3x3 block into the upper-left chamber, where the plus
+    is solved via backtrack-clamped left/up launches (the same flight-physics
+    rules from L2-L4). Launching the stack RIGHT twice afterward restores the
+    route to the upper-right square socket -- the chamber was never actually
+    one-way, the stack itself needed to be repositioned first. L7 was explored
+    for 100 further actions (not solved): it generalizes the transport to
+    different block aspect ratios (a 3x6 and a 6x3 selectable block, distinct
+    sockets, both can ride the lower stack across the lower barrier, only the
+    narrow block fits the central three-cell gap) -- both rectangular objects
+    were socketed and the lower transport/central gap mapped, but the sealed
+    plus chamber for L7 was not cracked this session. The source agent
+    honestly flagged the L6 win as reproduction_verified=false (two required
+    234-step prefix replays left no budget for a dedicated gate) despite the
+    live win. Independently re-verified by the outer loop: 5x fresh
+    env.reset() + replay via the fixed resolver, all 5 confirmed
+    reached_level=6, state=GameState.NOT_FINISHED.'
   - 'L5 (scouted in a PRIOR session, unsolved at the time, not banked then --
     confirmed correct by the entry above): a genuinely new timing/extraction
     mechanic -- a vertical channel holds a 6-row two-color (c/d) stack whose
@@ -3588,7 +3620,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 141
+reproducible_total_levels: 142
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
