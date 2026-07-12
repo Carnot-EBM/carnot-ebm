@@ -1,16 +1,10 @@
 {
   "game": "dc22",
   "model": "claude-fable-5",
-  "starting_level": 2,
+  "starting_level": 4,
   "max_level_reached": 4,
-  "total_env_steps_used": 433,
-  "reproduction_verified": true,
-  "reproduction_gate_result": {
-    "game": "dc22",
-    "reached_level": 4,
-    "claimed_level": 4,
-    "reproduced": true
-  },
+  "total_env_steps_used": 662,
+  "reproduction_verified": false,
   "action_sequence": [
     "{\"action\":3}",
     "{\"action\":1}",
@@ -225,21 +219,21 @@
     "{\"action\": 2}",
     "{\"action\": 4}"
   ],
-  "levels_won_this_session": [
-    4
-  ],
-  "registry_note": "Registry row said levels_reproduced=2 but the banked artifact results/arc_loop_solve_dc22.json (exp4666-gated) already reaches L3 with its 132-label sequence; this session verified that prefix live (L1@22, L2@86, L3@131 steps) and then discovered + won L4. Gate re-verified the FULL 212-label sequence from fresh reset -> reached_level=4.",
-  "novel_mechanics_found": "LEVEL 4 (all discovered this session): (1) The keyboard-controlled piece this level is the color-14 2x2 block (not the 6/7 checker); it walks on color-2 zones, color-1/color-12 shelf+bar material, and checker tiles; blocked by background-4 and wall-5. No gravity. (2) PORTAL PAIR: the two 6/7 checkered 2x2 tiles are linked teleporters -- stand on one and click the right-panel 6-shape button and the piece teleports to the other checker (this is the ONLY way into the west stack; walking cannot reach it). (3) The right-panel shapes are BUTTONS clicked via ACTION6 at their display centers: 6-shape=(52,19) flips checker phase AND teleports a piece standing on a checker; B-shape=(46,28) shifts BOTH 1/12-colored shelves right by 2 with wraparound (6 positions), REFUSED if the standing piece would lose support; 2-square=(56,28) runs a multi-stage material exchange between the top bar (r20-21 c8-23) and bottom bar (r40-41 c16-31): each click converts 2 cols per end of one bar to walkable while walling the other from the middle out -- the two bars are a coupled resource. (4) Crab-walk: shelves slide UNDER the piece (piece does not ride), so gap crossings alternate click-shift/step-right; right-only shifts make shelf crossings one-way west->east. (5) WIN: after reaching the B (color-11) 2x2 block in the bottom-right zone and stepping onto it, the level completes -- B is the goal object. LEVEL 5 (scouted, unsolved): 9-button (52,41) transfers solidity between two dithered color-9 regions (solid=walkable bridge, dotted=void) -- coupled bridges on east and west stacks; right AA99 button (49,29) ROTATES a color-8 piece inside the black (color-0) void region; left AA99 button (44,29) and 8-button (52,35) were NO CHANGE in the probed state (likely condition-gated); B-shape (47,22) shifts a 1-shelf at r54-55; 2-square (56,22) opens the r44-45 wall bar at both ends incl. cells at c28-29 above the dotted-F region; a second dither pair uses color-15/F (r46-53 c26-29 dotted vs solid F-bar r50-53 c14-23); portal checkers at r6-7 c24-25 (below it a walkable 12-slab r10-21 c20-25) and r34-35 c10-11; goal B at r50-51 c10-11.",
-  "narrative": "Replayed the banked 132-label prefix (verified L3, better than the registry claim of 2). On L4, probed moves and the three right-panel buttons, mapped walkable materials, and hit a topology wall: the west stack (zone2 + long zone -> shelf2 -> bottom bar -> B goal) is unreachable by walking because shelf shifts are right-only. Following the campaign meta-lesson (investigate unexplained glyphs), stood on the second 6/7 checker tile and clicked the 6-button: TELEPORT to the twin checker in the west stack. From there: crab-walked shelf2 east, cycled the 2-button to re-open the bottom bar, walked to the B block -- LEVEL 4 WON at live step 212. Immediately ran the mandatory reproduction gate on the full 212-label sequence from a fresh reset: reproduced=True at L4 (424 steps total). Spent the remainder scouting L5 (much richer: dither bridge pairs, a rotatable 8-piece in a void, condition-gated buttons); stopped with 67 steps unspent because a full L5 solve plus its 280+-step gate could not fit the 500-step budget.",
+  "levels_won_this_session": [],
+  "novel_mechanics_found": "LEVEL 5 was explored substantially but not won. The four AA99 quadrants are directional controls for a color-8 structure: (44,29)=left, (49,29)=up, (54,29)=right, and (59,29)=down, each in four-pixel increments. Moving 8 up and right until it touches the color-12 slab makes the 8 button at (52,35) latch them; the joined 8/12 assembly can then be routed left, down, and right to form the missing vertical bridge from the start island to the upper island, restored, and followed to the top checker. The large 6 control at (52,49) teleports an avatar standing on either checker. The 2-button material cycle is bidirectional: it closes the row-44 bar from the middle, reaches a fully walled phase, reopens from both ends, and then produces a fully walkable color-12 bridge; an aligned B-shelf also becomes color 12 in that phase. The remaining unexplained obstacle is the color-15/F network: its upper solid socket, lower solid bar, and dotted vertical chute never exchanged solidity under ACTION5, direct clicks, the visible controls, shelf alignment, or tested 2-cycle phases.",
+  "narrative": "Resolved the required 212-label prefix and replayed it from two fresh resets; both live replays reached frame.levels_completed=4. The first persistent probe exited after that confirmation because its renderer mishandled the frame stack, so its 212 calls were still counted. In the second probe I used rendered grids plus an allowed prior provenance artifact to ground the four directional controls, then live-routed and latched the 8/12 assembly, crossed and restored the temporary bridge, reached the upper checker, and used the 6 control to reach the west stack. I mapped the complete row-44 material cycle from the safe west pad, crossed its all-color-12 phase, and aligned the lower shelf beneath the dotted F chute. Extensive direct investigation of every F object and remaining verb/control produced no traversable chute, so level 5 was not observed won. I stopped at 662 total env.step calls with max_level_reached still 4; no fresh reproduce() gate was run because its 212-action replay would have exceeded the 700-call cap.",
   "gotchas": [
-    "The registry row for dc22 (levels_reproduced: 2) is STALE: results/arc_loop_solve_dc22.json already contains a 132-label exp4666-gated sequence reaching L3.",
-    "Click labels only need {action:6, x, y} display coords; the banked labels carry extra grid/sprite keys but the apply convention ignores them.",
     "Direction mapping: ACTION1=up, ACTION2=down, ACTION3=left, ACTION4=right; every move is 2 pixels (sprites are 2x2 on a 2x-upscaled grid).",
-    "Row 63 is a tick counter that fills left-to-right on some actions (resets each level, 64 cap, jumped +7 once on a refused B-click); never hit the cap this session -- unknown if filling it fails the level; budget moves anyway.",
-    "B-button shelf shifts are REFUSED (no-op, counter penalty) if the standing piece would lose support; shifts are right-only with wraparound, so shelf gap-crossings are one-way -- crossing west requires the checker portal, not shelves.",
-    "The 2-button bar exchange is multi-stage and monotonic per stage: fully opening the top bar fully walls the bottom bar; plan bar usage order before clicking.",
-    "Blocked moves are true no-ops (NO CHANGE frames) but still consume env.step budget.",
-    "L5: clicking the 9-button while the west 9-block is your only planned descent route dissolves it (solidity transfers to the east 9-bridge); order matters."
+    "The rendered frame may be a stack with shape (2,64,64); use the last frame for the current 2D grid.",
+    "The AA99 controls move the 8 object rather than rotating it; the fourth quadrant at (59,29) is down and the previously missed quadrant at (54,29) is right.",
+    "The 8 button only visibly latches after the 8 object is aligned against the color-12 slab; after latching, direction controls drag both as one assembly.",
+    "To bridge the initial vertical gap: latch at the upper-right alignment, move the assembly left to its limit, down three times, then right until the color-12 slab spans rows 22-33; walk left onto the slab before climbing because its right edge is not walkable from the fixed pad.",
+    "Restore the assembly before climbing to the top checker: left to the limit, up three, then right three.",
+    "The 2-button cycle is reversible and has a distinct all-color-12 full-bridge phase after the fully walled phase; map it while on the fixed west pad and cross only at the full phase.",
+    "Further 2-button clicks after crossing close the bridge from the middle and can trap the avatar on the east endpoint because the final support-deleting closure is refused.",
+    "Place the B shelf at columns 24-29 before testing the F chute; one more B click wraps it to the left.",
+    "The color-15/F chute remained the unresolved frontier; its 2x2 dither always contains void cells and no tested control made it solid.",
+    "Blocked moves and refused support-deleting toggles consume env.step budget and advance the visible row-63 tick counter."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
