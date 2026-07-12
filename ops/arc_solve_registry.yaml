@@ -3991,6 +3991,24 @@ games:
     swatch through a visually-clear four-cell corridor, showing paint
     contact/collision is stricter than simple rendered-cell overlap. No L8
     win; frontier stays at level 7.'
+  - 'L8 progress round 5, still HONEST NULL (2026-07-12, claude-fable-5,
+    first fable-5 leg of the campaign, results/outer_loop_fable5_re86_probe.json):
+    found the fix for round 4''s repaint trap -- a two-stage FLATTEN/CORRIDOR/
+    COMPRESS route, not a resize-tolerance issue. Flatten the color-11
+    rectangle to 22x4, paint at the upper-left swatch, traverse laterally
+    at y=15..18 through the seven-row horizontal corridor between the
+    upper swatches and the palette wall, recompress to 4x22 at the
+    upper-right fixture, cross the TRUE six-cell background opening at
+    x=44..49 (not the visually-similar four-cell corridor round 4 tried),
+    restore to 7x19 at the lower fixture, and place at x=9..15,y=39..57 --
+    this route preserved color 11 across the wall and placed the
+    rectangle exactly over all four color-11 sockets. The second
+    rectangle was independently resized to the target 16x10 geometry and
+    its color-6 paint leg confirmed at x=6..21,y=18..27, but budget ended
+    (788/800 calls) before its analogous wall-crossing route could be
+    executed. No new level banked; frontier stays at level 7 -- but the
+    first rectangle''s full route is now solved, leaving only the second
+    rectangle''s crossing as the remaining work.'
   - 'L6 (previewed for free in a PRIOR session, not attempted at the time --
     solved by the entry above): 8 rings (four 9-colored, four 11-colored in a
     rectangle) plus color-1 objects that are a genuinely NEW element not seen
