@@ -4076,6 +4076,50 @@ games:
     level banked; frontier stays at level 5. Next attempt should bound
     scratch-tooling iteration explicitly and prioritize the still-
     condition-gated 8 control from round 5''s scouting.'
+  - 'L6 mapped in depth, still HONEST NULL, round 7 (2026-07-12,
+    claude-fable-5, results/outer_loop_fable5_dc22_probe_round7_20260712.json):
+    unlike round 6''s tooling-churn failure, this session made major
+    mechanical progress despite not winning. SHELF-RIDING ESCAPE: the
+    starting lower-middle/lower-right room pair''s only exit is DOWNWARD
+    -- wait for the 6-phase B-cycle shelf machine to put shelf-A under
+    cols 18-19, step down through the floor onto it, then ride phase to
+    phase (a B-press that would strand the avatar is refused-with-tick)
+    west to the corridor and climb the C column into R2 -- the first
+    time the L6 room system was escaped. R2''s visible B/A/8877 cluster
+    is a SOCKET: standing on it reveals a 2x2 quad of buttons that each
+    advance a checker''s color-type through the cycle 6/7->D/8->C/B-
+    >9/A. Standing on a checker + clicking big-6 TELEPORTS to its
+    same-type twin (6/7<->lower-right, C/B<->R1, 9/A<->a "launcher"
+    box) -- but D/8 has NO discovered twin, so a D/8-typed checker only
+    rotates on click, teleporting nowhere. The launcher''s four dithered
+    exit cells light an F/C/E/A D-pad (up/left/right/down) that drives
+    the big 8-ring 4 cells per lit click; parking the ring concentric
+    with the C-structure''s embedded small 8-ring and clicking the
+    revealed 8-bar LATCHES them into a single draggable, 6-rotatable
+    C+8 assembly. Movement law for that assembly: never over ''2'' room
+    cells; over wall only at rows >=26; in rows <=25 every covered cell
+    must be void. The void channel connecting the starting area to the
+    goal room (rows 4-11, cols 32-49, B block at 6-7,46-47) DOG-LEGS
+    (cols 20-23 at rows 8-19 -> cols 28-31 at rows 24-27), which the
+    rigid 20-cell assembly cannot turn through -- confirmed this is why
+    every bridging attempt failed, not a missing technique. Also
+    confirmed raw void is NOT avatar-walkable (tested from a tower
+    top), and the assembly is boardable from inside a room when parked
+    flush against a ceiling opening. Ended at 614 of 650 env steps
+    mid-tower; no L6 win. Independently re-verified by the outer loop:
+    replayed both the 322-action L5 prefix alone and the full
+    614-action session sequence from fresh env.reset() -- both
+    confirmed level=5, state=GameState.NOT_FINISHED, matching the
+    session''s own report exactly (no hidden L6 win, no regression). No
+    new level banked; frontier stays at level 5. STRONGEST LEAD for the
+    next attempt: the D/8 checker type has no discovered twin (color 13
+    appears nowhere on the board) -- something unexplored almost
+    certainly CREATES a D/8 twin, and that is the leading hypothesis for
+    the goal-room entry. Also unswept: R2''s lower half (rows 20-23,
+    cols 4-9) and the corridor''s west cells (cols 6-9) for further
+    hidden sockets. A full fresh-reset reproduction gate for any future
+    L6 win will need a >1000-step budget (the 322-action prefix alone
+    already costs half of a 650-step session).'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
