@@ -2309,6 +2309,44 @@ games:
     priority branch, and independently verified via 5x fresh env.reset()
     + replay: all 5 trials confirmed level=6, state=GameState.NOT_FINISHED
     (more levels remain beyond 6; L7 was reached but not explored).'
+  - 'L7 mapped, still HONEST NULL, round 7 (2026-07-12, claude-fable-5,
+    results/outer_loop_fable5_lf52_probe_round7_20260712.json): first
+    confirmation the game has win_levels=10 total (four levels remain
+    beyond the banked frontier). The visible (west) L7 screen is FULLY
+    move-locked at level start -- every piece oracle-click (west peg at
+    grid (0,1), the stacked TWO fozwvlovdui_red blocks at (6,1), all
+    torches, all carriers) is silent, and no carrier track reaches the
+    (0,3)/(6,3) landing cells needed to unlock the sealed chambers. The
+    unlock chain must therefore START on the unseen EAST screen (a
+    second peg at grid (22,6) plus four more carriers on rows 0-5,
+    x16-22, unexplored this session). Mapped the full carrier network
+    on the west screen regardless: a center ferry (row-5 track x1-6,
+    two south spurs parking above the lower torches at (1,6)/(6,6),
+    which sit directly over bottom-corridor sockets (1,8)/(6,8) -- the
+    corridor entry/exit relay); a bidirectional elevator carrier,
+    (11,1)->(11,3)->west row 3 to (9,3)->down to (9,5)->(8,5)->(8,6)-
+    >(8,7) (parking one cell above the corridor)->east spur (9,7)-
+    >(10,7), confirmed reversible by riding it back up. Bottom corridor
+    row 8 has sockets at (1,8),(3,8),(5,8),(6,8),(7,8),(8,8),(9,8) with
+    jumpable torches at (2,8)/(4,8); sockets 5-9 are contiguous with
+    nothing to jump over, so the two stacked red blocks are almost
+    certainly portable stepping-stones for that stretch. ACTION7 is
+    newly available in L7 but its semantics are UNRESOLVED -- one press
+    coincided with a south-like carrier drift, a later press was a pure
+    no-op; it is NOT a simple undo of visible state. Grid<->frame
+    mapping confirmed as frame_xy = 6*grid_xy + 6; carrier positions on
+    the unseen east screen are readable off-screen via the adapter''s
+    state_key, which the next attempt should use to track that network
+    blind before spending click budget on it. The 615-action L6 prefix
+    itself was independently re-confirmed to reproduce cleanly (fresh
+    env.reset() + replay: level=6, state=GameState.NOT_FINISHED) and
+    the full 669-action session sequence was independently replayed to
+    confirm it does NOT cross into L7 either -- no new level banked;
+    frontier stays at level 6. Budget was the binding constraint: the
+    615-action prefix alone consumes 615 of a 690-action budget,
+    leaving only ~75 actions for exploration; a next attempt should
+    either get a larger budget or find an L7-scoped keyhole reset (the
+    L6 keyhole reset only resets L6, not L7).'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
