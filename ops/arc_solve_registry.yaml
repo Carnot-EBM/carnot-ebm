@@ -2534,6 +2534,49 @@ games:
     SEQUENCE, only individually), or re-examining whether the west
     screen becomes reachable only via a route through the L6 mechanics
     themselves rather than anything on the L7 board.'
+  - 'ALL REMAINING HYPOTHESES ALSO REFUTED, still HONEST NULL, round 11
+    (2026-07-12, gpt-5.6-sol via codex, results/outer_loop_round11_lf52_probe_20260712.json):
+    closes round 10''s three flagged directions. CLICK SEQUENCES: eight
+    consecutive clicks at each of the four east-carrier centers and
+    the east peg (40 clicks), then eleven varied click ORDERS across
+    those five targets (with L7-scoped resets separating each order)
+    -- every click remained adapter-state-silent, changing only the
+    ordinary action counter. L6-MECHANIC ROUTING: replayed both the
+    12-label L6 winning tail and a 36-label post-keyhole-reset L6
+    opening segment against canonical L7 starts -- their click labels
+    stayed inert on L7 and their directional labels caused only
+    ordinary carrier movement, no piece unlock. NON-ACTION6 CONTROLS
+    ON THE EAST SIDE: exhaustively tested single ACTION1-4/7 inputs,
+    inverse direction pairs, ACTION7 before/after every direction,
+    every direction while the ACTION5 keyhole overlay was armed,
+    east-carrier/peg clicks followed by ACTION1-4/7, and triple-click-
+    then-direction combinations near the east peg-adjacent carrier --
+    none produced piece motion or a level-up. Two new mechanic details
+    found along the way (neither unlocks anything): ACTION7, when
+    IMMEDIATE, cleanly restores the complete carrier state after ANY
+    of ACTION1-4 (not just east-only moves as round 10 characterized
+    it -- broader than previously known); and ACTION7 immediately
+    after ACTION5 specifically CANCELS the armed keyhole overlay
+    (ACTION1-4 do not cancel it -- the keyhole stays usable after
+    ordinary movement). Independently re-verified by the outer loop:
+    both the 615-action prefix alone and the full 944-action session
+    sequence replay cleanly from fresh env.reset() to level=6,
+    state=GameState.NOT_FINISHED -- matches the session''s own report
+    exactly. No new level banked; frontier stays at level 6. HONEST
+    STATE AFTER 11 ROUNDS: every click-based interaction (direct,
+    off-screen, drag-like, sequenced, ordered), every east-screen
+    configuration, every cross-screen dependency, and every non-click
+    action near the east side has been systematically ruled out. The
+    east peg and carriers remain completely inert to every tested
+    input. The next attempt should treat this as a genuinely
+    structural puzzle, not an input-discovery one -- consider whether
+    L7 requires a PRECONDITION not yet met (e.g. an L6-state artifact
+    that must be set differently before entering L7, or a specific
+    win_levels-adjacent global flag), or whether the east peg''s
+    unlock depends on world state entirely outside the carrier/peg
+    system tested so far (untested: HUD/tick-bar reads, or the still-
+    UNRESOLVED off-screen-click-beyond-y/x-63 world-mapping question
+    at coordinates far outside the tested 226-cell sweep range).'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
