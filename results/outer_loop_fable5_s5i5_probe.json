@@ -1,10 +1,10 @@
 {
   "game": "s5i5",
   "model": "claude-fable-5",
-  "starting_level": 4,
-  "max_level_reached": 7,
-  "total_env_steps_used": 670,
-  "reproduction_verified": false,
+  "starting_level": 7,
+  "max_level_reached": 8,
+  "total_env_steps_used": 764,
+  "reproduction_verified": true,
   "action_sequence": [
     {
       "action": 6,
@@ -2182,25 +2182,22 @@
         "x": 31,
         "y": 58
       }
-    }
+    },
+    {"action":6,"data":{"x":43,"y":4}}, {"action":6,"data":{"x":26,"y":56}}, {"action":6,"data":{"x":11,"y":56}}, {"action":6,"data":{"x":43,"y":11}}, {"action":6,"data":{"x":57,"y":11}}, {"action":6,"data":{"x":57,"y":4}}, {"action":6,"data":{"x":11,"y":56}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":28,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":40,"y":4}}, {"action":6,"data":{"x":46,"y":4}}, {"action":6,"data":{"x":46,"y":4}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":46,"y":4}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":15,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":22,"y":56}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":40,"y":4}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":46,"y":11}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":9,"y":56}}, {"action":6,"data":{"x":40,"y":11}}, {"action":6,"data":{"x":40,"y":11}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":49,"y":18}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}, {"action":6,"data":{"x":60,"y":11}}
   ],
   "levels_won_this_session": [
-    5,
-    6,
-    7
+    8
   ],
-  "novel_mechanics_found": "Level 5's apparent C/9 crossing deadlock is broken by temporarily growing E through the upper F-wall gap to lift the 9 rail: once the attached 1-column retracts above the isolated F block, 9 can retract four horizontal bands past C. E can then retract, C lowers the narrow diamond carrier below both F walls, and E regrows into the lower socket. Level 6 adds active small-glyph 90-degree joint rotators above telescoping controls; folding the E/B/9 arm into E-left, B-down, 9-right routes it through the wall corridor. Level 7 is a four-link articulated maze plus a separate A/8 clearance coupling: B-down, E-left along row 40, a temporarily horizontal 9 segment past the x=15 wall, then 9-up through the x=6-8 gap and C-right reaches the socket. Level 8 couples a movable upper carriage (9 vertical, 7 horizontal), the E diamond carrier, and a B-rotated chamber cross.",
-  "narrative": "Replayed the resolver's exact 120-action prefix twice from fresh resets and confirmed frame.levels_completed=4. Solved Level 5 live by lifting and retracting the 9 rail around the F stop, then solved Level 6 as a telescoping three-link arm; reproduce() passed on the exact 202-action prefix with reached_level=6. Solved Level 7 live at session step 431 after routing its articulated chain through the lower-left wall gap; the exact 311-action from-reset candidate is recorded, but gating it would have exceeded the 700-step cap, so the overall reproduction_verified flag is honestly false. Used the residual budget to decode Level 8's coupled carriage/chamber controls and stopped at 670 total calls because 30 remaining calls were not enough to solve that finale-like level or gate a 311+ action line.",
+  "novel_mechanics_found": "Level 8 couples every same-colored structure across the board: the paired 9/7 controls reshape the upper carriage, 8/A reshape the lower carriage, and E simultaneously lowers the diamond carrier and extends the chamber's E arm. The central B glyph rotates the four-color chamber cross, and a remote move is globally blocked unless that color's chamber arm has clearance. Crucially, an arm aimed through the bottom opening may continue extending off-screen after its visible pixels reach row 62, allowing E to carry the diamond all the way to the lower socket.",
+  "narrative": "Freshly replayed the resolver's exact 311-action prefix and confirmed frame.levels_completed=7. On Level 8, mapped both directional halves of the paired controls, rotated the chamber cross to make clearance for each coupled move, retracted the upper 7 span and lower A span to clear the diamond's x=18-20 lane, then pointed E through the chamber's bottom opening and extended it until the diamond reached the lower socket. The live run won Level 8 at action 382. A fresh reproduce() replay of the same 382-action full sequence reached claimed_level=8, completing the game's 8 win levels; total budget use was 311 live-prefix steps + 71 exploration/solve steps + 382 gate steps = 764.",
   "gotchas": [
-    "Budget accounting includes 240 calls for two 120-action starting-prefix replays, 191 subsequent live calls through Level 7 and into Level 8, 202 calls for the successful claimed_level=6 reproduce() gate, and 37 final Level 8 probes: 670 total.",
-    "Level 5 clean mechanism: retract A enough to clear the rail; C-down x3 and E-grow x4 put the E diamond in the upper F gap and lift the 9 rail; with the 1-column now above the isolated F block, 9-retract until the rail and column clear C; E-retract x4; C-down x6; E-grow x4 into the lower socket; restore A into its original socket.",
-    "Level 5's 9 retraction really is blocked while the attached vertical 1-column overlaps the isolated F block. Raising the rail shortens that column above F; the same 9 button then succeeds several more times. This timing/order dependency was the hidden escape from the prior dead end.",
-    "Level 6 small glyphs at y=48 rotate the correspondingly colored links by 90 degrees; the large paired buttons telescope them. Collapse links before rotating to avoid wall collisions. The winning pose extends E left to x=15-17, B down to row 34, and 9 right to the socket.",
-    "Level 7 uses the narrow x=6-8 gap, not merely the tempting x=30-32 gap. Lower B so E lies at row 40, rotate 9 horizontal to pass the x=15-17 wall, extend E left until the 9 anchor is at x=6-8, rotate 9 upward, extend it to row 16, extend C right six bands into the socket, and restore A after rotating 8 away.",
-    "The exact 311-action Level 7 candidate includes probes and no-ops but was observed live advancing levels_completed from 6 to 7. Its first 202 actions independently reproduced Level 6 in a fresh environment; Level 7 itself was not self-gated solely because 431+311 would exceed the 700-call cap.",
-    "Level 8 preliminary map: top 9 controls vertical motion of the upper 7/1/9 carriage; bottom 7 controls its horizontal motion; E moves the top diamond vertically but is globally blocked when the chamber's E arm lacks clearance; the central B glyph rotates the chamber cross; A, C, and 8 each move coupled lower/chamber structures.",
-    "Every rejected click consumes the row-63 meter, approximately one pixel per two clicks. Several apparent no-ops report only a meter-pixel change, so compare the non-meter grid before assuming a mechanism moved."
+    "Budget accounting is exactly 311 steps for the required live prefix, 71 further live Level-8 actions, and 382 steps for the successful fresh reproduction gate: 764 total.",
+    "The large control boxes contain two directional click regions; for example, Level 8's 7 control uses approximately x=22 to retract the upper span and x=28 to extend it, while A uses x=9 to retract and x=15 to extend.",
+    "The chamber cross's B rotation can require multiple repeated clicks to finish a 90-degree turn, and it cannot rotate while an arm remains extended through the bottom wall opening.",
+    "To clear the top diamond lane, point chamber 9 through the bottom opening before raising the upper carriage enough to clear its wall stop, then retract 7 until the upper left column sits right of x=20.",
+    "To clear the lower lane, point chamber 8 through the bottom opening, raise the lower assembly until its right column clears the isolated wall, then retract A until that column sits left of x=18; retract chamber 8 before rotating again.",
+    "Visible screen bounds are not a collision boundary for the chamber arm: after E reaches row 62, further E clicks can show changes only in the remote top diamond until the win.",
+    "Rejected clicks still consume the row-63 meter; compare rows 0-62 when deciding whether a mechanism actually moved."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
-
