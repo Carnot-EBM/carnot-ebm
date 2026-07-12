@@ -3387,7 +3387,7 @@ games:
     reproducibility_checksum: a13c3bf2d2b789492b1977b2d1d2965656582466da28eef26fd29aed7c396ceb
 - game: sk48
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   mechanic_class: chain_color_reorder
   win_condition: >-
     L1 chain navigation plus L2 chain-segment color/order matching: replay the
@@ -3573,6 +3573,35 @@ games:
     re-verified regardless: 5x fresh env.reset() + replay via a new
     resolver priority branch, all 5 confirmed level=5,
     state=GameState.NOT_FINISHED.'
+  - 'L6 SOLVED round 11 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_round11_sk48_probe_20260712.json): first attempt
+    at fresh L6 territory. L6 combines two SIMULTANEOUSLY-required
+    chain/guide pairs (horizontal target 9,9,9; vertical target 8,8,8)
+    with ONE CENTRAL FIXED BLOCKER at (29,26) -- the first level where
+    BOTH pairs start genuinely unsatisfied (unlike L4, where one pair
+    could remain incidentally intact). Neither chain can directly reach
+    its OWN three rack blocks because the blocker splits its forward
+    lane; the chains must therefore cooperate CROSSWISE -- the
+    horizontal chain relocates the vertical pair''s three 8-blocks from
+    the blocked x=29 column to the left boundary x=11, and the vertical
+    chain relocates the horizontal pair''s three 9-blocks from the
+    blocked y=26 row to the top boundary y=8. A subtlety: moving the
+    9-blocks to the NEARER y=32 position (rather than y=8) fails,
+    because the horizontal chain then sees the crossing 8-block first,
+    producing 8,9,9,9 instead of the required 9,9,9 -- ordering
+    contamination, not just reachability, determines the correct
+    target position. Boundary release requires one EXTRA retraction
+    after carrying a block to the boundary (x=11 or y=8): the block
+    cannot move out of bounds, so it stays fixed while the chain''s last
+    segment retracts through it, leaving a one-segment chain outside
+    the rack. levels_completed advanced from 5 to 6 at full-sequence
+    label 268 (144-action L5 prefix + a 124-action L6 tail). The source
+    agent ran its own fresh-environment reproduction gate on the full
+    268-action sequence and independently got the same result
+    (reproduction_verified: true), and the outer loop independently
+    re-verified regardless: 5x fresh env.reset() + replay via a new
+    resolver priority branch, all 5 confirmed level=6,
+    state=GameState.NOT_FINISHED (frame well-formed, not degenerate).'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -5406,7 +5435,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 172
+reproducible_total_levels: 173
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
