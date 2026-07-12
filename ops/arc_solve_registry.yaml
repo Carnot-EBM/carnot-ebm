@@ -3575,7 +3575,9 @@ games:
     reproducibility_checksum: 80c3407496706b32fd1eaa057b1da9f5ef8b56c0be32ccc59cf80b08872a5a43
 - game: ka59
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 7
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   win_condition: 'E3 executable-world-model L1: use the selected 3x3 block to push
     the second block through the central wall, place the left block on the left target,
     then place the pushed block on the right target. L2-L4 (2026-07-11,
@@ -3779,6 +3781,34 @@ games:
     deliberately time the all-d cycling phase and conserve the level''s
     internal counter for whatever the second downward launch (or
     another plus interaction) requires.'
+  - 'L7 SOLVED, FULL GAME CLEAR, round 9 (2026-07-12, gpt-5.6-sol via
+    codex, results/outer_loop_codex55_ka59_probe_round9_20260712.json):
+    reproduced round 8''s two upper-stack relocations and first plus
+    launch in just 38 calls from the L7 start, then discovered the
+    second plus interaction does NOT need another cycling-stack
+    launch. After the first launch leaves the plus at x=9-17,y=21-29,
+    routing the horizontal 6x3 helper to x=6-11,y=21-23 and pressing
+    ACTION2 strikes the plus''s horizontal bar with the helper''s lower
+    edge, launching the plus DOWNWARD another 15 pixels directly into
+    its matching target at x=9-17,y=36-44 -- the helper itself does
+    not move in this interaction, only the plus does (confirmed via a
+    90-cell color-11 occupancy diff, matching the first launch''s
+    signature exactly). The plus can be solved BEFORE either
+    rectangular helper is finally socketed: from the post-plus state,
+    the vertical helper was parked at x=27-29,y=45-50 and the
+    horizontal helper at x=24-29,y=24-26 without disturbing the plus,
+    and the final ACTION1 placing the horizontal helper advanced the
+    level. levels_completed advanced from 6 to 7 with GameState.WIN.
+    The complete winning L7 tail is only 93 actions (well inside the
+    level''s own 200-action internal counter, leaving 107 unused) --
+    round 8''s stopping point was a budget/pacing issue, not a
+    difficulty wall. The source agent''s own reproduction_verified is
+    honestly false (budget ran out after the win), but the outer loop
+    independently re-verified regardless: 5x fresh env.reset() +
+    replay via a new resolver priority branch (using ka59''s special
+    extended-label apply function, which handles both bare digit
+    actions and "6:x:y" click-coordinate labels), all 5 confirmed
+    level=7, state=GameState.WIN. ka59 is fully solved.'
 - game: ft09
   reproducibility: reproduced
   levels_reproduced: 6
@@ -5208,7 +5238,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 168
+reproducible_total_levels: 169
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
