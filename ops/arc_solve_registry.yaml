@@ -3222,7 +3222,7 @@ games:
     reproducibility_checksum: a13c3bf2d2b789492b1977b2d1d2965656582466da28eef26fd29aed7c396ceb
 - game: sk48
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: chain_color_reorder
   win_condition: >-
     L1 chain navigation plus L2 chain-segment color/order matching: replay the
@@ -3334,6 +3334,29 @@ games:
     linked colors against a separate horizontal head-to-tail ordering
     strip. Reproduction gate passed for level 2. No new level banked;
     frontier stays at level 2.'
+  - 'L3 SOLVED round 7 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_fable5_sk48_probe_round7_20260712.json): mapped
+    the exact win condition round 6''s honest-null attempts were missing
+    -- the horizontal ordering strip requires the head-to-tail color
+    sequence 8 -> 12 -> 9 -> 14 (read from the bottom head outward, NOT
+    the vertical rack''s top-to-bottom order, which is 14 -> 9 -> 8 -> 12
+    and looks deceptively similar). L3 is sequence-sensitive: blocks
+    must be staged via alternating vertical carries and horizontal
+    retract/extend transfers so the active chain accumulates the target
+    prefixes [8], [8,12], [8,12,9], then [8,12,9,14] in order. A
+    detached block only follows horizontal retraction correctly after
+    first being threaded while pinned to the perpendicular vertical
+    chain and carried beyond that chain''s endpoint -- a pinned block
+    behaves differently from an already-detached one (the endpoint
+    passes through a pinned block; an unpinned block gets pushed ahead
+    of it). Winning line: 37-action L3 tail after the banked 44-action
+    L1-L2 prefix (81 actions total); levels_completed advanced to 3 on
+    the final action. The source agent ran its own fresh-environment
+    reproduction gate and got reached_level=3 (reproduction_verified:
+    true), and the outer loop independently re-verified regardless: 5x
+    fresh env.reset() + replay via a new resolver priority branch (using
+    the resolver''s registered adapter, not a guessed one), all 5
+    confirmed level=3, state=GameState.NOT_FINISHED.'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -4752,7 +4775,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 163
+reproducible_total_levels: 164
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
