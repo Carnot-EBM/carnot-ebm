@@ -2,20 +2,757 @@
   "game": "bp35",
   "model": "gpt-5.6-sol",
   "starting_level": 4,
-  "max_level_reached": 4,
-  "total_env_steps_used": 657,
+  "max_level_reached": 5,
+  "total_env_steps_used": 593,
   "reproduction_verified": false,
-  "action_sequence": [{"action":4},{"action":4},{"action":4},{"action":4},{"action":6,"data":{"x":42,"y":30}},{"action":3},{"action":3},{"action":6,"data":{"x":24,"y":36}},{"action":3},{"action":6,"data":{"x":18,"y":36}},{"action":3},{"action":6,"data":{"x":18,"y":30}},{"action":4},{"action":4},{"action":6,"data":{"x":30,"y":30}},{"action":3},{"action":3},{"action":4},{"action":4},{"action":4},{"action":6,"data":{"x":36,"y":30}},{"action":6,"data":{"x":36,"y":30}},{"action":6,"data":{"x":30,"y":36}},{"action":3},{"action":6,"data":{"x":24,"y":36}},{"action":3},{"action":6,"data":{"x":18,"y":36}},{"action":3},{"action":6,"data":{"x":12,"y":36}},{"action":3},{"action":6,"data":{"x":12,"y":30}},{"action":4},{"action":4},{"action":4},{"action":6,"data":{"x":30,"y":30}},{"action":6,"data":{"x":30,"y":30}},{"action":3},{"action":3},{"action":6,"data":{"x":18,"y":30}},{"action":6,"data":{"x":18,"y":30}},{"action":6,"data":{"x":18,"y":30}},{"action":6,"data":{"x":24,"y":36}},{"action":4},{"action":6,"data":{"x":30,"y":36}},{"action":4},{"action":6,"data":{"x":36,"y":36}},{"action":4},{"action":6,"data":{"x":42,"y":36}},{"action":4},{"action":6,"data":{"x":48,"y":36}},{"action":4},{"action":6,"data":{"x":48,"y":30}},{"action":6,"data":{"x":48,"y":30}},{"action":3},{"action":3},{"action":3},{"action":6,"data":{"x":30,"y":30}},{"action":4},{"action":6,"data":{"x":33,"y":39}},{"action":4},{"action":4},{"action":6,"data":{"x":40,"y":33}},{"action":6,"data":{"x":33,"y":33}},{"action":6,"data":{"x":27,"y":33}},{"action":6,"data":{"x":21,"y":33}},{"action":3},{"action":3},{"action":3},{"action":3},{"action":4},{"action":4},{"action":6,"data":{"x":33,"y":27}},{"action":6,"data":{"x":33,"y":33}},{"action":4},{"action":6,"data":{"x":39,"y":27}},{"action":6,"data":{"x":39,"y":33}},{"action":4},{"action":6,"data":{"x":33,"y":39}},{"action":4},{"action":6,"data":{"x":39,"y":39}},{"action":4},{"action":4},{"action":6,"data":{"x":27,"y":33}},{"action":6,"data":{"x":33,"y":33}},{"action":6,"data":{"x":39,"y":33}},{"action":3},{"action":3},{"action":3},{"action":3},{"action":3},{"action":6,"data":{"x":15,"y":33}},{"action":4},{"action":4},{"action":6,"data":{"x":33,"y":39}},{"action":4},{"action":4},{"action":4},{"action":4},{"action":4},{"action":4},{"action":4},{"action":6,"data":{"x":33,"y":27}},{"action":3},{"action":3},{"action":3},{"action":3},{"action":3},{"action":6,"data":{"x":21,"y":33}},{"action":4},{"action":4},{"action":6,"data":{"x":21,"y":39}},{"action":4},{"action":4},{"action":6,"data":{"x":33,"y":57}},{"action":6,"data":{"x":45,"y":33}},{"action":6,"data":{"x":45,"y":39}},{"action":6,"data":{"x":45,"y":33}},{"action":3},{"action":3},{"action":3},{"action":6,"data":{"x":27,"y":39}}],
-  "levels_won_this_session": [],
-  "novel_mechanics_found": "Level 5's previously missing second color-8 gravity switch was located at the bottom-right of the trap-pair screen. It becomes visible as soon as the player moves left once after the deep remote-door descent (screen center approximately x=51,y=59), and after the camera drops it is at approximately x=51,y=53. Clicking it from either door-aligned column (player near x=22 or x=27) causes immediate death, consistent with the gravity reversal carrying the player into a pillar; the likely safe timing is one movement earlier while the player is still near x=33 and the switch is already visible. The deep descent also requires opening a remote E door and then moving laterally into its column; opened one-cell E pockets can be traversed sideways even though they appear soft-locked.",
-  "narrative": "The 121-action registry prefix was replayed successfully from fresh resets and confirmed frame.levels_completed == 4 before exploration. Level 5 was explored through the known right-door chain, then extended beyond the previously logged wall: a remote lower E door plus a lateral move reaches the deep trap-pair band, and moving left reveals the missing second gravity switch. Two live attempts clicked that switch after dropping into pillar-aligned columns and both died immediately; the final trace established that the switch is already visible one action earlier while the player is at the apparently safe x≈33 column, but the death consumed the live session and only 43 of 700 calls remained, fewer than the 121 needed to restore the prefix. No additional level was won. The explicit reproduce() gate was not run, so reproduction_verified is conservatively false even though the starting prefix replayed successfully multiple times.",
+  "action_sequence": [
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 42,
+        "y": 30
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 36
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 18,
+        "y": 36
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 18,
+        "y": 30
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 30,
+        "y": 30
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 36,
+        "y": 30
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 36,
+        "y": 30
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 30,
+        "y": 36
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 36
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 18,
+        "y": 36
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 12,
+        "y": 36
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 12,
+        "y": 30
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 30,
+        "y": 30
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 30,
+        "y": 30
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 18,
+        "y": 30
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 18,
+        "y": 30
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 18,
+        "y": 30
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 36
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 30,
+        "y": 36
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 36,
+        "y": 36
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 42,
+        "y": 36
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 48,
+        "y": 36
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 48,
+        "y": 30
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 48,
+        "y": 30
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 30,
+        "y": 30
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 39
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 40,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 27,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 21,
+        "y": 33
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 27
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 33
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 39,
+        "y": 27
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 39,
+        "y": 33
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 39
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 39,
+        "y": 39
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 27,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 39,
+        "y": 33
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 15,
+        "y": 33
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 39
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 27
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 21,
+        "y": 33
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 21,
+        "y": 39
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 57
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 45,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 45,
+        "y": 39
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 45,
+        "y": 33
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 27,
+        "y": 39
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 51,
+        "y": 39
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 45,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 45,
+        "y": 35
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 57,
+        "y": 35
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 51,
+        "y": 59
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 21,
+        "y": 34
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 27,
+        "y": 34
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 39,
+        "y": 33
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 57,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 51,
+        "y": 39
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 45,
+        "y": 39
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    }
+  ],
+  "levels_won_this_session": [
+    5
+  ],
+  "novel_mechanics_found": "Level 5's missing return route was solved. The second gravity switch must be clicked from the center safe column before entering either pillar-aligned trap-door column. After reversing upward, the two open-X toggle blocks below hanging pillars must first be solidified; they become a protective ceiling that permits the left-shaft ascent. The final 3x2 E barrier is a horizontal tunnel: enter from its lower-right cell, remove only the lower row from right to left, and leave the upper row intact as a shield against three hanging pillar eyes. Level 6 provisionally reuses the shield mechanic: solidifying its two lower X blocks before the first gravity flip creates a safe landing shelf, while stepping left off that shelf is lethal.",
+  "narrative": "Resolved and replayed the 121-action verified prefix and confirmed frame.levels_completed == 4 before exploration. Two failed L5 routes established the safe switch timing and the role of the X shields; a third fresh-prefix attempt followed the 43-action extension recorded here and personally observed frame.levels_completed advance from 4 to 5. Only 114 calls remained at that live win, fewer than the 164 required to run reproduce() on the full candidate, so reproduction_verified is conservatively false. I spent seven further actions mapping L6: its first switch is survivable after solidifying the two lower X blocks, but stepping left from the resulting shelf killed the player. With 107 calls left, restoring the 121-action prefix was impossible, so exploration stopped.",
   "gotchas": [
     "env.reset() returns to the start of the whole game, not the start of level 5; each new exploration life costs the full 121-action prefix.",
     "ACTION7 is a no-op during normal play and does not restart the level after GAME_OVER; after GAME_OVER it returned an empty level-0 frame.",
     "A same-environment reset-and-prefix replay diverged once and ended at level 0, while genuinely fresh environments replayed the prefix correctly; use a fresh env/scorecard for reliable restoration.",
-    "The second gravity switch is visible before the final leftward drop: after the deep descent, one left move shows it near (51,59), and after the camera shift it appears near (51,53). Flip it while still in the safe x≈33 column; waiting until x≈27 or x≈22 is lethal.",
+    "The second gravity switch is visible before the final trap-door columns. Flip it while the player is still in the center safe column; waiting until a door-aligned column is lethal.",
     "The E-door descent is not simply click-the-door-underfoot: opening a remote lower door and then taking a lateral move can trigger a long fall. Camera-relative click coordinates must be reread after every fall.",
-    "The 121-action action_sequence in this artifact is only the banked fresh-reset prefix reaching level 4; failed level-5 exploratory suffixes are intentionally excluded."
+    "Open-X toggle blocks are not merely passable gaps. Solidifying them creates shields that stop gravity before the player contacts a pillar eye; L5 requires solidifying both X blocks before traversing left under the pillars.",
+    "At L5's final 3x2 E barrier, remove only the lower row from right to left. The untouched upper row is a ceiling shield; removing an upper cell exposes the player to its hanging pillar and creates a lethal pocket.",
+    "L6 starts with open X blocks above downward pillars and below upward pillars. Solidifying the two lower X blocks before the first switch makes the initial fall safe, but the immediately adjacent left gap is lethal."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
