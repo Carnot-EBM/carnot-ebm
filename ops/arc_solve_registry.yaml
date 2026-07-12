@@ -3763,7 +3763,7 @@ games:
     reproducibility_checksum: bdae6a8349846c9a4aa7eb2367ad8eaf94d80e565064cb4b8f4a48bb81ea7daa
 - game: re86
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 7
   mechanic_class: pattern_match_sprite_resize
   win_condition: >-
     L1 sprite-overlay pattern match plus L2 verifier-derived post-L1 overlay
@@ -3854,6 +3854,29 @@ games:
     final rectangle route with no win observed. No new level banked; the
     full color assignment is now known, so a future attempt should route
     directly to it without the early-assignment exploration cost.'
+  - 'L7 SOLVED round 4 (2026-07-12, gpt-5.6-sol via codex, round-4 breadth
+    campaign, results/outer_loop_fable5_re86_probe.json): directly executes
+    round 3''s "route directly to the known assignment" recommendation --
+    placing a deformed color-11 small plus, a 19x7 color-9 rectangle, and
+    an independently-offset color-8 large plus advanced levels_completed
+    to 7 live at action 519 (of a 698-action session; the remaining 179
+    actions explored L8 without winning it -- see the L8 gotcha below).
+    Confirms round 3''s decoded assignment was correct; the win required no
+    new color-mapping discovery, just clean execution avoiding round 3''s
+    early-assignment exploration cost and repaint trap. The source agent''s
+    own reproduction_verified is correctly reported false (the 519-action
+    L7 line plus the mandatory 341-action prefix replay and L8 exploration
+    could not all fit under the 700-call budget for a dedicated gate).
+    Independently re-verified by the outer loop: 5x fresh env.reset() +
+    replay via a new resolver priority branch (sliced to the first 519
+    actions of the artifact -- the full 698-action trace continues into
+    unsuccessful L8 exploration past the win), all 5 confirmed level=7,
+    state=GameState.NOT_FINISHED. L8 adds two separated color-1 resize
+    fixtures and a dense paint-swatch barrier; a 7x19 rectangle squeezed to
+    4x22 at the upper-right fixture still gets repainted from an adjacent
+    swatch through a visually-clear four-cell corridor, showing paint
+    contact/collision is stricter than simple rendered-cell overlap. No L8
+    win; frontier stays at level 7.'
   - 'L6 (previewed for free in a PRIOR session, not attempted at the time --
     solved by the entry above): 8 rings (four 9-colored, four 11-colored in a
     rectangle) plus color-1 objects that are a genuinely NEW element not seen
@@ -4013,7 +4036,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 148
+reproducible_total_levels: 149
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
