@@ -493,6 +493,13 @@ def resolve_replay_plan(
             "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py",
             _apply_ka59_label,
         )
+    if game == "g50t" and _as_int(entry.get("levels_reproduced")) >= 7:
+        from carnot import experiment_4433_example_conditioned_win_induction as exp4433
+
+        rel_path = "results/outer_loop_round12_g50t_probe_20260712.json"
+        artifact = _load_json(root / rel_path)
+        labels = [str(label) for label in artifact.get("action_sequence") or []]
+        return ReplayPlan(game, labels, rel_path, exp4433.apply_g50t_label)
     if game == "g50t" and _as_int(entry.get("levels_reproduced")) >= 6:
         from carnot import experiment_4433_example_conditioned_win_induction as exp4433
 

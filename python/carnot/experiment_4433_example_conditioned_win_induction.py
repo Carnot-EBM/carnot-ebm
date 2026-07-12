@@ -25,9 +25,7 @@ CLAIMED_LEVEL = 1
 RANDOM_SEED = 4433
 MOVE_QUANTUM = 6
 MODEL_NAME = "unsloth/Qwen3.5-9B-MTP-GGUF"
-QWEN_GGUF_CACHE = (
-    Path.home() / ".cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF"
-)
+QWEN_GGUF_CACHE = Path.home() / ".cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF"
 PREFERRED_FEW_SHOT_GAME_ORDER = ("ka59", "s5i5", "tr87", "ft09", "sc25", "lp85")
 
 G50T_L1_SOLUTION = list("44445222222244444")
@@ -102,9 +100,9 @@ def _load_registry(root: Path) -> dict[str, Any]:
 
 
 def _is_reproduced(entry: Mapping[str, Any]) -> bool:
-    return entry.get("reproducibility") == "reproduced" or int(
-        entry.get("levels_reproduced") or 0
-    ) > 0
+    return (
+        entry.get("reproducibility") == "reproduced" or int(entry.get("levels_reproduced") or 0) > 0
+    )
 
 
 def _rule_id_from_text(text: str) -> str:
@@ -178,11 +176,14 @@ def extract_grounded_win_rule_examples(root: Path = REPO_ROOT) -> list[dict[str,
     for rule in exp4414.get("config_win_rules_grounded", []):
         if not isinstance(rule, Mapping):
             continue
-        grounded = int(rule.get("tier") or 0) >= 1 and float(
-            rule.get("false_positive_rate", 1.0) or 0.0
-        ) == 0.0
+        grounded = (
+            int(rule.get("tier") or 0) >= 1
+            and float(rule.get("false_positive_rate", 1.0) or 0.0) == 0.0
+        )
         if grounded:
-            add(str(rule.get("game") or ""), EXP4414_RELATIVE_PATH, str(rule.get("predicate") or ""))
+            add(
+                str(rule.get("game") or ""), EXP4414_RELATIVE_PATH, str(rule.get("predicate") or "")
+            )
 
     registry = _load_registry(root)
     for entry in registry.get("games", []) if isinstance(registry.get("games"), list) else []:
@@ -212,7 +213,9 @@ def prior_best_level(root: Path = REPO_ROOT, game: str = TARGET_GAME) -> int:
     return 0
 
 
-def precondition_probe(root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - live boundary
+def precondition_probe(
+    root: Path = REPO_ROOT,
+) -> dict[str, Any]:  # pragma: no cover - live boundary
     qwen_cached = QWEN_GGUF_CACHE.is_dir() and any(QWEN_GGUF_CACHE.iterdir())
     igpu_server = False
     try:
@@ -280,9 +283,10 @@ def g50t_is_win_features(features: Mapping[str, Any]) -> bool:
 
     player = _component(features, "player")
     target = _component(features, "target")
-    return int(player.get("x", -999)) == int(target.get("x", 999)) + 1 and int(
-        player.get("y", -999)
-    ) == int(target.get("y", 999)) + 1
+    return (
+        int(player.get("x", -999)) == int(target.get("x", 999)) + 1
+        and int(player.get("y", -999)) == int(target.get("y", 999)) + 1
+    )
 
 
 def g50t_goal_distance_features(features: Mapping[str, Any]) -> int:
@@ -295,7 +299,10 @@ def g50t_goal_distance_features(features: Mapping[str, Any]) -> int:
 
 def g50t_is_win_game(game: Any) -> bool:  # pragma: no cover - live boundary
     state = game.vgwycxsxjz
-    return state.whftgckbcu.x + 1 == state.dzxunlkwxt.x and state.whftgckbcu.y + 1 == state.dzxunlkwxt.y
+    return (
+        state.whftgckbcu.x + 1 == state.dzxunlkwxt.x
+        and state.whftgckbcu.y + 1 == state.dzxunlkwxt.y
+    )
 
 
 def _box(obj: Any) -> dict[str, Any]:  # pragma: no cover - live boundary
@@ -435,15 +442,23 @@ def derive_g50t_l1_solution(digest: Mapping[str, Any]) -> list[str]:
 
 
 def apply_g50t_label(env: Any, label: str, _frame: Any = None) -> Any:  # pragma: no cover
-    from arcengine import GameAction
+    from arcengine import GameAction, GameState
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
     frame = env.step(_game_action(GameAction, int(label)), data=None)
+    if frame.state == GameState.WIN:
+        # A settling-loop step submitted AFTER a genuine WIN frame returns a
+        # degenerate/empty terminal sentinel (levels_completed=0, is_empty=True)
+        # that overwrites the real win. Round-11's g50t candidate looked like a
+        # false loss for exactly this reason; round-12 diagnosed it. Stop here.
+        return frame
     for _ in range(120):
         game = env._game
         state = game.vgwycxsxjz
         if game.qgzorkgosv or state.jqpwhiraaj:
             frame = env.step(_game_action(GameAction, int(label)), data=None)
+            if frame.state == GameState.WIN:
+                return frame
         else:
             break
     return frame
@@ -512,7 +527,9 @@ def build_artifact(
         "experiment": "experiment_4433_example_conditioned_win_induction",
         "schema": "carnot.exp4433.example_conditioned_win_induction.v1",
         "target_game": TARGET_GAME,
-        "prior_best_level": int(preconditions.get("target_game_prior_best") or prior_best_level(root)),
+        "prior_best_level": int(
+            preconditions.get("target_game_prior_best") or prior_best_level(root)
+        ),
         "honest_verdict": _verdict(
             precondition_miss=precondition_miss,
             grounded=grounded,
@@ -589,11 +606,15 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     if verdict and str(verdict).startswith("success:"):
         if artifact.get("offline_reproduced") is not True:
             errors.append("offline_reproduced must be true for success verdicts")
-        if not isinstance(artifact.get("reproduced_levels"), int) or int(
-            artifact.get("reproduced_levels") or 0
-        ) < 1:
+        if (
+            not isinstance(artifact.get("reproduced_levels"), int)
+            or int(artifact.get("reproduced_levels") or 0) < 1
+        ):
             errors.append("success verdict requires reproduced_levels >= 1")
-    if artifact.get("offline_reproduced") is True and int(artifact.get("reproduced_levels") or 0) < 1:
+    if (
+        artifact.get("offline_reproduced") is True
+        and int(artifact.get("reproduced_levels") or 0) < 1
+    ):
         errors.append("offline_reproduced true requires reproduced_levels >= 1")
     model_specs = artifact.get("model_specs")
     if isinstance(model_specs, Mapping):
@@ -610,7 +631,9 @@ def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
         raise ValueError("; ".join(errors))
     path = root / RESULT_RELATIVE_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
+    )
     return path
 
 
@@ -626,12 +649,17 @@ def run(
 ) -> dict[str, Any]:
     started = now()
     root = Path(root)
-    examples = list(few_shot_examples) if few_shot_examples is not None else extract_grounded_win_rule_examples(root)
+    examples = (
+        list(few_shot_examples)
+        if few_shot_examples is not None
+        else extract_grounded_win_rule_examples(root)
+    )
     checked = dict(preconditions_checked or precondition_probe(root))
     checked.setdefault("grounded_few_shot_examples", len(examples))
     checked.setdefault(
         "generator_resource_available",
-        checked.get("qwen_gguf_cached") is True or checked.get("igpu_llama_server_available") is True,
+        checked.get("qwen_gguf_cached") is True
+        or checked.get("igpu_llama_server_available") is True,
     )
     checked.setdefault("target_game_prior_best", prior_best_level(root, TARGET_GAME))
     checked.setdefault("no_3090_inference", True)
@@ -656,7 +684,10 @@ def run(
         reproduction = _blocked_reproduction()
     else:
         grounded = ground_qwen_proposal(qwen_proposal, object_digest)
-        qwen_generation = {**dict(qwen_proposal), **{key: grounded[key] for key in ("grounded", "fires_on_win", "rejects_nonwins")}}
+        qwen_generation = {
+            **dict(qwen_proposal),
+            **{key: grounded[key] for key in ("grounded", "fires_on_win", "rejects_nonwins")},
+        }
         solution = derive_g50t_l1_solution(object_digest) if grounded["grounded"] else []
         reproduction = dict(reproduce_fn(solution)) if solution else _blocked_reproduction()
 
