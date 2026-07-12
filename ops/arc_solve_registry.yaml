@@ -4237,7 +4237,9 @@ games:
     reproducibility_checksum: a7c1cdc39245f128b86eaeebd2b49377e05647d2551d95af317e0051a5282798
 - game: dc22
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: config_toggle_navigation
   win_condition: 'L1+L2 toggle-navigation predicate: keyboard moves jfva through the maze while ACTION6 clicks visible buezna sys_click sprites to toggle same-letter blocker and support sprites; next_level counts only after the offline frame level counter advances. L3: reached by the same banked 132-label sequence
     (previously unrecorded in this registry''s levels_reproduced count -- see v1 outer-loop entry below). L4: keyboard piece becomes a color-14 2x2 block; the two 6/7 checker tiles are a PORTAL PAIR (stand on one, click the 6-shape button, teleport to the twin) -- the ONLY way to reach the west stack, since shelf-shift shifts (B-button) are right-only/one-way; win = step onto the color-11 B block (see gotcha below).'
@@ -4495,6 +4497,29 @@ games:
     east14,north1,east7 to goal) to confirm this mechanism actually
     wins the level -- this is the strongest lead this game has had
     across all 9 rounds.'
+  - 'L6 SOLVED, FULL GAME CLEAR, round 10 (2026-07-12, gpt-5.6-sol via
+    codex, results/outer_loop_codex55_dc22_probe_round10_20260712.json):
+    round 9''s corrected route, executed via PURE LIVE PLAY, works
+    exactly as predicted. From the L5-verified prefix: re-ran the
+    known R2 re-tooling to reach the socket, then the corrected R2-to-
+    LM shelf route to reach the LM checker; three quad clicks selected
+    9/A and big-6 teleported to the launcher; from the launcher,
+    driving the bare C-structure FOUR control positions left, the wide
+    8-bar click POLYMORPHICALLY LATCHED THE LONG BRIDGE instead of the
+    8-ring (a 48-cell live frame diff, confirming round 9''s mechanism
+    live for the first time). Transported the attached bridge RIGHT5,
+    UP3, LEFT2, UP3 (each move producing 88-168-cell composite diffs).
+    Two parity-balanced teleports returned to LM, retyped LM from 9/A
+    to C/B, and sent it to R1. From R1 at (4,4): DOWN2, EAST14, NORTH1,
+    EAST7 reached the goal at (46,6) -- levels_completed advanced to 6
+    and the live frame reported GameState.WIN at action 544. The
+    source agent ran its own fresh-environment reproduction gate on
+    all 544 actions and independently got the same result
+    (reproduction_verified: true), and the outer loop independently
+    re-verified regardless: 5x fresh env.reset() + replay, all 5
+    confirmed level=6, state=GameState.WIN. L6 is dc22''s FINAL level
+    -- the game is fully solved, closing out the longest-running open
+    frontier of this entire ARC breadth campaign (10 rounds).'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
@@ -5124,7 +5149,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 166
+reproducible_total_levels: 167
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
