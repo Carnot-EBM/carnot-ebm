@@ -3,7 +3,7 @@
   "model": "claude-fable-5",
   "starting_level": 2,
   "max_level_reached": 2,
-  "total_env_steps_used": 565,
+  "total_env_steps_used": 540,
   "reproduction_verified": true,
   "action_sequence": [
     {"action": 1},
@@ -52,14 +52,14 @@
     {"action": 4}
   ],
   "levels_won_this_session": [],
-  "novel_mechanics_found": "Level 3 introduces a previously absent color-11 B glyph at the top of a vertically anchored E-9-8-C chain. Actions 1/2 move the color-6 patterned actuator vertically and actions 4/3 extend or retract its patterned horizontal body. In the earlier banked levels, colored blocks can ride vertically on the body and contiguous rows shift together; the level-3 B-anchored column resisted the same pull, lift, merge, and row-reversal constructions. Direct ACTION6 clicks on both glyphs and ACTION5 produced no visible selection or release effect at the tested rendered coordinates.",
-  "narrative": "The 44-action resolver prefix was replayed first and reached levels_completed=2. I reconstructed the prior transition mechanics from rendered frames, then tried direct probes, the prior level's 30-action construction, several scaled row-reversal plans, and explicit interaction with the unexplained B glyph. None advanced level 3; multiple superficially analogous plans ended with the anchored vertical column unchanged. I stopped with 35 steps unspent because no candidate win had been observed and retained enough budget to run the mandatory fresh-reset reproduction gate, which passed for level 2.",
+  "novel_mechanics_found": "ACTION1/ACTION2 move the anchored arm vertically and ACTION4/ACTION3 extend/retract it. The two banked levels register colored encounters through arm positioning, but level 2 introduces a vertically connected color stack plus a maroon node; the earlier horizontal/independent-target strategy does not carry over directly.",
+  "narrative": "The 44-action banked prefix was recovered through the resolver and repeatedly confirmed at frame.levels_completed == 2. I traced the prefix frame by frame to infer the arm controls, then explored the vertical connected layout using clean resets, HUD-order and reverse-order encounters, exact-edge and full-boundary extensions, full retractions, direct interaction with the maroon/connector glyph, and ACTION5/ACTION6 coordinate probes. None advanced frame.levels_completed beyond 2, so I stopped at the genuine level-2 mechanic wall with budget reserved for verification. A fresh-reset reproduce() gate replayed the stored 44-action sequence and passed claimed_level=2.",
   "gotchas": [
-    "frame.frame is an animation stack for this game; inspect its final 64x64 slice rather than treating the full stack as one grid.",
-    "The color-6 actuator begins one grid cell farther left on level 3 than on the first banked level, so horizontal action counts do not transfer literally.",
-    "A horizontal body may visually overlap a colored 4x4 block without moving it; color-count changes caused by overlay are not evidence that the block was detached or collected.",
-    "The first two levels contain no visible B glyph, while level 3 does; treating the new vertical column as an ordinary unanchored block row led to repeatable no-progress loops.",
-    "ACTION6 clicks at the rendered centers/corners of B and the color-6 glyph, and an ACTION5 probe, caused no visible mode change in this session."
+    "An extended arm can block vertical movement when it intersects a colored object, so apparent no-op moves are collision-dependent.",
+    "Crossing a colored sprite transiently changes its matching HUD icon pixels, but that visual overlap is not evidence that the level accepted the interaction.",
+    "The long 2-to-3 bar is action-budget/timing-like UI state and changes on otherwise harmless actions.",
+    "ACTION5 and ACTION6 were no-ops both without data and with coordinates on the maroon node and HUD objects.",
+    "The maroon 2x2 node and the 2/3 connector beneath it are new at level 2; direct clicking and attempted arm alignment did not reveal their role."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
