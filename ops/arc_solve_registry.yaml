@@ -3292,7 +3292,7 @@ games:
     reproducibility_checksum: bdae6a8349846c9a4aa7eb2367ad8eaf94d80e565064cb4b8f4a48bb81ea7daa
 - game: re86
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   mechanic_class: pattern_match_sprite_resize
   win_condition: >-
     L1 sprite-overlay pattern match plus L2 verifier-derived post-L1 overlay
@@ -3351,11 +3351,29 @@ games:
     (Manhattan-distance-r to each target) rather than trial-and-error. Ring
     centers are pre-colored with their required color as a preview, but that
     alone is not proof of coverage -- check stroke-adjacent pixels too.'
-  - 'L6 (previewed for free this session, not attempted -- preserved for a
-    future attempt): 8 rings (four 9-colored, four 11-colored in a rectangle)
-    plus color-1 objects that are a genuinely NEW element not seen in L1-L5
-    (possibly obstacles or a new piece type) -- needs its own investigation
-    before attempting a solve.'
+  - 'L6 SOLVED round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
+    campaign, on a RELAUNCH after the first attempt hit a 1800s process
+    timeout right before writing its result): the color-1 glyph previewed
+    below is a COLLISION-BASED DEFORMATION FIXTURE, not an obstacle or new
+    piece type -- when a composite piece is pushed into it, individual
+    strokes are PINNED while the rest moves, reshaping a plus asymmetrically
+    or trading rectangle width for height. Used it to deform the L6 targets:
+    four color-9 targets for an asymmetric plus, four color-11 targets for a
+    10x28 rectangle (the starting 19x19 color-11 outline first became 4x34,
+    then, after routing below the fixture, the required 10x28). Self-run
+    reproduction gate passed (reached_level=6, reproduced=true) AND
+    independently re-verified by the outer loop: 5x fresh env.reset() +
+    replay via the fixed resolver, all 5 confirmed reached_level=6,
+    state=GameState.NOT_FINISHED. L7 was previewed for free (five top-edge
+    paint swatches -- 9/11/8/14/6 -- and three overlapping selectable
+    pieces; touching the 9 swatch repaints the selected color-10 plus to 9)
+    but not attempted this session.'
+  - 'L6 (previewed for free in a PRIOR session, not attempted at the time --
+    solved by the entry above): 8 rings (four 9-colored, four 11-colored in a
+    rectangle) plus color-1 objects that are a genuinely NEW element not seen
+    in L1-L5 (possibly obstacles or a new piece type -- now identified as a
+    deformation fixture, see above) -- needed its own investigation before
+    attempting a solve.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter
   - lf52: recently_deepened_or_operator_skip_list
@@ -3492,7 +3510,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 136
+reproducible_total_levels: 137
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

@@ -801,6 +801,26 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "re86" and _as_int(entry.get("levels_reproduced")) >= 6:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_codex_re86_probe.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("re86 adapter missing")
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "re86" and _as_int(entry.get("levels_reproduced")) >= 5:
         from carnot.agentic.arc_game_adapters import get_adapter
 
