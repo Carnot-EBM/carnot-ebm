@@ -892,7 +892,7 @@ games:
     verifier_checkpoint: null
 - game: ls20
   reproducibility: reproduced
-  levels_reproduced: 5
+  levels_reproduced: 6
   mechanic_class: clean_navigation_shape_color_rotation_step_counter
   win_condition: >-
     L1 first-solve navigation plus L2 clean-nav target match: enter each
@@ -1056,6 +1056,34 @@ games:
     the outer loop independently verified regardless: 5x fresh
     env.reset() + replay via a new resolver priority branch, all 5
     confirmed level=5, state=GameState.NOT_FINISHED.'
+  - 'L6 SOLVED round 8 (2026-07-12, gpt-5.6-sol via codex,
+    results/outer_loop_codex_ls20_probe_round8_20260712.json): first
+    attempt at fresh L6 territory. L6 has TWO blocking tuple targets in
+    a forced spatial order: an upper target at (54,35) requiring
+    internal tuple (shape=0,color=3,rotation=2) must be consumed BEFORE
+    the lower target at (54,50) requiring (5,1,1) -- the lower target
+    is physically unreachable while the upper one still blocks the
+    corridor. The tuple controls are moving collision objects: an upper
+    horizontal shuttle increments shape modulo 6, a lower horizontal
+    shuttle increments rotation modulo 4, and a pinwheel follows an
+    eight-position perimeter cycling color C->9->E->8 (internal
+    0->1->2->3) -- these movers only advance on VALID player movement
+    and freeze on ordinary blocked wall moves (which still drain the
+    42-step counter). Three green-center reset rings were freshly
+    mapped (upper-left, lower-left, top-middle); each is one-shot per
+    life even though its sprite stays visible after use. A vertical
+    launcher sends the player down into the target-side corridor; a
+    horizontal launcher ejects back into the control maze. Entering a
+    mismatched target is a blocking no-op (position and counter both
+    unchanged). Won live: set (0,3,2) via the vertical launcher to
+    consume the upper target, exited through the horizontal launcher,
+    set (5,1,1), inserted a two-move pinwheel-phase detour, and entered
+    the lower target with 3 counter units to spare. levels_completed
+    advanced to 6. The source agent''s own reproduction_verified is
+    honestly false (only 127 of 700 calls remained after the win), but
+    the outer loop independently verified regardless: 5x fresh
+    env.reset() + replay via a new resolver priority branch, all 5
+    confirmed level=6, state=GameState.NOT_FINISHED.'
   dead_ends:
   - sk48 is skipped because it was the .426 failed/deepened rotation target.
   - dc22 is skipped because it was the .425 failed deepen target.
@@ -5039,7 +5067,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 164
+reproducible_total_levels: 165
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
