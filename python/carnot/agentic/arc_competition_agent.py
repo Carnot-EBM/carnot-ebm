@@ -270,6 +270,114 @@ _FEATURE_ROUTER_EARLY_PLAY_K = 8
 # version of this idea -- see `_maybe_route_from_transitions`'s docstring.
 _FEATURE_ROUTER_MIN_CONFIDENCE = 0.5
 
+# ------------------------------------------------------------------------------------------------
+# RUN-LOCAL cross-game adaptation (scoped: docs/research-notes/arc-agi3-run-local-cross-game-
+# adaptation-scope-2026-07-12.md; operator-cleared to build per that doc's recorded ruling).
+#
+# One Kaggle submission's Swarm.main() instantiates every game's agent up front and runs them all
+# CONCURRENTLY on separate threads within ONE process (confirmed against both the vendored
+# ARC-AGI-3-Agents reference and scripts/kaggle/submission_kernel/main.py's real competition-rerun
+# path -- one gateway, one scorecard, one process, for the whole game roster). This ledger lets
+# games within that SAME run share a cheap, thread-safe, NEVER-persisted-to-disk signal about which
+# (mechanic_class, approach) pairs have been making progress so far -- learning a class of games'
+# behavior across a run, never a memorized per-game action sequence (the operator's own dividing
+# line). It NEVER touches ops/arc_solve_registry.yaml and never survives past the process.
+#
+# Ships OFF by default (CARNOT_ARC_RUN_LOCAL_ADAPTATION=1 to opt in). Per the scope doc's own Phase
+# Prototype + Empirical Validation + Adversarial Check discipline, this component is the prototype
+# only -- the offline concurrent-multi-game-sequence A/B measurement (scope doc SS2.4) has NOT run
+# yet, so do not flip the default on without it.
+# ------------------------------------------------------------------------------------------------
+
+# In-run minimum sample count (distinct game instances) for a mechanic class before its recorded
+# outcomes are trusted to nudge the confidence gate at all. Deliberately small (a submission roster
+# is not 30 games of one mechanic class) -- this is an explicitly WEAK signal, not a statistically
+# significant one; treat any measured effect from it with the same skepticism the scope doc applies.
+_RUN_LOCAL_MIN_SAMPLES = 3
+
+# Maximum confidence bonus this mechanism can contribute, added to (never replacing)
+# `feature_router.confidence` before the `_FEATURE_ROUTER_MIN_CONFIDENCE` gate. Bounded and small on
+# purpose: worst case, behavior converges to the already-shipped per-game-only default.
+_RUN_LOCAL_MAX_CONFIDENCE_BONUS = 0.2
+
+
+class RunLocalMechanicLedger:
+    """Thread-safe, in-process, NEVER-persisted ledger of (mechanic_class, approach) outcomes for
+    games completed so far in THIS run. See the module-level comment above for the concurrency
+    rationale. Keyed per-game-instance (not appended) so a still-in-progress game's repeated updates
+    overwrite its own prior entry rather than accumulating duplicates."""
+
+    def __init__(self) -> None:
+        import threading
+
+        self._lock = threading.Lock()
+        self._records: dict[str, dict[int, tuple[str, float]]] = {}
+
+    def update(
+        self, mechanic_class: str, game_key: int, approach: str, outcome_score: float
+    ) -> None:
+        if not mechanic_class or mechanic_class == "unknown" or not approach:
+            return
+        with self._lock:
+            self._records.setdefault(mechanic_class, {})[game_key] = (
+                approach,
+                float(outcome_score),
+            )
+
+    def sample_count(self, mechanic_class: str) -> int:
+        with self._lock:
+            return len(self._records.get(mechanic_class, {}))
+
+    def mean_outcome(self, mechanic_class: str, approach: str) -> Optional[float]:
+        with self._lock:
+            rows = list(self._records.get(mechanic_class, {}).values())
+        matched = [score for a, score in rows if a == approach]
+        if not matched:
+            return None
+        return sum(matched) / len(matched)
+
+
+# Module-level singleton: one ledger per process, shared by every concurrently-running game's
+# E3AgentPolicy instance in the same Swarm run (see the concurrency rationale above).
+_RUN_LOCAL_LEDGER = RunLocalMechanicLedger()
+
+
+def _run_local_adaptation_enabled() -> bool:
+    import os
+
+    return os.environ.get("CARNOT_ARC_RUN_LOCAL_ADAPTATION") == "1"
+
+
+def _run_local_confidence_bonus(mechanic_class: str, approach: str) -> float:
+    """A small, bounded confidence bonus from OTHER games' in-run evidence for this exact
+    (mechanic_class, approach) pair -- 0.0 (no effect) unless this run has already accumulated
+    `_RUN_LOCAL_MIN_SAMPLES` completed-or-in-progress games of this mechanic class. Never consults
+    game identity; purely a function of what this SAME process has observed so far this run."""
+
+    if not _run_local_adaptation_enabled():
+        return 0.0
+    if _RUN_LOCAL_LEDGER.sample_count(mechanic_class) < _RUN_LOCAL_MIN_SAMPLES:
+        return 0.0
+    mean = _RUN_LOCAL_LEDGER.mean_outcome(mechanic_class, approach)
+    if mean is None:
+        return 0.0
+    return max(0.0, min(_RUN_LOCAL_MAX_CONFIDENCE_BONUS, mean * _RUN_LOCAL_MAX_CONFIDENCE_BONUS))
+
+
+def _run_local_outcome_proxy(transitions: Any, *, k: int = _FEATURE_ROUTER_EARLY_PLAY_K) -> float:
+    """Cheap, HONEST-ABOUT-BEING-A-PROXY early-progress signal: 1.0 if any of this game's first `k`
+    transitions advanced the level, else 0.0. This is NOT the competition's real RHAE scoring
+    formula -- it is a scaffold for the prototype ledger above. The scope doc's SS2.4 validation
+    harness should measure against the real scoring formula for its own headline claim; this proxy
+    only needs to be cheap and directionally sane for the live nudge to be well-defined."""
+
+    for transition in list(transitions or [])[:k]:
+        level_before = getattr(transition, "level_before", None)
+        level_after = getattr(transition, "level_after", None)
+        if level_before is not None and level_after is not None and level_after > level_before:
+            return 1.0
+    return 0.0
+
 
 def _early_play_rows(
     transitions: Any, *, k: int = _FEATURE_ROUTER_EARLY_PLAY_K
@@ -2466,7 +2574,21 @@ class E3AgentPolicy:
         existing budget-sizing flag inside the SAME unified E3AgentPolicy cascade -- but it inherits
         the same classifier, so it is gated on `_FEATURE_ROUTER_MIN_CONFIDENCE` and treated as
         provisional/observational (always populates `self.feature_router` for visibility) rather than
-        trusted to move the scored win rate until it has its own controlled measurement."""
+        trusted to move the scored win rate until it has its own controlled measurement.
+
+        RUN-LOCAL CROSS-GAME EXTENSION (opt-in via CARNOT_ARC_RUN_LOCAL_ADAPTATION=1, off by
+        default; scoped in docs/research-notes/arc-agi3-run-local-cross-game-adaptation-scope-
+        2026-07-12.md, operator-cleared to build): when enabled, this method also contributes this
+        game's (mechanic_class, approach) choice to `_RUN_LOCAL_LEDGER` -- a thread-safe, in-process,
+        NEVER-persisted-to-disk ledger shared by every game running CONCURRENTLY in this same
+        submission (Swarm.main() runs the whole roster on separate threads in one process; confirmed
+        against the real scored submission path, not just the offline reference) -- and consults that
+        ledger for a small, bounded confidence bonus on top of the per-game classification before the
+        SAME `_FEATURE_ROUTER_MIN_CONFIDENCE` gate above. This is learning a MECHANIC CLASS's behavior
+        from this run's own concurrent play, never a memorized per-game action sequence (the
+        operator's dividing line, recorded in the scope doc) and never a lookup into
+        ops/arc_solve_registry.yaml. Still just a prototype: the scope doc's SS2.4 concurrent-play
+        offline A/B validation has not run yet, so this stays off by default until it does."""
 
         if self._feature_router_checked:
             return
@@ -2489,6 +2611,16 @@ class E3AgentPolicy:
         confidence = float(feature_router.get("confidence") or 0.0)
         if not mechanic_class or mechanic_class == "unknown" or not approach:
             return
+        if _run_local_adaptation_enabled():
+            # Contribute this game's own (mechanic_class, approach) choice to the run-local
+            # ledger for OTHER concurrently-running games in this same submission run to
+            # consult -- regardless of whether THIS game's own confidence gate ends up accepting
+            # the nudge below. `id(self)` is a stable per-instance key for this process's
+            # lifetime (see RunLocalMechanicLedger's docstring for the overwrite semantics).
+            _RUN_LOCAL_LEDGER.update(
+                mechanic_class, id(self), approach, _run_local_outcome_proxy(self.transitions)
+            )
+            confidence += _run_local_confidence_bonus(mechanic_class, approach)
         if confidence < _FEATURE_ROUTER_MIN_CONFIDENCE:
             # Classified, stored on self.feature_router for observability, but not confident
             # enough to change live search behavior -- see the confidence-gate rationale above.
@@ -2506,6 +2638,7 @@ class E3AgentPolicy:
             routed["uses_goal_distance_heuristic"] = wants_goal_distance
             routed["feature_router_mechanic_class"] = mechanic_class
             routed["feature_router_approach"] = approach
+            routed["feature_router_confidence_with_run_local_bonus"] = confidence
             self.strategy_route = routed
             recommendation["strategy"] = routed
             self.approach_recommendation = recommendation
