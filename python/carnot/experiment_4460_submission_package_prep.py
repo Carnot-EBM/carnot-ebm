@@ -649,7 +649,28 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "dc22" and _as_int(entry.get("levels_reproduced")) >= 5:
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_fable5_dc22_probe.json"
+        artifact = _load_json(root / rel_path)
+        labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("dc22 adapter missing")
+        return ReplayPlan(
+            game,
+            [str(label) for label in labels],
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "dc22" and _as_int(entry.get("levels_reproduced")) >= 4:
+        # NOTE: results/outer_loop_fable5_dc22_probe.json was overwritten by
+        # the round-5 (>=5) attempt at this same path; this branch is
+        # unreachable for the live registry entry (which is >=5) and is
+        # retained only as historical dead code documenting the prior
+        # (level-4) resolution.
         from carnot.agentic.arc_game_adapters import get_adapter
 
         adapter = get_adapter(game)

@@ -3677,7 +3677,7 @@ games:
     reproducibility_checksum: a7c1cdc39245f128b86eaeebd2b49377e05647d2551d95af317e0051a5282798
 - game: dc22
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: config_toggle_navigation
   win_condition: 'L1+L2 toggle-navigation predicate: keyboard moves jfva through the maze while ACTION6 clicks visible buezna sys_click sprites to toggle same-letter blocker and support sprites; next_level counts only after the offline frame level counter advances. L3: reached by the same banked 132-label sequence
     (previously unrecorded in this registry''s levels_reproduced count -- see v1 outer-loop entry below). L4: keyboard piece becomes a color-14 2x2 block; the two 6/7 checker tiles are a PORTAL PAIR (stand on one, click the 6-shape button, teleport to the twin) -- the ONLY way to reach the west stack, since shelf-shift shifts (B-button) are right-only/one-way; win = step onto the color-11 B block (see gotcha below).'
@@ -3760,6 +3760,30 @@ games:
     blocking L5 across all four rounds now. No fresh reproduce() gate run
     this session (would have exceeded the 700-call budget); no new level
     banked, frontier stays at level 4.'
+  - 'L5 SOLVED round 5 (2026-07-12, claude-fable-5, first fable-5 leg of the
+    campaign, results/outer_loop_fable5_dc22_probe.json): cracks the
+    color-15/F chute that resisted all four prior rounds -- the missing
+    piece was a HIDDEN CONTROL, not a routing/timing fix. Route the
+    latched 8/12 assembly a SECOND time so its color-12 slab occupies
+    columns 10-13, rows 22-33, creating a bridge from the lower checker
+    stack to the previously isolated solid F socket. Stepping onto that
+    socket reveals a hidden F button at (52,15) -- invisible/undiscoverable
+    until physically standing on the socket -- that swaps solidity between
+    the vertical F chute and the lower horizontal F bar. After descending
+    the solid chute, a B-shelf at columns 22-27 spans both endpoints and
+    supports the avatar while the F button is toggled back, making the
+    horizontal bar walkable to the B goal. Won live at action 322 of a
+    reset-rooted sequence. The source agent''s own reproduction_verified is
+    correctly reported false (replaying the 322-action candidate in
+    reproduce() would have exceeded the 700-call budget), but the outer
+    loop independently verified it regardless: 5x fresh env.reset() +
+    replay via a new resolver priority branch, all 5 confirmed level=5,
+    state=GameState.NOT_FINISHED. L6 was scouted (standing on its color-8
+    socket reveals another hidden 8 control; a large 6 control rotates the
+    large color-12 structure even without teleporting; a B control cycles
+    three lower shelves through positions/material states) but the
+    revealed 8 control stayed condition-gated -- no L6 win. Frontier stays
+    at level 5.'
   dead_ends:
   - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
@@ -4208,7 +4232,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 155
+reproducible_total_levels: 156
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
