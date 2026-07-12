@@ -29,7 +29,7 @@ read as shipped or as changing current live-agent behavior.
 
 ## 2. What "dynamic extension during submissions" would actually require
 
-### 2.0 Precondition (RESOLVED 2026-07-12 by reading the vendored framework source)
+### 2.0 Preconditions (BOTH run down 2026-07-12 — see findings below; #2 still needs operator sign-off)
 
 **Does one Kaggle submission process play the FULL hidden game roster sequentially in
 one long-lived Python process, or does the harness spawn a fresh process per game?**
@@ -85,13 +85,48 @@ CLASS being registered once and says nothing about the driver's own execution sh
 exactly the kind of assumption an adversarial pass on this scope needed to catch before
 any implementation time went in.
 
-**Also verify:** do the ARC-AGI-3 competition rules permit or forbid cross-game state
-within one submission? Both the letter (any explicit rule) and the spirit (the
-benchmark's stated design intent is "discover what winning looks like" per-game,
-similar to why hidden-game source-reading is forbidden per the existing
-`CLAUDE.md` "ARC Live-Path Reachability Discipline" §"Source-reading is a
-PUBLIC-games dev tool ONLY"). If genuinely ambiguous, this is an operator
-decision, not an engineering one — do not resolve it unilaterally.
+**Confirmed this also applies to the REAL scored path, not just the offline reference
+copy.** Re-read `scripts/kaggle/submission_kernel/main.py` end to end: on a competition
+rerun (`KAGGLE_IS_COMPETITION_RERUN` set) it copies the COMPETITION-PROVIDED
+`ARC-AGI-3-Agents` framework to a writable path (line 158), registers `CarnotAgent`
+into that copy's `agents/__init__.py` alongside the stock `Swarm` import (line 166),
+and runs that framework's own `main.py --agent carnotagent` against the internal
+gateway (lines 191-194) with a 12-hour timeout. The comment at line 187 states
+directly: "play all gateway games ... main.py fetches the game list from the gateway,
+runs the swarm, and the gateway records the scorecard that is scored." One scorecard,
+one `Swarm.main()` call, one process, for the WHOLE submission's game roster — this is
+the actual scored mechanism, not an inference from the open-source mirror.
+
+**Precondition 2 — RESOLVED (2026-07-12) as "not addressed in public docs," not as a
+yes or no.** Searched the ARC Prize / Kaggle public documentation directly rather than
+guessing: the main competition page (`arcprize.org/competitions/2026/arc-agi-3`), the
+full `docs.arcprize.org` methodology set (`index`, `full-play-test`, `methodology`,
+`agents-quickstart`, `scorecards`), and attempted the Kaggle competition rules tab
+(login-gated, returned only the page title, unreachable via WebFetch). **None of the
+six reachable pages contain any explicit statement permitting or forbidding an agent
+from retaining or sharing information across different games within one evaluation
+run.** The only tangentially relevant language found: the benchmark is "designed to
+measure an AI Agent's ability to generalize in novel, unseen environments" (quickstart
+page) and scorecards "aggregate the results from your agent's game performance"
+(scorecards page, consistent with the one-scorecard-per-run structure confirmed in
+code above) — neither addresses cross-game memory directly.
+
+**This silence is the finding, not a dead end — and it cuts differently than the
+original framing assumed.** The competition's OWN reference harness already shares one
+process, one Python interpreter, and one scorecard across every game in a run (per the
+code evidence above) — there is no structural isolation between games for the
+competition's own official harness to have engineered around, unlike the explicit,
+separately-documented prohibition on hidden-game source-reading (which the project's
+own "ARC Live-Path Reachability Discipline" already encodes because THAT restriction
+IS clearly evidenced — by the benchmark's stated design intent and this project's own
+prior settled decision, not by an explicit competition rule either, worth noting).
+Given genuine silence in the public docs plus a harness architecture that doesn't
+prevent it, **this is an operator judgment call, not an engineering one — proceed to
+implementation only with explicit operator sign-off**, and consider that sign-off
+might reasonably take either form: (a) approve based on the harness-architecture
+evidence above, (b) ask ARC Prize / Kaggle support directly for an explicit ruling
+before shipping anything, or (c) decline and keep the live agent per-game-only
+indefinitely. All three are legitimate; none of them is mine to pick.
 
 ### 2.1 Component: `RunLocalMechanicLedger`
 
@@ -215,8 +250,16 @@ either way. Measure, matched-compute, same methodology as `exp4582`:
 - commit `ecb2b7bf9` — the per-game (intra-episode) wiring this extends
 - `/home/ianblenke/arc-sota-refs/ARC-AGI-3-Agents/agents/swarm.py` (`Swarm.main()`) +
   `agents/agent.py` (`Agent.main()`) — the vendored framework source that resolved
-  §2.0 and corrected the original sequential-execution assumption to concurrent
-  multi-threaded execution in one process
+  §2.0's first precondition and corrected the original sequential-execution
+  assumption to concurrent multi-threaded execution in one process
+- `scripts/kaggle/submission_kernel/main.py` (lines 148-194) — confirmed the SAME
+  `Swarm`-driven mechanism governs the real scored submission, not just the offline
+  reference copy (competition-provided framework, one gateway, one scorecard, one
+  `main.py --agent carnotagent` run per submission)
+- docs.arcprize.org: `index`, `full-play-test`, `methodology`, `agents-quickstart`,
+  `scorecards` (all fetched 2026-07-12) + `arcprize.org/competitions/2026/arc-agi-3` —
+  searched for an explicit cross-game-memory rule, found none; the Kaggle rules tab
+  itself is login-gated and was not reachable
 - `tests/python/test_experiment_4582_live_feature_router_wiring.py` — existing
   regression coverage for the per-game mechanism
 - CLAUDE.md "ARC Live-Path Reachability Discipline" — the source-reading /
