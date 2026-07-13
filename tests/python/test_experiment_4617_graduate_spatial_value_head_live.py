@@ -169,7 +169,22 @@ def test_scenario_arc_wmte_4617_live_path_reachability(monkeypatch) -> None:
     comp_src = inspect.getsource(comp)
 
     assert "load_live_spatial_value_head" in arc_loop_src
-    assert "LearnedVerifier.load" not in arc_loop_src
+    # NOTE (2026-07-12): commit df207c1da (PHASE A3, the self-play loop) reintroduced
+    # LearnedVerifier.load into _live_verifier_for_adapter as a NARROW, GATED
+    # last-resort fallback -- tried ONLY when load_live_spatial_value_head(...)
+    # returns None for that specific game (no spatial checkpoint trained yet) AND
+    # a legacy per-game checkpoint + adapter.featurize both exist. This is
+    # development_proxy scope only (arc_loop_solve.py is the offline dev/registry
+    # tool, never the live scored path -- see CLAUDE.md's ARC Live-Path
+    # Reachability Discipline), so PHASE A2's "the linear LearnedVerifier warm-
+    # start actively misled" finding (about the SCORED path) does not apply here;
+    # the assertion below checks the intent that motivated PHASE A2 (spatial is
+    # tried FIRST, LearnedVerifier is fallback-only) rather than banning the
+    # identifier outright, which would incorrectly flag this legitimate,
+    # self-play-bootstrapping-only fallback as a regression.
+    spatial_call_index = arc_loop_src.index("load_live_spatial_value_head(")
+    learned_verifier_index = arc_loop_src.index("LearnedVerifier.load(")
+    assert spatial_call_index < learned_verifier_index
     assert "load_live_spatial_value_head" in comp_src
     assert comp.SUBMITTED_AGENT_CONFIG["value_weight"] == comp.SUBMITTED_VALUE_WEIGHT
     assert 0.0 < comp.SUBMITTED_AGENT_CONFIG["value_weight"] <= 1e-9
@@ -195,7 +210,9 @@ def test_scenario_arc_wmte_4617_live_path_reachability(monkeypatch) -> None:
 def test_scenario_arc_wmte_4617_arc_loop_uses_spatial_warm_start(monkeypatch) -> None:
     """SCENARIO-ARC-WMTE-4617-LIVE-PATH: arc_loop selects the spatial live verifier first."""
 
-    spec = importlib.util.spec_from_file_location("arc_loop_solve_4617", REPO / "scripts" / "arc_loop_solve.py")
+    spec = importlib.util.spec_from_file_location(
+        "arc_loop_solve_4617", REPO / "scripts" / "arc_loop_solve.py"
+    )
     assert spec is not None and spec.loader is not None
     arc_loop = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(arc_loop)

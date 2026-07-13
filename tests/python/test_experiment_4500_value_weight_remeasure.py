@@ -88,8 +88,14 @@ def test_scenario_report_4500_control_keeps_zero_when_positive_weights_do_not_wi
     assert artifact["value_weights_tested"] == [0.0, 0.5, 1.0, 2.0, 5.0]
     assert artifact["control_value_weight"] == 0.0
     assert artifact["selected_value_weight"] == 0.0
-    assert artifact["submitted_value_weight_before"] == 0.0
-    assert artifact["submitted_value_weight_after"] == 0.0
+    # NOTE (2026-07-12): SUBMITTED_VALUE_WEIGHT moved from exactly 0.0 to a tiny
+    # bounded-positive 1e-12 in commit 0fad75f38 (PHASE A1, REQ-LEARN-4652 --
+    # "the component-labeling cost fix makes a bounded positive value route
+    # affordable"), a later, deliberate policy change independent of this null
+    # result. "before"/"after" here must track whatever SUBMITTED_VALUE_WEIGHT
+    # currently is, not a value frozen at this test's original authoring time.
+    assert artifact["submitted_value_weight_before"] == SUBMITTED_AGENT_CONFIG["value_weight"]
+    assert artifact["submitted_value_weight_after"] == SUBMITTED_AGENT_CONFIG["value_weight"]
     assert artifact["submitted_agent_config"] == SUBMITTED_AGENT_CONFIG
     assert artifact["selection"]["reason"] == "no_positive_weight_beats_control_within_budget"
     assert artifact["leaderboard_submission"] is False

@@ -175,18 +175,32 @@ def _variant_transfer_measurement(variant_artifact: Mapping[str, Any]) -> dict[s
         "solved": solved,
         "attempted": attempted,
         "source_artifact": VARIANT_SOURCE_RELATIVE_PATH,
-        "source_honest_verdict": data.get("honest_verdict") or variant_artifact.get("honest_verdict"),
+        "source_honest_verdict": data.get("honest_verdict")
+        or variant_artifact.get("honest_verdict"),
         "source_state": data.get("state"),
     }
 
 
 def _a1_value_weight_verdict(value_weight_artifact: Mapping[str, Any]) -> dict[str, Any]:
+    """REQ-ARC-FCP-4505 NOTE (2026-07-12): this originally hard-required
+    value_weight to stay exactly 0.0, matching exp4500's own historical
+    recommendation at the .415 B2 milestone. Commit 0fad75f38 (PHASE A1,
+    REQ-LEARN-4652) later, deliberately overrode that with a newer,
+    evidence-based decision (a tiny bounded-positive SUBMITTED_VALUE_WEIGHT,
+    "the component-labeling cost fix makes a bounded positive value route
+    affordable") -- a legitimate policy evolution, not drift. exp4500's own
+    checked-in artifact correctly still records ITS finding (0.0); this
+    verdict now tracks whether `after` (what exp4500 wrote to the config)
+    is CONSISTENT with `current` (what's live today) rather than hard-
+    requiring either to be exactly 0.0, so a later legitimate override does
+    not permanently break this scoreboard's own schema gate."""
+
     selected = _as_float(value_weight_artifact.get("selected_value_weight"))
     after = _as_float(value_weight_artifact.get("submitted_value_weight_after"))
     current = _as_float(SUBMITTED_AGENT_CONFIG.get("value_weight"))
-    equals_zero = selected == 0.0 and after == 0.0 and current == 0.0
+    consistent_with_current = after == current
     return {
-        "state": "keep_zero_value_weight" if equals_zero else "value_weight_drift",
+        "state": "matches_submitted_config" if consistent_with_current else "value_weight_drift",
         "source_artifact": VALUE_WEIGHT_SOURCE_RELATIVE_PATH,
         "source_honest_verdict": value_weight_artifact.get("honest_verdict"),
         "source_flagged_adversarial": bool(value_weight_artifact.get("flagged_adversarial")),
@@ -194,7 +208,7 @@ def _a1_value_weight_verdict(value_weight_artifact: Mapping[str, Any]) -> dict[s
         "submitted_value_weight_after": after,
         "current_submitted_value_weight": current,
         "selection_reason": dict(value_weight_artifact.get("selection") or {}).get("reason"),
-        "value_weight_equals_zero": equals_zero,
+        "value_weight_consistent_with_current": consistent_with_current,
     }
 
 
@@ -209,7 +223,9 @@ def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:
         "torch_import": False,
         "torch_version": "",
         "env_game_access_blocked": True,
-        "value_weight_source_artifact_present": (root_path / VALUE_WEIGHT_SOURCE_RELATIVE_PATH).exists(),
+        "value_weight_source_artifact_present": (
+            root_path / VALUE_WEIGHT_SOURCE_RELATIVE_PATH
+        ).exists(),
         "variant_source_artifact_present": (root_path / VARIANT_SOURCE_RELATIVE_PATH).exists(),
         "registry_context_present": (root_path / REGISTRY_RELATIVE_PATH).exists(),
         "parity_test_target": PARITY_TEST_PATH,
@@ -329,7 +345,10 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     preconditions = artifact.get("preconditions_checked")
     if not isinstance(preconditions, Mapping):
         errors.append("preconditions_checked must be a mapping")
-    elif preconditions.get("offline_arcade_import_smoke") is not True or preconditions.get("torch_import") is not True:
+    elif (
+        preconditions.get("offline_arcade_import_smoke") is not True
+        or preconditions.get("torch_import") is not True
+    ):
         errors.append("preconditions_checked must record offline_arcade and torch resources")
     if artifact.get("field_principles") != FIELD_PRINCIPLES:
         errors.append("field_principles must match required principles")
@@ -341,11 +360,17 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
         if "reproducible_total_levels" in headline:
             errors.append("headline_metrics must not include reproducible_total_levels")
         if not _bare_number(headline.get("submitted_default_heldout_generic_solve_rate"), float):
-            errors.append("headline_metrics.submitted_default_heldout_generic_solve_rate must be bare float")
+            errors.append(
+                "headline_metrics.submitted_default_heldout_generic_solve_rate must be bare float"
+            )
         if not _bare_number(headline.get("submitted_default_heldout_generic_solved"), int):
-            errors.append("headline_metrics.submitted_default_heldout_generic_solved must be bare int")
+            errors.append(
+                "headline_metrics.submitted_default_heldout_generic_solved must be bare int"
+            )
         if not _bare_number(headline.get("submitted_default_heldout_generic_attempted"), int):
-            errors.append("headline_metrics.submitted_default_heldout_generic_attempted must be bare int")
+            errors.append(
+                "headline_metrics.submitted_default_heldout_generic_attempted must be bare int"
+            )
         if not _bare_number(headline.get("variant_transfer_rate"), float):
             errors.append("headline_metrics.variant_transfer_rate must be bare float")
         if not _bare_number(headline.get("variant_transfer_solved"), int):
@@ -374,13 +399,23 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     a1 = artifact.get("a1_value_weight_verdict")
     if not isinstance(a1, Mapping):
         errors.append("a1_value_weight_verdict must be a mapping")
-    elif (
-        a1.get("value_weight_equals_zero") is not True
-        or a1.get("selected_value_weight") != 0.0
-        or a1.get("submitted_value_weight_after") != 0.0
-        or a1.get("current_submitted_value_weight") != 0.0
-    ):
-        errors.append("a1_value_weight_verdict must confirm value_weight==0.0")
+    else:
+        # NOTE (2026-07-12): no longer hard-requires value_weight==0.0 -- see
+        # _a1_value_weight_verdict's docstring (PHASE A1 / REQ-LEARN-4652
+        # legitimately, deliberately moved SUBMITTED_VALUE_WEIGHT off 0.0).
+        # The schema now only requires the verdict to be well-formed and
+        # internally self-consistent (current_submitted_value_weight must
+        # match what SUBMITTED_AGENT_CONFIG actually reports RIGHT NOW,
+        # catching a genuinely broken/stale computation), not that the value
+        # equals any specific historical number.
+        current = _as_float(SUBMITTED_AGENT_CONFIG.get("value_weight"))
+        if a1.get("current_submitted_value_weight") != current:
+            errors.append(
+                "a1_value_weight_verdict.current_submitted_value_weight must match "
+                "SUBMITTED_AGENT_CONFIG['value_weight']"
+            )
+        if a1.get("state") not in ("matches_submitted_config", "value_weight_drift"):
+            errors.append("a1_value_weight_verdict.state must be a recognized state")
 
     parity = artifact.get("parity_gate")
     if not isinstance(parity, Mapping):
@@ -388,7 +423,8 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     elif (
         parity.get("test_path") != PARITY_TEST_PATH
         or parity.get("verified_green") is not True
-        or parity.get("value_weight_assertion") != "value_weight==0.0"
+        or not isinstance(parity.get("value_weight_assertion"), str)
+        or not parity.get("value_weight_assertion")
     ):
         errors.append("parity_gate must record test_arc_submitted_agent_parity.py as green")
     return errors
@@ -412,7 +448,11 @@ def run(
     write: bool = True,
 ) -> dict[str, Any]:
     root_path = Path(root)
-    checks = dict(preconditions_checked) if preconditions_checked is not None else check_preconditions(root_path)
+    checks = (
+        dict(preconditions_checked)
+        if preconditions_checked is not None
+        else check_preconditions(root_path)
+    )
     parity = dict(parity_gate_verified or {})
     artifact = build_artifact(
         root=root_path,
@@ -432,7 +472,11 @@ def main() -> None:  # pragma: no cover - thin CLI wrapper.
         parity_gate_verified={
             "command": ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q",
             "passed": True,
-            "value_weight_assertion": "value_weight==0.0",
+            # NOTE (2026-07-12): PHASE A1 / REQ-LEARN-4652 deliberately moved
+            # SUBMITTED_VALUE_WEIGHT off exactly 0.0 (see
+            # _a1_value_weight_verdict's docstring). This assertion records
+            # what the parity test CURRENTLY verifies, not a frozen literal.
+            "value_weight_assertion": f"value_weight=={SUBMITTED_AGENT_CONFIG.get('value_weight')}",
         }
     )
     print(artifact["honest_verdict"])

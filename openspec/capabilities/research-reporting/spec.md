@@ -35353,8 +35353,8 @@ The artifact SHALL be
 include bare top-level booleans `recommended_live_patch_available` and
 `patch_test_ready`, plus `patch_path`, `patch_failure_mode_targeted`,
 `registry_precheck_done`, `duplicate_solve_target_avoided`,
-`live_agent_reachability_evidence`, `model_specs`, `inference_substrate`, and
-`honest_verdict`.
+`live_agent_reachability_evidence`, `model_specs`, `inference_substrate`,
+`duration_s`, and `honest_verdict`.
 
 Required field principles:
 
@@ -35366,7 +35366,8 @@ Required field principles:
 - `duplicate_solve_target_avoided`: principle "True only when the synthesis does not target an already reached live solve depth."
 - `live_agent_reachability_evidence`: principle "Test command, dry-run receipt, or null."
 - `model_specs`: principle "MODEL_SPECS with mandated SOTA GGUF if any LLM proposer was used; otherwise null."
-- `inference_substrate`: principle "Must be arc_live_path_patch_synthesis."
+- `inference_substrate`: principle "Must be aggregation_from_upstream_artifacts (the workflow reads upstream JSON/YAML artifacts and computes a patch recommendation; it does not invoke an LLM or any other compute substrate). Corrected 2026-07-13 from a non-standard `arc_live_path_patch_synthesis` value that predated CLAUDE.md's Inference-Substrate Declaration Discipline's fixed enum and was never a legal value under it."
+- `duration_s`: principle "Real measured wall-clock time of the aggregation pass; must meet the aggregation_from_upstream_artifacts substrate floor (0.0001s). Added 2026-07-13: exp5240 never declared this field, which was masked by the `inference_substrate` bug above short-circuiting the ARC artifact lint's duration-floor check before it ever ran."
 - `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether a live patch is gated for exp5241."
 
 #### SCENARIO-REPORT-5240-LIVE-PATCH-SYNTHESIS: Controlled Memory Gates A Live Routing Patch

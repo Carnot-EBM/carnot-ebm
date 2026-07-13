@@ -110,7 +110,7 @@ def _parity_green() -> dict[str, object]:
     return {
         "command": ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q",
         "passed": True,
-        "value_weight_assertion": "value_weight==0.0",
+        "value_weight_assertion": f"value_weight=={SUBMITTED_AGENT_CONFIG.get('value_weight')}",
     }
 
 
@@ -141,7 +141,7 @@ def test_scenario_arc_fcp_4505_refresh_tracks_real_leaderboard_signal(tmp_path: 
     )
 
     assert artifact["honest_verdict"] == (
-        "complete: submitted_agent_scoreboard_refresh_generic_1_of_7_variant_7_of_25_value_weight_0"
+        "complete: submitted_agent_scoreboard_refresh_generic_1_of_7_variant_7_of_25_value_weight_1e-12"
     )
     assert artifact["inference_substrate"] == exp4505.INFERENCE_SUBSTRATE
     assert artifact["preconditions_checked"]["offline_arcade_import_smoke"] is True
@@ -150,9 +150,9 @@ def test_scenario_arc_fcp_4505_refresh_tracks_real_leaderboard_signal(tmp_path: 
     assert artifact["requirements"] == ["REQ-ARC-FCP-4505"]
     assert artifact["scenarios"] == ["SCENARIO-ARC-FCP-4505"]
 
-    assert artifact["headline_metrics"]["submitted_default_heldout_generic_solve_rate"] == pytest.approx(
-        1.0 / 7.0
-    )
+    assert artifact["headline_metrics"][
+        "submitted_default_heldout_generic_solve_rate"
+    ] == pytest.approx(1.0 / 7.0)
     assert artifact["headline_metrics"]["submitted_default_heldout_generic_solved"] == 1
     assert artifact["headline_metrics"]["submitted_default_heldout_generic_attempted"] == 7
     assert artifact["headline_metrics"]["variant_transfer_rate"] == pytest.approx(7.0 / 25.0)
@@ -169,20 +169,32 @@ def test_scenario_arc_fcp_4505_refresh_tracks_real_leaderboard_signal(tmp_path: 
 
     row = artifact["scoreboard_row"]
     assert row["submitted_agent_config"] == SUBMITTED_AGENT_CONFIG
-    assert row["submitted_agent_config"]["value_weight"] == 0.0
+    assert row["submitted_agent_config"]["value_weight"] == SUBMITTED_AGENT_CONFIG["value_weight"]
     assert row["heldout_generic_measurement"]["env_game_access_blocked"] is True
     assert row["heldout_generic_measurement"]["frame_only"] is True
     assert row["variant_transfer_measurement"]["solved"] == 7
     assert row["variant_transfer_measurement"]["attempted"] == 25
 
-    assert artifact["a1_value_weight_verdict"]["state"] == "keep_zero_value_weight"
+    # NOTE (2026-07-12): exp4500's checked-in artifact correctly still records
+    # ITS OWN historical finding (selected/after == 0.0, the .415 B2
+    # recommendation); PHASE A1 (REQ-LEARN-4652) later, deliberately moved
+    # SUBMITTED_VALUE_WEIGHT to a tiny bounded-positive value for unrelated
+    # reasons, so this scoreboard now correctly reports "value_weight_drift"
+    # (a real, expected, non-error state) rather than the old
+    # "keep_zero_value_weight" -- see _a1_value_weight_verdict's docstring.
+    assert artifact["a1_value_weight_verdict"]["state"] == "value_weight_drift"
     assert artifact["a1_value_weight_verdict"]["selected_value_weight"] == 0.0
     assert artifact["a1_value_weight_verdict"]["submitted_value_weight_after"] == 0.0
-    assert artifact["a1_value_weight_verdict"]["current_submitted_value_weight"] == 0.0
-    assert artifact["a1_value_weight_verdict"]["value_weight_equals_zero"] is True
+    assert (
+        artifact["a1_value_weight_verdict"]["current_submitted_value_weight"]
+        == (SUBMITTED_AGENT_CONFIG["value_weight"])
+    )
+    assert artifact["a1_value_weight_verdict"]["value_weight_consistent_with_current"] is False
     assert artifact["a1_value_weight_verdict"]["source_flagged_adversarial"] is True
     assert artifact["parity_gate"]["verified_green"] is True
-    assert artifact["parity_gate"]["value_weight_assertion"] == "value_weight==0.0"
+    assert artifact["parity_gate"]["value_weight_assertion"] == (
+        f"value_weight=={SUBMITTED_AGENT_CONFIG.get('value_weight')}"
+    )
     assert exp4505.artifact_schema_errors(artifact) == []
 
     written = json.loads((tmp_path / exp4505.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
@@ -204,7 +216,10 @@ def test_req_arc_fcp_4505_schema_rejects_stale_config_and_banked_headline(tmp_pa
         "honest_verdict": "partial: stale",
         "inference_substrate": "aggregation_from_upstream_artifacts",
         "preconditions_checked": [],
-        "field_principles": {**artifact["field_principles"], "honest_verdict": {"principle": "wrong"}},
+        "field_principles": {
+            **artifact["field_principles"],
+            "honest_verdict": {"principle": "wrong"},
+        },
         "headline_metrics": {
             **artifact["headline_metrics"],
             "submitted_default_heldout_generic_solve_rate": {"value": 1.0 / 7.0},
@@ -227,7 +242,10 @@ def test_req_arc_fcp_4505_schema_rejects_stale_config_and_banked_headline(tmp_pa
         "a1_value_weight_verdict": {
             **artifact["a1_value_weight_verdict"],
             "submitted_value_weight_after": 5.0,
-            "value_weight_equals_zero": False,
+            # A wrong current_submitted_value_weight (not matching the LIVE
+            # SUBMITTED_AGENT_CONFIG) is what the schema now actually rejects
+            # -- see _a1_value_weight_verdict's docstring.
+            "current_submitted_value_weight": 5.0,
         },
         "parity_gate": {**artifact["parity_gate"], "verified_green": False},
     }
@@ -238,7 +256,9 @@ def test_req_arc_fcp_4505_schema_rejects_stale_config_and_banked_headline(tmp_pa
     assert "inference_substrate must equal verifier_ensemble_against_cached_candidates" in errors
     assert "preconditions_checked must be a mapping" in errors
     assert "field_principles must match required principles" in errors
-    assert "headline_metrics.submitted_default_heldout_generic_solve_rate must be bare float" in errors
+    assert (
+        "headline_metrics.submitted_default_heldout_generic_solve_rate must be bare float" in errors
+    )
     assert "headline_metrics.submitted_default_heldout_generic_solved must be bare int" in errors
     assert "headline_metrics.submitted_default_heldout_generic_attempted must be bare int" in errors
     assert "headline_metrics.variant_transfer_rate must be bare float" in errors
@@ -248,7 +268,10 @@ def test_req_arc_fcp_4505_schema_rejects_stale_config_and_banked_headline(tmp_pa
     assert "reproducible_total_levels must remain context-only" in errors
     assert "scoreboard_row.submitted_agent_config must match SUBMITTED_AGENT_CONFIG" in errors
     assert "scoreboard_row.heldout_generic_measurement must block env._game" in errors
-    assert "a1_value_weight_verdict must confirm value_weight==0.0" in errors
+    assert (
+        "a1_value_weight_verdict.current_submitted_value_weight must match "
+        "SUBMITTED_AGENT_CONFIG['value_weight']"
+    ) in errors
     assert "parity_gate must record test_arc_submitted_agent_parity.py as green" in errors
     with pytest.raises(ValueError, match="honest_verdict"):
         exp4505.write_artifact(tmp_path, bad)

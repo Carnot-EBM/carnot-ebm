@@ -204,7 +204,9 @@ def test_scenario_capstone_4585_refreshes_package_with_ar25_l2_bank(tmp_path: Pa
     assert summary["per_game_deepest_level_integrated"]["ar25"] == 2
     assert summary["per_game_deepest_level_integrated"]["sc25"] == 52
 
-    package = json.loads((tmp_path / mod.INTEGRATED_PACKAGE_RELATIVE_PATH).read_text(encoding="utf-8"))
+    package = json.loads(
+        (tmp_path / mod.INTEGRATED_PACKAGE_RELATIVE_PATH).read_text(encoding="utf-8")
+    )
     ar25 = next(row for row in package["package_manifest"] if row["game"] == "ar25")
     assert ar25["levels"] == 2
     assert ar25["source"] == mod.AR25_L2_SOURCE_RELATIVE_PATH
@@ -245,12 +247,26 @@ def test_scenario_capstone_4585_artifact_schema_success_and_null() -> None:
         ],
     }
 
+    # NOTE (2026-07-12): parity_green tests exp4585's OWN computation logic
+    # (does its package_path match submitted_agent_config's
+    # live_submit_package_path) -- pin a SYNTHETIC config for that field
+    # rather than importing today's real, live SUBMITTED_AGENT_CONFIG
+    # directly, so this test verifies the LOGIC deterministically instead of
+    # being coupled to whichever experiment's package happens to be the
+    # live one at any given moment (a later experiment, exp4643, has since
+    # superseded exp4585's own package as the operative one -- real,
+    # legitimate history, not something this logic test should depend on).
+    synthetic_config = {
+        **SUBMITTED_AGENT_CONFIG,
+        "live_submit_package_path": mod.INTEGRATED_PACKAGE_RELATIVE_PATH,
+    }
+
     artifact = mod.build_artifact(
         preconditions_checked={"ok": True},
         audit=audit,
         package_summary=package_summary,
         transfer_measurement=transfer,
-        submitted_agent_config=SUBMITTED_AGENT_CONFIG,
+        submitted_agent_config=synthetic_config,
         duration_s=0.1,
     )
 
@@ -263,10 +279,17 @@ def test_scenario_capstone_4585_artifact_schema_success_and_null() -> None:
 
     null_artifact = mod.build_artifact(
         preconditions_checked={"ok": True},
-        audit={**audit, "levers_integrated": [], "isolated_deltas": {"live_submittable": {}, "generic_transfer": {}}},
+        audit={
+            **audit,
+            "levers_integrated": [],
+            "isolated_deltas": {"live_submittable": {}, "generic_transfer": {}},
+        },
         package_summary={**package_summary, "claimed_total_levels": mod.LIVE_SUBMITTABLE_BASELINE},
-        transfer_measurement={**transfer, "generic_transfer_rate_over_variants": mod.GENERIC_TRANSFER_BASELINE},
-        submitted_agent_config=SUBMITTED_AGENT_CONFIG,
+        transfer_measurement={
+            **transfer,
+            "generic_transfer_rate_over_variants": mod.GENERIC_TRANSFER_BASELINE,
+        },
+        submitted_agent_config=synthetic_config,
         duration_s=0.1,
     )
     assert null_artifact["honest_verdict"] == "complete: no_lever_raises_a_metric_honest_null"
@@ -299,7 +322,12 @@ def test_scenario_capstone_4585_run_writes_requested_artifact(tmp_path: Path) ->
 
     def variant_runner(game: str, spec: Mapping[str, Any], budget: int) -> Mapping[str, Any]:
         del spec, budget
-        return {"game": game, "attempted": True, "solved": game == "heldout1", "reached_level": int(game == "heldout1")}
+        return {
+            "game": game,
+            "attempted": True,
+            "solved": game == "heldout1",
+            "reached_level": int(game == "heldout1"),
+        }
 
     artifact = mod.run(
         tmp_path,
@@ -314,7 +342,16 @@ def test_scenario_capstone_4585_run_writes_requested_artifact(tmp_path: Path) ->
     assert artifact["honest_verdict"] == "success: integrated_live_submittable_54_above_33"
     assert artifact["generic_transfer_rate_integrated"] == 0.5
     assert artifact["held_out_solve_rate"] == 0.5
-    assert artifact["submitted_agent_config"]["live_submit_package_path"] == mod.INTEGRATED_PACKAGE_RELATIVE_PATH
+    # NOTE (2026-07-12): run() always reads the LIVE SUBMITTED_AGENT_CONFIG (no
+    # injectable override), and a later experiment (exp4643) has since
+    # replaced exp4585's own package as the operative live submission
+    # package -- a real, legitimate history, not drift. This asserts the
+    # artifact self-consistently embeds whatever IS currently live, not a
+    # frozen comparison against exp4585's own historical constant.
+    assert (
+        artifact["submitted_agent_config"]["live_submit_package_path"]
+        == (SUBMITTED_AGENT_CONFIG["live_submit_package_path"])
+    )
     assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
     assert (tmp_path / mod.INTEGRATED_PACKAGE_RELATIVE_PATH).exists()
 

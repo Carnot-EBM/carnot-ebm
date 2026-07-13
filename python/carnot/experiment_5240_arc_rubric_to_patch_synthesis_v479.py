@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -48,6 +49,7 @@ REQUIRED_ARTIFACT_FIELDS = (
     "live_agent_reachability_evidence",
     "model_specs",
     "inference_substrate",
+    "duration_s",
     "honest_verdict",
 )
 FIELD_PRINCIPLES = {
@@ -74,7 +76,13 @@ FIELD_PRINCIPLES = {
     "model_specs": (
         "MODEL_SPECS with mandated SOTA GGUF if any LLM proposer was used; otherwise null."
     ),
-    "inference_substrate": "Must be arc_live_path_patch_synthesis.",
+    "inference_substrate": "Must be aggregation_from_upstream_artifacts.",
+    "duration_s": (
+        "Real measured wall-clock time of the aggregation pass (registry read + "
+        "typed-memory-guard read + verdict computation); the aggregation_from_"
+        "upstream_artifacts substrate floor is 0.0001s, per CLAUDE.md's "
+        "Inference-Substrate Declaration Discipline."
+    ),
     "honest_verdict": (
         "Must start with complete:/complete_/success:/success_ and state whether a "
         "live patch is gated for exp5241."
@@ -122,6 +130,7 @@ def build_artifact(
 ) -> JsonDict:
     """Build the Exp 5240 synthesis artifact from upstream evidence."""
 
+    started = time.perf_counter()
     registry = load_registry_summary(root)
     guard = arc_solve_learning.typed_memory_provenance_guard(root=root)
     recommended = bool(guard.get("enabled") and registry.get("present"))
@@ -137,6 +146,7 @@ def build_artifact(
         if patch_test_ready
         else "complete: no evidence-backed live patch is gated for exp5241."
     )
+    duration_s = time.perf_counter() - started
     return {
         "schema": SCHEMA,
         "experiment": EXPERIMENT,
@@ -151,7 +161,8 @@ def build_artifact(
         "duplicate_solve_target_avoided": duplicate_avoided,
         "live_agent_reachability_evidence": reachability,
         "model_specs": None,
-        "inference_substrate": "arc_live_path_patch_synthesis",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "duration_s": duration_s,
         "honest_verdict": verdict,
         "field_principles": dict(FIELD_PRINCIPLES),
         "patch_candidate": {
