@@ -1,0 +1,247 @@
+{
+  "experiment": "experiment_5584_hud_mask_offline_ab",
+  "schema": "carnot.exp5584.hud_mask_offline_ab.v1",
+  "result_path": "results/experiment_5584_hud_mask_offline_ab.json",
+  "honest_verdict": "complete: hud_mask_ab_levels_gained_no_headroom_states_delta_real",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a measured null is complete (negative-but-real), never partial"
+    },
+    "inference_substrate": {
+      "principle": "no LLM/proposer invoked (StepwiseExplorer explore-phase only, proposer=None) -- pure CPU search, declared honestly"
+    },
+    "verifier_is_oracle": {
+      "principle": "False -- this measures whether a state-identity masking mechanism adds value, not whether the executable win-check agrees with itself"
+    },
+    "roster": {
+      "principle": "reused verbatim from exp5578 for comparability; mixes HUD-positive and HUD-negative (sk48) games as an in-roster harmlessness control"
+    },
+    "hud_survey": {
+      "principle": "pre-registered per-game mask-detection result on the initial reset frame -- lets the reader confirm treatment-arm results are consistent with the mechanism actually firing where expected"
+    },
+    "levels_gained_delta_ci": {
+      "principle": "paired bootstrap CI on (treatment - control) per game; a claim requires the CI to exclude 0.0, same bar exp4582/exp5578 used"
+    },
+    "distinct_states_delta_ci": {
+      "principle": "paired bootstrap CI on the dedup-collapse proxy (graph node count); the mechanism's DIRECT effect, separate from whether that translates into a levels_gained win"
+    },
+    "mask_fired_matches_survey": {
+      "principle": "positive control -- confirms the mechanism actually activates on treatment-arm HUD-positive games rather than silently no-op-ing the whole roster"
+    },
+    "levels_gained_headroom_present": {
+      "principle": "SECOND positive control (CLAUDE.md FALSE_NEGATIVE_RISK) -- confirms at least one arm reached a level-up somewhere on the roster, so a levels_gained null is informative rather than a floor-effect artifact of an unreachable roster/budget"
+    },
+    "no_regression_fallback": {
+      "principle": "SUBMITTED_AUTO_HUD_MASK_ENABLED stays False regardless of this result until an operator reviews it -- this script never flips the flag"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "roster": [
+    "bp35",
+    "dc22",
+    "g50t",
+    "re86",
+    "s5i5",
+    "sk48"
+  ],
+  "budget_per_game": 300,
+  "hud_survey": {
+    "bp35": {
+      "has_hud": true,
+      "n_masked_cells": 64
+    },
+    "dc22": {
+      "has_hud": true,
+      "n_masked_cells": 64
+    },
+    "g50t": {
+      "has_hud": true,
+      "n_masked_cells": 64
+    },
+    "re86": {
+      "has_hud": true,
+      "n_masked_cells": 64
+    },
+    "s5i5": {
+      "has_hud": true,
+      "n_masked_cells": 64
+    },
+    "sk48": {
+      "has_hud": false,
+      "n_masked_cells": 0
+    }
+  },
+  "control_results": {
+    "sk48": {
+      "game": "sk48",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 8,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "dc22": {
+      "game": "dc22",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 148,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "g50t": {
+      "game": "g50t",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 180,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "re86": {
+      "game": "re86",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 229,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 186,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "bp35": {
+      "game": "bp35",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 294,
+      "hud_mask_fired": false,
+      "error": null
+    }
+  },
+  "treatment_results": {
+    "sk48": {
+      "game": "sk48",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 8,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "g50t": {
+      "game": "g50t",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 53,
+      "hud_mask_fired": true,
+      "error": null
+    },
+    "dc22": {
+      "game": "dc22",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 20,
+      "hud_mask_fired": true,
+      "error": null
+    },
+    "re86": {
+      "game": "re86",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 152,
+      "hud_mask_fired": true,
+      "error": null
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 32,
+      "hud_mask_fired": true,
+      "error": null
+    },
+    "bp35": {
+      "game": "bp35",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 300,
+      "distinct_states_discovered": 25,
+      "hud_mask_fired": true,
+      "error": null
+    }
+  },
+  "levels_gained_delta_mean": 0.0,
+  "levels_gained_delta_ci": [
+    0.0,
+    0.0
+  ],
+  "levels_gained_ci_excludes_zero": false,
+  "distinct_states_delta_mean": -125.833333,
+  "distinct_states_delta_ci": [
+    -194.1666666667,
+    -59.8333333333
+  ],
+  "distinct_states_ci_excludes_zero": true,
+  "mask_fired_matches_survey": true,
+  "levels_gained_headroom_present": false,
+  "false_negative_risk_note": "FALSE_NEGATIVE_RISK acknowledgment: levels_gained_delta_mean=0.0 with NO level-up reached in EITHER arm on ANY roster game -- there is no positive control proving this roster/budget/explorer-config combination could show a levels_gained effect in either direction, so the levels_gained null is UNINFORMATIVE about whether HUD masking helps reach levels, not evidence it doesn't. The bare StepwiseExplorer config used here (proposer=None, flat value_head=0.0, no registry prefix) is apparently too weak to find any of this roster's known-short scripted solve paths (s5i5=39, sk48=44, g50t=48, re86=56, bp35=57 actions per ops/arc_solve_registry.yaml) via undirected search within 300 actions -- a floor effect independent of HUD masking (matches exp5578's own budget=30 floor-effect finding, just at a higher budget with this weaker search config). By contrast, distinct_states_delta (the mechanism's DIRECT, designed-for effect) IS a real, non-null finding: CI excludes 0.0, mean matches the pre-registered hud_survey exactly (0 states-delta on the sole HUD-negative game (sk48), large negative deltas of -34% to -91% on all 5 HUD-positive games) -- the mechanism collapses exactly the cosmetic HUD-tick duplicate states it was built to collapse. Whether that collapse translates into reaching MORE levels remains untested; it requires a stronger explorer config (a real value head or LLM proposer, or a much larger budget) with a positive control that headroom exists before the levels_gained question can be answered either way.",
+  "recommendation": "Do NOT treat this as a clean null on whether HUD masking helps -- see false_negative_risk_note. The mechanism itself is validated (distinct_states_delta CI excludes 0.0, positive control passes, zero harm on the HUD-negative control game). What is NOT yet validated is whether that translates into reaching more levels, because this experiment's explorer config could not reach ANY level-up in either arm to measure that against. Per the Failed-Experiment Rerun Discipline: a re-run of this SAME config/budget would be a doomed rerun (same floor effect expected); a re-run with a stated difference (a real value head or LLM proposer so the roster has reachable headroom, or a much larger budget) is the correct next step, not a repeat. Keep SUBMITTED_AUTO_HUD_MASK_ENABLED off by default until that headroom-present measurement exists.",
+  "no_regression_fallback": true,
+  "combined_wall_clock_s": 1771.65,
+  "n_bootstrap": 2000,
+  "random_seed": 5584,
+  "duration_s": 1771.941,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "hud_mask_fn_import": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "5e86bdce24f85c1744d5661b1993a21e13824e5ad26a0feaf4636cedc9a976ae",
+  "note_on_patch": "This artifact's verdict/recommendation/false_negative_risk_note fields were re-derived from the SAME underlying control_results/treatment_results/hud_survey measured in the original run (duration_s/combined_wall_clock_s preserved from that real run) -- no games were re-played. The decision logic was refined after the original run to add the levels_gained_headroom_present positive control and an explicit FALSE_NEGATIVE_RISK acknowledgment; this is a corrigendum-style re-analysis of unchanged data, not a new measurement."
+}
