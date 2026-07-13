@@ -32,7 +32,7 @@ import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_amortized_exploration import coerce_amortized_first_contact_prior
-from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior
+from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior, connected_color_blobs
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_controllable_novelty import coerce_controllable_novelty_policy
@@ -135,6 +135,20 @@ SUBMITTED_MATM_SIMILARITY_RETRIEVAL_ENABLED = False
 SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE = "within_game_lsh_cross_game_features_v2"
 MATM_SIMILARITY_BUCKET_WIDTH = 0.25
 MATM_SIMILARITY_MAX_CANDIDATES = 8
+# E1 (arXiv:2512.24156, the hidden-leaderboard 3rd-place "just-explore" solver) status-bar
+# masking. `StepwiseExplorer.hud_mask` has existed as a constructor param since before this
+# flag (see `_hash`, which already collapses masked cells) but was never populated on the
+# live path -- neither E3AgentPolicy nor CarnotAgentPolicy ever computed or passed one, so a
+# ticking score/timer/step-counter HUD cell made every tick look like a brand-new state to
+# the live dedup. Rule-based (`_compute_hud_mask_from_frame`, single observed frame, zero
+# extra actions) rather than the probe-based `arc_graph_explore.discover_hud_mask` (burns up
+# to 4 real actions from reset -- fine for the offline dev harness where resets are free, not
+# viable under RHAE live scoring where extra actions are squared against the human baseline).
+# Default OFF pending the Phase Prototype + Empirical Validation + Adversarial Check
+# Discipline's offline validation pass (see docs/research-notes/ for the comparison that
+# surfaced this gap; flip only after a matched-budget A/B clears a real bar).
+SUBMITTED_AUTO_HUD_MASK_ENABLED = False
+SUBMITTED_AUTO_HUD_MASK_MODE = "rule_based_status_bar_classifier_single_frame"
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -220,6 +234,41 @@ def _frame_only_mechanic_hint(frame: Any) -> Optional[str]:
     except Exception:
         return None
     return None
+
+
+def _compute_hud_mask_from_frame(frame: Any) -> Any | None:
+    """Rule-based, zero-action-cost status-bar mask for `StepwiseExplorer.hud_mask`.
+
+    E1 (arXiv:2512.24156): segment the frame into single-color connected components and
+    mark any status-bar-LIKE blob's cells (frame-edge-touching, spans most of the frame's
+    width, thin) as HUD, using the SAME geometric rule
+    `ColorBlobSaliencePrior.is_status_bar_like` already applies to deprioritize status-bar
+    click candidates -- just reused here to also collapse those cells out of node identity.
+    Computed from a SINGLE already-observed frame (no env access, no probe actions), unlike
+    `arc_graph_explore.discover_hud_mask` which burns up to 4 real actions from reset and is
+    only viable in the offline dev harness. Returns a bool grid-shaped mask (True = HUD
+    cell) or None if nothing looked like a status bar (a safe no-op: `_hash` leaves the grid
+    untouched when `hud_mask` is None).
+    """
+
+    if frame is None:
+        return None
+    try:
+        import numpy as np
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        grid = grid_of(frame)
+        if getattr(grid, "shape", None) is None or grid.ndim != 2:
+            return None
+        prior = ColorBlobSaliencePrior()
+        mask = np.zeros(grid.shape, dtype=bool)
+        for blob in connected_color_blobs(grid):
+            if prior.is_status_bar_like(blob):
+                for y, x in blob.cells:
+                    mask[y, x] = True
+        return mask if bool(mask.any()) else None
+    except Exception:
+        return None
 
 
 def _route_explore_budget(route: dict[str, Any]) -> int:
@@ -448,6 +497,7 @@ class StepwiseExplorer:
         target_levels: int = 1,
         max_depth: int = 45,
         hud_mask=None,
+        auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
@@ -491,6 +541,8 @@ class StepwiseExplorer:
         similarity_max_candidates: int = MATM_SIMILARITY_MAX_CANDIDATES,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
+        self.auto_hud_mask = bool(auto_hud_mask)
+        self._hud_mask_attempted = hud_mask is not None
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
         # closer). Trained offline on ALL banked solves (the offline->live distillation). The frontier is
         # ordered A*-style: priority = depth + value_weight*value. value_weight=0 (default) -> pure BFS
@@ -1331,6 +1383,13 @@ class StepwiseExplorer:
     def _ingest(self, latest) -> None:
         if latest is None:
             return
+        if not self._hud_mask_attempted:
+            # One attempt, on the first observed frame -- a static mask for the episode's
+            # lifetime (never refreshed mid-search: changing the mask after nodes are already
+            # hashed under the old one would corrupt node identity, per _hash's masking).
+            self._hud_mask_attempted = True
+            if self.auto_hud_mask and self.hud_mask is None:
+                self.hud_mask = _compute_hud_mask_from_frame(latest)
         h = self._hash(latest)
         lvl = _level_of(latest)
         over = self._game_over(latest)
@@ -2227,6 +2286,7 @@ class CarnotAgentPolicy:
         target_level: Optional[int] = None,
         force_explore: bool = False,
         hud_mask=None,
+        auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
@@ -2258,6 +2318,7 @@ class CarnotAgentPolicy:
             if self.has_plan
             else StepwiseExplorer(
                 hud_mask=hud_mask,
+                auto_hud_mask=auto_hud_mask,
                 value_head=value_head,
                 value_weight=value_weight,
                 search_mode=search_mode,
@@ -2317,6 +2378,7 @@ class E3AgentPolicy:
         proposer=None,
         explore_budget: Optional[int] = None,
         target_levels: int = SUBMITTED_TARGET_LEVELS,
+        auto_hud_mask: bool = SUBMITTED_AUTO_HUD_MASK_ENABLED,
         value_head: Any = _DEFAULT_VALUE_HEAD,
         value_weight: float = SUBMITTED_VALUE_WEIGHT,
         search_mode: str = SUBMITTED_SEARCH_MODE,
@@ -2425,6 +2487,7 @@ class E3AgentPolicy:
             goal_candidate_guidance = None
         self.explorer = StepwiseExplorer(
             target_levels=target_levels,
+            auto_hud_mask=auto_hud_mask,
             value_head=value_head,
             value_weight=value_weight,
             search_mode=search_mode,
@@ -3517,6 +3580,8 @@ SUBMITTED_AGENT_CONFIG = {
     "ige_cell_selection_mode": SUBMITTED_IGE_CELL_SELECTION_MODE,
     "matm_similarity_retrieval_enabled": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_ENABLED,
     "matm_similarity_retrieval_mode": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE,
+    "auto_hud_mask_enabled": SUBMITTED_AUTO_HUD_MASK_ENABLED,
+    "auto_hud_mask_mode": SUBMITTED_AUTO_HUD_MASK_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,

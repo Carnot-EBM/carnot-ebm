@@ -14577,3 +14577,79 @@ Given Experiment 5215 is a pure analysis gate
 When it writes the terminal artifact
 Then `arc_registry_modified.value=false`, the honest verdict does not claim PAW
 solves ARC, and the ARC solve registry is not modified.
+
+### REQ-ARC-WMTE-5583: Rule-Based Live HUD-Cell Masking (E1)
+
+A comparative gap analysis against the hidden-leaderboard 3rd-place solver
+("just-explore", arXiv:2512.24156) found that `StepwiseExplorer.hud_mask` had
+existed as a constructor parameter (already consumed by `_hash` to collapse
+masked cells out of node identity) since before this requirement, but was
+never populated on the live path: neither `E3AgentPolicy` nor
+`CarnotAgentPolicy` ever computed or passed a mask. A ticking score/timer/
+step-counter HUD cell therefore made every tick look like a brand-new state
+to the live dedup — exactly the state-explosion failure mode just-explore's
+own status-bar masking exists to prevent (their README attributes a large
+score improvement to this fix).
+
+The live `StepwiseExplorer` SHALL expose an opt-in `auto_hud_mask` flag,
+gated by `SUBMITTED_AUTO_HUD_MASK_ENABLED` (default `False` pending
+empirical validation), that computes a HUD mask from a single already-
+observed frame using `_compute_hud_mask_from_frame` — a RULE-BASED
+classifier reusing `ColorBlobSaliencePrior.is_status_bar_like` (frame-edge-
+touching, spans most of the frame's width, thin) — NOT the probe-based
+`arc_graph_explore.discover_hud_mask`, which burns up to 4 real actions from
+a fresh reset and is only viable in the offline dev harness where resets are
+free; RHAE live scoring squares extra actions against the human baseline, so
+an action-costly mask-discovery mechanism would directly hurt score.
+
+The mask SHALL be computed AT MOST ONCE per `StepwiseExplorer` instance, on
+the first frame observed via `_ingest`, and never refreshed mid-search:
+recomputing after nodes are already hashed under the prior mask (or no mask)
+would corrupt node identity (a state reachable under the old hash could
+silently alias or split from the same state hashed under a new mask). If no
+status-bar-like blob is found, the mask stays `None` and `_hash` behaves
+exactly as it did before this requirement (a safe no-op, not a behavior
+regression for games with no HUD element).
+
+`SUBMITTED_AGENT_CONFIG` SHALL include `auto_hud_mask_enabled` and
+`auto_hud_mask_mode`, and `E3AgentPolicy`'s own constructor default for
+`auto_hud_mask` SHALL equal `SUBMITTED_AUTO_HUD_MASK_ENABLED` so
+`test_shipped_explorer_config_matches_single_source_of_truth`-style parity
+checks catch any silent divergence between what is measured and what ships,
+per the existing parity-guard pattern in
+`tests/python/test_arc_submitted_agent_parity.py`.
+
+Before any default-on flip, an offline matched-budget A/B (auto_hud_mask on
+vs. off) SHALL be run per the Phase Prototype + Empirical Validation +
+Adversarial Check Discipline, and SHALL be retired per the Failed-Experiment
+Rerun Discipline if it comes back null rather than silently left half-
+validated.
+
+#### SCENARIO-ARC-WMTE-5583-STATUS-BAR-CHANGE-DEDUPS
+
+Given a frame whose top row is a full-width, thin, edge-touching status bar
+and whose board contains a compact non-edge blob
+When `_compute_hud_mask_from_frame` runs on that frame
+Then the status-bar row is fully masked and the board blob is not masked
+
+Given a `StepwiseExplorer` constructed with `auto_hud_mask=True`
+When it ingests two frames whose board content is identical but whose status-
+bar row differs (e.g. a ticking counter)
+Then `_hash` returns the SAME hash for both frames
+
+#### SCENARIO-ARC-WMTE-5583-REAL-CHANGE-STILL-DISTINGUISHED
+
+Given the same `StepwiseExplorer` with an auto-computed HUD mask already set
+When it ingests a frame whose BOARD (non-status-bar) content differs from a
+previously-hashed frame
+Then `_hash` returns a DIFFERENT hash, proving the mask does not collapse
+genuine state changes
+
+#### SCENARIO-ARC-WMTE-5583-DEFAULT-OFF-PARITY
+
+Given `E3AgentPolicy` constructed with its default arguments (the shipped
+configuration)
+When `pol.explorer.auto_hud_mask` is compared against
+`SUBMITTED_AGENT_CONFIG["auto_hud_mask_enabled"]`
+Then they are equal, and both are `False` until an offline validation pass
+justifies flipping the default.
