@@ -147,8 +147,13 @@ The artifact SHALL declare
 `inference_substrate=verifier_ensemble_against_cached_candidates`, record the
 precondition smoke checks for `arc_solver_kit.offline_arcade()` and Torch,
 include a focused parity gate for
-`tests/python/test_arc_submitted_agent_parity.py` with `value_weight==0.0`, and
-make the real leaderboard signal the pair
+`tests/python/test_arc_submitted_agent_parity.py` that records the CURRENT
+`SUBMITTED_AGENT_CONFIG["value_weight"]` (originally frozen as
+`value_weight==0.0` at the .415 B2 milestone; commit `0fad75f38`, PHASE A1 /
+REQ-LEARN-4652, later deliberately moved it to a tiny bounded-positive value
+once a compute-cost fix made that route affordable -- a legitimate policy
+evolution the scoreboard now tracks dynamically rather than re-asserting the
+stale literal), and make the real leaderboard signal the pair
 `submitted_default_heldout_generic_solve_rate` plus `variant_transfer_rate`
 rather than `reproducible_total_levels`.
 

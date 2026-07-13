@@ -33,7 +33,7 @@ def test_req_report_5240_spec_declares_patch_synthesis_contract() -> None:
         mod.RESULT_RELATIVE_PATH,
         "recommended_live_patch_available",
         "patch_test_ready",
-        "arc_live_path_patch_synthesis",
+        "aggregation_from_upstream_artifacts",
         "provenance_routing",
     ):
         assert marker in section
@@ -51,7 +51,7 @@ def test_scenario_report_5240_synthesizes_provenance_guard_patch() -> None:
     assert artifact["registry_precheck_done"] is True
     assert artifact["duplicate_solve_target_avoided"] is True
     assert artifact["model_specs"] is None
-    assert artifact["inference_substrate"] == "arc_live_path_patch_synthesis"
+    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
     assert artifact["honest_verdict"].startswith("success:")
     assert "level solve" not in artifact["honest_verdict"].lower()
 
@@ -68,12 +68,14 @@ def test_req_report_5240_live_agent_reaches_typed_memory_guard() -> None:
     assert guard["enabled"] is True
     assert guard["failure_mode_targeted"] == "provenance_routing"
     assert guard["recommended_heads"] == ["provenance", "failures", "skills_rubrics"]
-    assert "block_gap1_registry_promotion_until_frozen_subset_gate" in guard[
-        "blocked_arc_consumer_actions"
-    ]
-    assert "quarantine_gap4_candidate_pool_until_positive_validation" in guard[
-        "blocked_arc_consumer_actions"
-    ]
+    assert (
+        "block_gap1_registry_promotion_until_frozen_subset_gate"
+        in guard["blocked_arc_consumer_actions"]
+    )
+    assert (
+        "quarantine_gap4_candidate_pool_until_positive_validation"
+        in guard["blocked_arc_consumer_actions"]
+    )
     assert recommendation["strategy"]["game"] == "zz99_definitely_unseen"
 
 
@@ -114,12 +116,22 @@ def test_req_report_5240_run_writes_bare_boolean_artifact(tmp_path: Path) -> Non
 
 
 def test_req_report_5240_repository_artifact_is_stable_and_replayable() -> None:
-    """REQ-REPORT-5240: checked-in artifact matches deterministic synthesis."""
+    """REQ-REPORT-5240: checked-in artifact matches deterministic synthesis.
+
+    NOTE: duration_s is real measured wall-clock time (added when the
+    aggregation_from_upstream_artifacts substrate floor check revealed exp5240
+    never declared it), so it legitimately differs between the checked-in
+    artifact and a fresh replay. Every other field must still replay exactly.
+    """
 
     result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
     replay = mod.build_artifact(root=REPO, tests_run=result["tests_run"])
 
-    assert result == replay
+    result_stable = {key: value for key, value in result.items() if key != "duration_s"}
+    replay_stable = {key: value for key, value in replay.items() if key != "duration_s"}
+    assert result_stable == replay_stable
+    assert isinstance(result["duration_s"], (int, float))
+    assert result["duration_s"] >= 0.0001
     assert result["recommended_live_patch_available"] is True
     assert result["patch_test_ready"] is True
 

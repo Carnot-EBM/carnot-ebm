@@ -3013,6 +3013,8 @@ class E3AgentPolicy:
         return self.proposer
 
     def _world_model_candidates(self, engine, is_done) -> list[WorldModelCandidate]:
+        import os
+
         candidates = [WorldModelCandidate("loaded_world_model.py", engine, is_done)]
         # PoE-World (arXiv:2505.10819), OFF by default (CARNOT_ARC_POE_WORLD=1). Adds a weighted
         # product-of-experts engine as an extra candidate so select_trusted_world_model can rank it

@@ -48,6 +48,15 @@ E3_DIR = REPO / "results" / "arc_e3"
 def detect_cell(grid: np.ndarray) -> int:
     """Largest c in {8,4,2,1} (divisor of 64) for which the grid is EXACTLY constant
     within every c x c block -> the logical cell size. Lossless downsample factor."""
+    if grid.ndim != 2:
+        # A degenerate/malformed frame (e.g. a post-terminal empty sentinel,
+        # shape (0,) -- the g50t apply_g50t_label failure class) has no
+        # meaningful logical cell size. 1 (no downsampling) is the same safe
+        # fallback already used below when no clean divisor is found; this
+        # avoids `h, w = grid.shape` raising ValueError on every one of
+        # next_move's several call sites (multiple were found unguarded
+        # during the 2026-07-12 exp5587 cascade check).
+        return 1
     h, w = grid.shape
     for c in (8, 4, 2):
         if h % c or w % c:
@@ -60,6 +69,12 @@ def detect_cell(grid: np.ndarray) -> int:
 
 
 def to_logical(grid: np.ndarray, cell: int) -> np.ndarray:
+    if grid.ndim != 2:
+        # Can't logically downsample a malformed grid -- return it unchanged
+        # (same degenerate-input contract detect_cell now honors above)
+        # rather than raising and killing the caller's remaining action
+        # budget on the live scored path.
+        return grid
     h, w = grid.shape
     return grid[::cell, ::cell] if cell > 1 else grid
 
@@ -173,7 +188,12 @@ def _color_rewrite_expert(
         precondition=_precondition,
         effect=_effect,
         action=action_id,
-        metadata={"kind": "color_rewrite", "from_color": src, "to_color": dst, **dict(metadata or {})},
+        metadata={
+            "kind": "color_rewrite",
+            "from_color": src,
+            "to_color": dst,
+            **dict(metadata or {}),
+        },
     )
 
 
@@ -268,7 +288,9 @@ def _stratified_prefix_heldout(
     return (prefix or rows[:1], heldout or rows[-1:])
 
 
-def _fallback_experts_from_transitions(transitions: Sequence[Transition]) -> list[ProgrammaticExpert]:
+def _fallback_experts_from_transitions(
+    transitions: Sequence[Transition],
+) -> list[ProgrammaticExpert]:
     experts: list[ProgrammaticExpert] = []
     seen: set[tuple[Any, ...]] = set()
     for index, transition in enumerate(transitions):
@@ -408,7 +430,9 @@ def induce_programmatic_object_experts(
             kept.append(scored)
         weights.append(scored.summary(kept=is_kept))
 
-    residual = "" if kept else ("experts_overfit_prefix" if deduped else "expert_factors_not_independent")
+    residual = (
+        "" if kept else ("experts_overfit_prefix" if deduped else "expert_factors_not_independent")
+    )
     return ProgrammaticExpertInductionResult(
         experts=kept,
         expert_trust_weights=weights,
@@ -1243,9 +1267,7 @@ class LocalGGUFProposer:
         # closing fence so the model emits ONLY the code (no win-state CoT). DEFAULT ON (2026-06-25
         # operator directive): a strict improvement (emits valid code in ~10s where the unpatched
         # path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
-        _codeonly = (
-            os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0"
-        ) and codeonly_eligible
+        _codeonly = (os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0") and codeonly_eligible
         _stop_seq = ["```"] if _codeonly else None
         if _codeonly:
             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
@@ -1402,7 +1424,9 @@ class LocalGGUFProposer:
         are valid Python, but we verify the concatenation parses and fall back to a raw join."""
         import ast
 
-        combined = "import numpy as np\n\n" + engine_code.strip() + "\n\n" + goal_code.strip() + "\n"
+        combined = (
+            "import numpy as np\n\n" + engine_code.strip() + "\n\n" + goal_code.strip() + "\n"
+        )
         try:
             ast.parse(combined)
             return combined
@@ -1423,7 +1447,8 @@ class LocalGGUFProposer:
         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
         ok, code = self.generate(
-            base + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
+            base
+            + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
             ("engine", "is_level_complete"),
             tries=self.tries,
             codeonly_eligible=True,
@@ -1436,7 +1461,8 @@ class LocalGGUFProposer:
         # call so the engine ramble cannot starve the goal -- the focused goal call is valid in ~3.5s
         # where the combined call fails (a budget bump does NOT help; the model just rambles more).
         ok_e, eng = self.generate(
-            base + "\n\nReturn ONLY one ```python code block defining engine(grid, action, data).\n```python\n",
+            base
+            + "\n\nReturn ONLY one ```python code block defining engine(grid, action, data).\n```python\n",
             ("engine",),
             tries=self.tries,
             codeonly_eligible=True,

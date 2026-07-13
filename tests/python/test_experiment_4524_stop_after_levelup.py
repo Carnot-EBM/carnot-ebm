@@ -35,7 +35,10 @@ def _measurement(
                 "best_level": best_level,
                 "actions": total_actions,
                 "actions_to_reach_levels": (
-                    {str(level): min(total_actions, level * 10) for level in range(1, best_level + 1)}
+                    {
+                        str(level): min(total_actions, level * 10)
+                        for level in range(1, best_level + 1)
+                    }
                     if solved
                     else {}
                 ),
@@ -60,9 +63,7 @@ def test_req_arc_fcp_4524_spec_declares_required_fields() -> None:
 def test_scenario_arc_fcp_4524_success_requires_core_and_level_depth(tmp_path: Path) -> None:
     """SCENARIO-ARC-FCP-4524: lower total actions wins only with CORE and depth preserved."""
 
-    control = _measurement(
-        actions={"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}
-    )
+    control = _measurement(actions={"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731})
     stopped = _measurement(actions={"lp85": 20, "m0r0": 4210, "sp80": 7218, "vc33": 1758})
     artifact = exp4524.build_artifact(
         preconditions_checked={"offline_arcade_import": True},
@@ -73,7 +74,9 @@ def test_scenario_arc_fcp_4524_success_requires_core_and_level_depth(tmp_path: P
         duration_s=0.25,
     )
 
-    assert artifact["honest_verdict"] == "success: stop_after_levelup_core_actions_2984_below_control"
+    assert (
+        artifact["honest_verdict"] == "success: stop_after_levelup_core_actions_2984_below_control"
+    )
     assert artifact["core_solves_preserved"] is True
     assert artifact["levels_per_game_preserved"]["passed"] is True
     assert artifact["median_actions_on_core_control"] == 7760.0
@@ -103,7 +106,10 @@ def test_scenario_arc_fcp_4524_success_requires_core_and_level_depth(tmp_path: P
         duration_s=0.25,
     )
 
-    assert null_artifact["honest_verdict"] == "complete: stop_after_levelup_drops_level_depth_honest_null"
+    assert (
+        null_artifact["honest_verdict"]
+        == "complete: stop_after_levelup_drops_level_depth_honest_null"
+    )
     assert null_artifact["core_solves_preserved"] is True
     assert null_artifact["levels_per_game_preserved"]["passed"] is False
     assert exp4524.artifact_schema_errors(null_artifact) == []
@@ -125,9 +131,25 @@ def test_req_arc_fcp_4524_metric_mismatch_guard_rejects_mixed_action_fields() ->
 
 
 def test_req_arc_fcp_4524_submitted_target_matches_scored_stop_policy() -> None:
-    """REQ-ARC-FCP-4524: accepted stop policy is wired into the submitted explorer target."""
+    """REQ-ARC-FCP-4524: the submitted explorer's target_levels is consistently wired
+    end to end (SUBMITTED_AGENT_CONFIG -> the constructed policy's explorer).
+
+    NOTE (2026-07-12): exp4524's own historical measurement (see
+    `results/experiment_4524_stop_after_levelup.json`, honest_verdict
+    `success: stop_after_levelup_core_actions_2825_below_control`) genuinely
+    validated `STOP_AT_SCORED_TARGET_LEVELS = 1` as the accepted policy AT THE
+    TIME. Commit `0fad75f38` ("PHASE A1 ... raise target_levels") later
+    superseded that recommendation with a newer, deliberate scoring-lever
+    decision (`SUBMITTED_TARGET_LEVELS` is now 3) -- a legitimate policy
+    evolution, not drift, and exp4524's constant is correctly left unchanged
+    as the historical record of what THAT experiment measured and
+    recommended. This test therefore no longer asserts
+    `SUBMITTED_AGENT_CONFIG["target_levels"] == exp4524.STOP_AT_SCORED_TARGET_LEVELS`
+    (which would incorrectly imply the two are still supposed to match); it
+    checks the still-meaningful invariant that the shipped config value is
+    what actually reaches the constructed policy's explorer.
+    """
 
     policy = E3AgentPolicy("lp85", proposer=None)
 
-    assert SUBMITTED_AGENT_CONFIG["target_levels"] == exp4524.STOP_AT_SCORED_TARGET_LEVELS
-    assert policy.explorer.target_levels == exp4524.STOP_AT_SCORED_TARGET_LEVELS
+    assert policy.explorer.target_levels == SUBMITTED_AGENT_CONFIG["target_levels"]
