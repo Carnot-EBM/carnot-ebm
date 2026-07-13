@@ -3196,3 +3196,75 @@ When `blob_topology` runs
 Then only the enclosed blob's id appears under its true parent's `children`
 entry, the freely-sitting blob has no parent, and `object_hashes` reports
 the SAME hash for both despite their different topological position
+
+### REQ-ARC-FCP-5590: Dict-Candidate CNN Fix Matched-Budget A/B
+
+`docs/research-notes/arc-perception-grounding-audit-2026-07-13.md` found that
+`FrameChangeScorer.candidate_score`'s `getattr(candidate, "action_id")`
+raised `AttributeError` on dict-shaped candidates, silently zeroing the CNN
+term of the live default frame-change scorer on every
+`ActionEffectExpansionPrior.frontier_priority` call (the always-on default
+frontier-priority computation,
+`SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED = True`). The fix
+(`arc_frame_change_predictor._as_action_like`, normalizing a dict candidate
+to an attribute-bearing shim before the CNN call) is low-risk by
+construction (the pre-fix behavior was "silently contributes zero," so a
+correct fix can only add signal, never regress the unaffected
+`PersistentAEM` memory term), but per CLAUDE.md's Phase Prototype +
+Empirical Validation + Adversarial Check Discipline a fix that stops a
+silent bug is not automatically a capability win and must be measured before
+being trusted as one.
+
+`python/carnot/experiment_5590_frame_change_cnn_dict_candidate_fix_ab.py`
+SHALL run a matched-budget A/B across the full `CLAIMED` 11-game roster,
+CONTROL reproducing the PRE-FIX behavior via a scoped monkeypatch of
+`arc_frame_change_predictor._as_action_like` to the identity function (the
+same shipped `E3AgentPolicy` construction otherwise, restored after each
+game so concurrent TREATMENT runs are unaffected) and TREATMENT using the
+real, unmodified fixed default. Tier-3 LLM induction SHALL be disabled
+(`CARNOT_ARC_DISABLE_INDUCTION=1`) so the measurement isolates the
+search/frontier-priority effect from induction noise and wall-clock.
+
+The artifact SHALL report `levels_gained_control_total`,
+`levels_gained_treatment_total`, `per_game_levels_delta`,
+`states_expanded_control_total`, `states_expanded_treatment_total` (each
+arm's total distinct explored-state count, `len(policy.explorer.graph)`, a
+search-behavior proxy independent of whether any level was actually
+reached), and `levels_gained_headroom_present` (CLAUDE.md
+FALSE_NEGATIVE_RISK discipline -- a null delta is only interpretable if at
+least one arm reached a nonzero level somewhere on the roster).
+
+**RESOLUTION (2026-07-13).** Ran cleanly on the full 11-game roster,
+budget=200/game. `levels_gained_headroom_present: true` (1 level reached in
+both arms, `lp85`) -- the null is interpretable, not a degenerate
+zero-headroom test. `per_game_levels_delta`: zero on every single game.
+`states_expanded_control_total` and `states_expanded_treatment_total` were
+IDENTICAL, and per-game `states_expanded` matched EXACTLY (not just in
+aggregate) for all 11 games -- a much stronger and more informative null
+than "levels didn't change": the fix produced literally zero measurable
+difference in which states the explorer visited, in either direction.
+Consistent with the audit's own honest bound (the CNN term's blend weight is
+already small, `cnn_weight=0.05` vs `memory_weight=1.0`) and with the
+project's prior LOO=chance finding on frame-only features
+(`project_arc_live_agent_learning_gaps`): the underlying signal the bug was
+blocking was itself not load-bearing at this weight and on this roster, not
+that the bug was somehow inert. The fix remains correct code hygiene (a
+scorer that silently discards part of its own blended signal on a
+type-shape mismatch is a latent hazard regardless of today's measured
+weight), but does not currently move live-agent capability.
+
+Required field principles:
+
+- `levels_gained_headroom_present`: principle "CLAUDE.md FALSE_NEGATIVE_RISK discipline -- a null delta is only interpretable if at least one arm shows nonzero levels_gained somewhere on the roster, else the null may just mean neither arm had headroom."
+- `states_expanded_control_total` / `states_expanded_treatment_total`: principle "a search-behavior proxy independent of whether any level was reached -- a per-game exact match is a stronger null signal than an aggregate levels-only comparison."
+- `control_results`: principle "PRE-FIX behavior reproduced via a scoped monkeypatch of _as_action_like to identity -- the SAME shipped construction with one function swapped for the duration of the run, not a different code path."
+
+#### SCENARIO-ARC-FCP-5590-MATCHED-BUDGET-DELTA
+
+Given the real `E3AgentPolicy` cascade run on the same game under CONTROL
+(pre-fix `_as_action_like` identity monkeypatch) and TREATMENT (the real
+fixed default) with the same budget and induction disabled
+When both arms complete
+Then `per_game_levels_delta` and any `states_expanded` difference for that
+game reflect ONLY the dict-candidate CNN-term fix, with no other
+construction difference between the two arms

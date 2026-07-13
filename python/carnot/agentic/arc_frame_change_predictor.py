@@ -157,6 +157,39 @@ class BehaviorActionPrior:
         return float(score)
 
 
+def _as_action_like(candidate: Any) -> Any:
+    """Return a candidate exposing ``.action_id``/``.data`` for ``FrameChangeScorer``.
+
+    The live explorer's frontier hands candidates in TWO shapes: ArcAction-like
+    objects (``.action_id``/``.data`` attributes) and plain dict rows
+    (``{"action": .., "data": ..}`` or ``{"action_id": .., "data": ..}``).
+    ``getattr(candidate, "action_id")`` raises ``AttributeError`` on a dict,
+    which every caller in this module historically swallowed with a bare
+    ``except Exception: pass`` -- silently zeroing the CNN term on any dict-
+    shaped candidate. Confirmed live-path-active via
+    ``ActionEffectExpansionPrior.frontier_priority`` (the default, always-on
+    frontier-priority computation, gated only by
+    ``SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED``), which is fed
+    ``node["untested"]`` -- dict rows. See
+    ``docs/research-notes/arc-perception-grounding-audit-2026-07-13.md`` for
+    the audit that found this, and ``arc_online_action_effect_scorer.py``'s
+    own docstring for the original ~20/25-games measurement (that module
+    built the same normalization locally; this is the shared-root fix so
+    every consumer of ``FrameChangeScorer.candidate_score`` benefits, not
+    just the research-only online scorer).
+    """
+    if isinstance(candidate, Mapping):
+        from types import SimpleNamespace
+
+        action_id = candidate.get("action_id", candidate.get("action"))
+        try:
+            action_id = int(action_id)
+        except (TypeError, ValueError):
+            return candidate
+        return SimpleNamespace(action_id=action_id, data=candidate.get("data"))
+    return candidate
+
+
 @dataclass
 class FrameChangeScorer:
     """Score candidate actions from a trained ``SmallFrameChangeCNN``."""
@@ -187,6 +220,7 @@ class FrameChangeScorer:
         return result
 
     def candidate_score(self, frame: Any, candidate: Any) -> float:
+        candidate = _as_action_like(candidate)
         click_heatmap, directional_change = self._predict(frame)
         action_id = int(getattr(candidate, "action_id"))
         data = getattr(candidate, "data", None) or {}
