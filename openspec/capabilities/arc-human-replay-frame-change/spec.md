@@ -3268,3 +3268,86 @@ When both arms complete
 Then `per_game_levels_delta` and any `states_expanded` difference for that
 game reflect ONLY the dict-candidate CNN-term fix, with no other
 construction difference between the two arms
+
+### REQ-ARC-FCP-5592: Candidate-Scoring Stack Vs Bare-Control Matched-Budget A/B
+
+`docs/research-notes/arc-agi3-milestone1-winners-sota-ingestion-2026-07-11.md`
+(O2) found the 3rd-place ARC-AGI-3 team ("forge") had an architecturally
+equivalent candidate-selection "arbiter" slot to our own
+`candidate_router` + DAgger value head + goal-energy candidate guidance +
+navigation-cost-tiebreak stack, but disabled their arbiter (a second LLM
+call) in their winning config for cost, keeping only a hand-tuned static
+fallback. `SUBMITTED_AGENT_CONFIG["bare_control_config"]` already documents
+the exact on/off toggle matching forge's own ablation, but no experiment had
+ever run it against the real full-stack default and reported the delta --
+this is the missing measurement, not a new scorer build.
+
+`python/carnot/experiment_5592_candidate_scoring_stack_bare_control_ab.py`
+SHALL run a matched-budget A/B across the full `CLAIMED` 11-game roster,
+FULL STACK being the real, unmodified live `E3AgentPolicy` default, and
+BARE CONTROL being `E3AgentPolicy` constructed with
+`SUBMITTED_AGENT_CONFIG["bare_control_config"]`'s knobs mapped to their real
+constructor kwargs (`target_levels=1`, `value_weight=0.0`,
+`candidate_router=None`, `navigation_cost_tiebreak=False`,
+`action_effect_expansion_prior=False`, `goal_bias=None`,
+`goal_candidate_guidance=False`). Tier-3 LLM induction SHALL be disabled
+(`CARNOT_ARC_DISABLE_INDUCTION=1`) so the measurement isolates the
+candidate-SELECTION axis forge's ablation targeted.
+
+The artifact SHALL report `levels_gained_full_stack_total`,
+`levels_gained_bare_control_total`, `per_game_levels_delta`,
+`efficiency_full_stack_total`/`efficiency_bare_control_total` (summed
+per-game `arc_agi.scorecard.EnvironmentScoreCalculator` efficiency, the
+action-efficiency half of forge's own reported metric), and
+`levels_gained_headroom_present` (CLAUDE.md FALSE_NEGATIVE_RISK discipline).
+
+**RESOLUTION (2026-07-13).** Ran cleanly on the full 11-game roster,
+budget=200/game. `levels_gained_headroom_present: true` (`lp85` reached L1
+in both arms) -- interpretable, not a degenerate zero-headroom test.
+`per_game_levels_delta`: zero on every single game;
+`efficiency_full_stack_total == efficiency_bare_control_total` (2.7778,
+matching to 4 decimal places). Verified this is a real result, not a
+construction bug: the two arms' `lp85` rows show genuinely DIFFERENT search
+behavior (`actions_to_first_levelup`: 7 for full stack vs 5 for bare
+control; `actions` total 198 vs 5, since `bare_control_config`'s
+`target_levels=1` correctly stops bare control immediately after L1 while
+the full stack continues toward its default target of 3) -- the ablation
+demonstrably took effect. The efficiency SCORE nonetheless matched exactly
+because `arc_agi.scorecard`'s per-level score is `min((human/agent)^2*100,
+115)`: both 5 and 7 actions are already well under `lp85` L1's human
+baseline, so both arms saturate at the same capped per-level score
+regardless of the 2-action difference between them -- a real property of
+the (capped) metric, not evidence the ablation was a no-op.
+
+**Honest conclusion: on this roster/budget, the richer candidate-scoring
+stack (candidate_router + DAgger value head + goal-energy candidate
+guidance + navigation-cost tiebreak) produces NO measured level-up or
+action-efficiency advantage over the bare control forge's own ablation
+methodology would compare it against.** This does not establish the stack
+is worthless (it may earn its keep at a different budget, on a different
+roster, or via a mechanism `EnvironmentScoreCalculator`'s capped-per-level
+formula does not reward, e.g. reducing variance or avoiding worse-case
+failures elsewhere), but it means the claim "our scoring stack is the
+arbiter forge wanted but couldn't afford" is NOT YET empirically supported
+on this measurement and should not be cited as a moat without a
+follow-up at a different budget/roster or metric that is genuinely
+sensitive to the ablation.
+
+Required field principles:
+
+- `levels_gained_headroom_present`: principle "CLAUDE.md FALSE_NEGATIVE_RISK discipline -- a null delta is only interpretable if at least one arm shows nonzero levels_gained somewhere on the roster."
+- `bare_control_kwargs`: principle "the real E3AgentPolicy constructor kwargs mapped from SUBMITTED_AGENT_CONFIG['bare_control_config'] -- documents exactly what was ablated, matching forge's own on/off toggle."
+- `efficiency_full_stack_total` / `efficiency_bare_control_total`: principle "sum of the leaderboard harness's own per-game efficiency score -- the action-efficiency half of forge's own reported metric, not just level count; a capped-per-level formula can saturate identically for two genuinely different search behaviors on a shallow level, which is a real property of the metric, not evidence of a construction bug."
+
+#### SCENARIO-ARC-FCP-5592-STACK-VS-BARE-DELTA
+
+Given the real `E3AgentPolicy` cascade run on the same game under FULL
+STACK (the real unmodified default) and BARE CONTROL
+(`SUBMITTED_AGENT_CONFIG["bare_control_config"]`'s knobs applied) with the
+same budget and induction disabled
+When both arms complete
+Then `per_game_levels_delta` and any `efficiency` difference for that game
+reflect ONLY the candidate-selection-stack ablation, with no other
+construction difference between the two arms, and a per-game row inspection
+(actions taken, actions to first level-up) can distinguish a genuine null
+from a construction bug that silently made both arms identical
