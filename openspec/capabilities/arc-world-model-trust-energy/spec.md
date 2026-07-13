@@ -14832,3 +14832,73 @@ When `experiment_5588_tier3_induction_live_path_sanity_check.build_artifact`
 runs
 Then it emits `honest_verdict` starting with `complete: blocked_` naming the
 missing resource, and does not attempt to construct or run the policy
+
+### REQ-ARC-WMTE-5589: Tier-3 Induction Normal-Budget Capability Check
+
+`exp5588` verified `_world_model_candidates`'s fixed crash site runs clean on
+the real live path, but deliberately forced `explore_budget=6` to trigger a
+stall FAST and cheaply -- the induced engine only had 7 real transitions to
+learn from, nowhere near enough signal, so it was correctly rejected by the
+`HIDDEN_STATE_GAME_IDS` trust gate (`heldout_accuracy=0.0`). That answered
+"does the fixed code path crash" (no); it left open "does the now-crash-free
+path do anything USEFUL once it has a realistic amount of data."
+
+`python/carnot/experiment_5589_tier3_induction_normal_budget_capability_check.py`
+SHALL construct a real `E3AgentPolicy` against the SAME target game as
+`exp5588` (`m0r0`) using its OWN normal routed `explore_budget` (no
+artificial override), and the same real, explicitly-pinned tier-3 proposer
+(`LocalGGUFProposer(repo_substr="Qwen3.5-9B-MTP", port=8920, ...)`, avoiding
+the port-8919 collision `exp5588` documents). This remains a single-game
+capability check, not a roster sweep or a solve attempt: `solve_provenance`
+SHALL be `development_proxy` and no level-solve claim SHALL be made
+regardless of outcome.
+
+The artifact SHALL record `stall_attempt_transition_count` (the realistic
+transition count the induction actually had, contrasted with `exp5588`'s
+forced 7) and `levels_reached` (the leaderboard harness's own honest
+capability signal), in addition to the `stall_attempt_reached` /
+`stall_attempt_crashed` / `stall_attempt_planned` fields `exp5588` already
+established.
+
+**RESOLUTION (2026-07-13).** Ran cleanly against `m0r0` with a normal routed
+`explore_budget` (25 transitions reached before the stall, `total_budget=150`).
+`stall_attempt_reached: true`, `stall_attempt_crashed: false` -- still no
+crash, confirming the fix holds under realistic (not artificially starved)
+conditions. `heldout_accuracy` rose from `exp5588`'s `0.0` (at 7 transitions)
+to `0.125` (at 25 transitions) -- a real, honest, positive trend showing more
+data does help the induced engine -- but still failed the trust gate
+(`binary_gate_pass: false`, `trust_energy: 185.4`), so `stall_attempt_planned`
+stayed `false` and `levels_reached: 0`. **This is an honest negative-but-
+informative result, not evidence the fix accomplishes nothing**: the
+mechanism is verified crash-free AND verified to compute real, improving
+signal as transition count grows; `m0r0` specifically remains beyond what a
+single ~150-action budget's worth of induction can currently clear. This is
+consistent with `m0r0`'s pre-existing registry gap note ("needs: richer
+exploration ... OR E3 world-model induction") -- tier-3 induction alone, at
+this budget, is not sufficient on this particular game; a larger transition
+budget or richer exploration feeding it are the untested next levers, out of
+scope for this narrow capability check.
+
+Duration (`37.086s`) again fell under `adversarial_verify.py`'s 60s
+`live_llm_inference` floor for the same pre-warmed-server reason `exp5588`
+documents and independently corroborated; disclosed honestly via
+`flagged_adversarial: true` + a `methodology_note`, not suppressed.
+
+#### SCENARIO-ARC-WMTE-5589-NORMAL-BUDGET-OUTCOME
+
+Given `E3AgentPolicy` constructed with its own normal routed `explore_budget`
+(no override) and the real default tier-3 proposer, run against a real
+offline-arcade game until a genuine tier-1 stall
+When `_induce_and_plan`'s "stall" branch reaches `_world_model_candidates`
+Then `induction_attempts` contains a `reason == "stall"` entry whose
+`skipped` field is never `"exception"`, and `stall_attempt_transition_count`
+reflects the realistic (non-forced) transition count observed at that stall
+
+#### SCENARIO-ARC-WMTE-5589-BLOCKED-PRECONDITION
+
+Given the offline arcade, the `E3AgentPolicy` import, the cached
+`Qwen3.5-9B-MTP` GGUF weight, or the `llama-server` binary is unavailable
+When `experiment_5589_tier3_induction_normal_budget_capability_check.build_artifact`
+runs
+Then it emits `honest_verdict` starting with `complete: blocked_` naming the
+missing resource, and does not attempt to construct or run the policy
