@@ -14742,3 +14742,93 @@ both `True` after it (deferred to live-submission telemetry per operator
 directive, on the strength of the safety case rather than a levels_gained
 win)-- so a silent divergence between what is measured and what ships is
 still caught regardless of which value is current.
+
+### REQ-ARC-WMTE-5588: Tier-3 Induction Live-Path Crash-Free Sanity Check
+
+While fixing the 10 pre-existing test failures addressed in commit
+`f2f2763bd` (2026-07-13), this session found `E3AgentPolicy._world_model_candidates`
+referenced `os.environ` with no local `import os` -- a `NameError` on every
+single call. That method sits directly in the core tier-3 induction path
+(`_induce_and_plan` -> `e3.load_engine` -> `_world_model_candidates`),
+reached AFTER the real LLM proposer's `induce()` call already succeeded and
+immediately BEFORE the induced engine is wrapped into a plannable candidate.
+`_induce_and_plan`'s own blanket `except Exception` swallowed the crash
+silently (`attempt["skipped"] = "exception"`), so every tier-3 escalation on
+the LIVE SCORED path had been throwing away a real, already-paid-for LLM
+induction call and falling back to blind tier-1 exploration since commit
+`4f3a4f1ef` (2026-06-28) -- roughly two weeks, across ten subsequent commits
+to the same file, none of which caught it.
+
+The fix (a local `import os` inside `_world_model_candidates`) was verified
+against a mocked repro at commit time, but not against a real live-path run:
+`exp5587` (the prior HUD-mask cascade check) constructed `E3AgentPolicy`
+with a large default `explore_budget` on well-charted games, so it is not
+established that its clean run ever actually reached
+`_world_model_candidates` via a genuine stall.
+
+`python/carnot/experiment_5588_tier3_induction_live_path_sanity_check.py`
+SHALL construct a real `E3AgentPolicy` with a small `explore_budget` (forcing
+`_induce_and_plan`'s "stall" branch to trigger quickly) and the REAL default
+tier-3 proposer (`LocalGGUFProposer(repo_substr="Qwen3.5-9B-MTP", ...)`, not
+a mock), and SHALL run it against one real offline-arcade game via
+`scripts/arc_leaderboard_eval.py`'s own `run_game` harness. This is a single
+narrow sanity check, not a roster sweep or a solve attempt: the falsifiable
+question is "does `_induce_and_plan`'s stall branch complete without an
+exception now," not "how well does induction perform" -- `solve_provenance`
+SHALL be `development_proxy` and no level-solve claim SHALL be made.
+
+The artifact SHALL record `stall_attempt_reached` (proves the forced-stall
+design actually exercised the fixed crash site), `stall_attempt_crashed`
+(the exact signature this check exists to rule out), and
+`stall_attempt_planned` (a bonus signal, not required for a clean verdict).
+`inference_substrate` SHALL be `live_llm_inference` since the real default
+proposer is invoked.
+
+**RESOLUTION (2026-07-13).** Ran cleanly against `m0r0` (`explore_budget=6`,
+`total_budget=40`), pinning the proposer explicitly to the already-warm
+port-8920 `Qwen3.5-9B-MTP` server rather than `E3AgentPolicy._proposer()`'s
+lazy-default port 8919, which on this dev box was found to already be
+occupied by the conductor's own long-running `gemma-4-12B-it` server --
+`LocalGGUFProposer` reuses any healthy server on its port with no
+model-identity check, so the untargeted default would have silently run the
+wrong model and contended with the conductor's work. `stall_attempt_reached:
+true`, `stall_attempt_crashed: false` -- the fixed crash site was genuinely
+exercised via a real LLM `induce()` call and did not crash. The induced
+engine was correctly rejected downstream by the `HIDDEN_STATE_GAME_IDS`
+trust gate (`heldout_accuracy: 0.0`, `binary_gate_pass: false`, only 7
+transitions available from the tiny forced budget) -- a legitimate,
+principled skip (`hidden_state_trust_below_threshold`), not a masked crash.
+
+The run's `duration_s` (11.4s-30.5s across two runs) fell under
+`adversarial_verify.py`'s 60s `live_llm_inference` floor (calibrated for a
+cold model load + full generation); this was independently corroborated as
+genuine rather than a shortcut by timing a comparable codeonly-shaped
+completion directly against the same warm server outside this script
+(25.43s elapsed, 406 tokens predicted, 16.28 tok/s, MTP
+`draft_n_accepted=273/402`) -- consistent with a pre-warmed server skipping
+the ~10-30s model-load time the floor assumes, plus the documented
+`CARNOT_ARC_CODEONLY_INDUCE` fast path. Per the Adversarial Artifact
+Verification discipline the flag is disclosed honestly
+(`flagged_adversarial: true` + a `methodology_note` citing the
+corroboration) rather than suppressed; a recurring task in this shape may
+warrant a dedicated substrate value (the `exp5178`
+`live_llm_embedding_extraction` precedent), but that taxonomy change is out
+of scope for this one-off sanity check.
+
+#### SCENARIO-ARC-WMTE-5588-NO-CRASH
+
+Given `E3AgentPolicy` constructed with a small `explore_budget` and the real
+default tier-3 proposer, run against a real offline-arcade game until a
+genuine tier-1 stall
+When `_induce_and_plan`'s "stall" branch reaches `_world_model_candidates`
+Then `induction_attempts` contains a `reason == "stall"` entry whose
+`skipped` field is never `"exception"`
+
+#### SCENARIO-ARC-WMTE-5588-BLOCKED-PRECONDITION
+
+Given the offline arcade, the `E3AgentPolicy` import, the cached
+`Qwen3.5-9B-MTP` GGUF weight, or the `llama-server` binary is unavailable
+When `experiment_5588_tier3_induction_live_path_sanity_check.build_artifact`
+runs
+Then it emits `honest_verdict` starting with `complete: blocked_` naming the
+missing resource, and does not attempt to construct or run the policy
