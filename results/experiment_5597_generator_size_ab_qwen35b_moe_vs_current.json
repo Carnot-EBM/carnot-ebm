@@ -1,0 +1,107 @@
+{
+  "experiment": "experiment_5597_generator_size_ab_qwen35b_moe_vs_current",
+  "schema": "carnot.exp5597.generator_size_ab_qwen35b_moe_vs_current.v1",
+  "result_path": "results/experiment_5597_generator_size_ab_qwen35b_moe_vs_current.json",
+  "honest_verdict": "complete: generator_size_ab_equal_success_current_higher_accuracy",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "current frozen live-submission generator (arm=current)"
+    },
+    {
+      "name": "Qwen3.6-35B-A3B-MTP",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-MTP-GGUF",
+      "role": "candidate larger, MoE, MTP-capable generator -- exp5596's follow-on candidate (arm=candidate)"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a larger generator helping, not helping, or being untestable on this hardware are all distinct, real, citable outcomes"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- both arms invoke a real local GGUF proposer, not mocked"
+    },
+    "candidate_declares_mtp_metadata": {
+      "principle": "checked via direct GGUF metadata inspection (nextn_predict_layers), not assumed -- architectural MTP support is a DIFFERENT fact from whether self-draft actually fits in available VRAM (see candidate_mtp_self_draft_fits_vram)"
+    },
+    "candidate_mtp_self_draft_fits_vram": {
+      "principle": "self-draft MTP loads the SAME GGUF file twice (main + draft); exp5596 found this can OOM even when the metadata declares support, so this is checked separately before attempting a real launch, not assumed from metadata alone"
+    },
+    "candidate_mtp_used": {
+      "principle": "the actual runtime decision (metadata support AND VRAM feasibility); this is what determines whether any wall-clock delta between arms is confounded by an MTP-vs-no-MTP asymmetry, not the metadata declaration alone"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- offline dev measurement per task 13's own guardrail; does not flip the frozen live-submission generator"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "candidate_declares_mtp_metadata": true,
+  "candidate_mtp_self_draft_fits_vram": false,
+  "candidate_mtp_self_draft_detail": "self-draft estimate 43227MB (2x 21613MB file) vs 24120MB free on GPU 1 -- does NOT fit with a 2000MB margin",
+  "candidate_mtp_used": false,
+  "roster": [
+    "m0r0",
+    "sk48"
+  ],
+  "per_game_results": [
+    {
+      "game": "m0r0",
+      "arm": "current",
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 1.478,
+      "heldout_accuracy": 0.5,
+      "cell_recall": 0.0
+    },
+    {
+      "game": "m0r0",
+      "arm": "candidate",
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 67.328,
+      "heldout_accuracy": 0.3,
+      "cell_recall": 0.0
+    },
+    {
+      "game": "sk48",
+      "arm": "current",
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.725,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "game": "sk48",
+      "arm": "candidate",
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 14.421,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    }
+  ],
+  "current_induction_success_count": 2,
+  "candidate_induction_success_count": 2,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5597,
+  "duration_s": 247.205,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "current_gguf_cached": true,
+    "candidate_gguf_cached": true,
+    "llama_server_binary_present": true,
+    "gpu1_free_vram_sufficient": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "9705727919adb19ea4d932aa52c381c3ac28be1482a28697cb4adbfc69216104"
+}

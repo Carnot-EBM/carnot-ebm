@@ -561,6 +561,25 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > pushed. Spec: `REQ-ARC-WMTE-5596` in
     > `openspec/capabilities/arc-human-replay-frame-change/spec.md`. Tests:
     > `tests/python/test_experiment_5596_generator_size_ab_gemma31b_vs_current.py` (5 tests).
+    >
+    > **MoE FOLLOW-ON 2026-07-13 (exp5597, `REQ-ARC-WMTE-5597`).** Ran the second official
+    > candidate task 13(b) named, `unsloth/Qwen3.6-35B-A3B-MTP-GGUF` (MoE, 21.6GB Q4_K_M, genuine
+    > `qwen35moe.nextn_predict_layers=1` support, self-draft again correctly found infeasible on
+    > a single 24GB 3090 -- reused exp5596's feasibility check unmodified; a plain non-MTP load
+    > was manually sanity-checked first and fits with only ~2.2GB headroom). Real result is the
+    > OPPOSITE direction from exp5596's dense-27B finding: `honest_verdict:
+    > generator_size_ab_equal_success_current_higher_accuracy` -- the MoE candidate scored LOWER
+    > (mean heldout_accuracy 0.65) than the current 9B generator (mean 0.75) on the same m0r0+sk48
+    > roster, and was also substantially slower (67.3s/14.4s vs 1.5s/0.7s induce time). Notably,
+    > the CURRENT generator's own baseline scores differ between the two runs (exp5596:
+    > m0r0=0.0/sk48=0.2; exp5597: m0r0=0.5/sk48=1.0) despite identical model/game/budget --
+    > real LLM sampling variance, not a bug. **Honest combined reading across both A/Bs: neither
+    > candidate has demonstrated a RELIABLE induction-quality edge over the current generator at
+    > n=2 games per arm** -- exp5596's positive signal and exp5597's negative signal could both
+    > be sampling noise. A larger roster and/or multiple seeds per (game, arm) would be needed
+    > before either direction is trustworthy enough to inform an operator decision. Frozen
+    > live-submission generator remains UNCHANGED. Tests:
+    > `tests/python/test_experiment_5597_generator_size_ab_qwen35b_moe_vs_current.py` (5 tests).
 
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
