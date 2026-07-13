@@ -3821,3 +3821,70 @@ When `build_artifact` compares `heldout_accuracy` across arms
 Then the comparison reflects a genuine same-hardware-tier measurement (not confounded by one arm
 silently falling back to a slower device), and the verdict honestly reports which arm has higher
 accuracy without flipping the frozen live-submission generator
+
+### REQ-ARC-WMTE-5597: Generator-Size A/B -- Qwen3.6-35B-A3B-MTP (MoE) vs the Frozen Live Generator
+
+Follow-on to REQ-ARC-WMTE-5596. exp5596's dense `Qwen3.6-27B-MTP` candidate showed materially
+higher `heldout_accuracy` than the current generator on both tested games, and its own spec entry
+flagged the 35B MoE variant (`unsloth/Qwen3.6-35B-A3B-MTP-GGUF`) as "a natural follow-on if this
+result is promising." This experiment is that follow-on, reusing exp5596's exact two-step MTP
+feasibility check (`_candidate_declares_mtp_metadata` + `_candidate_mtp_self_draft_fits_vram`,
+duplicated per-experiment per this session's established one-file-per-experiment convention) and
+its GPU-pinning/stop-and-wait fix unmodified.
+
+**MoE VRAM confirmation.** The candidate's Q4_K_M quant is 21.6GB (larger than the dense 27B
+candidate's 16.3GB, despite the 35B MoE architecture activating only ~3B params per token --
+self-draft MTP stores the FULL weight file regardless of expert-routing sparsity, so MoE does not
+relax the self-draft VRAM problem). GGUF metadata confirms genuine MTP support
+(`qwen35moe.nextn_predict_layers = 1`), but the self-draft feasibility check correctly found it
+infeasible on a single 24GB RTX 3090 (self-draft estimate 43227MB vs 24120MB free), so the
+candidate ran without MTP -- as expected, the same outcome as exp5596. A direct manual single-load
+sanity check (no MTP) confirmed the model DOES fit non-MTP, but only barely: 21.9GB used of 24GB,
+leaving 2.2GB free -- confirmed BEFORE the real run to avoid another crash-loop.
+
+**RESOLUTION (2026-07-13).** The real 4-attempt measurement (m0r0 + sk48, both arms, GPU 1, both
+arms confirmed via the same stop-and-wait GPU-pinning fix) produced a DIFFERENT result from
+exp5596's dense-27B finding: both arms 2/2 induction success; `heldout_accuracy` -- m0r0
+current=0.5 vs candidate=0.3 (current wins); sk48 current=1.0 vs candidate=1.0 (tie). Mean:
+current=0.75, candidate=0.65. `honest_verdict:
+"complete: generator_size_ab_equal_success_current_higher_accuracy"` -- the MoE candidate
+performed WORSE than the current frozen 9B generator on this roster, in direct contrast to the
+dense 27B candidate's positive result on the SAME two games. `induce_duration_s` for the
+candidate was also notably higher (67.3s and 14.4s vs the current generator's 1.5s and 0.7s) --
+the larger MoE model is substantially slower even without the MTP self-draft doubling, since its
+weights are ~4x the current generator's file size.
+
+**Note on cross-run comparability.** exp5596's OWN `current` arm scores on this same roster
+(m0r0=0.0, sk48=0.2) differ from THIS run's `current` arm scores (m0r0=0.5, sk48=1.0) despite
+identical model, game, and budget configuration -- real sampling variance in LLM-driven
+exploration + induction (temperature > 0, no fixed decoding seed control at this layer), not a
+bug. This means neither run's `current`-arm baseline should be treated as a fixed reference point;
+the WITHIN-RUN candidate-vs-current comparison is the only sound reading, and even that is a
+single-draw comparison on a 2-game roster -- well below the CLAUDE.md sample-size floor for any
+percentage-point claim. Combined with exp5596's contradictory-direction result, the honest
+reading across both experiments is: **neither the dense-27B nor the MoE-35B candidate has
+demonstrated a reliable induction-quality edge over the current generator on this hardware and
+roster** -- exp5596's positive signal and exp5597's negative signal could both be sampling noise
+at n=2 games per arm. A larger roster (5+ games) and/or multiple seeds per (game, arm) pair would
+be needed before either direction is trustworthy enough to inform an operator decision.
+
+Required field principles: identical to REQ-ARC-WMTE-5596 (same field set, same rationale).
+
+#### SCENARIO-ARC-WMTE-5597-MOE-MTP-FEASIBILITY-CHECKED
+
+Given a MoE candidate GGUF whose metadata declares an MTP self-draft head and whose file is
+LARGER than a previously-tested dense candidate's file
+When `_candidate_mtp_self_draft_fits_vram` estimates the self-draft footprint
+Then MoE sparsity does NOT relax the self-draft VRAM requirement (the full file is still loaded
+twice), and a candidate whose self-draft footprint exceeds available VRAM is correctly identified
+as MTP-infeasible regardless of active-parameter count
+
+#### SCENARIO-ARC-WMTE-5597-INDUCTION-QUALITY-DELTA
+
+Given real induction attempts from both the current frozen generator and the MoE candidate
+generator, run sequentially on the SAME GPU with each arm's server fully stopped before the next
+starts
+When `build_artifact` compares `heldout_accuracy` across arms
+Then the comparison honestly reports whichever arm has higher accuracy -- including a result
+where the LARGER candidate performs WORSE than the current generator, without any pressure to
+report a positive-sounding outcome
