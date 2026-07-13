@@ -14667,6 +14667,50 @@ reached, actions used, RHAE) from a run with this flag on, compared against
 telemetry from before this flip, is the intended resolution path for the
 still-open `levels_gained` question.
 
+**FOLLOW-UP (2026-07-12, same session): the deferred question got answered
+sooner than expected, via a broader/cheaper offline check, not live
+telemetry.** `exp5586`
+(`results/experiment_5586_hud_mask_full_roster_leaderboard_check.json`) ran
+`scripts/arc_leaderboard_eval.py`'s own standing pre-submission measurement
+tool (the project's established leaderboard-metric harness, distinct from
+`exp5584`/`exp5585`'s bespoke narrow A/Bs) at FULL scale: all 11 `CLAIMED`
+games (a materially larger, entirely disjoint roster from `exp5584`'s 6 or
+`exp5585`'s 3), budget=2500, using the SAME bare `CarnotAgentPolicy`
+construction `arc_leaderboard_eval.py --policy explorer` already uses. This
+config turned out to run at ~0.02s/action -- nothing like `exp5584`'s 1.75s
+or `exp5585`'s 11.5s -- so the larger roster/budget combination that finally
+had headroom was affordable in under 2 minutes wall-clock (`duration_s:
+97.238` for BOTH arms), no background run needed.
+
+**Result: `auto_hud_mask=False` reaches 1 total level across the roster
+(only `lp85`); `auto_hud_mask=True` reaches 5 total levels (`lp85, cd82,
+sp80, su15, tu93`).** `adversarial_verify.py` returned ZERO flags (clean).
+The adversarial check built into `exp5586` itself
+(`mask_fired_matches_gain_pattern`) confirms every single per-game delta is
+on a HUD-positive game (`cd82: +1, sp80: +1, su15: +1, tu93: +1`; the two
+other HUD-positive games `m0r0`/`wa30` stayed flat in both arms; every
+HUD-negative game -- `cn04, ls20, r11l, sk48` -- stayed flat in both arms) --
+ruling out an unrelated confound as the explanation. This is a real,
+positive, cleanly-attributed `levels_gained` effect: `auto_hud_mask` took
+this bare-explorer configuration from 1/11 to 5/11 games with at least one
+level, entirely concentrated on and only on HUD-positive games.
+
+**What this does and does not settle.** This closes the `levels_gained`
+question for the OFFLINE-measurable portion at this config/roster/budget --
+a real, adversarially-checked, non-confounded positive result, stronger
+evidence than either prior A/B produced. It does NOT replace live-submission
+telemetry as the ultimate authority on the TRUE hidden-eval numbers (this
+harness is still `offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+frame-only, no banked plan -- a capability proxy, per the project's
+foundational ARC framing, not the scored deliverable itself), and the
+`E3AgentPolicy` cascade's stronger config (value head, discriminative
+router, frame-change scorer -- what `exp5585` tested at small scale) has
+NOT yet been re-checked at this same full-roster scale. Live-submission
+telemetry remains the standing plan for confirming this transfers to the
+actual hidden eval; this offline result is strong enough that the
+default-on flip decision (already made) stands confirmed rather than merely
+provisionally safe.
+
 #### SCENARIO-ARC-WMTE-5583-STATUS-BAR-CHANGE-DEDUPS
 
 Given a frame whose top row is a full-width, thin, edge-touching status bar
