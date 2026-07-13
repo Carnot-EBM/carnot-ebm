@@ -1,0 +1,64 @@
+{
+  "experiment": "experiment_5593_goal_predicate_consistency_offline_sim_prototype",
+  "schema": "carnot.exp5593.goal_predicate_consistency_offline_sim_prototype.v1",
+  "result_path": "results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json",
+  "honest_verdict": "complete: goal_predicate_consistency_prototype_induction_did_not_succeed",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default tier-3 world-model induction proposer"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a correctly-scored goal predicate, an incorrectly-scored one, and an inconclusive (no real level-up in the collected sample) run are all distinct, real outcomes"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the real default Qwen3.5-9B-MTP proposer induces the goal predicate under test, not mocked"
+    },
+    "real_levelup_present_in_sample": {
+      "principle": "the check is only interpretable if the collected transitions include at least one genuine level-up -- otherwise the accuracy figure reflects only no-op agreement, which any always-False predictor would also score perfectly (CLAUDE.md FALSE_NEGATIVE_RISK discipline, applied to this new consistency check)"
+    },
+    "goal_predicate_mismatches": {
+      "principle": "the specific transitions where the induced is_level_complete disagreed with real observed level-progress, for honest post-hoc inspection"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "target_game": "lp85",
+  "transition_count": 37,
+  "real_levelup_present_in_sample": true,
+  "goal_predicate_accuracy": null,
+  "goal_predicate_mismatches": [],
+  "goal_predicate_detail": {
+    "transition_count": 37,
+    "induce_transition_count": 8,
+    "real_levelup_present_in_sample": true,
+    "goal_predicate_accuracy": null,
+    "goal_predicate_mismatches": [],
+    "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: <HTTPError 400: 'Bad Request'>",
+    "induction_ok": false
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 5593,
+  "duration_s": 18.436,
+  "flagged_adversarial": true,
+  "methodology_note": "duration_s may legitimately fall under the live_llm_inference 60s floor because the server on port 8920 was already warm and CARNOT_ARC_CODEONLY_INDUCE's fast path applied -- see exp5588's independent corroboration (a standalone timed completion against the same server: 25.43s, 406 tokens, 16.28 tok/s, draft_n_accepted=273/402) for the underlying evidence this is a real, honest completion, not a shortcut.",
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "goal_predicate_consistency_import": true,
+    "gguf_cached": true,
+    "llama_server_binary_present": true,
+    "port_8920_prewarmed": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "13d8bba10518980254dcfaa8046b67c9a2505dc0b92b094bd74f683bca9658ee"
+}

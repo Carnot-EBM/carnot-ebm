@@ -366,6 +366,34 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     slot our verifier-routed search already fills. Task 12 below is the follow-through on this
     (actually measuring whether OUR version of that slot earns its keep) rather than just a
     citation.
+
+    > **DONE 2026-07-13 (outer-loop, partial — the goal-hypothesis half only):**
+    > investigating our own architecture found no direct analog to Reki's exact natural-language
+    > `board_change_assessment` self-report, but found the DYNAMICS half of this gap-class was
+    > already closed (`WorldModelVerifier.score(engine)` checks the induced `engine()`'s predicted
+    > next-grid against the real observed next-grid) while the GOAL half (Duck's free-text
+    > hypothesis analog) was genuinely open: nothing validated `is_level_complete` against real
+    > observed level-progress ground truth. Built
+    > `score_goal_predicate_consistency`/`GoalPredicateConsistency` in
+    > `arc_executable_world_model.py` — the goal-hypothesis sibling of `WorldModelVerifier` — a
+    > cheap, deterministic sign check (`is_level_complete(next_grid)` vs real `level_after >
+    > level_before`), no second LLM call, matching forge's own competitive-pressure finding.
+    > Validated by 5 direct unit tests on realistic synthetic data (both miscalibration directions
+    > caught, crash-safe, empty-list-safe;
+    > `tests/python/test_arc_goal_predicate_consistency.py`). The offline-sim prototype
+    > (`exp5593`) attempted a REAL end-to-end test against `lp85` (the only game with any measured
+    > headroom in this session's A/Bs) and found a genuine, precisely-diagnosed pre-existing
+    > limitation: `lp85`'s 64x64 grid makes `induce_prompt`'s fixed full-grid-render overhead alone
+    > consume most of the induction pipeline's 13,824-token available budget — confirmed by direct
+    > debugging (an 8-transition window measured 18,355 tokens,
+    > `exceed_context_size_error`; even a single-transition window measured ~13,400+ tokens) — so
+    > induction never produced a real predicate to score. Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5593. **Remaining
+    > (not done this session):** the claimed-diff-vs-measured-diff half (Reki's pattern) has no
+    > existing self-report to hook into in our architecture and was not built; a
+    > large-grid-scalability fix for `induce_prompt` (out of scope for this task) would be the
+    > natural prerequisite before a real positive-control demonstration of
+    > `score_goal_predicate_consistency` on `lp85` specifically.
 12. **(New 2026-07-12, operator-decided direction: "which of the top 3 has the best EBM
     opportunity" -> forge, ported into our own agent) Controlled A/B: our candidate-scoring stack
     vs bare control, forge's exact ablation methodology.** Full writeup:

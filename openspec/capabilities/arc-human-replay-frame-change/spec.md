@@ -3351,3 +3351,105 @@ reflect ONLY the candidate-selection-stack ablation, with no other
 construction difference between the two arms, and a per-game row inspection
 (actions taken, actions to first level-up) can distinguish a genuine null
 from a construction bug that silently made both arms identical
+
+### REQ-ARC-WMTE-5593: Goal-Predicate Consistency Against Real Observed Level-Progress
+
+`ops/known-issues.md`'s 2026-07-11 task 11 entry (hallucination-consistency
+checks) found two independent top-3 ARC-AGI-3 teams each carry an
+unexploited self-report-vs-ground-truth gap: Reki's `board_change_assessment`
+(what it thinks changed) is never cross-checked against `changed_pixels`
+(the real pixel diff); Duck's free-text Goal/Action hypothesis is
+regenerated each turn but never checked against observed level-up/no-change
+transitions. Investigating this project's own architecture found no direct
+analog to Reki's exact natural-language self-report, but found the DYNAMICS
+half of the same gap-class was already closed
+(`WorldModelVerifier.score(engine)` checks the induced `engine()`'s
+predicted next-grid against the real observed next-grid) while the GOAL
+half was genuinely open: nothing validated `is_level_complete` (the induced
+code's formalized goal hypothesis, installed by
+`execute_bounded_llm_reinduction` as a search termination condition) against
+real observed level-progress ground truth.
+
+`python/carnot/agentic/arc_executable_world_model.py` SHALL expose
+`score_goal_predicate_consistency(is_level_complete, transitions) ->
+GoalPredicateConsistency`, the goal-hypothesis sibling of
+`WorldModelVerifier`/`VerifyResult`: for each transition, the real ground
+truth is `level_after > level_before` (a genuine level-up occurred); the
+claim under test is `is_level_complete(next_grid)`. Agreement is a cheap,
+deterministic sign check -- no second LLM call, matching forge's own
+competitive-pressure finding (docs/research-notes/arc-agi3-milestone1-
+winners-sota-ingestion-2026-07-11.md, O3) that an expensive LLM judge was
+not worth the cost while a deterministic filter was kept. The function
+SHALL treat a raising predicate as a `claimed=False` miss rather than
+propagating the exception, and SHALL return a well-formed zero result (no
+`ZeroDivisionError`) for an empty transition list. The CALLER CONTRACT
+(documented in the function's own docstring) is to pass transitions from a
+SINGLE level boundary, since `is_level_complete` is a per-boundary predicate
+in the real pipeline (freshly re-induced after every level-up).
+
+This is a NEW, purely additive verification primitive -- it does not modify
+`WorldModelVerifier`, `VerifyResult`, or any existing induction/planning
+behavior, and is NOT yet wired into any live decision (e.g. vetoing a goal
+predicate before planning); that is a distinct, separately-scoped design +
+empirical-validation step, consistent with how the color-blob salience
+topology extension (REQ-ARC-FCP-5591) was left additive-only pending its
+own validation.
+
+**RESOLUTION (2026-07-13).** The function itself is validated by 5 direct
+unit tests on realistic (non-toy) synthetic data
+(`tests/python/test_arc_goal_predicate_consistency.py`): a perfect
+predictor scores 1.0; a predictor that never claims a win is CAUGHT missing
+a real level-up (not silently trusted); a predictor that claims every state
+is a win is CAUGHT false-positiving a no-op (both miscalibration
+directions detected, not just one); a raising predicate is handled
+gracefully; an empty transition list returns a well-formed zero result.
+
+The offline-sim prototype (`experiment_5593_goal_predicate_consistency_
+offline_sim_prototype.py`) attempted a REAL end-to-end test against `lp85`
+(the only game with any measured headroom across the full 11-game roster in
+this session's exp5590/exp5592 A/Bs) using the real default Qwen3.5-9B-MTP
+proposer, and found a genuine, precisely-diagnosed limitation of the
+EXISTING (pre-dating this task) `induce_prompt`/`LocalGGUFProposer`
+machinery: `lp85`'s logical grid is 64x64 (much larger than typical), and
+`induce_prompt`'s fixed "render the full initial grid" overhead alone
+produces a prompt whose token count is already close to the induction
+pipeline's available budget (`n_ctx=16384` minus `max_tokens=2560` reserved
+for the completion = 13,824 tokens) -- confirmed by direct debugging
+(bypassing `LocalGGUFProposer.induce()`'s own truncated error-repr handling
+to read the llama-server's actual JSON error body): an 8-transition window
+measured 18,355 prompt tokens (`exceed_context_size_error`), and even a
+MINIMAL single-transition window (the level-up transition alone) measured
+~13,400+ tokens -- already at the edge of the budget regardless of how few
+transitions are used. This is a real, useful finding about the shared
+induction pipeline's scalability on large-grid games, not a flaw in
+`score_goal_predicate_consistency` itself (which never got the chance to
+run against a real induced predicate on `lp85`, since induction itself
+never produced one). Fixing `induce_prompt`'s large-grid scalability is
+out of scope for this task; the checked-in artifact honestly records
+`goal_predicate_accuracy: null` and
+`induction_failure_detail` (the truncated exception repr
+`LocalGGUFProposer.generate()` currently captures -- the fuller JSON error
+body is not preserved by the existing error handling, a minor, separately
+fixable gap not addressed here).
+
+Required field principles:
+
+- `real_levelup_present_in_sample`: principle "the check is only interpretable if the collected transitions include at least one genuine level-up -- otherwise the accuracy figure reflects only no-op agreement, which any always-False predictor would also score perfectly (CLAUDE.md FALSE_NEGATIVE_RISK discipline, applied to this new consistency check)."
+- `goal_predicate_mismatches`: principle "the specific transitions where the induced is_level_complete disagreed with real observed level-progress, for honest post-hoc inspection."
+
+#### SCENARIO-ARC-WMTE-5593-CORRECT-PREDICTOR
+
+Given a goal predicate whose sign correctly matches every real observed
+level-up and no-op transition in a single level boundary's transition
+window
+When `score_goal_predicate_consistency` scores it
+Then `accuracy` is 1.0 and `mismatches` is empty
+
+#### SCENARIO-ARC-WMTE-5593-BROKEN-PREDICTOR-CAUGHT
+
+Given a goal predicate that never claims a win (or, in the opposite
+direction, claims every state is a win)
+When `score_goal_predicate_consistency` scores it against a transition
+window containing at least one real level-up and one real no-op
+Then the predicate's disagreement with the real observed transitions is
+recorded in `mismatches`, not silently scored as a correct prediction
