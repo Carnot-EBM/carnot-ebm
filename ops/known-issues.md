@@ -523,6 +523,45 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     live-submission generator based on this task alone — report the delta and require an explicit
     operator decision, same discipline as task 7's frozen-stack guard.
 
+    > **DONE 2026-07-13.** All four sub-items addressed.
+    >
+    > **(a)** Fresh, first-party confirmation (fetched 2026-07-13, not the stale May-2026 staff-post
+    > evidence): `docs.arcprize.org/arc-prize-2026`'s starter kit explicitly names an `rtx6000`
+    > accelerator (`Nvidia RTX 6000`, `g4-standard-48`) labelled "Heavy ML; ARC-AGI-3 exclusive." This
+    > session's clone of the ARC-AGI-3 Milestone-1 winners' code confirms it in practice: forge's real,
+    > scored 3rd-place `kernel-metadata.json` requests `"machine_shape": "NvidiaRtxPro6000"` directly.
+    > Documented as an update to `docs/research-notes/arc-kaggle-accelerator-upgrade-2026-06-21.md`,
+    > which also clarifies that `results/kaggle_env_probe.json`'s P100 finding is from an unrelated
+    > auxiliary dev/build-verify kernel with no `machine_shape` field (a known, previously-flagged gap)
+    > — NOT evidence the SCORED submission kernel's own `NvidiaL4` setting (a deliberate 2026-06-21
+    > quota-cost tradeoff) is broken. That tradeoff is NOT re-litigated here.
+    >
+    > **(c)** Direct GGUF metadata inspection found `unsloth/gemma-4-31B-it-GGUF` (the first candidate
+    > considered) has NO MTP support at all. Downloaded and verified the better-fitting
+    > `unsloth/Qwen3.6-27B-MTP-GGUF` (16.3GB, official, genuinely MTP-capable per
+    > `qwen35.nextn_predict_layers = 1`) instead. Found a SECOND, deeper compatibility gap via a real
+    > launch attempt: llama.cpp's self-draft MTP loads the GGUF file TWICE (main + draft), needing
+    > ~32.6GB for this model — a real CUDA OOM on a single 24GB RTX 3090
+    > (`cudaMalloc failed: out of memory`). Built a VRAM-feasibility check
+    > (`_candidate_mtp_self_draft_fits_vram`) so the experiment correctly runs the candidate WITHOUT
+    > MTP on this hardware rather than crash-looping — exactly the "verify before assuming the speedup
+    > carries over" caution this sub-item asked for.
+    >
+    > **(b)** Also found and fixed a structural GPU-pinning bug: the first working draft never stopped
+    > the "current" arm's server before starting the "candidate" arm, so both models contended for the
+    > same GPU's VRAM and the candidate silently fell back to the slow iGPU (no error, no warning).
+    > Fixed via `proposer.stop()` + a new `_wait_for_port_down` poll in a `finally` block. With both
+    > bugs fixed, the real 4-attempt measurement (m0r0 + sk48, both arms, GPU 1) produced a real,
+    > positive result: `heldout_accuracy` — m0r0 current=0.0 vs candidate=0.5; sk48 current=0.2 vs
+    > candidate=1.0. `honest_verdict: generator_size_ab_equal_success_candidate_higher_accuracy`. This
+    > is a narrow signal (2-game roster, quality-only, non-MTP for the candidate on this hardware) —
+    > promising enough to justify a deeper look, not a proof.
+    >
+    > **(d)** The frozen live-submission generator is UNCHANGED. No Kaggle config was touched or
+    > pushed. Spec: `REQ-ARC-WMTE-5596` in
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md`. Tests:
+    > `tests/python/test_experiment_5596_generator_size_ab_gemma31b_vs_current.py` (5 tests).
+
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
 (exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect

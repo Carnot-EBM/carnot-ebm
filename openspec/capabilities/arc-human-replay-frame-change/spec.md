@@ -3713,3 +3713,111 @@ real collected frame
 When `InertClickSigPruner.rank_candidates` filters that list
 Then it runs without error and `rows_kept + rows_dropped == rows_in`, with
 only rows whose click signature is confidently inert removed
+
+### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
+
+`ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
+VRAM budget and an offline A/B of a larger generator against the frozen live Qwen3.5-9B-MTP,
+after the operator asked: "are we still using qwen-3.5-9B when the leaders are using the larger
+and newer qwen-3.6-27B and Gemma-4-31b models?"
+
+**13(a) -- Kaggle backend hardware re-verification.** A fresh, first-party check (fetched
+2026-07-13, not the stale May-2026 staff-post evidence the original investigation relied on)
+found `docs.arcprize.org/arc-prize-2026`'s starter kit explicitly names an `rtx6000` accelerator
+option mapped to `Nvidia RTX 6000 (g4-standard-48)`, labelled "Heavy ML; ARC-AGI-3 exclusive."
+This session's own clone of the ARC-AGI-3 Milestone-1 winners' code
+(`external/arc-m1-3rd-forge/kernel-metadata.json`, 3rd place, LB 0.86) confirms this is not
+theoretical: forge's real, scored submission requests `"machine_shape":
+"NvidiaRtxPro6000"` directly and ran `gemma-4-31b-it`. This corroborates (does not replace) the
+project's existing accelerator investigation
+(`docs/research-notes/arc-kaggle-accelerator-upgrade-2026-06-21.md`, updated 2026-07-13 with
+this finding). Also clarified: `results/kaggle_env_probe.json`'s P100 finding is from an
+unrelated auxiliary dev/build-verify kernel with no `machine_shape` field (a known, previously
+flagged gap, not evidence the SCORED submission kernel's own `NvidiaL4` request -- a deliberate
+2026-06-21 quota-cost tradeoff, unchanged here -- is broken).
+
+**13(c) -- MTP compatibility at the larger size (checked, not assumed).** Direct GGUF metadata
+inspection (`gguf_dump.py --no-tensors`) found the FIRST candidate considered,
+`unsloth/gemma-4-31B-it-GGUF`, declares NO `nextn_predict_layers` key at all -- no native MTP
+support. The operator surfaced two better-fitting official candidates mid-task:
+`unsloth/Qwen3.6-27B-MTP-GGUF` and `unsloth/Qwen3.6-35B-A3B-MTP-GGUF`, both genuinely MTP-capable
+(`qwen35.nextn_predict_layers = 1`, confirmed by the same metadata inspection) at the exact
+"Qwen3.6-27B-class" size the operator's original question named. Downloaded and verified the
+dense 27B variant (16.3GB Q4_K_M, full download, `unsloth/Qwen3.6-27B-MTP-GGUF`).
+
+**A second, deeper compatibility gap found via a real launch attempt.** Even with genuine
+architectural MTP support, a manual CUDA launch with `--spec-type draft-mtp --model-draft <same
+path>` OOM'd on a single 24GB RTX 3090 (verbatim from the real launch log: `ggml_backend_cuda_
+buffer_type_alloc_buffer: allocating 15621.78 MiB on device 0: cudaMalloc failed: out of
+memory`): llama.cpp's SELF-draft MTP loads the SAME GGUF file TWICE (main + draft model), so the
+real VRAM footprint is roughly 2x the file size (~32.6GB for this 16.3GB file) plus KV
+cache/CUDA overhead -- exceeding a single 3090's capacity entirely.
+This is exactly the kind of gap task 13(c) asked to rule out before assuming a speedup carries
+over, and it generalizes past "does the metadata say MTP" to "does self-draft actually fit."
+Fixed by adding `_candidate_mtp_self_draft_fits_vram()` (a real free-VRAM-vs-2x-filesize
+feasibility check, +2GB margin) alongside the existing metadata check
+(`_candidate_declares_mtp_metadata()`); the experiment's actual runtime `mtp` flag
+(`candidate_mtp_used`) is the AND of both, so the candidate arm cleanly falls back to non-MTP on
+this hardware instead of crash-looping (the first real run, before this fix, silently fell back
+to a much slower AMD iGPU each time the OOM'd process died -- see the second bug below).
+
+**A separate, structural GPU-pinning bug found and fixed.** The experiment's first working draft
+never called `LocalGGUFProposer.stop()` between arms. Because both arms are pinned to the SAME
+GPU (GPU 1, the outer loop's own allocated 3090), the "current" arm's still-resident ~11GB server
+left only ~13GB free on the 24GB card -- right at
+`_generator_server_and_env()`'s `_GENERATOR_CUDA_MIN_FREE_MB=13000` guard floor -- so the
+candidate's launch attempt tripped the guard and silently fell back to the slow iGPU (`build-hip`
+binary), defeating the "both arms on the same hardware tier" design goal with no error or
+warning. Fixed by wrapping each arm's body in `try/finally: proposer.stop();
+_wait_for_port_down(proposer.port)`, a new helper that polls the stopped server's `/health`
+endpoint (bounded, 30s timeout) so the NEXT arm's free-VRAM guard sees genuinely reclaimed
+memory, not a still-warm process.
+
+**RESOLUTION (2026-07-13).** With both bugs fixed, the real 4-attempt measurement (m0r0 + sk48,
+both arms, GPU 1, both arms confirmed via wall-clock plausibility to have run on the CUDA build
+not the iGPU) produced a real, informative result: both arms 2/2 induction success;
+`heldout_accuracy` -- m0r0 current=0.0 vs candidate=0.5; sk48 current=0.2 vs candidate=1.0. The
+candidate (Qwen3.6-27B, running WITHOUT MTP per the VRAM-infeasibility finding) shows materially
+HIGHER induction quality on both tested games. `honest_verdict:
+"complete: generator_size_ab_equal_success_candidate_higher_accuracy"`.
+
+**What this does and does not show.** This is a real, positive signal for the candidate's
+induction QUALITY specifically, on a 2-game roster (well below the CLAUDE.md sample-size floor
+for any percentage-point claim), measuring `WorldModelVerifier.heldout_accuracy` (not a full
+actions-to-first-win live-solve sweep). It does NOT show the candidate would be faster or more
+efficient on the actual Kaggle hardware: MTP is confirmed infeasible for this model on a single
+24GB RTX 3090 (this dev box), but the ACTUAL scored hardware may be the 96GB RTX Pro 6000 per
+13(a)'s finding, where self-draft MTP (2x ~16.3GB = ~32.6GB) would fit comfortably alongside KV
+cache -- a materially different VRAM regime this experiment did not test. Per the task's own
+guardrail and CLAUDE.md's frozen-live-stack discipline (mirroring REQ-ARC-WMTE-5594's task-7
+precedent), this result does NOT change the frozen live generator -- it is reported as an offline
+dev measurement requiring an explicit operator decision, and the honest recommendation is: this
+result is promising enough to justify a deeper look (a larger roster, the 35B MoE variant, and/or
+a real VRAM-matched test if 96GB hardware becomes available), not an automatic swap.
+
+Required field principles:
+
+- `candidate_mtp_self_draft_fits_vram`: principle "self-draft MTP loads the SAME GGUF file twice
+  (main + draft); found mid-task that this can OOM even when the metadata declares support, so
+  this is checked separately before attempting a real launch, not assumed from metadata alone."
+- `candidate_mtp_used`: principle "the actual runtime decision (metadata support AND VRAM
+  feasibility); this is what determines whether any wall-clock delta between arms is confounded
+  by an MTP-vs-no-MTP asymmetry, not the metadata declaration alone."
+
+#### SCENARIO-ARC-WMTE-5596-MTP-SUPPORT-VERIFIED
+
+Given a candidate GGUF whose metadata declares an MTP self-draft head
+When `_candidate_mtp_self_draft_fits_vram` estimates the self-draft footprint (2x file size plus
+a margin) against real free VRAM on the target GPU
+Then a candidate whose self-draft footprint exceeds available VRAM is correctly identified as
+MTP-infeasible on this hardware, and the experiment runs that arm without MTP instead of
+attempting a doomed launch
+
+#### SCENARIO-ARC-WMTE-5596-INDUCTION-QUALITY-DELTA
+
+Given real induction attempts from both the current frozen generator and the candidate generator,
+run sequentially on the SAME GPU with each arm's server fully stopped before the next starts
+When `build_artifact` compares `heldout_accuracy` across arms
+Then the comparison reflects a genuine same-hardware-tier measurement (not confounded by one arm
+silently falling back to a slower device), and the verdict honestly reports which arm has higher
+accuracy without flipping the frozen live-submission generator
