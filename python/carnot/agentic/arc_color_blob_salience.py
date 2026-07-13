@@ -2,12 +2,23 @@
 
 Spec refs: REQ-ARC-FCP-5360, SCENARIO-ARC-FCP-5360,
 REQ-ARC-FCP-5373, SCENARIO-ARC-FCP-5373,
-REQ-ARC-FCP-5397, SCENARIO-ARC-FCP-5397.
+REQ-ARC-FCP-5397, SCENARIO-ARC-FCP-5397,
+REQ-ARC-FCP-5591, SCENARIO-ARC-FCP-5591.
 
 The live ARC agent already has learned frame-diff and action-prior hooks. This
 module adds the cheap perception-grounded fallback those hooks were missing:
 segment the rendered frame into single-color connected components and rank
 button-like blobs before large dull regions and status-bar artifacts.
+
+``object_hash``/``blob_topology`` (REQ-ARC-FCP-5591) extend that base with the
+two sub-components ``ops/known-issues.md``'s 2026-07-11 task 10 entry
+identified from an independent read of a real top-3 ARC-AGI-3 competitor's
+open-sourced segmentation code: a translation-invariant object-identity
+signature, and a containment tree + adjacency graph over the blob list. Both
+are purely additive (new functions over the existing ``ColorBlob``/
+``connected_color_blobs`` primitives, no changes to their behavior or
+signatures) -- this file's existing tier/score/click_points outputs are
+unaffected.
 """
 
 from __future__ import annotations
@@ -15,6 +26,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+import hashlib
 import math
 from typing import Any
 
@@ -428,3 +440,130 @@ class ColorBlobSaliencePrior:
             "status_bar_deprioritization": bool(self.status_bar_deprioritization),
             "large_flat_deprioritization": bool(self.large_flat_deprioritization),
         }
+
+
+def object_hash(blob: ColorBlob) -> str:
+    """REQ-ARC-FCP-5591: translation-invariant identity signature for a blob.
+
+    The signature is the blob's color plus its cell-shape pattern, normalized
+    so the top-left of its bounding box is the origin. Two blobs with the same
+    shape and color hash identically regardless of WHERE they sit in the
+    frame, so an object's identity can be tracked across frames even after it
+    moves -- the position-INVARIANT feature ``tier``/``score`` (both keyed on
+    a click's absolute (x, y) or a blob's absolute bbox) do not provide. This
+    directly attacks the GAP-4891 / ``project_arc_live_agent_learning_gaps``
+    binding constraint that frame-only, position-only (order-1) features sit
+    at LOO=chance on held-out games.
+    """
+
+    cells = blob.cells
+    min_y = min(y for y, _ in cells)
+    min_x = min(x for _, x in cells)
+    normalized = tuple(sorted((y - min_y, x - min_x) for y, x in cells))
+    payload = repr((int(blob.color), normalized)).encode("utf-8")
+    return hashlib.sha1(payload).hexdigest()[:16]
+
+
+def blob_topology(frame: Any) -> dict[str, Any]:
+    """REQ-ARC-FCP-5591: containment tree + adjacency graph over a frame's FULL
+    (unfiltered) connected-component partition.
+
+    Reuses ``connected_color_blobs`` unmodified (called here with
+    ``min_pixels=1, max_component_fraction=1.0`` so every pixel belongs to
+    exactly one returned blob -- the ``ColorBlobSaliencePrior`` tier/score
+    methods intentionally filter blobs for RANKING purposes, but a
+    containment/adjacency computation needs the complete partition to be
+    correct). Blobs are already returned in top-left-cell order by
+    ``connected_color_blobs``, which is a stable, unique ordering within one
+    frame -- that list position is this function's blob ``id``.
+
+    Containment: for each blob ``b``, flood-fill the grid's complement of
+    ``b`` inward from the frame border; any blob whose cells are never
+    reached is enclosed by ``b``. A blob's ``parent`` is its INNERMOST
+    encloser (the encloser that is itself most deeply enclosed) -- this
+    yields a clean nesting tree rather than every blob listing every
+    ancestor. A single representative cell per blob is sufficient to test
+    reachability because a blob's cells are one connected 4-adjacency region
+    that is either fully reached or fully unreached together.
+
+    Returns a dict:
+      - ``blobs``: the full blob list, ``blobs[i]`` is blob id ``i``.
+      - ``object_hashes``: ``{id: object_hash(blobs[id])}`` for convenience.
+      - ``children``: ``{id: sorted [child ids directly enclosed by id]}``.
+      - ``adjacency_list``: sorted ``[i, j]`` id pairs for blobs sharing a
+        4-connected edge (includes parent/child pairs, since they physically
+        touch).
+    """
+
+    grid = _as_grid(frame)
+    height, width = grid.shape
+    blobs = connected_color_blobs(grid, min_pixels=1, max_component_fraction=1.0)
+    n = len(blobs)
+
+    comp_id = np.full((height, width), -1, dtype=np.int32)
+    for blob_id, blob in enumerate(blobs):
+        for y, x in blob.cells:
+            comp_id[y, x] = blob_id
+
+    adj_pairs: set[tuple[int, int]] = set()
+    for y in range(height):
+        for x in range(width):
+            cid = int(comp_id[y, x])
+            if y + 1 < height:
+                other = int(comp_id[y + 1, x])
+                if other != cid:
+                    adj_pairs.add((min(cid, other), max(cid, other)))
+            if x + 1 < width:
+                other = int(comp_id[y, x + 1])
+                if other != cid:
+                    adj_pairs.add((min(cid, other), max(cid, other)))
+    adjacency_list = sorted(adj_pairs)
+
+    enclosers: list[set[int]] = [set() for _ in range(n)]
+    for b in range(n):
+        reached = np.zeros((height, width), dtype=bool)
+        stack: list[tuple[int, int]] = []
+        for y in range(height):
+            for x in (0, width - 1):
+                if int(comp_id[y, x]) != b and not reached[y, x]:
+                    reached[y, x] = True
+                    stack.append((y, x))
+        for x in range(width):
+            for y in (0, height - 1):
+                if int(comp_id[y, x]) != b and not reached[y, x]:
+                    reached[y, x] = True
+                    stack.append((y, x))
+        while stack:
+            y, x = stack.pop()
+            for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                ny, nx = y + dy, x + dx
+                if (
+                    0 <= ny < height
+                    and 0 <= nx < width
+                    and not reached[ny, nx]
+                    and int(comp_id[ny, nx]) != b
+                ):
+                    reached[ny, nx] = True
+                    stack.append((ny, nx))
+        for a in range(n):
+            if a == b:
+                continue
+            ay, ax = next(iter(blobs[a].cells))
+            if not reached[ay, ax]:
+                enclosers[a].add(b)
+
+    encloser_counts = {index: len(encs) for index, encs in enumerate(enclosers)}
+    children: dict[int, list[int]] = {blob_id: [] for blob_id in range(n)}
+    for a in range(n):
+        if enclosers[a]:
+            parent = max(enclosers[a], key=lambda e: (encloser_counts.get(e, 0), -e))
+            children[parent].append(a)
+    for child_ids in children.values():
+        child_ids.sort()
+
+    return {
+        "blobs": blobs,
+        "object_hashes": {blob_id: object_hash(blob) for blob_id, blob in enumerate(blobs)},
+        "children": children,
+        "adjacency_list": [[i, j] for i, j in adjacency_list],
+    }

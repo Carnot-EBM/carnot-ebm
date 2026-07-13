@@ -1,0 +1,100 @@
+{
+  "experiment": "experiment_5591_blob_topology_offline_sim_prototype",
+  "schema": "carnot.exp5591.blob_topology_offline_sim_prototype.v1",
+  "result_path": "results/experiment_5591_blob_topology_offline_sim_prototype.json",
+  "honest_verdict": "complete: blob_topology_prototype_cross_frame_identity_confirmed_5_of_5_games",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; demonstrates the mechanism works on real frames, does not claim a live-path capability win (that is a separate, later measurement)"
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_self_discovery_no_llm -- pure frame segmentation, no LLM invoked"
+    },
+    "games_with_cross_frame_hash_persistence": {
+      "principle": "count of roster games where at least one object_hash value observed on the initial frame reappeared after a real env action -- the load-bearing claim behind building object_hash at all (position-invariant identity tracking across a real transition, not just a synthetic grid)"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a prototype/measurement script, no per-game adapter, no offline BFS, no level-solve claim"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "roster": [
+    "cd82",
+    "m0r0",
+    "sk48",
+    "sp80",
+    "tu93"
+  ],
+  "actions_per_game": 6,
+  "per_game_rows": [
+    {
+      "game": "cd82",
+      "initial_blob_count": 15,
+      "initial_max_containment_depth": 3,
+      "initial_adjacency_edge_count": 18,
+      "actions_taken": [
+        1
+      ],
+      "cross_frame_hash_persisted": true
+    },
+    {
+      "game": "m0r0",
+      "initial_blob_count": 7,
+      "initial_max_containment_depth": 2,
+      "initial_adjacency_edge_count": 9,
+      "actions_taken": [
+        1
+      ],
+      "cross_frame_hash_persisted": true
+    },
+    {
+      "game": "sk48",
+      "initial_blob_count": 46,
+      "initial_max_containment_depth": 3,
+      "initial_adjacency_edge_count": 92,
+      "actions_taken": [
+        1
+      ],
+      "cross_frame_hash_persisted": true
+    },
+    {
+      "game": "sp80",
+      "initial_blob_count": 8,
+      "initial_max_containment_depth": 2,
+      "initial_adjacency_edge_count": 11,
+      "actions_taken": [
+        1
+      ],
+      "cross_frame_hash_persisted": true
+    },
+    {
+      "game": "tu93",
+      "initial_blob_count": 68,
+      "initial_max_containment_depth": 2,
+      "initial_adjacency_edge_count": 140,
+      "actions_taken": [
+        1
+      ],
+      "cross_frame_hash_persisted": true
+    }
+  ],
+  "games_with_cross_frame_hash_persistence": 5,
+  "total_games_measured": 5,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5591,
+  "duration_s": 1.081,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "blob_topology_import": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "7d1dc22a7ac449cd29aa887fd01078603c1266705b1ab810743e8623cba63ae7"
+}

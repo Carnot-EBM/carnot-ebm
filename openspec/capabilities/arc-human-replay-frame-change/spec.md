@@ -3133,3 +3133,66 @@ When experiment 5534 banks the result
 Then `offline_reproduced=true`, `reproduced_levels>=1`, `registry_delta`
 equals `reproduced_levels`, and the registry update records the Exp5534
 live-path reproduction evidence.
+
+### REQ-ARC-FCP-5591: Translation-Invariant Object Identity + Containment/Adjacency Topology
+
+`ops/known-issues.md`'s 2026-07-11 task 10 entry (folded into task 2, not a
+separate experiment) identified two sub-components a real top-3 ARC-AGI-3
+competitor's open-sourced classical connected-component segmentation adds
+beyond `ColorBlobSaliencePrior`'s existing size/color salience tiers: a
+translation-invariant object-identity signature (so the same shape+color
+object hashes identically across frames regardless of position -- attacking
+the GAP-4891 / `project_arc_live_agent_learning_gaps` binding constraint that
+frame-only, position-only features sit at LOO=chance), and a containment tree
++ adjacency graph over the blob list (which objects sit inside which, and
+which touch).
+
+`python/carnot/agentic/arc_color_blob_salience.py` SHALL expose
+`object_hash(blob: ColorBlob) -> str`, a sha1 signature of the blob's color
+plus its cell-shape pattern normalized to its own bounding box's top-left
+corner as origin, and `blob_topology(frame) -> dict`, computing the FULL
+(unfiltered, `min_pixels=1, max_component_fraction=1.0`) connected-component
+partition of a frame via the existing `connected_color_blobs` (unmodified)
+and returning `blobs` (list, index is blob id), `object_hashes` (id ->
+`object_hash` value), `children` (id -> sorted list of directly-enclosed
+blob ids, computed via complement flood-fill from the frame border per blob),
+and `adjacency_list` (sorted `[i, j]` id pairs for 4-connected-edge-sharing
+blobs). Both additions SHALL be pure functions over existing primitives with
+no change to `ColorBlob`'s fields or `connected_color_blobs`'/
+`ColorBlobSaliencePrior`'s existing signatures or outputs -- this is an
+additive perception-data extension, not a scoring or ranking change.
+
+Required field principles:
+
+- `object_hash`: principle "two blobs with the same shape and color hash identically regardless of position, giving the agent a position-invariant object-identity feature the existing bbox/centroid/tier fields do not provide."
+- `blob_topology.children`: principle "innermost-encloser parent assignment yields a clean nesting tree (an object's parent is not every ancestor, just the tightest enclosing blob)."
+- `blob_topology.adjacency_list`: principle "any two blobs sharing a 4-connected edge, including parent/child pairs since they physically touch -- lets a consumer reason about spatial relationships beyond raw bbox overlap."
+
+#### SCENARIO-ARC-FCP-5591-TRANSLATION-INVARIANT-IDENTITY
+
+Given a frame containing two same-color, same-shape blobs at different
+positions (e.g. two 3x3 squares of the same color, one elsewhere on the
+grid)
+When `object_hash` is computed for each blob
+Then both blobs receive the identical hash value
+
+Given a frame containing two blobs of the same color but a DIFFERENT shape,
+or the same shape but a DIFFERENT color
+When `object_hash` is computed for each
+Then the two blobs receive different hash values
+
+#### SCENARIO-ARC-FCP-5591-CONTAINMENT-AND-ADJACENCY
+
+Given a frame with a ring-shaped blob of one color fully enclosing a smaller
+solid blob of a different color
+When `blob_topology` runs
+Then the inner blob's id appears in `children[ring_id]`, and the pair
+appears in `adjacency_list` (the ring and its contents share a 4-connected
+edge)
+
+Given a frame with two same-shape, same-color blobs where one is enclosed by
+a third blob and the other sits freely on the background
+When `blob_topology` runs
+Then only the enclosed blob's id appears under its true parent's `children`
+entry, the freely-sitting blob has no parent, and `object_hashes` reports
+the SAME hash for both despite their different topological position
