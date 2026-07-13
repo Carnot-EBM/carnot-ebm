@@ -132,19 +132,22 @@ def test_step_wise_explorer_explicit_hud_mask_disables_auto_detection() -> None:
     assert explorer.hud_mask is explicit
 
 
-def test_step_wise_explorer_auto_hud_mask_defaults_off() -> None:
+def test_step_wise_explorer_auto_hud_mask_defaults_to_submitted_flag() -> None:
+    """Tracks SUBMITTED_AUTO_HUD_MASK_ENABLED rather than a hardcoded literal -- see
+    REQ-ARC-WMTE-5583's 2026-07-12 RESOLUTION for why the value is True as of that
+    date (deferred to live-submission telemetry, not a hardcoded True/False pin)."""
+
     explorer = StepwiseExplorer()
-    assert explorer.auto_hud_mask is False
     assert explorer.auto_hud_mask == SUBMITTED_AUTO_HUD_MASK_ENABLED
 
 
 def test_e3_agent_policy_default_auto_hud_mask_matches_submitted_config() -> None:
-    """SCENARIO-ARC-WMTE-5583-DEFAULT-OFF-PARITY."""
+    """SCENARIO-ARC-WMTE-5583-DEFAULT-PARITY."""
 
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _f: 0.0)
 
     assert pol.explorer.auto_hud_mask == SUBMITTED_AGENT_CONFIG["auto_hud_mask_enabled"]
-    assert pol.explorer.auto_hud_mask is False
+    assert pol.explorer.auto_hud_mask == SUBMITTED_AUTO_HUD_MASK_ENABLED
 
 
 def test_e3_agent_policy_auto_hud_mask_can_be_opted_in() -> None:
