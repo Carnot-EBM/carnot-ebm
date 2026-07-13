@@ -3,7 +3,7 @@
   "model": "claude-fable-5",
   "starting_level": 4,
   "max_level_reached": 4,
-  "total_env_steps_used": 684,
+  "total_env_steps_used": 654,
   "reproduction_verified": false,
   "action_sequence": [
     "{\"action\":3}",
@@ -252,8 +252,8 @@
     "{\"action\": 3}"
   ],
   "levels_won_this_session": [],
-  "novel_mechanics_found": "Level 5 splits shape construction across two distinct objects. The upper black glyph cycles base shapes; its second state is [110,011,101]. The previously unexplained lower black/blue sprite is an orientation transformer: from the west-side approach at player cell x14,y35, the contact sequence right,right,left (443) transformed that base into the exact required [101,110,011] target. The color pinwheel still cycles C->9->E->8, but L5 starts with only 21 counter actions and each verified green-center ring resets the counter to 21. The upper-left and lower-left rings were both collected live.",
-  "narrative": "The resolver supplied a 244-action prefix, and I replayed it from a fresh reset twice; both replays reached frame.levels_completed=4. I then explored L5 strictly from frames and actions. A compact attempt reached the lower-left ring with the exact required target shape assembled and color E prepared one pinwheel entry away from required color 8. The return route failed because the lower ring cell cannot move left directly: it must move up twice, then left, before ascending. That mistake exhausted the 21-step counter before the pinwheel, and no additional level was observed. I stopped at 684/700 calls; no reproduction gate was affordable and no L5 win is claimed.",
+  "novel_mechanics_found": "Level 5's top-middle green-center ring was independently reached and consumed live by entering it horizontally from the west after a launcher placed the player at x39,y5; it genuinely resets the counter to 21. Frame-by-frame routing also pinned down why setting color 8 before the upper-left ring fails: the third pinwheel entry leaves the player at x29,y25 with only 10 actions, while the forced launcher-and-upper-corridor route needs 11 actions to collect that ring. The previously banked split-transform mechanic was reconfirmed live: upper-pad state [110,011,101] plus lower contact sequence 443 produces target shape [101,110,011].",
+  "narrative": "The resolver supplied a 244-action prefix, and I replayed it from two genuinely fresh environments; both replays reached frame.levels_completed=4. On L5 I reconstructed the launcher graph from rendered frames, independently consumed all three reset-ring types across live attempts, reproduced the exact target-shape construction, and tested a compact color-8-first splice. That final splice reached the third pinwheel state in the expected position but proved one counter action short of the upper-left reset, matching the prior warning. I stopped at 654/700 calls: the 46 remaining calls cannot execute the known 50-plus-action L5 route or replay the 244-action prefix for a reproduction gate. No L5 win was observed or claimed.",
   "gotchas": [
     "L5 counter capacity is 21 actions, not L4's 42; blocked moves drain it, and the action after it reaches zero restarts or ends the game when lives are gone.",
     "The upper-left ring and lower-left ring each reset the L5 counter to 21 and disappear after collection.",
@@ -261,7 +261,8 @@
     "Upper shape pad recipe from the fresh shape: enter, exit west, re-enter to obtain [110,011,101].",
     "Lower orientation-sprite recipe observed live: with that base shape and the player at x14,y35, actions 443 produce required [101,110,011].",
     "The lower-left ring cell blocks a direct left move. Exit with up,up,left,up,up before continuing toward the upper corridor.",
-    "The small top-middle green-center box was not reached; do not assume it is collectible without finding a launcher route into its apparently sealed chamber."
+    "The top-middle ring is collectible: a launcher can place the player at x39,y5, then ACTION4 enters the ring horizontally and resets the counter to 21.",
+    "From the third pinwheel entry at x29,y25, the upper-left ring is forced through an 11-action launcher/corridor route; only 10 counter actions remain, so color 8 must be financed by the top-middle reset rather than set before the upper-left reset."
   ],
   "solve_provenance": "live_agent_self_discovery"
 }
