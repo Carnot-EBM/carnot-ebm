@@ -1,0 +1,167 @@
+{
+  "experiment": "experiment_5585_hud_mask_strong_config_ab",
+  "schema": "carnot.exp5585.hud_mask_strong_config_ab.v1",
+  "result_path": "results/experiment_5585_hud_mask_strong_config_ab.json",
+  "honest_verdict": "complete: hud_mask_strong_config_ab_still_no_headroom",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a measured null is complete (negative-but-real), never partial"
+    },
+    "inference_substrate": {
+      "principle": "no LLM/proposer invoked (StepwiseExplorer explore-phase only, proposer=None) -- pure CPU search including a small local CNN frame-change scorer, declared honestly"
+    },
+    "verifier_is_oracle": {
+      "principle": "False -- this measures whether a state-identity masking mechanism adds value, not whether the executable win-check agrees with itself"
+    },
+    "roster": {
+      "principle": "3-game subset of exp5578/exp5584's roster, chosen for shortest known-minimal solve length to fit this config's higher per-action cost within an interactive session; sk48 kept as the HUD-negative harmlessness control"
+    },
+    "hud_survey": {
+      "principle": "pre-registered per-game mask-detection result on the initial reset frame -- lets the reader confirm treatment-arm results are consistent with the mechanism actually firing where expected"
+    },
+    "levels_gained_delta_ci": {
+      "principle": "paired bootstrap CI on (treatment - control) per game; a claim requires the CI to exclude 0.0, same bar exp4582/exp5578/exp5584 used"
+    },
+    "distinct_states_delta_ci": {
+      "principle": "paired bootstrap CI on the dedup-collapse proxy (graph node count); the mechanism's DIRECT effect, separate from whether that translates into a levels_gained win"
+    },
+    "mask_fired_matches_survey": {
+      "principle": "positive control -- confirms the mechanism actually activates on treatment-arm HUD-positive games rather than silently no-op-ing the whole roster"
+    },
+    "levels_gained_headroom_present": {
+      "principle": "SECOND positive control (CLAUDE.md FALSE_NEGATIVE_RISK) -- confirms at least one arm reached a level-up somewhere on the roster; the specific gap exp5584 hit and this script exists to close"
+    },
+    "no_regression_fallback": {
+      "principle": "SUBMITTED_AUTO_HUD_MASK_ENABLED stays False regardless of this result until an operator reviews it -- this script never flips the flag"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "roster": [
+    "s5i5",
+    "g50t",
+    "sk48"
+  ],
+  "budget_per_game": 150,
+  "hud_survey": {
+    "s5i5": {
+      "has_hud": true,
+      "n_masked_cells": 64
+    },
+    "g50t": {
+      "has_hud": true,
+      "n_masked_cells": 64
+    },
+    "sk48": {
+      "has_hud": false,
+      "n_masked_cells": 0
+    }
+  },
+  "control_results": {
+    "sk48": {
+      "game": "sk48",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 150,
+      "distinct_states_discovered": 4,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "g50t": {
+      "game": "g50t",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 150,
+      "distinct_states_discovered": 90,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 150,
+      "distinct_states_discovered": 98,
+      "hud_mask_fired": false,
+      "error": null
+    }
+  },
+  "treatment_results": {
+    "sk48": {
+      "game": "sk48",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 150,
+      "distinct_states_discovered": 4,
+      "hud_mask_fired": false,
+      "error": null
+    },
+    "g50t": {
+      "game": "g50t",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 150,
+      "distinct_states_discovered": 32,
+      "hud_mask_fired": true,
+      "error": null
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "start_level": 0,
+      "max_level_reached": 0,
+      "levels_gained": 0,
+      "first_levelup_action": null,
+      "actions_used": 150,
+      "distinct_states_discovered": 24,
+      "hud_mask_fired": true,
+      "error": null
+    }
+  },
+  "levels_gained_delta_mean": 0.0,
+  "levels_gained_delta_ci": [
+    0.0,
+    0.0
+  ],
+  "levels_gained_ci_excludes_zero": false,
+  "distinct_states_delta_mean": -44.0,
+  "distinct_states_delta_ci": [
+    -74.0,
+    0.0
+  ],
+  "distinct_states_ci_excludes_zero": false,
+  "mask_fired_matches_survey": true,
+  "levels_gained_headroom_present": false,
+  "false_negative_risk_note": "FALSE_NEGATIVE_RISK acknowledgment: EVEN with E3AgentPolicy's real defaults (DaggerWinReachabilityValueHead, CrossGameDiscriminativeCandidateRouter, GroundTruthValidatedFrameChangeScorer, ColorBlobSaliencePrior) and a roster pre-selected for the shortest known-minimal solve lengths (s5i5=39, g50t=48, sk48=44 actions), budget=150 (3-3.8x those lengths) STILL reached zero level-ups in either arm on any roster game. This is a stronger, harder-to-dismiss null than exp5584's (that config was already known-weak; this one is the actual submitted default component set) -- it suggests undirected/lightly-guided from-scratch search on this roster may need either an LLM proposer (tier-3 escalation, not used here) or substantially more budget to find these solve paths, independent of HUD masking. distinct_states_delta remains the only measured effect of the mechanism; see that field for whether it still holds at this budget/roster.",
+  "recommendation": "Do NOT treat this as resolving exp5584's open question -- see false_negative_risk_note. Two honest options going forward: (a) invoke the tier-3 LLM proposer (requires a cached local SOTA GGUF and GPU/iGPU -- a materially bigger precondition and wall-clock commitment than this script's scope), or (b) accept that levels_gained cannot be cheaply measured for this mechanism offline and defer the flip decision to live-submission telemetry instead. Keep SUBMITTED_AUTO_HUD_MASK_ENABLED off by default either way.",
+  "no_regression_fallback": true,
+  "combined_wall_clock_s": 445.836,
+  "n_bootstrap": 2000,
+  "random_seed": 5585,
+  "duration_s": 445.956,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "hud_mask_fn_import": true,
+    "frame_change_scorer_loadable": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "9befd8a8dc9bc7e9dc0463595fe171bf7488dab5678ba2311883c530a8e187be",
+  "predecessor_experiment": "experiment_5584_hud_mask_offline_ab"
+}
