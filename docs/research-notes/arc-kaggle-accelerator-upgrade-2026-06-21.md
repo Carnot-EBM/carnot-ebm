@@ -116,6 +116,42 @@ definitive check, when convenient: in the Kaggle UI set one notebook to the L4x4
   BUILD kernel (mirrors the existing MTP-symbol self-verify) so a future disk-pressure rebuild that
   drops sm_89 fails loudly instead of silently shipping an L4-incompatible binary.
 
+## UPDATE 2026-07-13 (outer-loop, task 13 re-verification) — new corroborating + clarifying evidence
+
+**New ground-truth data point, partially closing the "medium confidence" gap above.** This session
+cloned the ARC-AGI-3 Milestone-1 winners' open-sourced code (`external/arc-m1-3rd-forge/`, forge, 3rd
+place, LB 0.86). Their REAL, actually-scored `kernel-metadata.json` sets
+**`"machine_shape": "NvidiaRtxPro6000"`** (a single, DIFFERENT accelerator identifier from the
+`NvidiaL4` bare-name-means-x4 interpretation this doc adopted) and `"model_sources":
+["google/gemma-4/Transformers/gemma-4-31b-it/1"]` — i.e. a real, winning submission ran Gemma-4-31B-it
+on an RTX Pro 6000. This corroborates (does not replace) this doc's own findings: `NvidiaRtxPro6000` was
+already listed as a known-valid identifier (line 16 above), and it now has a real-world proof-of-use
+from a placed competitor, plus a first-party confirmation from `docs.arcprize.org/arc-prize-2026`
+(fetched fresh 2026-07-13): the starter kit's `scripts/build_notebook.py` accelerator options are
+literally `cpu`/`t4`/`p100`/`rtx6000`, with `rtx6000` mapped verbatim to **`Nvidia RTX 6000
+(g4-standard-48)`**, labelled **"Heavy ML; ARC-AGI-3 exclusive"** and "reserved for ARC-AGI-3
+notebooks." This is a first-party, current (post-swap) doc, not the stale May-2026 staff-post evidence
+the original task-13 investigation had. **Still honestly unresolved:** whether Kaggle's SCORED/hidden
+run is guaranteed to honor whichever `machine_shape` the pushed kernel last requested — forge's real win
+is strong indirect evidence (not a Kaggle-staff confirmation) that it does.
+
+**The `results/kaggle_env_probe.json` P100 finding is NOT evidence that `NvidiaL4` fails.** That probe's
+`n_gpus: "1"`, `total_vram_MB: 16384` came from `scripts/kaggle/kernel/kernel-metadata.json` (the
+"build_verify" toolchain-check kernel) — which has NO `machine_shape` field at all and therefore falls
+back to Kaggle's P100 default. This is exactly the ALREADY-FLAGGED "Optional follow-ups" gap above
+(`dryrun_kernel`/`agent_dryrun_kernel` "SHOULD also set machine_shape... safe to defer") — a third,
+unnamed auxiliary kernel in the same already-known category, not a new bug and not evidence the
+SUBMISSION kernel's `NvidiaL4` setting (still present, unchanged, in
+`scripts/kaggle/submission_kernel/kernel-metadata.json` as of 2026-07-13) doesn't work.
+
+**Not re-litigated (the operator's 2026-06-21 quota-cost call stands):** `NvidiaL4` was a DELIBERATE
+choice over higher tiers for GPU-quota economics (2x burn vs presumably-costlier alternatives), not an
+oversight — this update does not second-guess that tradeoff. The June-30-deadline quota math in this
+doc is now STALE (that deadline passed; the ARC-AGI-3 November-Submission Standing Floor governs current
+pacing per CLAUDE.md) — if the operator wants to revisit `NvidiaL4` vs `NvidiaRtxPro6000` given the new
+forge evidence, that requires a fresh quota-cost comparison (RtxPro6000's quota-burn multiplier is not
+yet known to this project) and is an explicit operator decision, not something changed here.
+
 ## Sources
 
 - kaggle-cli accelerator list — https://github.com/Kaggle/kaggle-cli/blob/main/docs/kernels.md
