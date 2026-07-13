@@ -232,6 +232,33 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    `/no_think` model commits an action, rather than needing the model's own CoT. Add this as a second arm to
    test if precondition (a) fails, instead of just emitting `blocked_think_mode_incompatible_with_mtp` and
    stopping.
+
+   > **DONE 2026-07-13.** Precondition (a) confirmed compatible (`think_mode_compatible_with_mtp: true`) —
+   > but only after fixing a real bug in the compatibility check itself: the first automated probe reported a
+   > FALSE incompatibility because its tag check (`"<think>" in content`) missed the `<thinking>` tag variant
+   > the model actually emitted, and its 1.5x length-ratio fallback was too strict for a short `n_predict=120`
+   > probe (549 vs 403 chars, a real 36% delta, rejected by the threshold). Fixed by matching a tuple of known
+   > reasoning-tag prefixes + lowering the length fallback to 1.15x; re-verified against two independent
+   > manual probes showing genuine `/think`-mode reasoning content. Also found, independent of the A/B result
+   > itself: `LocalGGUFProposer`'s `no_think_prefix` attribute has NO EFFECT on real induction calls today —
+   > `CARNOT_ARC_CODEONLY_INDUCE` (default ON) hardcodes its own `/no_think\n` via `_L2_CODEONLY_DIRECTIVE`,
+   > which wins over the instance attribute. Testing `/think` required a scoped monkeypatch of that constant.
+   > Real 4-attempt measurement (m0r0 + sk48, both arms, live Qwen3.5-9B-MTP, 161.6s,
+   > `results/experiment_5594_think_mode_induction_quality_ab.json`): both arms induced successfully on both
+   > games (4/4); `heldout_accuracy` — m0r0 no_think=0.5 vs think=0.0 (no_think better), sk48 tied at 1.0.
+   > `honest_verdict: think_mode_ab_equal_success_no_think_higher_accuracy` — on this small 2-game roster,
+   > `/think` never wins and loses once. Neither game's window contained a real level-up, so the goal-predicate
+   > half of induction quality (REQ-ARC-WMTE-5593) is unmeasured. This is a narrower first pass than the task's
+   > full "actions-to-first-win on held-out games" ask (reused `WorldModelVerifier.heldout_accuracy` instead of
+   > a full solve-loop measurement) — an honest scope reduction per the task's own "cheap, dev-side-only"
+   > framing, not the final word. Per the frozen-live-stack guardrail, the `/no_think` live config is
+   > UNCHANGED — this result gives no evidence to justify unfreezing it, and remains an operator decision.
+   > Duck Harness's tool-loop fallback (the paragraph above) was not attempted this round since precondition
+   > (a) turned out compatible. Spec: `REQ-ARC-WMTE-5594` in
+   > `openspec/capabilities/arc-human-replay-frame-change/spec.md`. Tests:
+   > `tests/python/test_experiment_5594_think_mode_induction_quality_ab.py` (6 tests, including a direct
+   > regression test for the `<thinking>`-tag-variant bug).
+
 8. **(Heavier lift — real training infra, a 3090; not a cheap pilot) TRM-as-generator: PTRM-style
    stochastic multi-trajectory recursion + Carnot-verifier selection, history/intent-conditioned.**
    `prior_failures:` full writeup `docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md`,
