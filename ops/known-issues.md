@@ -610,6 +610,38 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > well-supported enough to justify a genuine cost/benefit evaluation, still an explicit
     > operator decision. Spec: `REQ-ARC-WMTE-5598`. Tests:
     > `tests/python/test_experiment_5598_generator_size_multiseed_ab.py` (5 tests).
+    >
+    > **REAL-REINDUCTION-PATH REVERSAL 2026-07-13 (exp5599, `REQ-ARC-WMTE-5599`, prompted by the
+    > operator's cost/benefit question).** Investigating `E3AgentPolicy._induce_and_plan()` (the
+    > method the SCORED live agent actually calls) found its LLM tier is ONLY invoked after a
+    > genuine level-up (`"level_up_reinduction"`) — for the initial exploration stall (no roster
+    > game this session has ever leveled up), the agent uses a zero-LLM TTT-prior + classical
+    > DSL/active-probe tiers instead, confirmed empirically (a real `lb.run_game` call on m0r0
+    > completed its internal induce step in 17.6s, far too fast for real LLM inference). **This
+    > means exp5596/5597/5598's induction-quality measurements never exercised the real live-agent
+    > reinduction code path at all** — their roster structurally can't trigger it. Built exp5599 to
+    > call `execute_bounded_llm_reinduction` (the exact function the scored agent invokes) directly
+    > on real, reproducible post-level-up transitions from `lp85` (the one game this session
+    > confirmed levels up), with a widened `n_ctx=22000` (fixing lp85's known context-overflow at
+    > the default 16384) and 3 stochastic repeats per arm (current vs candidate_27b).
+    >
+    > **Result reverses exp5598's finding.** `current`: plan_rate_given_levelup = 1/3 (33%), mean
+    > reinduce duration ~55s. `candidate_27b`: plan_rate_given_levelup = **0/3 (0%)** — worse, not
+    > better — and mean reinduce duration ~401s, **~7x slower**. `honest_verdict:
+    > reinduction_ab_current_plans_more_reliably`. Disclosed methodology gap: this call used the
+    > function's bare-default gating (`min_heldout_accuracy=0.0` etc.) rather than exactly
+    > replicating the real caller's stricter configured values (`min_heldout_accuracy=1.0` plus
+    > several other policy-specific kwargs) — a real fidelity gap, not hidden; current's one
+    > "planned" draw had `heldout_accuracy=0.0` and likely would not survive the real stricter
+    > threshold either. The plan-rate flip (1/3 vs 0/3, n=3) is not independently decisive alone,
+    > but the ~7x speed regression is sample-size-independent and severe.
+    >
+    > **Updated cost/benefit conclusion: do NOT switch the frozen live-submission generator.**
+    > exp5598's induction-quality signal did not carry over to the code path that actually matters
+    > for live play, and the theoretical speed-cost risk flagged in the cost/benefit discussion is
+    > now empirically confirmed as large. Frozen live-submission generator remains UNCHANGED. Spec:
+    > `REQ-ARC-WMTE-5599`. Tests:
+    > `tests/python/test_experiment_5599_reinduction_ab_lp85_levelup.py` (5 tests).
 
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning

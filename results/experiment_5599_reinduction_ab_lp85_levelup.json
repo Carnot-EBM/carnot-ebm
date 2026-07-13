@@ -1,0 +1,158 @@
+{
+  "experiment": "experiment_5599_reinduction_ab_lp85_levelup",
+  "schema": "carnot.exp5599.reinduction_ab_lp85_levelup.v1",
+  "result_path": "results/experiment_5599_reinduction_ab_lp85_levelup.json",
+  "honest_verdict": "complete: reinduction_ab_current_plans_more_reliably",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "current frozen live-submission generator (arm=current)"
+    },
+    {
+      "name": "Qwen3.6-27B-MTP",
+      "hf_id": "unsloth/Qwen3.6-27B-MTP-GGUF",
+      "role": "dense candidate, the exp5598 winner (arm=candidate_27b)"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; tests the REAL execute_bounded_llm_reinduction path the scored live agent calls after a level-up, not just induction-quality-in-isolation (exp5596/5597/5598's LocalGGUFProposer.induce() wrapper) -- a candidate that plans more reliably here is directly relevant to live solve efficiency"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- both arms invoke a real local GGUF proposer via the real internal reinduction function, not mocked"
+    },
+    "per_draw_results": {
+      "principle": "every individual draw is recorded (planned/skipped/plan_length/heldout_accuracy), not just aggregates -- lp85's exploration is stochastic, so preserving the full draw list lets a reader assess variance directly"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- offline dev measurement per task 13's own guardrail; does not flip the frozen live-submission generator"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "game": "lp85",
+  "n_repeats": 3,
+  "reinduction_n_ctx": 22000,
+  "per_draw_results": [
+    {
+      "arm": "current",
+      "repeat": 0,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 67.034,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.0,
+      "refinement_rounds_used": 2
+    },
+    {
+      "arm": "current",
+      "repeat": 1,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 78.082,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.0,
+      "refinement_rounds_used": 2
+    },
+    {
+      "arm": "current",
+      "repeat": 2,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 20.658,
+      "planned": true,
+      "skipped": "",
+      "plan_length": 1,
+      "heldout_accuracy": 0.0,
+      "refinement_rounds_used": 1
+    },
+    {
+      "arm": "candidate_27b",
+      "repeat": 0,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 294.938,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.3333333333333333,
+      "refinement_rounds_used": 2
+    },
+    {
+      "arm": "candidate_27b",
+      "repeat": 1,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 476.364,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.0,
+      "refinement_rounds_used": 2
+    },
+    {
+      "arm": "candidate_27b",
+      "repeat": 2,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 431.206,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.3333333333333333,
+      "refinement_rounds_used": 2
+    }
+  ],
+  "per_arm_summary": {
+    "current": {
+      "n_attempted": 3,
+      "n_levelup_reached": 3,
+      "n_planned": 1,
+      "plan_rate_given_levelup": 0.3333,
+      "mean_heldout_accuracy": 0.0
+    },
+    "candidate_27b": {
+      "n_attempted": 3,
+      "n_levelup_reached": 3,
+      "n_planned": 0,
+      "plan_rate_given_levelup": 0.0,
+      "mean_heldout_accuracy": 0.2222
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 5599,
+  "duration_s": 1462.004,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "reinduction_import": true,
+    "gguf_cached_current": true,
+    "gguf_cached_candidate_27b": true,
+    "llama_server_binary_present": true,
+    "gpu1_free_vram_sufficient": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "4f8a339d44afedbf70c38dbb797fc6910b6b65d0b27446635f7b9c5e8ae94996"
+}
