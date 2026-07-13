@@ -335,6 +335,35 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    as over-aggressive, mis-protecting context-dependent signatures and over-suppressing "twin"
    tiles that behave differently by position). Feeds `StepwiseExplorer._candidates` the same way
    `HazardMovePruner` feeds the offline solver's move list.
+
+   > **DONE 2026-07-13.** Built `InertClickSigPruner` (`python/carnot/agentic/
+   > arc_inert_click_pruner.py`) implementing the identical `should_prune(frame, label)` /
+   > `observe(frame_before, label, frame_after, leveled_up)` protocol as `HazardMovePruner`/
+   > `RelationalMaskMovePruner`, so it composes through the existing `CompositeMovePruner` and is
+   > live-path-reachable via `OfflineSolver`'s `move_pruner=` param with no new wiring (per the ARC
+   > Live-Path Reachability Discipline). Per structural signature `(color, size, is_rect,
+   > twin_count)` — computed via a new `click_signature()` helper on top of `connected_color_blobs`/
+   > a new `blob_at_click()` free function (promoted from `ColorBlobSaliencePrior`'s private
+   > `_blob_for_click`, purely additive) — the pruner tracks `(obs, inert, leveled)` counts and
+   > prunes only once `min_observations` (default 4, not Reki's K=2) AND `min_specificity` (default
+   > 0.9, replacing Reki's zero-tolerance) both clear, with any ever-leveled signature permanently
+   > sacred. Twin blobs sharing a signature transfer evidence to each other. 7 unit tests pass on
+   > synthetic grids (`tests/python/test_arc_inert_click_pruner.py`). A separate `rank_candidates`
+   > method matches `StepwiseExplorer._candidates`'s existing filter-protocol shape but is NOT yet
+   > wired into that live composition chain — a distinct, separately-scoped step (mirrors task
+   > #97's still-open color-blob live-wiring decision).
+   >
+   > Offline-sim prototype (`experiment_5595_inert_click_sig_pruner_offline_sim_prototype.py`) fed
+   > real transitions from a real `E3AgentPolicy`/`lb.run_game` exploration of `m0r0` (confirmed
+   > click-heavy: 21/22 transitions were clicks) into the pruner: 37 transitions, 32 clicks, 12
+   > distinct signatures tracked, 0 confidently inert at this budget — an honest null (average
+   > <3 observations per signature, below the evidence floor for most; the gate is DESIGNED to fail
+   > closed under sparse evidence, so this is expected behavior, not a bug). `inference_substrate`
+   > was corrected mid-task from an initial `live_llm_inference` guess to
+   > `offline_arcade_live_agent_runtime_self_discovery_no_llm` after `adversarial_verify.py`
+   > correctly flagged `DURATION_TOO_SHORT` (19.3s measured vs the 60s live-inference floor) — the
+   > proposer is wired but never actually invoked during pure exploration. Spec: `REQ-ARC-FCP-5595`
+   > in `openspec/capabilities/arc-human-replay-frame-change/spec.md`.
 10. **(New 2026-07-11, folds into task 2 above, do not run as a separate experiment) Extend the
     classical color-blob segmentation front-end (task 2) with translation-invariant object-hash
     tracking + containment/adjacency.** Full writeup: same SOTA-ingestion note (O4). The 1st-place

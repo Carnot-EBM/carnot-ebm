@@ -442,6 +442,23 @@ class ColorBlobSaliencePrior:
         }
 
 
+def blob_at_click(blobs: Sequence[ColorBlob], x: int, y: int) -> ColorBlob | None:
+    """REQ-ARC-FCP-5595: free-function form of ``ColorBlobSaliencePrior._blob_for_click`` --
+    the blob a click at ``(x, y)`` lands in, or the nearest-centroid blob as a fallback (a
+    click can land on a shared-color background gap between two components). Promoted to a
+    module-level function (identical logic, callers pass a full blob list) so callers
+    outside ``ColorBlobSaliencePrior`` -- e.g. ``arc_inert_click_pruner.InertClickSigPruner``
+    -- can reuse the exact same lookup without depending on the prior's tier/score machinery.
+    """
+
+    for blob in blobs:
+        if blob.contains_xy(x, y):
+            return blob
+    if not blobs:
+        return None
+    return min(blobs, key=lambda blob: math.dist((float(y), float(x)), blob.centroid))
+
+
 def object_hash(blob: ColorBlob) -> str:
     """REQ-ARC-FCP-5591: translation-invariant identity signature for a blob.
 
