@@ -388,6 +388,26 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     `operator_override: "2026-07-12 operator directive (standing): explicit decision to port the
     energy-scorer opportunity into our own E3AgentPolicy stack rather than fork forge's codebase —
     not a doomed-rerun risk, this is new measurement work with no prior attempt on file."`
+
+    > **DONE 2026-07-13 (outer-loop, exp5592):** matched-budget A/B on the full 11-game roster,
+    > `budget=200`, tier-3 induction disabled to isolate the candidate-selection axis. Honest,
+    > headroom-present result (`lp85` reached L1 in both arms): `per_game_levels_delta` zero on
+    > EVERY game, and total efficiency matched exactly (2.7778 both arms). Verified this is real,
+    > not a construction bug: the two arms' `lp85` rows show genuinely different search behavior
+    > (`actions_to_first_levelup` 7 vs 5, total actions 198 vs 5 — `bare_control_config`'s
+    > `target_levels=1` correctly stopped bare control immediately after L1 while the full stack
+    > kept exploring toward its default target of 3), and the efficiency METRIC saturated at the
+    > same capped value for both because `arc_agi.scorecard`'s per-level score is
+    > `min((human/agent)^2*100, 115)` and both 5 and 7 actions are already well under `lp85` L1's
+    > human baseline. **Honest conclusion: the richer candidate-scoring stack produced no measured
+    > level-up or action-efficiency advantage over bare control on this roster/budget.** The claim
+    > "our scoring stack is the arbiter forge wanted but couldn't afford" is NOT YET empirically
+    > supported and should not be cited as a moat without a follow-up at a different budget/roster,
+    > or a metric genuinely sensitive to the ablation (this roster's near-total lack of headroom —
+    > only 1/11 games reached any level at all — bounds how informative this specific run can be;
+    > a broader-headroom roster is the natural next check if this claim matters for paper-v6).
+    > `adversarial_verify.py` and the ARC artifact lint both clean. Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-FCP-5592.
 13. **(New 2026-07-12, HIGH PRIORITY — the frozen live generator's sizing constraint appears to be
     stale, not just conservative) Re-verify the Kaggle VRAM budget and A/B a larger generator before
     trusting the current 9B choice.** Operator question: "are we still using qwen-3.5-9B when the
