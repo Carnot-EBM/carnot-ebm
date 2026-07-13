@@ -3069,13 +3069,23 @@ class E3AgentPolicy:
             from carnot.agentic.arc_agi3_world_model import grid_of
             from carnot.agentic.arc_executable_world_model import Transition
 
-            g0, aid, data = self._prev
-            g1 = to_logical(grid_of(latest), self.cell)
-            transition = Transition(g0, aid, data, g1, 0, _level_of(latest))
-            self.transitions.append(transition)
-            self._dsl_transitions.append((g0, _action_key(aid, data), g1))
-            self._observe_active_probe_transition(transition)
-            self._maybe_route_from_transitions()
+            try:
+                g0, aid, data = self._prev
+                g1 = to_logical(grid_of(latest), self.cell)
+                transition = Transition(g0, aid, data, g1, 0, _level_of(latest))
+                self.transitions.append(transition)
+                self._dsl_transitions.append((g0, _action_key(aid, data), g1))
+                self._observe_active_probe_transition(transition)
+                self._maybe_route_from_transitions()
+            except Exception:
+                # A degenerate/empty frame (e.g. shape (0,) -- the same class of
+                # post-terminal sentinel diagnosed in the g50t apply_g50t_label
+                # incident) makes grid_of(latest) 1-D, so grid.shape unpacks to
+                # only one value. Skip recording this one transition rather than
+                # crash the whole game -- the boundary_events handler just below
+                # already applies this exact same defensive pattern for the same
+                # reason; this mirrors it for consistency.
+                pass
         boundary_events = self._observe_level_boundary(latest, frames_seen=len(frames))
         if boundary_events and latest is not None:
             try:
