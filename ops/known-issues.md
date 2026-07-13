@@ -70,6 +70,22 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    state-change read the live agent's perception layer currently relies on (`arc_frame_change_predictor`,
    `arc_online_action_effect_scorer`, or equivalent) for exactly this failure mode. This is a diagnostic, not
    a rebuild — report findings before proposing a fix.
+
+   > **DONE 2026-07-13 (outer-loop):** full write-up at
+   > `docs/research-notes/arc-perception-grounding-audit-2026-07-13.md`. Two findings. (1) Positive: the
+   > live frame-diff scorer (`GroundTruthValidatedFrameChangeScorer`) and tier-3 induced world-model code
+   > are both grounded against real observed pixels/held-out transitions, not self-consistency — neither
+   > channel is an LLM doing free-text self-assessment, so the literal Sensi failure mode does not apply to
+   > either as currently built. (2) Real but unrelated-to-Sensi: `FrameChangeScorer.candidate_score`'s
+   > `getattr(candidate, "action_id")` raises `AttributeError` on dict-shaped candidates, silently zeroing
+   > the CNN term (already project-documented in `arc_online_action_effect_scorer.py`'s docstring as a
+   > ~20/25-games false-negative cause, but the fix — `_as_action_like` — was only ever applied in that
+   > research-only module, never backported to the shipped `arc_frame_change_predictor.py` classes). Traced
+   > and confirmed this DOES fire on the live DEFAULT path via `ActionEffectExpansionPrior.frontier_priority`
+   > (`SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED = True`, no other gate) — every frontier-priority
+   > computation on the shipped agent silently drops the CNN's already-small (`cnn_weight=0.05`)
+   > contribution. Not fixed here (diagnostic-only per the task); candidate cheap follow-up if task 2 leaves
+   > slack, per the audit doc's recommendations section.
 2. **Classical connected-component/color-blob segmentation + salience-tiered action prioritization (the main
    new lever).** A real ARC-AGI-3 competitor (arXiv:2512.24156 / github.com/dolphin-in-a-coma/arc-agi-3-just-
    explore, 3rd place, 12/25 PRIVATE hidden levels, no learning, no LLM) segments each frame into single-color
