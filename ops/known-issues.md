@@ -580,6 +580,36 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > before either direction is trustworthy enough to inform an operator decision. Frozen
     > live-submission generator remains UNCHANGED. Tests:
     > `tests/python/test_experiment_5597_generator_size_ab_qwen35b_moe_vs_current.py` (5 tests).
+    >
+    > **MULTISEED RESOLUTION 2026-07-13 (exp5598, `REQ-ARC-WMTE-5598`, operator-directed: "scale
+    > up the roster and add multiple seeds").** Ran all THREE arms together (current + both
+    > candidates) on a widened 4-game roster (m0r0, sk48, cd82, sp80) with 3 independent repeats
+    > per (arm, game) cell (n=12 draws/arm). **First attempt hit a genuine hardware fault**: GPU 1
+    > (the outer loop's eGPU-hosted RTX 3090) fell completely off the PCI bus mid-run
+    > (`nvidia-smi -q -i 1`: "No devices were found"; even `nvidia-smi --gpu-reset` couldn't reach
+    > it) — required an operator power-cycle to recover; both GPUs came back healthy. Hardened the
+    > script before retrying: a per-arm `n_ctx` reduction for the 35B arm (modest — the tight VRAM
+    > margin is dominated by weights, not KV cache) and a real fix — a mid-run GPU-1-health check
+    > before every draw that aborts cleanly with a distinct `blocked_gpu1_lost_mid_run` verdict if
+    > the GPU vanishes again, instead of silently falling back to the slow iGPU mid-arm (what
+    > happened, undetected, in the first attempt).
+    >
+    > **The retry completed cleanly (no fault) and RESOLVES the exp5596-vs-exp5597 contradiction:
+    > at real statistical power, BOTH candidates beat the current generator.** Mean
+    > `heldout_accuracy`: current=0.100, candidate_27b=0.525, candidate_35b_moe=0.391.
+    > Paired win/loss/tie vs current: candidate_27b **10-0-2** (near-unanimous; naive sign test
+    > P~0.001 on the 10 decisive draws) — exp5596's original positive finding replicates and
+    > strengthens. candidate_35b_moe **5-1-5** (net positive but noisy; sign test P~0.11 on 6
+    > decisive draws) — consistent with exp5597's single negative draw having been an unlucky
+    > sample from a real-but-modest positive distribution, not a genuine loss. `honest_verdict:
+    > generator_size_multiseed_ab_ranked_candidate_27b_gt_candidate_35b_moe_gt_current`. Still a
+    > quality-only, offline, n=12/arm measurement (below the CLAUDE.md N>=30 floor for the
+    > absolute accuracy values, though the PAIRED comparison is meaningfully more trustworthy than
+    > either prior single-draw result) — MTP remains infeasible for both candidates on a single
+    > 24GB card. Frozen live-submission generator remains UNCHANGED; candidate_27b's edge is now
+    > well-supported enough to justify a genuine cost/benefit evaluation, still an explicit
+    > operator decision. Spec: `REQ-ARC-WMTE-5598`. Tests:
+    > `tests/python/test_experiment_5598_generator_size_multiseed_ab.py` (5 tests).
 
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning

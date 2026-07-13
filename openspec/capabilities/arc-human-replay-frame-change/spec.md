@@ -3888,3 +3888,100 @@ When `build_artifact` compares `heldout_accuracy` across arms
 Then the comparison honestly reports whichever arm has higher accuracy -- including a result
 where the LARGER candidate performs WORSE than the current generator, without any pressure to
 report a positive-sounding outcome
+
+### REQ-ARC-WMTE-5598: Properly-Powered Multiseed Generator-Size A/B -- Resolving the exp5596/5597 Contradiction
+
+exp5596 (dense Qwen3.6-27B-MTP, 2 games, n=1 draw/arm) found the candidate BEAT the current
+generator. exp5597 (MoE Qwen3.6-35B-A3B-MTP, same 2 games, n=1) found the candidate LOST. Both
+spec entries flagged this as likely sampling noise at n=1 -- this experiment resolves that by
+testing all THREE arms (current, both candidates) together on a widened 4-game roster (m0r0,
+sk48, cd82, sp80) with 3 independent repeated draws per (arm, game) cell (n=12 draws/arm total),
+batching the loop by arm (one server per arm, reused across all its draws, stopped once before
+the next arm starts) to avoid the per-attempt server-restart overhead exp5596/5597's interleaved
+loop would have incurred at this scale.
+
+**A genuine hardware fault interrupted the first attempt.** Mid-run, during the candidate_35b_moe
+arm, GPU 1 (the outer loop's dedicated RTX 3090, hosted in an external eGPU enclosure) dropped
+off the PCI bus entirely -- `nvidia-smi -q -i 1` returned "No devices were found," and even the
+purpose-built `nvidia-smi --gpu-reset -i 1` recovery tool could not reach it. This is a hardware/
+driver-level fault, not a script bug: the existing `_generator_server_and_env()` GPU-pinning
+guard (by design, per its own docstring, "never fight the conductor for the 3090s") silently fell
+back to the slow AMD iGPU when the free-VRAM check on GPU 1 started returning -1 (unreadable),
+which would have contaminated the arm's later draws with a different, inconsistent hardware tier
+partway through -- exactly the kind of confound this experiment was designed to eliminate. The
+operator physically power-cycled the machine to recover the eGPU; both RTX 3090s came back
+healthy afterward (confirmed via `nvidia-smi`).
+
+**Hardening added before the retry.** (1) A per-arm `n_ctx` override (`candidate_35b_moe`
+reduced from 16384 to 10240) intended to relax the arm's tight VRAM margin -- a direct manual
+comparison found this saved only ~80MB (21.9GB used either way; the footprint is dominated by
+model WEIGHTS, not KV cache, so this change alone would not have prevented the fault, and is kept
+as a modest, honest, non-load-bearing precaution rather than oversold as a fix). (2) A genuine
+fix: `_gpu1_free_mb() < 0` is now checked BEFORE every draw (not just once per arm); if GPU 1
+becomes unreachable mid-run, the experiment immediately stops collecting further draws and
+returns a distinct `generator_size_multiseed_ab_blocked_gpu1_lost_mid_run_partial_ranked_*`
+verdict rather than silently continuing on degraded hardware -- fail closed, not silently degrade.
+This guard was built defensively; it did NOT trigger on the successful retry (confirmed: no
+`gpu1_unreachable_mid_run_aborting_remaining_draws` row in the checked-in artifact).
+
+**RESOLUTION (2026-07-13).** The retried run completed cleanly on GPU 1 for all three arms
+(3061.6s total, 35 of 36 draws succeeded -- one candidate_35b_moe draw on sp80 hit a normal,
+honest induction failure: "syntax error line 159: expected an indented block," a real generated-
+code defect after 3 retries, unrelated to the earlier hardware fault). Mean `heldout_accuracy`:
+current=0.100 (std 0.289), candidate_27b=0.525 (std 0.352), candidate_35b_moe=0.391 (std 0.437).
+Paired win/loss/tie against current (per (game, repeat) cell): candidate_27b **10 wins / 0
+losses / 2 ties**; candidate_35b_moe **5 wins / 1 loss / 5 ties**. `honest_verdict:
+"complete: generator_size_multiseed_ab_ranked_candidate_27b_gt_candidate_35b_moe_gt_current"`.
+
+**This resolves the exp5596-vs-exp5597 contradiction: at real statistical power, BOTH candidates
+beat the current generator, with the dense 27B model the clearer, more decisive winner.**
+candidate_27b's 10-0-2 paired record is a near-unanimous signal (a naive sign test on the 10
+decisive draws: P(10/10 or better under a fair-coin null) = 0.5^10 ~ 0.001) -- exp5596's original
+positive finding replicates and strengthens with more data. candidate_35b_moe's 5-1-5 record is
+net positive but much weaker and noisier (sign test on 6 decisive draws: P(>=5/6) ~ 0.11, not
+strong evidence on its own) -- consistent with exp5597's negative n=1 draw having been an
+unlucky single sample from a real but modest, noisy positive distribution, not a genuine
+candidate-loses-to-current effect. Both candidates ran WITHOUT MTP (self-draft infeasible on a
+single 24GB card for both, reusing exp5596/5597's feasibility check unmodified) -- this remains
+an open axis: performance AND speed on the actual Kaggle hardware (a 96GB RTX Pro 6000, per
+REQ-ARC-WMTE-5596's task-13(a) finding) where self-draft would fit is untested.
+
+**What this does and does not show.** Still a 4-game, offline dev-quality-only measurement (not a
+full actions-to-first-win live-solve sweep, and n=12/arm is still below the CLAUDE.md N>=30 floor
+for a firm percentage-point claim on the absolute accuracy VALUES) -- but the PAIRED, WITHIN-RUN,
+same-hardware-tier, multi-draw comparison is now genuinely more trustworthy than either single-
+draw prior result, and candidate_27b's near-unanimous win record is a real, replicated, promising
+signal specifically for the dense 27B candidate. Per the task's own guardrail and CLAUDE.md's
+frozen-live-stack discipline, this result does NOT change the frozen live generator -- it is
+reported as an offline dev measurement requiring an explicit operator decision. The honest
+recommendation: candidate_27b's induction-quality edge is now well-supported enough to justify a
+genuine cost/benefit evaluation for switching (weighed against Kaggle quota, actual scored-
+hardware VRAM/MTP behavior, and a fuller live-solve test) -- it is no longer just a single-draw
+curiosity.
+
+Required field principles: identical to REQ-ARC-WMTE-5596/5597's `candidate_declares_mtp_
+metadata`/`candidate_mtp_self_draft_fits_vram`/`candidate_mtp_used` (per-arm here), plus:
+
+- `per_draw_results`: principle "every individual (arm, game, repeat) draw is recorded, not just
+  aggregates -- exp5596/5597's contradiction came from single draws, so preserving the full draw
+  list is what lets a reader assess variance directly rather than trusting a summary alone."
+- `paired_vs_current`: principle "per-(game, repeat) win/loss/tie counts against the current arm,
+  the higher-power paired comparison (controls for per-game/per-draw difficulty) vs comparing
+  unpaired means across arms."
+
+#### SCENARIO-ARC-WMTE-5598-MULTISEED-PAIRED-COMPARISON
+
+Given multiple independent draws per (arm, game) cell across a widened roster
+When `build_artifact` computes `per_arm_summary` and `paired_vs_current`
+Then the paired win/loss/tie counts against the current arm are reported per candidate, giving a
+higher-power signal than any single-draw comparison, without asserting formal statistical
+significance beyond what the sample size supports
+
+#### SCENARIO-ARC-WMTE-5598-ARM-BATCHED-SERVER-LIFECYCLE
+
+Given three arms sharing one GPU, each needing multiple draws across multiple games
+When `build_artifact` runs the game/repeat loops
+Then exactly one proposer/server is constructed per arm (reused across all its draws) and
+explicitly stopped before the next arm starts, and a mid-run GPU-health check aborts the run
+honestly (rather than silently falling back to different hardware) if the GPU becomes unreachable
+between draws

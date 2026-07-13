@@ -1,0 +1,533 @@
+{
+  "experiment": "experiment_5598_generator_size_multiseed_ab",
+  "schema": "carnot.exp5598.generator_size_multiseed_ab.v1",
+  "result_path": "results/experiment_5598_generator_size_multiseed_ab.json",
+  "honest_verdict": "complete: generator_size_multiseed_ab_ranked_candidate_27b_gt_candidate_35b_moe_gt_current",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "current frozen live-submission generator (arm=current)"
+    },
+    {
+      "name": "Qwen3.6-27B-MTP",
+      "hf_id": "unsloth/Qwen3.6-27B-MTP-GGUF",
+      "role": "dense candidate, exp5596's original candidate (arm=candidate_27b)"
+    },
+    {
+      "name": "Qwen3.6-35B-A3B-MTP",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-MTP-GGUF",
+      "role": "MoE candidate, exp5597's candidate (arm=candidate_35b_moe)"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a ranked, descriptive summary across 3 arms, NOT a significance claim -- n=12 draws/arm is more powered than exp5596/5597's n=2 but still below the CLAUDE.md N>=30 floor for a firm percentage-point claim"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- all arms invoke a real local GGUF proposer, not mocked"
+    },
+    "per_draw_results": {
+      "principle": "every individual (arm, game, repeat) draw is recorded, not just aggregates -- exp5596/5597's contradiction came from single draws, so preserving the full draw list is what lets a reader assess variance directly rather than trusting a summary alone"
+    },
+    "paired_vs_current": {
+      "principle": "per-(game, repeat) win/loss/tie counts against the current arm, the higher-power paired comparison (controls for per-game/per-draw difficulty) vs comparing unpaired means across arms"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- offline dev measurement per task 13's own guardrail; does not flip the frozen live-submission generator"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "roster": [
+    "m0r0",
+    "sk48",
+    "cd82",
+    "sp80"
+  ],
+  "n_seeds": 3,
+  "arm_mtp_used": {
+    "current": true,
+    "candidate_27b": false,
+    "candidate_35b_moe": false
+  },
+  "per_draw_results": [
+    {
+      "arm": "current",
+      "game": "m0r0",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 1.037,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "m0r0",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 1.192,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "m0r0",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.974,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "sk48",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 2.372,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "sk48",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 2.815,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "sk48",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.761,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "cd82",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 1.106,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "cd82",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 1.29,
+      "heldout_accuracy": 0.2,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "cd82",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.979,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "sp80",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.76,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "sp80",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 1.764,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "current",
+      "game": "sp80",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.756,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "m0r0",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 24.92,
+      "heldout_accuracy": 0.5,
+      "cell_recall": 0.2
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "m0r0",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 46.704,
+      "heldout_accuracy": 0.5,
+      "cell_recall": 1.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "m0r0",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 117.617,
+      "heldout_accuracy": 0.5,
+      "cell_recall": 0.4
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "sk48",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.919,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "sk48",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.914,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "sk48",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 0.916,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "cd82",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 64.247,
+      "heldout_accuracy": 0.3,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "cd82",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 87.876,
+      "heldout_accuracy": 0.3,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "cd82",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 38.192,
+      "heldout_accuracy": 0.3,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "sp80",
+      "repeat": 0,
+      "transition_count": 7,
+      "induction_ok": true,
+      "induce_duration_s": 235.942,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "sp80",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 111.994,
+      "heldout_accuracy": 0.8,
+      "cell_recall": 0.8666666666666666
+    },
+    {
+      "arm": "candidate_27b",
+      "game": "sp80",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 16.77,
+      "heldout_accuracy": 0.1,
+      "cell_recall": 0.1
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "m0r0",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 57.341,
+      "heldout_accuracy": 0.5,
+      "cell_recall": 1.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "m0r0",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 102.067,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "m0r0",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 54.189,
+      "heldout_accuracy": 0.5,
+      "cell_recall": 1.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "sk48",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 12.14,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "sk48",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 15.281,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "sk48",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 43.448,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "cd82",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 58.115,
+      "heldout_accuracy": 0.3,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "cd82",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 84.54,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "cd82",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 54.213,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "sp80",
+      "repeat": 0,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 49.025,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "sp80",
+      "repeat": 1,
+      "transition_count": 10,
+      "induction_ok": true,
+      "induce_duration_s": 41.827,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0
+    },
+    {
+      "arm": "candidate_35b_moe",
+      "game": "sp80",
+      "repeat": 2,
+      "transition_count": 10,
+      "induction_ok": false,
+      "induce_duration_s": 118.77,
+      "induction_failure_detail": "split induce: engine failed: local model code unusable after 3 tries (syntax error line 159: expected an indented block after function definition on line 3)"
+    }
+  ],
+  "per_arm_summary": {
+    "current": {
+      "n_attempted": 12,
+      "n_induction_ok": 12,
+      "mean_accuracy": 0.1,
+      "std_accuracy": 0.2892,
+      "per_game": {
+        "m0r0": {
+          "n_draws": 3,
+          "mean_accuracy": 0.0,
+          "std_accuracy": 0.0
+        },
+        "sk48": {
+          "n_draws": 3,
+          "mean_accuracy": 0.3333,
+          "std_accuracy": 0.5774
+        },
+        "cd82": {
+          "n_draws": 3,
+          "mean_accuracy": 0.0667,
+          "std_accuracy": 0.1155
+        },
+        "sp80": {
+          "n_draws": 3,
+          "mean_accuracy": 0.0,
+          "std_accuracy": 0.0
+        }
+      }
+    },
+    "candidate_27b": {
+      "n_attempted": 12,
+      "n_induction_ok": 12,
+      "mean_accuracy": 0.525,
+      "std_accuracy": 0.3519,
+      "per_game": {
+        "m0r0": {
+          "n_draws": 3,
+          "mean_accuracy": 0.5,
+          "std_accuracy": 0.0
+        },
+        "sk48": {
+          "n_draws": 3,
+          "mean_accuracy": 1.0,
+          "std_accuracy": 0.0
+        },
+        "cd82": {
+          "n_draws": 3,
+          "mean_accuracy": 0.3,
+          "std_accuracy": 0.0
+        },
+        "sp80": {
+          "n_draws": 3,
+          "mean_accuracy": 0.3,
+          "std_accuracy": 0.4359
+        }
+      }
+    },
+    "candidate_35b_moe": {
+      "n_attempted": 12,
+      "n_induction_ok": 11,
+      "mean_accuracy": 0.3909,
+      "std_accuracy": 0.4369,
+      "per_game": {
+        "m0r0": {
+          "n_draws": 3,
+          "mean_accuracy": 0.3333,
+          "std_accuracy": 0.2887
+        },
+        "sk48": {
+          "n_draws": 3,
+          "mean_accuracy": 1.0,
+          "std_accuracy": 0.0
+        },
+        "cd82": {
+          "n_draws": 3,
+          "mean_accuracy": 0.1,
+          "std_accuracy": 0.1732
+        },
+        "sp80": {
+          "n_draws": 2,
+          "mean_accuracy": 0.0,
+          "std_accuracy": 0.0
+        }
+      }
+    }
+  },
+  "paired_vs_current": {
+    "candidate_27b": {
+      "wins": 10,
+      "losses": 0,
+      "ties": 2
+    },
+    "candidate_35b_moe": {
+      "wins": 5,
+      "losses": 1,
+      "ties": 5
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 5598,
+  "duration_s": 3061.634,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "gguf_cached_current": true,
+    "gguf_cached_candidate_27b": true,
+    "gguf_cached_candidate_35b_moe": true,
+    "llama_server_binary_present": true,
+    "gpu1_free_vram_sufficient": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "6e6c995d7eb9729002907c99496097603390eed56b82f378cf0ee9a4b58febd3"
+}
