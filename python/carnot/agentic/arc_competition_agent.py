@@ -144,10 +144,25 @@ MATM_SIMILARITY_MAX_CANDIDATES = 8
 # extra actions) rather than the probe-based `arc_graph_explore.discover_hud_mask` (burns up
 # to 4 real actions from reset -- fine for the offline dev harness where resets are free, not
 # viable under RHAE live scoring where extra actions are squared against the human baseline).
-# Default OFF pending the Phase Prototype + Empirical Validation + Adversarial Check
-# Discipline's offline validation pass (see docs/research-notes/ for the comparison that
-# surfaced this gap; flip only after a matched-budget A/B clears a real bar).
-SUBMITTED_AUTO_HUD_MASK_ENABLED = False
+# 2026-07-12 RESOLUTION (REQ-ARC-WMTE-5583): two offline matched-budget A/Bs (exp5584,
+# exp5585 -- the second using E3AgentPolicy's own REAL default search components, not a
+# weak stand-in) both confirmed the mechanism's direct effect (distinct_states_delta:
+# large, consistent, HUD-positive-games-only reductions; positive control clean both
+# times) with ZERO measured harm on the in-roster HUD-negative control game, but both
+# hit the SAME floor effect on levels_gained (no level-up reached in EITHER arm on ANY
+# roster game at either budget) -- a limitation of the current from-scratch explorer's
+# basic capability ceiling on this roster, independent of auto_hud_mask, confirmed by
+# adversarial_verify.py's FALSE_NEGATIVE_RISK flag on both artifacts. Per operator
+# directive: invoking the tier-3 LLM proposer to manufacture headroom for a third
+# offline A/B was rejected (the verified hidden-leaderboard top-3 all use NO LLM
+# proposer at all, per a comparative leaderboard analysis this session). The
+# levels_gained question is DEFERRED to live-submission telemetry rather than further
+# offline attempts; flipped ON here on the strength of the established safety case
+# (structurally the mechanism can only collapse cells already proven action-invariant,
+# never introduce a false collapse of genuine board state -- see
+# _compute_hud_mask_from_frame's docstring), not a proven levels_gained win. See
+# REQ-ARC-WMTE-5583's RESOLUTION note for the full record.
+SUBMITTED_AUTO_HUD_MASK_ENABLED = True
 SUBMITTED_AUTO_HUD_MASK_MODE = "rule_based_status_bar_classifier_single_frame"
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()

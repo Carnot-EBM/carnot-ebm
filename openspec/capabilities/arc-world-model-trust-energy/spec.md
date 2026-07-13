@@ -14625,6 +14625,48 @@ Adversarial Check Discipline, and SHALL be retired per the Failed-Experiment
 Rerun Discipline if it comes back null rather than silently left half-
 validated.
 
+**RESOLUTION (2026-07-12).** Two offline A/Bs ran: `exp5584`
+(`results/experiment_5584_hud_mask_offline_ab.json`, 6-game roster, the
+stripped-down bare explorer config `exp5578` also used) and `exp5585`
+(`results/experiment_5585_hud_mask_strong_config_ab.json`, a 3-game roster
+picked for the shortest known scripted-solve lengths, using
+`E3AgentPolicy`'s OWN real default components -- `DaggerWinReachabilityValueHead`,
+`CrossGameDiscriminativeCandidateRouter`, `GroundTruthValidatedFrameChangeScorer`,
+`ColorBlobSaliencePrior` -- not a weak stand-in). Both independently confirmed
+the mechanism's designed-for direct effect (`distinct_states_delta`: large,
+consistent, HUD-positive-only reductions in duplicate-state discovery;
+`mask_fired_matches_survey: true` both times) with zero measured harm on the
+in-roster HUD-negative control game (`sk48`, states unchanged both runs). Both
+also hit the SAME floor effect on `levels_gained` (`levels_gained_headroom_present:
+false` both times) -- no level-up reached in EITHER arm on ANY roster game at
+either budget, meaning the null on `levels_gained` is uninformative (CLAUDE.md
+FALSE_NEGATIVE_RISK, independently flagged by `adversarial_verify.py` on both
+artifacts) rather than evidence against the mechanism. The floor persisted even
+with the real submitted search components, indicating the current from-scratch
+explorer's basic capability ceiling on this roster is the binding constraint, not
+`auto_hud_mask` specifically.
+
+Per operator directive (2026-07-12): given a comparative leaderboard analysis
+independently found the top 3 verified hidden-leaderboard entries use NO LLM
+proposer at all (see `docs/research-notes/` session record; the one LLM-as-core-
+solver family measures <0.4% on truly hidden games), invoking the tier-3 LLM
+proposer to manufacture levels_gained headroom for a THIRD offline A/B was
+rejected as contrary to that evidence. **The `levels_gained` question is
+DEFERRED to live-submission telemetry rather than further offline A/B attempts.**
+Because deferring to live telemetry requires the mechanism to actually run
+during live play for telemetry to exist to defer to, `SUBMITTED_AUTO_HUD_MASK_ENABLED`
+is flipped to `True` on the strength of the safety case established by both
+A/Bs (positive control clean both times, zero regression on the HUD-negative
+control, the mechanism structurally can only collapse cells already proven
+action-invariant -- it cannot introduce a false collapse of genuine board
+state; see `_compute_hud_mask_from_frame`'s docstring). This is NOT a claim
+that `levels_gained` is proven positive -- it remains genuinely unmeasured;
+it is a claim that the downside risk is low enough to ship while telemetry
+accumulates. A future session reviewing live-submission telemetry (levels
+reached, actions used, RHAE) from a run with this flag on, compared against
+telemetry from before this flip, is the intended resolution path for the
+still-open `levels_gained` question.
+
 #### SCENARIO-ARC-WMTE-5583-STATUS-BAR-CHANGE-DEDUPS
 
 Given a frame whose top row is a full-width, thin, edge-touching status bar
@@ -14645,11 +14687,14 @@ previously-hashed frame
 Then `_hash` returns a DIFFERENT hash, proving the mask does not collapse
 genuine state changes
 
-#### SCENARIO-ARC-WMTE-5583-DEFAULT-OFF-PARITY
+#### SCENARIO-ARC-WMTE-5583-DEFAULT-PARITY
 
 Given `E3AgentPolicy` constructed with its default arguments (the shipped
 configuration)
 When `pol.explorer.auto_hud_mask` is compared against
 `SUBMITTED_AGENT_CONFIG["auto_hud_mask_enabled"]`
-Then they are equal, and both are `False` until an offline validation pass
-justifies flipping the default.
+Then they are equal -- both `False` until the 2026-07-12 RESOLUTION above,
+both `True` after it (deferred to live-submission telemetry per operator
+directive, on the strength of the safety case rather than a levels_gained
+win)-- so a silent divergence between what is measured and what ships is
+still caught regardless of which value is current.
