@@ -322,6 +322,27 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     binding constraint (frame-only order-1 features at LOO=chance); (b) an explicit containment
     tree (`children`) and adjacency list on top of the raw blob list. When task 2 is implemented,
     add these two as explicit sub-components rather than stopping at size/color salience tiers.
+
+    > **DONE 2026-07-13 (outer-loop):** task 2's base tiers were already shipped and live
+    > (`ColorBlobSaliencePrior`, `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` in
+    > `arc_competition_agent.py`) — confirmed before starting, to avoid duplicating it. Added the
+    > two missing sub-components additively to `python/carnot/agentic/arc_color_blob_salience.py`,
+    > reimplemented cleanly from the Duck Harness reference (inspiration tier, not copied) rather
+    > than modifying `ColorBlob`'s fields or `connected_color_blobs`'s signature: `object_hash(blob)`
+    > (sha1 of color + top-left-normalized cell shape) and `blob_topology(frame)` (full unfiltered
+    > partition -> containment tree via complement flood-fill per blob + 4-connected adjacency list).
+    > Unit-tested on synthetic grids (translation invariance, shape/color discrimination, nested
+    > containment, full-partition pixel coverage — `tests/python/test_arc_color_blob_salience_object_
+    > topology.py`, 5/5 passing) AND prototyped against the offline dev sim on 5 REAL games (`exp5591`,
+    > `results/experiment_5591_blob_topology_offline_sim_prototype.json`, `adversarial_verify.py`
+    > clean): real frames segment into 7-68 blobs with genuine containment depth 2-3 (not degenerate),
+    > and the core load-bearing claim — that `object_hash` tracks an object's identity ACROSS a real
+    > env transition, not just within one synthetic grid — was confirmed on 5/5 games (`cd82, m0r0,
+    > sk48, sp80, tu93`) after a single real action. Pure additive data (no change to any existing
+    > `ColorBlobSaliencePrior` scoring/ranking behavior); NOT yet wired into a live consuming
+    > mechanism (e.g. preferring an object whose hash was seen to change in a prior frame) — that is
+    > a distinct, separately-scoped design + empirical-validation step per the Phase Prototype +
+    > Empirical Validation discipline, not done here.
 11. **(New 2026-07-11, genuinely new but small, directly in-thesis) Hallucination-consistency
     checks: claimed-diff vs measured-diff, goal-hypothesis vs observed transitions.** Full writeup:
     same SOTA-ingestion note (O3, and O5 as its time-extended follow-on — do not build O5's NL
