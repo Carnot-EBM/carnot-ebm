@@ -1,0 +1,152 @@
+{
+  "experiment": "experiment_5589_tier3_induction_normal_budget_capability_check",
+  "schema": "carnot.exp5589.tier3_induction_normal_budget_capability_check.v1",
+  "result_path": "results/experiment_5589_tier3_induction_normal_budget_capability_check.json",
+  "honest_verdict": "complete: tier3_induction_crash_free_but_still_no_usable_plan_at_normal_budget",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default tier-3 world-model induction proposer"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a planned-and-useful outcome, a crash-free-but-rejected outcome, a crashing outcome, and an inconclusive (stall never triggered) run are all distinct, real outcomes"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the real default Qwen3.5-9B-MTP proposer is invoked via an explicit construction pinned to the pre-warmed port-8920 server, not mocked"
+    },
+    "explore_budget_forced": {
+      "principle": "False -- unlike exp5588, this run uses E3AgentPolicy's own NORMAL routed explore_budget so a stall (if reached) carries a realistic transition count, not an artificially starved one"
+    },
+    "stall_attempt_transition_count": {
+      "principle": "the actual transition_count on the stall attempt (if reached) -- lets a reader judge whether the induction had a realistic amount of signal, unlike exp5588's forced 7"
+    },
+    "levels_reached": {
+      "principle": "the leaderboard harness's own levels field -- honest capability signal; this experiment does NOT claim a registry-countable solve regardless of this value (solve_provenance stays development_proxy)"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "target_game": "m0r0",
+  "explore_budget_forced": false,
+  "total_budget": 150,
+  "induction_attempts": [
+    {
+      "reason": "stall",
+      "goal_level": 1,
+      "transition_count": 25,
+      "dsl_transition_count": 25,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "planned": false,
+      "skipped": "hidden_state_trust_below_threshold",
+      "ttt_prior_engine": {
+        "backend": "cnn",
+        "n_transitions": 25,
+        "warm_start": false,
+        "prior_transition_count": 0,
+        "prior_loaded": true,
+        "heldout_accuracy": 0.5,
+        "heldout_cell_recall": 1.0,
+        "trust_threshold": 0.5,
+        "trust_metric": "cell_recall",
+        "gate": "PASS"
+      },
+      "trust_energy": 185.397805,
+      "heldout_change_consistency": 0.0,
+      "heldout_accuracy": 0.125,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false
+    }
+  ],
+  "stall_attempt_reached": true,
+  "stall_attempt_crashed": false,
+  "stall_attempt_planned": false,
+  "stall_attempt_transition_count": 25,
+  "levels_reached": 0,
+  "leaderboard_row": {
+    "game": "m0r0",
+    "levels": 0,
+    "reached": 0,
+    "actions": 149,
+    "efficiency": 0.0,
+    "per_level_efficiency": 0.0,
+    "per_level": [
+      {
+        "level": 0,
+        "agent_actions": 149,
+        "human_actions": 30,
+        "completed": false
+      },
+      {
+        "level": 1,
+        "agent_actions": 0,
+        "human_actions": 111,
+        "completed": false
+      },
+      {
+        "level": 2,
+        "agent_actions": 0,
+        "human_actions": 203,
+        "completed": false
+      },
+      {
+        "level": 3,
+        "agent_actions": 0,
+        "human_actions": 26,
+        "completed": false
+      },
+      {
+        "level": 4,
+        "agent_actions": 0,
+        "human_actions": 500,
+        "completed": false
+      },
+      {
+        "level": 5,
+        "agent_actions": 0,
+        "human_actions": 237,
+        "completed": false
+      }
+    ],
+    "deepest_level_reached": 0,
+    "navigation_diagnostics": {
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0
+    },
+    "reset_replay_steps": 0,
+    "forward_walk_hit_rate": 0.0,
+    "actions_to_first_levelup": null,
+    "gap": {
+      "game": "m0r0",
+      "stuck_at_level": 0,
+      "actions_spent": 149,
+      "signature": "no_level_up_within_budget",
+      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "predecessor_experiments": [
+    "experiment_5588_tier3_induction_live_path_sanity_check"
+  ],
+  "random_seed": 5589,
+  "duration_s": 37.086,
+  "flagged_adversarial": true,
+  "methodology_note": "duration_s may legitimately fall under the live_llm_inference 60s floor because the server on port 8920 was already warm (preconditions_checked.port_8920_prewarmed=True) and CARNOT_ARC_CODEONLY_INDUCE's fast path applied -- see exp5588's independent corroboration (a standalone timed completion against the same server: 25.43s, 406 tokens, 16.28 tok/s, draft_n_accepted=273/402) for the underlying evidence this is a real, honest completion, not a shortcut.",
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "gguf_cached": true,
+    "llama_server_binary_present": true,
+    "port_8920_prewarmed": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "c23d001ee2195f00c67d643ef6c8f5cff0dcc410dca3a5ef194ef49f65b0d7b6"
+}
