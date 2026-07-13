@@ -3985,3 +3985,95 @@ Then exactly one proposer/server is constructed per arm (reused across all its d
 explicitly stopped before the next arm starts, and a mid-run GPU-health check aborts the run
 honestly (rather than silently falling back to different hardware) if the GPU becomes unreachable
 between draws
+
+### REQ-ARC-WMTE-5599: Real Reinduction-Path A/B -- candidate_27b Reverses on the Actual Scored Code Path
+
+Follow-on to REQ-ARC-WMTE-5598, prompted by the operator's cost/benefit question. Investigating
+`E3AgentPolicy._induce_and_plan()` (the method the SCORED live agent actually calls) found its
+LLM tier (`execute_bounded_llm_reinduction`, `arc_llm_reinduction.py`) is ONLY invoked when the
+induction reason is `"level_up_reinduction"` -- a genuine level-up just happened. For the
+initial `"stall"` reason (exploration exhausted without ever winning), the agent tries a
+zero-LLM TTT-prior model, then classical DSL/active-probe tiers -- the LLM is never invoked.
+Confirmed empirically: a direct `lb.run_game` measurement on `m0r0` (never-leveled, like every
+roster game in exp5596/5597/5598) completed `_induce_and_plan()` in 17.6s -- far too fast for
+real LLM inference -- and `level_induction_events` stayed empty. **This means exp5596/5597/5598's
+induction-quality measurements, while real and valid as a measure of induction quality via the
+`LocalGGUFProposer.induce()` wrapper, could not have exercised the real live-agent reinduction
+code path on their own roster** -- that roster structurally cannot trigger it.
+
+This experiment instead calls `execute_bounded_llm_reinduction` directly -- the exact function
+the scored agent invokes -- on real, reproducible post-level-up transitions from `lp85` (the one
+game with a session-confirmed level-up, `first_levelup_index` around 6). A widened
+`n_ctx=22000` (up from the class default 16384) was required and verified first via a manual
+pre-check: lp85's 64x64 grid previously overflowed the induction prompt at 16384 (exp5593's real
+HTTP 400 `exceed_context_size_error`); 22000 resolved it (a real 101.6s call completed cleanly).
+3 independent repeats per arm (lp85's exploration is stochastic; fresh transitions collected
+every draw), current vs `candidate_27b` (exp5598's clear induction-quality winner), same
+GPU-1/stop-between-arms/GPU-health-guard discipline as exp5598.
+
+**DISCLOSED METHODOLOGY GAP (found reviewing the real result, not hidden).** `_induce_and_plan()`
+calls `execute_bounded_llm_reinduction` with `min_heldout_accuracy=1.0` plus several other
+policy-configured kwargs (`enable_subgoal_search`, `subgoal_budget`, `value_head`,
+`enable_factored_planner`, `factored_trust_threshold`, `structural_goal_provider`). This
+experiment's call used the function's own bare defaults for all of these (`min_heldout_accuracy
+=0.0` etc.) rather than replicating the exact policy-configured values -- a real fidelity gap
+against the true scored call site, not a bit-identical replication. This is flagged explicitly
+because `current`'s one "planned" draw (repeat 2, below) had `heldout_accuracy=0.0`, which would
+almost certainly have been REJECTED under the real agent's strict 1.0 threshold -- so even
+`current`'s single apparent success may not survive under the real, stricter gating. This
+experiment answers "does the generator work through the reinduction machinery under standard/
+default gating," a real and useful question, but not a bit-identical replication of the scored
+call site; a follow-on with exact parameter matching is the natural next step if this result is
+acted on.
+
+**RESOLUTION (2026-07-13) -- REVERSES exp5598's induction-quality-only finding.** All 6 draws
+reached the real level-up transition set (37 total transitions, level-up at action 7, 8-transition
+induce window, consistent across every draw). `current`: plan_rate_given_levelup = **1/3 (33%)**,
+`reinduce_duration_s` = 67.0s / 78.1s / 20.7s (mean ~55s), mean `heldout_accuracy` = 0.0.
+`candidate_27b`: plan_rate_given_levelup = **0/3 (0%)** -- WORSE, not better -- and
+`reinduce_duration_s` = 294.9s / 476.4s / 431.2s (mean ~401s, i.e. **~7x slower** than current),
+mean `heldout_accuracy` = 0.222 (nominally higher than current's 0.0, but never actually
+producing a usable plan in any of the 3 draws). `honest_verdict:
+"complete: reinduction_ab_current_plans_more_reliably"`.
+
+**What this changes for the cost/benefit recommendation.** exp5598's induction-quality signal
+(candidate_27b wins 10-0-2 on a held-out-accuracy proxy, n=12/arm) was real and well-powered, but
+this experiment shows that signal does NOT carry over to the real live-agent reinduction code
+path: candidate_27b never once produced a usable plan here, while current did once (with the
+above-noted caveat about whether that one success would survive stricter gating), AND
+candidate_27b is dramatically slower per attempt (~7x). **This reverses the tentative
+recommendation from the cost/benefit discussion following exp5598** -- candidate_27b's induction-
+quality edge does not translate into better live-agent planning reliability on this test, and its
+severe speed cost (already flagged as a theoretical risk in that discussion) is now empirically
+confirmed as large. The honest conclusion: **do not switch the frozen live-submission generator
+based on the evidence gathered so far** -- exp5598's quality-only signal was measuring the wrong
+thing for this decision, and the real-reinduction-path test (despite its own disclosed parameter-
+fidelity gap) points the opposite direction, on top of a severe throughput cost.
+
+**Scope limits, honestly stated.** n=3 repeats per arm on a SINGLE game (lp85) is a small sample;
+`plan_rate 1/3 vs 0/3` is not independently statistically decisive on its own (a single flip on
+either side would change the ranking). The speed finding (~7x slower) is the more robust,
+sample-size-independent part of this result. The disclosed parameter-fidelity gap (bare function
+defaults vs the real policy's stricter configured values) means this is not the final word on
+the planning-reliability question either. Taken together with exp5598's contradicted signal, the
+overall picture is: no candidate has yet shown a reliable, real advantage on the metric that
+matters (live planning success), and the cost (speed) is real and severe.
+
+Required field principles: identical structure to REQ-ARC-WMTE-5596/5597/5598.
+
+#### SCENARIO-ARC-WMTE-5599-REAL-REINDUCTION-PATH
+
+Given real post-level-up transitions and a candidate generator with a strong induction-quality
+signal from a prior, narrower experiment
+When `execute_bounded_llm_reinduction` (the actual function the scored live agent calls) is
+invoked directly with that candidate as the proposer
+Then the plan-success rate and wall-clock cost are measured on the real code path, which may
+disagree with the narrower induction-quality proxy -- and the experiment reports whichever
+direction the real data shows, without assuming the narrower result carries over
+
+#### SCENARIO-ARC-WMTE-5599-CONTEXT-BUDGET-FIX-VERIFIED
+
+Given a large-grid game whose induction prompt previously overflowed the default context window
+When the reinduction call is made with a widened `n_ctx`
+Then the call completes without a context-size error, isolating any subsequent
+planning-quality result from the context-budget confound
