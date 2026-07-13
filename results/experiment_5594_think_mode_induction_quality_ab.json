@@ -1,0 +1,95 @@
+{
+  "experiment": "experiment_5594_think_mode_induction_quality_ab",
+  "schema": "carnot.exp5594.think_mode_induction_quality_ab.v1",
+  "result_path": "results/experiment_5594_think_mode_induction_quality_ab.json",
+  "honest_verdict": "complete: think_mode_ab_equal_success_no_think_higher_accuracy",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default tier-3 world-model induction proposer"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; think mode helping, not helping, or being incompatible with MTP are all distinct, real, citable outcomes"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- both arms invoke the real default Qwen3.5-9B-MTP proposer, not mocked"
+    },
+    "think_mode_compatible_with_mtp": {
+      "principle": "task 7 precondition (a), checked here rather than assumed -- if False, this experiment stops per the task's blocked_think_mode_incompatible_with_mtp instruction rather than proceeding on an untested assumption"
+    },
+    "think_max_tokens": {
+      "principle": "materially larger than no_think_max_tokens by design -- think mode needs completion budget for reasoning tokens before code; comparing truncated-mid-thought output to quick code would not be a fair test, and this asymmetry is disclosed, not hidden"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "roster": [
+    "m0r0",
+    "sk48"
+  ],
+  "think_mode_compatible_with_mtp": true,
+  "think_mode_compat_detail": "think content starts with a reasoning tag (449 vs 391 chars) -- compatible",
+  "no_think_max_tokens": 2560,
+  "think_max_tokens": 6144,
+  "per_game_results": [
+    {
+      "game": "m0r0",
+      "arm": "no_think",
+      "transition_count": 10,
+      "induction_ok": true,
+      "heldout_accuracy": 0.5,
+      "cell_recall": 0.0,
+      "real_levelup_present_in_sample": false
+    },
+    {
+      "game": "m0r0",
+      "arm": "think",
+      "transition_count": 10,
+      "induction_ok": true,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "real_levelup_present_in_sample": false
+    },
+    {
+      "game": "sk48",
+      "arm": "no_think",
+      "transition_count": 10,
+      "induction_ok": true,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0,
+      "real_levelup_present_in_sample": false
+    },
+    {
+      "game": "sk48",
+      "arm": "think",
+      "transition_count": 10,
+      "induction_ok": true,
+      "heldout_accuracy": 1.0,
+      "cell_recall": 0.0,
+      "real_levelup_present_in_sample": false
+    }
+  ],
+  "no_think_induction_success_count": 2,
+  "think_induction_success_count": 2,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5594,
+  "duration_s": 161.602,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "gguf_cached": true,
+    "llama_server_binary_present": true,
+    "port_8920_prewarmed": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "ed12fe5754c24ba85a7a9b817ff43d2ff8faeb16cb9e1624ce0e6704c04b68cf"
+}

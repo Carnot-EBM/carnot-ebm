@@ -3453,3 +3453,124 @@ When `score_goal_predicate_consistency` scores it against a transition
 window containing at least one real level-up and one real no-op
 Then the predicate's disagreement with the real observed transitions is
 recorded in `mismatches`, not silently scored as a correct prediction
+
+### REQ-ARC-WMTE-5594: `/think` vs `/no_think` Induction Quality A/B on the Frozen Live Generator
+
+`ops/known-issues.md`'s 2026-07-11 task 7 entry (cheap, dev-side-only) was
+filed after ARC Prize's public GPT-5.6 results showed reasoning-effort
+scaling ARC-AGI-3 solve rate ~26x (Low->Max) versus only ~1.3x on
+ARC-AGI-1 for the same model -- a domain-specific signal that induction
+tasks (the thing GPT-5.6 gains the most from extra reasoning on) benefit
+disproportionately more from think-mode than the field's typical single-
+grid puzzle tasks do. The frozen live-submission generator
+(`project_arc_live_generator` memory: Qwen3.5-9B-MTP, MTP + q8 KV +
+`n_predict>=2048` + `/no_think`) was decided under June sprint time
+pressure and never re-measured against this specific finding.
+
+**Precondition (a) mechanism finding.** Before any A/B could run, this
+task discovered that `LocalGGUFProposer`'s `no_think_prefix` instance
+attribute (set to `"/no_think\n"` in the live default config) has **no
+effect on real induction calls today**: `CARNOT_ARC_CODEONLY_INDUCE`
+defaults ON (2026-06-25 operator directive), and codeonly mode's own
+`_L2_CODEONLY_DIRECTIVE` module-level constant in
+`arc_executable_world_model.py` hardcodes a literal `"/no_think\n"` as its
+own first line, which wins in `generate()`'s
+`if _codeonly: ... elif self.no_think_prefix: ...` branching (codeonly
+always applies when `codeonly_eligible=True`, which every `induce()` call
+passes). Testing `/think` fairly therefore requires a scoped module-level
+monkeypatch of `_L2_CODEONLY_DIRECTIVE` (swap the leading `/no_think\n`
+for `/think\n`), restored in a `finally` block after each induction call
+-- not the dead `no_think_prefix` attribute. This is a real, previously
+undocumented fact about the induction pipeline, independent of this task's
+headline A/B result.
+
+**Precondition (a) compatibility-check bug, found and fixed in-session.**
+The first automated compatibility probe (`check_think_mode_compatibility`)
+falsely reported `think_mode_compatible_with_mtp: False`, directly
+contradicting two separate manual verifications (direct `/completion`
+calls against the live port-8920 server) that `/think` mode produces
+genuinely different, clearly-reasoning-shaped output. Root cause: the
+check's tag test was a bare `"<think>" in think_content` substring check,
+but the model's actual opening tag varies across calls -- one probe
+emitted `<thinking>` (observed verbatim:
+`'<thinking>\nThe user wants me to write a Python world-model
+engine...'`), and the literal characters `<think>` are not a substring of
+`<thinking>` (the closing `>` does not align). The check's length-ratio
+fallback (`len(think) > 1.5 * len(no_think)`) was also too strict for a
+short `n_predict=120` probe budget: one real probe measured 549 vs 403
+chars (a genuine 36% delta), below the 1.5x (604.5-char) threshold. Fixed
+by checking a tuple of known reasoning-tag prefixes
+(`("<think>", "<thinking>", "<reasoning>")`) via `str.startswith` and
+lowering the length-ratio fallback to 1.15x. Re-verified standalone after
+the fix: `compatible=True`, `"think content starts with a reasoning tag
+(527 vs 460 chars) -- compatible"` -- consistent with the manual
+verification. This is a lesson for any future probe of LLM-emitted
+reasoning-tag content: match a set of known tag spellings, not one
+literal string, and do not rely solely on a length-ratio heuristic at a
+short completion budget.
+
+**RESOLUTION (2026-07-13).** With the compatibility check fixed, the real
+4-attempt measurement (2 roster games -- `m0r0`, `sk48` -- x 2 arms) ran
+against the live default Qwen3.5-9B-MTP proposer (161.6s total,
+`inference_substrate: live_llm_inference`). Both arms induced successfully
+on both games (4/4 induction_ok). Per-game `heldout_accuracy` (via the
+existing `WorldModelVerifier`, reused unmodified from REQ-ARC-WMTE-4494):
+`m0r0` no_think=0.5 vs think=0.0 (no_think better); `sk48` no_think=1.0 vs
+think=1.0 (tie). Neither roster game's 10-transition window contained a
+real level-up (`real_levelup_present_in_sample: false` on all four
+attempts), so `score_goal_predicate_consistency` (REQ-ARC-WMTE-5593) was
+never triggered and goal-predicate accuracy is not part of this result --
+an honest scope limitation, not a gap papered over. `honest_verdict:
+"complete: think_mode_ab_equal_success_no_think_higher_accuracy"`: equal
+induction-success count (2 vs 2), but no_think's mean heldout accuracy
+(0.75) exceeds think's (0.5) on this 2-game roster.
+
+**What this does and does not show.** This is a real, informative,
+NEGATIVE result for switching the frozen live stack to `/think` on
+induction quality specifically -- on this small roster, `/think` mode
+never wins outright and loses once. It does NOT settle the broader
+GPT-5.6-style reasoning-effort-scaling question for the ARC-AGI-3 domain
+in general: (1) the roster is 2 games, well below the CLAUDE.md sample-
+size floor for any percentage-point claim; (2) `heldout_accuracy` scores
+world-model INDUCTION quality only, not the fuller "actions-to-first-win
+across a real solve" metric GPT-5.6's own comparison used, which this
+task's scope explicitly excluded (reusing existing verifiers, not
+extending `lb.run_game` into a full solve loop); (3) neither game's
+sample included a real level-up, so the goal-predicate half of induction
+quality is entirely unmeasured here. Per the task's own explicit
+instruction and the ARC-AGI-3 Submission Sprint / November-Floor
+disciplines' "the live stack is frozen" rule, this result does NOT change
+the frozen live stack's `/no_think` setting -- it is reported as an
+offline dev measurement requiring an explicit operator decision, and on
+these numbers the honest recommendation is "no evidence yet to justify
+unfreezing the stack for `/think`."
+
+Required field principles:
+
+- `think_mode_compatible_with_mtp`: principle "task 7 precondition (a),
+  checked here rather than assumed -- if False, this experiment stops per
+  the task's `blocked_think_mode_incompatible_with_mtp` instruction rather
+  than proceeding on an untested assumption."
+- `think_max_tokens`: principle "materially larger than
+  `no_think_max_tokens` by design -- think mode needs completion budget
+  for reasoning tokens before code; comparing truncated-mid-thought
+  output to quick code would not be a fair test, and this asymmetry is
+  disclosed, not hidden."
+
+#### SCENARIO-ARC-WMTE-5594-INCOMPATIBLE-BLOCKS-CLEANLY
+
+Given the live-server compatibility probe finds no reasoning-tag prefix
+and no material length delta between `/think` and `/no_think` output
+When `build_artifact` runs
+Then `honest_verdict` is
+`"complete: blocked_think_mode_incompatible_with_mtp"` and no induction
+attempt is made on any roster game
+
+#### SCENARIO-ARC-WMTE-5594-TAG-VARIANT-RECOGNIZED
+
+Given the live-server compatibility probe's `/think`-arm response begins
+with `<thinking>` rather than the literal `<think>`
+When `check_think_mode_compatibility` evaluates the probe responses
+Then it recognizes the `<thinking>` prefix as a reasoning-tag match and
+reports `compatible=True`, not a false `no observable difference`
+negative
