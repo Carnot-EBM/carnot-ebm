@@ -3574,3 +3574,142 @@ When `check_think_mode_compatibility` evaluates the probe responses
 Then it recognizes the `<thinking>` prefix as a reasoning-tag match and
 reports `compatible=True`, not a false `no observable difference`
 negative
+
+### REQ-ARC-FCP-5595: InertClickSigPruner -- Dead-Signature Click Pruning
+
+`ops/known-issues.md`'s 2026-07-11 task 9 entry ("New 2026-07-11, cheap,
+reuses an existing code shape") asked for Reki's dead-signature click-pruning
+mechanism -- track a clicked component's structural signature `(color, size,
+is_rect, twin_count)`; if a click on that signature never changes the frame,
+suppress future clicks on components sharing it -- built by extending the
+`arc_hazard_pruner.HazardMovePruner` trust+specificity gating pattern rather
+than Reki's own greedy K=2 threshold, which the audit that surfaced this
+(`docs/research-notes/arc-perception-grounding-audit-2026-07-13.md`) flagged
+as over-aggressive: two observations is a thin evidence floor, and a strict
+"first effective observation ever = permanently sacred, otherwise K=2 kills
+it" rule has no tolerance for a signature that is mostly inert but
+occasionally does something.
+
+**The implementation (`python/carnot/agentic/arc_inert_click_pruner.py`,
+`InertClickSigPruner`).** Per structural signature, the pruner accumulates
+observed `(obs, inert, leveled)` counts from the search's own clicks -- no
+offline ground truth, transferring to any game the same way both sibling
+pruners (`HazardMovePruner`, `RelationalMaskMovePruner`) do. It differs from
+Reki's rule in two ways: the evidence floor is raised from 2 to
+`min_observations` (default 4, matching `RelationalMaskMovePruner`'s own
+explicitly-not-K=2 default), and a `min_specificity` threshold (default 0.9)
+replaces literal-zero-tolerance -- a signature is pruned once its OBSERVED
+inert fraction clears the bar, not the instant a single effective click is
+seen. A signature that has ever produced a real level-up is permanently
+sacred (never pruned, regardless of specificity), mirroring both sibling
+pruners' hard binary veto for level-ups specifically.
+
+The clicked component's signature is computed via `click_signature(blob,
+blobs)`, a new free function built on `connected_color_blobs`/`blob_at_click`
+(`arc_color_blob_salience`, REQ-ARC-FCP-5591). `blob_at_click` (REQ-ARC-FCP-
+5595) is the free-function promotion of `ColorBlobSaliencePrior`'s existing
+private `_blob_for_click` lookup, added purely additively so callers outside
+`ColorBlobSaliencePrior` can reuse the exact same click-to-blob resolution.
+`twin_count` is the number of OTHER blobs in the same frame sharing a blob's
+`(color, pixel_count, is_rect)` triple, so evidence about one component
+transfers to its structural twins even when they sit at different frame
+positions -- confirmed directly by `test_click_signature_twin_count_matches_
+shared_shape_only` and by the offline-sim prototype's cross-twin evidence
+transfer in `test_prunes_signature_confidently_inert_after_evidence_floor`.
+
+The pruner implements the SAME `should_prune(frame, label) -> bool` /
+`observe(frame_before, label, frame_after, leveled_up)` protocol as both
+sibling pruners, so it composes through the existing `arc_relational_mask_
+pruner.CompositeMovePruner` and is consumable by `OfflineSolver` via the
+identical `move_pruner=` constructor parameter both siblings already use --
+this makes it live-path-reachable per the ARC Live-Path Reachability
+Discipline without any new wiring code (`OfflineSolver` is one of the two
+recognized live entrypoints). A separate `rank_candidates(frame, rows) ->
+rows` method implements the identical gating logic in the filter-protocol
+shape `StepwiseExplorer._candidates` (`arc_competition_agent.py`) already
+composes with (matching `program_synthesis_filter`/`goal_candidate_
+guidance`'s contract) -- tested and ready, but deliberately NOT wired into
+that live composition chain in this task: connecting it is a distinct,
+separately-scoped live-path change (a new constructor param + a call site in
+the SCORED agent's candidate pipeline), consistent with how the color-blob
+salience front-end (REQ-ARC-FCP-5591) was left additive-only pending its own
+live-wiring decision (`ops/known-issues.md` task #97, still open).
+
+**RESOLUTION (2026-07-13).** The pruner itself is validated by 7 direct unit
+tests on realistic synthetic grids
+(`tests/python/test_arc_inert_click_pruner.py`): confidently-inert signatures
+are pruned only after clearing both the evidence floor and specificity bar;
+evidence transfers between structural twins; below-floor and below-specificity
+cases are conservatively NOT pruned; a signature that ever leveled up is
+permanently sacred even after many subsequent inert observations; keyboard
+actions and undecodable labels are safely ignored; `rank_candidates` drops
+only the confidently-inert click rows from a mixed candidate list.
+
+The offline-sim prototype (`experiment_5595_inert_click_sig_pruner_offline_
+sim_prototype.py`) ran the pruner against REAL transitions collected from a
+REAL `E3AgentPolicy`/`lb.run_game` exploration of `m0r0` (confirmed
+click-heavy by direct probe before selection: 21 of 22 transitions were
+action=6). GAME-SELECTION NOTE (found investigating, not assumed): a first
+attempt to probe click-action prevalence via a bare `E3AgentPolicy(game,
+explore_budget=6)` with no explicit `proposer=` stalled twice with near-zero
+CPU growth over many minutes -- some default-constructed component the
+exploration loop depends on appears to block. The script therefore always
+constructs `E3AgentPolicy` with an explicit `LocalGGUFProposer`, matching
+exp5594's proven-reliable pattern.
+
+The real run (37 transitions collected, 32 clicks, 19.3s and 32.8s on two
+runs) produced an honest, informative NULL: 12 distinct signatures were
+tracked but ZERO cleared BOTH the `min_observations=4` floor and the
+`min_specificity=0.9` bar (`honest_verdict:
+"complete: inert_click_sig_pruner_prototype_ran_but_no_signature_cleared_
+evidence_floor"`). This is not a flaw in the mechanism -- with 32 clicks
+spread across 12 distinct signatures (an average of under 3 observations per
+signature), most signatures simply did not accumulate enough repeated
+evidence within this budget to clear the conservative gate. The gate is
+DESIGNED to fail closed under sparse evidence (per the trust+specificity
+discipline this task explicitly asked for, replacing Reki's more aggressive
+K=2), so an honest null here is the expected behavior at this budget, not a
+bug. A larger `total_budget` (more actions per game) or a roster with more
+same-signature repeat clicks (e.g. a game with many decorative identical
+sprites) is the natural follow-on if a positive pruning demonstration is
+wanted; this task's "cheap" framing scoped the prototype to confirming the
+mechanism runs correctly end-to-end on real data, which it does.
+
+`inference_substrate` was corrected mid-task from an initial conservative
+`live_llm_inference` guess to `offline_arcade_live_agent_runtime_self_
+discovery_no_llm`: the real measured duration (19.3s) was far under the 60s
+`live_llm_inference` floor, and `adversarial_verify.py` correctly flagged the
+mismatch (`DURATION_TOO_SHORT`) before this artifact was accepted. A real
+`LocalGGUFProposer` IS constructed and wired into `E3AgentPolicy`, but this
+script never calls `induce()`/`generate()` on it, and the measured duration
+confirms the exploration loop itself never invokes the LLM either -- the
+`model_specs` GGUF entry is vestigial, matching the documented substrate's own
+disclosed pattern for vestigial model strings.
+
+Required field principles:
+
+- `total_signatures_confidently_inert`: principle "count of distinct
+  signatures that cleared BOTH the evidence floor AND the specificity bar
+  with zero level-ups -- the load-bearing claim behind building the pruner
+  at all, measured against real click data rather than synthetic grids."
+- `inference_substrate`: principle "offline_arcade_live_agent_runtime_
+  self_discovery_no_llm -- confirmed empirically (measured duration far
+  under the live_llm_inference floor), not assumed."
+
+#### SCENARIO-ARC-FCP-5595-SIGNATURE-CLASSIFIED-ON-REAL-DATA
+
+Given real (frame_before, label, frame_after, leveled_up) transitions
+collected from a real offline-arcade exploration run on a click-heavy game
+When those transitions are fed through `InertClickSigPruner.observe`
+Then the pruner's `stats()` reports a well-formed count of tracked
+signatures and confidently-inert signatures (zero is an honest, valid
+outcome when no signature clears the evidence floor within the budget, not
+an error)
+
+#### SCENARIO-ARC-FCP-5595-RANK-CANDIDATES-SANITY-CHECK
+
+Given the same real transitions replayed as a candidate-row list against a
+real collected frame
+When `InertClickSigPruner.rank_candidates` filters that list
+Then it runs without error and `rows_kept + rows_dropped == rows_in`, with
+only rows whose click signature is confidently inert removed

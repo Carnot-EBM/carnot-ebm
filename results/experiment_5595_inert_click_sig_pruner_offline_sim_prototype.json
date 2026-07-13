@@ -1,0 +1,72 @@
+{
+  "experiment": "experiment_5595_inert_click_sig_pruner_offline_sim_prototype",
+  "schema": "carnot.exp5595.inert_click_sig_pruner_offline_sim_prototype.v1",
+  "result_path": "results/experiment_5595_inert_click_sig_pruner_offline_sim_prototype.json",
+  "honest_verdict": "complete: inert_click_sig_pruner_prototype_ran_but_no_signature_cleared_evidence_floor",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default tier-3 exploration proposer (real, live, port 8920)"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; demonstrates the trust+specificity gate classifies real click signatures correctly, does not claim a live-path efficiency win (a states-expanded A/B, like HazardMovePruner's tu93 measurement, is a separate, later step once this mechanism is wired into a solver)"
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_self_discovery_no_llm -- confirmed empirically, not assumed: a real LocalGGUFProposer is wired into E3AgentPolicy but this script never calls induce()/generate() on it, and the measured 19.3s real duration is far under the 60s live_llm_inference floor, confirming the exploration loop itself never invokes the LLM either; the GGUF entries in model_specs are vestigial (the proposer object exists but is not exercised), not a live-inference claim"
+    },
+    "total_signatures_confidently_inert": {
+      "principle": "count of distinct (color, size, is_rect, twin_count) signatures that cleared BOTH the min_observations evidence floor AND the min_specificity bar with zero level-ups -- the load-bearing claim behind building the pruner at all, measured against real click data rather than synthetic grids"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a prototype/measurement script, no per-game adapter, no offline BFS, no level-solve claim"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "roster": [
+    "m0r0"
+  ],
+  "explore_budget": 6,
+  "total_budget": 40,
+  "min_observations": 4,
+  "min_specificity": 0.9,
+  "per_game_rows": [
+    {
+      "game": "m0r0",
+      "transitions_collected": 37,
+      "click_transitions": 32,
+      "signatures_tracked_after": 12,
+      "signatures_confidently_inert_after": 0,
+      "rank_candidates_sanity": {
+        "rows_in": 37,
+        "rows_kept": 37,
+        "rows_dropped": 0
+      }
+    }
+  ],
+  "total_click_transitions_observed": 32,
+  "total_signatures_tracked": 12,
+  "total_signatures_confidently_inert": 0,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5595,
+  "duration_s": 32.762,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_and_pruner_import": true,
+    "gguf_cached": true,
+    "llama_server_binary_present": true,
+    "port_8920_prewarmed": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "bf6c177591f8566ea1019358547ef9bf525362e47c1491a1ae6b00faa0636caf"
+}
