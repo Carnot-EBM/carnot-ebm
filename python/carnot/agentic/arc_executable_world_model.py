@@ -789,6 +789,86 @@ class WorldModelVerifier:
         )
 
 
+@dataclass
+class GoalPredicateConsistency:
+    """REQ-ARC-WMTE-5593: the goal-hypothesis analog of `VerifyResult` -- checks whether
+    `is_level_complete` correctly predicts the SIGN of real observed level transitions
+    (a real level-up occurred, or it did not), rather than the DYNAMICS `WorldModelVerifier`
+    already checks (does `engine()` predict the right next grid). Nothing in the induction
+    pipeline validated the goal predicate against real level-progress ground truth before
+    this -- `execute_bounded_llm_reinduction` installs `outcome.goal_predicate` as a search
+    termination condition on the strength of the proposer's own code, unchecked against any
+    observed transition. This is a direct, literal instance of the project's founding thesis
+    (verify a claim against ground truth) applied to the goal-hypothesis half of an induced
+    world model, mirroring the docs/research-notes/arc-agi3-milestone1-winners-sota-ingestion-
+    2026-07-11.md finding that two independent top-3 teams (Reki, Duck) both carry an
+    unexploited self-report-vs-ground-truth gap in their own pipelines.
+    """
+
+    n: int
+    n_correct: int
+    accuracy: float
+    n_real_levelups: int
+    n_real_noops: int
+    mismatches: list[dict] = field(default_factory=list)
+
+
+def score_goal_predicate_consistency(
+    is_level_complete: Callable[[np.ndarray], bool],
+    transitions: Sequence[Transition],
+    *,
+    max_mismatch: int = 8,
+) -> GoalPredicateConsistency:
+    """REQ-ARC-WMTE-5593: does `is_level_complete`'s sign match real observed level-ups?
+
+    For each transition, the real ground truth is `level_after > level_before` (a genuine
+    level-up occurred at that point). The claim under test is
+    `is_level_complete(next_grid)`. Agreement is a cheap, deterministic sign check -- no
+    second LLM call, matching forge's own competitive-pressure finding that an expensive
+    LLM judge was not worth the cost while a deterministic filter was kept.
+
+    CALLER CONTRACT: pass transitions from a SINGLE level boundary (the level
+    `is_level_complete` was induced/re-induced for). It is a per-boundary predicate in the
+    real pipeline (`execute_bounded_llm_reinduction` re-induces it after every level-up), so
+    checking it against transitions spanning multiple boundaries can produce a spurious
+    mismatch if a "win"-looking state persists visually into a later, unrelated boundary.
+    """
+
+    n_correct = 0
+    n_real_levelups = 0
+    n_real_noops = 0
+    mismatches: list[dict] = []
+    for i, t in enumerate(transitions):
+        real_levelup = bool(t.level_after > t.level_before)
+        if real_levelup:
+            n_real_levelups += 1
+        else:
+            n_real_noops += 1
+        try:
+            claimed = bool(is_level_complete(t.next_grid))
+        except Exception as e:
+            claimed = False
+            if len(mismatches) < max_mismatch:
+                mismatches.append(
+                    {"i": i, "real_levelup": real_levelup, "claimed": None, "error": repr(e)[:160]}
+                )
+            continue
+        if claimed == real_levelup:
+            n_correct += 1
+        elif len(mismatches) < max_mismatch:
+            mismatches.append({"i": i, "real_levelup": real_levelup, "claimed": claimed})
+
+    n = len(transitions)
+    return GoalPredicateConsistency(
+        n=n,
+        n_correct=n_correct,
+        accuracy=float(n_correct / max(1, n)),
+        n_real_levelups=n_real_levelups,
+        n_real_noops=n_real_noops,
+        mismatches=mismatches,
+    )
+
+
 def predict_hypothesis_transition(
     hypothesis: Any,
     grid: np.ndarray,
