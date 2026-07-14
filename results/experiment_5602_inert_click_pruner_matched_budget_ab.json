@@ -1,0 +1,87 @@
+{
+  "experiment": "experiment_5602_inert_click_pruner_matched_budget_ab",
+  "schema": "carnot.exp5602.inert_click_pruner_matched_budget_ab.v1",
+  "result_path": "results/experiment_5602_inert_click_pruner_matched_budget_ab.json",
+  "honest_verdict": "complete: inert_click_pruner_ab_no_op_offline_and_live_at_this_budget_on_m0r0",
+  "inference_substrate": "offline_arc_sim_no_quota",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; reports whichever outcome the matched-budget A/B actually produced (helps / no-op / regresses) -- a zero-reduction honest null is a valid, informative result at this search budget, not a failure requiring escalation, per exp5595's own precedent (0 confidently-inert signatures at that budget)"
+    },
+    "baseline": {
+      "principle": "hazard_prune=False, mask_prune=False, inert_click_prune=False -- isolates the inert-click-prune variable from any other pruner"
+    },
+    "treatment": {
+      "principle": "identical config with inert_click_prune=True -- the pruner's REAL, already-validated default parameters (min_observations=4, min_specificity=0.9), not tuned favorably for this measurement"
+    },
+    "states_expanded_reduction": {
+      "principle": "baseline.states_expanded - treatment.states_expanded; the load-bearing efficiency claim, mirroring HazardMovePruner's tu93 A/B (states_expanded 2947 -> 2859)"
+    },
+    "gate_definition": {
+      "principle": "the reproduction gate (arc_solver_kit.reproduce) is the correctness backstop for BOTH arms -- a states_expanded reduction only counts as a real win if both arms reach the SAME target level AND both pass offline_reproduced=True"
+    },
+    "live_wired_supplementary_check": {
+      "principle": "OfflineSolver's directed, verifier-guided search may simply never exercise repeated inert clicks the way broad live exploration does -- this second, independent measurement wires inert_click_pruner=True into a REAL E3AgentPolicy exploration run (matching exp5595's own construction) and reports the pruner's own stats() at the end, confirming whether the wiring engages at all outside the OfflineSolver harness, not just whether it changes states_expanded there"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a prototype/measurement script, not a live-path flip"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "game": "m0r0",
+  "target_level": 2,
+  "baseline": {
+    "reached_level": 2,
+    "states_expanded": 38,
+    "offline_reproduced": true,
+    "inert_click_prune": false,
+    "pruner_stats": null
+  },
+  "treatment": {
+    "reached_level": 2,
+    "states_expanded": 38,
+    "offline_reproduced": true,
+    "inert_click_prune": true,
+    "pruner_stats": {
+      "observed": 0,
+      "pruned": 0,
+      "signatures_tracked": 0,
+      "pruned_signatures": 0,
+      "min_observations": 4,
+      "min_specificity": 0.9,
+      "verifier_is_oracle": false
+    }
+  },
+  "states_expanded_reduction": 0,
+  "reduction_pct": 0.0,
+  "gate_definition": "reduction only counts if both arms reach the same target level and both pass the offline reproduction gate",
+  "live_wired_supplementary_check": {
+    "transitions_collected": 37,
+    "pruner_stats": {
+      "observed": 32,
+      "pruned": 0,
+      "signatures_tracked": 9,
+      "pruned_signatures": 0,
+      "min_observations": 4,
+      "min_specificity": 0.9,
+      "verifier_is_oracle": false
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 5602,
+  "duration_s": 17.008,
+  "preconditions_checked": {
+    "adapter_registered": true,
+    "inert_click_pruner_import": true,
+    "solve_adaptered_import": true,
+    "offline_arcade_makes_env": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "92c38f8bfe4749f05c35107dd8e2e7a87c159dd4dc7c4e3c0e9109f4a09a8735"
+}

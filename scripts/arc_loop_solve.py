@@ -75,7 +75,11 @@ def _label_to_action(label: str) -> dict:
 
 
 def solve_adaptered(
-    game: str, target_level: int, hazard_prune: bool = True, mask_prune: bool = False
+    game: str,
+    target_level: int,
+    hazard_prune: bool = True,
+    mask_prune: bool = False,
+    inert_click_prune: bool = False,
 ) -> dict:
     ad = adapters.get_adapter(game)
     arc = kit.offline_arcade()
@@ -96,7 +100,7 @@ def solve_adaptered(
     # (tu93) the search stops wasting expansions on death-paths. This is the wired-in salvage of the
     # outer-loop hazard-aware world model (arc_nav_world_model) onto the LIVE solve path.
     move_pruner = None
-    if hazard_prune or mask_prune:
+    if hazard_prune or mask_prune or inert_click_prune:
         from carnot.agentic.arc_agi3_world_model import grid_of
 
         pruners = []
@@ -110,6 +114,14 @@ def solve_adaptered(
             from carnot.agentic.arc_relational_mask_pruner import RelationalMaskMovePruner
 
             pruners.append(RelationalMaskMovePruner(grid_of))
+        if inert_click_prune:
+            # Task 9 matched-budget A/B (2026-07-13): identical should_prune/observe protocol as
+            # HazardMovePruner/RelationalMaskMovePruner, so it composes the same way. Prunes clicks
+            # on structurally-inert component signatures rather than lethal moves or relational
+            # exclusion zones -- no-ops (never prunes) on games without repeated inert clicks.
+            from carnot.agentic.arc_inert_click_pruner import InertClickSigPruner
+
+            pruners.append(InertClickSigPruner(grid_of))
         if len(pruners) == 1:
             move_pruner = pruners[0]
         elif pruners:
