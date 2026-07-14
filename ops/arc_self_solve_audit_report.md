@@ -16,17 +16,19 @@ OK: all solver-like ARC modules are reachable from the live agent path (51 modul
 
 ## Hostile LLM review
 
-**TL;DR: 0 `SELF_DISCOVERY_ADVANCE`; 2 `DUPLICATE`. Both are hand-adapter offline replays and would otherwise be `OUTER_LOOP_RE`.**
+**TL;DR: 0/2 self-discovery advances. Both are `DUPLICATE`, and both replay through outer-loop, per-game development proxies.**
 
-- [arc_loop_solve_ar25.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json)
+- `results/arc_loop_solve_ar25.json`
+
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches L3 while the registry already has L8/full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). Declares `development_proxy` and offline reproduction mode; contains a finished 66-action sequence, no live runtime-RE trace, and an unfitted hazard model. The registry explicitly attributes L1–L3 to the hand-built `_ar25` `GameAdapter`.
-  - **Recommended action:** No solve credit. Keep only as a regression replay; suppress from “recent solves.”
+  - **Evidence:** Artifact reaches L3 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:3)); registry already records L8/full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). It declares `development_proxy` and offline/no-quota mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:616)), with no honest verdict or live-attempt provenance. Worse, `_ar25` emits the next action from hardcoded per-level label arrays and reads game internals with a hand verifier ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2093)). Its last content commit was June 28; only its mtime is recent.
+  - **Recommended action:** Exclude from advancement counts; retain only as a replay fixture. Never relabel as self-discovery.
 
-- [arc_loop_solve_lf52.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json)
+- `results/arc_loop_solve_lf52.json`
+
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches L2 while the registry already has L6 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). Again `development_proxy`, offline reproduction, and a completed 42-action sequence without attempt→observation→induction evidence. The registry explicitly says L1–L2 use the hand-built `_lf52` `GameAdapter`.
-  - **Recommended action:** No solve credit. Mark reproduction-only and require registry precheck before artifact emission.
+  - **Evidence:** Artifact reaches L2 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:3)); registry already records L6 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). It likewise declares `development_proxy` and offline/no-quota mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:584)). `_lf52` feeds hardcoded L1/L2 action tails and uses game-specific internal fields plus a hand verifier ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2745)). Last content commit was June 28; recentness is mtime churn.
+  - **Recommended action:** Exclude from advancement counts and classify as a reproduction-only fixture.
 
-**Pattern watch:** Reachability is laundering hand-built per-game adapters into “live-path” optics. A callable offline replay is not autonomous discovery. Empty outer-loop declarations and names like `learned_verifier_live_checkpoint` do not overcome explicit `development_proxy` provenance. Require a genuinely new registry level plus an auditable live attempt→observation→hypothesis/model-update→solve trace.
+**Pattern watch:** Reachability is being confused with agency. Importing a solver from a live entrypoint does not make hardcoded action tails, internal-state readers, or hand verifiers self-discovery. The `learned_verifier_live_checkpoint` label is cosmetic when candidate generation is a prewritten per-game sequence. Fix the recent-artifact scan to require a new content hash/run timestamp, registry depth increase, live attempt transcript, and `live_agent_self_discovery` provenance.
 

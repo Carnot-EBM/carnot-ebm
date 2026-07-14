@@ -1,26 +1,21 @@
 import numpy as np
 
+import numpy as np
+
 def engine(grid, action, data):
-    H, W = grid.shape
     if action == 6:
-        if data is None:
-            return grid
         px, py = data['x'], data['y']
-        if px < 0 or px >= W or py < 0 or py >= H:
-            return grid
-        target_row = py
-        target_col = px
-        if grid[target_row, target_col] == 0:
-            return grid
-        if grid[target_row, target_col] != 0:
-            grid[target_row, target_col] = 0
-            return grid
+        grid = grid.copy()
+        grid[py, px] = 5
+        return grid
     return grid
 
 def is_level_complete(grid):
-    H, W = grid.shape
-    for r in range(H):
-        for c in range(W):
-            if grid[r, c] == 0:
-                return False
-    return True
+    return False
+
+import numpy as np
+
+def is_level_complete(grid):
+    if grid.shape != (50, 50):
+        return False
+    return np.all(grid == grid[12:48, 3:47])
