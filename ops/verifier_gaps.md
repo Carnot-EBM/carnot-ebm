@@ -2814,7 +2814,7 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   priority list task 9 for the queued build.
 
 ### GAP-ARC-CLAIMED-VS-MEASURED-DIFF-5xxx: generator self-reports of "what changed" are never checked against the real pixel diff
-- status: open
+- status: open_confirmed_no_hook_point_current_architecture (2026-07-14, outer-loop, task 11 final assessment)
 - evidence: read-only audit of the ARC-AGI-3 Milestone-1 2nd-place team's ("Reki") open-sourced
   code, same source as above. Full writeup: same SOTA-ingestion note (O3).
 - failure mode: Reki's policy LLM self-reports a `board_change_assessment` field (what it believes
@@ -2832,9 +2832,26 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   hypothesis memory (O5) is built, not after.
 - priority: medium-high — genuinely new build (not a code-shape reuse like the pruner above), but
   small and squarely in-thesis. See known-issues.md active ARC priority list task 11.
+- **2026-07-14 final assessment (outer-loop, task 11's second half):** re-checked every LLM
+  touchpoint in the current ARC induction pipeline (`arc_executable_world_model.py`'s
+  `induce_prompt`/`refactor_prompt`/`CodexProposer`/`LocalGGUFProposer`, and
+  `arc_llm_strategy_proposer.py`'s `LLMStrategyProposer.propose_one`/`reflect`) for any
+  natural-language "what changed" self-report analogous to Reki's `board_change_assessment`.
+  Confirmed none exists: our LLM touchpoints either (a) write executable CODE
+  (`engine()`/`is_level_complete()` — `refactor_prompt` feeds real mismatches back and asks for a
+  CODE fix, never a prose diff claim) or (b) state a forward-looking exploration STRATEGY
+  (SGE's `propose_one`/`reflect` — "what I'm trying to learn next," not "what I think just
+  changed"). Neither is the shape this gap needs. Building a NEW self-report solely to have
+  something to cross-check would cost an extra LLM call per transition, directly contradicting
+  this gap's own corroborating evidence (forge's 3rd-place team disabled their LLM judge/arbiter
+  for cost while keeping only the free `changed_pixels==0` deterministic filter). Conclusion:
+  this remains a genuine, confirmed dead-end in the CURRENT architecture, not merely an
+  unstarted build — re-open only if some other component starts organically producing a
+  natural-language change-claim as a byproduct of work it does for another purpose (at which
+  point the candidate design above is still the right shape to hook it with).
 
 ### GAP-ARC-GOAL-HYPOTHESIS-VS-TRANSITIONS-5xxx: free-text goal/rule hypotheses are never checked against observed level-up/no-op transitions
-- status: open
+- status: filled (score_goal_predicate_consistency)
 - evidence: read-only audit of the ARC-AGI-3 Milestone-1 1st-place team's ("Duck Harness", Tufa
   Labs) open-sourced code (`external/duck-harness/`, 2026-07-11). Full writeup: same SOTA-ingestion
   note (O3/O5).
@@ -2854,3 +2871,16 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   with extra steps).
 - priority: medium — real, but should follow GAP-ARC-CLAIMED-VS-MEASURED-DIFF-5xxx rather than being
   built in parallel. See known-issues.md active ARC priority list task 11.
+- **2026-07-13/14 fill (outer-loop, task 11):** `score_goal_predicate_consistency`/
+  `GoalPredicateConsistency` shipped in `arc_executable_world_model.py` (2026-07-13, `f4aa99c24`) —
+  the deterministic sign check this gap calls for (`is_level_complete(next_grid)` vs real
+  `level_after > level_before`), no second LLM call, matching forge's own competitive-pressure
+  finding. Validated with 5 unit tests on synthetic data at ship time, then a REAL end-to-end
+  positive-control demo on 2026-07-14 (exp5593 rerun, after the `induce_prompt` scalability fix
+  below unblocked it): a REAL Qwen3.5-9B-MTP induction on lp85's real 8-transition window produced
+  a real `is_level_complete`, scored against the real observed transitions —
+  `goal_predicate_accuracy=0.75` (6/8 correct, 2 false-negative mismatches where a real level-up
+  was missed), `real_levelup_present_in_sample=true` (interpretable per the FALSE_NEGATIVE_RISK
+  discipline — not an all-no-op degenerate test). The check ITSELF is now demonstrated working on
+  real induced output, not just synthetic fixtures; still NOT wired into any live decision
+  (vetoing a goal predicate before planning) — that remains a distinct, separately-scoped step.

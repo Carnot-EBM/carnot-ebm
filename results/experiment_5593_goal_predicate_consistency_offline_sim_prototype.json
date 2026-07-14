@@ -2,7 +2,7 @@
   "experiment": "experiment_5593_goal_predicate_consistency_offline_sim_prototype",
   "schema": "carnot.exp5593.goal_predicate_consistency_offline_sim_prototype.v1",
   "result_path": "results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json",
-  "honest_verdict": "complete: goal_predicate_consistency_prototype_induction_did_not_succeed",
+  "honest_verdict": "complete: goal_predicate_consistency_prototype_induced_predicate_miscalibrated",
   "inference_substrate": "live_llm_inference",
   "model_specs": [
     {
@@ -34,20 +34,45 @@
   "target_game": "lp85",
   "transition_count": 37,
   "real_levelup_present_in_sample": true,
-  "goal_predicate_accuracy": null,
-  "goal_predicate_mismatches": [],
+  "goal_predicate_accuracy": 0.75,
+  "goal_predicate_mismatches": [
+    {
+      "i": 6,
+      "real_levelup": true,
+      "claimed": false
+    },
+    {
+      "i": 7,
+      "real_levelup": true,
+      "claimed": false
+    }
+  ],
   "goal_predicate_detail": {
     "transition_count": 37,
     "induce_transition_count": 8,
     "real_levelup_present_in_sample": true,
-    "goal_predicate_accuracy": null,
-    "goal_predicate_mismatches": [],
-    "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: <HTTPError 400: 'Bad Request'>",
-    "induction_ok": false
+    "goal_predicate_accuracy": 0.75,
+    "goal_predicate_n_correct": 6,
+    "goal_predicate_n": 8,
+    "goal_predicate_n_real_levelups": 2,
+    "goal_predicate_n_real_noops": 6,
+    "goal_predicate_mismatches": [
+      {
+        "i": 6,
+        "real_levelup": true,
+        "claimed": false
+      },
+      {
+        "i": 7,
+        "real_levelup": true,
+        "claimed": false
+      }
+    ],
+    "induction_ok": true
   },
   "solve_provenance": "development_proxy",
   "random_seed": 5593,
-  "duration_s": 18.436,
+  "duration_s": 33.452,
   "flagged_adversarial": true,
   "methodology_note": "duration_s may legitimately fall under the live_llm_inference 60s floor because the server on port 8920 was already warm and CARNOT_ARC_CODEONLY_INDUCE's fast path applied -- see exp5588's independent corroboration (a standalone timed completion against the same server: 25.43s, 406 tokens, 16.28 tok/s, draft_n_accepted=273/402) for the underlying evidence this is a real, honest completion, not a shortcut.",
   "preconditions_checked": {
@@ -60,5 +85,5 @@
     "port_8920_prewarmed": true,
     "ok": true
   },
-  "reproducibility_checksum": "13d8bba10518980254dcfaa8046b67c9a2505dc0b92b094bd74f683bca9658ee"
+  "reproducibility_checksum": "8f0941a7f3bca575f645c7ff6c66d6cc55fb01459dad8be8f8660323a5245b70"
 }

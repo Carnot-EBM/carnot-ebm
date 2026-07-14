@@ -3587,6 +3587,94 @@ window containing at least one real level-up and one real no-op
 Then the predicate's disagreement with the real observed transitions is
 recorded in `mismatches`, not silently scored as a correct prediction
 
+### REQ-ARC-WMTE-5593-2: `induce_prompt` Large-Grid Scalability Fix -- Real Positive-Control Demo
+
+REQ-ARC-WMTE-5593's own RESOLUTION left the `induce_prompt` large-grid-scalability limitation
+explicitly out of scope, and `ops/known-issues.md` task 11's DONE note named it as the natural
+prerequisite for a real positive-control demonstration of `score_goal_predicate_consistency` on
+`lp85` specifically. This requirement closes that gap.
+
+**Root cause, precisely measured.** `_transitions_block`'s two full-grid renders (the INITIAL
+grid and, when a level-up occurred in the window, the WIN STATE grid) used `to_ascii` --
+one raw character per cell. On `lp85`'s 64x64 grid this is exactly correct at the character
+level (~4,160 chars/grid including newlines) but catastrophically token-inefficient: a
+single-transition window (up to 2 full grids) already measured ~13,400+ tokens against the
+13,824-token available budget, and an 8-transition window measured 18,355 tokens
+(`exceed_context_size_error`, 32.8% over budget).
+
+**Fix, two parts, both real-data-measured (not estimated):**
+
+1. `_rle_grid(g) -> str` -- a NEW function, run-length-encodes a FULL grid one line per row,
+   `r<row>:<v0>x<n0>,<v1>x<n1>,...`, with the starting column of each run left IMPLICIT (the
+   running sum of prior counts in that row) since every cell in a row is covered with no gaps.
+   An earlier attempt that spelled out an explicit column per run (matching `_rle_delta`'s own
+   style) measured WORSE than `to_ascii` on `lp85`'s real grid for its WIN-state render (5,164
+   vs 4,159 chars) -- the per-run column overhead dominated for `lp85`'s actual run-length
+   distribution (avg run length ~11.6 cells, 352 runs on the measured INITIAL grid). Dropping the
+   column entirely removed that overhead: measured on the SAME real `lp85` grid, INITIAL
+   4,159->1,857 chars (2.24x), WIN 4,159->2,368 chars (1.76x), both verified lossless
+   round-trip.
+2. `_rle_delta_compact(g0, g1) -> str` -- a NEW function (kept separate from the existing
+   `_rle_delta`, which has its own round-trip tests and another caller and is NOT modified here).
+   After fix (1) above, the per-transition DELTAS became the new dominant cost on `lp85`'s real
+   transitions (measured: 8 deltas via `_rle_delta` = 9,308 tokens, still over budget even after
+   the full-grid fix). `_rle_delta_compact` sub-compresses each changed run's NEW values as
+   `<value>x<count>` pairs instead of listing one value per changed cell -- large changes are
+   often a single-color object moving or appearing, which the raw comma-per-cell format cannot
+   exploit. Measured on the SAME 8 real deltas: 9,308 -> 5,992 tokens (a 3,316-token additional
+   saving), verified lossless round-trip against 200 random synthetic diffs.
+
+`induce_prompt`'s own explanatory text (the part of the prompt teaching the model how to decode
+the compact forms) SHALL be updated to describe both new formats precisely enough for the model
+to reconstruct a grid/delta from them -- this is a prompt-CONTRACT change, not just an internal
+encoding change, since the model must correctly parse the new notation to reason about the game.
+
+**RESOLUTION (2026-07-14).** Real, tokenizer-measured result on `lp85`'s actual 8-transition
+window (via `llama_cpp.Llama(vocab_only=True)` against the real `Qwen3.5-9B-MTP` GGUF, the
+exact model `induce_prompt` targets): the SAME window that measured 18,355 tokens before this fix
+now measures 11,167 tokens against the 13,824-token budget -- comfortably under budget with
+~2,657 tokens of real headroom (a ~39% total token reduction). Re-running
+`experiment_5593_goal_predicate_consistency_offline_sim_prototype.py` end-to-end (real GPU
+inference against the real port-8920 `Qwen3.5-9B-MTP` server, `duration_s=33.452`,
+`inference_substrate=live_llm_inference`) now produces the real positive-control demo REQ-ARC-
+WMTE-5593 could not: `induction_ok=true` (no context overflow), `induce_transition_count=8` (the
+exact target window size), `real_levelup_present_in_sample=true` (interpretable per
+FALSE_NEGATIVE_RISK), and `score_goal_predicate_consistency` scores the REAL induced
+`is_level_complete` against the 8 real transitions: `goal_predicate_accuracy=0.75` (6/8 correct,
+2 false-negative mismatches at transition indices 6 and 7 -- both real level-ups the induced
+predicate missed). `honest_verdict:
+"complete: goal_predicate_consistency_prototype_induced_predicate_miscalibrated"` -- the
+CHECK works correctly on real data (that is this requirement's job); the induced predicate
+itself being imperfect is a separate, honest finding about induction QUALITY on `lp85`
+specifically, not a defect in the check or the scalability fix.
+
+Existing tests unaffected (`test_rle_delta_lossless.py`'s 3 tests, `test_arc_goal_predicate_
+consistency.py`'s 5 tests, `test_experiment_5593_...py`'s 7 tests all still pass unmodified --
+`_rle_delta` itself was never touched). New tests:
+`tests/python/test_arc_induce_prompt_large_grid_scalability.py`.
+
+Required field principles: none new (this requirement modifies internal encoding functions and
+`induce_prompt`'s prompt text; no new artifact schema fields).
+
+#### SCENARIO-ARC-WMTE-5593-2-LOSSLESS-ROUND-TRIP
+
+Given a full grid or a changed-cell delta encoded via `_rle_grid` / `_rle_delta_compact`
+When the encoding is decoded back into a grid using the exact reconstruction rule stated in
+`induce_prompt`'s own explanatory text (implicit column for full grids; explicit run-start
+column + implicit sub-run column for deltas)
+Then the reconstructed grid is byte-identical to the original for both real `lp85` grids and
+randomized synthetic grids/diffs across multiple colors (0-15) and shapes
+
+#### SCENARIO-ARC-WMTE-5593-2-REAL-BUDGET-FIT
+
+Given `lp85`'s real 64x64 grid and a real 8-transition induction window selected the same way
+`experiment_5593_...py` selects it (through the first real level-up plus one)
+When `induce_prompt` renders the window and the result is tokenized with the real
+`Qwen3.5-9B-MTP` tokenizer
+Then the token count is below the 13,824-token available budget (`n_ctx=16384` minus
+`max_tokens=2560`), where it previously measured 18,355 tokens and overflowed with
+`exceed_context_size_error`
+
 ### REQ-ARC-WMTE-5594: `/think` vs `/no_think` Induction Quality A/B on the Frozen Live Generator
 
 `ops/known-issues.md`'s 2026-07-11 task 7 entry (cheap, dev-side-only) was

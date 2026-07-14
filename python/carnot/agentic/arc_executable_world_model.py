@@ -1006,6 +1006,51 @@ def _rle_delta(g0: np.ndarray, g1: np.ndarray) -> str:
     return " ".join(runs) if runs else "(no change)"
 
 
+def _rle_delta_compact(g0: np.ndarray, g1: np.ndarray) -> str:
+    """Like `_rle_delta`, but each changed run's NEW values are themselves run-length-collapsed
+    as '<value>x<count>' pairs instead of listed one-per-cell. `_rle_grid` fixed
+    `induce_prompt`'s full-grid cost, but on lp85's real transitions the per-transition DELTAS
+    then became the dominant remaining cost (measured: 8 deltas via `_rle_delta` = 9,308 tokens,
+    still over the 13,824-token budget after the full-grid fix) -- large changes are often a
+    single-color object moving or a solid region appearing, which `_rle_delta`'s raw
+    comma-per-cell listing cannot exploit but this can (measured: same 8 deltas =
+    5,992 tokens, a 3,316-token additional saving, closing the remaining gap). Kept as a
+    SEPARATE function from `_rle_delta` rather than changing its output format in place --
+    `_rle_delta` has its own round-trip tests (test_rle_delta_lossless.py) and another caller
+    (scripts/experiments/arc_frontier_tooluse_probe.py) that expect the existing one-value-per-
+    comma format; this function is used only by `_transitions_block`'s induction-evidence path.
+    The run's starting column stays explicit (unlike `_rle_grid`'s implicit-column full-row
+    encoding): a row can have multiple disjoint CHANGED spans separated by unchanged cells, so
+    the column position is not implicit here the way it is when every cell in a row is covered."""
+    g0 = np.asarray(g0)
+    g1 = np.asarray(g1)
+    if g0.shape != g1.shape:
+        return ""
+    diff = g0 != g1
+    h, w = g0.shape
+    runs = []
+    for r in range(h):
+        c = 0
+        while c < w:
+            if diff[r, c]:
+                c0 = c
+                while c < w and diff[r, c]:
+                    c += 1
+                sub = []
+                i = c0
+                while i < c:
+                    v = g1[r, i]
+                    j = i
+                    while j < c and g1[r, j] == v:
+                        j += 1
+                    sub.append(f"{int(v)}x{j - i}")
+                    i = j
+                runs.append(f"r{r}c{c0}:" + ",".join(sub))
+            else:
+                c += 1
+    return " ".join(runs) if runs else "(no change)"
+
+
 def _transitions_block(
     trans: list[Transition],
     k: int = 8,
@@ -1018,7 +1063,10 @@ def _transitions_block(
     context window (the raw one-char-per-cell full-grid form overflowed gemma-4-12B at ~67k
     tokens on small boards, and on large boards like lp85's 64x64 grid overflowed even the
     13,824-token available budget with a SINGLE transition — see `_rle_grid`'s docstring; both
-    full-grid renders below use the run-length encoding instead)."""
+    full-grid renders below use the run-length encoding instead). Deltas use
+    `_rle_delta_compact` (not `_rle_delta`) — on lp85's real transitions the raw comma-per-cell
+    delta format became the new dominant cost once the full-grid fix landed (see
+    `_rle_delta_compact`'s docstring for the measured before/after)."""
     changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
     noop = [t for t in trans if np.array_equal(t.grid, t.next_grid)]
     sample = changed[: k - 2] + noop[:2]
@@ -1032,7 +1080,7 @@ def _transitions_block(
         click = f" data={t.data}" if t.data else ""
         out.append(
             f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
-            f"changed cells (FULL, run-length) = {_rle_delta(t.grid, t.next_grid)}"
+            f"changed cells (FULL, run-length) = {_rle_delta_compact(t.grid, t.next_grid)}"
         )
     win = next((t for t in trans if t.level_after > t.level_before), None)
     if win is not None:
@@ -1084,10 +1132,13 @@ def induce_prompt(
 The game state is a {h}x{w} integer grid (logical resolution; colors {colors}). You are
 given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
 transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
-form r<row>c<col>:<v0,v1,...> — each run is a horizontal span of changed cells starting at
-(row, col), and the values are the NEW cell values left-to-right (comma-separated). To apply a
-transition's delta to the prior grid, for each run set grid[row, col+i] = the i-th run value;
-all other cells are unchanged. The delta is COMPLETE (not truncated). Full grids (the INITIAL
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
 grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
 boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
 left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
