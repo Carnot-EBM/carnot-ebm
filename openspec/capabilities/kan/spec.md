@@ -2914,3 +2914,57 @@ an additional energy term for candidate scoring.
 Given a sidecar record with KAN energy features,
 When the sidecar replay scorer evaluates the candidate,
 Then the KAN energy formulation is correctly integrated, and the test succeeds, logging to `results/experiment_3374_ebt_kan_integration.json`.
+
+## REQ-KAN-5617: Active-Spline KAN Critical Task Duration Map
+
+The KAN capability SHALL measure the active-spline retention/adaptation boundary
+on the exact Exp5616 nonstationary constraint-stream fixture without fitting an
+LLM, causal memory, PACE, LLM weights, external teachers, or any non-KAN
+adaptation component. The workflow MUST freeze the Exp5616 split definitions,
+duration cells, metric definitions, and promotion rules before loading fixture
+outcomes, then write
+`results/experiment_5617_kan_critical_task_duration_map.json`.
+
+The experiment MUST compare at least these arms: `frozen_no_update`,
+`retain_exact_replay`, `reset_adapt`, and `loss_smoothed_adaptation`. It MUST
+also run `update_substitution_control` and `frozen_spline_control` so bypassed
+or disabled learners receive no adaptation credit. Mutable KAN arms MUST reuse
+the Exp5570/Exp5608 active-spline update path and exact gate semantics, with
+matched sample order, optimization budgets, calibration calls, and held-out
+evaluation calls across arms.
+
+The experiment MUST run at least five learner seeds and must expose at least 32
+held-out stream-instance replicates per crossed space-shift, temporal-drift,
+and duration condition after seed replication. Metrics SHALL be disaggregated by
+space shift, temporal drift, conflict class, and duration, including Average
+Lifelong Error, inherited instability, transient relearning error, backward
+retention, forward transfer, time-to-valid-adaptation, update and rollback
+counts, and unsafe false accepts. Empirical arm crossings and confidence
+intervals MUST be computed without selecting on future held-out labels. A
+Critical Task Duration may be declared only when the fit score is numeric and at
+least two nondegenerate switch cases are present; otherwise the artifact MUST
+report a bounded no-crossing/null verdict.
+
+The terminal artifact MUST include `field_principles`, `fixture_hash`,
+`models_tested`, `duration_cells`, `seeds`, `instances_per_condition`,
+`ale_by_arm_and_cell`, `instability_by_arm_and_cell`,
+`transient_error_by_arm_and_cell`, `backward_retention_by_arm`,
+`forward_transfer_by_arm`, `unsafe_false_accept_count`,
+`empirical_switch_durations`, `critical_duration_fit_r2`,
+`nondegenerate_switch_cases`, `lazy_identity_guard_passed`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. The required inference substrate is
+`exact_constraint_stream_active_spline_kan_no_llm`.
+
+### SCENARIO-KAN-5617: Exact Fixture Boundary Map
+
+Given the completed Exp5616 fixture and Exp5608/Exp5570 active-spline KAN update
+prerequisite,
+When the Exp5617 runner freezes gates, loads exact rows, evaluates every arm on
+matched seeds and held-out condition cells, and writes the terminal artifact,
+Then the artifact names every KAN/control arm, reports all required
+disaggregated metrics, preserves immutable per-update ledger/checkpoint
+receipts, reports at least two nondegenerate switch cases before declaring a
+critical duration or emits a bounded no-crossing null, records zero exact-gate
+unsafe false accepts, sets `lazy_identity_guard_passed=true`, and uses
+`inference_substrate="exact_constraint_stream_active_spline_kan_no_llm"`.
