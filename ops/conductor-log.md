@@ -11729,3 +11729,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 10:35 UTC | Gated on Exp5619 transition controls: ARC cycle-gu | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cyc |
 | 2026-07-14 10:37 UTC | Gated on Exp5619 transition controls: ARC cycle-gu | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cyc |
 | 2026-07-14 10:39 UTC | Gated on Exp5619 transition controls: ARC cycle-gu | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cyc |
+| 2026-07-14 10:54 UTC | ARC-AGI-3 unconditional rotated live-agent plus-on | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
