@@ -18,6 +18,49 @@ and verifier-selected stochastic trajectories. It is not a hidden-game solve.
   `tests/python/test_arc_ptrm_stage1_generator.py`. Scoped module coverage is
   100% (`464` statements, `0` missing). The implementation preserves the
   Stage-1 proxy claim boundary and does not modify `scripts/research_conductor.py`.
+- 2026-07-13: **Wiring bug found and fixed** (REQ-ARC-PTRM-5600-1).
+  `generate_trajectories` seeded every trajectory from `_base_action_logits`
+  (an untrained action-frequency heuristic) regardless of whether a trained
+  `PTRMActionSequenceGenerator` was available. `_train_proxy_model` genuinely
+  trained the model via real backprop and a real checkpoint, but the trained
+  weights were never consulted at generation time -- Stage 1's own
+  `recursion_depth_metrics`/`overthinking_curve` (and therefore any held-out
+  generalization signal computed from them) reflected an untrained heuristic,
+  not the trained model. Fixed by threading an optional `model` parameter
+  through `generate_trajectories` -> `_recursion_metrics` ->
+  `run_experiment_5574`, seeding trajectory generation from the model's own
+  forward pass (mean-pooled over the K-step horizon) when supplied, with the
+  original heuristic preserved as the fallback when no model is given.
+- 2026-07-13: **exp5574 artifact/code mismatch found, not yet re-run.** The
+  checked-in `results/experiment_5574_ptrm_stochastic_generator_stage1.json`
+  (committed alongside the source file in the single commit `70c857a69`,
+  whose own commit message is unrelated -- "SGE anti-stagnation diversity
+  controller and live-path precheck", task `exp5575-sge-anti-stagnation-live-
+  precheck") contains fields
+  (`recursion_depth_metrics.*.exact_window_accuracy`,
+  `recursion_depth_metrics.*.per_action_accuracy`,
+  `verifier_selection_method.selection_eval.verifier_selection_uplift`,
+  `gpu_device_receipt.device_count`/`nvidia_smi_returncode`,
+  `controls.non_recursive.halting_distribution`) that the committed
+  `_recursion_metrics`/`_gpu_device_receipt`/`build_stage1_artifact` code in
+  that same commit does not compute or accept -- the artifact could not have
+  been produced by the code it was committed with. `scripts/
+  adversarial_verify.py` did not flag this (its checks do not include
+  artifact-schema-vs-source-code consistency). The original artifact is
+  preserved unmodified per this project's never-prune discipline; its
+  specific numbers should not be cited pending investigation into how it was
+  produced. REQ-ARC-PTRM-5600-2's properly-powered multi-seed run
+  supersedes it as the trustworthy reference going forward.
+- 2026-07-13: Multi-seed (10 seeds/game), pre-registered leave-one-game-out
+  gate implemented in `python/carnot/experiment_5600_ptrm_loo_gate.py`
+  (REQ-ARC-PTRM-5600-2), reusing the now-fixed generation path. **Real run
+  completed: the gate FAILS.** Only `ft09` (1 of 5 held-out games) clears
+  both bars (p=0.0020, PTRM mean 0.1459 vs majority-baseline 0.1367);
+  `cd82` and `vc33` beat the majority baseline but not significantly vs the
+  non-recursive control; `m0r0` and `sk48` clear neither. 1 of 5 is below
+  the required majority (>= 3). Per `ops/known-issues.md` task 8's
+  `retire_if_same_verdict: true`, the TRM-as-generator line for ARC-AGI-3 is
+  retired: `results/experiment_5600_ptrm_loo_gate.json`.
 
 ## Requirements
 
@@ -90,3 +133,61 @@ Given a completed bounded Stage-1 run, artifact validation confirms every
 required field is present, all headline/gate fields have principles, the
 checkpoint hash matches the written file, `verifier_is_oracle=false`, and
 `no_level_solve_claim=true`.
+
+### REQ-ARC-PTRM-5600-1: Trajectory Generation Consumes Trained Model Weights
+
+`generate_trajectories` SHALL accept an optional trained
+`PTRMActionSequenceGenerator`. When supplied, the per-input starting logits
+SHALL be derived from the model's own forward pass (mean-pooled over the
+K-step target horizon), not from the untrained `_base_action_logits`
+frequency heuristic. When no model is supplied, the original heuristic-only
+behavior SHALL be preserved unchanged. `_recursion_metrics` and
+`run_experiment_5574` SHALL forward the trained model so that Stage-1's
+`recursion_depth_metrics`/`overthinking_curve` reflect the trained model's
+weights, and `model_architecture.trajectory_generation_uses_trained_model`
+SHALL record `true` when this path is exercised.
+
+### REQ-ARC-PTRM-5600-2: Multi-Seed Pre-Registered Leave-One-Game-Out Gate
+
+Following the same rigor established by the prior standalone-reimplementation
+pilots (`docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md`
+v3), Experiment 5600 SHALL evaluate the (now wiring-fixed) PTRM Stage-1
+pipeline against a fixed, pre-registered set of held-out games
+(`ft09`, `m0r0`, `vc33`, `sk48`, `cd82` -- the same set v3 used, for direct
+comparability and to avoid post-hoc held-out-game selection) across multiple
+independent seeds per game. For each (game, seed), the experiment SHALL train
+on all other games and measure, on the held-out game: (a) the wiring-fixed
+PTRM arm (trained-model-seeded stochastic recursion + Carnot-verifier
+selection), (b) a non-recursive control (the trained model's own single-shot
+argmax prediction, no recursion or verifier selection), and (c) a
+majority-class baseline fit on training targets only. The experiment SHALL
+run a paired Wilcoxon signed-rank test (matched by seed) between the PTRM arm
+and the non-recursive control per held-out game, and SHALL report a
+pre-registered falsifiable gate: PTRM is supported only if, in a majority
+(>= 3 of 5) of held-out games, it both (i) beats the non-recursive control
+with p < 0.05 and (ii) has a higher mean per-action accuracy than the
+majority-class baseline. The experiment SHALL disclose the corpus's
+`level_progress >= 1.0` won-session proxy as an inherited methodology caveat
+(per the v4 pilot's own finding that this proxy can mean "reached this
+session's own highest recorded checkpoint," not "won the whole game") without
+attempting to fix it in this experiment's scope. If the gate fails, the
+artifact SHALL set `retire_trm_generator_line` per the `retire_if_same_verdict`
+condition in `ops/known-issues.md` task 8.
+
+### SCENARIO-ARC-PTRM-5600-WIRING-FIX: Different Model Weights Produce Different Trajectories
+
+Given two `PTRMActionSequenceGenerator` instances with materially different
+weights, the same batch, seed, and zero noise, `generate_trajectories` called
+with each model produces different depth-1 energy and different sampled
+action sequences -- proving the model's weights are load-bearing in
+generation, not orphaned as they were before the fix.
+
+### SCENARIO-ARC-PTRM-5600-LOO-GATE: Pre-Registered Gate Computed Honestly
+
+Given the multi-seed sweep across the five held-out games, the artifact
+reports the Wilcoxon p-value and win count for every (game) combination, the
+majority-class baseline as a flat non-seed-varying reference, and a single
+`loo_verdict_reached=true` with an honest `heldout_generalization_signal`
+that matches the pre-registered gate definition -- never a verdict computed
+after seeing results that contradicts the gate as defined in
+REQ-ARC-PTRM-5600-2.

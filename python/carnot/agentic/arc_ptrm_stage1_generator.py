@@ -187,6 +187,7 @@ class TrajectoryCandidate:
     verifier_score: float
     verifier_score_source: str
     depth_metrics: list[JsonDict]
+    base_logits_source: str = "action_frequency_heuristic"
 
 
 class PTRMActionSequenceGenerator(nn.Module):
@@ -399,17 +400,43 @@ def generate_trajectories(
     seed: int,
     noise_std: float,
     verifier: CarnotTrajectoryVerifier | None = None,
+    model: PTRMActionSequenceGenerator | None = None,
 ) -> list[TrajectoryCandidate]:
-    """REQ-ARC-PTRM-5574-3: seeded stochastic recursion with dynamic halting."""
+    """REQ-ARC-PTRM-5574-3: seeded stochastic recursion with dynamic halting.
+
+    When `model` is supplied, the per-input starting logits are seeded from the
+    TRAINED generator's own forward pass (mean-pooled over the K-step target
+    horizon), not the untrained action-frequency heuristic. Without this, a
+    model trained by `_train_proxy_model` (real backprop, real checkpoint) was
+    never actually consulted at generation time -- its measured training
+    accuracy was real, but orphaned from the trajectories this function
+    produces. `model=None` preserves the original heuristic-only behavior for
+    callers that have no trained model yet (e.g. the blocked-preconditions
+    path).
+    """
 
     del hidden_dim
     generator = torch.Generator().manual_seed(int(seed))
     candidates: list[TrajectoryCandidate] = []
     batch_size = int(batch.history_actions.shape[0])
+    model_logits: torch.Tensor | None = None
+    if model is not None:
+        model.eval()
+        with torch.no_grad():
+            raw_model_logits = model(batch)
+        if raw_model_logits.shape[1] == int(sequence_length) and raw_model_logits.shape[2] == int(
+            action_vocab_size
+        ):
+            model_logits = raw_model_logits
     for input_index in range(batch_size):
         history = batch.history_actions[input_index].tolist()
         intent = batch.history_intents[input_index].tolist()
-        base_logits = _base_action_logits(history, action_vocab_size)
+        if model_logits is not None:
+            base_logits = model_logits[input_index].mean(dim=0).detach()
+            base_logits_source = "trained_ptrm_model"
+        else:
+            base_logits = _base_action_logits(history, action_vocab_size)
+            base_logits_source = "action_frequency_heuristic"
         for trajectory_index in range(int(trajectories_per_input)):
             logits = base_logits.clone()
             depth_metrics: list[JsonDict] = []
@@ -469,6 +496,7 @@ def generate_trajectories(
                     verifier_score=verifier_score,
                     verifier_score_source=score_source,
                     depth_metrics=depth_metrics,
+                    base_logits_source=base_logits_source,
                 )
             )
     return candidates
@@ -610,7 +638,7 @@ def run_experiment_5574(
     )
     validation = verifier.validate_against_corruptions(seed=cfg.seed, n_trials=16)
     recursion_depth_metrics = _recursion_metrics(
-        bundle.heldout_examples, cfg, action_vocab_size, verifier
+        bundle.heldout_examples, cfg, action_vocab_size, verifier, model=model
     )
     overthinking_curve = [
         {"depth": int(depth), **values}
@@ -631,6 +659,7 @@ def run_experiment_5574(
             "history_length": cfg.history_length,
             "hidden_dim": cfg.hidden_dim,
             "action_vocab_size": action_vocab_size,
+            "trajectory_generation_uses_trained_model": True,
         },
         parameter_count=sum(parameter.numel() for parameter in model.parameters()),
         stochastic_noise_schedule={
@@ -1006,6 +1035,7 @@ def _recursion_metrics(
     config: Stage1Config,
     action_vocab_size: int,
     verifier: CarnotTrajectoryVerifier,
+    model: PTRMActionSequenceGenerator | None = None,
 ) -> JsonDict:
     selected_examples = list(examples[: max(int(config.batch_size), 1)])
     if not selected_examples:
@@ -1021,6 +1051,7 @@ def _recursion_metrics(
         seed=config.seed,
         noise_std=config.noise_std,
         verifier=verifier,
+        model=model,
     )
     by_depth: dict[int, list[TrajectoryCandidate]] = defaultdict(list)
     for candidate in candidates:
