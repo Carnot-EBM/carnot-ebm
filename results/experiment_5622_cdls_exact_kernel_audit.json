@@ -1,0 +1,910 @@
+{
+  "broken_kernel_controls_rejected": true,
+  "correction_applied": true,
+  "correction_spec": {
+    "acceptance_rule": "alpha(x,y)=min(1, pi(y) q(x|y) / (pi(x) q(y|x))) with pi(x) proportional to exp(-beta E(x))",
+    "bound_note": "The symmetric clamp is recorded for Exp5611 parity; for positive bounds it does not change sign-projection probabilities.",
+    "continuous_bound": 3.0,
+    "drift_scale": 0.17,
+    "final_kernel": "corrected_cdls_projection_mh",
+    "large_n_timing_tuned": false,
+    "proposal": "z_i ~ Normal(x_i + drift_scale * beta * (Jx + h)_i, proposal_std); y_i = sign(z_i)",
+    "proposal_probability": "q(y|x) = product_i Phi(y_i * mean_i / proposal_std)",
+    "proposal_std": 0.72
+  },
+  "detailed_balance_residual_max": 5.204170427930421e-18,
+  "empirical_distribution_intervals": [
+    {
+      "burn_in_steps": 512,
+      "model_id": "discrete_dls_heat_bath",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n3_mixed_line",
+      "tv_by_seed": [
+        0.04620441066,
+        0.039766297122,
+        0.027882684508,
+        0.017322125338,
+        0.047268103612
+      ],
+      "tv_interval_95": [
+        0.024433182134,
+        0.046944266363
+      ],
+      "tv_max": 0.047268103612,
+      "tv_mean": 0.035688724248,
+      "tv_std": 0.012840896577,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    },
+    {
+      "burn_in_steps": 512,
+      "model_id": "corrected_cdls_projection_mh",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n3_mixed_line",
+      "tv_by_seed": [
+        0.034617315492,
+        0.048451632231,
+        0.065092695407,
+        0.083229432639,
+        0.060269103471
+      ],
+      "tv_interval_95": [
+        0.04235262901,
+        0.074311442686
+      ],
+      "tv_max": 0.083229432639,
+      "tv_mean": 0.058332035848,
+      "tv_std": 0.018230122413,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    },
+    {
+      "burn_in_steps": 512,
+      "model_id": "discrete_dls_heat_bath",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n4_frustrated_cycle",
+      "tv_by_seed": [
+        0.042177030211,
+        0.037345993818,
+        0.046266920254,
+        0.056015009647,
+        0.056346408639
+      ],
+      "tv_interval_95": [
+        0.040249137675,
+        0.055011407353
+      ],
+      "tv_max": 0.056346408639,
+      "tv_mean": 0.047630272514,
+      "tv_std": 0.008420775128,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    },
+    {
+      "burn_in_steps": 512,
+      "model_id": "corrected_cdls_projection_mh",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n4_frustrated_cycle",
+      "tv_by_seed": [
+        0.05314768203,
+        0.073523639123,
+        0.068298181966,
+        0.052022146291,
+        0.067700671278
+      ],
+      "tv_interval_95": [
+        0.054412165287,
+        0.071464762989
+      ],
+      "tv_max": 0.073523639123,
+      "tv_mean": 0.062938464138,
+      "tv_std": 0.009727236647,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    },
+    {
+      "burn_in_steps": 512,
+      "model_id": "discrete_dls_heat_bath",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n5_weighted_star",
+      "tv_by_seed": [
+        0.073456490564,
+        0.067085320774,
+        0.069208097491,
+        0.054666701644,
+        0.0838356726
+      ],
+      "tv_interval_95": [
+        0.060384456714,
+        0.078916456516
+      ],
+      "tv_max": 0.0838356726,
+      "tv_mean": 0.069650456615,
+      "tv_std": 0.010571125336,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    },
+    {
+      "burn_in_steps": 512,
+      "model_id": "corrected_cdls_projection_mh",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n5_weighted_star",
+      "tv_by_seed": [
+        0.087942478601,
+        0.084312750059,
+        0.082344170889,
+        0.07720571723,
+        0.103108795815
+      ],
+      "tv_interval_95": [
+        0.07838101577,
+        0.095584549267
+      ],
+      "tv_max": 0.103108795815,
+      "tv_mean": 0.086982782519,
+      "tv_std": 0.009813334274,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    },
+    {
+      "burn_in_steps": 512,
+      "model_id": "discrete_dls_heat_bath",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n6_ladder_chord",
+      "tv_by_seed": [
+        0.093063149861,
+        0.08701914805,
+        0.101108950427,
+        0.116051413527,
+        0.103996652977
+      ],
+      "tv_interval_95": [
+        0.090534820898,
+        0.109960905039
+      ],
+      "tv_max": 0.116051413527,
+      "tv_mean": 0.100247862968,
+      "tv_std": 0.011081133846,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    },
+    {
+      "burn_in_steps": 512,
+      "model_id": "corrected_cdls_projection_mh",
+      "retained_samples_per_seed": 4096,
+      "seed_count": 5,
+      "seed_replay_match": true,
+      "seeds": [
+        5622,
+        5623,
+        5624,
+        5625,
+        5626
+      ],
+      "system_id": "ising_n6_ladder_chord",
+      "tv_by_seed": [
+        0.082458910175,
+        0.119606560683,
+        0.119549766508,
+        0.112449174136,
+        0.096704981836
+      ],
+      "tv_interval_95": [
+        0.091946998839,
+        0.120360758496
+      ],
+      "tv_max": 0.119606560683,
+      "tv_mean": 0.106153878668,
+      "tv_std": 0.016207933186,
+      "uncertainty_method": "five_seed_t_interval_on_seed_tv_values"
+    }
+  ],
+  "energy_histogram_tv_max": 4.875613801580414e-14,
+  "exact_audit_rows": [
+    {
+      "detailed_balance_residual_max": 6.938893903907228e-18,
+      "energy_histogram_tv": 6.071532165918825e-15,
+      "irreducible": true,
+      "model_id": "discrete_dls_heat_bath",
+      "passes_exact_target_gate": true,
+      "probability_min": 0.0,
+      "row_sum_error_max": 0.0,
+      "state_count": 8,
+      "stationary_distribution_tv": 6.071532165918825e-15,
+      "system_id": "ising_n3_mixed_line"
+    },
+    {
+      "detailed_balance_residual_max": 0.008518919057000907,
+      "energy_histogram_tv": 0.13935876200391056,
+      "irreducible": true,
+      "model_id": "uncorrected_cdls_projection",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0002502762079606629,
+      "row_sum_error_max": 0.0,
+      "state_count": 8,
+      "stationary_distribution_tv": 0.13935876200391056,
+      "system_id": "ising_n3_mixed_line"
+    },
+    {
+      "detailed_balance_residual_max": 5.204170427930421e-18,
+      "energy_histogram_tv": 1.776009894705055e-14,
+      "irreducible": true,
+      "model_id": "corrected_cdls_projection_mh",
+      "passes_exact_target_gate": true,
+      "probability_min": 0.00021437091542594292,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 8,
+      "stationary_distribution_tv": 1.776009894705055e-14,
+      "system_id": "ising_n3_mixed_line"
+    },
+    {
+      "detailed_balance_residual_max": 3.469446951953614e-18,
+      "energy_histogram_tv": 1.2337353361147052e-14,
+      "irreducible": true,
+      "model_id": "discrete_dls_heat_bath",
+      "passes_exact_target_gate": true,
+      "probability_min": 0.0,
+      "row_sum_error_max": 1.1102230246251565e-16,
+      "state_count": 16,
+      "stationary_distribution_tv": 1.2329547105505156e-14,
+      "system_id": "ising_n4_frustrated_cycle"
+    },
+    {
+      "detailed_balance_residual_max": 0.006431831791578545,
+      "energy_histogram_tv": 0.16298321665724758,
+      "irreducible": true,
+      "model_id": "uncorrected_cdls_projection",
+      "passes_exact_target_gate": false,
+      "probability_min": 1.2634755433183342e-05,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 16,
+      "stationary_distribution_tv": 0.16298321665724758,
+      "system_id": "ising_n4_frustrated_cycle"
+    },
+    {
+      "detailed_balance_residual_max": 2.6020852139652106e-18,
+      "energy_histogram_tv": 2.1668430938426297e-14,
+      "irreducible": true,
+      "model_id": "corrected_cdls_projection_mh",
+      "passes_exact_target_gate": true,
+      "probability_min": 1.0047027610448501e-05,
+      "row_sum_error_max": 0.0,
+      "state_count": 16,
+      "stationary_distribution_tv": 2.1675369832330205e-14,
+      "system_id": "ising_n4_frustrated_cycle"
+    },
+    {
+      "detailed_balance_residual_max": 2.6020852139652106e-18,
+      "energy_histogram_tv": 2.0436777270482764e-14,
+      "irreducible": true,
+      "model_id": "discrete_dls_heat_bath",
+      "passes_exact_target_gate": true,
+      "probability_min": 0.0,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 32,
+      "stationary_distribution_tv": 2.1354445989274495e-14,
+      "system_id": "ising_n5_weighted_star"
+    },
+    {
+      "detailed_balance_residual_max": 0.0026413413927453095,
+      "energy_histogram_tv": 0.12012142863901104,
+      "irreducible": true,
+      "model_id": "uncorrected_cdls_projection",
+      "passes_exact_target_gate": false,
+      "probability_min": 1.3525204963424018e-06,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 32,
+      "stationary_distribution_tv": 0.12012142863901107,
+      "system_id": "ising_n5_weighted_star"
+    },
+    {
+      "detailed_balance_residual_max": 2.6020852139652106e-18,
+      "energy_histogram_tv": 2.725684261628558e-14,
+      "irreducible": true,
+      "model_id": "corrected_cdls_projection_mh",
+      "passes_exact_target_gate": true,
+      "probability_min": 9.980978631881211e-07,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 32,
+      "stationary_distribution_tv": 2.8313289213155457e-14,
+      "system_id": "ising_n5_weighted_star"
+    },
+    {
+      "detailed_balance_residual_max": 2.168404344971009e-18,
+      "energy_histogram_tv": 4.3027864257694226e-14,
+      "irreducible": true,
+      "model_id": "discrete_dls_heat_bath",
+      "passes_exact_target_gate": true,
+      "probability_min": 0.0,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 64,
+      "stationary_distribution_tv": 4.532463813988752e-14,
+      "system_id": "ising_n6_ladder_chord"
+    },
+    {
+      "detailed_balance_residual_max": 0.0012991618323174694,
+      "energy_histogram_tv": 0.16692974362063584,
+      "irreducible": true,
+      "model_id": "uncorrected_cdls_projection",
+      "passes_exact_target_gate": false,
+      "probability_min": 8.71899264494269e-08,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 64,
+      "stationary_distribution_tv": 0.16692974362063584,
+      "system_id": "ising_n6_ladder_chord"
+    },
+    {
+      "detailed_balance_residual_max": 8.673617379884035e-19,
+      "energy_histogram_tv": 4.875613801580414e-14,
+      "irreducible": true,
+      "model_id": "corrected_cdls_projection_mh",
+      "passes_exact_target_gate": true,
+      "probability_min": 6.129313486713708e-08,
+      "row_sum_error_max": 4.440892098500626e-16,
+      "state_count": 64,
+      "stationary_distribution_tv": 5.1144852242224204e-14,
+      "system_id": "ising_n6_ladder_chord"
+    }
+  ],
+  "exact_distribution_tv_max": 5.1144852242224204e-14,
+  "experiment": 5622,
+  "experiment_id": "exp5622-cdls-exact-kernel-audit",
+  "field_principles": {
+    "broken_kernel_controls_rejected": "Proves the audit rejects biased and broken positive controls.",
+    "correction_applied": "Declares whether projection bias was corrected before any timing run.",
+    "correction_spec": "Documents the exact acceptance rule and proposal probability used by the corrected kernel.",
+    "detailed_balance_residual_max": "Measures reversibility or invariant-condition residual instead of assuming it.",
+    "empirical_distribution_intervals": "Bounds finite-sample exact-versus-empirical total variation across independent seeds.",
+    "exact_distribution_tv_max": "Quantifies stationary-target parity for the final corrected kernel.",
+    "field_principles": "Explains why each audit field exists before Exp5623 can consume it.",
+    "honest_verdict": "States whether a biased kernel blocks timing.",
+    "inference_substrate": "Declares that the artifact came from deterministic enumeration and simulation, not LLM judgment.",
+    "kernel_audit_ready_score": "Equals 1.0 only when exactness and control-rejection gates pass.",
+    "models_tested": "Keeps the discrete baseline, biased cDLS control, and corrected cDLS kernel separately named.",
+    "quality_gate_specification": "Predeclares the large-n Exp5623 quality gates before timing evidence exists.",
+    "quality_gate_specified_count": "Makes downstream gate coverage numeric rather than prose-only.",
+    "random_seeds": "Records replay seeds for empirical checks.",
+    "reproducibility_checksum": "Content-addresses the audit artifact for deterministic replay.",
+    "state_space_sizes": "Shows the exact enumeration limit and the number of states audited per topology.",
+    "target_descriptors": "Makes every exact Ising system explicit enough to recompute the target distribution.",
+    "transition_row_sum_error_max": "Confirms every accepted transition matrix is normalized."
+  },
+  "honest_verdict": "complete: corrected cDLS exact kernel audit ready; biased uncorrected kernel blocks timing unless the corrected kernel is used",
+  "inference_substrate": "deterministic_verifier",
+  "kernel_audit_ready_score": 1.0,
+  "milestone": "2026.07.507",
+  "model_summaries": [
+    {
+      "detailed_balance_residual_max": 6.938893903907228e-18,
+      "energy_histogram_tv_max": 4.3027864257694226e-14,
+      "model_id": "discrete_dls_heat_bath",
+      "row_sum_error_max": 2.220446049250313e-16,
+      "stationary_distribution_tv_max": 4.532463813988752e-14,
+      "systems_passing_exact_target_gate": 4,
+      "systems_tested": 4
+    },
+    {
+      "detailed_balance_residual_max": 0.008518919057000907,
+      "energy_histogram_tv_max": 0.16692974362063584,
+      "model_id": "uncorrected_cdls_projection",
+      "row_sum_error_max": 2.220446049250313e-16,
+      "stationary_distribution_tv_max": 0.16692974362063584,
+      "systems_passing_exact_target_gate": 0,
+      "systems_tested": 4
+    },
+    {
+      "detailed_balance_residual_max": 5.204170427930421e-18,
+      "energy_histogram_tv_max": 4.875613801580414e-14,
+      "model_id": "corrected_cdls_projection_mh",
+      "row_sum_error_max": 4.440892098500626e-16,
+      "stationary_distribution_tv_max": 5.1144852242224204e-14,
+      "systems_passing_exact_target_gate": 4,
+      "systems_tested": 4
+    }
+  ],
+  "models_tested": [
+    {
+      "description": "Single-site heat-bath Gibbs kernel using the exact Ising conditional.",
+      "model_id": "discrete_dls_heat_bath",
+      "projection_correction": "not_applicable",
+      "role": "discrete_baseline_control"
+    },
+    {
+      "description": "Continuous Gaussian intermediate projected to signs without MH correction.",
+      "model_id": "uncorrected_cdls_projection",
+      "projection_correction": "none",
+      "role": "biased_projection_positive_control"
+    },
+    {
+      "description": "Projected cDLS proposal corrected by exact discrete Metropolis-Hastings.",
+      "model_id": "corrected_cdls_projection_mh",
+      "projection_correction": "metropolis_hastings_exact_projected_proposal",
+      "role": "final_kernel"
+    }
+  ],
+  "positive_control_audit_rows": [
+    {
+      "detailed_balance_residual_max": 0.013139112729758774,
+      "energy_histogram_tv": 0.10281515116030851,
+      "irreducible": true,
+      "model_id": "biased_temperature_positive_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 0.0,
+      "state_count": 8,
+      "stationary_distribution_tv": 0.10281515116030851,
+      "system_id": "ising_n3_mixed_line"
+    },
+    {
+      "detailed_balance_residual_max": 0.0,
+      "energy_histogram_tv": 0.23909230387956193,
+      "irreducible": false,
+      "model_id": "broken_zero_support_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 0.0,
+      "state_count": 8,
+      "stationary_distribution_tv": 0.23909230387956193,
+      "system_id": "ising_n3_mixed_line"
+    },
+    {
+      "detailed_balance_residual_max": 0.007967931818968219,
+      "energy_histogram_tv": 0.12254183405917879,
+      "irreducible": true,
+      "model_id": "biased_temperature_positive_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 0.0,
+      "state_count": 16,
+      "stationary_distribution_tv": 0.12254183405917878,
+      "system_id": "ising_n4_frustrated_cycle"
+    },
+    {
+      "detailed_balance_residual_max": 0.0,
+      "energy_histogram_tv": 0.2751071688292999,
+      "irreducible": false,
+      "model_id": "broken_zero_support_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 0.0,
+      "state_count": 16,
+      "stationary_distribution_tv": 0.27510716882929986,
+      "system_id": "ising_n4_frustrated_cycle"
+    },
+    {
+      "detailed_balance_residual_max": 0.0029449465668464677,
+      "energy_histogram_tv": 0.08971289088280388,
+      "irreducible": true,
+      "model_id": "biased_temperature_positive_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 1.1102230246251565e-16,
+      "state_count": 32,
+      "stationary_distribution_tv": 0.0897128908828039,
+      "system_id": "ising_n5_weighted_star"
+    },
+    {
+      "detailed_balance_residual_max": 0.0,
+      "energy_histogram_tv": 0.19849386870175023,
+      "irreducible": false,
+      "model_id": "broken_zero_support_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 0.0,
+      "state_count": 32,
+      "stationary_distribution_tv": 0.1984938687017502,
+      "system_id": "ising_n5_weighted_star"
+    },
+    {
+      "detailed_balance_residual_max": 0.0012915432952471874,
+      "energy_histogram_tv": 0.12268436954568585,
+      "irreducible": true,
+      "model_id": "biased_temperature_positive_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 2.220446049250313e-16,
+      "state_count": 64,
+      "stationary_distribution_tv": 0.12268436954568585,
+      "system_id": "ising_n6_ladder_chord"
+    },
+    {
+      "detailed_balance_residual_max": 0.0,
+      "energy_histogram_tv": 0.28506061253358755,
+      "irreducible": false,
+      "model_id": "broken_zero_support_control",
+      "passes_exact_target_gate": false,
+      "probability_min": 0.0,
+      "row_sum_error_max": 0.0,
+      "state_count": 64,
+      "stationary_distribution_tv": 0.2850606125335876,
+      "system_id": "ising_n6_ladder_chord"
+    }
+  ],
+  "quality_gate_specification": [
+    {
+      "category": "target_behavior",
+      "gate_id": "QG-5623-TARGET-TV",
+      "requirement": "Corrected cDLS empirical spin/energy marginals must remain noninferior to discrete DLS under the preregistered TV tolerance.",
+      "threshold": {
+        "empirical_distribution_tv_delta_max": 0.03
+      }
+    },
+    {
+      "category": "energy_behavior",
+      "gate_id": "QG-5623-ENERGY-HIST",
+      "requirement": "Corrected cDLS energy histogram distance from the discrete baseline must not exceed the preregistered tolerance before speed is inspected.",
+      "threshold": {
+        "energy_histogram_tv_delta_max": 0.03,
+        "mean_energy_worse_abs_max": 0.5
+      }
+    },
+    {
+      "category": "mixing",
+      "gate_id": "QG-5623-MIXING",
+      "requirement": "Corrected cDLS must meet a minimum effective-sample-size floor and must not hide poor mixing behind wall-clock speed.",
+      "threshold": {
+        "max_integrated_autocorrelation_ratio": 2.0,
+        "min_effective_sample_size": 100.0
+      }
+    },
+    {
+      "category": "constraint_validity",
+      "gate_id": "QG-5623-CONSTRAINT",
+      "requirement": "Corrected cDLS exact constraint-satisfaction rate must be noninferior to discrete DLS within the preregistered tolerance.",
+      "threshold": {
+        "constraint_satisfaction_rate_drop_max": 0.03
+      }
+    }
+  ],
+  "quality_gate_specified_count": 4,
+  "random_seeds": [
+    5622,
+    5623,
+    5624,
+    5625,
+    5626
+  ],
+  "reproducibility_checksum": "7932f264ba60a2639f47f59ec0868d422f3a20392b6508f45f96a3743529c2fd",
+  "run_date": "2026-07-14",
+  "schema": "carnot.experiment_5622.cdls_exact_kernel_audit.v1",
+  "spec_refs": [
+    "REQ-SAMPLE-5622",
+    "SCENARIO-SAMPLE-5622"
+  ],
+  "state_space_sizes": {
+    "enumeration_limit_states": 4096,
+    "max_exact_enumerated_states": 64,
+    "systems": [
+      {
+        "exact_transition_matrix_feasible": true,
+        "n_spins": 3,
+        "state_count": 8,
+        "system_id": "ising_n3_mixed_line"
+      },
+      {
+        "exact_transition_matrix_feasible": true,
+        "n_spins": 4,
+        "state_count": 16,
+        "system_id": "ising_n4_frustrated_cycle"
+      },
+      {
+        "exact_transition_matrix_feasible": true,
+        "n_spins": 5,
+        "state_count": 32,
+        "system_id": "ising_n5_weighted_star"
+      },
+      {
+        "exact_transition_matrix_feasible": true,
+        "n_spins": 6,
+        "state_count": 64,
+        "system_id": "ising_n6_ladder_chord"
+      }
+    ]
+  },
+  "target_descriptors": [
+    {
+      "constraint_indices": [
+        0,
+        1,
+        2
+      ],
+      "couplings": [
+        [
+          0.0,
+          0.62,
+          0.0
+        ],
+        [
+          0.62,
+          0.0,
+          -0.48
+        ],
+        [
+          0.0,
+          -0.48,
+          0.0
+        ]
+      ],
+      "energy_max": 1.44,
+      "energy_min": -1.3,
+      "fields": [
+        0.18,
+        -0.27,
+        0.11
+      ],
+      "n_spins": 3,
+      "state_count": 8,
+      "system_id": "ising_n3_mixed_line",
+      "target_probability_checksum": "4616ec86823c12cc1fa0c18608239c21f2ff0a4f07d8d5a4d8f83319526c3800",
+      "target_spins": [
+        1,
+        -1,
+        1
+      ],
+      "temperature": 1.35,
+      "topology": "line_mixed_ferro_antiferro"
+    },
+    {
+      "constraint_indices": [
+        0,
+        2,
+        3
+      ],
+      "couplings": [
+        [
+          0.0,
+          0.51,
+          0.16,
+          -0.29
+        ],
+        [
+          0.51,
+          0.0,
+          -0.44,
+          0.0
+        ],
+        [
+          0.16,
+          -0.44,
+          0.0,
+          0.37
+        ],
+        [
+          -0.29,
+          0.0,
+          0.37,
+          0.0
+        ]
+      ],
+      "energy_max": 1.77,
+      "energy_min": -1.69,
+      "fields": [
+        0.07,
+        -0.21,
+        0.19,
+        -0.09
+      ],
+      "n_spins": 4,
+      "state_count": 16,
+      "system_id": "ising_n4_frustrated_cycle",
+      "target_probability_checksum": "f342f03f895320c81b38d59115527debe19a5834caddc64aa75dd328ac699ee1",
+      "target_spins": [
+        1,
+        -1,
+        1,
+        -1
+      ],
+      "temperature": 1.1,
+      "topology": "cycle_with_frustrating_chord"
+    },
+    {
+      "constraint_indices": [
+        0,
+        1,
+        4
+      ],
+      "couplings": [
+        [
+          0.0,
+          0.42,
+          -0.35,
+          0.28,
+          -0.31
+        ],
+        [
+          0.42,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.35,
+          0.0,
+          0.0,
+          0.0,
+          0.22
+        ],
+        [
+          0.28,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.31,
+          0.0,
+          0.22,
+          0.0,
+          0.0
+        ]
+      ],
+      "energy_max": 1.82,
+      "energy_min": -2.0,
+      "fields": [
+        0.13,
+        -0.08,
+        0.17,
+        -0.24,
+        0.06
+      ],
+      "n_spins": 5,
+      "state_count": 32,
+      "system_id": "ising_n5_weighted_star",
+      "target_probability_checksum": "9963422be48798a9c2c80896567d606249c701df82d14a22bf02e692d0c9fc3e",
+      "target_spins": [
+        1,
+        1,
+        -1,
+        1,
+        -1
+      ],
+      "temperature": 1.55,
+      "topology": "weighted_star_with_leaf_coupling"
+    },
+    {
+      "constraint_indices": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "couplings": [
+        [
+          0.0,
+          0.33,
+          0.0,
+          0.25,
+          0.0,
+          -0.18
+        ],
+        [
+          0.33,
+          0.0,
+          -0.27,
+          0.0,
+          -0.3,
+          0.0
+        ],
+        [
+          0.0,
+          -0.27,
+          0.0,
+          0.0,
+          0.0,
+          0.21
+        ],
+        [
+          0.25,
+          0.0,
+          0.0,
+          0.0,
+          0.41,
+          0.0
+        ],
+        [
+          0.0,
+          -0.3,
+          0.0,
+          0.41,
+          0.0,
+          -0.36
+        ],
+        [
+          -0.18,
+          0.0,
+          0.21,
+          0.0,
+          -0.36,
+          0.0
+        ]
+      ],
+      "energy_max": 1.89,
+      "energy_min": -1.87,
+      "fields": [
+        -0.12,
+        0.22,
+        -0.16,
+        0.09,
+        -0.05,
+        0.14
+      ],
+      "n_spins": 6,
+      "state_count": 64,
+      "system_id": "ising_n6_ladder_chord",
+      "target_probability_checksum": "6c95b8462f4c0ae945afb5c3571fc32f7bd3c090c00172982d193a24c199b1a9",
+      "target_spins": [
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        1
+      ],
+      "temperature": 1.25,
+      "topology": "two_by_three_ladder_with_chord"
+    }
+  ],
+  "tests_added_or_reused": [
+    "results/experiment_5622_cdls_exact_kernel_audit.json",
+    "tests/python/test_experiment_5622_cdls_exact_kernel_audit.py"
+  ],
+  "transition_row_sum_error_max": 4.440892098500626e-16
+}

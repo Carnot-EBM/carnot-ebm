@@ -171,6 +171,96 @@ available matched evidence.
 |---|---|---|
 | REQ-SAMPLE-5611 | Planned (`python/carnot/experiment_5611_cdls_matched_sampler_crossover.py`, `results/experiment_5611_cdls_matched_sampler_crossover.json`) | Planned (`tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py`) |
 
+### REQ-SAMPLE-5622: cDLS Exact Small-Ising Kernel Audit
+
+Carnot MUST provide Exp 5622 at
+`python/carnot/experiment_5622_cdls_exact_kernel_audit.py` and write
+`results/experiment_5622_cdls_exact_kernel_audit.json` without modifying
+`scripts/research_conductor.py`. The experiment SHALL audit the continuous-
+intermediate discrete Langevin sampler against exactly enumerable finite-
+temperature Ising targets before any additional CPU/CUDA timing run is allowed.
+
+The audit SHALL preserve three separately named kernels: the existing discrete
+Langevin/heat-bath baseline as `discrete_dls_heat_bath`, the deliberately
+uncorrected continuous-intermediate projection as
+`uncorrected_cdls_projection`, and the final corrected kernel as
+`corrected_cdls_projection_mh`. For each exact small Ising system the audit
+SHALL enumerate normalized target probabilities, build exact transition
+matrices when feasible, and otherwise record a separately verified
+high-precision estimate. The exact systems SHALL cover several sizes and
+topologies, use finite temperature, and include nontrivial couplings and fields.
+
+The verifier SHALL test row normalization, nonnegative probabilities,
+transition support and irreducibility, reversibility or a declared invariant
+condition, detailed-balance residual, stationary distribution total variation,
+energy-histogram total variation, and deterministic seed replay. If the
+uncorrected projection introduces target bias, the corrected cDLS kernel SHALL
+use a mathematically justified Metropolis-Hastings projection correction based
+only on the exact discrete Ising energy and exact projected proposal
+probabilities; that correction SHALL NOT be tuned on any later large-n timing
+set.
+
+Empirical checks SHALL use at least five independent seeds and report
+exact-versus-empirical total variation with uncertainty. Deliberately biased
+and broken-proposal positive controls SHALL be included and SHALL be rejected
+by the audit. The audit SHALL predeclare at least three large-n quality-
+equivalence requirements covering target or energy behavior, mixing behavior,
+and constraint validity. These preregistered fields, not a manually set success
+boolean, SHALL gate Exp 5623.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `target_descriptors`, `models_tested`,
+`state_space_sizes`, `transition_row_sum_error_max`,
+`detailed_balance_residual_max`, `exact_distribution_tv_max`,
+`empirical_distribution_intervals`, `broken_kernel_controls_rejected`,
+`correction_applied`, `correction_spec`, `quality_gate_specification`,
+`quality_gate_specified_count`, `kernel_audit_ready_score`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`deterministic_verifier`. `kernel_audit_ready_score` SHALL equal exactly `1.0`
+only when the exactness gates pass for the corrected kernel and the biased and
+broken controls are rejected; a biased final kernel SHALL block timing.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why each audit field exists before Exp5623 can consume it."
+- `target_descriptors`: principle "Makes every exact Ising system explicit enough to recompute the target distribution."
+- `models_tested`: principle "Keeps the discrete baseline, biased cDLS control, and corrected cDLS kernel separately named."
+- `state_space_sizes`: principle "Shows the exact enumeration limit and the number of states audited per topology."
+- `transition_row_sum_error_max`: principle "Confirms every accepted transition matrix is normalized."
+- `detailed_balance_residual_max`: principle "Measures reversibility or invariant-condition residual instead of assuming it."
+- `exact_distribution_tv_max`: principle "Quantifies stationary-target parity for the final corrected kernel."
+- `empirical_distribution_intervals`: principle "Bounds finite-sample exact-versus-empirical total variation across independent seeds."
+- `broken_kernel_controls_rejected`: principle "Proves the audit rejects biased and broken positive controls."
+- `correction_applied`: principle "Declares whether projection bias was corrected before any timing run."
+- `correction_spec`: principle "Documents the exact acceptance rule and proposal probability used by the corrected kernel."
+- `quality_gate_specification`: principle "Predeclares the large-n Exp5623 quality gates before timing evidence exists."
+- `quality_gate_specified_count`: principle "Makes downstream gate coverage numeric rather than prose-only."
+- `kernel_audit_ready_score`: principle "Equals 1.0 only when exactness and control-rejection gates pass."
+- `inference_substrate`: principle "Declares that the artifact came from deterministic enumeration and simulation, not LLM judgment."
+- `random_seeds`: principle "Records replay seeds for empirical checks."
+- `reproducibility_checksum`: principle "Content-addresses the audit artifact for deterministic replay."
+- `honest_verdict`: principle "States whether a biased kernel blocks timing."
+
+### SCENARIO-SAMPLE-5622: Exact cDLS Kernel Audit Emits Gated Evidence
+
+**Given** exactly enumerable finite-temperature Ising systems with nontrivial
+couplings
+**When** Exp 5622 runs
+**Then** it enumerates each target distribution, audits exact transition
+matrices for `discrete_dls_heat_bath`, `uncorrected_cdls_projection`, and
+`corrected_cdls_projection_mh`, rejects deliberately biased and broken controls,
+reports exact and empirical total variation, writes
+`results/experiment_5622_cdls_exact_kernel_audit.json`, and sets
+`kernel_audit_ready_score=1.0` only when the corrected kernel is target-exact
+and all control gates pass.
+
+## Implementation Status (REQ-SAMPLE-5622)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5622 | Planned (`python/carnot/experiment_5622_cdls_exact_kernel_audit.py`, `results/experiment_5622_cdls_exact_kernel_audit.json`) | Planned (`tests/python/test_experiment_5622_cdls_exact_kernel_audit.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
