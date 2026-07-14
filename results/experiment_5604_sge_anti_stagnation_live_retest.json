@@ -1,0 +1,60 @@
+{
+  "attempts": 31,
+  "collapse_detected_live": false,
+  "collapse_trigger_step": null,
+  "duration_s": 199.8345310859986,
+  "experiment": "experiment_5604_sge_anti_stagnation_live_retest",
+  "experiment_id": 5604,
+  "field_principles": {
+    "attempts": "bare int count of live actions executed.",
+    "collapse_detected_live": "bare bool: the anti-stagnation controller actually fired during THIS live run (not a replayed trace).",
+    "collapse_trigger_step": "the step index collapse first fired, or null if it never fired (a genuine no-collapse run is also an honest, valid result).",
+    "duration_s": "real wall-clock time; a genuine GPU LLM run over a 46-action budget takes well over 60s.",
+    "forced_portfolio_activated_live": "bare bool: the deterministic diverse portfolio was actually installed as the ranked candidates at least once live.",
+    "honest_verdict": "one-line verdict starting complete: or blocked:.",
+    "inference_substrate": "live_llm_inference when llm_strategy_proposer_used_any_step is true, else the honest no-LLM substrate.",
+    "llm_strategy_proposer_used_any_step": "bare bool proving real GGUF inference occurred at least once (the exp5534 dishonest-baseline failure mode this guards against).",
+    "max_level_reached": "highest level counter observed during this single fresh env session.",
+    "model_specs": "the local GGUF proposer actually invoked.",
+    "offline_reproduced": "true only when a claimed new level passes the standard offline replay gate.",
+    "post_collapse_strategy_diversity": "unique forced-portfolio category count selected in the step(s) after collapse fired; the direct behavioral escape signal.",
+    "preconditions_checked": "resources verified before any live inference was attempted.",
+    "prior_levels_reproduced": "registry depth for target_game before this attempt.",
+    "registry_delta": "nonzero only when offline_reproduced is true.",
+    "reproduced_levels": "integer new levels banked; secondary to the collapse-escape headline, not required for a valid result.",
+    "solve_provenance": "must equal live_agent_self_discovery -- the scored E3AgentPolicy path, not a hand-derived outer-loop solve.",
+    "target_game": "current shallowest not-fully-cleared registry game, re-read live so the target can never go stale.",
+    "target_level": "the next unreproduced level for target_game at run time.",
+    "trajectory_path": "path to the full step-by-step diagnostics log for audit."
+  },
+  "forced_portfolio_activated_live": false,
+  "honest_verdict": "complete: no_collapse_observed_this_run_budget_or_target_too_short_to_trigger_no_new_level_banked",
+  "inference_substrate": "live_llm_inference",
+  "llm_strategy_proposer_used_any_step": true,
+  "max_level_reached": 6,
+  "model_specs": [
+    "gemma-4-12B-it"
+  ],
+  "offline_reproduced": false,
+  "post_collapse_strategy_diversity": 0,
+  "preconditions_checked": {
+    "gguf_cached": true,
+    "offline_arcade_makes_env": true,
+    "ok": true,
+    "sge_and_e3_import": true
+  },
+  "prior_levels_reproduced": 6,
+  "random_seed": 5604,
+  "registry_delta": 0,
+  "registry_updated": false,
+  "reproduced_levels": 0,
+  "schema": "carnot.experiment_5604_sge_anti_stagnation_live_retest.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5604",
+    "SCENARIO-ARC-FCP-5604-LIVE-COLLAPSE-ESCAPE"
+  ],
+  "target_game": "lf52",
+  "target_level": 7,
+  "trajectory_path": "results/experiment_5604_sge_anti_stagnation_live_retest_trajectory.json"
+}
