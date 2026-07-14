@@ -82,6 +82,95 @@ target state
 device metadata, and a backend verdict
 **And** it records GPU latency and parity only when a GPU backend is available.
 
+### REQ-SAMPLE-5611: Bounded cDLS Matched CPU/CUDA Crossover Benchmark
+
+Carnot MUST provide Exp 5611 at
+`python/carnot/experiment_5611_cdls_matched_sampler_crossover.py` and write
+`results/experiment_5611_cdls_matched_sampler_crossover.json` without modifying
+`scripts/research_conductor.py`. The experiment SHALL preserve the existing
+discrete Langevin/heat-bath baseline from Exp 5573 unchanged and add a separately
+identified bounded continuous-intermediate discrete Langevin sampler (cDLS).
+
+The cDLS proposal SHALL use deterministic seeds, form a bounded continuous
+intermediate for each discrete Ising state, project that intermediate back to
+`{-1, +1}` spins, and apply a documented Metropolis-Hastings correction using
+the exact discrete Ising energy and proposal probability so the projection does
+not replace the exact discrete target distribution.
+
+Exp 5611 SHALL use descriptor-derived Ising instances already available in
+Carnot, with target descriptors recorded for `n=128,256,512,1024` where memory
+and the bounded runtime permit execution. Discrete DLS and cDLS SHALL share the
+same target energies, descriptor checksums, seeds, warm-up count, retained sample
+count, temperature, thinning, precision, and timing boundaries across CPU and
+CUDA. Successful matched rows SHALL retain at least 10000 post-warmup samples.
+OOM, timeout, CUDA-blocked, descriptor-blocked, or runtime-budget-blocked rows
+SHALL remain explicit and SHALL NOT enter speedup summaries.
+
+The artifact SHALL define quality equivalence before inspecting timing. A
+crossover claim SHALL be allowed only when successful matched cDLS/DLS CPU/CUDA
+pairs pass the quality non-inferiority gate and the relevant timing interval
+excludes 1.0 in the favorable direction. `crossover_size` MAY be null, and
+`crossover_claim_allowed` SHALL be false when the quality or timing gate is not
+conjunctively satisfied. No KV260, PolarFire, GateMate, or TSU speedup claim is
+in scope, and `board_speedup_claimed` SHALL be false.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `target_descriptors`, `instance_sizes`, `methods`, `seeds`,
+`samples_per_pair`, `cpu_device_receipt`, `cuda_device_receipt`, `timing_rows`,
+`energy_quality_metrics`, `mixing_metrics`, `successful_matched_pairs`,
+`speedup_by_pair`, `crossover_size`, `crossover_claim_allowed`,
+`board_speedup_claimed`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal `matched_cpu_cuda_exact_ising_sampling`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every headline and gate field exists before a reviewer trusts the JSON shape."
+- `target_descriptors`: principle "Proves both methods sample identical descriptor-derived Ising problems."
+- `instance_sizes`: principle "Makes the tested crossover range explicit instead of implying unmeasured scale."
+- `methods`: principle "Keeps the unchanged discrete DLS baseline and bounded cDLS proposal separately identifiable."
+- `seeds`: principle "Records paired seeds so every CPU/CUDA and method comparison is reproducible."
+- `samples_per_pair`: principle "Guards the >=10000 retained-sample floor required for mixing estimates."
+- `cpu_device_receipt`: principle "Authenticates CPU identity, runtime, and free memory for the local benchmark."
+- `cuda_device_receipt`: principle "Authenticates CUDA identity, driver/runtime, and free memory or records a precise blocker."
+- `timing_rows`: principle "Preserves raw matched timing evidence, including failed rows, before any summary ratio."
+- `energy_quality_metrics`: principle "Prevents speed from hiding wrong samples by reporting energy and exact constraint quality."
+- `mixing_metrics`: principle "Reports ESS and autocorrelation to test whether the cDLS mechanism actually mixes."
+- `successful_matched_pairs`: principle "Counts only complete method/device rows that satisfy the same schedule; quality gates are recorded before claims."
+- `speedup_by_pair`: principle "Reports only matched ratios; failed or quality-inferior rows cannot enter speedups."
+- `crossover_size`: principle "Records the smallest gated crossover size, or null when no crossover is proven."
+- `crossover_claim_allowed`: principle "Requires quality and timing gates to pass together before any crossover claim."
+- `board_speedup_claimed`: principle "Bare false prevents this CPU/CUDA sampler study from reopening board continuity."
+- `inference_substrate`: principle "Declares matched CPU/CUDA exact Ising sampling, not LLM inference or board timing."
+- `honest_verdict`: principle "Terminal complete: or blocked: verdict states whether no-crossover evidence is final."
+
+### SCENARIO-SAMPLE-5611: cDLS Benchmark Emits Matched Evidence Or Blockers
+
+**Given** the Exp 5556 descriptor output is available
+**When** Exp 5611 runs on a host with CPU and CUDA available
+**Then** it builds descriptor-derived Ising targets for the requested sizes,
+runs unchanged discrete DLS and bounded cDLS under the same schedule and seeds,
+writes raw timing rows for CPU and CUDA, reports acceptance, ESS, integrated
+autocorrelation, energy distribution, best/mean energy, exact constraint
+satisfaction, memory, compile/warmup time, sampling time, end-to-end wall time,
+matched speedups, and a terminal artifact at
+`results/experiment_5611_cdls_matched_sampler_crossover.json`
+**And** sets `crossover_claim_allowed=true` only when the quality and timing
+gates both pass, otherwise preserving the evidence with `crossover_size=null`
+or a false crossover claim.
+
+**If** CUDA, descriptors, memory, or bounded runtime are unavailable
+**Then** Exp 5611 SHALL still write the same result path with explicit blocker
+rows, `successful_matched_pairs` excluding failed rows,
+`crossover_claim_allowed=false`, `board_speedup_claimed=false`, and an
+`honest_verdict` starting with `blocked:` or `complete:` as appropriate for the
+available matched evidence.
+
+## Implementation Status (REQ-SAMPLE-5611)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5611 | Planned (`python/carnot/experiment_5611_cdls_matched_sampler_crossover.py`, `results/experiment_5611_cdls_matched_sampler_crossover.json`) | Planned (`tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
