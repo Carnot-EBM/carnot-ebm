@@ -248,18 +248,34 @@ def run_prototype(
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer as _P
 
     proposer_on = _P(
-        repo_substr=GGUF_REPO_SUBSTR, port=port_base + 1, mtp=True, kv_quant="q8_0",
-        no_think_prefix="/no_think\n", max_tokens=2560,
+        repo_substr=GGUF_REPO_SUBSTR,
+        port=port_base + 1,
+        mtp=True,
+        kv_quant="q8_0",
+        no_think_prefix="/no_think\n",
+        max_tokens=2560,
     )
     proposer_off = _P(
-        repo_substr=GGUF_REPO_SUBSTR, port=port_base + 2, mtp=True, kv_quant="q8_0",
-        no_think_prefix="/no_think\n", max_tokens=2560,
+        repo_substr=GGUF_REPO_SUBSTR,
+        port=port_base + 2,
+        mtp=True,
+        kv_quant="q8_0",
+        no_think_prefix="/no_think\n",
+        max_tokens=2560,
     )
     arm_on = _run_arm(
-        policy=policy, proposer=proposer_on, veto_on=True, root_grid=root_grid, transitions=transitions
+        policy=policy,
+        proposer=proposer_on,
+        veto_on=True,
+        root_grid=root_grid,
+        transitions=transitions,
     )
     arm_off = _run_arm(
-        policy=policy, proposer=proposer_off, veto_on=False, root_grid=root_grid, transitions=transitions
+        policy=policy,
+        proposer=proposer_off,
+        veto_on=False,
+        root_grid=root_grid,
+        transitions=transitions,
     )
 
     return {
