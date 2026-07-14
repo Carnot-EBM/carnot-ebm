@@ -11745,3 +11745,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 14:54 UTC | Epistemic object-hypothesis causal-probe prototype | OK | 87 passed, 1 warning in 17.30s |
 | 2026-07-14 14:56 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
 | 2026-07-14 14:58 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
+| 2026-07-14 15:00 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
