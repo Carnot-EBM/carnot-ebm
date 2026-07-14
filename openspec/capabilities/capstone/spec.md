@@ -2421,3 +2421,95 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5647 | Planned (`python/carnot/experiment_5647_v509_capstone_reconciliation.py`, `results/experiment_5647_v509_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5647_v509_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-5706: The `.510` transition workflow
+  `exp5706-transition-v510` in
+  `python/carnot/experiment_5706_transition_v510.py` SHALL write
+  `results/experiment_5706_transition_v510.json` without modifying
+  `research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL read
+  every expected Exp5636 through Exp5647 `.509` artifact directly, including
+  the terminal capstone `results/experiment_5647_v509_capstone_reconciliation.json`,
+  with the complete input set
+  `results/experiment_5636_transition_v509.json`,
+  `results/experiment_5637_v509_source_delta_ingestion.json`,
+  `results/experiment_5638_fr11_gate_schema_corrigendum.json`,
+  `results/experiment_5639_anytime_valid_csl_independent_audit.json`,
+  `results/experiment_5640_fr11_shadow_pipeline_integration.json`,
+  `results/experiment_5641_arc_counterexample_executable_model.json`,
+  `results/experiment_5642_arc_executable_model_live_ab.json`,
+  `results/experiment_5643_arc_live_self_discovery_levelup_v509.json`,
+  `results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`,
+  `results/experiment_5645_two_axis_tempering_hard_constraint_quality.json`,
+  `results/experiment_5646_two_axis_tempering_rust_parity.json`, and
+  `results/experiment_5647_v509_capstone_reconciliation.json`,
+  and it SHALL snapshot the already-written outer-loop artifacts Exp5700
+  through Exp5705 by experiment ID, verdict, sha256, and implication before
+  allocating the canonical Exp5706 through Exp5716 range. It SHALL close the
+  outer-loop input set
+  `results/experiment_5700_goal_predicate_veto_live_integration.json`,
+  `results/experiment_5701_candidate_scoring_stack_bare_control_ab_headroom.json`,
+  `results/experiment_5702_dynamics_gate_pass_rate_survey.json`,
+  `results/experiment_5703_sp80_candidate_stack_mechanism_trace.json`,
+  `results/experiment_5704_dynamics_gate_relaxed_threshold_ab.json`, and
+  `results/experiment_5705_full_precision_27b_vs_4bit_quant_ab.json` before
+  allocating the canonical Exp5706 through Exp5716 range. It SHALL close the
+  two missing narrow exclusion-manifest retirements for the terminal Exp5641
+  counterexample-patched executable transition model and the terminal Exp5645
+  two-axis beta-lambda tempering quality extension while preserving generic ARC
+  models, one-axis replica exchange, and generic replica exchange as live
+  scopes.
+- SCENARIO-CAPSTONE-5706: The artifact
+  `results/experiment_5706_transition_v510.json` must emit top-level fields
+  `field_principles`, `source_capstone_hash`, `v509_task_verdicts`,
+  `fr11_promoted`, `fr11_shadow_default_enabled`, `arc_registry_count`,
+  `arc_registry_delta`, `one_axis_replica_exchange_promoted`,
+  `two_axis_quality_promoted`, `missing_retirements_before`,
+  `retirements_applied`, `outer_loop_snapshot`, `current_task_range`,
+  `dependency_map`, `gate_map`, `retired_scopes`, `preserved_scopes`,
+  `timing_claimed`, `hardware_speedup_claimed`, `inference_substrate`,
+  `test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+  `honest_verdict`. The default `.510` transition must preserve
+  `fr11_promoted=true`, keep `fr11_shadow_default_enabled=false`, report the ARC
+  registry at exactly `177` with `arc_registry_delta=0`, preserve
+  one-axis replica exchange, refuse two-axis quality promotion, keep the gated
+  two-axis Rust parity skip as a downstream consequence, set both timing and
+  hardware-speedup claims to false, include GAP-5703 in the outer-loop snapshot,
+  and validate that every dependency ID named in the dependency and gate maps
+  resolves to either Exp5636 through Exp5647, Exp5700 through Exp5705, or the
+  newly allocated Exp5706 through Exp5716 range.
+- SCENARIO-CAPSTONE-5706-MISSING-MALFORMED: If an expected `.509` terminal
+  artifact, outer-loop artifact, or required manifest retirement entry is
+  missing or malformed, the workflow must still write the transition artifact,
+  list the affected path or scope, keep downstream promotion fields false where
+  evidence is unavailable, and start `honest_verdict` with `blocked:`.
+- SCENARIO-CAPSTONE-5706-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required transition field.",
+  `source_capstone_hash` = "binds the transition to the terminal .509 capstone bytes.",
+  `v509_task_verdicts` = "every Exp5636-Exp5647 verdict is explicit before carry-forward.",
+  `fr11_promoted` = "preserves the independent FR-11 promotion only from Exp5647.",
+  `fr11_shadow_default_enabled` = "keeps the shadow adapter disabled by default.",
+  `arc_registry_count` = "authoritative reproduced-level count after .509.",
+  `arc_registry_delta` = "the .509 live attempt banked no ARC level.",
+  `one_axis_replica_exchange_promoted` = "preserves the prior one-axis sampler promotion.",
+  `two_axis_quality_promoted` = "records the terminal two-axis quality failure.",
+  `missing_retirements_before` = "the manifest debt named by Exp5647 before this task.",
+  `retirements_applied` = "narrow manifest retirements closed by this transition.",
+  `outer_loop_snapshot` = "Exp5700-Exp5705 cannot be overwritten or reused.",
+  `current_task_range` = "canonical allocation is exp5706-exp5716.",
+  `dependency_map` = "successors and prerequisites are reconstructable.",
+  `gate_map` = "structured gates are auditable and ID-valid.",
+  `retired_scopes` = "terminal negative scopes are bounded narrowly.",
+  `preserved_scopes` = "non-retired scopes stay live and unbroadened.",
+  `timing_claimed` = "bare false prevents runtime inflation.",
+  `hardware_speedup_claimed` = "bare false prevents hardware inflation.",
+  `inference_substrate` = "artifact_reconciliation_only -- no inference occurred.",
+  `test_commands` = "verification commands are replayable.",
+  `test_exit_codes` = "observed command exits are recorded without laundering failures.",
+  `reproducibility_checksum` = "content-addressed transition output is stable.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5706)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5706 | Planned (`python/carnot/experiment_5706_transition_v510.py`, `results/experiment_5706_transition_v510.json`) | Planned (`tests/python/test_experiment_5706_transition_v510.py`) |

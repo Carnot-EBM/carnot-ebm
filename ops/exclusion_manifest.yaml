@@ -736,3 +736,40 @@ retired_extras:
   - rerun SOTA GGUF extraction with current CPU-only llama-cpp-python offload path
   - repeat exp5284 blocked_no_gpu_offload_evidence without changed runtime substrate
   - SOTA quality task gated only by the same no-offload llama.cpp receipt
+- id: exp5641_arc_counterexample_transition_model_retired_v510
+  scope_key: arc_counterexample_patched_transition_model_exp5641
+  experiment_scope: Exp5641 counterexample-patched ARC executable transition model
+    only
+  reason: >-
+    Exp5641 accepted safe patches but executable_model_ready_score stayed 0.0
+    and the .509 capstone recorded terminal retirement; do not retune or reuse
+    this counterexample patcher without operator authorization.
+  experiment_ids:
+  - exp5641
+  retired_milestone: 2026.07.510
+  retired_by_artifact: results/experiment_5641_arc_counterexample_executable_model.json
+  recorded_by_artifact: results/experiment_5706_transition_v510.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - Exp5641 counterexample-patched ARC executable transition model
+  - counterexample-patched ARC transition patcher exp5641
+  - counterexample_patched_executable_model_retired_terminal
+- id: exp5645_two_axis_beta_lambda_tempering_retired_v510
+  scope_key: two_axis_beta_lambda_tempering_extension_exp5645
+  experiment_scope: Exp5645 two-axis beta-lambda tempering hard-constraint quality
+    extension only
+  reason: >-
+    Exp5645 failed every preregistered quality-promotion gate and regressed
+    hard-instance quality; preserve the promoted one-axis exchange sampler.
+  experiment_ids:
+  - exp5645
+  retired_milestone: 2026.07.510
+  retired_by_artifact: results/experiment_5645_two_axis_tempering_hard_constraint_quality.json
+  recorded_by_artifact: results/experiment_5706_transition_v510.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - Exp5645 two-axis beta-lambda tempering hard-constraint quality extension
+  - two-axis beta-lambda tempering extension exp5645
+  - two_axis_quality_extension_exp5645
