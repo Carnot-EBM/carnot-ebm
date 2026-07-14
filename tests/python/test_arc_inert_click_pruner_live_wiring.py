@@ -29,6 +29,10 @@ def test_coerce_inert_click_pruner_none_false_true_and_instance() -> None:
     assert isinstance(default, InertClickSigPruner)
     instance = InertClickSigPruner(lambda frame: frame)
     assert coerce_inert_click_pruner(instance) is instance
+    # anything else (a Mapping, a duck-typed spy, a stray string) falls through to None --
+    # matching coerce_program_synthesis_filter's own strict-isinstance discipline.
+    assert coerce_inert_click_pruner({"mode": "on"}) is None
+    assert coerce_inert_click_pruner("on") is None
 
 
 class _SpyRankPruner:
@@ -128,7 +132,9 @@ class _SpyObservePruner:
     def __init__(self) -> None:
         self.calls: list[tuple[Any, Any, Any, bool]] = []
 
-    def observe(self, frame_before: Any, label: Any, frame_after: Any, leveled_up: bool = False) -> None:
+    def observe(
+        self, frame_before: Any, label: Any, frame_after: Any, leveled_up: bool = False
+    ) -> None:
         self.calls.append((frame_before, label, frame_after, leveled_up))
 
 
@@ -193,7 +199,9 @@ def test_scenario_arc_fcp_5595_default_off_parity() -> None:
     A/B yet) rather than a hardcoded literal, and SUBMITTED_AGENT_CONFIG agrees."""
 
     assert SUBMITTED_INERT_CLICK_PRUNER_ENABLED is False
-    assert SUBMITTED_AGENT_CONFIG["inert_click_pruner_enabled"] is SUBMITTED_INERT_CLICK_PRUNER_ENABLED
+    assert (
+        SUBMITTED_AGENT_CONFIG["inert_click_pruner_enabled"] is SUBMITTED_INERT_CLICK_PRUNER_ENABLED
+    )
 
     explorer = StepwiseExplorer()
     assert explorer.inert_click_pruner is None  # off by default -> coerced to None

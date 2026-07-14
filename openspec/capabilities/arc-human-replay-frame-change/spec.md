@@ -3628,12 +3628,43 @@ recognized live entrypoints). A separate `rank_candidates(frame, rows) ->
 rows` method implements the identical gating logic in the filter-protocol
 shape `StepwiseExplorer._candidates` (`arc_competition_agent.py`) already
 composes with (matching `program_synthesis_filter`/`goal_candidate_
-guidance`'s contract) -- tested and ready, but deliberately NOT wired into
-that live composition chain in this task: connecting it is a distinct,
-separately-scoped live-path change (a new constructor param + a call site in
-the SCORED agent's candidate pipeline), consistent with how the color-blob
-salience front-end (REQ-ARC-FCP-5591) was left additive-only pending its own
-live-wiring decision (`ops/known-issues.md` task #97, still open).
+guidance`'s contract) -- at the time this task was originally scoped, tested
+and ready but deliberately NOT wired into that live composition chain,
+consistent with how the color-blob salience front-end (REQ-ARC-FCP-5591) was
+left additive-only pending its own live-wiring decision (`ops/known-issues.md`
+task #97, still open).
+
+**WIRING FOLLOW-ON (2026-07-13, same day).** The gap above is closed.
+`coerce_inert_click_pruner` (new, `arc_inert_click_pruner.py`, matching
+`coerce_program_synthesis_filter`'s `None`/`False` -> no pruner, instance ->
+passthrough, `True` -> construct-default shape) plugs an `InertClickSigPruner`
+into both `StepwiseExplorer` (a new `inert_click_pruner` constructor param,
+threaded through a `rank_candidates` call inside `_candidates` alongside
+`program_synthesis_filter`/`goal_candidate_guidance`) and `E3AgentPolicy`
+(same param name, passed through). The pruner also gets a real `observe()`
+call from `_ingest`'s existing per-transition OBSERVE hook -- the same site
+that already feeds `dense_curiosity`/`controllable_novelty_policy`/
+`object_centric_proposal_policy`/`action_prior` -- so it accumulates evidence
+from the search's OWN live clicks, matching `HazardMovePruner`'s own online
+discipline; without this half, `rank_candidates` would be wired but
+permanently a no-op (every signature stays "unproven" forever). Gated OFF by
+default (`SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False`, mirrored in
+`SUBMITTED_AGENT_CONFIG["inert_click_pruner_enabled"]`), matching every other
+freshly-wired-but-unvalidated component in that file -- per the
+`solve_rate_dropped` guardrail, flipping the default for the SCORED agent
+needs its own matched-budget offline A/B (states/actions-expanded reduction,
+zero regression in reproduced levels) first, not assumed safe just because
+it is reachable. Verified with 8 new focused tests
+(`tests/python/test_arc_inert_click_pruner_live_wiring.py`): the coercion
+function's full branch set, `_candidates` calling and propagating
+`rank_candidates`'s filtered result, a no-pruner no-op, a raising-pruner
+non-fatal fallback (matching every sibling hook's try/except discipline),
+`_ingest` feeding `observe()` the realized transition, a no-pruner no-op for
+that hook too, default-off parity against `SUBMITTED_AGENT_CONFIG`, and
+`E3AgentPolicy` opt-in threading. Ruff and mypy clean; 46 pre-existing
+`arc_competition_agent.py`-adjacent tests (submitted-parity, program-synthesis
+filter, E3 fidelity/named-tail gates, HUD mask, competition-agent adapter)
+still pass unchanged.
 
 **RESOLUTION (2026-07-13).** The pruner itself is validated by 7 direct unit
 tests on realistic synthetic grids
@@ -3713,6 +3744,39 @@ real collected frame
 When `InertClickSigPruner.rank_candidates` filters that list
 Then it runs without error and `rows_kept + rows_dropped == rows_in`, with
 only rows whose click signature is confidently inert removed
+
+#### SCENARIO-ARC-FCP-5595-LIVE-WIRING-CANDIDATES
+
+Given a `StepwiseExplorer` with an `inert_click_pruner` configured
+When `_candidates` builds the candidate-row list for a frame
+Then it calls `inert_click_pruner.rank_candidates(frame, rows)` and returns
+its (filtered) result, exactly like the `program_synthesis_filter`/
+`goal_candidate_guidance` hooks it composes alongside; a raising pruner is
+caught and never breaks candidate generation; no pruner configured is a
+clean no-op
+
+#### SCENARIO-ARC-FCP-5595-LIVE-WIRING-OBSERVE
+
+Given a `StepwiseExplorer` with an `inert_click_pruner` configured and a
+pending action recorded in `self.awaiting`
+When `_ingest` processes the resulting frame
+Then it calls `inert_click_pruner.observe(frame_before, label, frame_after,
+leveled_up)` with the realized transition, from the same per-transition
+OBSERVE hook that feeds `dense_curiosity`/`controllable_novelty_policy`/
+`object_centric_proposal_policy`/`action_prior` -- without this, the pruner's
+tally never accumulates evidence from live play and `rank_candidates` would
+be wired but permanently inert
+
+#### SCENARIO-ARC-FCP-5595-DEFAULT-OFF-PARITY
+
+Given the SUBMITTED default configuration
+When a `StepwiseExplorer` or `E3AgentPolicy` is constructed with no explicit
+`inert_click_pruner` argument
+Then `explorer.inert_click_pruner` is `None` (tracking
+`SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False`, mirrored in
+`SUBMITTED_AGENT_CONFIG["inert_click_pruner_enabled"]`) -- the SCORED agent's
+behavior is unchanged until a matched-budget offline A/B validates flipping
+it on, per the `solve_rate_dropped` guardrail
 
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
