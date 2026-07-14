@@ -11691,3 +11691,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 00:41 UTC | Execution-time V505 source delta and experiment ma | OK | 87 passed, 1 warning in 9.03s |
 | 2026-07-14 00:59 UTC | Cached local-SOTA parser forensics, repair, and po | OK | 108 passed, 1 warning in 10.25s |
 | 2026-07-14 01:01 UTC | Local-SOTA solve-versus-verify remeasurement gated | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5580-parser-forensics-positive-control. |
+| 2026-07-14 01:03 UTC | Local-SOTA solve-versus-verify remeasurement gated | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5580-parser-forensics-positive-control. |
