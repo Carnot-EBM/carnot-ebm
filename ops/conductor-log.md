@@ -11737,3 +11737,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 13:11 UTC | Milestone 2026.07.508 activated | OK | 11 tasks queued |
 | 2026-07-14 13:28 UTC | Transition .507 terminal evidence into the .508 de | OK | 87 passed, 1 warning in 11.93s |
 | 2026-07-14 13:44 UTC | Execution-time V508 source delta, citation-trail r | OK | 88 passed, 1 warning in 13.00s |
+| 2026-07-14 14:10 UTC | Parameter-free group-conditional online conformal  | OK | 95 passed, 1 warning in 70.07s (0:01:10) |
