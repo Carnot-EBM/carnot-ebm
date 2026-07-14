@@ -22801,3 +22801,84 @@ recorded readiness gates
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5628 | Planned (`python/carnot/experiment_5628_conformal_active_spline_kan_csl.py`, `results/experiment_5628_conformal_active_spline_kan_csl.json`) | Planned (`tests/python/test_experiment_5628_conformal_active_spline_kan_csl.py`) |
+
+## REQ-LEARN-5638: Hash-Bound FR-11 Gate Schema Corrigendum
+
+The self-learning tier SHALL provide Exp 5638, a deterministic downstream
+contract for the Exp 5628 `unsafe_false_accept_count` schema mismatch that
+blocked Exp 5629's conductor pre-gate. The Exp 5628 scientific artifact is
+immutable: Exp 5638 MUST read
+`results/experiment_5628_conformal_active_spline_kan_csl.json` as bytes,
+compute its SHA-256 content hash, reject duplicate JSON object keys as
+ambiguous evidence, and emit only a separate corrigendum at
+`results/experiment_5638_fr11_gate_schema_corrigendum.json`. It MUST NOT modify
+Exp 5628, recompute any scientific metric, rerun learner state, or edit
+`scripts/conductor_gates.py` or `scripts/research_conductor.py`.
+
+The corrigendum SHALL preserve the raw structured Exp 5628
+`unsafe_false_accept_count` object under `raw_unsafe_false_accept_count` and
+derive the conductor-safe scalar `unsafe_false_accept_count_total` only from the
+exact JSON path `unsafe_false_accept_count.total`. The total and every
+`unsafe_false_accept_count.by_arm` value SHALL be a non-boolean, non-negative
+integer. Missing totals, boolean totals, floating totals, negative totals,
+string totals, duplicate-key totals, malformed `by_arm` shapes, and totals whose
+declared value differs from the sum of integer `by_arm` values SHALL fail
+closed. Nonzero but internally consistent totals SHALL remain preserved and
+produce a blocked gate contract, not a complete readiness score.
+
+The terminal artifact MUST include field principles and the following required
+top-level fields: `field_principles` -- receipt fields explain why they exist;
+`source_artifact_path` -- provenance is explicit; `source_artifact_sha256` --
+immutability is enforced; `source_honest_verdict` -- upstream status is
+preserved; `raw_unsafe_false_accept_count` -- structured evidence is not
+discarded; `normalization_json_path` -- derivation is unambiguous;
+`unsafe_false_accept_count_total` -- the conductor-safe value is a scalar
+integer; `by_arm_sum` -- reconciliation is explicit;
+`by_arm_reconciliation_pass` -- shape consistency is tested;
+`source_continuous_self_learning_ready` -- no readiness value is invented;
+`scientific_recompute_performed` -- this is not a rerun;
+`source_artifact_modified` -- Exp 5628 remains immutable;
+`gate_contract_ready_score` -- downstream gating is mechanical;
+`inference_substrate` -- no model inference occurred;
+`reproducibility_checksum` -- receipt is stable; and `honest_verdict` --
+terminal status starts with `complete:` or `blocked:` and never claims
+independent FR-11 validation. `inference_substrate` SHALL equal
+`deterministic_artifact_schema_normalization`.
+
+`gate_contract_ready_score` SHALL equal `1.0` only when the source artifact hash
+matches the pre-registered Exp 5628 hash, `unsafe_false_accept_count_total` is
+the integer `0`, `by_arm_reconciliation_pass=true`,
+`scientific_recompute_performed=false`, and `source_artifact_modified=false`.
+Otherwise it SHALL equal `0.0` with a terminal `blocked:` verdict.
+
+### SCENARIO-LEARN-5638-ORIGINAL-SHAPE: Original Exp5628 Object Normalizes To Scalar Zero
+
+**Given** the immutable Exp 5628 artifact bytes are available at the
+pre-registered hash
+**When** Exp 5638 builds the corrigendum
+**Then** `raw_unsafe_false_accept_count` SHALL equal the original structured
+object
+**And** `unsafe_false_accept_count_total` SHALL equal the integer `0`
+**And** `by_arm_sum` SHALL equal `0`
+**And** `gate_contract_ready_score` SHALL equal `1.0`.
+
+### SCENARIO-LEARN-5638-FAIL-CLOSED: Malformed Or Drifted Evidence Blocks The Contract
+
+**Given** a source artifact has a missing, boolean, floating, negative, string,
+duplicate-key, malformed, inconsistent, or source-hash-drifted
+`unsafe_false_accept_count.total`
+**When** Exp 5638 validates the gate contract
+**Then** validation SHALL fail closed without changing the source artifact
+**And** no scientific metric or learner state SHALL be recomputed.
+
+### SCENARIO-LEARN-5638-DETERMINISTIC: Corrigendum Output Is Stable
+
+**Given** the same source bytes and tests list
+**When** Exp 5638 writes the corrigendum more than once
+**Then** the JSON payload and `reproducibility_checksum` SHALL be identical.
+
+## Implementation Status (Exp 5638)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5638 | Implemented (`python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py`, `results/experiment_5638_fr11_gate_schema_corrigendum.json`) | Implemented (`tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py`) |
