@@ -22604,3 +22604,92 @@ recovery SHALL be recorded.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5618 | Planned (`python/carnot/experiment_5618_predictive_window_kan_self_learning.py`, `results/experiment_5618_predictive_window_kan_self_learning.json`) | Planned (`tests/python/test_experiment_5618_predictive_window_kan_self_learning.py`) |
+
+## REQ-LEARN-5627: Online-Conformal KAN Qualification Layer
+
+The self-learning tier SHALL provide Exp 5627, a parameter-free online
+conformal qualification layer over the immutable Exp 5616 exact
+nonstationary constraint stream. The workflow MUST freeze chronological
+train, calibration, and held-out windows before any conformal thresholds or
+coverage metrics are computed. The frozen receipt SHALL include content hashes
+for the Exp 5616 fixture result, the Exp 5616 dataset, and each chronological
+split, and SHALL prove that future held-out rows are absent from initial
+calibration. Exp 5627 MAY reuse causal Exp 5616 metadata and causal Exp 5618
+feature concepts, but it MUST NOT use future labels, held-out outcomes,
+external teachers, shuffled future rows, LLM inference, or model-weight
+training to define nonconformity.
+
+Exp 5627 SHALL define nonconformity scores for the qualification actions
+`retain`, `smooth`, `reset`, `adapt`, and `abstain`. It SHALL evaluate global,
+rolling-window, and group-conditional online-conformal arms, plus inactive,
+shuffled-label, undercoverage, delayed-label, and order-permutation controls.
+The headline group-conditional arm SHALL use a preregistered sparse-group
+backoff before predicting: exact group
+`constraint_family|drift_type|conflict_class|duration`, then coarser family
+and drift backoff groups, then global history when a group is sparse. Exact
+validators remain authoritative: conformal membership MAY narrow or abstain
+over exact-safe actions, but it MUST NOT legalize an invalid update or control
+row.
+
+The terminal artifact MUST be written to
+`results/experiment_5627_online_conformal_kan_qualification.json` and include
+the following top-level required fields with field principles:
+`field_principles`, `fixture_path`, `chronological_split_receipts`,
+`group_definitions`, `method_arms`, `marginal_coverage`,
+`worst_group_coverage`, `coverage_intervals`, `action_set_size_by_group`,
+`abstention_rate_by_group`, `training_conditional_regret`,
+`detection_delay`, `exact_unsafe_accept_count`, `leakage_control_pass`,
+`conformal_qualification_ready_score`, `inference_substrate`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`online_conformal_calibration_over_exact_labels`.
+
+`conformal_qualification_ready_score` SHALL be exactly `1.0` only when the
+held-out headline arm has marginal coverage at least `0.90`, worst-group
+coverage at least `0.90` for preregistered adequately powered groups, zero
+exact unsafe accepts, nontrivial useful singleton-or-correct-set rate, and
+chronological leakage controls pass. If any gate fails, `honest_verdict` SHALL
+be a terminal `blocked:` verdict and the ready score SHALL be `0.0`.
+
+### SCENARIO-LEARN-5627-CHRONOLOGY: Frozen Windows Exclude Future Leakage
+
+**Given** the completed Exp 5616 exact fixture
+**When** Exp 5627 freezes train, calibration, and held-out windows
+**Then** the receipt SHALL record disjoint stream, state, and update IDs
+**And** calibration instance windows SHALL end before held-out windows begin
+**And** each split SHALL have a stable content hash before held-out coverage is
+measured.
+
+### SCENARIO-LEARN-5627-GROUPS: Group-Conditional Coverage With Sparse Backoff
+
+**Given** preregistered groups over constraint family, drift type, conflict
+class, and duration
+**When** the group-conditional conformal arm predicts held-out action sets
+**Then** powered groups SHALL report denominators, coverage, confidence
+intervals, action-set size, abstention rate, and the selected sparse backoff
+level
+**And** sparse groups SHALL back off without using held-out future labels.
+
+### SCENARIO-LEARN-5627-CONTROLS: Negative Controls Cannot Promote
+
+**Given** inactive, shuffled-label, undercoverage, delayed-label, and
+order-permutation controls
+**When** Exp 5627 computes qualification readiness
+**Then** the controls SHALL be present in `method_arms`
+**And** no control SHALL determine `conformal_qualification_ready_score`
+**And** the undercoverage and order-permutation controls SHALL be recorded as
+non-promotable leakage or calibration stress tests.
+
+### SCENARIO-LEARN-5627-SAFETY: Exact Validators Fail Closed
+
+**Given** Exp 5616 known-valid and corrupted control rows
+**When** conformal action sets are built
+**Then** every invalid exact-validator row SHALL be restricted to `abstain`
+**And** `exact_unsafe_accept_count` SHALL remain zero for the headline arm
+**And** an unsafe accept SHALL block the ready score even if coverage is high.
+
+## Implementation Status (Exp 5627)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5627 | Planned (`python/carnot/experiment_5627_online_conformal_kan_qualification.py`, `results/experiment_5627_online_conformal_kan_qualification.json`) | Planned (`tests/python/test_experiment_5627_online_conformal_kan_qualification.py`) |
