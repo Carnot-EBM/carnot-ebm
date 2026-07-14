@@ -3284,6 +3284,52 @@ evidence is sparse within the measured budget, not an error; and an
 adversarial degeneracy check reports whether any two real click candidates
 sharing an identical `base_prior` score were differentiated by history alone
 
+### REQ-ARC-FCP-5591-3: Matched-Budget A/B -- The Flip-Decision Measurement
+
+The `solve_rate_dropped` guardrail names a matched-budget A/B as the
+precondition for ever flipping `SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED` to
+`True`. Unlike REQ-ARC-FCP-5595-2's `InertClickSigPruner` A/B,
+`ObjectHistorySaliencePrior` cannot be measured through `OfflineSolver`
+(`action_prior` is not a `move_pruner`; `OfflineSolver` has no `action_prior=`
+concept), and no `states_expanded`-equivalent counter exists on the live
+`StepwiseExplorer`/`E3AgentPolicy` path. This requirement therefore measures
+TRAJECTORY DIVERGENCE -- whether enabling the mechanism actually changes
+which candidates a real `E3AgentPolicy` exploration run selects, compared
+against an identical-budget baseline with the mechanism off -- as the
+honestly-available substitute, since the tested game/policy does not reach a
+level-up within the tested budget (no `actions_to_first_levelup` available).
+The experiment SHALL run three arms on the SAME game/budget: baseline
+(disabled), the real default `change_bonus_weight`, and a diagnostic arm with
+`change_bonus_weight` rescaled to match `ColorBlobSaliencePrior`'s own
+tier-score magnitude -- isolating whether the mechanism CAN influence
+behavior at an appropriate scale, separate from whether the current default
+is well-tuned. Any hypothesis formed from an informal check without a real
+baseline comparison SHALL be re-verified against the formal three-arm result
+before being reported, per this project's own "cross-check surprising
+results" discipline.
+
+### SCENARIO-ARC-FCP-5591-3-DEFAULT-WEIGHT-NO-OP: Identical Trajectories At Default Weight Is An Honest Null
+
+Given the baseline (`object_history_salience=False`) and default-weight
+treatment (`object_history_salience=True`, `change_bonus_weight=10.0`) arms
+run on the same game and matched budget
+When their action sequences are compared
+Then an identical trajectory is reported as an honest, valid null (the
+mechanism tracks real evidence but the bonus magnitude never changes
+candidate ranking at this weight), not a failure requiring escalation
+
+### SCENARIO-ARC-FCP-5591-3-RESCALED-WEIGHT-STILL-NO-OP: A Rescaled Bonus Weight Isolates Scale From Structure
+
+Given a diagnostic arm with `change_bonus_weight` rescaled to match
+`ColorBlobSaliencePrior`'s real tier-score magnitude, run on the same game
+When compared against the baseline trajectory
+Then the artifact reports honestly whether the rescaled weight changes
+behavior (confirming the mechanism CAN matter at an appropriate scale) or
+remains identical to baseline (an open question for follow-up, not assumed
+to be an over-exploitation risk without a real baseline-comparison check --
+a repeated-coordinate pattern that appears IDENTICALLY in the baseline
+disproves that it is bonus-induced)
+
 ### REQ-ARC-FCP-5590: Dict-Candidate CNN Fix Matched-Budget A/B
 
 `docs/research-notes/arc-perception-grounding-audit-2026-07-13.md` found that
