@@ -457,6 +457,10 @@ class VerifyRepairPipeline:
         learning_mode: bool = False,
         n_learning_cycles: int = 3,
         enable_abductive_csp: bool = False,
+        fr11_shadow_adapter_enabled: bool | None = None,
+        fr11_shadow_ledger_path: str | os.PathLike[str] | None = None,
+        fr11_shadow_checkpoint_path: str | os.PathLike[str] | None = None,
+        fr11_shadow_adapter: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -520,11 +524,21 @@ class VerifyRepairPipeline:
                 Based on exp2755 validation: 3-cycle loop achieves AUROC=0.9275 with
                 genuine generalization.
             n_learning_cycles: Number of learning cycles for ORCA-NEXUS loop (default 3).
+            fr11_shadow_adapter_enabled: Optional FR-11 shadow-mode flag. None reads
+                ``CARNOT_FR11_SHADOW_ADAPTER`` at construction. False preserves
+                the exact pre-shadow behavior and writes no ledger.
+            fr11_shadow_ledger_path: Append-only JSONL ledger path used only when the
+                FR-11 shadow adapter is enabled.
+            fr11_shadow_checkpoint_path: Atomic checkpoint path used only when the
+                FR-11 shadow adapter is enabled.
+            fr11_shadow_adapter: Optional prebuilt adapter for tests or controlled
+                deployments. Passing None keeps the feature purely flag-driven.
 
         Raises:
             ModelLoadError: If model is specified but cannot be loaded.
 
-        Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243
+        Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243,
+              REQ-LEARN-5640
         """
         self.learning_mode = learning_mode
         self.n_learning_cycles = n_learning_cycles
@@ -595,6 +609,31 @@ class VerifyRepairPipeline:
         self._online_observation_count = 0
         self._online_fast_path_taken_count = 0
         self._n_partial_fits = 0
+        if fr11_shadow_adapter is not None:
+            self._fr11_shadow_adapter = fr11_shadow_adapter
+        else:
+            fr11_shadow_enabled = (
+                os.getenv("CARNOT_FR11_SHADOW_ADAPTER", "0") == "1"
+                if fr11_shadow_adapter_enabled is None
+                else bool(fr11_shadow_adapter_enabled)
+            )
+            self._fr11_shadow_adapter = None
+            if fr11_shadow_enabled:
+                from carnot.pipeline.fr11_shadow_adapter import FR11ShadowAdapter
+
+                ledger_path = fr11_shadow_ledger_path or os.getenv(
+                    "CARNOT_FR11_SHADOW_LEDGER",
+                    "results/fr11_shadow_adapter_ledger.jsonl",
+                )
+                checkpoint_path = fr11_shadow_checkpoint_path or os.getenv(
+                    "CARNOT_FR11_SHADOW_CHECKPOINT",
+                    "results/fr11_shadow_adapter_checkpoint.json",
+                )
+                self._fr11_shadow_adapter = FR11ShadowAdapter(
+                    ledger_path=ledger_path,
+                    checkpoint_path=checkpoint_path,
+                    enabled=True,
+                )
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
@@ -1745,6 +1784,12 @@ class VerifyRepairPipeline:
                     )
                     if _pending_odar_certificate is not None:
                         result.certificate.update(_pending_odar_certificate)
+                    result = self._record_fr11_shadow_decision(
+                        question=question,
+                        response=response,
+                        domain=domain,
+                        result=result,
+                    )
                     return _with_fst_certificate(result)
                 except Exception as exc:
                     logger.warning("Rust verify failed, falling back to Python: %s", exc)
@@ -1862,18 +1907,23 @@ class VerifyRepairPipeline:
             raise
         except CarnotError as exc:
             logger.warning("Verification degraded: %s", exc)
-            return _with_fst_certificate(
-                VerificationResult(
-                    verified=False,
-                    constraints=[],
-                    energy=0.0,
-                    violations=[],
-                    certificate={"error": str(exc), "error_type": type(exc).__name__},
-                    typed_reasoning=typed_reasoning,
-                    semantic_grounding=semantic_grounding,
-                    semantic_verifier_v2=semantic_verifier_v2,
-                )
+            degraded_result = VerificationResult(
+                verified=False,
+                constraints=[],
+                energy=0.0,
+                violations=[],
+                certificate={"error": str(exc), "error_type": type(exc).__name__},
+                typed_reasoning=typed_reasoning,
+                semantic_grounding=semantic_grounding,
+                semantic_verifier_v2=semantic_verifier_v2,
             )
+            degraded_result = self._record_fr11_shadow_decision(
+                question=question,
+                response=response,
+                domain=domain,
+                result=degraded_result,
+            )
+            return _with_fst_certificate(degraded_result)
 
         result.typed_reasoning = typed_reasoning
         result.semantic_grounding = semantic_grounding
@@ -2038,6 +2088,12 @@ class VerifyRepairPipeline:
                     )
                 )
 
+        result = self._record_fr11_shadow_decision(
+            question=question,
+            response=response,
+            domain=domain,
+            result=result,
+        )
         return _with_fst_certificate(result)
 
     def verify_with_gate(
@@ -2902,6 +2958,48 @@ class VerifyRepairPipeline:
             },
             typed_reasoning=typed_reasoning,
         )
+
+    def _record_fr11_shadow_decision(
+        self,
+        *,
+        question: str,
+        response: str,
+        domain: str | None,
+        result: VerificationResult,
+    ) -> VerificationResult:
+        """Append FR-11 shadow advice after exact verification, when enabled.
+
+        The disabled path returns the original result without touching its
+        certificate. If shadow persistence fails, exact verification remains
+        authoritative and the learned side channel records an abstaining error
+        certificate rather than altering ``result.verified``.
+
+        Spec: REQ-LEARN-5640, SCENARIO-LEARN-5640-SHADOW
+        """
+
+        adapter = getattr(self, "_fr11_shadow_adapter", None)
+        if adapter is None:
+            return result
+
+        try:
+            from carnot.pipeline.fr11_shadow_adapter import ExactVerificationReceipt
+
+            receipt = ExactVerificationReceipt.from_verification_result(
+                question=question,
+                response=response,
+                domain=domain,
+                result=result,
+            )
+            decision = adapter.observe(receipt)
+            if decision is not None:
+                result.certificate["fr11_shadow_adapter"] = decision.to_certificate()
+        except Exception as exc:
+            result.certificate["fr11_shadow_adapter"] = {
+                "recommendation": "abstain",
+                "exact_disposition": "unsupported",
+                "rollback_reason": f"shadow_adapter_error:{type(exc).__name__}",
+            }
+        return result
 
     @staticmethod
     def _merge_semantic_analysis(
