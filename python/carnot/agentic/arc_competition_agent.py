@@ -3325,6 +3325,7 @@ class E3AgentPolicy:
                     plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
                     max_rounds=MAX_REFINEMENT_ROUNDS,
                     min_heldout_accuracy=1.0,
+                    min_goal_predicate_consistency=1.0,
                     previous_level_complete_grid=self._previous_level_complete_grid,
                     enable_subgoal_search=self.subgoal_search,
                     subgoal_budget=self.subgoal_budget,

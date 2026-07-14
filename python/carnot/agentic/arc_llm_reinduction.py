@@ -17,7 +17,10 @@ from typing import Any, Callable, Mapping, Sequence
 
 import numpy as np
 
-from carnot.agentic.arc_executable_world_model import WorldModelVerifier
+from carnot.agentic.arc_executable_world_model import (
+    WorldModelVerifier,
+    score_goal_predicate_consistency,
+)
 from carnot.agentic.arc_world_model_trust_energy import (
     WorldModelCandidate,
     select_trusted_world_model,
@@ -660,6 +663,7 @@ def execute_bounded_llm_reinduction(
     plan_in_model: Callable[[Any, Any, np.ndarray], list[dict[str, Any]] | None],
     max_rounds: int = MAX_REFINEMENT_ROUNDS,
     min_heldout_accuracy: float = 0.0,
+    min_goal_predicate_consistency: float = 0.0,
     proposal_transitions: Sequence[Any] | None = None,
     previous_level_complete_grid: np.ndarray | None = None,
     enable_subgoal_search: bool = False,
@@ -675,6 +679,7 @@ def execute_bounded_llm_reinduction(
     rounds_limit = min(int(max_rounds), MAX_REFINEMENT_ROUNDS)
     specs = _model_specs(proposer)
     verifier_threshold = max(0.0, min(1.0, float(min_heldout_accuracy)))
+    goal_consistency_threshold = max(0.0, min(1.0, float(min_goal_predicate_consistency)))
     if root_grid is None:
         return LlmReinductionResult(
             planned=False,
@@ -854,6 +859,38 @@ def execute_bounded_llm_reinduction(
                     row["skipped"] = str(
                         last_counterexample.get("kind") or "degenerate_goal_predicate"
                     )
+                    skipped = row["skipped"]
+                    rounds.append(row)
+                    continue
+            if goal_consistency_threshold > 0.0:
+                # REQ-ARC-WMTE-5593-3: `is_level_complete` gets installed as `plan_in_model`'s
+                # search termination condition on the strength of the proposer's own code --
+                # nothing checked it against real observed level-progress before this. Mirrors
+                # the dynamics veto above (attach real mismatch evidence, skip this round so
+                # `refactor()` gets a chance to fix it) rather than inventing a new pattern.
+                # Only fires when the window contains at least one real level-up
+                # (CLAUDE.md FALSE_NEGATIVE_RISK discipline) -- an all-no-op window makes
+                # ANY predicate, including a constant-False stub, score a trivial 1.0, so a
+                # veto there would be judging the predicate on uninformative data.
+                consistency = score_goal_predicate_consistency(selected_goal, list(transitions))
+                row["goal_predicate_consistency_accuracy"] = round(float(consistency.accuracy), 6)
+                row["goal_predicate_consistency_n_real_levelups"] = int(consistency.n_real_levelups)
+                if (
+                    consistency.n_real_levelups >= 1
+                    and consistency.accuracy < goal_consistency_threshold
+                ):
+                    last_counterexample = {
+                        "kind": "goal_predicate_consistency_failed",
+                        "accuracy": round(float(consistency.accuracy), 6),
+                        "threshold": round(goal_consistency_threshold, 6),
+                        "n": consistency.n,
+                        "n_correct": consistency.n_correct,
+                        "n_real_levelups": consistency.n_real_levelups,
+                        "mismatches": list(consistency.mismatches),
+                    }
+                    counterexamples.append(last_counterexample)
+                    row["counterexample"] = dict(last_counterexample)
+                    row["skipped"] = "goal_predicate_consistency_failed"
                     skipped = row["skipped"]
                     rounds.append(row)
                     continue
