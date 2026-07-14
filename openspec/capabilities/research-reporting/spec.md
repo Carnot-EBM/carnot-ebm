@@ -41281,3 +41281,110 @@ and `honest_verdict` starts with `complete:` or `blocked:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5625 | Implemented (`python/carnot/experiment_5625_transition_v508.py`, `results/experiment_5625_transition_v508.json`) | Implemented (`tests/python/test_experiment_5625_transition_v508.py`) |
+
+### REQ-REPORT-5626: Ingest V508 Execution-Time Source Delta Without Reopening Closed Scopes
+
+The Exp5626 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-program.md`, `research-references.md`, `research-complete.yaml`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, `ops/known-issues.md`, and
+`results/experiment_5625_transition_v508.json`. If
+`research-roadmap-next.yaml` is absent because the conductor has already
+activated the staged roadmap, the workflow SHALL read `research-roadmap.yaml`
+instead and SHALL NOT recreate `research-roadmap-next.yaml`. It SHALL NOT
+modify `scripts/research_conductor.py`, `research-roadmap-next.yaml`,
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`.
+
+The workflow SHALL begin from the
+`V508 Planner Refresh - 20260714` marker in `research-references.md` and SHALL
+record that execution-time source checks covered arXiv records for EBM
+verification and reasoning, neural constraint satisfaction, Ising ML, LLM
+hallucination detection and mitigation, KANs, energy-guided decoding,
+accelerated sampling, and continual or online constraint learning; OpenReview;
+Extropic writing; direct Semantic Scholar citation routes for EBT `2507.02092`
+and ARM-EBM `2512.15605`; Hugging Face Papers; GitHub discovery and trending
+routes; Logical Intelligence public updates; Carnot's complete reference
+history; `research-complete.yaml`; previous roadmap proposals; conductor
+results; the exclusion manifest; and known-issues scope notes.
+
+The workflow SHALL append at most one `V508 Execution Refresh - 20260714` block
+only when a candidate is both non-duplicate and executable for planned `.508`
+experiments `exp5627` through `exp5634` through an exact, local, non-retired
+Carnot hook without changing the dependency graph. An honest no-op is valid
+and SHALL leave `research-references.md` unchanged. The workflow SHALL NOT
+remap already-planned papers merely to create work and SHALL NOT reopen retired
+native runtime, solve-versus-verify, ARC transition-cycle proxy, cDLS timing
+crossover, external generated-text scorer, proprietary TSU/Kona/Aleph, or
+unmatched hardware-speedup scopes. It SHALL record proprietary, unavailable,
+withdrawn, workshop-only, externally hosted, domain-mismatched, or non-local
+systems as duplicate, watch-only, or excluded rather than as executable claims.
+It SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`
+and SHALL write `results/experiment_5626_v508_source_delta_ingestion.json`.
+
+The artifact SHALL include required fields `field_principles`,
+`planner_marker_found`, `sources_checked`, `search_timestamp_utc`,
+`new_references_added`, `duplicates_suppressed`, `experiment_mappings`,
+`watch_only_items`, `closed_scopes_reopened`, `inference_substrate`,
+`reproducibility_checksum`, and `honest_verdict`. It SHOULD also record
+`research_references_updated`, `citation_trails_checked`,
+`dedupe_corpus_checked`, `source_link_checks`, `marker_checks`,
+`duplicate_checks`, `closed_scope_review`, `duration_s`, `random_seed`, and
+`spec_refs` so the sweep remains auditable without rerunning public searches.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `planner_marker_found`: principle "the search window is explicit"
+- `sources_checked`: principle "coverage is auditable"
+- `search_timestamp_utc`: principle "recency is reproducible"
+- `new_references_added`: principle "duplicates do not count"
+- `duplicates_suppressed`: principle "repeated ideas create no work"
+- `experiment_mappings`: principle "sources need executable hooks"
+- `watch_only_items`: principle "unavailable systems support no claim"
+- `closed_scopes_reopened`: principle "retirement requires authority"
+- `inference_substrate`: principle "this is source synthesis"
+- `reproducibility_checksum`: principle "the source set is stable"
+- `honest_verdict`: principle "a no-op is terminal"
+
+#### SCENARIO-REPORT-5626-NOOP: Duplicate Or Non-Executable Sources Leave References Unchanged
+
+**Given** `research-references.md` contains the
+`V508 Planner Refresh - 20260714` marker
+**And** every checked source candidate is already indexed, watch-only,
+excluded, proprietary, unavailable, withdrawn, workshop-only, externally
+hosted, domain-mismatched, or non-executable for local `.508` work
+**When** the Exp5626 workflow runs
+**Then** it does not append a new execution refresh block, records suppressed
+sources in `duplicates_suppressed` or `watch_only_items`, sets
+`research_references_updated=false`, keeps `closed_scopes_reopened=false`,
+declares `inference_substrate=aggregation_from_upstream_artifacts`, maps
+accepted sources only to Exp5627 through Exp5634, and emits a terminal no-op
+artifact.
+
+#### SCENARIO-REPORT-5626-BLOCKED-MARKER: Missing Planner Marker Blocks Mutation
+
+**Given** `research-references.md` lacks the
+`V508 Planner Refresh - 20260714` marker
+**When** the Exp5626 workflow runs
+**Then** it leaves `research-references.md` unchanged, sets
+`planner_marker_found=false`, keeps `new_references_added=[]`, keeps
+`closed_scopes_reopened=false`, and writes a terminal blocked artifact rather
+than appending an unanchored source block.
+
+#### SCENARIO-REPORT-5626-FIELD-PRINCIPLES: Source Delta Fields Stay Annotated
+
+**Given** the Exp5626 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `closed_scopes_reopened` is false,
+`inference_substrate` is `aggregation_from_upstream_artifacts`,
+`planner_marker_found` is a boolean, `search_timestamp_utc` is populated,
+`reproducibility_checksum` is populated, and `honest_verdict` has a terminal
+prefix.
+
+## Implementation Status (REQ-REPORT-5626)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5626 | Implemented (`python/carnot/experiment_5626_v508_source_delta_ingestion.py`, `results/experiment_5626_v508_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5626_v508_source_delta_ingestion.py`) |
