@@ -658,14 +658,15 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > "relaxing doesn't help." This null is itself consistent with exp5702's corpus survey: `0.0`
     > is the single most common real-world outcome there (47.4% of the historical corpus), while
     > the `[0.7, 1.0)` band is much narrower (~6.3 percentage points), so a 3-attempt live sample
-    > missing it entirely is unsurprising, not anomalous. **Separately-disclosed, orthogonal
-    > observation:** despite `heldout_accuracy=0.0` on every attempt, `plan_reaches_goal=True` on
-    > all 3 (in-model verification, not real environment ground truth) — flagged as an open
-    > question about whether the held-out dynamics check and downstream planning usefulness are
-    > perfectly aligned metrics, but explicitly NOT claimed as evidence the strict gate is
-    > miscalibrated. A conclusive answer would need a larger N (costly — each real attempt is a
-    > genuine GPU-backed induction call, 90-800s observed) or a corpus selection biased toward the
-    > interesting band; not pursued further in this task's scope. `adversarial_verify.py` clean.
+    > missing it entirely is unsurprising, not anomalous. **Orthogonal observation, RESOLVED same
+    > session via code analysis (no further live compute needed):** despite `heldout_accuracy=0.0`
+    > on every attempt, `plan_reaches_goal=True` on all 3. Tracing `_plan_reaches_goal`
+    > (`arc_llm_reinduction.py:452-501`) found the cause: it re-simulates the plan using the SAME
+    > induced engine the held-out check just scored `0.0` on, then checks the SAME induced goal
+    > predicate against that engine's own simulated output — a purely self-referential check with
+    > zero grounding against real transitions. **Not a sign the metrics are misaligned — a direct
+    > demonstration of the exact failure mode `min_heldout_accuracy=1.0` exists to prevent**
+    > (corroborating evidence FOR the strict gate, not against it). `adversarial_verify.py` clean.
     > Full write-up: `openspec/capabilities/arc-human-replay-frame-change/spec.md`
     > REQ-ARC-WMTE-5593-5.
 13. **(New 2026-07-12, HIGH PRIORITY — the frozen live generator's sizing constraint appears to be

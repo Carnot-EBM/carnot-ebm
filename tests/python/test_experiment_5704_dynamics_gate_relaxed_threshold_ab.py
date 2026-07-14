@@ -28,6 +28,9 @@ def test_req_arc_wmte_5593_5_spec_declares_relaxed_threshold_ab() -> None:
         "SCENARIO-ARC-WMTE-5593-5",
         "inconclusive_no_attempt_in_relaxed_only_band",
         "does NOT presuppose",
+        "RESOLVED via code analysis",
+        "purely self-referential",
+        "corroborating evidence FOR keeping it",
     ):
         assert marker in section
 
