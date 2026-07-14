@@ -3630,6 +3630,57 @@ present from mechanisms that measurably changed a decision, so the
 diagnosis names what did NOT cause the regression with the same rigor as
 what might have
 
+### REQ-ARC-FCP-5703-2: `goal_bias` Degenerate-Score Self-Audit
+
+GAP-5703's candidate design (a): `StepwiseExplorer.goal_bias_diagnostics()`
+SHALL surface the same class of degenerate-score self-audit
+`GoalEnergyCandidateGuidance` already has (`arms_non_degenerate`), so a
+future investigator can see directly from the diagnostics dict that a
+goal-energy source is contributing zero real signal on the current game --
+without needing exp5703's manual instrumentation to find out.
+
+Implementation: `StepwiseExplorer` tracks a STREAMING (not stored-list, to
+avoid unbounded memory on long episodes) running sum/sum-of-squares/min/max
+of every real `goal_bias(frame)` invocation in `_goal_bias_score`.
+`goal_bias_diagnostics()` computes `score_variance` from the running
+sum/sum-of-squares and reports `degenerate: bool` --
+`nodes_scored >= 20 AND score_variance <= 1e-12` (the same variance floor
+`GoalEnergyCandidateGuidance` uses, plus a minimum-sample floor to avoid a
+false-positive read on a short episode that has not scored enough nodes
+yet to say anything).
+
+This is OBSERVABILITY ONLY: `degenerate=True` does NOT disable `goal_bias`
+mid-episode or change search behavior. A constant score's `_goal_bias_key`
+is already mathematically a no-op on ordering (a constant added to every
+candidate's combined score does not change relative rank) -- confirmed
+directly by exp5703's `candidate_router_changed_order_count=0` /
+`goal_candidate_guidance`'s own `arms_non_degenerate=False` no-op finding
+for the sibling mechanisms. Auto-disabling mid-episode would be a separate,
+larger behavioral change (risk: a signal that is degenerate early in an
+episode but would become informative later) that this fix deliberately
+does not attempt.
+
+**RESOLUTION (2026-07-14).** Shipped in `arc_competition_agent.py`
+(`StepwiseExplorer.__init__`, `_goal_bias_score`, `goal_bias_diagnostics`).
+Verified directly against the real sp80 case that motivated it: after 4
+nodes scored, `degenerate=False` (correctly below the 20-sample floor,
+guards against a false-positive read); after a full 500-budget episode (938
+real nodes scored), `degenerate=True`, `score_variance=0.0`,
+`score_min=score_max=1.0` -- exactly reproducing exp5703's manually-found
+result, now available from `goal_bias_diagnostics()` directly without
+custom instrumentation. Existing test (`test_experiment_4534_energy_trust_
+next_level_routing.py`, which only asserted `lower_is_better`) still
+passes unmodified.
+
+#### SCENARIO-ARC-FCP-5703-2-DEGENERATE-SELF-AUDIT
+
+Given a `StepwiseExplorer` with a `goal_bias` that returns a constant score
+regardless of the frame it is given
+When enough real nodes have been scored to clear the minimum-sample floor
+Then `goal_bias_diagnostics()["degenerate"]` is `True` and
+`score_variance` is at or below the variance floor, WITHOUT any change to
+which candidate the explorer actually selects
+
 ### REQ-ARC-WMTE-5593-4: Real-World Pass-Rate Survey of the `min_heldout_accuracy=1.0` Dynamics Gate
 
 REQ-ARC-WMTE-5593-3's live-integration follow-up found both arms failing at
