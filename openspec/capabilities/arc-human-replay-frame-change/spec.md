@@ -3197,6 +3197,93 @@ Then only the enclosed blob's id appears under its true parent's `children`
 entry, the freely-sitting blob has no parent, and `object_hashes` reports
 the SAME hash for both despite their different topological position
 
+### REQ-ARC-FCP-5591-2: Object-Hash Change-History Bonus (Task 10's Deferred Live-Wiring Step)
+
+REQ-ARC-FCP-5591's DONE note deferred its own suggested live-consuming
+mechanism -- "preferring an object whose hash was seen to change in a prior
+frame" -- as "a distinct, separately-scoped design + empirical-validation
+step per the Phase Prototype + Empirical Validation discipline." This
+requirement closes that gap. `ObjectHistorySaliencePrior`
+(`python/carnot/agentic/arc_object_history_salience.py`) SHALL wrap
+`ColorBlobSaliencePrior` (mirroring the existing
+`arc_geometric_salience.GeometricSaliencePrior` precedent for composing a
+mutable history-tracking layer on top of the frozen base prior) with a
+per-`object_hash` `(obs, changed)` tally, updated via `observe_transition`
+from real observed click transitions and consumed via `score` as an additive
+bonus proportional to the observed change rate, gated behind a
+`min_observations` evidence floor (mirroring `InertClickSigPruner`'s
+trust+specificity discipline, inverted polarity: boost instead of prune,
+identity-hash-keyed instead of structural-signature-keyed). An
+under-observed hash SHALL receive zero bonus, never a penalty.
+
+`coerce_object_history_salience_prior` SHALL provide the standard
+`None`/`False` -> unchanged base, instance -> passthrough, `True` -> wrap
+coercion contract, threaded through `E3AgentPolicy.__init__` as
+`object_history_salience`, gated OFF by default
+(`SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED = False`, mirrored in
+`SUBMITTED_AGENT_CONFIG`). Because `action_prior` is already a generic,
+externally-composable slot that `_ingest`'s existing `hasattr`-gated
+`observe_transition`/`reset` hooks and `_candidates`' existing
+`action_prior.score` consumption dispatch to generically, wiring this in
+requires NO new hook call sites in `arc_competition_agent.py` -- unlike
+REQ-ARC-FCP-5595's `InertClickSigPruner`, which needed a brand-new
+`rank_candidates` call site.
+
+### SCENARIO-ARC-FCP-5591-2-CHANGE-RATE-BONUS: Reliable Change History Outscores Reliably-Inert History
+
+Given the SAME object (identical `base_prior` score), observed `>=
+min_observations` times either always changing the frame or never changing
+it when clicked
+When `score` is called for a click candidate on that object
+Then the reliably-changing history's score is strictly higher than the
+reliably-inert history's score, and the reliably-inert history's score
+equals the unmodified base score (zero bonus, not a penalty)
+
+### SCENARIO-ARC-FCP-5591-2-EVIDENCE-FLOOR: Under-Observed Hashes Get Zero Bonus
+
+Given an object observed fewer than `min_observations` times, regardless of
+how many of those observations changed the frame
+When `score` is called for a click candidate on that object
+Then the score equals the unmodified base score -- no premature boost from
+sparse evidence
+
+### SCENARIO-ARC-FCP-5591-2-NOT-DEGENERATE: Adversarial Check Against Base-Tier Redundancy
+
+Given two click candidates whose `base_prior` scores are IDENTICAL (same
+color, size, and shape, hence the same tier and button-likelihood features)
+before any observed history
+When one of the shared-hash objects accumulates a reliable change-history
+tally and `score` is called for both candidates
+Then both candidates' final scores are boosted identically above the shared
+base score (the mechanism is hash-identity-based, not position-based) --
+confirming the bonus is genuinely new information, not a re-derivation of
+the base tier features under a different name
+
+### SCENARIO-ARC-FCP-5591-2-DEFAULT-OFF-PARITY: Unwrapped By Default
+
+Given the SUBMITTED default configuration
+When a `StepwiseExplorer` or `E3AgentPolicy` is constructed with no explicit
+`object_history_salience` argument
+Then `action_prior` is a plain, unwrapped `ColorBlobSaliencePrior`
+(`SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED = False`, mirrored in
+`SUBMITTED_AGENT_CONFIG["object_history_salience_enabled"]`) -- byte-identical
+to the agent's behavior before this requirement, until a matched-budget
+offline A/B validates flipping it on, per the `solve_rate_dropped` guardrail
+
+### SCENARIO-ARC-FCP-5591-2-REAL-GAME-NON-DEGENERATE-SIGNAL: Real-Game Empirical Validation
+
+Given real click transitions collected from a real `E3AgentPolicy`
+exploration run on a click-heavy game (`m0r0`, per REQ-ARC-FCP-5595's own
+confirmed roster)
+When those transitions are fed through `ObjectHistorySaliencePrior.observe_
+transition`
+Then the artifact reports, honestly, whether any `object_hash` cleared both
+`min_observations` and shows a nonzero change rate (a genuine, non-degenerate
+signal for the mechanism to act on) -- zero is an honest, valid outcome when
+evidence is sparse within the measured budget, not an error; and an
+adversarial degeneracy check reports whether any two real click candidates
+sharing an identical `base_prior` score were differentiated by history alone
+
 ### REQ-ARC-FCP-5590: Dict-Candidate CNN Fix Matched-Budget A/B
 
 `docs/research-notes/arc-perception-grounding-audit-2026-07-13.md` found that

@@ -1,0 +1,75 @@
+{
+  "experiment": "experiment_5601_object_history_salience_offline_sim_prototype",
+  "schema": "carnot.exp5601.object_history_salience_offline_sim_prototype.v1",
+  "result_path": "results/experiment_5601_object_history_salience_offline_sim_prototype.json",
+  "honest_verdict": "complete: object_history_salience_prototype_confirmed_2_hashes_with_real_change_signal_across_1_games",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default tier-3 exploration proposer (real, live, port 8921)"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; demonstrates the change-history-bonus mechanism accumulates real, non-degenerate tally evidence on real clicks, does not claim a live-path efficiency win (a matched-budget A/B, like HazardMovePruner's tu93 measurement, is a separate, later step before SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED is ever flipped True)"
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_self_discovery_no_llm -- a real LocalGGUFProposer is constructed and wired into E3AgentPolicy (required to avoid the bare-construction stall exp5595 documented), but pure classical-salience exploration never invokes it; the GGUF entry in model_specs is vestigial, not a live-inference claim"
+    },
+    "total_hashes_with_evidence_and_nonzero_change_rate": {
+      "principle": "count of distinct object_hash values that cleared min_observations AND have changed>0 -- the load-bearing claim behind wiring this mechanism at all: real objects with a genuine, non-zero track record of changing the frame when clicked, measured against real click data rather than synthetic grids"
+    },
+    "adversarial_degeneracy_check": {
+      "principle": "per REQ-ARC-FCP-5591-2's adversarial-check unit test (same base_prior score for two same-shape-and-color candidates, differentiated only by history), confirms on THIS real game's actual data whether any two real click candidates shared an identical base_prior score before history and were differentiated only by the change-rate bonus -- catches whether the bonus is genuinely new information on real games, not just synthetic constructions"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a prototype/measurement script, no per-game adapter, no offline BFS, no level-solve claim"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "roster": [
+    "m0r0"
+  ],
+  "explore_budget": 6,
+  "total_budget": 40,
+  "min_observations": 3,
+  "per_game_rows": [
+    {
+      "game": "m0r0",
+      "transitions_collected": 37,
+      "click_transitions": 32,
+      "hashes_tracked_after": 15,
+      "hashes_with_evidence_after": 2,
+      "hashes_with_evidence_and_nonzero_change_rate_after": 2,
+      "degeneracy_pairs_checked": 8,
+      "degeneracy_pairs_differentiated_by_history": 0
+    }
+  ],
+  "total_click_transitions_observed": 32,
+  "total_hashes_tracked": 15,
+  "total_hashes_with_evidence_and_nonzero_change_rate": 2,
+  "adversarial_degeneracy_check": {
+    "pairs_checked": 8,
+    "pairs_differentiated": 0
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 5601,
+  "duration_s": 34.028,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_and_prior_import": true,
+    "gguf_cached": true,
+    "llama_server_binary_present": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "19d340e49240a7fcc98441e88587a09caf1d11d083dcb1e78ebdb8e08b08f4f0"
+}
