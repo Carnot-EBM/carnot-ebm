@@ -1,0 +1,710 @@
+{
+  "experiment": "experiment_5603_object_history_salience_matched_budget_ab",
+  "schema": "carnot.exp5603.object_history_salience_matched_budget_ab.v1",
+  "result_path": "results/experiment_5603_object_history_salience_matched_budget_ab.json",
+  "honest_verdict": "complete: object_history_salience_ab_no_op_at_either_weight",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; reports whichever outcome the A/B actually produced -- a zero-divergence result at the default weight is a valid, real, and actionable finding (the bonus magnitude vs. the base prior's tier-score scale), not a failure to hide"
+    },
+    "trajectories_diverge_at_default_weight": {
+      "principle": "whether the treatment (object_history_salience=True, default weight) action sequence differs from the baseline (False) sequence at all -- the most direct, honestly-available signal that the wiring has ANY real behavioral effect, since m0r0 does not level up within this budget under a bare policy (no actions_to_first_levelup available)"
+    },
+    "trajectories_diverge_at_rescaled_weight": {
+      "principle": "a diagnostic-only check (change_bonus_weight rescaled to match ColorBlobSaliencePrior's real tier-score magnitude) isolating whether the mechanism CAN influence behavior at an appropriate scale, separate from whether the CURRENT default is well-tuned to ship"
+    },
+    "gate_definition": {
+      "principle": "no OfflineSolver-equivalent states_expanded/reproduction-gate metric exists for action_prior on this path (action_prior is not a move_pruner) -- trajectory divergence is the honest substitute for 'does this change search behavior', not a claim about solve efficiency, which needs its own follow-up measurement"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a prototype/measurement script, not a live-path flip"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "game": "m0r0",
+  "baseline": {
+    "transitions_collected": 37,
+    "actions": [
+      {
+        "action": 6,
+        "data": {
+          "x": 21,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 41,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 63
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 16,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 46,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 62,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 1,
+          "y": 63
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 30,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 33,
+          "y": 63
+        }
+      },
+      {
+        "action": 3,
+        "data": null
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 11,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 51,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 59,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 3,
+          "y": 63
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 27,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 35,
+          "y": 63
+        }
+      },
+      {
+        "action": 3,
+        "data": null
+      },
+      {
+        "action": 4,
+        "data": null
+      },
+      {
+        "action": 4,
+        "data": null
+      },
+      {
+        "action": 4,
+        "data": null
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 26,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 36,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 57,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 6,
+          "y": 63
+        }
+      }
+    ],
+    "prior_summary": {
+      "source": "single_color_connected_component_tiers",
+      "connected_component_salience_enabled": true,
+      "salience_tiers_emitted": true,
+      "salient_colors": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "status_bar_color": 16,
+      "max_component_fraction": 0.45,
+      "status_bar_deprioritization": true,
+      "large_flat_deprioritization": true
+    }
+  },
+  "default_weight_treatment": {
+    "transitions_collected": 37,
+    "actions": [
+      {
+        "action": 6,
+        "data": {
+          "x": 21,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 41,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 63
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 16,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 46,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 62,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 1,
+          "y": 63
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 30,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 33,
+          "y": 63
+        }
+      },
+      {
+        "action": 3,
+        "data": null
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 11,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 51,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 59,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 3,
+          "y": 63
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 27,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 35,
+          "y": 63
+        }
+      },
+      {
+        "action": 3,
+        "data": null
+      },
+      {
+        "action": 4,
+        "data": null
+      },
+      {
+        "action": 4,
+        "data": null
+      },
+      {
+        "action": 4,
+        "data": null
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 26,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 36,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 57,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 6,
+          "y": 63
+        }
+      }
+    ],
+    "prior_summary": {
+      "source": "object_hash_change_history_blob_salience",
+      "base_prior": {
+        "source": "single_color_connected_component_tiers",
+        "connected_component_salience_enabled": true,
+        "salience_tiers_emitted": true,
+        "salient_colors": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "status_bar_color": 16,
+        "max_component_fraction": 0.45,
+        "status_bar_deprioritization": true,
+        "large_flat_deprioritization": true
+      },
+      "enabled": true,
+      "change_bonus_weight": 10.0,
+      "min_observations": 3,
+      "tracked_hash_count": 12,
+      "verifier_is_oracle": false
+    }
+  },
+  "rescaled_weight_diagnostic": {
+    "transitions_collected": 12,
+    "actions": [
+      {
+        "action": 6,
+        "data": {
+          "x": 21,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 41,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 0
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 63
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 16,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 46,
+          "y": 51
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 31,
+          "y": 34
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 49,
+          "y": 30
+        }
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 14,
+          "y": 29
+        }
+      }
+    ],
+    "prior_summary": {
+      "source": "object_hash_change_history_blob_salience",
+      "base_prior": {
+        "source": "single_color_connected_component_tiers",
+        "connected_component_salience_enabled": true,
+        "salience_tiers_emitted": true,
+        "salient_colors": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "status_bar_color": 16,
+        "max_component_fraction": 0.45,
+        "status_bar_deprioritization": true,
+        "large_flat_deprioritization": true
+      },
+      "enabled": true,
+      "change_bonus_weight": 2000.0,
+      "min_observations": 3,
+      "tracked_hash_count": 5,
+      "verifier_is_oracle": false
+    }
+  },
+  "trajectories_diverge_at_default_weight": false,
+  "trajectories_diverge_at_rescaled_weight": false,
+  "gate_definition": "no OfflineSolver-equivalent states_expanded metric exists for action_prior; trajectory divergence from baseline is the honest substitute",
+  "solve_provenance": "development_proxy",
+  "random_seed": 5603,
+  "duration_s": 42.295,
+  "preconditions_checked": {
+    "offline_arcade_makes_env": true,
+    "e3_and_prior_import": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "a4fe64d452fa365e3ad01729b6607a97fb233ca67ed98e20f9cef53f3ce9f5b1"
+}
