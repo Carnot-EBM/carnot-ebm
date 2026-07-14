@@ -3738,6 +3738,86 @@ Then the resulting `pass_rate_at_live_threshold` reflects only genuine
 real-world attempts at the live pipeline's actual configured threshold, with
 a full audit trail (`cited_upstream_artifacts`) back to the source artifacts
 
+### REQ-ARC-WMTE-5593-5: Live A/B -- Does Relaxing `min_heldout_accuracy` Unlock Usable Plans?
+
+REQ-ARC-WMTE-5593-4 raised, but did not resolve, a calibration question: does
+a graduated-trust tier let the pipeline safely use a "good but imperfect"
+induced model instead of discarding it outright at `1.0`?
+`python/carnot/experiment_5704_dynamics_gate_relaxed_threshold_ab.py` SHALL
+test this directly and LIVE: collect real transitions on a game with an
+observed real level-up, then make N independent fresh real induction
+attempts (`execute_bounded_llm_reinduction`, `max_rounds=1`, a fresh
+proposer per attempt, `min_heldout_accuracy=0.0` so every attempt's real
+`heldout_accuracy` is observed regardless of outcome) against the SAME real
+transitions. For each attempt, record whether the STRICT threshold (`1.0`)
+and a RELAXED threshold (`0.7`) would each accept it, and -- for any attempt
+the relaxed threshold accepts but the strict one rejects -- whether the
+resulting plan actually reaches the goal under in-model verification
+(`plan_reaches_goal`).
+
+This experiment does NOT presuppose relaxing the threshold helps. It SHALL
+report one of three DISTINCT, non-interchangeable outcomes: (a) relaxing
+unlocks one or more genuinely good plans the strict gate discards, (b)
+relaxing accepts attempts but none produce a good plan (the strict gate is
+correctly protective), or (c) no attempt lands in the relaxed-only band at
+all (inconclusive -- the small live sample did not happen to sample the
+interesting middle ground).
+
+**RESOLUTION (2026-07-14).** Collected real transitions on `lp85`
+(47 collected, 1 real level-up), then ran 3 independent fresh real
+induction attempts (real GPU-backed `Qwen3.5-9B-MTP`,
+`duration_s` per attempt: 794.3s / 94.2s / 89.8s -- the first attempt's
+outlier duration is consistent with GPU/model cold-start overhead, not a
+hang). **All 3 attempts scored `heldout_accuracy=0.0`** -- a complete
+dynamics-check failure on every single real attempt, landing NONE in the
+`[0.7, 1.0)` relaxed-only band this experiment was built to characterize.
+`n_relaxed_only_accepts=0`, honest verdict
+`complete: inconclusive_no_attempt_in_relaxed_only_band`.
+
+**Honest conclusion: inconclusive by construction, and this null result is
+itself consistent with REQ-ARC-WMTE-5593-4's corpus survey** -- `0.0` was
+found to be the single most common real-world outcome there
+(`exact_zero_rate=0.4737`, 47.4% of the historical corpus), so a 3-attempt
+live sample landing entirely in that bucket, missing the much narrower
+`[0.7, 1.0)` band (historically ~6.3 percentage points of the corpus:
+`threshold_sweep["0.7"]=0.189` minus `pass_rate_at_live_threshold=0.1263`),
+is unsurprising rather than anomalous. This experiment does not resolve the
+graduated-trust calibration question either way; a larger N (costly -- each
+real attempt is a genuine GPU-backed induction call, ~90-800s observed) or
+a game/corpus selection biased toward the interesting band would be needed
+for a conclusive answer, and is not pursued further in this task's scope.
+
+**Separately-disclosed, orthogonal observation (not a resolution of the
+threshold question).** Despite `heldout_accuracy=0.0` on every attempt,
+`planned=True` and `plan_reaches_goal=True` on all 3 -- because this
+experiment sets `min_heldout_accuracy=0.0` to observe the raw held-out
+score without letting the gate block downstream steps, the induced engine
+still produced a plan verified, IN-MODEL, to reach the goal. This is worth
+noting as a possible sign the held-out dynamics check and downstream
+planning usefulness are not perfectly aligned metrics, but `plan_reaches_
+goal` is verified against the induced engine's OWN simulation, not real
+environment ground truth (the same caveat REQ-ARC-WMTE-5593-3's live
+integration disclosed for its own `plan_reaches_goal` field) -- so this is
+flagged as an open question for a future task, not evidence that the
+strict gate is miscalibrated.
+
+Required field principles:
+
+- `n_relaxed_only_accepts`: principle "count of real attempts that would be accepted under the relaxed bar but rejected under the strict bar -- the direct evidence for whether the strict threshold discards recoverable attempts."
+- `relaxed_only_accepts_with_good_plan`: principle "of the relaxed-only accepts, how many produced a plan that ALSO passed plan_reaches_goal (in-model verification) -- an accepted-but-useless model would not support loosening the gate."
+
+#### SCENARIO-ARC-WMTE-5593-5-RELAXED-THRESHOLD-AB
+
+Given N independent fresh real induction attempts against the SAME real
+transitions, with the dynamics gate bypassed so every attempt's real
+`heldout_accuracy` is observed
+When the strict (1.0) and relaxed (0.7) thresholds are each applied to the
+same attempts
+Then the artifact reports exactly one of "relaxing unlocks a good plan",
+"relaxing accepts but no good plan resulted", or "inconclusive -- no
+attempt in the relaxed-only band", never conflating the three, and never
+presupposing which outcome will occur before the real attempts run
+
 ### REQ-ARC-WMTE-5593: Goal-Predicate Consistency Against Real Observed Level-Progress
 
 `ops/known-issues.md`'s 2026-07-11 task 11 entry (hallucination-consistency
