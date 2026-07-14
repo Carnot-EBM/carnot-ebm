@@ -2596,6 +2596,7 @@ games:
   - su15: no_grounded_L3_delta
   - lf52: adapter-free graph explore banked L1 only; L2 requires GameAdapter rail delta
   - 'Exp4936 lf52 no-bank no_grounded_l3_delta: complete_lf52_no_new_level_residual_no_grounded_l3_delta.'
+  - 'Exp5585 lf52 no-bank duplicate_depth_vs_registry_prior: standing arc_loop_solve --game lf52 --target-level 7 reproduced only L2 while the registry prior is L6; offline_reproduced=true is not creditable unless reproduced_levels strictly exceeds the registry depth.'
   latest_exp4690_levelup_selfplay:
     artifact: results/experiment_4690_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_lf52.json
@@ -2614,6 +2615,17 @@ games:
     residual_cause: no_grounded_l3_delta
     solve_provenance: live_agent_self_discovery
     reproducibility_checksum: a988ffc5568e397a431e2637bb40e290f262d42710ae272ea570f0e023caf3bb
+  latest_exp5585_levelup_attempt:
+    artifact: results/experiment_5585_arc_levelup_attempt_v505.json
+    loop_artifact: results/arc_loop_solve_lf52.json
+    auto_loop_artifact: results/arc_loop_solve_ar25.json
+    offline_reproduced: true
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: duplicate_depth_vs_registry_prior_l6
+    solve_provenance: development_proxy
+    target_rotation: shallowest_non_full_clear_lf52_l7_rotated_off_recent_lp85_cn04_sk48_sc25_g50t_tn36_bp35_s5i5_and_auto_ar25
+    reproducibility_checksum: aeee89c327213cc353c4331a271c78e1ba3737bdca7ebe302fc79adaff70b6ed
 - game: sp80
   reproducibility: reproduced
   levels_reproduced: 6

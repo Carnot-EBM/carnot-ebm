@@ -1,0 +1,1403 @@
+{
+  "auto_probe": {
+    "command": [
+      ".venv/bin/python",
+      "scripts/arc_loop_solve.py",
+      "--auto"
+    ],
+    "game": "ar25",
+    "loop_artifact": "results/arc_loop_solve_ar25.json",
+    "offline_reproduced": true,
+    "reproduced_levels": 3,
+    "verdict": "same_depth_or_shallower_than_registry_not_creditable"
+  },
+  "dead_ends_found": [
+    "standing_loop_reproduced_only_l2_vs_prior_l6"
+  ],
+  "duration_s": 0.19189071655273438,
+  "experiment": "experiment_5585_arc_levelup_attempt_v505",
+  "experiment_id": 5585,
+  "field_principles": {
+    "game_targeted": "the ARC Level-Up Attempt Guarantee requires rotation across games, not repeated attempts on one.",
+    "honest_verdict": "a null attempt (no new level) is still a valid, honestly-reported outcome.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort, only reproduced levels count.",
+    "registry_updated": "knowledge must be captured as reusable scaffolding, not lost.",
+    "reproduced_levels": "the headline progress metric.",
+    "solve_provenance": "distinguishes live-agent self-discovery from the offline dev-twin proxy, per the ARC Live-Path Reachability Discipline."
+  },
+  "game_targeted": "lf52",
+  "gotchas_discovered": [
+    "offline_reproduced_true_can_still_be_duplicate_depth_against_registry_prior",
+    "adaptered_standing_loop_stopped_at_l2_while_targeting_l7"
+  ],
+  "honest_verdict": "complete: no_new_arc_level_banked_lf52_reproduced_l2_prior_l6",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "milestone": "2026.07.505",
+  "new_levels_banked": 0,
+  "offline_reproduced": true,
+  "prior_reproduced_level": 6,
+  "registry_total_after": 177,
+  "registry_total_before": 177,
+  "registry_updated": true,
+  "reproduced_levels": 2,
+  "reproducibility_checksum": "aeee89c327213cc353c4331a271c78e1ba3737bdca7ebe302fc79adaff70b6ed",
+  "result_path": "results/experiment_5585_arc_levelup_attempt_v505.json",
+  "schema": "carnot.exp5585.arc_levelup_attempt_v505.v1",
+  "solution_labels_count": 42,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-5585-LEVELUP",
+    "SCENARIO-ARC-WMTE-5585-LEVELUP-ROTATED-TARGET",
+    "SCENARIO-ARC-WMTE-5585-LEVELUP-REPRODUCTION-GATE",
+    "SCENARIO-ARC-WMTE-5585-LEVELUP-STABLE-ARTIFACT"
+  ],
+  "standing_loop": {
+    "command": [
+      ".venv/bin/python",
+      "scripts/arc_loop_solve.py",
+      "--game",
+      "lf52",
+      "--target-level",
+      "7"
+    ],
+    "loop_artifact": "results/arc_loop_solve_lf52.json",
+    "reproduction_gate": {
+      "claimed_level": 2,
+      "game": "lf52",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 2,
+      "reproduced": true
+    },
+    "result_summary": {
+      "game": "lf52",
+      "mode": "standing_arc_loop_offline_no_quota",
+      "offline_reproduced": true,
+      "reached_level": 2,
+      "reproduced_levels": 2,
+      "states_expanded": 42,
+      "verifier_src": "learned_verifier_live_checkpoint"
+    }
+  },
+  "status": "complete",
+  "target_level": 7,
+  "target_selection": {
+    "auto_game": "ar25",
+    "game": "lf52",
+    "prior_reproduced_level": 6,
+    "selection_reason": "shallowest_non_full_clear_rotated_target",
+    "skipped_recent_targets": [
+      "lp85",
+      "cn04",
+      "sk48",
+      "sc25",
+      "g50t",
+      "tn36",
+      "bp35",
+      "s5i5"
+    ],
+    "target_level": 7
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5585_arc_levelup_attempt_v505.py -q --no-cov",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "transfer_routing_recommendation": {
+    "cautions": [
+      "Exp4535 arc_loop_solve --game sp80 --target-level 3 replays to L2 only; the current adapter has no grounded L3 splitter-placement delta.",
+      "Exp4925 sp80 no-bank duplicate_depth: complete_sp80_no_new_level_residual_duplicate_depth.",
+      "Pre-adapter arc_loop_solve --game cn04 returned needs_per_game_RE; broad graph exploration preserved L1 but did not derive the L2 marker-pair delta.",
+      "Exp5012 cn04 no-bank no_grounded_l4_delta: complete_cn04_no_new_level_residual_no_grounded_l4_delta.",
+      "re86: registry_prechecked:bp35: no_grounded_next_level_adapter",
+      "re86: registry_prechecked:lf52: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:sb26: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:dc22: recently_deepened_or_operator_skip_list"
+    ],
+    "confident_transfer": true,
+    "feature_router": {
+      "approach": "default_graph_explore",
+      "confidence": 0.0,
+      "enabled": false,
+      "mechanic_class": "",
+      "no_regression_fallback": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+      "reason": "early_play_signature_not_supplied",
+      "verifier_is_oracle": false
+    },
+    "general_gotchas": [
+      {
+        "id": "offline_is_a_simulator",
+        "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      },
+      {
+        "id": "level_on_frame_not_game",
+        "note": "level = frame.levels_completed; env._game has no levels_completed."
+      },
+      {
+        "id": "deepcopy_injection_unreliable",
+        "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      },
+      {
+        "id": "first_step_after_reset_consumed",
+        "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      },
+      {
+        "id": "discover_coords_never_hardcode",
+        "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      },
+      {
+        "id": "state_dependent_controls_and_animations",
+        "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      },
+      {
+        "id": "non_idempotent_reset",
+        "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      },
+      {
+        "id": "same_action_next_level",
+        "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      },
+      {
+        "derived_from_games": [
+          "tr87"
+        ],
+        "id": "primitive_glyph_rewrite_matcher",
+        "note": "Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from Exp 4436.",
+        "operator": "glyph_rewrite_matcher"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "tr87"
+        ],
+        "id": "primitive_config_rule_grounding",
+        "note": "Exp 4438 records consolidated generic primitive config_rule_grounding from Exp 4436.",
+        "operator": "config_rule_grounding"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t"
+        ],
+        "id": "primitive_config_rule_verifier",
+        "note": "Exp 4444 promotes config_rule_grounding into a generic execution-grounded verifier for marker coverage, local constraint color-cycle, and target-offset toggle digests; ft09 L1 re-solves without ft09's own recipe.",
+        "operator": "config_rule_verifier"
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "id": "primitive_graph_astar_action_cost",
+        "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436.",
+        "operator": "graph_astar_action_cost"
+      },
+      {
+        "derived_from_games": [
+          "exp4020_goal_induction_separation",
+          "exp4640_goal_energy_generation_live"
+        ],
+        "id": "primitive_graded_goal_energy_search_heuristic_operator",
+        "latest_exp4644_transfer": {
+          "artifact": "results/experiment_4644_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "reproducibility_checksum": "sha256:64005ae35b67a176784c59bcad835c00a10e118bd0acb9dee3431a80fbc6a3f0",
+          "residual_dead_end": "Transfer value was null on untuned cached matched variants; no new executable level was banked, so reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "bp35",
+            "cd82",
+            "dc22"
+          ],
+          "transfer_value_per_game": {
+            "bp35": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "cd82": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "dc22": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4644 persists A1's Exp4020 graded goal-energy search heuristic as a reusable graph/frontier ranking primitive: compute lower-is-better `alpha * navigation_energy + beta * graded_goal_energy`, keep depth and the executable verifier outside the scoring function, and report live solve-rate / first-win / action-efficiency lift before any solve claim. This is a search heuristic, not an oracle; new levels count only through arc_solver_kit.reproduce().",
+        "operator": "graded_goal_energy_search_heuristic_operator",
+        "transfer_dead_ends": [
+          "A graded goal-energy well can only add value when the generated frontier already contains candidates whose visible target-satisfaction state is more informative than the navigation heuristic. Exp4644's untuned cached bp35/cd82/dc22 transfer rows showed zero solve-rate, first-win, and action-efficiency lift, so the primitive is persisted as-built with the transfer null characterized."
+        ]
+      },
+      {
+        "derived_from_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ],
+        "id": "primitive_per_level_reinduction_operator",
+        "note": "Exp 4537 persists the A1 loop as a reusable operator; detect level-up from frame.levels_completed, clear stale induction, re-induce the L_{n+1} predicate from the post-transition representation, and route with depth-primary goal bias. Exp 4549 extends the same primitive family with arc_solver_kit.llm_proposer_reinduction_operator: detect level-up, request GOAL+DYNAMICS+plan candidates from the LLM proposer when available, trust-energy-rank them, run at most 3 bounded refinement rounds, and degrade to the DSL/verifier predicate inducer when A1's live proposer is null. New levels still count only through arc_solver_kit.reproduce().",
+        "operator": "per_level_reinduction_operator"
+      },
+      {
+        "derived_from_games": [
+          "exp4556_cached_generic_transfer"
+        ],
+        "id": "primitive_verifier_router_candidate_ranking_operator",
+        "note": "Exp 4561 persists the A1 verifier-router as a reusable generic candidate-ranking operator: rank compatible cached action/plan candidates by verifier score with stable original-order tie-breaking, then report ordering gain before any solve claim. Cross-game transfer on tu93/tr87/sc25 was a characterized null: the operator applied cleanly, but the cached held-out candidates had no offline-reproduced target candidate for the ranker to promote, so ordering gain remained 0. Needs a non-oracle verifier score that separates at least one held-out reachable candidate from same-depth distractors to add value.",
+        "operator": "verifier_router_candidate_ranking_operator",
+        "transfer_dead_ends": [
+          {
+            "tu93": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
+          },
+          {
+            "tr87": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
+          },
+          {
+            "sc25": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
+          }
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4604_world_model_trust_energy"
+        ],
+        "id": "primitive_world_model_trust_energy_gate_operator",
+        "latest_exp4608_transfer": {
+          "artifact": "results/experiment_4608_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "reproducibility_checksum": "sha256:696c801588e07f003a8d4af06ff9ebed58ea2a5601f7c59e60f5a47847786d6e",
+          "residual_dead_end": "Transfer value is trust-gate selection over cached verifier/reproduction-gated fixtures; no new executable level was banked, so reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "bp35",
+            "dc22",
+            "g50t"
+          ],
+          "transfer_value_per_game": {
+            "bp35": {
+              "binary_gate_pass": false,
+              "first_win_lift": true,
+              "offline_reproduced_new_level": false,
+              "trust_pass": true
+            },
+            "dc22": {
+              "binary_gate_pass": false,
+              "first_win_lift": true,
+              "offline_reproduced_new_level": false,
+              "trust_pass": true
+            },
+            "g50t": {
+              "binary_gate_pass": false,
+              "first_win_lift": true,
+              "offline_reproduced_new_level": false,
+              "trust_pass": true
+            }
+          }
+        },
+        "note": "Exp 4608 persists A1's change-weighted trust-energy gate as reusable world-model scaffolding: rank executable model candidates by held-out changed-cell consistency, reject identity/no-op degeneracy, compare against the legacy binary exact-match gate, and report trust-pass or first-win lift before any solve claim. This is a rank/route primitive, not an oracle; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "world_model_trust_energy_gate_operator",
+        "transfer_dead_ends": [
+          "Transfer value is a trust-pass/routing lift over cached untuned world-model candidates; no new executable level is banked unless the resulting path passes arc_solver_kit.reproduce()."
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4568_clickability_action_effect_predictor",
+          "exp4629_graduate_action_effect_predictor_live"
+        ],
+        "id": "primitive_persistent_action_effect_memory_operator",
+        "latest_exp4573_transfer": {
+          "artifact": "results/experiment_4573_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "reproducibility_checksum": "sha256:40b6b9874717b0a9973e9e33addfba694337ee722656e4101335c6c44173bab1",
+          "residual_dead_end": "Transfer value is candidate-ordering efficiency over cached leave-one-game rows; no new executable level was banked, so reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "dc22",
+            "m0r0",
+            "ka59"
+          ],
+          "transfer_value_per_game": {
+            "dc22": {
+              "actions_reduced": 1.0,
+              "baseline_actions_to_first_levelup": 2.0,
+              "candidate_group_count": 115,
+              "memory_actions_to_first_levelup": 1.0
+            },
+            "ka59": {
+              "actions_reduced": 1.0,
+              "baseline_actions_to_first_levelup": 2.0,
+              "candidate_group_count": 41,
+              "memory_actions_to_first_levelup": 1.0
+            },
+            "m0r0": {
+              "actions_reduced": 1.0,
+              "baseline_actions_to_first_levelup": 2.0,
+              "candidate_group_count": 53,
+              "memory_actions_to_first_levelup": 1.0
+            }
+          }
+        },
+        "latest_exp4632_transfer": {
+          "artifact": "results/experiment_4632_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "reproducibility_checksum": "sha256:3b44341b2926a7ccdb9189f03aca4da9299f517cf66ee3004686c9a3a37c7d78",
+          "residual_dead_end": "Transfer value is live action-pruner ordering over cached target-excluded rows; no new executable level was banked, so reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "cd82",
+            "sp80",
+            "ka59"
+          ],
+          "transfer_value_per_game": {
+            "cd82": {
+              "actions_delta": 1.0,
+              "baseline_actions_to_first_levelup": 2.0,
+              "candidate_group_count": 12,
+              "first_win_rate_delta": 0.5,
+              "ranker_actions_to_first_levelup": 1.0,
+              "solve_rate_lift": 0.0,
+              "target_game_excluded_from_memory": true
+            },
+            "ka59": {
+              "actions_delta": 1.0,
+              "baseline_actions_to_first_levelup": 2.0,
+              "candidate_group_count": 41,
+              "first_win_rate_delta": 0.3658536585,
+              "ranker_actions_to_first_levelup": 1.0,
+              "solve_rate_lift": 0.0,
+              "target_game_excluded_from_memory": true
+            },
+            "sp80": {
+              "actions_delta": 1.0,
+              "baseline_actions_to_first_levelup": 2.0,
+              "candidate_group_count": 17,
+              "first_win_rate_delta": 0.4117647059,
+              "ranker_actions_to_first_levelup": 1.0,
+              "solve_rate_lift": 0.0,
+              "target_game_excluded_from_memory": true
+            }
+          }
+        },
+        "note": "Exp 4573 persists A1's action-effect predictor as a reusable PersistentAEM operator: build a leave-one-game cross-game memory from cached frame/action effects, rank compatible action candidates by predicted effect with stable original-order tie-breaking, and report actions-to-first-levelup deltas before any solve claim. Exp 4632 extends the same primitive with the 4629 live action-effect ranker signal (`persistent_aem_plus_optional_cnn`) so the scored E3 action-pruner reuses the target-excluded memory/scorer path rather than re-deriving action effects. A CNN predictor forward pass is not live LLM inference; the persisted operator can also run from cached action-effect rows without invoking the CNN. New levels still count only through arc_solver_kit.reproduce().",
+        "operator": "persistent_action_effect_memory_operator",
+        "transfer_dead_ends": [
+          "If the winning action is absent from the candidate group, PersistentAEM can only reorder generated candidates; candidate generation remains the residual bottleneck.",
+          "Leave-one-game transfer can be value-null when the held-out game's effective action family is not represented in the cached memory features.",
+          "The 4629/4632 live ranker adds action-efficiency value only when the winning target action is already in the generated candidate group; richer candidate generation remains the residual bottleneck when all target candidates are absent or equivalent under cached frame-change features."
+        ]
+      },
+      {
+        "derived_from_games": [
+          "sc25",
+          "exp4580_live_submission_gap_close"
+        ],
+        "id": "primitive_env_adaptive_resolve_operator",
+        "latest_exp4584_transfer": {
+          "artifact": "results/experiment_4584_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "residual_dead_end": "Transfer value is drift-recovery over cached symbolic click labels; no new executable level was banked, so reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "s5i5",
+            "ft09",
+            "sb26"
+          ],
+          "transfer_value_per_game": {
+            "ft09": {
+              "drift_recovered": true,
+              "existing_reproduced_level": 1,
+              "offline_reproduced_new_level": false
+            },
+            "s5i5": {
+              "drift_recovered": true,
+              "existing_reproduced_level": 1,
+              "offline_reproduced_new_level": false
+            },
+            "sb26": {
+              "drift_recovered": true,
+              "existing_reproduced_level": 1,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4584 promotes the A1 env-adaptive re-solve pattern into a reusable operator: keep symbolic action labels as the durable plan, discover or re-derive the current environment's coordinates at replay time, compare the adaptive replay against frozen coordinate replay, and count value only when the adaptive path reaches the transfer verifier target under coordinate drift where frozen replay fails. This is packaging/replay scaffolding, not a win oracle; any new level still counts only through arc_solver_kit.reproduce().",
+        "operator": "env_adaptive_resolve_operator",
+        "transfer_dead_ends": [
+          "Env-adaptive replay adds value only for symbolic plans whose labels can be resolved against current environment features; pure keyboard plans or already-valid frozen coordinates are expected nulls.",
+          "Transfer proxy recovered coordinate drift on non-sc25 click-label games, but no new level was banked, so reproducible_total_levels is unchanged."
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4592_generation_completeness_wiring"
+        ],
+        "id": "primitive_approach_dispatcher_operator",
+        "latest_exp4596_transfer": {
+          "artifact": "results/experiment_4596_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "residual_dead_end": "Transfer value is dispatcher selection over cached verifier/reproduction-gated candidates; no new executable level was banked, so reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "ar25",
+            "cn04",
+            "dc22"
+          ],
+          "transfer_value_per_game": {
+            "ar25": {
+              "existing_reproduced_level": 2,
+              "offline_reproduced_new_level": false,
+              "win_reached": true,
+              "winner_generated": true
+            },
+            "cn04": {
+              "existing_reproduced_level": 2,
+              "offline_reproduced_new_level": false,
+              "win_reached": true,
+              "winner_generated": true
+            },
+            "dc22": {
+              "existing_reproduced_level": 1,
+              "offline_reproduced_new_level": false,
+              "win_reached": true,
+              "winner_generated": true
+            }
+          }
+        },
+        "note": "Exp 4596 persists the A1 approach-dispatcher as reusable live-solver scaffolding: take the mechanic-class route from early-play routing, select and execute the generated candidate for the routed toolkit approach, keep the no-wiring default_graph_explore candidate as the fallback/control, and report winner-generated or win-reached value only after verifier/reproduce evidence. This is candidate-generation/selection wiring, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "approach_dispatcher_operator",
+        "transfer_dead_ends": [
+          "A routed approach with no generated candidate remains a candidate-generation null; the dispatcher cannot promote a winner that was never proposed.",
+          "Existing reproduced candidates can demonstrate cross-game selection value, but they do not increment reproducible_total_levels unless this run banks a strictly new offline-reproduced level."
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4616_offline_live_bridge_disambiguation"
+        ],
+        "id": "primitive_value_head_bridge_fix_operator",
+        "latest_exp4620_transfer": {
+          "artifact": "results/experiment_4620_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "residual_dead_end": "Transfer value is bounded decision-point value ranking over cached untuned candidates; no new executable level was banked, so reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "bp35",
+            "dc22",
+            "g50t"
+          ],
+          "transfer_value_per_game": {
+            "bp35": {
+              "efficiency_lift": 1,
+              "first_win_lift": true,
+              "offline_reproduced_new_level": false
+            },
+            "dc22": {
+              "efficiency_lift": 2,
+              "first_win_lift": true,
+              "offline_reproduced_new_level": false
+            },
+            "g50t": {
+              "efficiency_lift": 0,
+              "first_win_lift": false,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4620 persists the A1 offline-to-live bridge-fix helper as reusable value-head scaffolding: score only bounded decision-point candidates, cache repeated state scores, keep value-head weight effectively as a rank/tie-break signal, and report live first-win or efficiency lift before any solve claim. Exp 4617's graduated SpatialValueNet live path was a characterized null, so this persists the compute-cost fix that made the offline value-head win reusable without repeating the heavy value_weight=5 regression. This is ranking/routing scaffolding, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "value_head_bridge_fix_operator",
+        "transfer_dead_ends": [
+          "If the generated candidate set lacks a level-up/win candidate, the bridge fix can only reorder non-winning candidates; candidate generation remains the residual bottleneck.",
+          "If the target candidate is already first in baseline order, decision-point value ranking is an honest efficiency null for that game."
+        ]
+      },
+      {
+        "derived_from_artifacts": [
+          "results/experiment_4652_value_routing_cost_fix_live.json",
+          "results/experiment_4653_energy_fitness_qd_generation_live.json"
+        ],
+        "derived_from_games": [
+          "exp4652_value_routing_cost_fix_live"
+        ],
+        "id": "primitive_cheap_value_routing_cost_fix_operator",
+        "latest_exp4656_transfer": {
+          "artifact": "results/experiment_4656_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "residual_dead_end": "Transfer value is null on cached held-out games; the cheap-feature cost fix is persisted as reusable speedup, but candidate generation/value calibration remains the residual and reproducible_total_levels is unchanged.",
+          "transfer_games": [
+            "bp35",
+            "cd82",
+            "dc22"
+          ],
+          "transfer_value_per_game": {
+            "bp35": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "cd82": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "dc22": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4656 persists the .429 cheap-feature value-routing cost fix as reusable live-solver scaffolding: use the output-identical scipy/fallback connected component speedup, route value-head calls through the cheap cross_game_features_v3:v2_plus_frame_delta subset, keep lazy frame-hash caching, and report solve-rate / first-win / action-efficiency deltas before any solve claim. A1 and A2 both selected `unchanged` for submitted config, so this captures the strongest characterized reusable component rather than fabricating transfer value. This is ranking/routing scaffolding, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "cheap_value_routing_cost_fix_operator",
+        "transfer_dead_ends": [
+          "Cached held-out transfer can remain value-null when the candidate generator does not expose a better first-win or multi-level candidate for the cheap value route to rank."
+        ]
+      },
+      {
+        "derived_from_artifacts": [
+          "results/experiment_4664_l2_goal_predicate_induction_live.json",
+          "results/experiment_4665_dagger_distribution_shift_value_routing.json"
+        ],
+        "derived_from_games": [
+          "exp4665_dagger_distribution_shift_value_routing"
+        ],
+        "id": "primitive_dagger_off_path_data_collection_operator",
+        "latest_exp4668_transfer": {
+          "artifact": "results/experiment_4668_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "residual_dead_end": "Transfer value is null on cached held-out games; the DAgger-lite collection operator is persisted as reusable search-distribution correction scaffolding, but the residual bridge gap is converting corrected off-path labels into value-routing decisions that expose new candidates.",
+          "transfer_games": [
+            "bp35",
+            "cd82",
+            "dc22"
+          ],
+          "transfer_value_per_game": {
+            "bp35": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "cd82": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "dc22": {
+              "action_efficiency_lift": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4668 persists the .430 DAgger-lite off-path data-collection operator as reusable live-solver scaffolding: collect live-frontier rows from the StepwiseExplorer search distribution, relabel them only from executable reproduction-prefix evidence for training, aggregate them with winning-path positives, and retrain cheap value heads on the actual search distribution before claiming live transfer. A1 and A2 both selected no submitted-config lift, so this captures the strongest characterized reusable component rather than fabricating value. This is data-collection and induction scaffolding, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "dagger_off_path_data_collection_operator",
+        "transfer_dead_ends": [
+          "Cached held-out transfer can remain value-null when the corrected value head changes the training distribution but the live candidate generator still does not expose a better first-win or multi-level candidate to rank."
+        ]
+      },
+      {
+        "derived_from_artifacts": [
+          "results/experiment_4676_hierarchical_subgoal_search_live.json",
+          "results/experiment_4677_poe_world_factored_subgoal_planner.json"
+        ],
+        "derived_from_games": [
+          "exp4677_poe_world_factored_subgoal_planner"
+        ],
+        "id": "primitive_programmatic_expert_trust_weighting_operator",
+        "latest_exp4680_transfer": {
+          "artifact": "results/experiment_4680_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "residual_dead_end": "Transfer value is null on cached held-out games; the programmatic expert trust-weighting gate is persisted as reusable generation scaffolding, but the residual bridge gap is inducing replay-stable experts that expose winning candidates on new games.",
+          "transfer_games": [
+            "bp35",
+            "cd82",
+            "dc22"
+          ],
+          "transfer_value_per_game": {
+            "bp35": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "cd82": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "dc22": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4680 persists the .432 programmatic expert trust-weighting generation primitive as reusable live-solver scaffolding: generated object-level experts are ranked by held-out transition trust, only replay-stable factors are admitted to product-model planning, and prefix-overfit experts are rejected before any solve claim. Both .432 A1 and A2 selected unchanged submitted config and banked no level, so this captures the strongest characterized reusable generation component rather than fabricating value. The primitive generates/ranks/filters candidates only; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "transfer_dead_ends": [
+          "Cached held-out transfer can remain value-null when no replay-stable expert rows exist for the held-out game, or when all generated experts overfit the proposer prefix and fail held-out transition trust."
+        ]
+      },
+      {
+        "derived_from_artifacts": [
+          "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
+          "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json"
+        ],
+        "derived_from_games": [
+          "exp4688_controllable_novelty_proposal_policy_live"
+        ],
+        "id": "primitive_controllable_novelty_embedding_operator",
+        "latest_exp4692_transfer": {
+          "artifact": "results/experiment_4692_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "reproducibility_checksum": "sha256:e15b6945aaba76bc4d8dec319d76bfb3d2e21ef77e5d5db3aaa44b99ddebe89c",
+          "residual_dead_end": "Transfer value is null on cached held-out games; the controllable-novelty embedding operator is persisted as reusable directed-exploration scaffolding, but the residual bridge gap is making the novelty signal propose a winning prefix instead of revisiting non-winning controllable states.",
+          "transfer_games": [
+            "bp35",
+            "cd82",
+            "dc22"
+          ],
+          "transfer_value_per_game": {
+            "bp35": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "cd82": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "dc22": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4692 persists the .433 controllable-novelty embedding primitive as reusable directed-exploration scaffolding: live proposal candidates are embedded through controllable action-effect deltas, raw-frame/cosmetic novelty is rejected when the controllability gate is on, and the resulting intrinsic novelty signal is reused before value-ranking or frontier selection. Both .433 A1 and A2 selected unchanged submitted config and banked no level, so this captures the strongest characterized reusable generation component rather than fabricating value. The primitive generates/ranks/embeds candidates only; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "controllable_novelty_embedding_operator",
+        "transfer_dead_ends": [
+          "Cached held-out transfer can remain value-null when the controllable novelty embedding creates a strong action-effect signal but the winning prefix is still absent from the generated proposal pool."
+        ]
+      },
+      {
+        "derived_from_artifacts": [
+          "results/experiment_4700_object_centric_perception_proposal_live.json",
+          "results/experiment_4701_amortized_exploration_prior_go_explore_live.json"
+        ],
+        "derived_from_games": [
+          "exp4700_object_centric_perception_proposal_live",
+          "exp4701_amortized_exploration_prior_go_explore_live"
+        ],
+        "id": "primitive_object_centric_representation_builder_operator",
+        "latest_exp4704_transfer": {
+          "artifact": "results/experiment_4704_primitive_persist_transfer.json",
+          "offline_reproduced_new_level": false,
+          "reproducibility_checksum": "sha256:2239834a07c66edfce69c84416be68ebe0939a3e84700853a7a27e73124f6955",
+          "residual_dead_end": "Transfer value is null on cached held-out games; the object-centric representation builder is persisted as reusable perception scaffolding, but the residual bridge gap is converting object slots and relational keypoints into winning-prefix proposal coverage.",
+          "transfer_games": [
+            "cd82",
+            "dc22",
+            "g50t"
+          ],
+          "transfer_value_per_game": {
+            "cd82": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "dc22": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            },
+            "g50t": {
+              "candidate_generation_coverage_delta": 0.0,
+              "first_win_rate_delta": 0.0,
+              "live_solve_rate_delta": 0.0,
+              "offline_reproduced_new_level": false
+            }
+          }
+        },
+        "note": "Exp 4704 persists the .434 object-centric representation builder as reusable perception scaffolding: live proposal candidates can reuse connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value-ranking or frontier selection. Both .434 A1 and A2 selected unchanged submitted config and banked no level, so this captures the strongest characterized reusable component rather than fabricating value. The primitive perceives/generates candidate structure only; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "object_centric_representation_builder_operator",
+        "transfer_dead_ends": [
+          "Cached held-out transfer can remain value-null when object-centric slots are built successfully but no cached winning-prefix coverage, first-win, solve-rate, or offline reproduction lift is produced."
+        ]
+      },
+      {
+        "derived_from": [
+          "results/experiment_4726_online_action_learning_driver_valid_test.json",
+          "results/experiment_4727_active_probe_disambiguation.json"
+        ],
+        "derived_from_games": [
+          "exp4726_online_action_learning_driver_valid_test",
+          "exp4727_active_probe_disambiguation"
+        ],
+        "id": "primitive_online_warm_action_effect_controller_operator",
+        "note": "Exp 4730 persists the .435 A1 online-warm action-effect controller as a reusable hidden-game candidate ranker after Exp 4726 proved the online arms were non-degenerate and Exp 4727's active-probe path executed no probe actions. The operator combines leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, ranks/routes candidate actions, and remains oracle-distinct; new levels still count only through arc_solver_kit.reproduce().",
+        "operator": "online_warm_action_effect_controller_operator",
+        "transfer_dead_ends": [
+          "Leave-one-game transfer can remain value-null when cached held-out candidate groups contain no same-state effective target, or when the online-warm ranker reorders candidates without improving solve-rate, first-win, coverage, or action efficiency."
+        ]
+      },
+      {
+        "derived_from": [
+          "results/experiment_4738_energy_fitness_qd_generation_valid_test.json"
+        ],
+        "derived_from_games": [
+          "exp4738_energy_fitness_qd_generation_valid_test"
+        ],
+        "id": "primitive_energy_fitness_qd_generator_operator",
+        "note": "Exp 4741 persists the .436 A2 energy-fitness QD generator after Exp 4738 proved the naive-search, random-mutation, and energy-QD arms were non-degenerate and generated novel candidates. The reusable operator scores cached candidate rows with lower-is-better oracle-distinct energy, preserves MAP-Elites-style behavior descriptor coverage, keeps naive candidates available, and reports solve-rate / first-win / coverage / action-efficiency transfer before any solve claim. New levels still count only through arc_solver_kit.reproduce().",
+        "operator": "energy_fitness_qd_generator_operator",
+        "transfer_dead_ends": [
+          "Exp4738/Exp4741 showed generated coverage can improve on cached held-out rows while solve-rate, first-win, and action-efficiency remain flat. The residual gap is converting QD novelty into a winning-prefix mutation neighborhood rather than treating candidate novelty itself as a reproduced level."
+        ]
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "id": "primitive_object_centric_digest",
+        "note": "Exp 4438 records consolidated generic primitive object_centric_digest from Exp 4436.",
+        "operator": "object_centric_digest"
+      },
+      {
+        "derived_from_games": [
+          "ar25",
+          "ka59",
+          "ft09",
+          "sc25"
+        ],
+        "id": "primitive_active_data_collection",
+        "note": "Exp 4438 records consolidated generic primitive active_data_collection from Exp 4436.",
+        "operator": "active_data_collection"
+      }
+    ],
+    "guidance": "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot the runtime proposer with that recipe AND the `cautions`. FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+    "heuristic_policy": {
+      "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+      "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+      "feature": "per-action cell impact + bfs_expansions headroom probe",
+      "rule": {
+        "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+        "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+        "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+        "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+      },
+      "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+      "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+    },
+    "recommended": [
+      {
+        "action_model": "Keyboard ACTION1-4 move the selected splitter after display-rotation remapping; ACTION6 selects splitter sprites from offline-derived display centers; ACTION5 commits the spill. L2 tail selects the two len3 splitters and moves them to the derived target placements. L3+: ACTION1-4 move the currently-selected piece (no rotation observed); commits are cheap to retry (the spill animates, drains, and pieces keep their positions on failure) but appear resource-limited via a per-commit border-pixel counter that resets each level.",
+        "game": "sp80",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "L2 has dojfslwbg=180, so external keyboard directions and click coordinates are display-rotated before the game maps them back to grid space.",
+          "The win predicate is not just visible piece placement; ACTION5 starts a spill, and success requires every repwkzbkhxl block to be marked while no waoewejnqzc wall is touched.",
+          "Failed commit states can spend search time in spill animation; use a bounded spill predicate to evaluate candidate placements before replay-gating.",
+          "Use fresh-env branching for this adapter; replaying L1 on a reused advanced sp80 env does not reconstruct the L2 start state that the reproduction gate sees from a pristine offline arcade.",
+          "L3-L4 SPILL-ROUTING PHYSICS mechanic (2026-07-11, claude-fable-5, independently re-verified by the outer loop): flow direction alternates per level (L3 towers shoot vines UPWARD; L4 flips to a ceiling spout pouring DOWNWARD; L5 reverts to upward). SPLITTER BARS: a stream hitting a bar runs along its far side to both ends and re-emits 3px branch streams just past each end (streams merge when feeding the same bar). The blue border/ceiling band AND the grey floor are BOTH lethal on contact -- every stream must terminate inside a target; branches pushed off the board EDGE (not into a wall) vanish harmlessly and are the only safe disposal in L3. THE SUBTLE KILLER, vertical clearance: a bar's run occupies the 3 pixel-rows on its far side, so parking a bar exactly one cell beyond another bar's face BLOCKS that bar's run from spreading, silently deleting its branch outputs (cost a failed commit in L4). EMBEDDED SOURCES (new at L4): a long bar can carry its own 3px source segment that drips a stream wherever the bar is moved -- a second, movable spout. Pieces move on per-piece 3px sub-lattices with per-piece positional caps (e.g. L3 bars cannot rise above grid-row 4); measure piece and target positions from the frame programmatically, off-by-one eyeballing wastes commits.",
+          "L5 SOLVED (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth campaign round 2): the color-15 L-piece is a fluid elbow/diverter, NOT a key inserted into the wall sculpture -- at its x=14 minimum, a splitter branch entering its lower-right leg is redirected horizontally into the wall notch. Winning positions: color-15 elbow at x=14,y=35; 12px bar at x=20..31,y=47; 15px bar at x=23..37,y=29; 9px bar at x=41..49,y=47; commit with ACTION5. The frame after the L4 win still visually shows the prior layout even though levels_completed is already 4 -- the NEXT action initializes L5's stable rendering. Independently re-verified by the outer loop: 5x fresh env.reset() + replay via the fixed resolver, all 5 confirmed reached_level=5, state=GameState.NOT_FINISHED. L6 was explored (two oriented color-15 elbows, a vertical color-8 splitter, an embedded-source horizontal splitter, two left sockets, one right socket, a bottom arch) but not won this session -- several geometry-consistent placements tried, none completed the level.",
+          "L6 progress round 3, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex): tested four rendered-geometry routing families (centered and horizontally-shifted embedded-source splitters, both assignments of the oppositely-oriented elbows to the side branches, a target-aligned vertical splitter at x=14,y=26) -- none won. Genuinely new finding: L6 has a FINITE WHOLE-LEVEL action budget, not merely a per-commit counter -- after 79 exploratory suffix actions, an ordinary movement action ended the episode with an empty terminal frame (this had not been observed in the prior L6 exploration). The selected piece renders as color 9 (unselected splitters are color 8, unselected elbows color 15), confirmed reliable for rendered-frame-only position tracking. No new level banked; the whole-level budget finding narrows future attempts (route planning must now also respect a hard action ceiling, not just the per-commit border-pixel counter documented earlier).",
+          "L6 progress round 4, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex, round-4 breadth campaign, results/outer_loop_fable5_sp80_probe.json): frontier stays at level 5 -- this is the FINAL level (win_levels=6). New geometric finding: elbow routing depends on one-cell alignment -- a downward stream aimed at an elbow's vertical stem can spill down its inner side AS WELL AS turn (a double-leak), while offsetting the elbow so the stream meets its HORIZONTAL arm instead eliminates one leakage path and fills previously-unreachable side sockets. Offsetting one elbow by one cell filled all four visible sockets but the animation still showed an extra downward spill missing the bottom cup; a symmetric offset of the other elbow was attempted but ended the live episode (GAME_OVER) before any level-up, confirming round 3's finding that ACTION5 commits are a scarce resource independent of the whole-level action limit (5 commits exhausted the episode here). A compressed 36-action one-commit candidate for the hypothesized corrected layout was fresh-reset reproduce()-gated and reached only level 5 -- filling all four visible sockets is confirmed INSUFFICIENT while any stray stream remains; at least one final routing or hidden condition is still unresolved. No new level banked.",
+          "L6 SOLVED, FULL GAME CLEAR round 5 (2026-07-12, claude-fable-5, first fable-5 leg of the campaign, results/outer_loop_fable5_sp80_probe.json): resolves round 4's \"at least one final routing or hidden condition is still unresolved\" with a precise geometric diagnosis, not a new mechanic. Round 4's layout already colored all four sockets, but the right branch struck the SOLID TOP of the right socket at y=29..31 even though the socket glyph visibly changed color (a glyph-color change does not mean the stream actually entered through the open side). Moving only the right-turn elbow down exactly ONE 3-pixel cell (y=29..34 -> y=32..37) shifts the outflow to y=32..34, through the socket's actual open side, and wins live. Compressed to a 37-action suffix after the 278-action prefix (315 total); fresh-reset reproduce() passed with reached_level=6. Independently re-verified by the outer loop: 5x fresh env.reset() + replay via a new resolver priority branch, all 5 confirmed level=6, state=GameState.WIN -- the game's full 6 levels are now cleared.",
+          "L5 (well-mapped in a PRIOR session, unsolved at the time, not banked then -- superseded by the entry above): both tower vines were routed into all three arch holes with zero strays (verified in the spill animation) and the commit STILL failed -- there is a genuinely undiscovered extra win condition. L5 introduces a new selectable L-shaped color-15 piece with an invisible x>=14 movement boundary, and the wall sculpture has a matching side-facing 3px notch the piece cannot currently reach. Candidate next leads: whether the piece must sit somewhere specific, whether a stream must touch the piece, or whether the piece must ride a bar. Game has 6 total levels (win_levels=6)."
+        ],
+        "similarity": 7.0,
+        "solver": "L1-L2: GameAdapter _sp80 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_sp80.json 33-label L2 gate. L3-L4: results/outer_loop_fable5_sp80_probe.json action_sequence (195-action full sequence: the same 33-action L1-L2 prefix + 162 actions solving L3 and L4 in one session), claude-fable-5, 2026-07-11. Self-run reproduction gate (reached_level=4, reproduced=True) AND independently re-verified by the outer loop (5x fresh env.reset() + reproduce(), with each dict-shaped label properly JSON-serialized before replay).",
+        "win_condition": "L1 move-right x3 then commit; L2 splitter placements route the spill into all three repwkzbkhxl target blocks without touching the wall: len3 at (0,3), len5 at (4,3), len3 at (8,5). L3-L4 (2026-07-11, claude-fable-5): the same spill-routing physics escalates -- flow direction alternates per level (L3 upward from towers, L4 downward from a ceiling spout), and L4 introduces a bar with an embedded second source. See gotcha below for the full flow-physics model."
+      },
+      {
+        "action_model": "ACTION1-4 move the selected visible sprite; ACTION5 rotates a singleton selected sprite or cycles a stacked variant; ACTION6 selects a visible sprite through camera-derived display coordinates. L4+: ACTION5 semantics are PER-SPRITE and PER-LEVEL -- rigid 90-degree rotation on L4, but shape-VARIANT cycling starting at L5 (see gotcha below).",
+        "game": "cn04",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "The win predicate is marker-pair coverage, not full-canvas equality; every same-colored 8/13 marker must be paired exactly twice.",
+          "ACTION5 can rotate the selected sprite and advance the level on the same action, so count only the offline reproduction gate's reached_level.",
+          "ACTION6 display coordinates must land on non-transparent rendered sprite pixels after camera.display_to_grid mapping.",
+          "Use fresh-env branching; reuse-one-env replay can stop at the L1 seed even though the full L1+L2 label sequence reproduces on a fresh offline arcade.",
+          "FULL CLEAR, L6 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth campaign round 2): L6 is a five-sprite marker-pair puzzle. The G-hook and n-glyph rotate through four ACTION5 orientations; the tall bar is a rigid two-marker connector; the three-marker arm stretches one marker 3px per press through 4 stops, ping-ponging; the winding snake grows non-uniformly from 2 to 6 markers via ACTION5, and DESELECTING/ RESELECTING it appears to reset or reverse its ping-pong direction (do not predict remaining presses from the direction observed before deselecting). Solved via an exact-cover constraint search over marker constellations, then executed the placement live. The source agent honestly flagged the win as reproduction_verified=false (only 5 of 700 steps remained after the live win, not enough for a fresh gate) -- the outer loop independently ran the canonical reproduction gate AND 4 additional fresh env.reset()+replay trials before recording anything: all 5 returned reached_level=6 AND state=GameState.WIN. cn04 is a confirmed full clear.",
+          "L4-L5 SHAPE-VARIANT ESCALATION mechanic (2026-07-11, claude-fable-5, independently re-verified by the outer loop): the core loop is consistent across L4-L6 -- ACTION6-click selects a sprite (revealing its 8-colored 3x3 markers; unselected sprites hide markers), ACTION1-4 translate the selection in 3px steps, and the level completes the INSTANT every marker on every sprite coincides with exactly one marker from another sprite (paired markers render green, live feedback -- survey by clicking each sprite before planning). L4: ACTION5 rigidly rotates 90 degrees; solved as vector algebra (a closed 4-cycle of marker-offset vectors). L5 BREAKS the rotation assumption: ACTION5 instead cycles each sprite through a FORM CATALOG (e.g. a snake ping-pongs through lengths 3-7 with a black growth-head marker that vanishes at max length; other sprites include zero-marker EMPTY forms in their cycle). Solve by exhaustively cataloging every sprite's form catalog empirically (a handful of ACTION5 presses per sprite), then constraint-solving for the unique feasible configuration covering every marker 1:1 -- rigid pairing under a single fixed form is provably infeasible once variant cycling is active. One documented anomaly: a transient ALL-GREEN state did not fire the win once (suspected subtle mis-pairing after an accidental displacement); tearing one sprite away and rebuilding the identical configuration fired the win immediately -- if everything looks paired but nothing fires, try a rebuild before assuming the model is wrong.",
+          "L6 (reconned this session, not attempted -- preserved for a future attempt): five sprites with richer growth grammars, including a marker-arm that stretches 3px per press (ping-pong) and a snake that grows 2-to-6 markers along a winding path with a wandering head. Rigid current-form pairing is PROVABLY infeasible; map all five form catalogs first (~25 presses), then re-run the same constraint-solve pattern used for L5 (a generic solver script from this session should transfer)."
+        ],
+        "similarity": 7.0,
+        "solver": "L1-L3: GameAdapter _cn04 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py with branch_mode='fresh_env'; results/arc_loop_solve_cn04.json 43-label L2 gate. L4-L5: results/outer_loop_fable5_cn04_probe.json action_sequence (219-action full sequence: the same 63-action L1-L3 prefix + 156 actions solving L4 and L5 in one session), claude-fable-5, 2026-07-11. Self-run reproduction gate (reached_level=5, reproduced=True) AND independently re-verified by the outer loop (5x fresh env.reset() + reproduce()).",
+        "win_condition": "L1 adapter-free seed plus L2 marker-pair shape alignment: every original 8/13 marker on each visible sprite must overlap exactly one same-colored marker from another visible sprite. L2 positions 0002 at (4,5), 0003 at (8,6), 0004 at (3,3), and 0005 at (12,8) with all rotations normalized to 0. L4-L5 (2026-07-11, claude-fable-5): the same marker-pair-coverage win condition escalates from rigid rotation (L4) to variant-shape cycling (L5) -- see gotcha below."
+      },
+      {
+        "action_model": "Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling (cycles horizontal mirror, then vertical mirror, then each disconnected movable sprite separately). L3 tail: ACTION1 x7 moves the selected horizontal axis up, ACTION5 selects the L-shaped object, ACTION4 x7 and ACTION2 x7 place it, ACTION5 selects the two-row object, then ACTION3 x12 and ACTION2 x5 place it. L4-L8: decompose each disconnected glyph into its component sprites and place each into its matching target orbit; L5 has a one-column anchor gotcha (large sprite starts at logical column 14, not 15 -- move left 10, not 11). Full 253-action winning sequence in results/outer_loop_codex_ar25_probe.json. ACTION6/ACTION7 are non-load-bearing (ACTION7 pops a hidden undo stack, deliberately excluded).",
+        "game": "ar25",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "The L3 axis sprite is selected at level entry; moving it horizontally is ignored by the environment, so ACTION1 x7 is the load-bearing axis delta.",
+          "The L3 target decomposes into two reflected object masks around y=9; moving only the axis does not win.",
+          "ACTION7 pops a hidden undo stack and remains excluded from the banked path.",
+          "The learned verifier checkpoint routes/ranks future search only; the executable offline reproduction gate remains the oracle-distinct authority.",
+          "FULL CLEAR CONFIRMED (2026-07-11, gpt-5.6-sol via codex): resolve_replay_plan had an unconditional ar25 branch that always returned the stale L1-only plan regardless of levels_reproduced; a priority branch for levels_reproduced>=8 now resolves the correct 253-action full-clear sequence from results/outer_loop_codex_ar25_probe.json (verified 3x fresh reset -> level=8/WIN through the fixed resolver). L5's large sprite starts at logical column 14 (not 15) -- 10 left-moves wins, 11 leaves the right contour uncovered. After the live level-8 terminal frame, one additional ACTION5 produced an empty frame with levels_completed=0 -- that is post-terminal behavior, not a lost solve or a hidden 9th level. The banked 253-action sequence is a reconstruction the source agent did NOT itself gate-verify; the outer loop independently confirmed it (gate + 5x fresh replay, 6/6 clean) before recording this as reproduced."
+        ],
+        "similarity": 7.0,
+        "solver": "GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py (apply=_apply_ar25_label) plus scripts/arc_loop_solve.py --game ar25 --target-level 3 --no-hazard-prune for the L1-L3 base; L4-L8 solved live by gpt-5.6-sol via codex (2026-07-11) reading target symmetry and decomposing disconnected sprites, action_sequence banked in results/outer_loop_codex_ar25_probe.json.",
+        "win_condition": "L1 object reflection plus L2 vertical mirror/object alignment plus L3 horizontal-axis reflection coverage: move the horizontal 0002nuguepuujf axis from y=16 to y=9, place the L-shaped object at (11,14), and place the two-row object at (3,14) so reflections cover every fixed 0001sruqbuvukh target cell. L4-L8 escalate the same reflection-alignment mechanic: multiple mirror axes (horizontal and vertical) must be positioned simultaneously, and later boards present glyphs that LOOK like one decorative irregular shape but are actually several disconnected, independently-selectable sprites -- each component must be cycled to via ACTION5 and placed into its own same-orientation target orbit around the inferred symmetry axes."
+      }
+    ],
+    "retrieved_primitives": [
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t",
+          "dc22"
+        ],
+        "description": "Retrieves and execution-grounds coverage, local-constraint, and target-toggle predicates.",
+        "matched_cues": [
+          "config",
+          "verifier",
+          "marker coverage",
+          "local constraint",
+          "target offset"
+        ],
+        "mechanic_class": "config_rule",
+        "name": "config_rule_verifier",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "verifier",
+          "marker coverage",
+          "local constraint",
+          "target offset",
+          "toggle"
+        ],
+        "score": 9.0,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "sk48"
+        ],
+        "description": "Grounds visible configuration predicates such as coverage, local constraints, and toggles.",
+        "matched_cues": [
+          "config",
+          "coverage",
+          "local constraint",
+          "target offset"
+        ],
+        "mechanic_class": "chain_color_reorder",
+        "name": "mechanic_chain_color_reorder",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "toggle",
+          "coverage",
+          "local constraint",
+          "target offset",
+          "rule family"
+        ],
+        "score": 7.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "ls20"
+        ],
+        "description": "Grounds visible configuration predicates such as coverage, local constraints, and toggles.",
+        "matched_cues": [
+          "config",
+          "coverage",
+          "local constraint",
+          "target offset"
+        ],
+        "mechanic_class": "clean_navigation_shape_color_rotation_step_counter",
+        "name": "mechanic_clean_navigation_shape_color_rotation_step_counter",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "toggle",
+          "coverage",
+          "local constraint",
+          "target offset",
+          "rule family"
+        ],
+        "score": 7.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "r11l"
+        ],
+        "description": "Grounds visible configuration predicates such as coverage, local constraints, and toggles.",
+        "matched_cues": [
+          "config",
+          "coverage",
+          "local constraint",
+          "target offset"
+        ],
+        "mechanic_class": "click_template_handle_average",
+        "name": "mechanic_click_template_handle_average",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "toggle",
+          "coverage",
+          "local constraint",
+          "target offset",
+          "rule family"
+        ],
+        "score": 7.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "su15"
+        ],
+        "description": "Grounds visible configuration predicates such as coverage, local constraints, and toggles.",
+        "matched_cues": [
+          "config",
+          "coverage",
+          "local constraint",
+          "target offset"
+        ],
+        "mechanic_class": "drag_merge_fruit_target",
+        "name": "mechanic_drag_merge_fruit_target",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "toggle",
+          "coverage",
+          "local constraint",
+          "target offset",
+          "rule family"
+        ],
+        "score": 7.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      }
+    ],
+    "routing_confidence": 1.0,
+    "selected_generic_operators": [
+      {
+        "derived_from_games": [
+          "exp4592_generation_completeness_wiring"
+        ],
+        "operator": "approach_dispatcher_operator",
+        "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
+        "selector_tags": [
+          "approach_dispatch",
+          "mechanic_router",
+          "candidate_generation",
+          "graph_explore",
+          "goal_distance",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4616_offline_live_bridge_disambiguation",
+          "exp4652_value_routing_cost_fix_live"
+        ],
+        "operator": "value_head_bridge_fix_operator",
+        "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
+        "selector_tags": [
+          "value_head",
+          "bridge_fix",
+          "decision_point",
+          "candidate_ranking",
+          "graph_explore",
+          "live_path",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4652_value_routing_cost_fix_live"
+        ],
+        "operator": "cheap_value_routing_cost_fix_operator",
+        "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
+        "selector_tags": [
+          "value_head",
+          "cheap_feature",
+          "value_routing",
+          "cost_fix",
+          "candidate_ranking",
+          "graph_explore",
+          "live_path",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4665_dagger_distribution_shift_value_routing"
+        ],
+        "operator": "dagger_off_path_data_collection_operator",
+        "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
+        "selector_tags": [
+          "dagger",
+          "off_path",
+          "search_distribution",
+          "value_head",
+          "graph_explore",
+          "live_path",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4677_poe_world_factored_subgoal_planner"
+        ],
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
+        "selector_tags": [
+          "programmatic_expert",
+          "trust_weighting",
+          "factored_planner",
+          "candidate_generation",
+          "world_model",
+          "graph_explore",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4688_controllable_novelty_proposal_policy_live"
+        ],
+        "operator": "controllable_novelty_embedding_operator",
+        "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
+        "selector_tags": [
+          "controllable_novelty",
+          "directed_exploration",
+          "intrinsic_proposal",
+          "candidate_generation",
+          "action_effect",
+          "graph_explore",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ],
+        "operator": "per_level_reinduction_operator",
+        "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
+        "selector_tags": [
+          "reinduction",
+          "level_up",
+          "deepening",
+          "goal_bias",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ],
+        "operator": "llm_proposer_reinduction_operator",
+        "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
+        "selector_tags": [
+          "reinduction",
+          "level_up",
+          "llm_proposer",
+          "bounded_refinement",
+          "trust_energy",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "sc25",
+          "exp4580_live_submission_gap_close"
+        ],
+        "operator": "env_adaptive_resolve_operator",
+        "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
+        "selector_tags": [
+          "env_adaptive",
+          "coordinate_discovery",
+          "drift_recovery",
+          "replay",
+          "click",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4556_cached_generic_transfer"
+        ],
+        "operator": "verifier_router_candidate_ranking_operator",
+        "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
+        "selector_tags": [
+          "verifier_router",
+          "candidate_ranking",
+          "trust_energy",
+          "graph_explore",
+          "config_toggle",
+          "program_editor",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4604_world_model_trust_energy"
+        ],
+        "operator": "world_model_trust_energy_gate_operator",
+        "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
+        "selector_tags": [
+          "world_model",
+          "trust_energy",
+          "hidden_state",
+          "candidate_ranking",
+          "verifier",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4568_clickability_action_effect_predictor",
+          "exp4629_graduate_action_effect_predictor_live"
+        ],
+        "operator": "persistent_action_effect_memory_operator",
+        "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
+        "selector_tags": [
+          "action_effect",
+          "clickability",
+          "frame_change",
+          "live_action_pruner",
+          "persistent_aem_plus_optional_cnn",
+          "candidate_ranking",
+          "graph_explore",
+          "click",
+          "keyboard",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4726_online_action_learning_driver_valid_test",
+          "exp4727_active_probe_disambiguation"
+        ],
+        "operator": "online_warm_action_effect_controller_operator",
+        "purpose": "Reuse the .435 online-warm action-effect controller: combine leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, keep the executable win-check outside ranking, and report first-win/efficiency transfer before any solve claim.",
+        "selector_tags": [
+          "online_action_learning",
+          "online_warm",
+          "action_effect",
+          "frame_change",
+          "candidate_ranking",
+          "graph_explore",
+          "click",
+          "keyboard",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4020_goal_induction_separation",
+          "exp4640_goal_energy_generation_live"
+        ],
+        "operator": "graded_goal_energy_search_heuristic_operator",
+        "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
+        "selector_tags": [
+          "goal_energy",
+          "graded_goal_satisfaction",
+          "search_heuristic",
+          "graph_explore",
+          "candidate_ranking",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4738_energy_fitness_qd_generation_valid_test"
+        ],
+        "operator": "energy_fitness_qd_generator_operator",
+        "purpose": "Reuse the .436 energy-fitness QD generator: keep naive candidates available, score generated candidates with oracle-distinct lower-is-better energy, preserve diverse behavior descriptors, and report coverage or first-win transfer before any solve claim.",
+        "selector_tags": [
+          "energy_qd",
+          "map_elites",
+          "candidate_generation",
+          "energy_fitness",
+          "graph_explore",
+          "click",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "operator": "graph_astar_action_cost",
+        "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+        "selector_tags": [
+          "graph_explore",
+          "astar",
+          "action_cost",
+          "keyboard",
+          "click"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "exp4700_object_centric_perception_proposal_live",
+          "exp4701_amortized_exploration_prior_go_explore_live"
+        ],
+        "operator": "object_centric_representation_builder_operator",
+        "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
+        "selector_tags": [
+          "object_centric",
+          "perception",
+          "representation_builder",
+          "candidate_generation",
+          "graph_explore",
+          "transfer"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "operator": "object_centric_digest",
+        "purpose": "Connected-component object summary for routing, grounding, and active data.",
+        "selector_tags": [
+          "object",
+          "digest",
+          "program_editor",
+          "world_model"
+        ]
+      }
+    ],
+    "strategy": {
+      "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+      "game": "lf52",
+      "mechanic": "graph_explore",
+      "name": "graph_explore",
+      "needs": null,
+      "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+      "routed_mechanic": "graph_explore",
+      "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+      "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+      "uses_goal_distance_heuristic": true,
+      "wired": true
+    },
+    "target_features": {
+      "action_type": "mixed",
+      "difficulty": "hard",
+      "game": "lf52",
+      "spatial": true,
+      "win_kw": [
+        "click",
+        "goal",
+        "position"
+      ]
+    },
+    "target_game": "lf52",
+    "top_similarity": 7.0,
+    "typed_memory_provenance_guard": {
+      "blocked_arc_consumer_actions": [
+        "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "quarantine_gap4_candidate_pool_until_positive_validation"
+      ],
+      "controlled_reuse": {
+        "aligned_vs_no_memory_delta": 0.666667,
+        "aligned_vs_shuffled_delta": 1.0,
+        "degradation_detected": true,
+        "retention_passed": true,
+        "rollback_policy_exercised": true
+      },
+      "enabled": true,
+      "failure_mode_targeted": "provenance_routing",
+      "recommended_heads": [
+        "provenance",
+        "failures",
+        "skills_rubrics"
+      ],
+      "registry_precheck_done": true,
+      "routing_rule": "Before registry promotion or reusable candidate-pool routing, require live-agent self-discovery provenance and honor rolled-back ARC memory actions as block or quarantine guardrails.",
+      "source_artifacts": [
+        "results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json",
+        "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "ops/arc_solve_registry.yaml"
+      ]
+    }
+  },
+  "verifier_is_oracle": true
+}
