@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-07-14 (ARC filter A/B test fix -- codex)
+
+- Fixed the Exp5609 ARC filter A/B test failure by regenerating
+  `results/experiment_5609_arc_filter_intermediate_invariance_ab.json` from
+  the current module/runtime, yielding a reachable matched-budget result with
+  exact known-level offline reproduction safety.
+- Added focused `REQ-VERIFY-4437` coverage for invalid substrate reporting and
+  principle-wrapped field unwrapping in
+  `tests/python/test_arc_solve_artifact_discipline.py`.
+- Verified the relevant behavior set (`131 passed`) and scoped 100% Coverage.py
+  for `arc_llm_strategy_proposer.py` plus
+  `arc_solve_artifact_discipline.py` (`410` statements, `0` missing).
+- Did not modify `scripts/research_conductor.py`.
+
 ## 2026-07-13 (Milestone 2026.07.506 planning staged -- codex)
 
 - In response to the operator request to plan the next research milestone, staged

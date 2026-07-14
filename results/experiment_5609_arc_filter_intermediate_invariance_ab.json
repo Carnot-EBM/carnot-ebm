@@ -1,0 +1,1732 @@
+{
+  "arm_configs": {
+    "baseline": {
+      "action_budget": 18,
+      "explore_budget": 19,
+      "frozen_live_generator": "unchanged_not_invoked",
+      "inert_click_pruner": false,
+      "object_history_salience": false,
+      "proposer_available": false,
+      "random_seed": 5609,
+      "roster": [
+        "dc22",
+        "bp35",
+        "s5i5"
+      ],
+      "stopping_rule": "fixed_action_budget_no_induction",
+      "target_levels": 1
+    },
+    "combined": {
+      "action_budget": 18,
+      "explore_budget": 19,
+      "frozen_live_generator": "unchanged_not_invoked",
+      "inert_click_pruner": true,
+      "object_history_salience": true,
+      "proposer_available": false,
+      "random_seed": 5609,
+      "roster": [
+        "dc22",
+        "bp35",
+        "s5i5"
+      ],
+      "stopping_rule": "fixed_action_budget_no_induction",
+      "target_levels": 1
+    },
+    "history_only": {
+      "action_budget": 18,
+      "explore_budget": 19,
+      "frozen_live_generator": "unchanged_not_invoked",
+      "inert_click_pruner": false,
+      "object_history_salience": true,
+      "proposer_available": false,
+      "random_seed": 5609,
+      "roster": [
+        "dc22",
+        "bp35",
+        "s5i5"
+      ],
+      "stopping_rule": "fixed_action_budget_no_induction",
+      "target_levels": 1
+    },
+    "inert_only": {
+      "action_budget": 18,
+      "explore_budget": 19,
+      "frozen_live_generator": "unchanged_not_invoked",
+      "inert_click_pruner": true,
+      "object_history_salience": false,
+      "proposer_available": false,
+      "random_seed": 5609,
+      "roster": [
+        "dc22",
+        "bp35",
+        "s5i5"
+      ],
+      "stopping_rule": "fixed_action_budget_no_induction",
+      "target_levels": 1
+    }
+  },
+  "candidate_counts_by_arm": {
+    "baseline": {
+      "by_game": {
+        "bp35": {
+          "proposed": 408,
+          "pruned_or_reranked": 0
+        },
+        "dc22": {
+          "proposed": 200,
+          "pruned_or_reranked": 0
+        },
+        "s5i5": {
+          "proposed": 167,
+          "pruned_or_reranked": 0
+        }
+      },
+      "proposed_total": 775,
+      "pruned_or_reranked_total": 0
+    },
+    "combined": {
+      "by_game": {
+        "bp35": {
+          "proposed": 408,
+          "pruned_or_reranked": 0
+        },
+        "dc22": {
+          "proposed": 200,
+          "pruned_or_reranked": 0
+        },
+        "s5i5": {
+          "proposed": 167,
+          "pruned_or_reranked": 0
+        }
+      },
+      "proposed_total": 775,
+      "pruned_or_reranked_total": 0
+    },
+    "history_only": {
+      "by_game": {
+        "bp35": {
+          "proposed": 408,
+          "pruned_or_reranked": 0
+        },
+        "dc22": {
+          "proposed": 200,
+          "pruned_or_reranked": 0
+        },
+        "s5i5": {
+          "proposed": 167,
+          "pruned_or_reranked": 0
+        }
+      },
+      "proposed_total": 775,
+      "pruned_or_reranked_total": 0
+    },
+    "inert_only": {
+      "by_game": {
+        "bp35": {
+          "proposed": 408,
+          "pruned_or_reranked": 0
+        },
+        "dc22": {
+          "proposed": 200,
+          "pruned_or_reranked": 0
+        },
+        "s5i5": {
+          "proposed": 167,
+          "pruned_or_reranked": 0
+        }
+      },
+      "proposed_total": 775,
+      "pruned_or_reranked_total": 0
+    }
+  },
+  "distinct_states_by_arm": {
+    "baseline": 19,
+    "combined": 19,
+    "history_only": 19,
+    "inert_only": 19
+  },
+  "duration_s": 191.904,
+  "environment_actions_by_arm": {
+    "baseline": 54,
+    "combined": 54,
+    "history_only": 54,
+    "inert_only": 54
+  },
+  "experiment": "experiment_5609_arc_filter_intermediate_invariance_ab",
+  "field_principles": {
+    "arm_configs": {
+      "principle": "variables are isolated: only inert_click_pruner and object_history_salience vary across the four arms."
+    },
+    "candidate_counts_by_arm": {
+      "principle": "direct filter action is visible before downstream metrics are interpreted."
+    },
+    "distinct_states_by_arm": {
+      "principle": "cosmetic candidate collapse is separated from real state-space change."
+    },
+    "environment_actions_by_arm": {
+      "principle": "filters must affect the live path, not only an internal candidate list."
+    },
+    "field_principles": {
+      "principle": "principle annotations are carried in the artifact so every required 5609 field is auditable."
+    },
+    "filter_promotion_decisions": {
+      "principle": "each mechanism is decided separately so a combined arm cannot hide one mechanism's repeat no-op."
+    },
+    "honest_verdict": {
+      "principle": "repeat reachable no-op retires the corresponding mechanism instead of re-running unconstrained prototypes."
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_filters_no_new_llm -- current reachable code is measured with no new LLM calls."
+    },
+    "levels_gained_by_arm": {
+      "principle": "the north-star outcome remains visible even though this is a development proxy."
+    },
+    "matched_budget_receipt": {
+      "principle": "comparisons are fair: games, seeds, action budgets, proposer availability, target levels, and stopping rules are identical."
+    },
+    "mechanism_reachability_controls": {
+      "principle": "a null is interpretable because each mechanism first proves its shipped hook can fire on runtime frames."
+    },
+    "nodes_expanded_by_arm": {
+      "principle": "search work is measured independently of candidate counts."
+    },
+    "offline_reproduced": {
+      "principle": "known-level safety is exact and never inferred from level counters alone."
+    },
+    "paired_effects_and_intervals": {
+      "principle": "uncertainty controls promotion; no single aggregate delta can promote a filter."
+    },
+    "registry_precheck": {
+      "principle": "duplicate solve targets are excluded and roster selection is auditable from registry/public environment metadata, not from game source."
+    },
+    "roster": {
+      "principle": "scope is auditable; at least three click/change-diverse games are measured under identical arms."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- public-game measurement receives no new-level credit."
+    },
+    "wall_time_by_arm": {
+      "principle": "runtime overhead cannot be hidden by reporting only search counts."
+    }
+  },
+  "filter_promotion_decisions": {
+    "inert_click": {
+      "candidate_reduction_only": false,
+      "decision": "retire_reachable_downstream_noop",
+      "downstream_improved": false,
+      "paired_effect_key": "inert_only_vs_baseline",
+      "reachable": true,
+      "reason": "reachable control but no downstream live-path improvement",
+      "safety_regression": false
+    },
+    "object_history": {
+      "candidate_reduction_only": false,
+      "decision": "retire_reachable_downstream_noop",
+      "downstream_improved": false,
+      "paired_effect_key": "history_only_vs_baseline",
+      "reachable": true,
+      "reason": "reachable control but no downstream live-path improvement",
+      "safety_regression": false
+    }
+  },
+  "honest_verdict": "complete: arc_filter_ab_reachable_repeat_noop_filters_retired",
+  "inference_substrate": "offline_arcade_live_agent_runtime_filters_no_new_llm",
+  "inference_substrate_note": "No new LLM calls: proposer_available=False and explore_budget exceeds action_budget, so the frozen generator route is unchanged and uninvoked.",
+  "levels_gained_by_arm": {
+    "baseline": 0,
+    "combined": 0,
+    "history_only": 0,
+    "inert_only": 0
+  },
+  "matched_budget_receipt": {
+    "action_budget": 18,
+    "explore_budget": 19,
+    "fair": true,
+    "frozen_live_generator": "unchanged_not_invoked",
+    "proposer_available": false,
+    "random_seed": 5609,
+    "roster": [
+      "dc22",
+      "bp35",
+      "s5i5"
+    ],
+    "stopping_rule": "fixed_action_budget_no_induction",
+    "target_levels": 1,
+    "varied_only": [
+      "inert_click_pruner",
+      "object_history_salience"
+    ]
+  },
+  "mechanism_reachability_controls": {
+    "inert_click": {
+      "changed_clicks_observed": 8,
+      "clicks_observed": 48,
+      "clicks_observed_at_first_hit": 20,
+      "fixed_trace": "salience_centroid_clicks_top12_repeat4",
+      "game": "bp35",
+      "per_game": [
+        {
+          "changed_clicks_observed": 28,
+          "clicks_observed": 48,
+          "fixed_trace": "salience_centroid_clicks_top12_repeat4",
+          "game": "dc22",
+          "reachable": false,
+          "stats": {
+            "min_observations": 4,
+            "min_specificity": 0.9,
+            "observed": 48,
+            "pruned": 0,
+            "pruned_signatures": 0,
+            "signatures_tracked": 9,
+            "verifier_is_oracle": false
+          },
+          "trace_prefix": [
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 14,
+                "y": 31
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 14,
+                "y": 31
+              }
+            }
+          ]
+        },
+        {
+          "changed_clicks_observed": 8,
+          "clicks_observed": 48,
+          "clicks_observed_at_first_hit": 20,
+          "fixed_trace": "salience_centroid_clicks_top12_repeat4",
+          "game": "bp35",
+          "reachable": true,
+          "stats": {
+            "min_observations": 4,
+            "min_specificity": 0.9,
+            "observed": 20,
+            "pruned": 0,
+            "pruned_signatures": 1,
+            "signatures_tracked": 7,
+            "verifier_is_oracle": false
+          },
+          "trace_prefix": [
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 33,
+                "y": 15
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 33,
+                "y": 15
+              }
+            }
+          ]
+        }
+      ],
+      "reachable": true,
+      "stats": {
+        "min_observations": 4,
+        "min_specificity": 0.9,
+        "observed": 20,
+        "pruned": 0,
+        "pruned_signatures": 1,
+        "signatures_tracked": 7,
+        "verifier_is_oracle": false
+      },
+      "trace_prefix": [
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 15,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 15,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": false,
+          "data": {
+            "x": 15,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": false,
+          "data": {
+            "x": 15,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 21,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 21,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": false,
+          "data": {
+            "x": 21,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": false,
+          "data": {
+            "x": 21,
+            "y": 3
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 33,
+            "y": 15
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 33,
+            "y": 15
+          }
+        }
+      ]
+    },
+    "object_history": {
+      "changed_clicks_observed": 28,
+      "clicks_observed": 48,
+      "fixed_trace": "salience_centroid_clicks_top12_repeat4",
+      "game": "dc22",
+      "pair": {
+        "base_order": "tie_stable_original_order",
+        "history_order": "left_before_right",
+        "left": {
+          "action": 6,
+          "base_score": 4000.0608888888887,
+          "data": {
+            "x": 48,
+            "y": 19
+          },
+          "history_score": 4010.0608888888887,
+          "index": 0
+        },
+        "right": {
+          "action": 6,
+          "base_score": 4000.0608888888887,
+          "data": {
+            "x": 48,
+            "y": 36
+          },
+          "history_score": 4000.0608888888887,
+          "index": 1
+        }
+      },
+      "per_game": [
+        {
+          "changed_clicks_observed": 28,
+          "clicks_observed": 48,
+          "fixed_trace": "salience_centroid_clicks_top12_repeat4",
+          "game": "dc22",
+          "pair": {
+            "base_order": "tie_stable_original_order",
+            "history_order": "left_before_right",
+            "left": {
+              "action": 6,
+              "base_score": 4000.0608888888887,
+              "data": {
+                "x": 48,
+                "y": 19
+              },
+              "history_score": 4010.0608888888887,
+              "index": 0
+            },
+            "right": {
+              "action": 6,
+              "base_score": 4000.0608888888887,
+              "data": {
+                "x": 48,
+                "y": 36
+              },
+              "history_score": 4000.0608888888887,
+              "index": 1
+            }
+          },
+          "reachable": true,
+          "same_base_ordering_changes": 1,
+          "trace_prefix": [
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 14,
+                "y": 31
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 14,
+                "y": 31
+              }
+            }
+          ]
+        },
+        {
+          "changed_clicks_observed": 8,
+          "clicks_observed": 48,
+          "fixed_trace": "salience_centroid_clicks_top12_repeat4",
+          "game": "bp35",
+          "reachable": false,
+          "same_base_ordering_changes": 0,
+          "trace_prefix": [
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 15,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": false,
+              "data": {
+                "x": 21,
+                "y": 3
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 33,
+                "y": 15
+              }
+            },
+            {
+              "action": 6,
+              "changed": true,
+              "data": {
+                "x": 33,
+                "y": 15
+              }
+            }
+          ],
+          "tracked_hash_count": 19
+        }
+      ],
+      "reachable": true,
+      "same_base_ordering_changes": 1,
+      "trace_prefix": [
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 19
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 19
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 19
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 19
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 48,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "changed": true,
+          "data": {
+            "x": 14,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "changed": false,
+          "data": {
+            "x": 14,
+            "y": 31
+          }
+        }
+      ]
+    },
+    "ok": true
+  },
+  "nodes_expanded_by_arm": {
+    "baseline": 19,
+    "combined": 19,
+    "history_only": 19,
+    "inert_only": 19
+  },
+  "offline_reproduced": {
+    "by_arm": {
+      "baseline": {
+        "all_reproduced": true,
+        "reproduced_levels": {
+          "bp35": 0,
+          "dc22": 0,
+          "s5i5": 0
+        }
+      },
+      "combined": {
+        "all_reproduced": true,
+        "reproduced_levels": {
+          "bp35": 0,
+          "dc22": 0,
+          "s5i5": 0
+        }
+      },
+      "history_only": {
+        "all_reproduced": true,
+        "reproduced_levels": {
+          "bp35": 0,
+          "dc22": 0,
+          "s5i5": 0
+        }
+      },
+      "inert_only": {
+        "all_reproduced": true,
+        "reproduced_levels": {
+          "bp35": 0,
+          "dc22": 0,
+          "s5i5": 0
+        }
+      }
+    },
+    "exact_known_level_safety": true
+  },
+  "paired_effects_and_intervals": {
+    "combined_vs_baseline": {
+      "actions_to_level_delta_95ci": [
+        null,
+        null
+      ],
+      "actions_to_level_delta_mean": 0.0,
+      "candidate_count_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "candidate_count_delta_mean": 0.0,
+      "distinct_states_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "distinct_states_delta_mean": 0.0,
+      "environment_actions_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "environment_actions_delta_mean": 0.0,
+      "levels_gained_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "levels_gained_delta_mean": 0.0,
+      "n_pairs": 3,
+      "nodes_expanded_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "nodes_expanded_delta_mean": 0.0,
+      "pruned_or_reranked_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "pruned_or_reranked_delta_mean": 0.0,
+      "safety_regression": false,
+      "wall_time_delta_95ci": [
+        1.159388,
+        8.189278
+      ],
+      "wall_time_delta_mean": 4.674333
+    },
+    "history_only_vs_baseline": {
+      "actions_to_level_delta_95ci": [
+        null,
+        null
+      ],
+      "actions_to_level_delta_mean": 0.0,
+      "candidate_count_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "candidate_count_delta_mean": 0.0,
+      "distinct_states_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "distinct_states_delta_mean": 0.0,
+      "environment_actions_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "environment_actions_delta_mean": 0.0,
+      "levels_gained_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "levels_gained_delta_mean": 0.0,
+      "n_pairs": 3,
+      "nodes_expanded_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "nodes_expanded_delta_mean": 0.0,
+      "pruned_or_reranked_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "pruned_or_reranked_delta_mean": 0.0,
+      "safety_regression": false,
+      "wall_time_delta_95ci": [
+        0.6662,
+        3.364467
+      ],
+      "wall_time_delta_mean": 2.015333
+    },
+    "inert_only_vs_baseline": {
+      "actions_to_level_delta_95ci": [
+        null,
+        null
+      ],
+      "actions_to_level_delta_mean": 0.0,
+      "candidate_count_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "candidate_count_delta_mean": 0.0,
+      "distinct_states_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "distinct_states_delta_mean": 0.0,
+      "environment_actions_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "environment_actions_delta_mean": 0.0,
+      "levels_gained_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "levels_gained_delta_mean": 0.0,
+      "n_pairs": 3,
+      "nodes_expanded_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "nodes_expanded_delta_mean": 0.0,
+      "pruned_or_reranked_delta_95ci": [
+        0.0,
+        0.0
+      ],
+      "pruned_or_reranked_delta_mean": 0.0,
+      "safety_regression": false,
+      "wall_time_delta_95ci": [
+        -0.083534,
+        0.1862
+      ],
+      "wall_time_delta_mean": 0.051333
+    }
+  },
+  "per_game_results_by_arm": {
+    "baseline": [
+      {
+        "action_trace_sha256": "02efd580d330fa98752d80b4ca457733d4f3a4d3b11ed64cff4af4d4b39308da",
+        "actions_to_level": null,
+        "arm": "baseline",
+        "best_runtime_level": 0,
+        "distinct_states": 5,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "dc22",
+        "history_prior_stats": null,
+        "levels_gained": 0,
+        "nodes_expanded": 5,
+        "offline_reproduced": true,
+        "proposed_candidates": 200,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": null,
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 8.265
+      },
+      {
+        "action_trace_sha256": "2aac3fb743f40873ee296c2b7ce01826b3f66cb53fd8a632658b0a107e995b9d",
+        "actions_to_level": null,
+        "arm": "baseline",
+        "best_runtime_level": 0,
+        "distinct_states": 8,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "bp35",
+        "history_prior_stats": null,
+        "levels_gained": 0,
+        "nodes_expanded": 8,
+        "offline_reproduced": true,
+        "proposed_candidates": 408,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": null,
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 16.609
+      },
+      {
+        "action_trace_sha256": "195c3026856061986fd104899592660bcee32848b92331dddd5efd3a70fa83c8",
+        "actions_to_level": null,
+        "arm": "baseline",
+        "best_runtime_level": 0,
+        "distinct_states": 6,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "s5i5",
+        "history_prior_stats": null,
+        "levels_gained": 0,
+        "nodes_expanded": 6,
+        "offline_reproduced": true,
+        "proposed_candidates": 167,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": null,
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 8.065
+      }
+    ],
+    "combined": [
+      {
+        "action_trace_sha256": "02efd580d330fa98752d80b4ca457733d4f3a4d3b11ed64cff4af4d4b39308da",
+        "actions_to_level": null,
+        "arm": "combined",
+        "best_runtime_level": 0,
+        "distinct_states": 5,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "dc22",
+        "history_prior_stats": {
+          "base_prior": {
+            "connected_component_salience_enabled": true,
+            "large_flat_deprioritization": true,
+            "max_component_fraction": 0.45,
+            "salience_tiers_emitted": true,
+            "salient_colors": [
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "source": "single_color_connected_component_tiers",
+            "status_bar_color": 16,
+            "status_bar_deprioritization": true
+          },
+          "bonus_rows_scored": 0,
+          "change_bonus_weight": 10.0,
+          "enabled": true,
+          "min_observations": 3,
+          "source": "object_hash_change_history_blob_salience",
+          "tracked_hash_count": 0,
+          "verifier_is_oracle": false
+        },
+        "levels_gained": 0,
+        "nodes_expanded": 5,
+        "offline_reproduced": true,
+        "proposed_candidates": 200,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": {
+          "min_observations": 4,
+          "min_specificity": 0.9,
+          "observed": 0,
+          "pruned": 0,
+          "pruned_signatures": 0,
+          "rank_calls": 0,
+          "rows_dropped": 0,
+          "rows_in": 0,
+          "rows_out": 0,
+          "signatures_tracked": 0,
+          "verifier_is_oracle": false
+        },
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 11.154
+      },
+      {
+        "action_trace_sha256": "2aac3fb743f40873ee296c2b7ce01826b3f66cb53fd8a632658b0a107e995b9d",
+        "actions_to_level": null,
+        "arm": "combined",
+        "best_runtime_level": 0,
+        "distinct_states": 8,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "bp35",
+        "history_prior_stats": {
+          "base_prior": {
+            "connected_component_salience_enabled": true,
+            "large_flat_deprioritization": true,
+            "max_component_fraction": 0.45,
+            "salience_tiers_emitted": true,
+            "salient_colors": [
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "source": "single_color_connected_component_tiers",
+            "status_bar_color": 16,
+            "status_bar_deprioritization": true
+          },
+          "bonus_rows_scored": 0,
+          "change_bonus_weight": 10.0,
+          "enabled": true,
+          "min_observations": 3,
+          "source": "object_hash_change_history_blob_salience",
+          "tracked_hash_count": 0,
+          "verifier_is_oracle": false
+        },
+        "levels_gained": 0,
+        "nodes_expanded": 8,
+        "offline_reproduced": true,
+        "proposed_candidates": 408,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": {
+          "min_observations": 4,
+          "min_specificity": 0.9,
+          "observed": 0,
+          "pruned": 0,
+          "pruned_signatures": 0,
+          "rank_calls": 0,
+          "rows_dropped": 0,
+          "rows_in": 0,
+          "rows_out": 0,
+          "signatures_tracked": 0,
+          "verifier_is_oracle": false
+        },
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 24.87
+      },
+      {
+        "action_trace_sha256": "195c3026856061986fd104899592660bcee32848b92331dddd5efd3a70fa83c8",
+        "actions_to_level": null,
+        "arm": "combined",
+        "best_runtime_level": 0,
+        "distinct_states": 6,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "s5i5",
+        "history_prior_stats": {
+          "base_prior": {
+            "connected_component_salience_enabled": true,
+            "large_flat_deprioritization": true,
+            "max_component_fraction": 0.45,
+            "salience_tiers_emitted": true,
+            "salient_colors": [
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "source": "single_color_connected_component_tiers",
+            "status_bar_color": 16,
+            "status_bar_deprioritization": true
+          },
+          "bonus_rows_scored": 0,
+          "change_bonus_weight": 10.0,
+          "enabled": true,
+          "min_observations": 3,
+          "source": "object_hash_change_history_blob_salience",
+          "tracked_hash_count": 0,
+          "verifier_is_oracle": false
+        },
+        "levels_gained": 0,
+        "nodes_expanded": 6,
+        "offline_reproduced": true,
+        "proposed_candidates": 167,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": {
+          "min_observations": 4,
+          "min_specificity": 0.9,
+          "observed": 0,
+          "pruned": 0,
+          "pruned_signatures": 0,
+          "rank_calls": 0,
+          "rows_dropped": 0,
+          "rows_in": 0,
+          "rows_out": 0,
+          "signatures_tracked": 0,
+          "verifier_is_oracle": false
+        },
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 10.938
+      }
+    ],
+    "history_only": [
+      {
+        "action_trace_sha256": "02efd580d330fa98752d80b4ca457733d4f3a4d3b11ed64cff4af4d4b39308da",
+        "actions_to_level": null,
+        "arm": "history_only",
+        "best_runtime_level": 0,
+        "distinct_states": 5,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "dc22",
+        "history_prior_stats": {
+          "base_prior": {
+            "connected_component_salience_enabled": true,
+            "large_flat_deprioritization": true,
+            "max_component_fraction": 0.45,
+            "salience_tiers_emitted": true,
+            "salient_colors": [
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "source": "single_color_connected_component_tiers",
+            "status_bar_color": 16,
+            "status_bar_deprioritization": true
+          },
+          "bonus_rows_scored": 0,
+          "change_bonus_weight": 10.0,
+          "enabled": true,
+          "min_observations": 3,
+          "source": "object_hash_change_history_blob_salience",
+          "tracked_hash_count": 0,
+          "verifier_is_oracle": false
+        },
+        "levels_gained": 0,
+        "nodes_expanded": 5,
+        "offline_reproduced": true,
+        "proposed_candidates": 200,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": null,
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 11.362
+      },
+      {
+        "action_trace_sha256": "2aac3fb743f40873ee296c2b7ce01826b3f66cb53fd8a632658b0a107e995b9d",
+        "actions_to_level": null,
+        "arm": "history_only",
+        "best_runtime_level": 0,
+        "distinct_states": 8,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "bp35",
+        "history_prior_stats": {
+          "base_prior": {
+            "connected_component_salience_enabled": true,
+            "large_flat_deprioritization": true,
+            "max_component_fraction": 0.45,
+            "salience_tiers_emitted": true,
+            "salient_colors": [
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "source": "single_color_connected_component_tiers",
+            "status_bar_color": 16,
+            "status_bar_deprioritization": true
+          },
+          "bonus_rows_scored": 0,
+          "change_bonus_weight": 10.0,
+          "enabled": true,
+          "min_observations": 3,
+          "source": "object_hash_change_history_blob_salience",
+          "tracked_hash_count": 0,
+          "verifier_is_oracle": false
+        },
+        "levels_gained": 0,
+        "nodes_expanded": 8,
+        "offline_reproduced": true,
+        "proposed_candidates": 408,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": null,
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 18.821
+      },
+      {
+        "action_trace_sha256": "195c3026856061986fd104899592660bcee32848b92331dddd5efd3a70fa83c8",
+        "actions_to_level": null,
+        "arm": "history_only",
+        "best_runtime_level": 0,
+        "distinct_states": 6,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "s5i5",
+        "history_prior_stats": {
+          "base_prior": {
+            "connected_component_salience_enabled": true,
+            "large_flat_deprioritization": true,
+            "max_component_fraction": 0.45,
+            "salience_tiers_emitted": true,
+            "salient_colors": [
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "source": "single_color_connected_component_tiers",
+            "status_bar_color": 16,
+            "status_bar_deprioritization": true
+          },
+          "bonus_rows_scored": 0,
+          "change_bonus_weight": 10.0,
+          "enabled": true,
+          "min_observations": 3,
+          "source": "object_hash_change_history_blob_salience",
+          "tracked_hash_count": 0,
+          "verifier_is_oracle": false
+        },
+        "levels_gained": 0,
+        "nodes_expanded": 6,
+        "offline_reproduced": true,
+        "proposed_candidates": 167,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": null,
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 8.802
+      }
+    ],
+    "inert_only": [
+      {
+        "action_trace_sha256": "02efd580d330fa98752d80b4ca457733d4f3a4d3b11ed64cff4af4d4b39308da",
+        "actions_to_level": null,
+        "arm": "inert_only",
+        "best_runtime_level": 0,
+        "distinct_states": 5,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "dc22",
+        "history_prior_stats": null,
+        "levels_gained": 0,
+        "nodes_expanded": 5,
+        "offline_reproduced": true,
+        "proposed_candidates": 200,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": {
+          "min_observations": 4,
+          "min_specificity": 0.9,
+          "observed": 0,
+          "pruned": 0,
+          "pruned_signatures": 0,
+          "rank_calls": 0,
+          "rows_dropped": 0,
+          "rows_in": 0,
+          "rows_out": 0,
+          "signatures_tracked": 0,
+          "verifier_is_oracle": false
+        },
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 8.234
+      },
+      {
+        "action_trace_sha256": "2aac3fb743f40873ee296c2b7ce01826b3f66cb53fd8a632658b0a107e995b9d",
+        "actions_to_level": null,
+        "arm": "inert_only",
+        "best_runtime_level": 0,
+        "distinct_states": 8,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "bp35",
+        "history_prior_stats": null,
+        "levels_gained": 0,
+        "nodes_expanded": 8,
+        "offline_reproduced": true,
+        "proposed_candidates": 408,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": {
+          "min_observations": 4,
+          "min_specificity": 0.9,
+          "observed": 0,
+          "pruned": 0,
+          "pruned_signatures": 0,
+          "rank_calls": 0,
+          "rows_dropped": 0,
+          "rows_in": 0,
+          "rows_out": 0,
+          "signatures_tracked": 0,
+          "verifier_is_oracle": false
+        },
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 16.797
+      },
+      {
+        "action_trace_sha256": "195c3026856061986fd104899592660bcee32848b92331dddd5efd3a70fa83c8",
+        "actions_to_level": null,
+        "arm": "inert_only",
+        "best_runtime_level": 0,
+        "distinct_states": 6,
+        "environment_actions": 18,
+        "exact_offline_reproduction": {
+          "expected_actions": 18,
+          "levels_gained": 0,
+          "offline_reproduced": true,
+          "replayed_actions": 18,
+          "reproduced_level": 0,
+          "start_level": 0
+        },
+        "game": "s5i5",
+        "history_prior_stats": null,
+        "levels_gained": 0,
+        "nodes_expanded": 6,
+        "offline_reproduced": true,
+        "proposed_candidates": 167,
+        "pruned_or_reranked_candidates": 0,
+        "pruner_stats": {
+          "min_observations": 4,
+          "min_specificity": 0.9,
+          "observed": 0,
+          "pruned": 0,
+          "pruned_signatures": 0,
+          "rank_calls": 0,
+          "rows_dropped": 0,
+          "rows_in": 0,
+          "rows_out": 0,
+          "signatures_tracked": 0,
+          "verifier_is_oracle": false
+        },
+        "reproduced_level": 0,
+        "safety_regression": false,
+        "wall_time_s": 8.062
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "offline_arcade_makes_env": true,
+    "ok": true,
+    "registry_present": true,
+    "runtime_filter_imports": true
+  },
+  "random_seed": 5609,
+  "registry_precheck": {
+    "duplicate_solve_targets_excluded": true,
+    "excluded_duplicate_solve_targets": [],
+    "exhaustive_offline_bfs_run": false,
+    "ok": true,
+    "per_game_adapters_created": false,
+    "roster_rows": [
+      {
+        "baseline_actions": [
+          59,
+          102,
+          67,
+          98,
+          324,
+          578
+        ],
+        "click_capable_by_public_tags": true,
+        "game": "dc22",
+        "public_environment_metadata_present": true,
+        "registry_entry_present": true,
+        "tags": [
+          "keyboard_click"
+        ]
+      },
+      {
+        "baseline_actions": [
+          21,
+          48,
+          44,
+          38,
+          33,
+          87,
+          86,
+          131,
+          163
+        ],
+        "click_capable_by_public_tags": true,
+        "game": "bp35",
+        "public_environment_metadata_present": true,
+        "registry_entry_present": true,
+        "tags": [
+          "keyboard_click"
+        ]
+      },
+      {
+        "baseline_actions": [
+          20,
+          89,
+          106,
+          54,
+          162,
+          38,
+          86,
+          83
+        ],
+        "click_capable_by_public_tags": true,
+        "game": "s5i5",
+        "public_environment_metadata_present": true,
+        "registry_entry_present": true,
+        "tags": [
+          "click"
+        ]
+      }
+    ],
+    "selected_games": [
+      "dc22",
+      "bp35",
+      "s5i5"
+    ],
+    "source_files_read": []
+  },
+  "reproducibility_checksum": "92560c319c9aa0cb8de87d30db33e950fc6a734771fbc87a111ba9d4ef9bc69b",
+  "result_path": "results/experiment_5609_arc_filter_intermediate_invariance_ab.json",
+  "roster": [
+    "dc22",
+    "bp35",
+    "s5i5"
+  ],
+  "schema": "carnot.exp5609.arc_filter_intermediate_invariance_ab.v1",
+  "solve_provenance": "development_proxy",
+  "wall_time_by_arm": {
+    "baseline": 32.939,
+    "combined": 46.962,
+    "history_only": 38.985,
+    "inert_only": 33.093
+  }
+}

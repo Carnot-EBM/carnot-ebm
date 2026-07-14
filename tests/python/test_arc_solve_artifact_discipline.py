@@ -58,6 +58,8 @@ def test_req_verify_4437_helper_builds_offline_template_with_canonical_substrate
     assert len(artifact["reproducibility_checksum"]) == 64
     assert discipline.validate_arc_solve_artifact(artifact) == []
     assert discipline.duration_floor_s(123) is None
+    assert discipline.duration_floor_s({"value": discipline.AGGREGATION_SUBSTRATE}) == 0.0001
+    assert discipline.terminal_prefixed({"value": "complete: wrapped verdict"}) is True
 
 
 def test_req_verify_4437_helper_accepts_arc_live_agent_no_llm_substrate() -> None:
@@ -129,6 +131,19 @@ def test_scenario_verify_4437_helper_rejects_missing_short_and_nonterminal_cases
     assert [issue.kind for issue in discipline.validate_arc_solve_artifact(bool_duration)] == [
         "DURATION_MISSING"
     ]
+
+    invalid_substrate = {
+        "honest_verdict": "complete: offline_replay",
+        "duration_s": 1.0,
+        "inference_substrate": "unknown_runtime",
+    }
+    invalid_issues = discipline.validate_arc_solve_artifact(invalid_substrate)
+    assert invalid_issues[0].to_dict() == {
+        "kind": "INVALID_INFERENCE_SUBSTRATE",
+        "detail": (
+            f"inference_substrate must be one of {sorted(discipline.SUBSTRATE_DURATION_FLOORS)}."
+        ),
+    }
 
 
 def test_req_verify_4437_builder_raises_for_invalid_template_inputs() -> None:

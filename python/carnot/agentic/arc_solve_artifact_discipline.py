@@ -16,12 +16,14 @@ from typing import Any
 AGGREGATION_SUBSTRATE = "aggregation_from_upstream_artifacts"
 VERIFIER_SCORING_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
 ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 SUBSTRATE_DURATION_FLOORS = {
     AGGREGATION_SUBSTRATE: 0.0001,
     VERIFIER_SCORING_SUBSTRATE: 1.0,
     ARC_LIVE_AGENT_NO_LLM_SUBSTRATE: 0.01,
+    ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE: 0.01,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -35,7 +37,8 @@ FIELD_PRINCIPLES = {
         "aggregation_from_upstream_artifacts, cached scoring uses "
         "verifier_ensemble_against_cached_candidates, and real LLM induction "
         "uses live_llm_inference; no-LLM live ARC environment stepping uses "
-        "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+        "offline_arcade_live_agent_runtime_self_discovery_no_llm; no-LLM live "
+        "ARC filter A/B stepping uses offline_arcade_live_agent_runtime_filters_no_new_llm"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",
@@ -195,6 +198,7 @@ def _sha256(value: Any) -> str:
 
 __all__ = [
     "AGGREGATION_SUBSTRATE",
+    "ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE",
     "ARC_LIVE_AGENT_NO_LLM_SUBSTRATE",
     "ArtifactDisciplineIssue",
     "FIELD_PRINCIPLES",

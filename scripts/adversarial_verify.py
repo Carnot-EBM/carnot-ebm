@@ -239,6 +239,7 @@ DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 # "Inference-Substrate Declaration Discipline" -- the forward-only 5th legal
 # value.
 ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
 ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
 )
@@ -1907,6 +1908,19 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE)
 
 
+def _is_arc_filter_runtime_no_llm(d: dict[str, Any]) -> bool:
+    """True when the artifact declares a no-new-LLM ARC live-agent filter A/B.
+
+    Exp5609 measures already-wired runtime filters against the offline arcade live
+    agent path. It may mention the frozen generator for parity, but the experiment
+    must not invoke new LLM calls; this substrate keeps the same duration floor as
+    the older no-LLM live-agent runtime while making the filter-specific scope
+    auditable.
+    """
+
+    return _inference_substrate_matches(d, ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE)
+
+
 def _is_llm_embedding_extraction(d: dict[str, Any]) -> bool:
     """True when the artifact declares live LLM embedding-extraction (no generation).
 
@@ -2047,6 +2061,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
             "min_duration_s": ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S,
             "reason": "arc_live_agent_no_llm",
+        }
+    if _is_arc_filter_runtime_no_llm(d):
+        return {
+            "substrate": ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
+            "min_duration_s": ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S,
+            "reason": "arc_live_agent_filter_runtime_no_llm",
         }
     if _is_llm_embedding_extraction(d):
         return {

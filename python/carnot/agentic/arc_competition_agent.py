@@ -2597,6 +2597,7 @@ class E3AgentPolicy:
         self.plan: list = []
         self.pi = 0
         self._prev = None  # last (grid, action_id, data) for transition pairing
+        self._prev_level = 0  # real level AT THE TIME self._prev was captured (see next_move)
         self.cell = 1
         self.induced = False
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
@@ -3003,6 +3004,7 @@ class E3AgentPolicy:
 
             self.cell = detect_cell(grid_of(latest))
             self._prev = (to_logical(grid_of(latest), self.cell), int(kind), data)
+            self._prev_level = _level_of(latest)
         except Exception:
             return
 
@@ -3119,7 +3121,7 @@ class E3AgentPolicy:
             try:
                 g0, aid, data = self._prev
                 g1 = to_logical(grid_of(latest), self.cell)
-                transition = Transition(g0, aid, data, g1, 0, _level_of(latest))
+                transition = Transition(g0, aid, data, g1, self._prev_level, _level_of(latest))
                 self.transitions.append(transition)
                 self._dsl_transitions.append((g0, _action_key(aid, data), g1))
                 self._observe_active_probe_transition(transition)
@@ -3163,6 +3165,7 @@ class E3AgentPolicy:
                         self.root_grid = to_logical(grid_of(latest), self.cell)
                     if mv[0] not in ("RESET", None):
                         self._prev = (to_logical(grid_of(latest), self.cell), int(mv[0]), mv[1])
+                        self._prev_level = _level_of(latest)
                     else:
                         self._prev = None
                 # VERIFIER-ROUTED CASCADE escalation: hand off to the tier-3 induction path on
