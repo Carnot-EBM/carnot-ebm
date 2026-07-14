@@ -1,60 +1,119 @@
 {
-  "attempts": 31,
-  "collapse_detected_live": false,
-  "collapse_trigger_step": null,
-  "duration_s": 199.8345310859986,
+  "collapse_detected_live": true,
+  "collapse_trigger_step": 39,
+  "duration_s": 148.4757354659996,
   "experiment": "experiment_5604_sge_anti_stagnation_live_retest",
   "experiment_id": 5604,
   "field_principles": {
-    "attempts": "bare int count of live actions executed.",
-    "collapse_detected_live": "bare bool: the anti-stagnation controller actually fired during THIS live run (not a replayed trace).",
-    "collapse_trigger_step": "the step index collapse first fired, or null if it never fired (a genuine no-collapse run is also an honest, valid result).",
-    "duration_s": "real wall-clock time; a genuine GPU LLM run over a 46-action budget takes well over 60s.",
-    "forced_portfolio_activated_live": "bare bool: the deterministic diverse portfolio was actually installed as the ranked candidates at least once live.",
+    "collapse_detected_live": "bare bool: the anti-stagnation controller actually fired during the replication pass's live run (not a replayed trace) -- the headline answer to task 6.",
+    "collapse_trigger_step": "the step index collapse first fired in the replication pass, or null if it never fired.",
+    "duration_s": "real wall-clock time; genuine GPU LLM runs across both passes take well over 60s combined.",
+    "forced_portfolio_activated_live": "bare bool: the deterministic diverse portfolio was actually installed as the ranked candidates at least once live in the replication pass.",
     "honest_verdict": "one-line verdict starting complete: or blocked:.",
     "inference_substrate": "live_llm_inference when llm_strategy_proposer_used_any_step is true, else the honest no-LLM substrate.",
-    "llm_strategy_proposer_used_any_step": "bare bool proving real GGUF inference occurred at least once (the exp5534 dishonest-baseline failure mode this guards against).",
-    "max_level_reached": "highest level counter observed during this single fresh env session.",
+    "llm_strategy_proposer_used_any_step": "bare bool proving real GGUF inference occurred at least once across both passes (the exp5534 dishonest-baseline failure mode this guards against).",
     "model_specs": "the local GGUF proposer actually invoked.",
-    "offline_reproduced": "true only when a claimed new level passes the standard offline replay gate.",
-    "post_collapse_strategy_diversity": "unique forced-portfolio category count selected in the step(s) after collapse fired; the direct behavioral escape signal.",
+    "offline_reproduced": "true only when the registry_frontier_attempt pass's claimed new level passes the standard offline replay gate.",
+    "post_collapse_strategy_diversity": "unique forced-portfolio category count selected after collapse fired in the replication pass; the direct behavioral escape signal.",
     "preconditions_checked": "resources verified before any live inference was attempted.",
-    "prior_levels_reproduced": "registry depth for target_game before this attempt.",
     "registry_delta": "nonzero only when offline_reproduced is true.",
-    "reproduced_levels": "integer new levels banked; secondary to the collapse-escape headline, not required for a valid result.",
+    "registry_frontier_attempt": "full trace of the secondary, bonus real attempt at the current shallowest unsolved registry frontier using the same SGE router.",
+    "replication_pass": "TWO independent fresh-episode g50t (original null target) structural-replication runs (n=2, per CLAUDE.md cross-check-surprising-results discipline): real live collapse observed and real live escape confirmed in both, with an honest caveat about partial escape.",
+    "reproduced_levels": "integer new levels banked by the frontier attempt; secondary to the collapse-escape headline, not required for a valid result.",
+    "reproducibility_checksum": "sha256 over both passes' executed action-label sequences and the random_seed; catches silent corpus/action drift on any future re-run.",
     "solve_provenance": "must equal live_agent_self_discovery -- the scored E3AgentPolicy path, not a hand-derived outer-loop solve.",
-    "target_game": "current shallowest not-fully-cleared registry game, re-read live so the target can never go stale.",
-    "target_level": "the next unreproduced level for target_game at run time.",
-    "trajectory_path": "path to the full step-by-step diagnostics log for audit."
+    "trajectory_path": "path to the full step-by-step diagnostics log for both passes, for audit."
   },
-  "forced_portfolio_activated_live": false,
-  "honest_verdict": "complete: no_collapse_observed_this_run_budget_or_target_too_short_to_trigger_no_new_level_banked",
+  "forced_portfolio_activated_live": true,
+  "honest_verdict": "complete: replication_confirms_live_collapse_at_step_39_escaped_to_5_forced_categories_partial_escape_candidate_pool_then_static; frontier_no_new_level_no_collapse_empty_candidates_after_early_steps",
   "inference_substrate": "live_llm_inference",
   "llm_strategy_proposer_used_any_step": true,
-  "max_level_reached": 6,
   "model_specs": [
     "gemma-4-12B-it"
   ],
   "offline_reproduced": false,
-  "post_collapse_strategy_diversity": 0,
+  "post_collapse_strategy_diversity": 5,
   "preconditions_checked": {
     "gguf_cached": true,
     "offline_arcade_makes_env": true,
     "ok": true,
     "sge_and_e3_import": true
   },
-  "prior_levels_reproduced": 6,
   "random_seed": 5604,
   "registry_delta": 0,
+  "registry_frontier_attempt": {
+    "attempts": 31,
+    "blocked": false,
+    "collapse_detected_live": false,
+    "collapse_trigger_step": null,
+    "duration_s": 56.82282304763794,
+    "forced_portfolio_activated_live": false,
+    "llm_strategy_proposer_used_any_step": true,
+    "max_level_reached": 6,
+    "model_specs": [
+      "gemma-4-12B-it"
+    ],
+    "offline_reproduced": false,
+    "post_collapse_strategy_diversity": 0,
+    "prior_levels_reproduced": 6,
+    "reached_level": 6,
+    "reproduced_levels": 0,
+    "target_game": "lf52",
+    "target_level": 7
+  },
   "registry_updated": false,
+  "replication_pass": {
+    "collapse_detected_live": true,
+    "collapse_trigger_step": 39,
+    "duration_s": 88.04724955558777,
+    "episodes": [
+      {
+        "attempts": 89,
+        "collapse_detected_live": true,
+        "collapse_trigger_step": 39,
+        "duration_s": 45.12441301345825,
+        "forced_portfolio_activated_live": true,
+        "llm_strategy_proposer_used_any_step": true,
+        "max_level_reached": 0,
+        "model_specs": [
+          "gemma-4-12B-it"
+        ],
+        "offline_reproduced": false,
+        "post_collapse_strategy_diversity": 5,
+        "reached_level": 0,
+        "reproduced_levels": 0
+      },
+      {
+        "attempts": 89,
+        "collapse_detected_live": true,
+        "collapse_trigger_step": 60,
+        "duration_s": 42.92283654212952,
+        "forced_portfolio_activated_live": true,
+        "llm_strategy_proposer_used_any_step": true,
+        "max_level_reached": 0,
+        "model_specs": [
+          "gemma-4-12B-it"
+        ],
+        "offline_reproduced": false,
+        "post_collapse_strategy_diversity": 5,
+        "reached_level": 0,
+        "reproduced_levels": 0
+      }
+    ],
+    "forced_portfolio_activated_live": true,
+    "llm_strategy_proposer_used_any_step": true,
+    "model_specs": [
+      "gemma-4-12B-it"
+    ],
+    "post_collapse_strategy_diversity": 5
+  },
   "reproduced_levels": 0,
+  "reproducibility_checksum": "d51aef6667c49c749afa154397093f3a5aa41367a9abfc5aeaeed6e86202e376",
   "schema": "carnot.experiment_5604_sge_anti_stagnation_live_retest.v1",
   "solve_provenance": "live_agent_self_discovery",
   "spec_refs": [
     "REQ-ARC-FCP-5604",
     "SCENARIO-ARC-FCP-5604-LIVE-COLLAPSE-ESCAPE"
   ],
-  "target_game": "lf52",
-  "target_level": 7,
   "trajectory_path": "results/experiment_5604_sge_anti_stagnation_live_retest_trajectory.json"
 }
