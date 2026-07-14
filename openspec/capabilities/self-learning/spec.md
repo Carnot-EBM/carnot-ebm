@@ -22991,3 +22991,99 @@ block `fr11_independent_promotion_ready_score`.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5639 | Implemented (`python/carnot/experiment_5639_anytime_valid_csl_independent_audit.py`, `results/experiment_5639_anytime_valid_csl_independent_audit.json`) | Implemented (`tests/python/test_experiment_5639_anytime_valid_csl_independent_audit.py`) |
+
+## REQ-LEARN-5640: Opt-In FR-11 Shadow Adapter In Verify/Repair Path
+
+The verify/repair pipeline SHALL expose an opt-in, fail-closed FR-11 shadow
+adapter that observes exact verification receipts and records the conformal KAN
+action recommendation that would have been made. The adapter is disabled by default:
+it MUST remain off unless explicitly requested, and when disabled the public
+`VerifyRepairPipeline.verify(...)`
+behavior and certificate shape SHALL remain byte-for-byte equivalent to the
+pre-adapter default path. When enabled, exact verification remains authoritative:
+an exact rejection MUST always produce exact disposition `reject`, unsupported
+receipt states MUST abstain, and a learned recommendation MUST NOT legalize an
+invalid state or mutate any LLM/model weights.
+
+The adapter MAY recommend only the frozen conformal action contract
+`retain`, `smooth`, `reset`, `adapt`, or `abstain`. It SHALL persist an
+append-only JSONL decision ledger containing, for each observed receipt, the
+input hash, checkpoint parent, conformal action set, recommendation, exact
+disposition, rollback reason, duplicate delivery flag, delayed label flag, and
+poison/corruption disposition. The checkpoint commit SHALL be atomic and
+deterministic: a partial or corrupt checkpoint MUST fail closed without
+publishing candidate state, and restart replay MUST reproduce ledger lineage.
+
+Exp 5640 SHALL replay the frozen exact stream through both the audited offline
+controller and the pipeline-shadow adapter under identical seeds. It SHALL
+exercise feature-disabled equivalence, inactive adapter behavior,
+shadow/offline parity, crash/restart, duplicate delivery, delayed labels,
+poison rows, corrupted checkpoint recovery, and rollback. The terminal artifact
+MUST be written to
+`results/experiment_5640_fr11_shadow_pipeline_integration.json`.
+
+The terminal artifact MUST include the following top-level required fields:
+`field_principles`, `upstream_gate_receipts`,
+`openspec_requirement_ids`, `adapter_path`, `feature_flag`,
+`default_enabled` with value `false`, `exact_verifier_authority` with value `true`,
+`shadow_decision_count`, `shadow_offline_parity`,
+`default_path_equivalence`, `unsafe_update_accept_count` with value `0`,
+`checkpoint_atomicity_pass`, `restart_replay_pass`, `rollback_pass`,
+`ledger_path`, `ledger_lineage_complete`, `model_weight_mutation` with value `false`,
+`fr11_shadow_integration_ready_score`,
+`inference_substrate` with value
+`exact_verifier_gated_conformal_kan_shadow_adapter`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`. The
+`honest_verdict` SHALL start with `complete:` or `blocked:` and MUST
+distinguish shadow-integration readiness from default production enablement.
+
+`fr11_shadow_integration_ready_score` SHALL be exactly `1.0` only when Exp 5639
+promotion is a prerequisite and passes, default-path equivalence passes,
+shadow/offline decision parity is exact, all unsafe updates are rejected,
+restart and rollback replay pass, ledger lineage is complete, benefit evidence
+remains within Exp 5639's certified bound, and no model weight changed.
+Otherwise the ready score SHALL be `0.0` with a terminal `blocked:` verdict.
+
+### SCENARIO-LEARN-5640-EQUIVALENCE: Disabled Adapter Leaves Default Path Unchanged
+
+**Given** the FR-11 shadow adapter feature flag is unset or false
+**When** `VerifyRepairPipeline.verify(...)` runs on the same exact response
+before and after the adapter is available
+**Then** the returned `VerificationResult` and certificate SHALL be equivalent
+for existing callers
+**And** no shadow ledger row SHALL be written.
+
+### SCENARIO-LEARN-5640-SHADOW: Enabled Adapter Records Exact-Gated Advice
+
+**Given** the adapter is explicitly enabled with a ledger path and an exact
+verification receipt
+**When** the real verify/repair path completes exact verification
+**Then** the adapter SHALL append a ledger row containing the required lineage
+fields
+**And** exact rejection SHALL force the recommendation to `abstain` with a
+rollback reason rather than accepting learned advice.
+
+### SCENARIO-LEARN-5640-REPLAY: Restart, Duplicate, Delayed, Poison, And Corrupt State Fail Closed
+
+**Given** the frozen exact stream includes duplicate deliveries, delayed labels,
+poison rows, rollback rows, and a corrupt checkpoint simulation
+**When** Exp 5640 replays offline and pipeline-shadow paths under identical
+seeds
+**Then** shadow/offline decisions SHALL match exactly
+**And** unsafe, poison, unsupported, and corrupt states SHALL abstain or roll
+back without publishing unsafe state.
+
+### SCENARIO-LEARN-5640-ARTIFACT: Shadow Integration Artifact Is Mechanically Gated
+
+**Given** Exp 5639 has promoted and Exp 5640 has written its ledger
+**When** the artifact schema is validated
+**Then** all required fields and field principles SHALL be present
+**And** readiness SHALL be `1.0` only when parity, equivalence, atomicity,
+restart, rollback, lineage, unsafe rejection, certified-bound, and weight
+immutability gates all pass.
+
+## Implementation Status (Exp 5640)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5640 | Planned (`python/carnot/pipeline/fr11_shadow_adapter.py`, `python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py`, `results/experiment_5640_fr11_shadow_pipeline_integration.json`) | Planned (`tests/python/test_fr11_shadow_adapter.py`, `tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py`) |
