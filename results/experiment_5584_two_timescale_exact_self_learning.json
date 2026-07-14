@@ -1,0 +1,33 @@
+{
+  "experiment": 5584,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-14",
+  "started_at": "2026-07-14T01:50:36.602211+00:00",
+  "finished_at": "2026-07-14T01:50:36.602211+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PACE-style two-timescale exact-gated continuous self-learning controller",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5583-causal-memory-metric-corrigendum.policy_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5583-causal-memory-metric-corrigendum",
+      "artifact_field": "policy_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp5583-causal-memory-metric-corrigendum",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "reason": "actual=False == expected=False"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
