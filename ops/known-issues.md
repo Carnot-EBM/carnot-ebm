@@ -519,6 +519,33 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > large-grid-scalability fix for `induce_prompt` (out of scope for this task) would be the
     > natural prerequisite before a real positive-control demonstration of
     > `score_goal_predicate_consistency` on `lp85` specifically.
+
+    > **DONE 2026-07-14 (outer-loop, closes both remaining halves):** fixed `induce_prompt`'s
+    > large-grid-render overhead — `_rle_grid` (full grids, implicit-column row-wise run-length)
+    > and `_rle_delta_compact` (per-transition deltas, value-count-collapsed runs within each
+    > changed span) replace the raw `to_ascii`/verbose `_rle_delta` full-grid+delta encoding for
+    > the induction-evidence path only (`_rle_delta` itself is untouched — it has its own tests
+    > and another caller). Measured on `lp85`'s REAL 64x64 grid, real tokenizer
+    > (`llama_cpp.Llama(vocab_only=True)` against the real `Qwen3.5-9B-MTP` GGUF): the exact
+    > 8-transition window that measured 18,355 tokens before now measures 11,167 tokens against
+    > the 13,824-token budget — a real ~39% reduction, ~2,657 tokens of headroom. Re-running
+    > `exp5593` end-to-end (real GPU inference, `duration_s=33.452`) now produces the real
+    > positive-control demo: `induction_ok=true`, `induce_transition_count=8`,
+    > `goal_predicate_accuracy=0.75` (6/8 correct against real observed transitions, 2 real
+    > level-ups the induced predicate missed — an honest finding about induction QUALITY on
+    > `lp85`, not a defect in the check or the fix). Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5593-2.
+    > **Claimed-diff half, final assessment:** re-checked every LLM touchpoint in the current
+    > pipeline (`induce_prompt`/`refactor_prompt`/`CodexProposer`/`LocalGGUFProposer`, and SGE's
+    > `propose_one`/`reflect`) for any natural-language "what changed" self-report analogous to
+    > Reki's `board_change_assessment`. Confirmed none exists: our LLM touchpoints write CODE or
+    > state a forward-looking exploration STRATEGY, never a prose diff claim. Building a NEW
+    > self-report solely to have something to cross-check would cost an extra LLM call per
+    > transition, directly against this gap's own corroborating evidence (forge disabled their
+    > LLM judge for cost). **Confirmed genuine dead-end in the current architecture** — see
+    > `ops/verifier_gaps.md`'s `GAP-ARC-CLAIMED-VS-MEASURED-DIFF-5xxx` entry (status updated,
+    > not closed — this is a documented non-build, not a filled gap) for the full reasoning and
+    > the re-open condition. Task 11 is now fully closed — both halves resolved with real evidence.
 12. **(New 2026-07-12, operator-decided direction: "which of the top 3 has the best EBM
     opportunity" -> forge, ported into our own agent) Controlled A/B: our candidate-scoring stack
     vs bare control, forge's exact ablation methodology.** Full writeup:

@@ -29835,6 +29835,123 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5606: Clean SOTA Solve-Versus-Verify Evidence Panel
+
+The repository SHALL provide Exp 5606 at
+`python/carnot/experiment_5606_clean_sota_solve_verify_evidence_panel.py` and
+write `results/experiment_5606_clean_sota_solve_verify_evidence_panel.json`.
+Exp 5606 SHALL be a single evidence-preserving remeasurement after Exp 5605,
+not a parser-only rerun of Exp 5567. It SHALL consume the Exp 5566 exact
+ASP/FSM near-miss corpus, SHALL use the Exp 5605 raw response evidence envelope
+contract for every prompt and raw response, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT push, and SHALL declare
+`inference_substrate=local_gguf_llamacpp_cuda`.
+
+Before loading any model, Exp 5606 SHALL enforce structured gates for corpus
+readiness, at least 30 independent valid/controlled-near-miss instance pairs
+per headline model, cached local GGUF paths for every headline model,
+llama.cpp availability, CUDA visibility, and no legacy CPU substitution.
+Headline `model_specs` SHALL include all three mandated families:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy 0.8B or E4B models MAY be recorded
+only as labeled smoke diagnostics and SHALL NOT satisfy headline gates.
+
+For every headline model, Exp 5606 SHALL authenticate the local path, model
+file hash, llama.cpp version, CUDA device identity, worker PID and port status,
+offloaded layer count, and nonzero GPU use. A CPU-only or unauthenticated
+offload path SHALL write an explicit blocked artifact rather than silently
+accepting fallback. The exact Exp 5566 ASP/FSM validators SHALL remain the
+only correctness oracle; no LLM judge SHALL decide solve or verify labels.
+
+Exp 5606 SHALL compare direct solving against at least three verification arms:
+`discrete_verdict`, `criteria_decomposition`, and `repeated_verdict_3x`.
+The arms SHALL use fixed seeds and fixed budgets. Repeated verification SHALL
+aggregate repeated calls per candidate before statistics and SHALL NOT pool
+repeats as independent samples. The panel SHALL report direct solve accuracy
+separately from verification accuracy by model and arm.
+
+Every model prompt and raw response SHALL be persisted through the Exp 5605
+lossless response envelope. The terminal artifact SHALL point to that ledger
+through `evidence_envelope_path`; the default ledger path SHALL be
+`results/experiment_5606_clean_sota_solve_verify_evidence_panel.responses.jsonl`.
+`raw_response_replay_passed=true` SHALL mean the stored prompt and response
+bytes replay byte-for-byte with matching hashes and row-chain hashes. Exp 5606
+SHALL report parser failure and truncation separately per headline model, SHALL compute
+`maximum_parser_failure_rate` from the worst model rather than an average, and
+SHALL require every per-model parser failure rate and truncation rate to be
+`<=0.05` before `panel_complete` can be true.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `model_specs`, `gpu_offload_authenticated`,
+`instances_evaluated_by_model`, `evidence_envelope_path`,
+`raw_response_replay_passed`, `per_model_parser_failure_rate`,
+`maximum_parser_failure_rate`, `per_model_truncation_rate`,
+`solve_accuracy_by_model`, `verify_accuracy_by_model_and_arm`,
+`exact_oracle_agreement`, `paired_effects_and_intervals`,
+`solve_verify_asymmetry_supported`, `panel_complete`, `inference_substrate`,
+and `honest_verdict`. `panel_complete` SHALL be true only when all headline
+models have full denominators, exact replay, authenticated inference, and the
+parser and truncation ceilings. `solve_verify_asymmetry_supported` SHALL be
+true only when clean paired effects with intervals support a non-sub-percent
+solve-versus-verify difference. Sub-percent differences SHALL NOT be promoted
+as claims.
+
+Field principles:
+
+- `field_principles`: Every headline and gate field names the evidence
+  boundary it protects.
+- `model_specs`: Headline identity and cache path are auditable for all three
+  mandated GGUF families.
+- `gpu_offload_authenticated`: Local CUDA evidence is real and CPU fallback
+  cannot unlock headline rows.
+- `instances_evaluated_by_model`: Denominators stay separate for each model
+  and arm.
+- `evidence_envelope_path`: Every aggregate traces to raw prompt and response
+  rows.
+- `raw_response_replay_passed`: Exact outputs remain recoverable from the
+  ledger.
+- `per_model_parser_failure_rate`: One family cannot mask another.
+- `maximum_parser_failure_rate`: Downstream gates use the worst family.
+- `per_model_truncation_rate`: Output-budget failures stay visible.
+- `solve_accuracy_by_model`: Direct generation is separate from verification.
+- `verify_accuracy_by_model_and_arm`: Verification modes remain
+  disaggregated.
+- `exact_oracle_agreement`: Exact validators are the authority.
+- `paired_effects_and_intervals`: Uncertainty bounds claims.
+- `solve_verify_asymmetry_supported`: Headline support requires clean paired
+  evidence.
+- `panel_complete`: Exact extension needs a valid residual ledger.
+- `inference_substrate`: Provenance is explicit.
+- `honest_verdict`: Repeat collapse is terminal retirement evidence.
+
+### SCENARIO-VERIFY-5606: Clean Panel Or Terminal Retirement Evidence
+
+Given the Exp 5566 corpus is ready, all three mandated GGUF paths are cached,
+and llama.cpp CUDA offload is authenticated with nonzero GPU use, when Exp 5606
+runs, then it preregisters at least 30 independent valid/near-miss pairs per
+headline model, invokes direct solve and the three verification arms with fixed
+seeds and budgets, writes every prompt and response to the Exp 5605 envelope,
+replays the ledger exactly, computes per-model parser and truncation rates,
+reports solve and verify accuracy separately, writes paired effects with
+intervals and family heterogeneity, writes
+`results/experiment_5606_clean_sota_solve_verify_evidence_panel.json`, and
+sets `panel_complete=true` only if every gate passes.
+
+If any headline GGUF is missing, CUDA/offload is unauthenticated, nonzero GPU
+use cannot be shown, the response ledger cannot be replayed, a model has fewer
+than 30 independent instances, any per-model parser failure rate or truncation
+rate exceeds 0.05, or exact validators cannot decide every required label, then
+Exp 5606 SHALL still write the terminal artifact with `panel_complete=false`,
+the raw-response ledger or safe diagnostics preserved, and an `honest_verdict`
+beginning with `blocked_` rather than averaging away the failing family.
+
+## Implementation Status (REQ-VERIFY-5606)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5606 | Implemented (`python/carnot/experiment_5606_clean_sota_solve_verify_evidence_panel.py`, `results/experiment_5606_clean_sota_solve_verify_evidence_panel.json`) | Implemented (`tests/python/test_experiment_5606_clean_sota_solve_verify_evidence_panel.py`) |
+
 ### REQ-VERIFY-5605: Append-Only Raw Response Evidence Envelope
 
 The repository SHALL provide Exp 5605 at
