@@ -1,0 +1,3112 @@
+{
+  "experiment": "experiment_5701_candidate_scoring_stack_bare_control_ab_headroom",
+  "schema": "carnot.exp5701.candidate_scoring_stack_bare_control_ab_headroom.v1",
+  "result_path": "results/experiment_5701_candidate_scoring_stack_bare_control_ab_headroom.json",
+  "honest_verdict": "complete: candidate_stack_ties_levels_but_more_efficient_than_bare_control",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; the full stack beating bare control, losing to it, and tying are all distinct, real, citable outcomes -- an architecturally-richer stack is not automatically a measured win"
+    },
+    "roster_source": {
+      "principle": "documents WHY this roster differs from exp5592's -- every game here has a registered GameAdapter (arc_game_adapters.adaptered_games()), so the generic policy has a structural chance to progress, unlike exp5592's un-adaptered games (wa30, sc25) which were floor-effect noise, not signal"
+    },
+    "n_games_with_headroom": {
+      "principle": "count of games where EITHER arm reached level>=1 -- the direct fix for exp5592's single-game floor effect; more non-zero cells means the arm comparison rests on genuine statistical footing, not one game's tie"
+    },
+    "prior_attempt": {
+      "principle": "CLAUDE.md Failed-Experiment Rerun Discipline -- names the exp5592 floor-effect finding and what is different here (roster restricted to adaptered games, budget raised 200->500) so this is a documented root-cause fix, not a doomed re-run"
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_self_discovery_no_llm -- CARNOT_ARC_DISABLE_INDUCTION=1 isolates the candidate-selection axis, not tier-3 induction"
+    },
+    "bare_control_kwargs": {
+      "principle": "identical to exp5592's -- the real E3AgentPolicy constructor kwargs mapped from SUBMITTED_AGENT_CONFIG['bare_control_config'], unchanged so this is a genuine re-scope, not a different ablation"
+    },
+    "levels_gained_headroom_present": {
+      "principle": "CLAUDE.md FALSE_NEGATIVE_RISK discipline -- a null delta is only interpretable if at least one arm shows nonzero levels_gained somewhere on the roster"
+    },
+    "efficiency_full_stack_total": {
+      "principle": "sum of the leaderboard harness's own per-game efficiency score -- the action-efficiency half of forge's own reported metric, not just level count"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "verifier_is_oracle": false,
+  "roster": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "dc22",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sk48",
+    "sp80",
+    "su15",
+    "tr87",
+    "tu93",
+    "vc33"
+  ],
+  "roster_source": "arc_game_adapters.adaptered_games()",
+  "budget": 500,
+  "prior_attempt": {
+    "experiment_id": 5592,
+    "verdict": "candidate_stack_honest_null_headroom_present_no_delta",
+    "root_cause": "roster mixed adaptered and un-adaptered games at budget=200; only 1 of 11 games (lp85) reached level>0 in either arm, and that game tied identically -- a floor effect, not a genuine arm comparison",
+    "what_is_different": "roster restricted to arc_game_adapters.adaptered_games() (games the live path can structurally progress on); budget raised 200->500, calibrated by a same-session probe showing budget=600 lifts the level>=1 hit rate on adaptered games from ~9% to ~50%",
+    "retire_if_same_verdict": false
+  },
+  "bare_control_kwargs": {
+    "target_levels": 1,
+    "value_weight": 0.0,
+    "candidate_router": null,
+    "navigation_cost_tiebreak": false,
+    "action_effect_expansion_prior": false,
+    "goal_bias": null,
+    "goal_candidate_guidance": false
+  },
+  "full_stack_results": {
+    "m0r0": {
+      "game": "m0r0",
+      "levels": 0,
+      "reached": 0,
+      "actions": 496,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 496,
+          "human_actions": 30,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 111,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 203,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 500,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 237,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 1,
+        "forward_walk_hit_rate": 0.8333333333333334
+      },
+      "reset_replay_steps": 1,
+      "forward_walk_hit_rate": 0.8333333333333334,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "m0r0",
+        "stuck_at_level": 0,
+        "actions_spent": 496,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "tu93": {
+      "game": "tu93",
+      "levels": 1,
+      "reached": 1,
+      "actions": 486,
+      "efficiency": 0.0045,
+      "per_level_efficiency": 0.0045,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 421,
+          "human_actions": 19,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 65,
+          "human_actions": 16,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 34,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 42,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 123,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 80,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 14,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 111,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 124,
+        "forward_walk_hit_rate": 0.723404255319149
+      },
+      "reset_replay_steps": 124,
+      "forward_walk_hit_rate": 0.723404255319149,
+      "actions_to_first_levelup": 421,
+      "gap": null
+    },
+    "sp80": {
+      "game": "sp80",
+      "levels": 0,
+      "reached": 0,
+      "actions": 483,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 483,
+          "human_actions": 39,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 25,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 148,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 152,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 24,
+        "forward_walk_hit_rate": 0.6190476190476191
+      },
+      "reset_replay_steps": 24,
+      "forward_walk_hit_rate": 0.6190476190476191,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sp80",
+        "stuck_at_level": 0,
+        "actions_spent": 483,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "sk48": {
+      "game": "sk48",
+      "levels": 0,
+      "reached": 0,
+      "actions": 499,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 499,
+          "human_actions": 61,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 177,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 101,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 103,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 230,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 181,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 125,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 92,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sk48",
+        "stuck_at_level": 0,
+        "actions_spent": 499,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "vc33": {
+      "game": "vc33",
+      "levels": 1,
+      "reached": 1,
+      "actions": 457,
+      "efficiency": 1.75,
+      "per_level_efficiency": 1.75,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 10,
+          "human_actions": 7,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 447,
+          "human_actions": 18,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 44,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 61,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 131,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 34,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 152,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 64,
+        "forward_walk_hit_rate": 0.3333333333333333
+      },
+      "reset_replay_steps": 64,
+      "forward_walk_hit_rate": 0.3333333333333333,
+      "actions_to_first_levelup": 10,
+      "gap": null
+    },
+    "ar25": {
+      "game": "ar25",
+      "levels": 0,
+      "reached": 0,
+      "actions": 499,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 499,
+          "human_actions": 32,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 50,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 75,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 37,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 89,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 159,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 233,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 73,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ar25",
+        "stuck_at_level": 0,
+        "actions_spent": 499,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "ka59": {
+      "game": "ka59",
+      "levels": 0,
+      "reached": 0,
+      "actions": 494,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 494,
+          "human_actions": 28,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 109,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 51,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 51,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 33,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 132,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 326,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 1,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 1,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ka59",
+        "stuck_at_level": 0,
+        "actions_spent": 494,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "lf52": {
+      "game": "lf52",
+      "levels": 0,
+      "reached": 0,
+      "actions": 491,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 491,
+          "human_actions": 32,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 81,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 60,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 71,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 205,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 148,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 244,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 109,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 164,
+          "completed": false
+        },
+        {
+          "level": 9,
+          "agent_actions": 0,
+          "human_actions": 225,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 6,
+        "forward_walk_hit_rate": 0.8947368421052632
+      },
+      "reset_replay_steps": 6,
+      "forward_walk_hit_rate": 0.8947368421052632,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "lf52",
+        "stuck_at_level": 0,
+        "actions_spent": 491,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "g50t": {
+      "game": "g50t",
+      "levels": 0,
+      "reached": 0,
+      "actions": 496,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 496,
+          "human_actions": 78,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 175,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 179,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 230,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 67,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 9,
+        "forward_walk_hit_rate": 0.9594594594594594
+      },
+      "reset_replay_steps": 9,
+      "forward_walk_hit_rate": 0.9594594594594594,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "g50t",
+        "stuck_at_level": 0,
+        "actions_spent": 496,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "cd82": {
+      "game": "cd82",
+      "levels": 0,
+      "reached": 0,
+      "actions": 493,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 493,
+          "human_actions": 55,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 8,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 21,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 8,
+        "forward_walk_hit_rate": 0.25
+      },
+      "reset_replay_steps": 8,
+      "forward_walk_hit_rate": 0.25,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "cd82",
+        "stuck_at_level": 0,
+        "actions_spent": 493,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "ls20": {
+      "game": "ls20",
+      "levels": 0,
+      "reached": 0,
+      "actions": 488,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 488,
+          "human_actions": 22,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 123,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 73,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 84,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 192,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 186,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 8,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 8,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ls20",
+        "stuck_at_level": 0,
+        "actions_spent": 488,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "tr87": {
+      "game": "tr87",
+      "levels": 0,
+      "reached": 0,
+      "actions": 496,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 496,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 40,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 45,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 71,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 146,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 6,
+        "forward_walk_hit_rate": 0.7
+      },
+      "reset_replay_steps": 6,
+      "forward_walk_hit_rate": 0.7,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "tr87",
+        "stuck_at_level": 0,
+        "actions_spent": 496,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "dc22": {
+      "game": "dc22",
+      "levels": 0,
+      "reached": 0,
+      "actions": 495,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 495,
+          "human_actions": 59,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 102,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 67,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 98,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 324,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 578,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "dc22",
+        "stuck_at_level": 0,
+        "actions_spent": 495,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "re86": {
+      "game": "re86",
+      "levels": 0,
+      "reached": 0,
+      "actions": 495,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 495,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 42,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 86,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 108,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 189,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 139,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 424,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 241,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 2,
+        "forward_walk_hit_rate": 0.3333333333333333
+      },
+      "reset_replay_steps": 2,
+      "forward_walk_hit_rate": 0.3333333333333333,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "re86",
+        "stuck_at_level": 0,
+        "actions_spent": 495,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "levels": 0,
+      "reached": 0,
+      "actions": 490,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 490,
+          "human_actions": 20,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 89,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 106,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 162,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 38,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 86,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 83,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 11,
+        "forward_walk_hit_rate": 0.64
+      },
+      "reset_replay_steps": 11,
+      "forward_walk_hit_rate": 0.64,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "s5i5",
+        "stuck_at_level": 0,
+        "actions_spent": 490,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "su15": {
+      "game": "su15",
+      "levels": 1,
+      "reached": 1,
+      "actions": 489,
+      "efficiency": 0.0061,
+      "per_level_efficiency": 0.0061,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 421,
+          "human_actions": 22,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 68,
+          "human_actions": 42,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 115,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 36,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 31,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 8,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 40,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 10,
+        "forward_walk_hit_rate": 0.6666666666666666
+      },
+      "reset_replay_steps": 10,
+      "forward_walk_hit_rate": 0.6666666666666666,
+      "actions_to_first_levelup": 421,
+      "gap": null
+    },
+    "sb26": {
+      "game": "sb26",
+      "levels": 0,
+      "reached": 0,
+      "actions": 499,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 499,
+          "human_actions": 18,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 28,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 18,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 19,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 31,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 18,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sb26",
+        "stuck_at_level": 0,
+        "actions_spent": 499,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "cn04": {
+      "game": "cn04",
+      "levels": 0,
+      "reached": 0,
+      "actions": 491,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 491,
+          "human_actions": 29,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 85,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 300,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 208,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 113,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "cn04",
+        "stuck_at_level": 0,
+        "actions_spent": 491,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "ft09": {
+      "game": "ft09",
+      "levels": 0,
+      "reached": 0,
+      "actions": 497,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 497,
+          "human_actions": 43,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 12,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 28,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 65,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 37,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 2,
+        "forward_walk_hit_rate": 0.5
+      },
+      "reset_replay_steps": 2,
+      "forward_walk_hit_rate": 0.5,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ft09",
+        "stuck_at_level": 0,
+        "actions_spent": 497,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "lp85": {
+      "game": "lp85",
+      "levels": 1,
+      "reached": 1,
+      "actions": 496,
+      "efficiency": 2.7778,
+      "per_level_efficiency": 2.7778,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 7,
+          "human_actions": 17,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 489,
+          "human_actions": 38,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 31,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 16,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 60,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 159,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": 7,
+      "gap": null
+    },
+    "bp35": {
+      "game": "bp35",
+      "levels": 0,
+      "reached": 0,
+      "actions": 489,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 489,
+          "human_actions": 21,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 48,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 44,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 38,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 33,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 87,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 86,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 131,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 163,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "bp35",
+        "stuck_at_level": 0,
+        "actions_spent": 489,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "r11l": {
+      "game": "r11l",
+      "levels": 0,
+      "reached": 0,
+      "actions": 489,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 489,
+          "human_actions": 22,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 33,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 51,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 52,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 49,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "r11l",
+        "stuck_at_level": 0,
+        "actions_spent": 489,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    }
+  },
+  "bare_control_results": {
+    "lp85": {
+      "game": "lp85",
+      "levels": 1,
+      "reached": 1,
+      "actions": 5,
+      "efficiency": 2.7778,
+      "per_level_efficiency": 2.7778,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 5,
+          "human_actions": 17,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 38,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 31,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 16,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 60,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 159,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": 5,
+      "gap": null
+    },
+    "vc33": {
+      "game": "vc33",
+      "levels": 1,
+      "reached": 1,
+      "actions": 67,
+      "efficiency": 0.039,
+      "per_level_efficiency": 0.039,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 67,
+          "human_actions": 7,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 18,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 44,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 61,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 131,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 34,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 152,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 2,
+        "forward_walk_hit_rate": 0.8
+      },
+      "reset_replay_steps": 2,
+      "forward_walk_hit_rate": 0.8,
+      "actions_to_first_levelup": 67,
+      "gap": null
+    },
+    "sp80": {
+      "game": "sp80",
+      "levels": 1,
+      "reached": 1,
+      "actions": 425,
+      "efficiency": 0.0401,
+      "per_level_efficiency": 0.0401,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 425,
+          "human_actions": 39,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 25,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 148,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 152,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 21,
+        "forward_walk_hit_rate": 0.6111111111111112
+      },
+      "reset_replay_steps": 21,
+      "forward_walk_hit_rate": 0.6111111111111112,
+      "actions_to_first_levelup": 425,
+      "gap": null
+    },
+    "ar25": {
+      "game": "ar25",
+      "levels": 0,
+      "reached": 0,
+      "actions": 499,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 499,
+          "human_actions": 32,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 50,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 75,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 37,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 89,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 159,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 233,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 73,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ar25",
+        "stuck_at_level": 0,
+        "actions_spent": 499,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "sk48": {
+      "game": "sk48",
+      "levels": 0,
+      "reached": 0,
+      "actions": 499,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 499,
+          "human_actions": 61,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 177,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 101,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 103,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 230,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 181,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 125,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 92,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sk48",
+        "stuck_at_level": 0,
+        "actions_spent": 499,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "m0r0": {
+      "game": "m0r0",
+      "levels": 0,
+      "reached": 0,
+      "actions": 496,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 496,
+          "human_actions": 30,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 111,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 203,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 500,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 237,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 1,
+        "forward_walk_hit_rate": 0.5714285714285714
+      },
+      "reset_replay_steps": 1,
+      "forward_walk_hit_rate": 0.5714285714285714,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "m0r0",
+        "stuck_at_level": 0,
+        "actions_spent": 496,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "cd82": {
+      "game": "cd82",
+      "levels": 0,
+      "reached": 0,
+      "actions": 493,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 493,
+          "human_actions": 55,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 8,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 21,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 8,
+        "forward_walk_hit_rate": 0.25
+      },
+      "reset_replay_steps": 8,
+      "forward_walk_hit_rate": 0.25,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "cd82",
+        "stuck_at_level": 0,
+        "actions_spent": 493,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "ka59": {
+      "game": "ka59",
+      "levels": 0,
+      "reached": 0,
+      "actions": 495,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 495,
+          "human_actions": 28,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 109,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 51,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 51,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 33,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 132,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 326,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ka59",
+        "stuck_at_level": 0,
+        "actions_spent": 495,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "s5i5": {
+      "game": "s5i5",
+      "levels": 0,
+      "reached": 0,
+      "actions": 490,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 490,
+          "human_actions": 20,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 89,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 106,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 162,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 38,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 86,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 83,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 12,
+        "forward_walk_hit_rate": 0.5909090909090909
+      },
+      "reset_replay_steps": 12,
+      "forward_walk_hit_rate": 0.5909090909090909,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "s5i5",
+        "stuck_at_level": 0,
+        "actions_spent": 490,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "dc22": {
+      "game": "dc22",
+      "levels": 0,
+      "reached": 0,
+      "actions": 495,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 495,
+          "human_actions": 59,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 102,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 67,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 98,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 324,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 578,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "dc22",
+        "stuck_at_level": 0,
+        "actions_spent": 495,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "tr87": {
+      "game": "tr87",
+      "levels": 0,
+      "reached": 0,
+      "actions": 496,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 496,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 40,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 45,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 71,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 146,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 6,
+        "forward_walk_hit_rate": 0.7692307692307693
+      },
+      "reset_replay_steps": 6,
+      "forward_walk_hit_rate": 0.7692307692307693,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "tr87",
+        "stuck_at_level": 0,
+        "actions_spent": 496,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "ls20": {
+      "game": "ls20",
+      "levels": 0,
+      "reached": 0,
+      "actions": 489,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 489,
+          "human_actions": 22,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 123,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 73,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 84,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 192,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 186,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 7,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 7,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ls20",
+        "stuck_at_level": 0,
+        "actions_spent": 489,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "cn04": {
+      "game": "cn04",
+      "levels": 0,
+      "reached": 0,
+      "actions": 491,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 491,
+          "human_actions": 29,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 85,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 300,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 208,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 113,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "cn04",
+        "stuck_at_level": 0,
+        "actions_spent": 491,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "ft09": {
+      "game": "ft09",
+      "levels": 0,
+      "reached": 0,
+      "actions": 497,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 497,
+          "human_actions": 43,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 12,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 28,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 65,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 37,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 2,
+        "forward_walk_hit_rate": 0.6
+      },
+      "reset_replay_steps": 2,
+      "forward_walk_hit_rate": 0.6,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "ft09",
+        "stuck_at_level": 0,
+        "actions_spent": 497,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "re86": {
+      "game": "re86",
+      "levels": 0,
+      "reached": 0,
+      "actions": 495,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 495,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 42,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 86,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 108,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 189,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 139,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 424,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 241,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 3,
+        "forward_walk_hit_rate": 0.2
+      },
+      "reset_replay_steps": 3,
+      "forward_walk_hit_rate": 0.2,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "re86",
+        "stuck_at_level": 0,
+        "actions_spent": 495,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "tu93": {
+      "game": "tu93",
+      "levels": 0,
+      "reached": 0,
+      "actions": 488,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 488,
+          "human_actions": 19,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 16,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 34,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 42,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 123,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 80,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 14,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 111,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 113,
+        "forward_walk_hit_rate": 0.8035714285714286
+      },
+      "reset_replay_steps": 113,
+      "forward_walk_hit_rate": 0.8035714285714286,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "tu93",
+        "stuck_at_level": 0,
+        "actions_spent": 488,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "bp35": {
+      "game": "bp35",
+      "levels": 0,
+      "reached": 0,
+      "actions": 489,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 489,
+          "human_actions": 21,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 48,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 44,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 38,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 33,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 87,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 86,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 131,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 163,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "bp35",
+        "stuck_at_level": 0,
+        "actions_spent": 489,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "sb26": {
+      "game": "sb26",
+      "levels": 0,
+      "reached": 0,
+      "actions": 499,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 499,
+          "human_actions": 18,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 28,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 18,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 19,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 31,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 18,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sb26",
+        "stuck_at_level": 0,
+        "actions_spent": 499,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "su15": {
+      "game": "su15",
+      "levels": 1,
+      "reached": 1,
+      "actions": 461,
+      "efficiency": 0.0051,
+      "per_level_efficiency": 0.0051,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 461,
+          "human_actions": 22,
+          "completed": true
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 42,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 115,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 36,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 31,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 8,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 40,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 1,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 20,
+        "forward_walk_hit_rate": 0.7142857142857143
+      },
+      "reset_replay_steps": 20,
+      "forward_walk_hit_rate": 0.7142857142857143,
+      "actions_to_first_levelup": 461,
+      "gap": null
+    },
+    "lf52": {
+      "game": "lf52",
+      "levels": 0,
+      "reached": 0,
+      "actions": 483,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 483,
+          "human_actions": 32,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 81,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 60,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 71,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 205,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 148,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 244,
+          "completed": false
+        },
+        {
+          "level": 7,
+          "agent_actions": 0,
+          "human_actions": 109,
+          "completed": false
+        },
+        {
+          "level": 8,
+          "agent_actions": 0,
+          "human_actions": 164,
+          "completed": false
+        },
+        {
+          "level": 9,
+          "agent_actions": 0,
+          "human_actions": 225,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 30,
+        "forward_walk_hit_rate": 0.7575757575757576
+      },
+      "reset_replay_steps": 30,
+      "forward_walk_hit_rate": 0.7575757575757576,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "lf52",
+        "stuck_at_level": 0,
+        "actions_spent": 483,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "g50t": {
+      "game": "g50t",
+      "levels": 0,
+      "reached": 0,
+      "actions": 496,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 496,
+          "human_actions": 78,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 175,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 179,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 230,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 67,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 10,
+        "forward_walk_hit_rate": 0.9538461538461539
+      },
+      "reset_replay_steps": 10,
+      "forward_walk_hit_rate": 0.9538461538461539,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "g50t",
+        "stuck_at_level": 0,
+        "actions_spent": 496,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    },
+    "r11l": {
+      "game": "r11l",
+      "levels": 0,
+      "reached": 0,
+      "actions": 489,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 489,
+          "human_actions": 22,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 33,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 51,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 26,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 52,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 49,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "r11l",
+        "stuck_at_level": 0,
+        "actions_spent": 489,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      }
+    }
+  },
+  "levels_gained_full_stack_total": 4,
+  "levels_gained_bare_control_total": 4,
+  "per_game_levels_delta": {
+    "ar25": 0,
+    "bp35": 0,
+    "cd82": 0,
+    "cn04": 0,
+    "dc22": 0,
+    "ft09": 0,
+    "g50t": 0,
+    "ka59": 0,
+    "lf52": 0,
+    "lp85": 0,
+    "ls20": 0,
+    "m0r0": 0,
+    "r11l": 0,
+    "re86": 0,
+    "s5i5": 0,
+    "sb26": 0,
+    "sk48": 0,
+    "sp80": -1,
+    "su15": 0,
+    "tr87": 0,
+    "tu93": 1,
+    "vc33": 0
+  },
+  "efficiency_full_stack_total": 4.5384,
+  "efficiency_bare_control_total": 2.862,
+  "n_games_with_headroom": 5,
+  "levels_gained_headroom_present": true,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5701,
+  "duration_s": 1255.488,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "bare_control_config_present": true,
+    "adaptered_games_available": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "ce83ca6137b56d05015d35bae6d1551cfc3ba4c8dab90499ca321e24b48f3d95"
+}
