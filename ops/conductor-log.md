@@ -11742,3 +11742,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 14:35 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
 | 2026-07-14 14:37 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
 | 2026-07-14 14:39 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
+| 2026-07-14 14:54 UTC | Epistemic object-hypothesis causal-probe prototype | OK | 87 passed, 1 warning in 17.30s |
