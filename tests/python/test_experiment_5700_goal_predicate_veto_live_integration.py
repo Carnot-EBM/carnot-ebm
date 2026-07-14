@@ -91,7 +91,9 @@ def test_build_artifact_inconclusive_when_no_real_levelup(monkeypatch, tmp_path)
     assert artifact["real_levelups_in_collected_transitions"] == 0
 
 
-def test_build_artifact_confirms_veto_catches_miscalibrated_predicate(monkeypatch, tmp_path) -> None:
+def test_build_artifact_confirms_veto_catches_miscalibrated_predicate(
+    monkeypatch, tmp_path
+) -> None:
     """When the veto-on arm is rejected for goal-predicate inconsistency AND the veto-off
     arm on the same real transitions would have proceeded, the headline verdict names the
     confirmation directly."""
@@ -115,7 +117,10 @@ def test_build_artifact_confirms_veto_catches_miscalibrated_predicate(monkeypatc
 
     artifact = mod.build_artifact(root=tmp_path)
 
-    assert artifact["honest_verdict"] == "complete: veto_confirmed_catches_real_miscalibrated_predicate"
+    assert (
+        artifact["honest_verdict"]
+        == "complete: veto_confirmed_catches_real_miscalibrated_predicate"
+    )
     assert "dynamics gate" in artifact["dynamics_gate_finding"]
 
 
@@ -151,7 +156,9 @@ def test_req_arc_wmte_5593_3_repository_artifact_is_a_real_measured_result() -> 
 
     result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
 
-    assert result["honest_verdict"] == "complete: veto_confirmed_catches_real_miscalibrated_predicate"
+    assert (
+        result["honest_verdict"] == "complete: veto_confirmed_catches_real_miscalibrated_predicate"
+    )
     assert result["inference_substrate"] == "live_llm_inference"
     assert result["target_game"] == "lp85"
     assert result["real_levelups_in_collected_transitions"] >= 1
