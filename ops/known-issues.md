@@ -606,6 +606,46 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > `adversarial_verify.py` clean. Full write-up:
     > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-FCP-5701-HEADROOM-RESCOPE.
     > Task 12 is now fully closed.
+
+    > **DONE 2026-07-14 (outer-loop, exp5703, follow-up investigation into the one regression
+    > exp5701 found):** instrumented all three "richer stack" mechanisms (`candidate_router`,
+    > `goal_bias`, `goal_candidate_guidance`) during a real replay of the sp80 regression and found
+    > **all three were structurally inert** — `goal_bias`
+    > (`arc_goal_energy_live.GoalSatisfactionEnergy`, source `exp4020_graded_goal_satisfaction_
+    > energy`) scored EXACTLY `1.0` on all 771 real frontier-node invocations (zero variance,
+    > mathematically incapable of influencing search order); `goal_candidate_guidance` (same
+    > source) also scored uniformly and correctly self-detected its own degeneracy
+    > (`arms_non_degenerate=False`) and no-op'd by existing design; `candidate_router` was
+    > genuinely invoked 33 times but never once changed the candidate ordering
+    > (`changed_order_count=0`). **Honest conclusion: the sp80 regression is NOT caused by a bad
+    > learned signal actively misleading search — it is structurally impossible for these three
+    > mechanisms to be the cause here.** The real cause traces to one of the other differing knobs
+    > (`value_weight`/DAgger value head, `navigation_cost_tiebreak`, `action_effect_expansion_
+    > prior`) — not further isolated in this investigation. Separately surfaced a genuine, useful
+    > finding: `GoalSatisfactionEnergy` is structurally blind on sp80's placement mechanic,
+    > corroborating `ops/verifier_gaps.md` GAP-4891's independent finding (a different code path —
+    > the offline self-induction operator, not the live goal-bias stack) that sp80's goal is
+    > spatial/placement and not discriminable by count/generic-fraction features. Logged as
+    > `ops/verifier_gaps.md` GAP-5703 per the Missing-Verifier Gap Logging discipline, with a
+    > concrete fix recommendation (give `goal_bias` the same degenerate-score self-audit
+    > `goal_candidate_guidance` already has). `adversarial_verify.py` clean. Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-FCP-5703.
+
+    > **DONE 2026-07-14 (outer-loop, exp5702, follow-up to task 8's dynamics-gate-dominance
+    > finding):** aggregated 95 real round-level `heldout_accuracy` values across 12 real
+    > `live_llm_inference` artifacts (excluding exp5700, which deliberately bypassed the gate).
+    > **`pass_rate_at_live_threshold=0.1263`** (only 12.6% of real induction rounds ever reach the
+    > exact `1.0` bar the live pipeline enforces); `exact_zero_rate=0.4737` (47.4% score a complete
+    > `0.0`); `mean=0.3069`, `median=0.12` — a strongly right-skewed, mostly-poor distribution.
+    > **Honest limitation:** this measures the PER-ROW pass rate, not the bounded 3-round retry
+    > loop's eventual within-budget success rate — the checked-in corpus lacks enough same-attempt
+    > multi-round traces to reconstruct that distinct statistic. Still, corpus-scale evidence that
+    > the dynamics gate is genuinely strict in practice, corroborating task 8's single-attempt
+    > observation. Raises (but does not resolve) a calibration question: whether a graduated-trust
+    > tier, mirroring `GoalEnergyCandidateGuidance`'s own degenerate-score self-audit pattern
+    > (see the exp5703 entry above), could safely use a "good but imperfect" induced model instead
+    > of an all-or-nothing accept/reject at `1.0`. `adversarial_verify.py` clean. Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5593-4.
 13. **(New 2026-07-12, HIGH PRIORITY — the frozen live generator's sizing constraint appears to be
     stale, not just conservative) Re-verify the Kaggle VRAM budget and A/B a larger generator before
     trusting the current 9B choice.** Operator question: "are we still using qwen-3.5-9B when the

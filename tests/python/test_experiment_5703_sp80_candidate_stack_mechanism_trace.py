@@ -11,7 +11,42 @@ from carnot import experiment_5703_sp80_candidate_stack_mechanism_trace as mod
 
 
 REPO = Path(__file__).resolve().parents[2]
+SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+GAPS_PATH = REPO / "ops" / "verifier_gaps.md"
 RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
+
+
+def test_req_arc_fcp_5703_spec_declares_mechanism_trace() -> None:
+    """REQ-ARC-FCP-5703: OpenSpec declares the mechanism-level diagnosis, including the
+    honest finding that all three learned mechanisms were confirmed inert this run."""
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5703") :]
+    section = section[: section.index("### REQ-ARC-WMTE-5593-4")]
+
+    for marker in (
+        "SCENARIO-ARC-FCP-5703-MECHANISM-INERT-OR-IMPLICATED",
+        "goal_bias_score_variance=0.0",
+        "structurally impossible for",
+    ):
+        assert marker in section
+
+
+def test_gap_5703_logged_in_verifier_gaps() -> None:
+    """CLAUDE.md Missing-Verifier Gap Logging: the present-but-uninformative
+    GoalSatisfactionEnergy finding is logged with a real diagnosed cause and a
+    concrete candidate design, cross-referenced to the corroborating GAP-4891."""
+
+    gaps = GAPS_PATH.read_text(encoding="utf-8")
+    section = gaps[gaps.index("### GAP-5703") :]
+
+    for marker in (
+        "GAP-4891",
+        "missing discriminator",
+        "candidate design",
+        "does NOT explain the sp80 regression",
+    ):
+        assert marker in section
 
 
 def test_first_precondition_miss_reports_failing_key() -> None:
