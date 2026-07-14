@@ -11714,3 +11714,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 04:42 UTC | Property-template and entity-attribution exact ver | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-p |
 | 2026-07-14 05:01 UTC | Spline-local KAN longitudinal exact-gated continuo | OK | 88 passed, 1 warning in 16.45s |
 | 2026-07-14 05:45 UTC | ARC inert-click and object-history filter matched- | OK | 154 passed, 1 warning in 19.78s |
+| 2026-07-14 06:06 UTC | ARC-AGI-3 unconditional rotated live-agent +1 repr | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
