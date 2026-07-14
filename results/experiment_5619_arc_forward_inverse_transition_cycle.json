@@ -1,0 +1,220 @@
+{
+  "abstention_rate": 0.75,
+  "corruption_reject_rate": 1.0,
+  "coverage": 0.25,
+  "cycle_verifier_positive_control_rate": 0.009259,
+  "date": "20260714",
+  "experiment": "experiment_5619_arc_forward_inverse_transition_cycle",
+  "experiment_id": 5619,
+  "field_principles": {
+    "abstention_rate": {
+      "principle": "an over-abstaining verifier is safe but not useful."
+    },
+    "corruption_reject_rate": {
+      "principle": "negative controls prove bad updates are rejected."
+    },
+    "coverage": {
+      "principle": "the verifier must expose how much of heldout data received a non-abstaining decision."
+    },
+    "cycle_verifier_positive_control_rate": {
+      "principle": "the downstream gate exposes a numeric positive-control pass rate."
+    },
+    "field_principles": {
+      "principle": "principle annotations are carried in the artifact so every required 5619 field is auditable."
+    },
+    "forward_replay_error": {
+      "principle": "effect consistency is measured directly instead of inferred from acceptance."
+    },
+    "heldout_transitions_by_condition": {
+      "principle": "valid and adversarial sample sizes are explicit before interpreting rates."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix records whether the verifier was useful, over-abstaining, or unsafe."
+    },
+    "immutable_update_receipts": {
+      "principle": "only admitted valid transitions create durable update receipts."
+    },
+    "inference_substrate": {
+      "principle": "offline_arcade_live_agent_runtime_filters_no_new_llm -- no new LLM was invoked."
+    },
+    "inverse_action_accuracy": {
+      "principle": "the inverse reachability factor is measured separately from successor plausibility."
+    },
+    "per_game_adapter_used": {
+      "principle": "false proves the verifier is generic and not a hand GameAdapter."
+    },
+    "per_game_heterogeneity": {
+      "principle": "within-game fitting is reported per game and no cross-game transfer is claimed."
+    },
+    "random_seeds": {
+      "principle": "determinism is the precondition for replaying the evaluation."
+    },
+    "registry_precheck": {
+      "principle": "known public reproduced levels only; no duplicate solve or new-level credit is implied."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed replay inputs catch silent corpus or threshold drift."
+    },
+    "runtime_overhead": {
+      "principle": "live-path cost is bounded and not hidden inside aggregate wall time."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- this task receives no new ARC level credit."
+    },
+    "source_files_read": {
+      "principle": "false excludes outer-loop source reverse engineering from the measurement."
+    },
+    "trace_roster": {
+      "principle": "every measured transition has auditable game/session/episode provenance from agent-owned observations."
+    },
+    "transition_feature_contract": {
+      "principle": "features are derived from before/action/after frames, not source code, adapters, or hidden oracle flags."
+    },
+    "unsafe_transition_accept_count": {
+      "principle": "fail-closed admission prevents corrupted updates from mutating the world model."
+    },
+    "valid_transition_accept_count": {
+      "principle": "the numerator behind valid-transition coverage is auditable."
+    },
+    "valid_transition_accept_rate": {
+      "principle": "coverage is visible; an all-abstain verifier is not useful."
+    }
+  },
+  "forward_replay_error": 0.0,
+  "heldout_transitions_by_condition": {
+    "mismatched_successor": 108,
+    "noop_substitution": 108,
+    "permuted_action": 108,
+    "valid": 108,
+    "wrong_object_change": 108
+  },
+  "honest_verdict": "complete: transition_cycle_verifier_safe_over_abstaining_not_useful_terminal",
+  "immutable_update_receipts": [
+    {
+      "action": 1,
+      "condition": "valid",
+      "effect_core": "(8, (4, 2), ((2, 14, 4), (14, 2, 4)))",
+      "episode": "dc22-episode-1",
+      "forward_replay_error": 0.0,
+      "game": "dc22",
+      "immutable": true,
+      "inverse_action": 1,
+      "provenance": "agent_owned_runtime_observation",
+      "receipt_id": "cycle:65975a6b635e2fe1",
+      "step": 19
+    }
+  ],
+  "inference_substrate": "offline_arcade_live_agent_runtime_filters_no_new_llm",
+  "inference_substrate_note": "Offline public-transition verifier scoring only; no GGUF/LLM invocation.",
+  "inverse_action_accuracy": 0.203704,
+  "per_game_adapter_used": false,
+  "per_game_heterogeneity": {
+    "bp35": {
+      "abstention_rate": 0.944444,
+      "calibration_transitions": 96,
+      "corruption_reject_rate": 1.0,
+      "heldout_transitions": 36,
+      "valid_transition_accept_rate": 0.0
+    },
+    "dc22": {
+      "abstention_rate": 0.666667,
+      "calibration_transitions": 101,
+      "corruption_reject_rate": 1.0,
+      "heldout_transitions": 36,
+      "valid_transition_accept_rate": 0.027778
+    },
+    "s5i5": {
+      "abstention_rate": 0.638889,
+      "calibration_transitions": 100,
+      "corruption_reject_rate": 1.0,
+      "heldout_transitions": 36,
+      "valid_transition_accept_rate": 0.0
+    }
+  },
+  "random_seeds": [
+    5619
+  ],
+  "registry_precheck": {
+    "ok": true,
+    "only_known_levels_used": true,
+    "per_game_adapter_used": false,
+    "registry_total_levels": 177,
+    "roster_rows": [
+      {
+        "agent_owned_transition_count": 144,
+        "game": "dc22",
+        "levels_reproduced": 6,
+        "registry_reproduced": true,
+        "selected": true
+      },
+      {
+        "agent_owned_transition_count": 144,
+        "game": "bp35",
+        "levels_reproduced": 8,
+        "registry_reproduced": true,
+        "selected": true
+      },
+      {
+        "agent_owned_transition_count": 144,
+        "game": "s5i5",
+        "levels_reproduced": 8,
+        "registry_reproduced": true,
+        "selected": true
+      }
+    ],
+    "selected_games": [
+      "dc22",
+      "bp35",
+      "s5i5"
+    ],
+    "source_files_read": false
+  },
+  "reproducibility_checksum": "sha256:1478dd2dee604e7f7804749884877c1d84541e7f32ebdff38ac51bd1430b7b96",
+  "runtime_overhead": {
+    "duration_s": 1.839209,
+    "evaluated_transitions": 540,
+    "seconds_per_transition": 0.00340594
+  },
+  "schema": "carnot.exp5619.arc_forward_inverse_transition_cycle.v1",
+  "solve_provenance": "development_proxy",
+  "source_files_read": false,
+  "source_files_read_note": "No environment_files game source was read by this builder.",
+  "trace_roster": [
+    {
+      "calibration_transitions": 101,
+      "game": "dc22",
+      "heldout_transitions": 36,
+      "provenance": "data/arc_transition_corpus agent-owned runtime observations"
+    },
+    {
+      "calibration_transitions": 96,
+      "game": "bp35",
+      "heldout_transitions": 36,
+      "provenance": "data/arc_transition_corpus agent-owned runtime observations"
+    },
+    {
+      "calibration_transitions": 100,
+      "game": "s5i5",
+      "heldout_transitions": 36,
+      "provenance": "data/arc_transition_corpus agent-owned runtime observations"
+    }
+  ],
+  "transition_feature_contract": {
+    "cross_game_transfer_claim": false,
+    "features": [
+      "changed_cell_count",
+      "delta_color_pairs",
+      "changed_bbox_shape",
+      "click_relative_offsets"
+    ],
+    "fit_scope": "within_game_live_session_only",
+    "inputs": [
+      "state",
+      "action",
+      "successor"
+    ]
+  },
+  "unsafe_transition_accept_count": 0,
+  "valid_transition_accept_count": 1,
+  "valid_transition_accept_rate": 0.009259
+}

@@ -570,6 +570,7 @@ class StepwiseExplorer:
         similarity_retrieval: bool | None = None,
         similarity_bucket_width: float = MATM_SIMILARITY_BUCKET_WIDTH,
         similarity_max_candidates: int = MATM_SIMILARITY_MAX_CANDIDATES,
+        transition_cycle_verifier: Any | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         self.auto_hud_mask = bool(auto_hud_mask)
@@ -729,6 +730,11 @@ class StepwiseExplorer:
             amortized_first_contact_prior
         )
         self.go_explore_archive = coerce_go_explore_archive(go_explore_archive)
+        self.transition_cycle_verifier = transition_cycle_verifier
+        self._transition_cycle_receipts: list[dict[str, Any]] = []
+        self._transition_cycle_admitted = 0
+        self._transition_cycle_rejected = 0
+        self._transition_cycle_abstained = 0
         # IGE cell selection (2026-06-28): when the flag is on and a Go-Explore archive exists without an
         # explicit selector, attach the LLM-promisingness cell selector (Intelligent Go-Explore). The
         # selector only RANKS already-archived cells (verifier_is_oracle=False) and falls back to the
@@ -981,6 +987,27 @@ class StepwiseExplorer:
         if hasattr(self.action_effect_expansion_prior, "diagnostics"):
             return dict(self.action_effect_expansion_prior.diagnostics())
         return {"enabled": True}
+
+    def transition_cycle_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-5619: expose forward/inverse update-admission receipts."""
+
+        if self.transition_cycle_verifier is None:
+            return {"enabled": False}
+        diagnostics: dict[str, Any] = {"enabled": True}
+        if hasattr(self.transition_cycle_verifier, "diagnostics"):
+            try:
+                diagnostics.update(dict(self.transition_cycle_verifier.diagnostics()))
+            except Exception:
+                diagnostics["verifier_diagnostics_error"] = True
+        diagnostics.update(
+            {
+                "admitted_update_count": int(self._transition_cycle_admitted),
+                "rejected_update_count": int(self._transition_cycle_rejected),
+                "abstained_update_count": int(self._transition_cycle_abstained),
+                "immutable_update_receipts": list(self._transition_cycle_receipts),
+            }
+        )
+        return diagnostics
 
     @staticmethod
     def _salience_diagnostic_prior(action_prior: Any | None) -> Any | None:
@@ -1527,6 +1554,29 @@ class StepwiseExplorer:
                     )
                 except Exception:
                     pass
+            cycle_allows_update = True
+            cycle_verifier = getattr(self, "transition_cycle_verifier", None)
+            if cycle_verifier is not None and o.get("previous_frame") is not None:
+                cycle_allows_update = False
+                try:
+                    decision = cycle_verifier.observe_transition(
+                        o.get("previous_frame") or o.get("grid"),
+                        int(o["action"]),
+                        o.get("data"),
+                        latest,
+                    )
+                    if bool(getattr(decision, "admitted", False)):
+                        cycle_allows_update = True
+                        self._transition_cycle_admitted += 1
+                        receipt = getattr(decision, "update_receipt", None)
+                        if isinstance(receipt, dict):
+                            self._transition_cycle_receipts.append(dict(receipt))
+                    elif bool(getattr(decision, "abstained", False)):
+                        self._transition_cycle_abstained += 1
+                    else:
+                        self._transition_cycle_rejected += 1
+                except Exception:
+                    self._transition_cycle_abstained += 1
             if level_increased:
                 fcs = getattr(self, "frame_change_scorer", None)
                 if fcs is not None and hasattr(fcs, "reset"):
@@ -1566,44 +1616,45 @@ class StepwiseExplorer:
                 act = {"action": o["action"], "data": o["data"]}
                 # record the forward edge for frontier-distance navigation (only if the
                 # action actually CHANGED state — a no-op self-edge is useless to navigate)
-                self._record_forward_edge(o["origin"], act, h)
-                if h not in self.graph:
-                    origin_node = self.graph.get(o["origin"], {})
-                    opath = origin_node.get("path", [])
-                    new_path = opath + [act]
-                    features = self._record_discriminative_sample(
-                        latest,
-                        previous_frame=o.get("previous_frame") or origin_node.get("frame"),
-                        label=1,
-                        source="alive_frontier",
-                        node_hash=h,
-                        path=new_path,
-                    )
-                    value, frame_for_value = self._initial_value(latest)
-                    self.graph[h] = {
-                        "path": new_path,
-                        "untested": self._candidates(
+                if cycle_allows_update:
+                    self._record_forward_edge(o["origin"], act, h)
+                    if h not in self.graph:
+                        origin_node = self.graph.get(o["origin"], {})
+                        opath = origin_node.get("path", [])
+                        new_path = opath + [act]
+                        features = self._record_discriminative_sample(
                             latest,
-                            path=new_path,
                             previous_frame=o.get("previous_frame") or origin_node.get("frame"),
-                        ),
-                        "value": value,
-                        "frame": (
-                            latest
-                            if self.goal_bias is not None
-                            or self.dense_curiosity is not None
-                            or self.action_effect_expansion_prior is not None
-                            or self.qd_generator is not None
-                            or self.controllable_novelty_policy is not None
-                            or self.object_centric_proposal_policy is not None
-                            or self.go_explore_archive is not None
-                            or self.similarity_retrieval_enabled
-                            else frame_for_value
-                        ),
-                        "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
-                        "discriminative_features": features,
-                    }
-                self._index_similarity_state(h, latest)
+                            label=1,
+                            source="alive_frontier",
+                            node_hash=h,
+                            path=new_path,
+                        )
+                        value, frame_for_value = self._initial_value(latest)
+                        self.graph[h] = {
+                            "path": new_path,
+                            "untested": self._candidates(
+                                latest,
+                                path=new_path,
+                                previous_frame=o.get("previous_frame") or origin_node.get("frame"),
+                            ),
+                            "value": value,
+                            "frame": (
+                                latest
+                                if self.goal_bias is not None
+                                or self.dense_curiosity is not None
+                                or self.action_effect_expansion_prior is not None
+                                or self.qd_generator is not None
+                                or self.controllable_novelty_policy is not None
+                                or self.object_centric_proposal_policy is not None
+                                or self.go_explore_archive is not None
+                                or self.similarity_retrieval_enabled
+                                else frame_for_value
+                            ),
+                            "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
+                            "discriminative_features": features,
+                        }
+                    self._index_similarity_state(h, latest)
         self.cur = h
         if self.root is None and not over:
             self.root = h
@@ -2480,6 +2531,7 @@ class E3AgentPolicy:
         active_probe_budget: int = 2,
         active_probe_concentration_threshold: float = 0.9,
         goal_guidance_lambda: float = SUBMITTED_GOAL_GUIDANCE_LAMBDA,
+        transition_cycle_verifier: Any | None = None,
     ) -> None:
         import os
 
@@ -2593,6 +2645,7 @@ class E3AgentPolicy:
             else _route_explore_budget(self.strategy_route)
         )
         self.proposer = proposer  # default set lazily to LocalGGUFProposer
+        self.transition_cycle_verifier = transition_cycle_verifier
         self.phase = "explore"
         self.plan: list = []
         self.pi = 0
@@ -3122,10 +3175,20 @@ class E3AgentPolicy:
                 g0, aid, data = self._prev
                 g1 = to_logical(grid_of(latest), self.cell)
                 transition = Transition(g0, aid, data, g1, self._prev_level, _level_of(latest))
-                self.transitions.append(transition)
-                self._dsl_transitions.append((g0, _action_key(aid, data), g1))
-                self._observe_active_probe_transition(transition)
-                self._maybe_route_from_transitions()
+                admit_world_model_update = True
+                verifier = getattr(self, "transition_cycle_verifier", None)
+                if verifier is not None:
+                    admit_world_model_update = False
+                    try:
+                        decision = verifier.observe_transition(g0, int(aid), data, g1)
+                        admit_world_model_update = bool(getattr(decision, "admitted", False))
+                    except Exception:
+                        admit_world_model_update = False
+                if admit_world_model_update:
+                    self.transitions.append(transition)
+                    self._dsl_transitions.append((g0, _action_key(aid, data), g1))
+                    self._observe_active_probe_transition(transition)
+                    self._maybe_route_from_transitions()
             except Exception:
                 # A degenerate/empty frame (e.g. shape (0,) -- the same class of
                 # post-terminal sentinel diagnosed in the g50t apply_g50t_label

@@ -14965,3 +14965,64 @@ Then every required field principle is present verbatim, `solve_provenance` is
 one of `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`,
 and the reproducibility checksum matches the content hash of the target,
 registry depths, loop evidence, provenance, and banking decision.
+
+### REQ-ARC-WMTE-5619: Agent-Owned Forward/Inverse Transition-Cycle Admission
+
+The ARC live agent SHALL provide a generic forward/inverse transition-cycle verifier that consumes
+only the agent's own runtime `(state, action, successor)` observations. The verifier SHALL build
+game-agnostic action-effect features from rendered state changes, fit or update only within a live
+session, and hold out episodes within each measured game without claiming cross-game transfer.
+
+For each candidate observed transition, the verifier SHALL score two independent factors:
+successor plausibility under observed generic state-change features and sparse inverse-action
+recovery of the executed action from the observed effect signature. A transition SHALL be admitted
+for downstream world-model updates only when both factors pass and the learned forward replay plus
+inverse recovery form a consistent cycle. Corrupted transitions, including permuted actions,
+mismatched successors, no-op substitutions, and wrong-object changes, SHALL fail closed rather than
+mutating the world model.
+
+Experiment 5619 SHALL write
+`results/experiment_5619_arc_forward_inverse_transition_cycle.json` from at least three already
+reproduced public games, with at least 32 held-out valid transitions and at least 32 held-out
+transitions for each corruption condition. The artifact SHALL declare
+`solve_provenance="development_proxy"`, `source_files_read=false`,
+`per_game_adapter_used=false`, and
+`inference_substrate="offline_arcade_live_agent_runtime_filters_no_new_llm"`. It SHALL report
+coverage, abstention, valid-transition acceptance, corrupted-transition rejection, inverse action
+accuracy, forward replay error, per-game heterogeneity, runtime overhead, immutable update receipts,
+random seeds, a reproducibility checksum, and an honest terminal verdict. A verifier that only
+abstains, or that cannot reject the corruption controls, SHALL report a terminal honest null and
+SHALL NOT promote itself as useful.
+
+Required field principles:
+
+- `registry_precheck`: principle "known public reproduced levels only; no duplicate solve or new-level credit is implied."
+- `trace_roster`: principle "every measured transition has auditable game/session/episode provenance from agent-owned observations."
+- `transition_feature_contract`: principle "features are derived from before/action/after frames, not source code, adapters, or hidden oracle flags."
+- `heldout_transitions_by_condition`: principle "valid and adversarial sample sizes are explicit before interpreting rates."
+- `inverse_action_accuracy`: principle "the inverse reachability factor is measured separately from successor plausibility."
+- `forward_replay_error`: principle "effect consistency is measured directly instead of inferred from acceptance."
+- `valid_transition_accept_rate`: principle "coverage is visible; an all-abstain verifier is not useful."
+- `corruption_reject_rate`: principle "negative controls prove bad updates are rejected."
+- `unsafe_transition_accept_count`: principle "fail-closed admission prevents corrupted updates from mutating the world model."
+- `cycle_verifier_positive_control_rate`: principle "the downstream gate exposes a numeric positive-control pass rate."
+- `runtime_overhead`: principle "live-path cost is bounded and not hidden inside aggregate wall time."
+- `random_seeds`: principle "determinism is the precondition for replaying the evaluation."
+- `reproducibility_checksum`: principle "content-addressed replay inputs catch silent corpus or threshold drift."
+- `honest_verdict`: principle "terminal prefix records whether the verifier was useful, over-abstaining, or unsafe."
+
+#### SCENARIO-ARC-WMTE-5619-CYCLE-ADMISSION
+
+Given agent-owned transition observations from a live ARC session and frozen thresholds learned
+only from that session's calibration split
+When a held-out transition is evaluated
+Then the verifier admits an update only if successor plausibility passes, inverse action recovery
+matches the executed action, and forward replay reproduces the successor effect signature.
+
+#### SCENARIO-ARC-WMTE-5619-CORRUPTION-REJECTION
+
+Given held-out transitions corrupted by permuted actions, mismatched successors, no-op
+substitutions, and wrong-object changes
+When the transition-cycle verifier evaluates them
+Then corrupted transitions are rejected or abstained, never admitted as immutable update receipts,
+and `unsafe_transition_accept_count` remains zero.
