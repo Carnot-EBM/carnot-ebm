@@ -4783,6 +4783,96 @@ selected target and independent replay matches the trace checksum, then and only
 then the artifact records a new reproducible level and increments
 `levels_after`.
 
+### REQ-ARC-FCP-5632: V508 Registry-Rotated Live Self-Discovery Level-Up Attempt
+
+Experiment 5632 SHALL write
+`results/experiment_5632_arc_live_self_discovery_levelup_v508.json` after one
+bounded live-agent self-discovery attempt against exactly one unreproduced ARC
+frontier level. The registry precheck SHALL run at execution time across every
+public offline-arcade game, SHALL exclude `bp35` level 9, `sk48` level 8, and
+every level already reproduced in `ops/arc_solve_registry.yaml`, and SHALL record
+the selected target and target-selection hash before any live observation or
+action is taken. A selected target SHALL have authenticated public-game headroom
+for the next level beyond its registry depth.
+
+Exp5631 is advisory only. Experiment 5632 SHALL use Exp5631's epistemic policy
+only when that artifact has `live_epistemic_policy_ready=true`,
+`unsafe_model_accept_count=0`, and `known_level_regression_count=0`. Otherwise
+the experiment SHALL run the unchanged no-new-LLM live E3 baseline. The selected
+target and policy source SHALL NOT change after any live outcome is observed.
+
+The live attempt SHALL use only the agent's own runtime observations, actions,
+memory, and runtime reverse-engineering signals. It SHALL NOT inspect game
+source, run exhaustive offline ground-truth BFS, use a hand `GameAdapter`, import
+an outer-loop recipe, or precompute the solution. Seeds, wall time, model calls,
+environment actions, retries, and checkpoints SHALL be bounded before execution.
+If no LLM is invoked, `model_specs` SHALL be `[]`; if an LLM is invoked, the
+artifact SHALL name a mandated cached SOTA GGUF model receipt rather than a legacy
+smoke-only model.
+
+A level SHALL count only when the selected target level is reached by the live
+environment, the same trace independently reproduces through the generic live
+path from a clean state, `offline_reproduced=true`, and the trace checksum
+matches. The registry delta SHALL be exactly `0` for a bounded null or `1` for
+one newly banked target level.
+
+Required field principles:
+
+- `field_principles`: principle "principle annotations are carried in the artifact so every required 5632 field is auditable."
+- `registry_count_before`: principle "authoritative reproduced-level total before target selection; the level-up baseline is explicit."
+- `registry_precheck_receipt`: principle "execution-time precheck proves the selected target is unreproduced before any live observation."
+- `excluded_targets`: principle "bp35 L9, sk48 L8, and registry-duplicate levels stay closed and cannot receive duplicate credit."
+- `selected_game`: principle "the game scope is fixed before live observation, preventing outcome-driven target switching."
+- `selected_level`: principle "the level scope is fixed before live observation, preventing outcome-driven target switching."
+- `target_selection_hash`: principle "content hash of the pre-outcome target receipt proves the target was not changed after seeing results."
+- `policy_source`: principle "records whether Exp5631 promoted cleanly or the unchanged baseline ran."
+- `model_specs`: principle "empty for a no-LLM run; otherwise names the mandated cached SOTA GGUF receipt exactly."
+- `budget_receipt`: principle "seeds, wall time, model calls, environment actions, retries, and checkpoints are bounded before execution."
+- `live_trace_path`: principle "complete live observation/action evidence is durable and replayable."
+- `live_path_reachability_counters`: principle "the scored live mechanism that generated actions is identified by runtime counters."
+- `solve_provenance`: principle "must equal live_agent_self_discovery; only the credited path can solve."
+- `level_reached`: principle "terminal environment level fact is explicit and separate from reproduction credit."
+- `reproduced_levels`: principle "newly reproduced target levels; solve credit requires at least one."
+- `offline_reproduced`: principle "exactly true is mandatory for solve credit after independent generic reproduction."
+- `registry_count_after`: principle "authoritative reproduced-level total after accepted banking; unchanged on honest nulls."
+- `registry_delta`: principle "exactly 0 or 1 so the banked-level delta is auditable."
+- `source_read`: principle "must be false; game source is excluded from live self-discovery credit."
+- `game_adapter_used`: principle "must be false; no per-game adapter can be smuggled into the live path."
+- `outer_loop_re_used`: principle "must be false; off-path recipes are excluded from live self-discovery credit."
+- `inference_substrate`: principle "live_agent_environment_interaction -- environment observations/actions are the authority, not an offline solver."
+- `random_seeds`: principle "deterministic seeds make the bounded attempt replayable and auditable."
+- `reproducibility_checksum`: principle "content-addressed target, trace, budget, and banking decision catch silent drift."
+- `honest_verdict`: principle "a bounded no-level result is terminal and must not be upgraded without reproduction."
+
+#### SCENARIO-ARC-FCP-5632-PRECHECK-EXCLUDES-RECENT-AND-REGISTRY-DUPLICATES
+
+Given the current registry, authenticated public-game headroom, and the explicit
+`bp35` L9 and `sk48` L8 exclusions
+When Experiment 5632 runs its execution-time registry precheck
+Then it closes every reproduced registry level, excludes the two recent unbanked
+targets, selects one unreproduced next-level target with authenticated headroom,
+and records a target-selection hash before live execution.
+
+#### SCENARIO-ARC-FCP-5632-EPISTEMIC-POLICY-ADVISORY-NOT-GATING
+
+Given Exp5631 is blocked, missing, unsafe, or regresses a known level
+When Experiment 5632 builds its live policy receipt
+Then the attempt still executes using the unchanged no-new-LLM baseline. Given
+Exp5631 is ready, has zero unsafe accepts, and has zero known-level regressions
+Then the promoted epistemic policy source is recorded without changing the
+preselected target after outcomes.
+
+#### SCENARIO-ARC-FCP-5632-REPRODUCTION-GATE-BANKS-AT-MOST-ONE-LEVEL
+
+Given a bounded live-agent trace
+When the trace does not reach and independently reproduce the selected target
+Then `offline_reproduced=false`, `reproduced_levels=0`, `registry_delta=0`, and
+the verdict is a terminal honest null. When the trace reaches and independently
+reproduces the selected target from a clean state
+Then `offline_reproduced=true`, `reproduced_levels=1`, `registry_delta=1`, and
+only the selected target level is banked even if the terminal level counter is
+deeper.
+
 ### REQ-ARC-FCP-5699: SGE Anti-Stagnation Controller -- Genuine Live Collapse-Escape Re-Test
 
 `ops/known-issues.md` task 6's own "NEXT STEP" named the fix: detect repeated
