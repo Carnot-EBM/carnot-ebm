@@ -11725,3 +11725,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 09:25 UTC | Exact space-time constraint-drift stream with dura | OK | 85 passed, 1 warning in 24.78s |
 | 2026-07-14 09:48 UTC | Gated on Exp5616 exact fixture: KAN retention-adap | OK | 87 passed, 1 warning in 38.06s |
 | 2026-07-14 10:14 UTC | Gated on Exp5617 nondegenerate duration map: predi | OK | 87 passed, 1 warning in 68.33s (0:01:08) |
+| 2026-07-14 10:33 UTC | ARC own-observation forward-inverse transition-cyc | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |

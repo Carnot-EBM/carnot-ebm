@@ -1,0 +1,33 @@
+{
+  "experiment": 5620,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-14",
+  "started_at": "2026-07-14T10:35:18.157882+00:00",
+  "finished_at": "2026-07-14T10:35:18.157882+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5619 transition controls: ARC cycle-guarded live world-model update A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cycle.cycle_verifier_positive_control_rate (actual=0.009259 >= expected=0.9)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5619-arc-forward-inverse-transition-cycle",
+      "artifact_field": "cycle_verifier_positive_control_rate",
+      "op": ">=",
+      "expected": 0.9,
+      "actual": 0.009259,
+      "passed": false,
+      "reason": "actual=0.009259 >= expected=0.9"
+    },
+    {
+      "upstream": "exp5619-arc-forward-inverse-transition-cycle",
+      "artifact_field": "unsafe_transition_accept_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "reason": "actual=0 == expected=0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
