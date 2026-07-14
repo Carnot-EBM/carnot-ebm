@@ -2101,3 +2101,74 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5522 | Planned (`python/carnot/experiment_5522_capstone_v500.py`, `results/experiment_5522_capstone_v500.json`) | Planned (`tests/python/test_experiment_5522_capstone_v500.py`) |
+
+- REQ-CAPSTONE-5612: The `.506` capstone reconciliation workflow
+  `exp5612-v506-capstone-reconciliation` in
+  `python/carnot/experiment_5612_v506_capstone_reconciliation.py` SHALL write
+  `results/experiment_5612_v506_capstone_reconciliation.json` without modifying
+  `research-roadmap.yaml` and without modifying
+  `scripts/research_conductor.py`. It SHALL read every expected Exp5603 through
+  Exp5611 upstream artifact that exists on disk
+  (`results/experiment_5603_transition_v506.json`,
+  `results/experiment_5604_v506_source_delta_ingestion.json`,
+  `results/experiment_5605_raw_response_evidence_envelope.json`,
+  `results/experiment_5606_clean_sota_solve_verify_evidence_panel.json`,
+  `results/experiment_5607_property_template_exact_residual_extension.json`,
+  `results/experiment_5608_kan_longitudinal_self_learning.json`,
+  `results/experiment_5609_arc_filter_intermediate_invariance_ab.json`,
+  `results/experiment_5610_arc_live_self_discovery_levelup_v506.json`,
+  `results/experiment_5610_arc_live_self_discovery_levelup_v506_trace.json`,
+  and `results/experiment_5611_cdls_matched_sampler_crossover.json`), and
+  SHALL record missing, malformed, blocked, gate-skipped,
+  adversarially flagged, and complete tasks separately. It SHALL derive narrow
+  promotion and retirement decisions only from artifact fields, preserve honest
+  nulls, keep adversarially flagged artifacts out of positive headline evidence,
+  and set the ARC registry delta exactly from the Exp5610 before/after level
+  counts and new reproduced-level list. The workflow SHALL report that ops
+  status, changelog, traceability, completion, and exclusion edits are delegated
+  when an operator stop rule forbids touching those files during this run.
+- SCENARIO-CAPSTONE-5612: The artifact
+  `results/experiment_5612_v506_capstone_reconciliation.json` must emit
+  top-level fields `field_principles`, `expected_task_ids`, `artifacts_found`,
+  `terminal_status_by_task`, `headline_claims`, `promotion_decisions`,
+  `retirement_decisions`, `arc_registry_delta`,
+  `continuous_self_learning_verdict`, `hardware_sampling_verdict`,
+  `documents_reconciled`, `tests_run`, `unresolved_gaps`,
+  `inference_substrate`, and `honest_verdict`. The default `.506` aggregation
+  must promote the raw-response evidence envelope and KAN-only longitudinal
+  self-learning only within their artifact-backed boundaries; it must not
+  promote the flagged V506 source delta, blocked exact predicate extension,
+  flagged live ARC no-bank attempt, or flagged cDLS crossover artifact; it must
+  retire the repeated local-SOTA panel collapse and both reachable no-op ARC
+  filters; it must keep the ARC level-up null as a planning gap rather than a
+  broad ARC retirement; and it must report `arc_registry_delta=0`,
+  `inference_substrate=aggregation_from_exp5603_exp5611_artifacts`, and an
+  `honest_verdict` starting with `complete:` unless an expected primary
+  upstream artifact is missing or malformed.
+- SCENARIO-CAPSTONE-5612-MISSING-MALFORMED: If any expected `.506` primary
+  result artifact is missing or malformed, the workflow must still write the
+  capstone artifact, list the affected path under the appropriate terminal
+  status bucket, keep affected claim gates false, and start `honest_verdict`
+  with `blocked:`.
+- SCENARIO-CAPSTONE-5612-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required capstone field.",
+  `expected_task_ids` = "fixed milestone denominator; must list Exp5603 through Exp5612 task ids.",
+  `artifacts_found` = "only readable files can support claims.",
+  `terminal_status_by_task` = "blocked, skipped, flagged, malformed, missing, and complete stay distinct.",
+  `headline_claims` = "narrow artifact-backed conclusions; flagged artifacts cannot support positive claims.",
+  `promotion_decisions` = "mechanisms promote only through preregistered gates.",
+  `retirement_decisions` = "repeated failures stop reruns, while new scientific nulls stay planning inputs.",
+  `arc_registry_delta` = "levels_after - levels_before and new_reproducible_levels must agree.",
+  `continuous_self_learning_verdict` = "FR-11 outcome from Exp5608, including safety and rollback gates.",
+  `hardware_sampling_verdict` = "matched-quality CPU/CUDA timing and quality verdict from Exp5611.",
+  `documents_reconciled` = "spec and ops reconciliation state, including any operator-delegated files.",
+  `tests_run` = "commands, exit codes, counts, warnings, and skipped checks actually observed.",
+  `unresolved_gaps` = "negative evidence becomes planning input.",
+  `inference_substrate` = "must equal aggregation_from_exp5603_exp5611_artifacts.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5612)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5612 | Planned (`python/carnot/experiment_5612_v506_capstone_reconciliation.py`, `results/experiment_5612_v506_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5612_v506_capstone_reconciliation.py`) |
