@@ -5919,3 +5919,9 @@ The critical path for milestone .250:
 - theme: CUDA certification and closeout reconciliation led the recorded operational runtime
 - key result: honest operational result -- the supplied evidence identifies the longest compute-bound paths but does not establish an idle-GPU bottleneck, a causal phase breakdown, or a concurrent multi-model DualGPURunner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.508
+- exp_range: no data available this milestone
+- theme: bounded operational attribution for a synthesis-heavy slowest-path set
+- key result: honest operational result -- the slowest-five list contains one compute-bound entry, and the task-conditioned GPU-idle indicator is false; runtime causes and any concurrent multi-model runner miss are not established
+- acceptance: no data available this milestone
