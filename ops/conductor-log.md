@@ -11746,3 +11746,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 14:56 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
 | 2026-07-14 14:58 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
 | 2026-07-14 15:00 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
+| 2026-07-14 15:17 UTC | Registry-rotated bounded live-agent self-discovery | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

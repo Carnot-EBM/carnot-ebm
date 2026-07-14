@@ -366,6 +366,107 @@ available matched evidence.
 |---|---|---|
 | REQ-SAMPLE-5623 | Planned (`python/carnot/experiment_5623_cdls_multiseed_cpu_cuda_crossover.py`, `results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json`) | Planned (`tests/python/test_experiment_5623_cdls_multiseed_cpu_cuda_crossover.py`) |
 
+### REQ-SAMPLE-5633: Exact Fixed-Ladder Temperature-Label Exchange cDLS Audit
+
+Carnot MUST provide Exp 5633 at
+`python/carnot/experiment_5633_temperature_exchange_cdls_exact_audit.py` and
+write `results/experiment_5633_temperature_exchange_cdls_exact_audit.json`
+without modifying `scripts/research_conductor.py`. The experiment SHALL add a
+fixed beta-ladder temperature-label exchange layer around Exp 5622's final
+`corrected_cdls_projection_mh` kernel only. The within-replica cDLS acceptance
+rule, proposal probability, drift scale, proposal standard deviation, and
+source module/hash receipt SHALL be inherited from Exp 5622 unchanged; Exp 5633
+SHALL NOT retune or replace the corrected within-replica kernel.
+
+The experiment SHALL preregister a fixed beta ladder, a within-replica
+transition schedule, an adjacent-pair exchange schedule, and the exact exchange
+acceptance rule. Exchange moves SHALL swap temperature labels attached to
+physical replicas while leaving all replica states unchanged. For states
+`x_a,x_b` currently wearing adjacent beta labels `beta_a,beta_b`, the accepted
+label swap probability SHALL be
+`min(1, exp((beta_a - beta_b) * (E(x_a) - E(x_b))))`. The artifact SHALL also
+include equal-transition single-chain and independent-replica no-exchange
+baselines so any later quality trial can separate the exchange layer from the
+unchanged corrected cDLS substrate.
+
+On exactly enumerable frustrated Ising targets, Exp 5633 SHALL enumerate exact
+target marginals and energy distributions for every beta in the fixed ladder.
+It SHALL verify within-kernel normalization, swap detailed balance,
+product-target stationarity under the composed fixed schedule, cold-label
+target parity, deterministic replay, and round-trip label accounting. The audit
+SHALL include broken controls for missing beta factors, wrong energy sign,
+state-copy swap, asynchronous stale energy, one-way exchange, and biased proposal schedules. Every broken control SHALL be detected before
+`replica_exchange_kernel_ready_score` can equal `1.0`.
+
+`replica_exchange_kernel_ready_score` SHALL equal exactly `1.0` only when
+`exact_distribution_tv_max <= 0.02`,
+`swap_detailed_balance_residual_max <= 1e-6`, transition normalization and
+deterministic replay pass, every broken control is rejected, round-trip label
+accounting is valid, and no validity regression appears. Exp 5633 SHALL collect
+no timing, CUDA, board, SNN, TSU, or crossover result. `timing_claimed` SHALL be false and `hardware_speedup_claimed` SHALL be false.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `corrected_kernel_receipt`, `beta_ladder`,
+`within_replica_schedule`, `exchange_schedule`, `swap_rule`,
+`enumerable_targets`, `transition_normalization_error_max`,
+`swap_detailed_balance_residual_max`, `exact_distribution_tv_max`,
+`cold_replica_energy_error`, `round_trip_accounting_error`,
+`broken_controls`, `deterministic_replay_pass`, `timing_claimed`,
+`hardware_speedup_claimed`, `replica_exchange_kernel_ready_score`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`exact_corrected_cdls_with_replica_temperature_exchange`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why each audit and gate field exists before any exchange quality trial can consume it."
+- `corrected_kernel_receipt`: principle "Proves the exact Exp5622 corrected within-replica substrate is unchanged and source-hash pinned."
+- `beta_ladder`: principle "Freezes the temperature scope so later quality differences cannot come from an unreported ladder search."
+- `within_replica_schedule`: principle "Records the exact corrected-cDLS transition accounting applied at each physical replica."
+- `exchange_schedule`: principle "Records which adjacent beta-label pairs are proposed and in what fixed order."
+- `swap_rule`: principle "Makes the exact label-exchange acceptance ratio inspectable."
+- `enumerable_targets`: principle "Preserves deterministic Ising ground truth, marginals, and energy distributions for replay."
+- `transition_normalization_error_max`: principle "Confirms the within-replica and exchange kernels are stochastic before stationarity is trusted."
+- `swap_detailed_balance_residual_max`: principle "Measures reversibility of the temperature-label exchange instead of assuming it."
+- `exact_distribution_tv_max`: principle "Measures exact product-target and cold-label parity for the composed exchange sampler."
+- `cold_replica_energy_error`: principle "Reports target-temperature energy parity explicitly instead of hiding it in aggregate TV."
+- `round_trip_accounting_error`: principle "Checks that label movement is accounted for without copying or losing temperature labels."
+- `broken_controls`: principle "Demonstrates the audit rejects biased exchange variants that would otherwise look superficially normalized."
+- `deterministic_replay_pass`: principle "Proves fixed seeds reproduce the same label-exchange trace."
+- `timing_claimed`: principle "Bare false keeps Exp5633 an exactness audit and does not reopen retired crossover timing."
+- `hardware_speedup_claimed`: principle "Bare false prevents CUDA, board, SNN, TSU, or hardware inference from entering this artifact."
+- `replica_exchange_kernel_ready_score`: principle "Provides a mechanical downstream gate that is 1.0 only when exactness and control-rejection gates pass."
+- `inference_substrate`: principle "Declares exact corrected cDLS plus replica temperature-label exchange, not LLM inference or hardware timing."
+- `random_seeds`: principle "Records replay seeds for deterministic trace and accounting checks."
+- `reproducibility_checksum`: principle "Content-addresses the artifact so future reruns can detect silent drift."
+- `honest_verdict`: principle "States whether invariant failure blocks later quality trials."
+
+### SCENARIO-SAMPLE-5633: Temperature-Label Exchange Emits Exact Audit Evidence
+
+**Given** Exp 5622's corrected `corrected_cdls_projection_mh` kernel and
+exactly enumerable frustrated Ising systems
+**When** Exp 5633 runs
+**Then** it builds fixed-ladder corrected-cDLS within-replica kernels, composes
+them with fixed adjacent temperature-label exchanges, verifies normalization,
+swap detailed balance, product-target stationarity, cold-label energy parity,
+deterministic replay, round-trip accounting, and all broken-control rejections,
+writes `results/experiment_5633_temperature_exchange_cdls_exact_audit.json`,
+and sets `replica_exchange_kernel_ready_score=1.0` only when every exactness
+gate passes.
+
+**If** the corrected kernel receipt is missing, stale, changed, or any invariant
+or broken-control gate fails
+**Then** Exp 5633 SHALL still emit the same result path with terminal evidence,
+`timing_claimed=false`, `hardware_speedup_claimed=false`,
+`replica_exchange_kernel_ready_score=0.0`, and an `honest_verdict` starting
+with `blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5633)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5633 | Implemented (`python/carnot/experiment_5633_temperature_exchange_cdls_exact_audit.py`, `results/experiment_5633_temperature_exchange_cdls_exact_audit.json`) | Implemented (`tests/python/test_experiment_5633_temperature_exchange_cdls_exact_audit.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
