@@ -29519,3 +29519,97 @@ Execution-time sweep after the `.506` planner marker checked arXiv primary pages
 - **Watch-only/excluded:** Energy-guided Recursive Model, FlashTrie, constrained KAN IDE kernel discovery, TreeThink, matched-FP16 speedup attribution, Extropic, and Logical Intelligence were checked but not promoted as executable `.506` dependencies.
 
 <!-- V506-EXECUTION-REFRESH-20260714-END -->
+
+## V507 Planner Refresh - 20260714
+
+Planning-time sweep for milestone `.507` after all `.506` experiments completed. The
+search covered 2025-2026 arXiv work on energy-based reasoning, neural constraint
+satisfaction, Ising/sampling systems, hallucination verification, KANs, constrained
+generation, accelerated probabilistic hardware, and continual learning; OpenReview;
+direct Semantic Scholar citation queries for EBT `2507.02092` and ARM-EBM
+`2512.15605`; Hugging Face Papers; GitHub discovery; Extropic writing; and Logical
+Intelligence public pages. Existing Carnot entries already cover the dominant verifier,
+grammar, EBT/ARM-EBM, KAN, p-bit, cDLS, PTRM, SGE, and memory-agent lines. The entries
+below are the non-duplicate deltas that change the executable plan.
+
+### New actionable deltas
+
+- **To Retain or to Adapt? Generalizing Continual Learning** - arXiv:2607.05609,
+  https://arxiv.org/abs/2607.05609. The paper replaces retention-only evaluation with
+  Average Lifelong Error (ALE), decomposes transfer into inherited instability and
+  transient relearning error, and derives a Critical Task Duration beyond which old
+  knowledge can become an adaptation liability. Carnot hook: extend the clean `.506`
+  spline-local KAN learner onto exact constraint streams whose drift duration and shared
+  versus conflicting predicates are controlled. Measure ALE, instability, transient
+  error, backward retention, and the empirical switch point between replay/retention and
+  reset/adaptation; do not assume that retaining every prior rule is always correct.
+- **When Does Continual Learning Require Learning** - arXiv:2607.07847,
+  https://arxiv.org/abs/2607.07847; code:
+  https://github.com/anneharrington/studying-cl. The mechanism-agnostic protocol separates
+  change across task/domain space from temporal drift within a fixed task and compares
+  external scaffolding with weight updates under one sequential evaluation. Carnot hook:
+  cross the KAN drift-duration fixture with spatial constraint-family shifts and temporal
+  predicate drift, then compare a frozen exact-controller baseline, a spline-local update,
+  and a predictive window controller. This is a bounded KAN/controller experiment; it
+  does not authorize LLM fine-tuning, GRPO, external teachers, or retired memory-policy
+  work.
+- **Loss Smoothing for Continual Adaptation** - ICLR 2026 CAO Workshop,
+  https://openreview.net/forum?id=pUqcOkV69j. The paper gradually transitions replay mass
+  from the old objective to the new one so task-shared features stay stable while
+  conflicting features adapt. Carnot hook: include a loss-smoothed spline-update arm in
+  the drift controller, with the exact validator deciding whether stability helps ALE or
+  merely delays a necessary rule update. Workshop status motivates a local ablation only;
+  it is not performance authority.
+- **World Action Verifier: Self-Improving World Models via Forward-Inverse Asymmetry** -
+  arXiv:2604.01985, https://arxiv.org/abs/2604.01985; project/code:
+  https://world-action-verifier.github.io/. WAV decomposes an action-conditioned
+  transition into state plausibility and inverse action reachability, then uses cycle
+  consistency to detect forward-model errors in under-explored regimes. Carnot hook:
+  build an ARC live-path transition-cycle verifier using only the agent's own observations
+  and actions. A generic, game-agnostic inverse signature must reconstruct the executed
+  action from changed object features, and the learned forward effect must replay to the
+  observed successor before the transition can update online planning. No game source,
+  external video, hand GameAdapter, offline ground-truth BFS, or cross-game value transfer
+  is admissible.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct EBT and ARM-EBM citation endpoints were reachable. EBT
+  still returns Fixed-Point Reasoners, temporal-difference visual representations,
+  LoopUS, causal-energy parameterization, and EBM workload characterization. ARM-EBM
+  still returns Path-Measure Dynamics, Constitutional On-Policy Safe Distillation,
+  Distributional EBMs, LoopUS, ontology constraints, Graph Energy Matching, and
+  false-first-step planning. No newly visible citation displaces Carnot's exact validators
+  or creates a stronger `.507` dependency.
+- **OpenReview:** the new plan uses the bounded loss-smoothing ablation and the already
+  indexed cDLS proposal only as hypotheses to test. Workshop and rejected-paper claims are
+  not treated as demonstrated Carnot speedups.
+- **Hugging Face Papers and GitHub:** current verification discovery repeated
+  LLM-as-a-Verifier, CoVe, self-verification, constrained decoding, and already-indexed
+  repositories. GitHub trending/topic checks exposed no local EBM/KAN/constraint engine
+  that supersedes Carnot's exact-validator or llama.cpp paths.
+- **Extropic:** the writing index still tops out at the October 2025 X0/XTR-0 and TSU
+  launch material. There is no authenticated Carnot-accessible TSU route, so no `.507`
+  experiment may claim TSU execution or speedup.
+- **Logical Intelligence:** public Kona 1.0 pages continue to frame the EBM as a
+  constraint layer beneath LLM interfaces, but publish no local weights, exact benchmark
+  artifact, or authenticated execution route. Kona remains architecture context only.
+
+### V507 planning impact
+
+- Do not rerun the retired `.506` solve-versus-verify panel. First establish a changed
+  native llama.cpp CUDA substrate and a reusable three-model runtime certificate with
+  lossless response receipts; this is execution readiness, not verifier evidence.
+- Advance FR-11 from one bounded KAN sequence to nonstationary constraint streams. Use
+  ALE and Critical Task Duration to decide when retention, loss-smoothed adaptation, or a
+  predictive window is appropriate, while keeping exact rollback and delayed-regression
+  gates authoritative.
+- Replace retired ARC filter/PTRM/exploration-signal families with a forward/inverse
+  transition-cycle verifier that learns only from the live agent's own attempts. Run the
+  milestone's unconditional registry-prechecked level-up attempt through the reachable
+  live branch when safe, otherwise through the unchanged baseline.
+- Repair cDLS methodology before any crossover claim: prove exact small-state target
+  parity and quality diagnostics first, then require multiple seeds, matched CPU/CUDA
+  schedules, successful quality-matched pairs, and authenticated timing.
+
+<!-- V507-PLANNER-REFRESH-20260714-END -->
