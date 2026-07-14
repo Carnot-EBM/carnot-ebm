@@ -11740,3 +11740,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 14:10 UTC | Parameter-free group-conditional online conformal  | OK | 95 passed, 1 warning in 70.07s (0:01:10) |
 | 2026-07-14 14:33 UTC | Gated on Exp5627 coverage and safety: conformal ac | OK | 86 passed, 1 warning in 110.47s (0:01:50) |
 | 2026-07-14 14:35 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
+| 2026-07-14 14:37 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
