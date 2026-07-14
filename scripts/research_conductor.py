@@ -2873,7 +2873,28 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     retro_timing_reconstructed_from_disk_mtime = False
     if not experiment_times:
         try:
-            from scripts.retro_timing_fallback import build_retro_timing_fallback
+            # 2026-07-03 (exp5195 root-cause fix): the conductor is
+            # launched as `python scripts/research_conductor.py`, so
+            # sys.path[0] is the scripts/ directory, NOT the repo root —
+            # the same reason every other sibling helper in this file is
+            # imported bare (gpu_monitor, failure_ledger,
+            # in_process_doc_reconcile, adversarial_verify). The original
+            # `from scripts.retro_timing_fallback import ...` raised
+            # ModuleNotFoundError at conductor runtime (repo root not on
+            # sys.path); the outer `except Exception` swallowed it and
+            # left experiment_times empty, reproducing the very false-zero
+            # this fallback was built to eliminate (the .475 retro passes,
+            # confirmed in journalctl). Import the bare sibling first
+            # (works at conductor runtime); fall back to the package path
+            # (works under pytest, where the repo root IS on sys.path).
+            # The package form is deliberately retained so the existing
+            # conductor-wiring assertion test stays green.
+            try:
+                from retro_timing_fallback import (  # type: ignore[import-not-found]
+                    build_retro_timing_fallback,
+                )
+            except ModuleNotFoundError:
+                from scripts.retro_timing_fallback import build_retro_timing_fallback
 
             _fallback_timing = build_retro_timing_fallback(current, repo_root=PROJECT_ROOT)
             if _fallback_timing.get("experiment_times"):
