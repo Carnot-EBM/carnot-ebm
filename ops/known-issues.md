@@ -820,6 +820,49 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > `REQ-ARC-WMTE-5599`. Tests:
     > `tests/python/test_experiment_5599_reinduction_ab_lp85_levelup.py` (5 tests).
 
+    > **APPLES-TO-APPLES PRECISION ISOLATION 2026-07-14 (exp5705, `REQ-ARC-WMTE-5599-2`,
+    > operator-directed: "let's get to the bottom of this and compare apples to apples").** The
+    > operator asked why exp5599's Q4 Qwen finding contradicted forge's real success running
+    > Gemma-4-31B-it at full precision via vLLM on 96GB VRAM. **Three disclosed pivots, ending in
+    > a real measured result:**
+    >
+    > 1. **vLLM ruled out** on this hardware — the PyPI wheel is CUDA-only; ROCm support has no
+    >    PyPI distribution and has historically targeted MI-series datacenter cards, not this
+    >    consumer gfx1150 iGPU.
+    > 2. **`unsloth/Qwen3.6-27B` at full BF16 (precision-only isolation vs the SAME Q4 model)
+    >    ABANDONED after 3 real, reproducible load hangs** on the project's HIP llama.cpp binary
+    >    (default `-fit`: zero I/O progress for 12+ min; `-fit off`: hard-stall at a later step;
+    >    `-fit off --parallel 1`: crawled at ~11MB/s). No backtrace tooling available (`ptrace`
+    >    restricted, no `perf`, no root) — pattern consistent with this build mishandling
+    >    Qwen3.6's hybrid linear/full-attention architecture.
+    > 3. **Operator-directed pivot to `google/gemma-4-31B-it`** (the model forge ACTUALLY used,
+    >    conventional sliding-window architecture) — **this ALSO failed at full BF16**: fast
+    >    initial bulk read (RSS 0→36.1GB in 20s) then crawled to a near-stall over ~9 minutes,
+    >    same failure class as Qwen3.6 on a structurally different architecture — pointing to a
+    >    broader HIP/ROCm large-BF16-loading issue, not an architecture-specific bug.
+    > 4. **Operator-directed second pivot to Q8_0** (near-lossless 8-bit, not full precision) —
+    >    loaded CLEANLY in ~20s, confirmed via a real `/completion` call. Added a general,
+    >    reusable `extra_server_args` field to `LocalGGUFProposer` for the `-fit off` fix (not a
+    >    one-off hack — available to any future experiment on this hardware).
+    >
+    > **Real result (n=1, reduced from the planned n=3 — disclosed, not hidden):** the script has
+    > no incremental checkpointing, and the first repeat of the original n=3 run alone took ~40
+    > real minutes (~2.4 tok/s on this iGPU, ~5x slower than the frozen 9B's ~13 tok/s) — a full
+    > n=3 risked losing everything, including the completed first repeat, to a timeout kill;
+    > re-launched at n=1. The single real draw reached a real level-up, then genuinely FAILED to
+    > induce (`skipped=proposer_failed` after `reinduce_duration_s=2408.163` — ~40 min, 3
+    > near-full-budget retries, never reaching held-out scoring). **Honest verdict:
+    > `gemma_q8_0_plans_less_reliably_than_current_9b`** (0/1 vs the 9B's historical 1/3, ~44x
+    > slower per attempt). Comparing against the Q4 Qwen candidate (CONTEXT ONLY, model family
+    > AND precision both differ): `gemma_q8_0_ties_qwen_q4` — both larger candidates scored 0/N.
+    > **This is now the THIRD independent measurement (Q4 Qwen, Q8_0 Gemma, both vs the 9B
+    > baseline) pointing the same direction** — n=1 is not conclusive alone, but it strengthens
+    > rather than reverses exp5599's original cost/benefit conclusion. Frozen live-submission
+    > generator remains UNCHANGED. `adversarial_verify.py` clean. Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5599-2. Tests:
+    > `tests/python/test_experiment_5705_full_precision_27b_vs_4bit_quant_ab.py` (7 tests) +
+    > `tests/python/test_local_gguf_proposer_extra_server_args.py` (4 tests).
+
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
 (exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect

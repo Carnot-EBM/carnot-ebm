@@ -1,0 +1,97 @@
+{
+  "experiment": "experiment_5705_full_precision_27b_vs_4bit_quant_ab",
+  "schema": "carnot.exp5705.full_precision_27b_vs_4bit_quant_ab.v1",
+  "result_path": "results/experiment_5705_full_precision_27b_vs_4bit_quant_ab.json",
+  "honest_verdict": "complete: gemma_q8_0_plans_less_reliably_than_current_9b",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Gemma-4-31B-it-Q8_0",
+      "hf_id": "google/gemma-4-31B-it",
+      "role": "near-lossless Q8_0 candidate (8-bit, NOT full/lossless precision) -- the model forge (3rd-place ARC-AGI-3) actually used, converted to Q8_0 GGUF locally after full BF16 precision proved impractical on this hardware for two different models (Qwen3.6-27B AND Gemma-4-31B-it both hit real, reproducible loading stalls on this HIP llama.cpp build)"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; the PRIMARY verdict compares Q8_0-precision Gemma-4-31B-it against the current 9B baseline (same task/methodology) -- NOT against exp5599's Q4 Qwen candidate, since that comparison changes both model family AND precision level together"
+    },
+    "weight_precision": {
+      "principle": "honestly discloses that the WEIGHTS served are Q8_0 (near-lossless 8-bit), NOT the originally-planned full/lossless BF16 -- full precision was tried and abandoned for two different models on this hardware (see module docstring); reporting this run as 'full precision' would misrepresent what was actually measured"
+    },
+    "kv_cache_precision": {
+      "principle": "documents that this run uses llama.cpp's default full-precision (f16) KV cache, not exp5599's q8_0-quantized cache -- directly addresses the operator's 'full kv-cache key size' request even though the WEIGHTS are Q8_0, not full precision"
+    },
+    "serving_hardware": {
+      "principle": "honestly discloses the NECESSARY hardware confound: even at Q8_0 (~31GB), this model does not fit the single 24GB RTX 3090 exp5599 used, so this arm runs on the AMD iGPU instead -- serving stack (llama.cpp) is held constant, hardware is not"
+    },
+    "exp5599_historical_reference": {
+      "principle": "CLAUDE.md Failed-Experiment Rerun Discipline analog -- names the prior measurement this compares against and discloses it is cross-session, not re-measured fresh in this same run"
+    },
+    "qwen_q4_context_comparison": {
+      "principle": "explicitly labeled CONTEXT ONLY, never the primary verdict -- comparing Gemma-4-31B-it (full precision) against exp5599's Qwen3.6-27B (Q4) conflates model family and precision; reporting it as a clean isolation would be dishonest"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "game": "lp85",
+  "n_repeats": 1,
+  "reinduction_n_ctx": 22000,
+  "weight_precision": "q8_0",
+  "kv_cache_precision": "f16_default_unquantized",
+  "serving_hardware": "amd_strix_point_gfx1150_igpu_rocm_hip",
+  "per_draw_results": [
+    {
+      "arm": "gemma_31b_q8_0",
+      "repeat": 0,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 2408.163,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": null,
+      "refinement_rounds_used": 1
+    }
+  ],
+  "arm_summary": {
+    "n_attempted": 1,
+    "n_levelup_reached": 1,
+    "n_planned": 0,
+    "plan_rate_given_levelup": 0.0,
+    "mean_reinduce_duration_s": 2408.163,
+    "mean_heldout_accuracy": null
+  },
+  "exp5599_historical_reference": {
+    "current_9b_q4": {
+      "experiment_id": 5599,
+      "model": "Qwen3.5-9B-MTP-GGUF (Q4_K_M, MTP, GPU 1 CUDA)",
+      "plan_rate_given_levelup": 0.3333333333333333,
+      "mean_reinduce_duration_s": 55.0
+    },
+    "candidate_27b_q4": {
+      "experiment_id": 5599,
+      "model": "Qwen3.6-27B-MTP-GGUF (Q4_K_M, non-MTP fallback, GPU 1 CUDA) -- a DIFFERENT model family AND a different quantization level from this experiment's Q8_0 Gemma-4-31B-it candidate; not a precision-only comparator for this run",
+      "plan_rate_given_levelup": 0.0,
+      "mean_reinduce_duration_s": 401.0
+    }
+  },
+  "qwen_q4_context_comparison": "gemma_q8_0_ties_qwen_q4_context_only_different_model_and_precision",
+  "solve_provenance": "development_proxy",
+  "random_seed": 5705,
+  "duration_s": 2423.501,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "reinduction_import": true,
+    "full_precision_gguf_present": true,
+    "hip_llama_server_binary_present": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "b236006bd0736895d5df7f039808460ed451c7bf6a9fc79ca741637901841ac2"
+}
