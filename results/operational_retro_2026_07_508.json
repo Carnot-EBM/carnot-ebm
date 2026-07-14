@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.508",
+  "generated_at": "2026-07-14T16:32:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 127.1,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Milestone .508 capstone, promotion ledger, retirement enforcement, and documenta",
+      "duration_minutes": 27.85,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Parameter-free group-conditional online conformal qualification for KAN actions",
+      "duration_minutes": 25.97,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5627 coverage and safety: conformal active-spline KAN continuous sel",
+      "duration_minutes": 23.27,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5633 exact parity: hard-instance replica-exchange cDLS quality trial",
+      "duration_minutes": 18.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Transition .507 terminal evidence into the .508 dependency and retirement map",
+      "duration_minutes": 16.97,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Across 127.1 minutes and 11 completed experiments, the bounded slowest-five list contains four synthesis-only entries and one compute-bound entry. The recorded compute-task idle indicator is false, so the report-time idle GPU snapshot is not treated as compute-task waste.",
+  "bottlenecks_identified": [
+    "The bounded timing evidence identifies only one of the two compute-bound experiments in the slowest-five list, so a complete compute-bound ranking and the cause of the 16.97-minute transition run cannot be established.",
+    "Experiment-level durations have no phase breakdown, leaving the cause of the longest recorded paths unresolved.",
+    "No task-correlated model-concurrency record is present, so DualGPURunner selection cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Emit phase-level timing receipts for planning, synthesis, validation, artifact writing, and closeout so slow stages can be targeted.",
+    "Add dependency-aware parallel dispatch for independent synthesis-only work after timing receipts confirm safe overlap.",
+    "Record GPU utilization against each compute-bound task instead of relying on a report-time snapshot.",
+    "Record concurrent model count and runner choice, selecting DualGPURunner only when at least two models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase-level timing receipts to every experiment.",
+    "Dispatch dependency-independent synthesis-only work concurrently.",
+    "Capture task-correlated GPU and model-concurrency telemetry, with DualGPURunner selected only for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The available data supports a bounded wall-time ranking but not causal attribution: the only named compute-bound entry in the slowest-five list is the 16.97-minute transition run, while the other compute-bound experiment is outside that list. Without task-correlated concurrency telemetry or a measured counterfactual, neither a DualGPURunner miss nor savings above 0 percent can be justified."
+}
