@@ -11726,3 +11726,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 09:48 UTC | Gated on Exp5616 exact fixture: KAN retention-adap | OK | 87 passed, 1 warning in 38.06s |
 | 2026-07-14 10:14 UTC | Gated on Exp5617 nondegenerate duration map: predi | OK | 87 passed, 1 warning in 68.33s (0:01:08) |
 | 2026-07-14 10:33 UTC | ARC own-observation forward-inverse transition-cyc | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-07-14 10:35 UTC | Gated on Exp5619 transition controls: ARC cycle-gu | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cyc |
