@@ -1211,6 +1211,96 @@ actually invoked.
 |---|---|---|
 | REQ-BENCH-3211 | Implemented (`python/carnot/eval/constraintbench_feasibility_objective_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3211_constraintbench_feasibility_objective_pilot_v1.py`) |
 
+### REQ-BENCH-5616: Exact Nonstationary Constraint-Stream Fixture
+
+Carnot MUST provide a deterministic exact nonstationary constraint-stream
+benchmark for Exp5616 that separates two independent axes before any learner is
+fit:
+
+- constraint-family or domain-space shifts, represented by explicit
+  `space_shift_families`; and
+- temporal predicate drift within a fixed family, represented by explicit
+  `temporal_drift_types`.
+
+The fixture MUST write a durable JSONL dataset at
+`data/research/experiment_5616_exact_nonstationary_constraint_stream.jsonl` and
+a terminal artifact at
+`results/experiment_5616_exact_nonstationary_constraint_stream.json`. The
+dataset schema SHALL be stable and row-level, with every state and update
+labeled by an exact validator. Rows SHALL include old-rule, current-rule, and
+future-rule labels so retention, adaptation, and leakage can be measured without
+using circular model predictions.
+
+The fixture SHALL include shared-rule, conflicting-rule, no-drift,
+reversible-drift, and persistent-drift cases at preregistered durations
+`1, 2, 4, 8, 16, 32`. Each condition SHALL contain at least 32 independent
+stream instances generated from deterministic seeds, with disjoint train,
+calibration, and held-out splits. The dataset SHALL publish stable stream
+ordering, the seed list, family and duration counts, content hashes, split
+receipts, and a replay loader.
+
+The exact validator SHALL include corruption controls for wrong predicate,
+wrong variable or entity binding, delayed label, and poison update. The fixture
+SHALL prove that the validator rejects every injected violation and accepts
+every known-valid control. The fixture SHALL NOT run an LLM, SHALL NOT fit a policy,
+and SHALL NOT claim self-learning benefit.
+
+The terminal artifact SHALL include required fields `field_principles`,
+`dataset_path`, `schema_version`, `space_shift_families`,
+`temporal_drift_types`, `task_durations`, `instances_per_condition`,
+`split_receipts`, `exact_oracle_label_count`, `oracle_label_error_count`,
+`corruption_controls`, `fixture_ready_score`, `inference_substrate`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+`fixture_ready_score` SHALL be exactly `1.0` only when schema, counts, splits,
+oracle controls, and replay validation pass. `inference_substrate` SHALL be `deterministic_verifier`,
+and no other substrate value is valid for this fixture.
+
+Required field principles:
+
+- `field_principles`: principle "Every required evidence field states why it exists."
+- `dataset_path`: principle "the fixture is durable"
+- `schema_version`: principle "rows have a stable contract"
+- `space_shift_families`: principle "domain changes are explicit"
+- `temporal_drift_types`: principle "time changes are explicit"
+- `task_durations`: principle "the duration axis is preregistered"
+- `instances_per_condition`: principle "denominators meet the evidence floor"
+- `split_receipts`: principle "leakage is excluded"
+- `exact_oracle_label_count`: principle "authority is deterministic"
+- `oracle_label_error_count`: principle "corrupted and valid controls are exact"
+- `corruption_controls`: principle "unsafe cases are represented"
+- `fixture_ready_score`: principle "only complete fixture gates can unlock learners"
+- `inference_substrate`: principle "no LLM participated"
+- `random_seeds`: principle "generation replays exactly"
+- `reproducibility_checksum`: principle "generation replays exactly"
+- `honest_verdict`: principle "a deficient fixture blocks learners"
+
+#### SCENARIO-BENCH-5616-SCHEMA: Dataset Rows Carry Exact Rule Labels
+
+**Given** the Exp5616 generator is run with the preregistered seed list,
+durations, space-shift families, and temporal-drift types
+**When** the JSONL dataset is replay-loaded
+**Then** every row conforms to the stable schema, stream ordering is
+deterministic, train/calibration/held-out splits are disjoint, and each state
+and update has exact old-rule, current-rule, and future-rule labels.
+
+#### SCENARIO-BENCH-5616-CONTROLS: Corruption Controls Fail Closed
+
+**Given** known-valid controls and injected wrong-predicate,
+wrong-binding, delayed-label, and poison-update controls
+**When** the exact validator evaluates the rows
+**Then** every valid control is accepted, every injected violation is rejected,
+`oracle_label_error_count=0`, and `fixture_ready_score=1.0` only if the replay
+loader reproduces the artifact hashes.
+
+**Spec traces:** REQ-BENCH-5616, SCENARIO-BENCH-5616-SCHEMA,
+SCENARIO-BENCH-5616-CONTROLS
+
+## Implementation Status (REQ-BENCH-5616)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5616 | Planned (`python/carnot/experiment_5616_exact_nonstationary_constraint_stream.py`) | Planned (`tests/python/test_experiment_5616_exact_nonstationary_constraint_stream.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
@@ -1230,4 +1320,3 @@ Carnot MUST provide an evaluation script that runs a subset of ConstraintBench t
 **Given** the generation script `experiment_3585_realistic_factual_corpus.py`
 **When** the corpus is generated and scored
 **Then** the confidence baseline AUROC must be `< 0.95`.
-
