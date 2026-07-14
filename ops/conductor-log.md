@@ -11732,3 +11732,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 10:54 UTC | ARC-AGI-3 unconditional rotated live-agent plus-on | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-14 11:10 UTC | cDLS exact small-state target, detailed-balance, a | OK | 86 passed, 1 warning in 13.67s |
 | 2026-07-14 11:36 UTC | Gated on Exp5622 exactness: corrected cDLS multi-s | OK | 93 passed, 1 warning in 10.63s |
+| 2026-07-14 12:03 UTC | V507 capstone, promotion-retirement ledger, and sp | OK | 87 passed, 1 warning in 10.04s |

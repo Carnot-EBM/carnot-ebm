@@ -1,0 +1,69 @@
+{
+  "experiment": "experiment_5702_dynamics_gate_pass_rate_survey",
+  "schema": "carnot.exp5702.dynamics_gate_pass_rate_survey.v1",
+  "result_path": "results/experiment_5702_dynamics_gate_pass_rate_survey.json",
+  "honest_verdict": "complete: dynamics_gate_strict_low_pass_rate_12pct",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a low pass rate is a real, citable finding about gate calibration, not a failure of this survey"
+    },
+    "pass_rate_at_live_threshold": {
+      "principle": "the direct answer to task 11's question -- how often a real induction round clears the exact threshold (1.0) the live call site enforces"
+    },
+    "excluded_artifacts": {
+      "principle": "exp5700 deliberately set min_heldout_accuracy=0.0 to isolate an unrelated veto test; including its rows would understate how strict the REAL live threshold is by mixing in rows collected under a different, lower bar"
+    },
+    "cited_upstream_artifacts": {
+      "principle": "CLAUDE.md Inference-Substrate Declaration Discipline -- this is an aggregation_from_upstream_artifacts run; the audit trail must trace every row back to the real artifact that measured it"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "live_threshold": 1.0,
+  "n_rows": 95,
+  "n_source_files": 12,
+  "mean": 0.3069,
+  "median": 0.12,
+  "pass_rate_at_live_threshold": 0.1263,
+  "exact_zero_rate": 0.4737,
+  "threshold_sweep": {
+    "1.0": 0.1263,
+    "0.9": 0.1263,
+    "0.8": 0.1895,
+    "0.75": 0.1895,
+    "0.7": 0.1895,
+    "0.5": 0.3368,
+    "0.3": 0.4421
+  },
+  "cited_upstream_artifacts": [
+    "results/experiment_4557_executable_world_model_proposer.json",
+    "results/experiment_4676_hierarchical_subgoal_search_live.json",
+    "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
+    "results/experiment_5588_tier3_induction_live_path_sanity_check.json",
+    "results/experiment_5589_tier3_induction_normal_budget_capability_check.json",
+    "results/experiment_5594_think_mode_induction_quality_ab.json",
+    "results/experiment_5596_generator_size_ab_gemma31b_vs_current.json",
+    "results/experiment_5597_generator_size_ab_qwen35b_moe_vs_current.json",
+    "results/experiment_5598_generator_size_multiseed_ab.json",
+    "results/experiment_5599_reinduction_ab_lp85_levelup.json",
+    "results/proto_l2_measure_fixstack.json",
+    "results/proto_l2_measure_fixstack_v2_with_split.json"
+  ],
+  "excluded_artifacts": [
+    "results/experiment_5700_goal_predicate_veto_live_integration.json"
+  ],
+  "methodology_note": "Corpus is round-level heldout_accuracy snapshots from real live_llm_inference artifacts. This measures the PER-ROW pass rate at the live threshold, not the bounded 3-round retry loop's eventual within-budget success rate -- the checked-in corpus does not contain enough same-attempt multi-round traces to reconstruct that distinct statistic. The per-row rate is still the right first-order answer to 'how strict is 1.0 in practice': a low per-row rate means most individual real induction attempts miss the bar, which is the direct evidence for whether the gate is calibrated tightly or loosely against real model output quality.",
+  "solve_provenance": "development_proxy",
+  "random_seed": 5702,
+  "duration_s": 2.651124,
+  "preconditions_checked": {
+    "results_dir_present": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "433591fd08c776380ce6309293e5e5fd57e3deb884958384aabc3d37426dc4d7"
+}
