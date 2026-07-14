@@ -29835,6 +29835,119 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5615: Native llama.cpp CUDA Runtime Certificate
+
+The repository SHALL provide Exp 5615 at
+`python/carnot/experiment_5615_native_llamacpp_cuda_runtime_certificate.py`
+and write
+`results/experiment_5615_native_llamacpp_cuda_runtime_certificate.json`.
+Exp 5615 SHALL be a changed native-runtime certificate only: it SHALL NOT
+rerun, summarize, infer, or compare solve-versus-verify task accuracy. It
+SHALL first check, before any model load, all three mandated cached GGUF paths,
+native llama.cpp binary paths, `--help` and build/version metadata, CUDA build
+capability, GPU identity/driver/free memory, and the existing Exp 5605
+response-envelope APIs. If no authenticated native CUDA path is available, it
+SHALL write a terminal blocked artifact naming the exact missing precondition
+and SHALL NOT substitute a legacy CPU smoke model.
+
+`MODEL_SPECS` / `model_specs` SHALL include exactly these headline GGUF IDs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, with cached local path and file/path hash
+for each. Legacy `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` MAY appear
+only as explicitly labeled CPU smoke diagnostics and SHALL NOT satisfy any
+certificate field.
+
+For each mandated model, Exp 5615 SHALL run one deterministic short structured
+positive control and one deliberately truncated/stop control through a native
+llama.cpp process when preconditions pass. CLI calls SHALL use
+`--single-turn`; server calls, if used, SHALL bind only to localhost, record
+port and PID, and shut down cleanly. Every control row SHALL preserve prompt
+bytes, raw response bytes, sampling parameters, token and stop metadata,
+parser result, exact control outcome, native arguments, exit status, wall
+time, and CUDA/offload receipts through the Exp 5605 lossless envelope.
+
+The runtime certificate SHALL authenticate the native binary version/build
+flags, requested and observed offloaded layers, GPU PID/process memory before,
+during, and after each process, nonzero GPU memory delta, exit status, wall
+time, orphan-process cleanup, lossless replay, content hashes for every row,
+zero semantic false accepts, correct stop/truncation classification, and
+repeatable native arguments. CPU fallback is diagnostic only and sets that
+model's certificate false.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `model_specs`, `native_binary_receipt`,
+`cuda_build_capability`, `gpu_device_receipts`, `offload_layers_by_model`,
+`gpu_memory_delta_by_model`, `response_envelope_path`,
+`lossless_replay_rate`, `stop_control_pass_rate`,
+`semantic_false_accept_count`, `orphan_process_count`,
+`models_certified_count`, `runtime_certificate_ready_score`,
+`inference_substrate`, `random_seed`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL equal `live_llm_inference`.
+`models_certified_count` SHALL use denominator three.
+`runtime_certificate_ready_score` SHALL equal exactly `1.0` only when all
+three mandated models and both controls per model pass with authenticated
+native CUDA offload.
+
+Field principles:
+
+- `field_principles`: Every certificate field names the evidence boundary it
+  protects.
+- `model_specs`: All mandated identities, cache paths, and hashes are explicit
+  so legacy smoke models cannot satisfy the certificate.
+- `native_binary_receipt`: The changed native llama.cpp substrate is
+  authenticated before model load.
+- `cuda_build_capability`: Compiled CUDA offload support is real rather than
+  inferred from a CPU binary.
+- `gpu_device_receipts`: Device identity, driver, free memory, PID memory, and
+  process cleanup evidence are preserved.
+- `offload_layers_by_model`: Requested and observed offloaded layers stay
+  separate.
+- `gpu_memory_delta_by_model`: CPU fallback cannot masquerade as offload.
+- `response_envelope_path`: Raw prompt and response evidence is replayable.
+- `lossless_replay_rate`: Preservation is exact for every row.
+- `stop_control_pass_rate`: Termination behavior is bounded by explicit
+  controls.
+- `semantic_false_accept_count`: Parsing fails closed.
+- `orphan_process_count`: The native runtime cleans up.
+- `models_certified_count`: The denominator is three mandated models.
+- `runtime_certificate_ready_score`: Only a complete three-model native CUDA
+  certificate may score 1.0.
+- `inference_substrate`: Declares that real local generation occurred when
+  controls run.
+- `random_seed`: Fixed sampling makes the native arguments repeatable.
+- `reproducibility_checksum`: The method and evidence can be replayed.
+- `honest_verdict`: No-offload or failed-control evidence is terminal
+  retirement evidence for this runtime certificate.
+
+### SCENARIO-VERIFY-5615: Native CUDA Certificate Or Terminal Blocked Receipt
+
+Given all three mandated GGUF files are cached, a native CUDA-capable
+llama.cpp binary exists, `--single-turn` is supported for CLI execution, and
+`nvidia-smi` exposes GPU identity and free memory, when Exp 5615 runs, then it
+executes two short native controls for each mandated model, writes the Exp
+5605-compatible response envelope, authenticates observed CUDA offload and
+nonzero GPU memory deltas, proves lossless replay and correct stop/truncation
+classification, writes
+`results/experiment_5615_native_llamacpp_cuda_runtime_certificate.json`, and
+sets `runtime_certificate_ready_score=1.0` only if all three model
+certificates pass.
+
+If any mandated GGUF is missing, the native binary or `--single-turn` support
+is unavailable, CUDA build evidence is absent, GPU memory delta is zero, a
+native process exits unsuccessfully, any row fails replay, any stop/truncation
+control is misclassified, a semantic false accept occurs, or an orphan server
+or CLI process remains, then Exp 5615 SHALL still write the terminal artifact
+with `models_certified_count<3` or `runtime_certificate_ready_score<1.0` and
+an `honest_verdict` beginning with `blocked_` rather than claiming task
+accuracy or solve-versus-verify progress.
+
+## Implementation Status (REQ-VERIFY-5615)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5615 | Implemented (`python/carnot/experiment_5615_native_llamacpp_cuda_runtime_certificate.py`, `results/experiment_5615_native_llamacpp_cuda_runtime_certificate.json`) | Implemented (`tests/python/test_experiment_5615_native_llamacpp_cuda_runtime_certificate.py`) |
+
 ### REQ-VERIFY-5606: Clean SOTA Solve-Versus-Verify Evidence Panel
 
 The repository SHALL provide Exp 5606 at
