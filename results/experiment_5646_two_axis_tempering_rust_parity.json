@@ -1,0 +1,33 @@
+{
+  "experiment": 5646,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-14",
+  "started_at": "2026-07-14T21:45:51.349147+00:00",
+  "finished_at": "2026-07-14T21:45:51.349147+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5645 quality promotion: Rust/Python two-axis tempering parity",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5645-two-axis-tempering-hard-constraint-quality.two_axis_quality_ready_score (actual=0.0 >= expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5645-two-axis-tempering-hard-constraint-quality",
+      "artifact_field": "two_axis_quality_ready_score",
+      "op": ">=",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 >= expected=1.0"
+    },
+    {
+      "upstream": "exp5645-two-axis-tempering-hard-constraint-quality",
+      "artifact_field": "material_quality_regression_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 2,
+      "passed": false,
+      "reason": "actual=2 == expected=0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
