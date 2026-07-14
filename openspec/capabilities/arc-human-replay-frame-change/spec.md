@@ -3787,19 +3787,35 @@ real attempt is a genuine GPU-backed induction call, ~90-800s observed) or
 a game/corpus selection biased toward the interesting band would be needed
 for a conclusive answer, and is not pursued further in this task's scope.
 
-**Separately-disclosed, orthogonal observation (not a resolution of the
-threshold question).** Despite `heldout_accuracy=0.0` on every attempt,
-`planned=True` and `plan_reaches_goal=True` on all 3 -- because this
-experiment sets `min_heldout_accuracy=0.0` to observe the raw held-out
-score without letting the gate block downstream steps, the induced engine
-still produced a plan verified, IN-MODEL, to reach the goal. This is worth
-noting as a possible sign the held-out dynamics check and downstream
-planning usefulness are not perfectly aligned metrics, but `plan_reaches_
-goal` is verified against the induced engine's OWN simulation, not real
-environment ground truth (the same caveat REQ-ARC-WMTE-5593-3's live
-integration disclosed for its own `plan_reaches_goal` field) -- so this is
-flagged as an open question for a future task, not evidence that the
-strict gate is miscalibrated.
+**Orthogonal observation, RESOLVED via code analysis (2026-07-14, no further
+live compute needed).** Despite `heldout_accuracy=0.0` on every attempt,
+`planned=True` and `plan_reaches_goal=True` on all 3. Tracing
+`_plan_reaches_goal` (`arc_llm_reinduction.py:452-501`) explains this fully:
+it re-simulates the candidate plan by repeatedly calling the SAME induced
+`engine` the held-out check just scored `0.0` (`arc_world_model_trust_
+energy.py:select_trusted_world_model` -> `_score_accuracy` ->
+`WorldModelVerifier(heldout).score(engine).accuracy`, an exact per-transition
+grid match over a genuine 16-transition held-out split on lp85's 47
+collected transitions, per `_split_prefix_heldout`'s 1/3 fraction) --
+then checks the SAME induced `goal` predicate against that engine's own
+simulated final grid. **This is a purely self-referential, internally-
+consistent check with zero grounding against real transitions or the real
+environment.** An engine that is completely wrong about real dynamics
+(0/16 held-out transitions correct) can still "prove" its own plan correct
+by simulating entirely within its own incorrect beliefs and checking an
+equally ungrounded goal predicate against the result.
+
+**This is NOT a sign the held-out check and planning usefulness are
+misaligned metrics -- it is a direct demonstration of the EXACT failure
+mode `min_heldout_accuracy=1.0` exists to prevent.** A plan that "reaches
+the goal" only inside a self-consistent-but-wrong simulation carries no
+evidence it would work against the real game; if executed for real against
+an engine this wrong about held-out dynamics, the plan would have no
+principled reason to succeed. This closes the open question this task
+originally flagged: the finding is not a counter-argument for relaxing the
+strict threshold, it is corroborating evidence FOR keeping it -- a low
+`heldout_accuracy` and a passing `plan_reaches_goal` can coexist precisely
+because the latter provides no independent check when the former is bad.
 
 Required field principles:
 
