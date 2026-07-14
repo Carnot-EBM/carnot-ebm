@@ -2172,3 +2172,84 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5612 | Planned (`python/carnot/experiment_5612_v506_capstone_reconciliation.py`, `results/experiment_5612_v506_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5612_v506_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-5624: The `.507` capstone reconciliation workflow
+  `exp5624-v507-capstone-reconciliation` in
+  `python/carnot/experiment_5624_v507_capstone_reconciliation.py` SHALL write
+  `results/experiment_5624_v507_capstone_reconciliation.json` without modifying
+  `research-roadmap.yaml`, without activating or requiring
+  `research-roadmap-next.yaml`, and without modifying
+  `scripts/research_conductor.py`. It SHALL read every expected Exp5613 through
+  Exp5623 upstream artifact that exists on disk
+  (`results/experiment_5613_transition_v507.json`,
+  `results/experiment_5614_v507_source_delta_ingestion.json`,
+  `results/experiment_5615_native_llamacpp_cuda_runtime_certificate.json`,
+  `results/experiment_5615_native_llamacpp_cuda_runtime_certificate.responses.jsonl`,
+  `results/experiment_5616_exact_nonstationary_constraint_stream.json`,
+  `results/experiment_5617_kan_critical_task_duration_map.json`,
+  `results/experiment_5618_predictive_window_kan_self_learning.json`,
+  `results/experiment_5619_arc_forward_inverse_transition_cycle.json`,
+  `results/experiment_5620_arc_cycle_guarded_live_update_ab.json`,
+  `results/experiment_5621_arc_live_self_discovery_levelup_v507.json`,
+  `results/experiment_5621_arc_live_self_discovery_levelup_v507_trace.json`,
+  `results/experiment_5622_cdls_exact_kernel_audit.json`,
+  `results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json`, and
+  `results/experiment_5623_cdls_multiseed_cpu_cuda_crossover_sufficient_statistics.json`)
+  and SHALL record missing, malformed, blocked, gate-skipped,
+  adversarially flagged, complete, promoted, and retired tasks separately. It
+  SHALL derive narrow claims only from artifact fields, keep flagged artifacts
+  out of positive headline evidence, apply every `retire_if_same_verdict`
+  decision conservatively, and record when the operator stop rule delegates
+  ops/status, changelog, traceability, completion, references, exclusion
+  manifest, and ARC registry edits to a separate reconciler.
+- SCENARIO-CAPSTONE-5624: The artifact
+  `results/experiment_5624_v507_capstone_reconciliation.json` must emit
+  top-level fields `field_principles`, `expected_task_ids`, `artifacts_found`,
+  `terminal_status_by_task`, `headline_claims`, `promotion_decisions`,
+  `retirement_decisions`, `native_runtime_verdict`,
+  `continuous_self_learning_verdict`, `arc_transition_verdict`,
+  `arc_registry_delta`, `arc_registry_delta_evidence`,
+  `hardware_sampling_verdict`, `documents_reconciled`, `tests_run`,
+  `unresolved_gaps`, `inference_substrate`,
+  `reproducibility_checksum`, and `honest_verdict`. The default `.507`
+  aggregation must classify Exp5615 as blocked native-runtime evidence rather
+  than a verifier-quality certificate, promote the exact Exp5616 drift fixture
+  and the bounded Exp5617 duration map only within their artifact-backed
+  boundaries, refuse to promote Exp5618 past the preregistered
+  `critical_duration_fit_r2 >= 0.5` gate when Exp5617 reports `0.0`, refuse to
+  promote flagged Exp5619 and Exp5621 ARC artifacts, report Exp5620 as
+  gate-skipped, record `arc_registry_delta=0`, promote Exp5622 exact corrected
+  cDLS kernel evidence, refuse an Exp5623 CPU/CUDA crossover claim when zero
+  quality-matched pairs enter speedups, and set
+  `inference_substrate=aggregation_from_upstream_artifacts` with an
+  `honest_verdict` starting with `complete:` unless an expected primary
+  upstream artifact is missing or malformed.
+- SCENARIO-CAPSTONE-5624-MISSING-MALFORMED: If any expected `.507` primary
+  result artifact is missing or malformed, the workflow must still write the
+  capstone artifact, list the affected path under the appropriate terminal
+  status bucket, keep affected claim gates false, preserve available sidecar
+  provenance separately, and start `honest_verdict` with `blocked:`.
+- SCENARIO-CAPSTONE-5624-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required capstone field.",
+  `expected_task_ids` = "fixed milestone denominator; must list Exp5613 through Exp5624 task ids.",
+  `artifacts_found` = "only readable files can support claims.",
+  `terminal_status_by_task` = "blocked, skipped, flagged, malformed, missing, and complete stay distinct.",
+  `headline_claims` = "narrow artifact-backed conclusions; flagged artifacts cannot support positive claims.",
+  `promotion_decisions` = "mechanisms promote only through preregistered gates.",
+  `retirement_decisions` = "repeated failures stop reruns while new scientific nulls stay planning inputs.",
+  `native_runtime_verdict` = "native CUDA smoke/build evidence is not verifier-quality evidence.",
+  `continuous_self_learning_verdict` = "FR-11 outcome is explicit and respects upstream duration-map gates.",
+  `arc_transition_verdict` = "development-proxy and flagged ARC evidence is bounded before live-path promotion.",
+  `arc_registry_delta` = "levels_after - levels_before and new_reproducible_levels must agree.",
+  `hardware_sampling_verdict` = "exactness and quality gates bound all timing/crossover claims.",
+  `documents_reconciled` = "spec and ops reconciliation state, including stop-rule delegated files.",
+  `tests_run` = "commands, exit codes, counts, warnings, and skipped checks actually observed.",
+  `unresolved_gaps` = "negative evidence becomes planning input.",
+  `inference_substrate` = "must equal aggregation_from_upstream_artifacts.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5624)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5624 | Planned (`python/carnot/experiment_5624_v507_capstone_reconciliation.py`, `results/experiment_5624_v507_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5624_v507_capstone_reconciliation.py`) |
