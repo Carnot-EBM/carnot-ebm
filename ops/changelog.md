@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-07-13 (Milestone 2026.07.506 planning staged -- codex)
+
+- In response to the operator request to plan the next research milestone, staged
+  `openspec/change-proposals/research-roadmap-vNEXT.md` and
+  `research-roadmap-next.yaml` without modifying the active roadmap or conductor.
+- Appended the V506 research refresh with chain-of-evidence response provenance,
+  aggregate-invariant intermediate accounting, cDLS hybrid sampling, and a
+  watch-only temporal-difference representation item.
+- Designed 10 tasks across four phases: transition/source/evidence infrastructure,
+  gated three-family local-SOTA verification and exact residual extension, KAN-only
+  longitudinal continuous self-learning plus live ARC filter/level work, and matched
+  CPU/CUDA cDLS evaluation plus reconciliation.
+- Avoided the concurrent outer-loop Exp5602 collision by allocating Exp5603-Exp5612.
+  Preserved the retired causal-memory/PACE and PTRM-generator lanes, and kept the ARC
+  `+1` live-agent attempt unconditional on filter promotion.
+- Roadmap gate audit, exclusion-manifest lint, ARC level-up guarantee, prompt contract,
+  YAML/schema checks, and touched-file whitespace checks passed. No experiment or E2E
+  workload ran because this change is planning-only.
+
 ## 2026-07-11 (Exp 5574 ARC pTRM Stage-1 regression fix -- codex)
 
 - Fixed the ARC pTRM Stage-1 test failures by implementing

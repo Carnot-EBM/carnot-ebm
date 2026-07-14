@@ -29423,3 +29423,84 @@ Execution-time sweep after the `.505` planner refresh checked arXiv primary page
 - **Watch-only/excluded:** Shared Selective Persistent Memory, XVada grammar inference, Mosaic, open-ended verifier-gap position work, Extropic TSU/XTR/Z1, and Logical Intelligence Kona/Aleph were checked but not promoted as executable `.505` dependencies.
 
 <!-- V505-EXECUTION-REFRESH-20260714-END -->
+
+## V506 Planner Refresh - 20260714
+
+Planning-time sweep for milestone `.506` after the terminal `.505` conductor run and the
+subsequent outer-loop ARC measurements. The search covered 2025–2026 arXiv work on EBM
+reasoning, neural constraint satisfaction, Ising ML, hallucination mitigation, KANs,
+energy-guided decoding, accelerated sampling, and continual learning; OpenReview; direct
+Semantic Scholar citation queries for EBT `2507.02092` and ARM-EBM `2512.15605`; Hugging
+Face Papers; GitHub discovery; Extropic writing; and Logical Intelligence public pages.
+The entries below are non-duplicate deltas with a concrete Carnot hook or an explicit
+watch-only disposition.
+
+### New actionable deltas
+
+- **Can Aggregate Invariants Accelerate Continuous Subgraph Matching?** —
+  arXiv:2606.24421, https://arxiv.org/abs/2606.24421. The paper's transferable lesson is
+  that an exact maintained filter can reduce candidates without reducing the intermediate
+  work that dominates end-to-end cost. Carnot hook: evaluate the live-wired ARC inert-click
+  pruner and object-history salience prior with an intermediate-invariance ledger: candidate
+  actions, environment steps, distinct states, expanded nodes, level gains, and wall time.
+  Include a positive-control trace where a known inert signature is reachable. A lower
+  candidate count alone is not an efficiency or solve claim.
+- **Accelerating Discrete Langevin Samplers via Continuous Intermediates** —
+  OpenReview ProbML 2026 workshop paper, https://openreview.net/forum?id=Rgs15piXcl.
+  Continuous-intermediate Discrete Langevin Sampling (cDLS) proposes in a continuous
+  relaxation and returns to discrete Ising/RBM states, aiming to improve mixing without a
+  fully continuous target. Carnot hook: a bounded matched-quality CPU/CUDA comparison
+  against the existing discrete Langevin baseline on exact Ising descriptors at larger
+  sizes. The work has workshop-level status (and an earlier TMLR rejection), so it can
+  motivate a local benchmark but cannot serve as performance authority.
+- **ScientistOne: Towards Human-Level Autonomous Research via Chain-of-Evidence** —
+  arXiv:2605.26340, https://arxiv.org/abs/2605.26340. Its relevant systems pattern binds
+  research claims to preserved evidence and executable artifacts rather than retaining
+  summaries alone. Carnot hook: introduce an append-only local-SOTA response envelope that
+  preserves raw bytes or losslessly compressed text, content hashes, model/runtime receipts,
+  prompts, parser versions, and exact-validator outcomes. This directly prevents a repeat
+  of Exp5580's hash-only forensic dead end; it does not make an agent-generated narrative
+  authoritative.
+
+### Watch-only delta
+
+- **You Don't Need Strong Assumptions: Visual Representation Learning via Temporal
+  Differences** — arXiv:2606.15956, https://arxiv.org/abs/2606.15956; visible in the EBT
+  citation trail. Its temporal-difference representation equation is relevant to future
+  online ARC world-state learning. Carnot disposition: watch only in `.506`. The current
+  milestone first measures already-wired live-path filters and may not use this paper to
+  reopen retired human-replay clickability, external pretraining, or off-path adapters.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the direct EBT citation route surfaced Fixed-Point Reasoners
+  (arXiv:2606.18206), temporal-difference visual representation learning, LoopUS, CEM, and
+  EBM-workload studies. The ARM-EBM route surfaced Path Measure (arXiv:2607.02154), COPSD
+  (arXiv:2606.03089), and distributional-energy work. These strengthen the fixed-point and
+  sampling watch lists but do not displace Carnot's exact validators or create an admissible
+  new reasoning lane.
+- **OpenReview:** cDLS was the only new item promoted to a bounded local experiment. Its
+  venue and earlier review history are recorded so the roadmap does not launder a workshop
+  proposal into a demonstrated speedup.
+- **Hugging Face Papers and GitHub:** current verification and constraint searches mostly
+  repeated already-indexed verifier, grammar, EBT/ARM-EBM, and KAN lines. No trending
+  repository supplied a stronger local exact-verification substrate than the existing
+  Carnot code.
+- **Extropic:** the public writing index still provides no authenticated, locally accessible
+  TSU execution path beyond the indexed X0/XTR material. No `.506` claim depends on it.
+- **Logical Intelligence:** Kona remains a proprietary constraint layer beneath an LLM,
+  with no local weights, exact benchmark artifact, or authenticated execution route for a
+  Carnot comparison. It remains architecture context only.
+
+### V506 planning impact
+
+- Repair verifier evidence collection at the source: preserve raw local-SOTA responses and
+  prove lossless replay before any solve-versus-verify remeasurement.
+- Measure live ARC filters at their downstream intermediates, then run the milestone's
+  unconditional live-agent self-discovery attempt regardless of whether the filters promote.
+- Continue FR-11 through the clean spline-local KAN substrate only. The causal-memory and
+  two-timescale policy chain remains retired after the `.505` metric corrigendum and gates.
+- Benchmark cDLS only under identical targets, schedules, sample counts, seeds, quality
+  diagnostics, and authenticated CPU/CUDA receipts; unmatched timing supports no speedup.
+
+<!-- V506-PLANNER-REFRESH-20260714-END -->
