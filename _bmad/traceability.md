@@ -2,6 +2,18 @@
 
 **Last Updated:** 2026-07-11
 
+**Operational Note:** 2026-07-14 ARC filter A/B and SGE anti-stagnation test
+fix regenerated the Exp5609 decision-grade no-LLM filter artifact under
+`REQ-ARC-FCP-5609`, replacing a stale blocked/precondition artifact with a
+reachable matched-budget result whose offline reproduction safety is exact.
+The fix also added the missing wrapped-field and invalid-substrate coverage for
+`REQ-VERIFY-4437` while preserving the SGE forced-portfolio rotation changes
+under `REQ-ARC-FCP-5699`. Validation: focused behavior tests pass (`131
+passed`), and scoped Coverage.py reports 100% for
+`arc_llm_strategy_proposer.py` plus `arc_solve_artifact_discipline.py` (`410`
+statements, `0` missing). No changes were made to
+`scripts/research_conductor.py`.
+
 **Operational Note:** 2026-07-11 Exp 5574 ARC pTRM Stage-1 regression fix
 implemented `REQ-ARC-PTRM-5574-1` through `REQ-ARC-PTRM-5574-5` in
 `python/carnot/agentic/arc_ptrm_stage1_generator.py` after the module had been

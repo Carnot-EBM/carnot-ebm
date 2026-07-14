@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-13 (Milestone 2026.07.506 planning staged)
+**Last Updated:** 2026-07-14 (ARC filter A/B test fix)
+
+## Session 2026-07-14 - ARC Filter A/B Test Fix
+
+Fixed the failing ARC Exp5609 test surface without reverting prior changes and
+without modifying `scripts/research_conductor.py`. Regenerated
+`results/experiment_5609_arc_filter_intermediate_invariance_ab.json` through
+the experiment module after current runtime preconditions passed, replacing the
+stale blocked artifact with
+`complete: arc_filter_ab_reachable_repeat_noop_filters_retired` and
+`offline_reproduced.exact_known_level_safety=true`.
+
+Also added focused coverage for the artifact-discipline invalid-substrate and
+principle-wrapped field branches. Validation: relevant behavior tests pass
+(`131 passed`), and scoped Coverage.py reports 100% for the touched reusable
+modules (`arc_llm_strategy_proposer.py` and
+`arc_solve_artifact_discipline.py`, `410` statements, `0` missing). The full
+repo-wide `--cov=python/carnot --cov-fail-under=100` target remains unsuitable
+for this focused run because it includes the untouched research tree.
 
 ## Session 2026-07-13 - Milestone 2026.07.506 planning staged
 
