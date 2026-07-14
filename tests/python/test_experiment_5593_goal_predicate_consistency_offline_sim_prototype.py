@@ -235,21 +235,23 @@ def test_scenario_arc_wmte_5593_context_overflow_classified_distinctly(monkeypat
     )
 
 
-def test_req_arc_wmte_5593_repository_artifact_is_an_honest_diagnosed_null() -> None:
-    """REQ-ARC-WMTE-5593: the checked-in real run is an honest, diagnosed null -- lp85's
-    64x64 grid saturates the induction pipeline's context budget even at a minimal
-    transition window (confirmed by direct debugging: a single-transition prompt already
-    measures ~13,400+ tokens against a 13,824-token available budget). This does not
-    reflect on score_goal_predicate_consistency's own correctness, which is validated by
-    test_arc_goal_predicate_consistency.py's 5 direct unit tests on realistic synthetic
-    data instead."""
+def test_req_arc_wmte_5593_repository_artifact_is_a_real_positive_control_result() -> None:
+    """REQ-ARC-WMTE-5593 + REQ-ARC-WMTE-5593-2: the checked-in real run is now the real
+    positive-control demo the induce_prompt scalability fix (REQ-ARC-WMTE-5593-2) enabled --
+    a genuinely real induction on lp85's 8-transition window (no context overflow) scored by
+    score_goal_predicate_consistency against real observed transitions. The induced predicate
+    is imperfect (0.75 accuracy, 2 real-level-up misses) -- an honest finding about induction
+    QUALITY on lp85, distinct from the check working correctly (also validated by
+    test_arc_goal_predicate_consistency.py's 5 direct unit tests on synthetic data)."""
 
     result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
+    detail = result.get("goal_predicate_detail", {})
 
     assert result["real_levelup_present_in_sample"] is True
-    assert result["goal_predicate_accuracy"] is None
+    assert detail.get("induction_ok") is True
+    assert detail.get("induce_transition_count") == 8
+    assert result["goal_predicate_accuracy"] == 0.75
     assert result["inference_substrate"] == "live_llm_inference"
     assert result["solve_provenance"] == "development_proxy"
-    assert result["flagged_adversarial"] is True
     for field in mod.REQUIRED_ARTIFACT_FIELDS:
         assert field in result
