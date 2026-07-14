@@ -216,5 +216,23 @@
   },
   "unsafe_transition_accept_count": 0,
   "valid_transition_accept_count": 1,
-  "valid_transition_accept_rate": 0.009259
+  "valid_transition_accept_rate": 0.009259,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "cycle_verifier_positive_control_rate=0.009259 and valid_transition_accept_rate=0.009259 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "forward_replay_error=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
+    }
+  ]
 }
