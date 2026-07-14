@@ -29613,3 +29613,101 @@ below are the non-duplicate deltas that change the executable plan.
   schedules, successful quality-matched pairs, and authenticated timing.
 
 <!-- V507-PLANNER-REFRESH-20260714-END -->
+
+## V508 Planner Refresh - 20260714
+
+Planning-time sweep for milestone `.508` after the terminal `.507` conductor run. The
+search covered 2025-2026 arXiv work on energy-based verification/reasoning, neural
+constraint satisfaction, Ising ML and sampling, hallucination detection/mitigation,
+KANs, energy-guided and constrained generation, FPGA/thermodynamic acceleration, and
+continual/online constraint learning. It also checked OpenReview, Semantic Scholar
+citation routes for EBT `2507.02092` and ARM-EBM `2512.15605`, Hugging Face Papers,
+GitHub discovery, Extropic writing, and Logical Intelligence's Kona pages. Entries
+below are non-duplicate deltas or explicit dispositions; previously indexed work is not
+re-added as new.
+
+### New actionable deltas
+
+- **Parameter-Free and Group Conditional Online Conformal Prediction** -
+  arXiv:2606.00419, https://arxiv.org/abs/2606.00419. The method combines
+  parameter-free online adaptation with group-conditional coverage under unknown and
+  potentially adversarial shifts. Carnot hook: replace `.507`'s failed global
+  duration-regression promotion gate with a frozen online-conformal contract stratified
+  by constraint family, drift type, conflict class, and duration. Exact oracle labels
+  remain authoritative; conformal sets may decide retain/adapt/abstain, but may never
+  waive an exact rejection.
+- **Optimal Training-Conditional Regret for Online Conformal Prediction** -
+  arXiv:2602.16537, https://arxiv.org/abs/2602.16537. The paper treats both abrupt
+  change points and smooth drift, using drift detection to update calibration sets and
+  an online-trained nonconformity score under stability assumptions. Carnot hook: test
+  whether the existing active-spline KAN can achieve preregistered coverage and bounded
+  regret on the exact Exp5616 stream without a predictive `R^2` fit. Calibration must be
+  chronological, causal, and isolated from held-out outcomes.
+- **Breaking Local-Minimum Traps in Spiking Neural Network-Based Solvers for CSPs via
+  Parallel Tempering** - arXiv:2607.08897,
+  https://arxiv.org/abs/2607.08897. The paper exchanges temperatures rather than
+  network states across stochastic CSP replicas and reports gains concentrated on hard
+  SAT instances. Carnot hook: use Exp5622's exact-corrected cDLS kernel inside a bounded
+  temperature-exchange replica sampler, prove invariant-target parity on enumerable
+  Ising systems, then test hard-instance mixing and energy quality against matched
+  independent replicas. This is a changed quality mechanism, not permission to reopen
+  the terminal cDLS CPU/CUDA crossover or claim SNN/FPGA speedup.
+
+### Corroborating and promoted existing sources
+
+- **Learned Surrogates for AC Feasibility in Stochastic Unit Commitment: A Comparative
+  Study With Conformal Guarantees** - DOI:10.1049/gtd2.70345,
+  https://doi.org/10.1049/gtd2.70345. This 2026 application wraps KAN feasibility
+  predictions with split-conformal and group-conditional calibration, sending uncertain
+  points to an exact solver. It is cross-domain corroboration only: Carnot must establish
+  its own coverage, efficiency, and zero-false-accept evidence on the exact constraint
+  stream.
+- **Epistemic MCTS** (ICLR 2025, https://openreview.net/forum?id=Tb8RiXOc3N),
+  **Object-Centric World Models Meet Monte Carlo Tree Search** (arXiv:2601.06604), and
+  **Learning Interactive World Model for Object-Centric Reinforcement Learning**
+  (arXiv:2511.02225) were already indexed and mapped in Exp4734/4746, but the combined
+  epistemic-object causal-probe planner remains unbuilt. It is promoted into `.508` as
+  the clean ARC lane after `.507` retired the transition-cycle proxy. The implementation
+  must learn object/effect hypotheses only from the live agent's own observations and
+  propagate disagreement through bounded MCTS; it may not read game source, use a hand
+  GameAdapter, or perform exhaustive ground-truth search.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** EBT and ARM-EBM citation routes did not expose a newer executable
+  result that supersedes Carnot's exact validators, the online-conformal qualification
+  path, or the mapped epistemic ARC planner. No citation-count claim is made.
+- **OpenReview:** recent neural-CSP and constrained-optimization pages included
+  ConsFormer-LNS, FSNet, PAL, and SafeMPO. ConsFormer, hard feasibility repair, and PAL
+  are already represented in Carnot's history; SafeMPO's incremental-safe-update framing
+  supports fail-closed adaptation but does not displace exact rollback or justify a new
+  task by itself.
+- **Hugging Face Papers:** current verification searches repeated Spilled Energy,
+  HalluGuard, DiffuTruth, self-verification, and first-token confidence. Carnot has
+  already tested or bounded the relevant output/logit detector families; none reopens
+  the retired external generated-text scorer line.
+- **GitHub discovery:** no newly trending EBM, KAN, CSP, or constrained-decoding repository
+  supplied a more reproducible local substrate than the existing active-spline KAN,
+  exact validators, ARC live agent, or Ising samplers.
+- **Extropic:** the public writing index still tops out at the October 2025 X0/XTR-0/Z1
+  material and exposes no authenticated Carnot-accessible TSU execution route. TSU stays
+  watch-only.
+- **Logical Intelligence:** Kona 1.0 continues to be described publicly as a proprietary
+  constraint-enforcement layer beneath LLM interfaces, with no local weights or
+  reproducible benchmark artifact. It remains architecture context, not a comparator.
+
+### V508 planning impact
+
+- Preserve `.507`'s native three-model runtime certificate and cDLS timing crossover as
+  terminally retired. Neither receives another execution slot.
+- Qualify continuous self-learning through causal group-conditional online coverage and
+  regret, not another global duration fit. Replicate the positive Exp5618 controller only
+  after the conformal contract clears exact safety and coverage gates.
+- Build the previously mapped epistemic object-model MCTS mechanism as a generic,
+  live-reachable causal-probe policy, then run the mandatory registry-rotated live-agent
+  level-up attempt regardless of prototype outcome.
+- Give the exact-corrected cDLS kernel one changed, quality-only replica-exchange test.
+  Retire the hybrid if invariant parity or hard-instance quality fails; do not measure or
+  imply a CPU/CUDA, board, SNN, or TSU speedup.
+
+<!-- V508-PLANNER-REFRESH-20260714-END -->

@@ -1,290 +1,303 @@
-# Research Roadmap vNEXT — Milestone 2026.07.507
+# Research Roadmap vNEXT — Milestone 2026.07.508
 
-**Title:** Native Local-SOTA Runtime Certification, Drift-Aware KAN Self-Learning, Forward-Inverse ARC Verification, and Exact cDLS
+**Title:** Conformal KAN Self-Learning, Epistemic-Object ARC Probing, and Replica-Exchange cDLS
 **Status:** Proposed
-**Task range:** Exp5613–Exp5624
+**Task range:** Exp5625–Exp5635
 **Execution manifest:** `research-roadmap-next.yaml`
 
 ## Milestone thesis
 
-Milestone `.506` produced two promotable assets and three bounded negative results. The
-lossless response envelope preserved eight model calls with perfect replay and zero semantic
-false accepts. The exact-gated active-spline KAN learner improved held-out behavior, retained
-earlier constraints, rejected poison, and passed rollback and delayed-regression controls. In
-contrast, the three-family local-SOTA panel never established CUDA offload, every family
-collapsed at parsing, and the panel shape was retired. The ARC inert-click and object-history
-filters were reachable but repeated their no-op and were retired; the unconditional `sk48` L8
-attempt added no reproducible level. The cDLS run exercised CPU and CUDA code, but used only
-one seed and produced zero quality-matched pairs, so neither exact-target equivalence nor a
-crossover claim survived.
+Milestone `.507` established three useful facts and closed three tempting but invalid
+continuations. First, the exact nonstationary constraint stream is sound and the active-spline KAN
+controller is internally beneficial: it improved ALE, transfer, retention, and poison handling.
+However, its preregistered upstream duration-fit gate failed (`critical_duration_fit_r2=0.0`), so
+the controller is not promotion-ready. Second, the corrected cDLS kernel is exact on enumerable
+targets, but it produced no quality-matched large-instance pairs; timing and crossover are therefore
+terminally retired. Third, the ARC forward/inverse cycle proxy was safe but almost always abstained,
+and the live `bp35` L9 attempt added no level. The native three-GGUF runtime certificate also repeated
+its blocked outcome and is terminally retired.
 
-`.507` follows those boundaries. It certifies a changed native llama.cpp CUDA substrate without
-reopening the retired solve-versus-verify panel. It advances the clean KAN component from one
-bounded sequence to controlled nonstationary streams, using Average Lifelong Error and Critical
-Task Duration to decide when retention becomes harmful. It adapts World Action Verifier's
-forward/inverse asymmetry to the ARC live path using only the agent's own actions and
-observations, then runs the standing unconditional level attempt. Finally, it repairs cDLS at
-the Markov-kernel level before spending another multi-seed CPU/CUDA benchmark.
+`.508` follows the evidence instead of the task titles. It replaces the failed global duration fit
+with causal, group-conditional online conformal qualification over the already-exact drift stream.
+It independently replicates the active-spline controller only after coverage, abstention, safety,
+and regret gates pass. It builds the epistemic object-model MCTS path that Carnot mapped in
+Exp4734/4746 but never implemented, using only live-agent observations and bounded causal probes,
+then runs the required registry-rotated live `+1` attempt regardless of prototype outcome. Finally,
+it gives the exact-corrected cDLS kernel one changed, quality-only rescue: temperature exchange
+between replicas. No runtime-certificate, sampler-speedup, board, SNN, TSU, or cDLS crossover claim
+is reopened.
 
-## What milestone `.506` proved
+## What milestone `.507` proved
 
-| Evidence | Terminal fact | Consequence for `.507` |
+| Evidence | Terminal fact | Consequence for `.508` |
 |---|---|---|
-| Exp5603 transition | `.505` and the post-milestone outer loop were archived with parser, causal-memory, PTRM, and ARC boundaries intact. | Allocate a non-colliding Exp5613–Exp5624 range and do not revive retired chains. |
-| Exp5604 source refresh | One KAN lazy-identity diagnostic was actionable; the artifact was later flagged because its source-only substrate looked compute-bound. | Keep a source-ingestion slot, use an aggregation provenance category, and treat no-op discovery as valid. |
-| Exp5605 response envelope | Eight rows replayed losslessly; truncation and corruption controls passed; semantic false accepts were zero. | Reuse the envelope as runtime evidence infrastructure. Do not rerun its schema. |
-| Exp5606 local-SOTA panel | All three mandated GGUFs were cached, but `gpu_offload_authenticated=false`; parser failure was total and Gemma-26B truncation was high. `panel_complete=false`. | Retire this panel shape. Build a native-runtime certificate only; make no verifier-quality claim in `.507`. |
-| Exp5607 gate | Exact residual extension did not run because the panel supplied no clean residuals. | Do not propose another residual extension until a future milestone has a clean, independently justified corpus. |
-| Exp5608 KAN longitudinal learner | Exact-gated active splines passed the benefit and safety gates, with positive held-out and backward-retention deltas, poison rollback, and no LLM-weight mutation. Forward transfer remained zero. | Preserve this as the sole FR-11 learning substrate and test it under drift, duration, and family shift. |
-| Exp5609 ARC filter A/B | Both filters were reachable but produced the same downstream no-op; both were retired. | No more candidate-pruning or salience-filter variants. Improve transition-model trust instead. |
-| Exp5610 ARC live attempt | The live agent attempted `sk48` L8 from its own observations but banked no new level. | Rotate target/game, change the reachable model-update branch, and retain an unconditional baseline fallback. |
-| Exp5611 cDLS benchmark | CPU/CUDA execution rows existed, but one seed and zero quality-matched pairs made the timing result inadmissible. | Prove detailed balance and exact small-state target parity first; then use at least three seeds and preregistered quality gates. |
-| Exp5612 capstone | Response preservation and KAN promoted; local-SOTA asymmetry, exact extension, ARC filters/level-up, and cDLS crossover did not. | The next milestone centers on runtime readiness, nonstationary FR-11, ARC transition verification, and sampler correctness. |
+| Exp5613 transition | `.506` promotions and retirements were locked into the `.507` dependency graph. | Allocate Exp5625–Exp5635 and preserve every terminal boundary. |
+| Exp5614 source refresh | No new non-duplicate execution-time source delta was found. | Keep one freshness slot; a deduplicated no-op remains valid. |
+| Exp5615 native runtime certificate | CUDA build/device evidence and model GPU-memory deltas were real, but all three grammar samplers failed and observed offload-layer telemetry remained unusable. `runtime_certificate_ready_score=0`. | Retire the native three-model certificate and the solve/verify panel chain. No `.508` LLM-runtime experiment. |
+| Exp5616 exact drift stream | 17,856 rows and 107,136 exact labels replayed with zero oracle-label errors across durations 1–32 and multiple shift/conflict classes. | Reuse this immutable fixture; do not generate another drift benchmark. |
+| Exp5617 Critical Task Duration map | The measured crossing was at duration 16, but the preregistered fit failed (`R²=0.0`) and switch estimates were underpowered. | Do not fit another global duration curve. Qualify causal actions by online group-conditional coverage and regret. |
+| Exp5618 predictive KAN | Internally, the controller beat the best fixed arm on ALE and transfer, retained old rules, and rejected/rolled back all poison; `continuous_self_learning_ready=true`. | Preserve as promising but unpromoted. Replicate chronologically behind a new independent qualification contract. |
+| Exp5619 transition cycle | Zero unsafe accepts, but valid positive-control acceptance was only `0.009259`; inverse accuracy was `0.203704`; artifact was adversarially flagged. | Retire forward/inverse cycle verification. Build the previously mapped epistemic object-hypothesis planner instead. |
+| Exp5620 live ARC A/B | Structured gate correctly blocked the live branch because Exp5619 was not useful. | Do not tune the blocked cycle branch. |
+| Exp5621 live ARC attempt | A credited live-agent attempt targeted `bp35` L9 but banked no level; registry remained 177. | Exclude `bp35` L9 and `sk48` L8, rotate target/game, and retain an unconditional baseline fallback. |
+| Exp5622 cDLS audit | Metropolis-corrected cDLS matched exact targets and detailed balance; broken controls were rejected. | Preserve the corrected kernel as a clean substrate. |
+| Exp5623 cDLS crossover | Zero quality-matched pairs; energy-distribution mismatch remained severe; no speedup entered the result. | Retire timing/crossover. Test only whether a new replica-exchange mechanism repairs mixing/quality. |
+| Exp5624 capstone | Promoted Exp5616, Exp5617 as a measured map (not predictive fit), and Exp5622. Retired Exp5615 and Exp5623; preserved flags on Exp5619/5621. | Build `.508` only from clean substrates and genuinely changed mechanisms. |
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1 — local-SOTA execution is preserved but not operationally trustworthy
+### Gap 1 — FR-11 self-learning is safe and promising, but not statistically qualified
 
-FR-12 ultimately needs local proposals whose exact verification path is replayable. Carnot now
-has the replay contract, but its Python llama.cpp route could not authenticate GPU offload and
-the retired panel produced no usable structured responses. Repeating that panel would violate
-the failure ledger. `.507` instead asks a narrower infrastructure question: can the native
-llama.cpp binary or server load, offload, generate, terminate, and replay a minimal structured
-response for each mandated GGUF with device/process evidence? A certificate unlocks later
-science; it is not itself evidence that an LLM verifies better than it solves.
+The PRD requires a system that improves continuously without corrupting old knowledge. Carnot now
+has a clean exact stream and an internally positive active-spline controller, but its promotion
+depended on a global duration fit that had no predictive power. A point estimate of duration 16 is
+not enough to decide whether a new family, abrupt shift, smooth drift, or conflicting rule should be
+retained, adapted, reset, or rejected. `.508` replaces that proxy with online conformal action sets,
+chronological calibration, per-group coverage, abstention, and regret. Exact validation remains the
+authority; conformal uncertainty can route or abstain, never legalize an invalid update.
 
-### Gap 2 — continuous self-learning has no policy for nonstationary constraints
+### Gap 2 — the ARC live agent still cannot actively reduce uncertainty about hidden mechanics
 
-Exp5608 showed that a spline-local KAN component can update safely in one ordered sequence, but
-forward transfer was zero and the task did not distinguish transient shifts from persistent rule
-changes. FR-11 needs a controller that decides whether to retain, smooth, reset, or adapt as the
-constraint distribution changes. `.507` builds an exact stream with domain-space and temporal
-drift axes, estimates the empirical Critical Task Duration, and gates a predictive-window KAN
-controller on a nondegenerate switch signal. Exact validation, poison rollback, delayed
-regression, and immutable decisions remain authoritative.
+The registry remains at 177 reproduced levels, and `.507` confirmed that another safe-looking
+transition filter can be useless through over-abstention. The still-open path is not another scalar
+novelty reward, value head, salience filter, or transition-cycle veto. It is explicit epistemic
+planning: maintain competing object/effect hypotheses from the agent's own observations, propagate
+hypothesis disagreement through bounded MCTS, and choose probes that are both executable and
+expected to distinguish hypotheses. The live agent must reach the mechanism; source reads, exhaustive
+offline ground-truth search, hand GameAdapters, and outer-loop recipes remain disallowed.
 
-### Gap 3 — the ARC live agent lacks a trustworthy self-updating transition model
+### Gap 3 — exact native energy sampling still lacks a quality-preserving hard-instance path
 
-The north-star registry did not move in `.506`, and the filter, PTRM, scoring, larger-generator,
-and exploration-signal families are closed. A different weakness remains: an online planner can
-poison itself when a learned forward effect attributes the wrong action or successor state.
-World Action Verifier suggests a distinct mechanism—verify state plausibility and inverse action
-reachability separately, then demand forward/inverse cycle consistency. `.507` implements that
-contract from the live agent's own action/observation history, measures whether verified updates
-improve model fidelity on already reproduced levels, and only then exposes the promoted branch
-to a registry-prechecked live level attempt.
+FR-12 and the hardware vision require native energy inference that is both correct and useful. Exp5622
+solved the correctness half for cDLS, but Exp5623 showed the corrected chain did not mix closely enough
+to admit a matched performance comparison. The separate local-GGUF runtime gap is also real, but its
+third certificate attempt is terminally retired and receives no slot. `.508` advances the remaining
+admissible half: use temperature exchange across corrected cDLS replicas to cross energy barriers,
+first proving invariant-target parity, then measuring hard-instance mixing and solution quality under
+matched transition budgets. The result is quality evidence only, not hardware speedup.
 
 ## 2025–2026 research incorporated
 
-The `V507 Planner Refresh - 20260714` block was appended to `research-references.md` before this
+The `V508 Planner Refresh - 20260714` block was appended to `research-references.md` before this
 roadmap was designed.
 
-| Source | Executable use in `.507` |
+| Source | Executable use in `.508` |
 |---|---|
-| To Retain or to Adapt?, arXiv:2607.05609 | Define ALE, instability, transient error, and an empirical Critical Task Duration over exact constraint streams. |
-| When Does Continual Learning Require Learning, arXiv:2607.07847 | Cross domain-space shifts with temporal drift and compare external/frozen control with spline-local learning under one protocol. |
-| Loss Smoothing for Continual Adaptation, ICLR 2026 CAO Workshop | Add a bounded loss-smoothed adaptation arm; exact validators decide whether smoothing helps or merely delays necessary change. |
-| World Action Verifier, arXiv:2604.01985 | Build a generic forward/inverse action-effect cycle verifier from ARC live observations, with no external video or game-specific adapter. |
-| cDLS, OpenReview ProbML 2026 | Retain only the continuous-intermediate proposal hypothesis; require local exactness and mixing evidence before timing claims. |
+| Parameter-Free and Group Conditional Online Conformal Prediction, arXiv:2606.00419 | Define causal group-conditional coverage and parameter-free calibration for KAN retain/adapt/abstain action sets. |
+| Optimal Training-Conditional Regret for Online Conformal Prediction, arXiv:2602.16537 | Handle abrupt change points and smooth drift with chronological calibration updates and training-conditional regret. |
+| Learned Surrogates for AC Feasibility with Conformal Guarantees, DOI:10.1049/gtd2.70345 | Cross-domain corroboration for routing uncertain KAN feasibility predictions to exact solvers; no result transfers without local evidence. |
+| Epistemic MCTS, ICLR 2025; ObjectZero, arXiv:2601.06604; FIOC-WM, arXiv:2511.02225 | Build the already-mapped but unimplemented object-hypothesis causal-probe planner for the ARC live path. |
+| Breaking Local-Minimum Traps in SNN CSP Solvers via Parallel Tempering, arXiv:2607.08897 | Exchange temperatures across corrected cDLS replicas and test invariant parity plus hard-instance quality; do not claim SNN or FPGA execution. |
 
-The direct Semantic Scholar EBT (`2507.02092`) and ARM-EBM (`2512.15605`) citation trails added
-no stronger executable dependency. Hugging Face Papers and GitHub searches repeated indexed
-verifier and constrained-decoding work. Extropic still exposes no authenticated local TSU route,
-and Logical Intelligence publishes no local Kona artifact. Those systems remain context, not
-evidence.
+OpenReview, Hugging Face Papers, GitHub discovery, Extropic writing, Logical Intelligence, and the
+Semantic Scholar EBT/ARM-EBM citation routes produced no stronger executable dependency. Extropic
+still has no authenticated local TSU route; Kona remains proprietary context; output/logit
+hallucination detectors and external generated-text scoring remain bounded or retired.
 
 ## Target architecture
 
 ```text
-  CACHED LOCAL GGUFs + LOSSLESS RESPONSE ENVELOPE
-                 |
-                 v
-  +----------------------------------------------+
-  | native llama.cpp CUDA runtime certificate    |
-  | Qwen3.6-35B-A3B + Gemma-4-31B + 26B-A4B     |
-  | model hash + offload + PID/GPU + replay      |
-  +----------------------------------------------+
-                 (readiness only; no verifier claim)
-
-  EXACT CONSTRAINT-DRIFT STREAM
-  space shift x temporal drift x task duration
-                 |
-                 v
-  +--------------------------+     +----------------------------+
-  | KAN duration map         |---->| predictive-window KAN      |
-  | ALE / instability /      |gate | retain / smooth / reset /  |
-  | transient error / switch |     | adapt + exact rollback     |
-  +--------------------------+     +----------------------------+
-
-  ARC LIVE ACTIONS + OBSERVATIONS ONLY
-                 |
-                 v
-  +----------------------------------------------+
-  | forward/inverse transition-cycle verifier    |
-  | plausible successor + reachable action       |
-  | + cycle consistency + corruption controls    |
-  +----------------------+-----------------------+
+EXACT EXP5616 NONSTATIONARY STREAM
+family x drift x conflict x duration; exact labels; chronological splits
                          |
                          v
-  matched known-level integration A/B --promotion advisory--> live +1 attempt
-                                                               |
-                                                       reproduce -> registry
+        +-------------------------------------------+
+        | group-conditional online conformal layer  |
+        | nonconformity + drift detector + abstain  |
+        | per-group coverage + conditional regret   |
+        +----------------------+--------------------+
+                               | qualification gate
+                               v
+        +-------------------------------------------+
+        | active-spline KAN causal controller       |
+        | retain / smooth / reset / adapt / abstain |
+        | exact accept + rollback + poison controls |
+        +----------------------+--------------------+
+                               | independent audit gate
+                               v
+                    FR-11 promotion certificate
 
-  EXISTING cDLS KERNEL
-          |
-          v
-  exact small-state stationary/detailed-balance audit
-          |
-          +--quality gate--> multi-seed matched CPU/CUDA crossover
+ARC LIVE AGENT OBSERVATIONS + ACTIONS ONLY
+                         |
+            object hashes / topology / observed effects
+                         |
+                         v
+        +-------------------------------------------+
+        | competing object/effect hypotheses        |
+        | posterior/disagreement + causal probes    |
+        +----------------------+--------------------+
+                               |
+                               v
+        +-------------------------------------------+
+        | bounded epistemic MCTS                    |
+        | executable value + information gain       |
+        +----------------------+--------------------+
+                               |
+                   known-level matched A/B --advisory--> live +1 attempt
+                                                            |
+                                                    reproduce -> registry
+
+EXP5622 EXACT-CORRECTED cDLS
+                         |
+                         v
+        +-------------------------------------------+
+        | corrected replicas at beta_1 ... beta_K   |
+        | exchange TEMPERATURE LABELS, not states   |
+        | exact swap rule + round-trip telemetry    |
+        +----------------------+--------------------+
+                               | invariant gate
+                               v
+                  hard-instance quality-only trial
 ```
 
-## Phase 0 — continuity, freshness, and native runtime readiness (Exp5613–Exp5615)
+## Phase 0 — evidence continuity and source freshness (Exp5625–Exp5626)
 
-**Exp5613 — `.506` to `.507` transition.** Lock every `.506` terminal artifact, record the two
-promotions and the retired/blocked branches, allocate Exp5613–Exp5624, and emit the new gate map.
-This is infrastructure slot one.
+**Exp5625 — `.507` to `.508` transition.** Read all terminal `.507` artifacts directly, preserve
+the exact stream and corrected cDLS kernel, record the nonpromotion of predictive KAN, preserve both
+ARC flags, and mechanically retire the native runtime certificate and cDLS crossover where required.
+Allocate Exp5625–Exp5635 and emit the new dependency map. This is infrastructure slot one.
 
-**Exp5614 — execution-time source delta.** Search all mandated sources after the V507 planner
-marker, deduplicate against the complete reference and failure ledgers, and map only genuinely
-new executable deltas. A clean no-op is terminal success. This is the SOTA-ingestion slot.
+**Exp5626 — execution-time V508 source delta.** Search every mandated primary and secondary source
+after the V508 planner marker. Dedupe against the complete reference, roadmap, conductor, known-issue,
+and exclusion ledgers. Map only genuinely new, local, exact, non-retired deltas without changing the
+dependency graph. A clean no-op is terminal success. This is the SOTA-ingestion slot and infrastructure
+slot two.
 
-**Exp5615 — native llama.cpp CUDA runtime certificate.** Use all three mandated GGUF families,
-the Exp5605 envelope, and a changed native CLI/server substrate. Authenticate build capability,
-offloaded layers, process/GPU memory, stop behavior, and response replay. Run only small
-structured positive/truncation controls. Do not calculate solve-versus-verify accuracy or reopen
-Exp5606. This is infrastructure slot two and is routed to Opus because it is hardware/runtime
-integration with multiple failure modes.
+## Phase 1 — conformal qualification of continuous self-learning (Exp5627–Exp5629)
 
-## Phase 1 — drift-aware continuous self-learning (Exp5616–Exp5618)
+**Exp5627 — online-conformal qualification contract.** Freeze chronological train/calibration/held-out
+windows from Exp5616 and build parameter-free group-conditional action sets over constraint family,
+drift type, conflict class, and duration. Compare global, rolling-window, and group-conditional
+conformal controls. Report marginal and worst-group coverage, set size, abstention, detection delay,
+training-conditional regret, leakage tests, and exact unsafe accepts. This does not rerun the global
+duration fit and does not update an LLM.
 
-**Exp5616 — exact nonstationary constraint-stream fixture.** Generate a deterministic,
-machine-checkable stream crossing spatial constraint-family shifts with temporal predicate drift,
-shared versus conflicting rules, and controlled durations. Include no-drift, reversible-drift,
-and persistent-drift controls; publish exact labels and checksums before learner evaluation.
+**Exp5628 — gated active-spline KAN continuous self-learning replication.** Run only when Exp5627
+meets coverage, worst-group, and safety gates. Reuse Exp5618's causal features and action space, but
+replace its failed global duration threshold with the frozen conformal action set. Evaluate on new
+chronological windows and independent seeds. Promotion requires lower ALE than every fixed non-oracle
+arm, bounded conditional regret, useful nontrivial action sets, zero unsafe accepts, backward retention,
+poison rejection, delayed-regression recovery, checkpoint replay, and no model-weight mutation. This is
+the milestone's required continuous self-learning task.
 
-**Exp5617 — KAN Critical Task Duration map.** Reuse the clean active-spline KAN substrate and
-compare retain/replay, reset/adapt, loss-smoothed, and frozen arms over preregistered duration
-cells. Measure ALE, instability, transient error, backward retention, unsafe accepts, and the
-empirical switch point with uncertainty. This experiment identifies the policy boundary; it does
-not choose adaptively.
+**Exp5629 — gated independent adversarial promotion audit.** If Exp5628 is internally ready, recompute
+all primary metrics from immutable rows, stress unseen family groups, label delays, order permutations,
+group undercoverage, inactive-component substitution, and adversarially chosen shift sequences. A
+promotion certificate requires the independent recomputation to preserve benefit, coverage, and safety.
+This is validation/adversarial checking, not a third controller variant.
 
-**Exp5618 — predictive-window KAN continuous self-learning.** Gate on a nondegenerate and safe
-Exp5617 duration map. Let a causal controller use only past exact-energy/residual history to
-choose retain, smooth, reset, or adapt. Compare against the best fixed arm and an oracle selector
-that is reported but cannot headline. Promotion requires lower held-out ALE, bounded regret,
-positive transfer or faster valid adaptation, backward safety, poison rejection, rollback, and a
-lazy-identity guard. This is the milestone's required continuous self-learning experiment.
+## Phase 2 — epistemic-object ARC probing and live level attempt (Exp5630–Exp5632)
 
-## Phase 2 — forward/inverse ARC transition verification and level attempt (Exp5619–Exp5621)
+**Exp5630 — epistemic object-hypothesis causal-probe prototype.** On already reproduced levels only,
+reuse the shipped connected components, translation-invariant object hashes, topology, and observed
+action effects. Maintain at least two competing generic hypotheses when evidence permits. Score causal
+probes by expected reduction in hypothesis disagreement subject to executability and a bounded tree.
+Prove nondegeneracy with informative and uninformative controls and fail closed when no object model is
+supported. This task is `development_proxy` and receives no solve credit.
 
-**Exp5619 — ARC transition-cycle verifier prototype.** On agent-owned live traces from already
-reproduced levels, learn generic action-effect signatures and verify each transition by inverse
-action recovery plus forward replay. Hold out episodes within each game; do not claim cross-game
-transfer. Permuted actions and successors provide corruption controls. The task receives
-`solve_provenance=development_proxy` and no new-level credit.
+**Exp5631 — gated known-level live-path A/B.** Gate on Exp5630's hypothesis and corruption controls.
+Wire the generic epistemic planner into `E3AgentPolicy`, prove the scored agent reaches it, and compare
+against the unchanged baseline on already reproduced levels under identical seeds and action budgets.
+Promotion requires no known-level regression, zero unsafe model accepts, actual probe diversity, lower
+hypothesis entropy or model error, and an improvement in environment actions, distinct states, expanded
+nodes, or actions-to-level with intervals. It may not become another post-hoc candidate ranker.
 
-**Exp5620 — gated live-path transition-update A/B.** Gate on the prototype's clean positive and
-negative controls. Wire verified transition updates into the generic live planner, then compare
-baseline versus cycle-guarded updating on at least three already reproduced games under matched
-seeds and budgets. Promotion requires actual verifier reachability, lower held-out forward error
-or invalid-plan rate, no known-level regression, and a downstream action/search improvement.
-This changes transition-model updates, not proposal pruning, salience filtering, or an intrinsic
-reward.
+**Exp5632 — unconditional rotated live-agent `+1` attempt.** Registry-precheck all games at execution
+time, exclude `bp35` L9, `sk48` L8, and every already reproduced level, then select authenticated next
+headroom before the attempt. Use Exp5631 only if it promoted cleanly; otherwise run the unchanged
+no-new-LLM live baseline. This task is never structured-gated. Only the live agent's own runtime
+self-discovery followed by independent generic reproduction and a registry update counts.
 
-**Exp5621 — unconditional live-agent `+1` attempt.** Registry-precheck every candidate level,
-exclude `sk48` L8 and all already reproduced targets, and rotate toward authenticated headroom.
-Use Exp5620 only if it promoted cleanly; otherwise run the unchanged no-new-LLM live baseline.
-The attempt is not conductor-gated. Only the live agent's own discovery followed by independent
-generic reproduction and registry banking counts.
+## Phase 3 — replica-exchange cDLS quality and reconciliation (Exp5633–Exp5635)
 
-## Phase 3 — corrected cDLS and reconciliation (Exp5622–Exp5624)
+**Exp5633 — exact temperature-exchange cDLS prototype.** Use only Exp5622's corrected within-replica
+kernel. Add a fixed beta ladder and an exact swap rule that exchanges temperature labels rather than
+states. On enumerable frustrated Ising systems, prove transition normalization, swap detailed balance,
+stationary-distribution parity, deterministic replay, and broken-swap rejection. Compare with a single
+corrected chain and equal-budget independent replicas. No timing or hardware claim is collected.
 
-**Exp5622 — exact cDLS kernel audit.** Enumerate small Ising state spaces, construct or estimate
-the transition kernel, and test normalization, support, detailed balance, stationary-distribution
-total variation, and deterministic replay. Add a Metropolis-Hastings or otherwise proven
-correction if the continuous projection is biased. Predeclare the large-n quality-equivalence
-gate before timing.
+**Exp5634 — gated hard-instance quality trial.** Run only if Exp5633 passes invariant gates. On
+preregistered frustrated Ising/CSP instances, compare temperature exchange with equal-budget independent
+corrected-cDLS replicas across at least five paired seeds and identical total kernel transitions. Report
+round trips, barrier crossings, ESS, autocorrelation, energy distributions, best/mean energy, exact
+constraint satisfaction, solve probability, and intervals. Promotion requires a quality/mixing benefit
+without worse validity or target diagnostics. A repeated quality mismatch retires this hybrid.
 
-**Exp5623 — gated multi-seed CPU/CUDA crossover.** Run only if Exp5622 passes exactness. Compare
-corrected cDLS with the unchanged discrete Langevin baseline on identical targets, schedules,
-sample counts, and at least three seeds across `n=128,256,512,1024` where memory permits. Report
-acceptance, ESS, autocorrelation, energy distribution, constraint satisfaction, raw timing, and
-authenticated devices. Only successful quality-matched pairs enter a speedup or crossover claim.
-
-**Exp5624 — `.507` capstone reconciliation.** Aggregate all eleven upstream tasks, apply every
-retirement rule, run adversarial/spec/roadmap/ARC checks and applicable end-to-end tests, and
-reconcile OpenSpec, traceability, completion, status, changelog, exclusions, references, and the
-ARC registry. It cannot upgrade a blocked, skipped, development-proxy, or unmatched result.
+**Exp5635 — `.508` capstone reconciliation.** Aggregate all ten upstream tasks, apply every retirement
+rule, and reconcile OpenSpec, traceability, completion, references, status, changelog, exclusions, ARC
+registry, and conductor evidence. Run roadmap/gate/exclusion lints, relevant unit/spec tests,
+adversarial verification, root-clutter sweep, and applicable checks from `ops/e2e-test-plan.md`. Blocked,
+skipped, development-proxy, flagged, or quality-mismatched artifacts cannot be promoted.
 
 ## Dependency graph
 
 ```text
-Exp5613 transition ----------------------------------------------+
-Exp5614 source delta --------------------------------------------+----> Exp5624 capstone
+Exp5625 transition ----------------------------------------------+
+Exp5626 source delta --------------------------------------------+----> Exp5635 capstone
 
-Exp5605 envelope + changed native CUDA substrate ---------------> Exp5615 runtime certificate
-                                                                    (no downstream panel in .507)
+Exp5616 exact stream + Exp5618 promising controller
+    |
+    +--> Exp5627 online-conformal qualification
+           └──[coverage + worst-group + safety]──> Exp5628 KAN CSL replication
+                                                    └──[ready]──> Exp5629 adversarial audit
 
-Exp5616 exact drift fixture
-    └──[fixture/oracle clean]──> Exp5617 KAN duration map
-                                  └──[switch fit + safe]──> Exp5618 predictive KAN CSL
+Exp5630 epistemic object-hypothesis prototype
+    └──[nondegenerate + corruption safe]──> Exp5631 known-level live A/B
+                                              └── advisory only ─┐
+current live baseline + registry precheck -----------------------> Exp5632 +1 attempt
 
-Exp5619 forward/inverse cycle verifier
-    └──[positive + corruption controls]──> Exp5620 live update A/B
-                                             └── advisory only ─┐
-current live baseline + registry precheck -----------------------> Exp5621 +1 attempt
+Exp5622 exact-corrected cDLS
+    └──> Exp5633 temperature-exchange invariant audit
+           └──[target parity + swap balance]──> Exp5634 hard-instance quality trial
 
-Exp5622 exact cDLS kernel audit
-    └──[detailed balance + target parity]──> Exp5623 matched CPU/CUDA benchmark
-
-Exp5613–Exp5623 -----------------------------------------------> Exp5624 reconciliation
+Exp5625–Exp5634 -----------------------------------------------> Exp5635 reconciliation
 ```
 
-Exp5621 is intentionally not structured-gated on Exp5620. The standing ARC floor requires a real
-attempt even when the new mechanism fails. Exp5615 likewise has no scientific panel downstream
-in this milestone: its purpose is to close the runtime precondition without laundering a minimal
-smoke test into verifier evidence.
+Exp5632 is intentionally not structured-gated on Exp5631: the November ARC standing floor requires
+a real live-agent attempt even when the new mechanism fails. Exp5629 and Exp5634 are structured-gated
+because their only value is to validate a prerequisite that must first be scientifically admissible.
 
 ## Hardware and model requirements
 
 | Resource | Tasks | Requirement and claim boundary |
 |---|---|---|
-| Local GGUF cache | Exp5615 | `MODEL_SPECS` contains `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy Qwen3.5-0.8B and Gemma-E4B are smoke-only and cannot satisfy the certificate. |
-| Native llama.cpp CUDA build | Exp5615 | Native CLI/server capability, version, build flags, `--single-turn` behavior, offloaded layers, PID, and GPU memory must be authenticated. CPU fallback is diagnostic only. |
-| NVIDIA GPUs | Exp5615, Exp5623 | Record device/driver/runtime/free memory and process or kernel evidence. Exp5623 may use CUDA only after the exact CPU kernel audit passes. |
-| System RAM / NVMe | Exp5615–Exp5618 | Cached 26–35B GGUFs, lossless response rows, exact drift fixtures, checkpoints, and immutable decision ledgers. |
-| CPU | Exp5616–Exp5623 | Exact validators, KAN stream runs, ARC environment, small-state enumeration, and the matched sampler baseline. Record identity and wall time. |
-| KV260 / PolarFire / GateMate / TSU | none required | No board or proprietary-hardware speedup claim is in scope. Existing wishlist entries remain unchanged. |
-| Network | Exp5614 only | Literature discovery. All model inference, learning, ARC execution, and sampler work remain local-first. |
+| CPU | Exp5627–Exp5634 | Exact labels, online conformal calibration, active-spline KAN, offline ARC environment, MCTS controls, exact Ising enumeration, and replica exchange. Record CPU identity and wall time. |
+| System RAM / NVMe | Exp5627–Exp5634 | Immutable Exp5616 data, calibration windows, KAN checkpoints, ARC traces, replica samples or sufficient statistics, and content hashes. |
+| NVIDIA GPUs | none required | No GPU task is required. A task may not turn incidental CUDA availability into a speedup claim. |
+| Local GGUF models | Conditional Exp5632 only | Prefer the existing no-LLM live path. If an LLM call is genuinely required, `MODEL_SPECS` must include at least `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF` through the cached SOTA helper. Legacy Qwen3.5-0.8B and Gemma-E4B are smoke-only. |
+| KV260 / PolarFire / GateMate / SNN / TSU | none required | No board, spiking-neural, or proprietary thermodynamic execution is in scope. The temperature-exchange paper supplies an algorithmic hypothesis only. |
+| Network | Exp5626 only | Literature discovery. All learning, ARC, and sampling experiments remain local-first. |
 
 ## Promotion and retirement rules
 
-- **Native runtime:** certify only if every mandated model has a real cached file/hash, native
-  CUDA capability, nonzero offload evidence, lossless envelope replay, correct termination, and
-  zero semantic false accepts. The same no-offload verdict retires this native-certificate attempt.
-- **Duration map:** accept a switch boundary only when multiple duration/family cells contain
-  both retention-favorable and adaptation-favorable regimes, the fit and intervals are reported,
-  and unsafe false accepts remain zero.
-- **Continuous self-learning:** promote only when the causal predictive controller beats the best
-  fixed non-oracle baseline on held-out ALE without backward safety loss, passes poison/rollback
-  and delayed-regression controls, and demonstrably changes the active spline state.
-- **ARC transition verifier:** corruption rejection and inverse/forward cycle controls must pass
-  before live wiring. Promotion requires reachable transition decisions and downstream model or
-  planning improvement; another reachable no-op retires the mechanism.
-- **ARC solve:** only `solve_provenance=live_agent_self_discovery`, independent generic replay,
-  and a new registry entry count. Development proxies, source reads, per-game adapters, and
-  outer-loop reverse engineering receive no solve credit.
-- **cDLS:** detailed balance and exact small-state target parity precede timing. Speedup/crossover
-  requires at least three seeds, identical targets/schedules, successful quality-matched pairs,
-  and intervals excluding parity in the favorable direction.
+- **Conformal qualification:** marginal coverage alone is insufficient. Worst-group coverage,
+  abstention, set size, chronological leakage controls, and conditional regret must pass with zero exact
+  unsafe accepts. A second failure to produce useful group-conditional action sets retires this gate
+  design, not the exact stream.
+- **Continuous self-learning:** promote only when the causal conformal-KAN controller beats every fixed
+  non-oracle arm on held-out ALE with intervals, retains old rules, rejects poison, survives delayed
+  regression, replays checkpoints exactly, and passes an independent adversarial audit. LLM weights do
+  not change.
+- **ARC prototype:** promotion requires competing hypotheses that are supported by agent-owned evidence,
+  an informative causal-probe positive control, corruption rejection, live reachability, and downstream
+  benefit on known levels. Another reachable no-op or scalar-reward collapse retires the mechanism.
+- **ARC solve:** only `solve_provenance=live_agent_self_discovery`, a true new registry level, an action
+  trace, independent generic reproduction, and `offline_reproduced=true` count. Development proxies,
+  source reads, per-game adapters, exhaustive ground-truth BFS, and outer-loop recipes never headline.
+- **Replica exchange:** exact target parity and swap detailed balance precede hard-instance trials.
+  Promotion requires quality/mixing gain over equal-budget independent corrected replicas without worse
+  validity. No CPU/CUDA, board, SNN, or TSU speedup is measured or inferred. The same no-quality-match
+  verdict retires the hybrid.
+- **Closed scopes:** the native three-model runtime certificate, `.506/.507` solve-versus-verify panel,
+  forward/inverse ARC cycle proxy, generic ARC exploration signals, PTRM, cDLS timing/crossover, and
+  external generated-text scorer remain closed absent explicit operator authority and a new mechanism.
 
 ## Expected milestone outputs
 
-1. A reusable three-model native llama.cpp CUDA runtime certificate or terminal retirement.
-2. An exact, checksummed nonstationary constraint-stream benchmark.
-3. A measured KAN retention/adaptation duration boundary.
-4. A safe predictive-window continuous self-learning verdict under spatial and temporal drift.
-5. A generic ARC forward/inverse transition-cycle verifier and live-path promotion decision.
-6. At least one real registry-prechecked live-agent attempt to bank `+1` reproducible ARC level.
-7. An exactness-first verdict on cDLS and, only if justified, a multi-seed CPU/CUDA crossover.
-8. Reconciled OpenSpec, traceability, status, changelog, completion, exclusion, reference, and ARC records.
+1. A parameter-free, group-conditional online conformal contract over the exact nonstationary stream.
+2. A gated, independently audited continuous self-learning promotion or a terminal statistical bound.
+3. A generic, live-reachable epistemic object-hypothesis causal-probe planner or an honest retirement.
+4. One real registry-prechecked live-agent attempt to bank `+1` reproducible ARC level.
+5. An exact invariant verdict for temperature-exchange corrected cDLS.
+6. A gated hard-instance quality/mixing verdict with no speedup laundering.
+7. Reconciled OpenSpec, traceability, status, changelog, completion, exclusion, reference, and ARC records.
