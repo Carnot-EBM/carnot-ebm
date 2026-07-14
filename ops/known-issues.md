@@ -588,6 +588,24 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > a broader-headroom roster is the natural next check if this claim matters for paper-v6).
     > `adversarial_verify.py` and the ARC artifact lint both clean. Full write-up:
     > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-FCP-5592.
+
+    > **DONE 2026-07-14 (outer-loop, exp5701, closes the broader-headroom follow-up named
+    > above):** re-ran the identical ablation (same `BARE_CONTROL_KWARGS`, same
+    > tier-3-induction-disabled isolation) on the full 22-game `arc_game_adapters.adaptered_games()`
+    > roster at `budget=500` (a same-session calibration probe found budget, not roster diversity,
+    > was the binding constraint — raising 200->600 lifted the level>=1 hit rate on adaptered games
+    > from ~9% to ~50%; 500 was picked as a margin-preserving midpoint). Root-caused exp5592's null
+    > as a genuine floor effect (only 1/11 games — `lp85` — showed any progress in either arm, and
+    > that game tied identically), not evidence the stack doesn't matter. Result:
+    > **`n_games_with_headroom=5`** (`lp85`, `sp80`, `su15`, `tu93`, `vc33` — up from 1), a real
+    > mixed picture (full stack +1 level on `tu93`, bare control +1 level on `sp80`, three-way tie
+    > elsewhere), **total levels tied 4-4**, but **efficiency favored the full stack 4.5384 vs
+    > 2.862** (driven mainly by `vc33`: same level reached, ~45x more action-efficient). Honest
+    > verdict: `candidate_stack_ties_levels_but_more_efficient_than_bare_control` — a genuine,
+    > informative result resting on 5 real signal-bearing games, not a floor-effect artifact.
+    > `adversarial_verify.py` clean. Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-FCP-5701-HEADROOM-RESCOPE.
+    > Task 12 is now fully closed.
 13. **(New 2026-07-12, HIGH PRIORITY — the frozen live generator's sizing constraint appears to be
     stale, not just conservative) Re-verify the Kaggle VRAM budget and A/B a larger generator before
     trusting the current 9B choice.** Operator question: "are we still using qwen-3.5-9B when the
