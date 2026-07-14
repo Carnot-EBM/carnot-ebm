@@ -1,6 +1,56 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-13 (Task 8 PTRM Wiring Fix + LOO Gate — TRM-as-Generator Retired)
+**Last Updated:** 2026-07-13 (Tasks 9+10 Follow-ons — Live-Wired InertClickSigPruner + ObjectHistorySaliencePrior)
+
+## Session 2026-07-13 - Tasks 9+10 Follow-ons — Live-Wired InertClickSigPruner + ObjectHistorySaliencePrior
+
+Continued the `ops/known-issues.md` numbered task list past task 8. Task 9
+(InertClickSigPruner) and task 10 (`object_hash`/`blob_topology`) were both
+already marked DONE from earlier sessions, but each had an explicitly
+flagged, still-open live-wiring gap — closed both this session.
+
+**Task 9 follow-on:** wired `InertClickSigPruner.rank_candidates` into
+`StepwiseExplorer._candidates` (alongside `program_synthesis_filter`/
+`goal_candidate_guidance`) and a real `observe()` call into `_ingest`'s
+per-transition OBSERVE hook — without the observe half, the filter would
+have been wired but permanently a no-op (its tally never accumulates).
+Threaded a new `inert_click_pruner` param through `StepwiseExplorer` and
+`E3AgentPolicy`, gated OFF by default
+(`SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False`), matching every other
+freshly-wired-but-unvalidated component. 8 new tests, 46+ pre-existing
+related tests unaffected.
+
+**Task 10 follow-on:** built `ObjectHistorySaliencePrior`
+(`python/carnot/agentic/arc_object_history_salience.py`), wrapping
+`ColorBlobSaliencePrior` (mirroring the existing `GeometricSaliencePrior`
+precedent) with a per-`object_hash` change-history bonus — click candidates
+on objects previously observed to change the frame get preferred over
+untested or reliably-inert ones. Because `action_prior` was already a
+generic composable slot, no new hook call sites were needed in
+`arc_competition_agent.py` at all — `_ingest`'s existing hooks and
+`_candidates`' existing score consumption dispatch to the wrapper
+automatically once `E3AgentPolicy` wraps `action_prior` with it (confirmed
+directly). Gated OFF by default
+(`SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED = False`). 28 new tests.
+
+Both mechanisms then got a REAL empirical-validation prototype run (exp5601
+for task 10, following exp5591/exp5595's established real-game pattern
+against `m0r0`): 37 real transitions, 32 clicks, 15 object identities
+tracked, 2 cleared the evidence floor with a genuine nonzero change rate —
+`honest_verdict: complete: object_history_salience_prototype_confirmed_2_
+hashes_with_real_change_signal_across_1_games`. An adversarial degeneracy
+sub-check found 0/8 same-base-tier real pairs diverging in this specific
+sample (an honest sample-size limitation, not a mechanism failure — the
+synthetic unit test already proves differentiation is possible).
+
+Both mechanisms remain gated OFF for the SCORED agent pending their own
+matched-budget offline A/B (states/actions-expanded reduction, zero
+regression in reproduced levels), per the `solve_rate_dropped` guardrail —
+this session validated that both mechanisms are correctly wired and have
+real, non-degenerate signal to act on, not that flipping them on is safe.
+
+Total this session: 99 new tests across both follow-ons, all passing;
+ruff/mypy clean on every touched file.
 
 ## Session 2026-07-13 - Task 8 PTRM Wiring Fix + LOO Gate — TRM-as-Generator Retired
 
