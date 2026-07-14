@@ -60,7 +60,10 @@ def test_scenario_arc_wmte_4664_previous_level_win_grid_enters_prompt() -> None:
     assert "WIN STATE" in block
     assert "COMPLETED the previous level" in block
     assert "next level's completion likely looks structurally similar" in block
-    assert "77\n07" in block
+    # REQ-ARC-WMTE-5593-2 (2026-07-14): full-grid renders now use _rle_grid's row-wise,
+    # implicit-column run-length encoding instead of raw to_ascii -- "r0:7x2\nr1:0x1,7x1"
+    # is the lossless encoding of [[7,7],[0,7]], replacing the old raw "77\n07" form.
+    assert "r0:7x2\nr1:0x1,7x1" in block
 
 
 def test_scenario_arc_wmte_4664_e3_policy_captures_level_complete_grid() -> None:
