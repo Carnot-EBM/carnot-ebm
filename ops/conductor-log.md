@@ -11708,3 +11708,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 03:42 UTC | Lossless local-SOTA raw-response evidence envelope | SKIP | Pre-tests failing, self-heal failed: 3 failed, 84 passed, 1 warning in 11.57s |
 | 2026-07-14 03:45 UTC | Lossless local-SOTA raw-response evidence envelope | SKIP | Pre-tests failing, self-heal failed: 2 failed, 85 passed, 1 warning in 12.23s |
 | 2026-07-14 03:59 UTC | Lossless local-SOTA raw-response evidence envelope | OK | 118 passed, 1 warning in 14.91s |
+| 2026-07-14 04:35 UTC | Evidence-preserving local-SOTA solve-versus-verify | OK | 122 passed, 1 warning in 13.71s |
