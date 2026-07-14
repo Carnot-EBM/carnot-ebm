@@ -22693,3 +22693,111 @@ non-promotable leakage or calibration stress tests.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5627 | Planned (`python/carnot/experiment_5627_online_conformal_kan_qualification.py`, `results/experiment_5627_online_conformal_kan_qualification.json`) | Planned (`tests/python/test_experiment_5627_online_conformal_kan_qualification.py`) |
+
+## REQ-LEARN-5628: Conformal Active-Spline KAN Continuous Self-Learning Replication
+
+The self-learning tier SHALL provide Exp 5628, an independent chronological
+replication of the Exp 5618 active-spline KAN continuous self-learning
+controller gated by the frozen Exp 5627 online-conformal action contract. The
+workflow MUST freeze new chronological evaluation windows and at least five
+learner seeds that were not used to choose Exp 5618 hyperparameters before any
+adaptation-lag error, transfer, retention, or control outcome is computed. The
+evaluation receipt SHALL include content hashes for every frozen window,
+overlap counts against Exp 5618 learner seeds and Exp 5627 initial calibration,
+and a clear statement that held-out rows are not used for tuning.
+
+Exp 5628 SHALL reuse Exp 5618 causal features, active-spline update mechanics,
+retain/smooth/reset/adapt/abstain action semantics, bounded rollback, and exact
+acceptance audit trail. It SHALL replace any failed global duration-fit gate
+with the Exp 5627 frozen group-conditional conformal action set and MUST NOT
+tune on held-out rows. It SHALL compare frozen, retain/replay, reset/adapt, best
+fixed non-oracle, conformal controller without KAN, full conformal-KAN
+controller, inactive KAN, and oracle-reference arms under equal label and
+compute budgets. Wrong-predicate, binding, delayed-label, poison,
+group-undercoverage, and abrupt-conflict controls SHALL be injected or inherited
+from the exact fixture, and every candidate update SHALL have exact acceptance,
+bounded rollback, and an audit trail. LLM weight updates are forbidden.
+
+The terminal artifact MUST be written to
+`results/experiment_5628_conformal_active_spline_kan_csl.json` and include the
+following top-level required fields with field principles: `field_principles`
+-- evidence fields explain why they exist; `upstream_gate_receipts` --
+prerequisite evidence is exact; `evaluation_window_receipts` -- replication
+data are independent; `method_arms` -- causal ablations are explicit;
+`ale_by_arm` and `ale_paired_intervals` -- the primary benefit is measured with
+uncertainty; `delta_vs_each_fixed_nonoracle_arm` -- cherry-picked comparators
+are impossible; `conditional_regret_by_group` -- drift cost is bounded;
+`forward_transfer` and `backward_retention` -- learning and forgetting are
+separate; `conformal_action_set_utility` -- qualification is not trivial;
+`abstention_rate` -- usefulness is visible; `unsafe_false_accept_count` --
+exact safety is mandatory; `poison_rejection_rate` -- corrupt updates fail
+closed; `delayed_regression_recovery` -- rollback is exercised;
+`checkpoint_replay_exact` -- state is reproducible; `llm_weight_updates` --
+scope stays bounded; `continuous_self_learning_ready` -- the FR-11 gate is
+mechanical; `inference_substrate` -- learning substrate is explicit;
+`random_seeds` and `reproducibility_checksum` -- the replication replays; and
+`honest_verdict` -- blocked or null evidence is terminal.
+`inference_substrate` SHALL equal
+`active_spline_kan_with_exact_validation_and_online_conformal_control`.
+
+`continuous_self_learning_ready` SHALL be true only when the full conformal-KAN
+arm beats every fixed non-oracle arm on held-out ALE with paired intervals,
+conditional regret is bounded for preregistered groups, conformal action sets
+are nontrivial and useful, unsafe false accepts are zero, old-rule retention has
+no material regression, poison rejection is complete, delayed-regression
+recovery and exact checkpoint replay pass, Exp 5627 qualification is exact, and
+`llm_weight_updates=0`. If any benefit, chronology, or safety gate fails,
+`honest_verdict` SHALL be a terminal `blocked:` verdict rather than a
+headline-ready claim.
+
+### SCENARIO-LEARN-5628-WINDOWS: Independent Chronological Replication Windows
+
+**Given** Exp 5616 exact rows, Exp 5618 controller evidence, and Exp 5627
+conformal qualification evidence are available
+**When** Exp 5628 freezes its replication windows
+**Then** the receipt SHALL list chronological train, calibration, early-heldout,
+and late-heldout windows
+**And** every window SHALL have a stable content hash and row count
+**And** Exp 5628 learner seeds SHALL have zero overlap with Exp 5618 learner
+seeds
+**And** evaluation rows SHALL have zero overlap with Exp 5627 initial
+calibration rows.
+
+### SCENARIO-LEARN-5628-ARMS: Full Conformal-KAN Beats Fixed Non-Oracle Arms
+
+**Given** frozen, retain/replay, reset/adapt, best fixed non-oracle, conformal
+controller without KAN, full conformal-KAN controller, inactive KAN, and
+oracle-reference arms
+**When** Exp 5628 evaluates the frozen windows under equal exact-label and
+compute budgets
+**Then** `ale_by_arm`, `ale_paired_intervals`, and
+`delta_vs_each_fixed_nonoracle_arm` SHALL compare the full conformal-KAN arm
+against every fixed non-oracle comparator
+**And** the oracle-reference arm SHALL be labeled as a non-promotable ceiling.
+
+### SCENARIO-LEARN-5628-SAFETY: Exact Acceptance And Rollback Fail Closed
+
+**Given** wrong-predicate, binding, delayed-label, poison, group-undercoverage,
+and abrupt-conflict controls are represented
+**When** candidate updates are audited
+**Then** every candidate update SHALL record exact acceptance, rollback bound,
+and audit hash evidence
+**And** unsafe false accepts SHALL be zero
+**And** poison rejection SHALL be complete
+**And** delayed-regression recovery and checkpoint replay SHALL pass exactly.
+
+### SCENARIO-LEARN-5628-ARTIFACT: FR-11 CSL Gate Is Mechanical
+
+**Given** all readiness criteria are computed from frozen windows and upstream
+receipts
+**When** Exp 5628 writes its terminal artifact
+**Then** `continuous_self_learning_ready` SHALL equal the conjunction of the
+recorded readiness gates
+**And** `llm_weight_updates` SHALL equal `0`
+**And** `honest_verdict` SHALL be `complete:` only when every gate passes.
+
+## Implementation Status (Exp 5628)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5628 | Planned (`python/carnot/experiment_5628_conformal_active_spline_kan_csl.py`, `results/experiment_5628_conformal_active_spline_kan_csl.json`) | Planned (`tests/python/test_experiment_5628_conformal_active_spline_kan_csl.py`) |
