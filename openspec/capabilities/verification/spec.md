@@ -29835,6 +29835,107 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5605: Append-Only Raw Response Evidence Envelope
+
+The repository SHALL provide Exp 5605 at
+`python/carnot/experiment_5605_raw_response_evidence_envelope.py` and
+write `results/experiment_5605_raw_response_evidence_envelope.json`. Exp 5605
+SHALL specify and positively control an append-only raw-response evidence
+envelope before any later expensive local-SOTA panel is interpreted. It SHALL
+consume the prior Exp 5567 CUDA/offload receipt when available, SHALL preserve
+the Exp 5580 hash-only limitation as motivation, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL declare
+`inference_substrate=local_gguf_llamacpp_cuda_evidence_fixture`.
+
+Each envelope row SHALL represent exactly one model-call evidence unit and
+SHALL contain prompt bytes or a lossless prompt byte encoding, prompt byte
+hash, raw response bytes or a lossless compressed raw-response payload,
+payload hash, model Hugging Face ID, local GGUF path hash, llama.cpp version
+and arguments, device/offload receipt, sampling parameters and seed, stop
+reason, token counts, truncation flag, parser name and version, parsed object,
+exact-validator outcome, row timestamp, previous-row hash, and row hash. The
+row hash SHALL bind the row content and previous-row hash so rows are
+append-only auditable. Payload hashes alone SHALL NOT satisfy the envelope:
+the raw response must be locally recoverable byte-for-byte or by lossless
+decompression.
+
+The mandated headline model specs for this fixture SHALL explicitly include
+`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, resolved to cached local GGUF paths before
+the fixture is marked ready. Cached local paths and llama.cpp availability are
+mandatory. Legacy CPU models MAY appear only as labeled CPU smoke diagnostics
+and SHALL NOT satisfy `envelope_ready`. Native CUDA offload SHALL be
+authenticated from a CUDA-capable llama.cpp receipt when available. If CUDA or
+offload authentication is unavailable, the artifact SHALL emit a blocked
+headline verdict and SHALL retain only labeled CPU diagnostics.
+
+Exp 5605 SHALL run at least two known-valid fixture prompts and two
+deliberately truncated or malformed fixture prompts per mandated headline
+family. The reader/replay path SHALL prove byte-identical or
+decompression-identical payload replay, prompt and payload hash verification,
+parser-version replay, truncation detection, and zero semantic false accepts.
+It SHALL corrupt one stored payload in a controlled copy and prove the reader
+fails closed rather than parsing or accepting tampered evidence.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `model_specs`, `gpu_offload_authenticated`,
+`envelope_schema_version`, `response_rows_written`, `raw_payloads_preserved`,
+`lossless_replay_rate`, `truncation_controls_detected`,
+`payload_corruption_rejected`, `semantic_false_accept_count`,
+`parser_version_replay_passed`, `envelope_ready`, `inference_substrate`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`local_gguf_llamacpp_cuda_evidence_fixture`. `envelope_ready` SHALL be true
+only when mandated local model specs are resolved, CUDA/offload is
+authenticated, raw payload preservation is proven, replay rate is 1.0,
+truncation controls are detected, corruption is rejected, semantic false
+accepts are zero, and parser-version replay passes.
+
+Field principles:
+
+- `field_principles`: Every headline and gate field names the evidence
+  boundary it protects.
+- `model_specs`: Mandated local families are explicit and cannot be replaced
+  by legacy CPU smoke models.
+- `gpu_offload_authenticated`: CPU fallback is not headline evidence.
+- `envelope_schema_version`: Replay has a stable contract.
+- `response_rows_written`: Every call has a row.
+- `raw_payloads_preserved`: Hashes alone are insufficient.
+- `lossless_replay_rate`: Preservation is positively tested.
+- `truncation_controls_detected`: Stop failures stay visible.
+- `payload_corruption_rejected`: Tampering fails closed.
+- `semantic_false_accept_count`: Parser repair cannot invent correctness.
+- `parser_version_replay_passed`: Aggregates can be regenerated.
+- `envelope_ready`: Downstream inference requires every control.
+- `inference_substrate`: Execution is local and authenticated.
+- `honest_verdict`: Failed preservation blocks the panel.
+
+### SCENARIO-VERIFY-5605: Raw Payload Replay And Corruption Fail Closed
+
+Given the mandated Qwen and Gemma GGUF paths are locally resolved and CUDA
+llama.cpp offload is authenticated from a live local receipt, when Exp 5605
+runs, then it writes at least eight append-only evidence rows, including at
+least two known-valid rows and two truncated or malformed rows per headline
+family, preserves every prompt and raw response payload in a lossless local
+encoding, verifies every prompt and payload hash, replays parser version output
+from the stored bytes, detects truncation controls, rejects one deliberately
+corrupted stored payload, writes
+`results/experiment_5605_raw_response_evidence_envelope.json`, and sets
+`envelope_ready=true`.
+
+If a mandated GGUF path is missing, llama.cpp is unavailable, CUDA/offload
+authentication is unavailable, any payload cannot be losslessly replayed, any
+tampered payload is accepted, or any malformed/truncated control is
+semantically accepted, then Exp 5605 SHALL still write the terminal artifact
+with `envelope_ready=false`, preserve the rows or diagnostics that are safe to
+retain, and use a `blocked_` honest verdict rather than unlocking a downstream
+panel.
+
+## Implementation Status (REQ-VERIFY-5605)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5605 | Implemented (`python/carnot/experiment_5605_raw_response_evidence_envelope.py`, `results/experiment_5605_raw_response_evidence_envelope.json`) | Implemented (`tests/python/test_experiment_5605_raw_response_evidence_envelope.py`) |
+
 ### REQ-VERIFY-5580: Cached Parser Forensics Positive Control
 
 The repository SHALL provide Exp 5580 at

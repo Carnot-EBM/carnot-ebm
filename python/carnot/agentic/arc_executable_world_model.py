@@ -84,6 +84,30 @@ def to_ascii(logical: np.ndarray) -> str:
     return "\n".join("".join(str(int(v))[-1] for v in row) for row in logical)
 
 
+def _rle_grid(g: np.ndarray) -> str:
+    """Lossless run-length encoding of a FULL grid for the induce prompt: every row is walked
+    left-to-right and collapsed into maximal same-value horizontal runs
+    'r<row>c<col0>:<value>x<count>'. On large boards (e.g. lp85's 64x64 logical grid), `to_ascii`'s
+    one-char-per-cell render was the dominant fixed cost of `induce_prompt` -- a SINGLE full grid
+    measured ~6-7K tokens, so an 8-transition window (up to two full-grid renders + per-transition
+    deltas) measured 18,355 tokens against a 13,824-token available budget and overflowed with
+    `exceed_context_size_error` (ops/known-issues.md task 11, exp5593). ARC boards are typically
+    blocky (large same-color regions), which run-length encoding exploits directly: a uniform
+    64-cell background row collapses to one run instead of 64 characters."""
+    g = np.asarray(g)
+    h, w = g.shape
+    runs = []
+    for r in range(h):
+        c = 0
+        while c < w:
+            v = g[r, c]
+            c0 = c
+            while c < w and g[r, c] == v:
+                c += 1
+            runs.append(f"r{r}c{c0}:{int(v)}x{c - c0}")
+    return " ".join(runs)
+
+
 # ---------------------------------------------------------------------------
 # transition collection (zero quota — offline sim)
 # ---------------------------------------------------------------------------
@@ -984,15 +1008,18 @@ def _transitions_block(
     """Compact transition encoding for the induce prompt: ONE full grid (the layout) +
     per-transition DELTAS (changed cells), + the full WIN state if observed. Prefers
     grid-CHANGING transitions; keeps a couple of no-ops. Small enough for a local model's
-    context window (the full-grid form overflowed gemma-4-12B at ~67k tokens)."""
+    context window (the raw one-char-per-cell full-grid form overflowed gemma-4-12B at ~67k
+    tokens on small boards, and on large boards like lp85's 64x64 grid overflowed even the
+    13,824-token available budget with a SINGLE transition — see `_rle_grid`'s docstring; both
+    full-grid renders below use the run-length encoding instead)."""
     changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
     noop = [t for t in trans if np.array_equal(t.grid, t.next_grid)]
     sample = changed[: k - 2] + noop[:2]
     out = []
     if sample:
         out.append(
-            "INITIAL GRID (one full example of the state layout; all grids are this shape):\n"
-            + to_ascii(sample[0].grid)
+            "INITIAL GRID (one full example of the state layout, run-length encoded; "
+            "all grids are this shape):\n" + _rle_grid(sample[0].grid)
         )
     for t in sample:
         click = f" data={t.data}" if t.data else ""
@@ -1003,15 +1030,15 @@ def _transitions_block(
     win = next((t for t in trans if t.level_after > t.level_before), None)
     if win is not None:
         out.append(
-            "WIN STATE (full grid of a level-complete state — is_level_complete must return True here):\n"
-            + to_ascii(win.next_grid)
+            "WIN STATE (full grid of a level-complete state, run-length encoded — "
+            "is_level_complete must return True here):\n" + _rle_grid(win.next_grid)
         )
     elif previous_level_complete_grid is not None:
         out.append(
-            "WIN STATE EXEMPLAR (full grid of a state that COMPLETED the previous level; "
-            "the next level's completion likely looks structurally similar. Use this as a "
-            "positive level-complete shape exemplar, not as an oracle for the exact next grid):\n"
-            + to_ascii(np.asarray(previous_level_complete_grid))
+            "WIN STATE EXEMPLAR (full grid of a state that COMPLETED the previous level, "
+            "run-length encoded; the next level's completion likely looks structurally similar. "
+            "Use this as a positive level-complete shape exemplar, not as an oracle for the "
+            "exact next grid):\n" + _rle_grid(np.asarray(previous_level_complete_grid))
         )
     return "\n".join(out)
 
@@ -1053,8 +1080,12 @@ transition the action and its DELTA = the FULL set of changed cells as run-lengt
 form r<row>c<col>:<v0,v1,...> — each run is a horizontal span of changed cells starting at
 (row, col), and the values are the NEW cell values left-to-right (comma-separated). To apply a
 transition's delta to the prior grid, for each run set grid[row, col+i] = the i-th run value;
-all other cells are unchanged. The delta is COMPLETE (not truncated). A full WIN STATE grid is
-shown if a level was completed. Actions are integers 1-7; ACTION6 is a click
+all other cells are unchanged. The delta is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: r<row>c<col0>:<value>x<count> — a horizontal run of <count> cells starting at
+(row, col0), ALL equal to <value>. To reconstruct a full grid, for each run set
+grid[row, col0:col0+count] = value; runs cover every cell in the row left-to-right with no gaps.
+Actions are integers 1-7; ACTION6 is a click
 with data={{'x':px,'y':py}} in PIXEL coords (pixel = logical*{cell}); others are
 keyboard/directional with data=None.
 
