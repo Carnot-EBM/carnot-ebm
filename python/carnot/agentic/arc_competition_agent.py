@@ -3633,6 +3633,7 @@ SUBMITTED_AGENT_CONFIG = {
     "program_synthesis_proposal_filter_trust_threshold": (
         SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
     ),
+    "inert_click_pruner_enabled": SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
     "amortized_first_contact_prior_enabled": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED,
     "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
     "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
