@@ -11764,3 +11764,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 20:52 UTC | Registry-rotated bounded live-agent self-discovery | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-14 21:26 UTC | Exact temperature-by-penalty parallel-tempering au | OK | 87 passed, 1 warning in 21.82s |
 | 2026-07-14 21:43 UTC | Gated on Exp5644 joint invariants: two-axis temper | OK | 86 passed, 1 warning in 11.41s |
+| 2026-07-14 21:45 UTC | Gated on Exp5645 quality promotion: Rust/Python tw | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5645-two-axis-tempering-hard-constraint |
