@@ -239,6 +239,7 @@ DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 # "Inference-Substrate Declaration Discipline" -- the forward-only 5th legal
 # value.
 ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE = "live_agent_environment_interaction"
 ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
 ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
@@ -1905,7 +1906,9 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
     schema-prefix fallback -- this class was introduced 2026-06-30, so there is no pre-discipline
     history to backfill). See ARC_LIVE_AGENT_NO_LLM_SUBSTRATE for the exemplar incident (exp5054).
     """
-    return _inference_substrate_matches(d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE)
+    return _inference_substrate_matches(
+        d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE
+    ) or _inference_substrate_matches(d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE)
 
 
 def _is_arc_filter_runtime_no_llm(d: dict[str, Any]) -> bool:
