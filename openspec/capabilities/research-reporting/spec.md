@@ -40563,3 +40563,90 @@ prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5577 | Planned (`python/carnot/experiment_5577_capstone_v504.py`, `results/experiment_5577_capstone_v504.json`) | Planned (`tests/python/test_experiment_5577_capstone_v504.py`) |
+
+### REQ-REPORT-5578: V505 Transition Locks V504 Terminal Evidence Without Reinterpretation
+
+The Exp5578 workflow SHALL read all fourteen `.504` task deliverables from
+`results/experiment_5564_transition_v504.json` through
+`results/experiment_5577_capstone_v504.json`. It SHALL cite terminal evidence
+from those artifacts, not task titles, roadmap prose, or inferred intent. The
+workflow SHALL also read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/conductor-log.md`, and `scripts/research_conductor.py`. It SHALL NOT
+modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The transition SHALL preserve Exp5567's `parser_failure_count=648` as an
+instrumentation collapse rather than model solve or verification evidence.
+It SHALL preserve Exp5569's adversarial tautology flag, including the equal
+forward-transfer and backward-retention deltas, and SHALL NOT promote
+`policy_ready=true` from that flagged artifact. It SHALL preserve Exp5570 as a
+clean KAN online-energy result, Exp5571/Exp5572 as blocked or skipped
+reset-free/promotion evidence, Exp5574 PTRM as a separate development-proxy
+slot with no leave-one-game-out verdict and no ordinary ARC solve credit,
+Exp5575/Exp5576 SGE as retired or skipped ordinary ARC evidence, and the
+capstone's `arc_registry_delta=0`.
+
+The artifact SHALL record `previous_task_range=exp5564-exp5577` and
+`next_task_range=exp5578-exp5591`. It SHALL emit the `.505` gate map chains
+`parser->panel->exact extension`, `memory corrigendum->two-timescale->live->promotion`,
+and `EOM precheck->live ARC`, plus independent PTRM and hardware lanes. It
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"` and
+SHALL write `results/experiment_5578_transition_v505.json`.
+
+The artifact SHALL include the required fields `field_principles`,
+`artifacts_read`, `clean_lanes`, `blocked_or_flagged_lanes`,
+`parser_collapse_preserved`, `previous_task_range`, `next_task_range`,
+`ptrm_slot_separate`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `artifacts_read`: principle "transitions cite terminal evidence"
+- `clean_lanes`: principle "only unflagged completed findings are clean"
+- `blocked_or_flagged_lanes`: principle "boundaries remain binding"
+- `parser_collapse_preserved`: principle "instrumentation failure is not model evidence"
+- `previous_task_range`: principle "CalVer continuity is explicit"
+- `next_task_range`: principle "CalVer continuity is explicit"
+- `ptrm_slot_separate`: principle "PTRM cannot satisfy ordinary ARC"
+- `inference_substrate`: principle "no live inference occurred"
+- `honest_verdict`: principle "terminal status starts complete: or blocked:"
+
+#### SCENARIO-REPORT-5578: V505 Transition Preserves V504 Boundaries
+
+**Given** all fourteen `.504` task deliverables are readable through the
+Exp5577 capstone
+**And** Exp5567 has `parser_failure_count=648`
+**And** Exp5569 is adversarial-flagged as a tautology
+**And** Exp5570 is clean KAN evidence
+**When** the Exp5578 workflow runs
+**Then** it emits `results/experiment_5578_transition_v505.json`, records
+`previous_task_range=exp5564-exp5577`, records
+`next_task_range=exp5578-exp5591`, keeps parser collapse as instrumentation
+evidence, classifies only unflagged completed findings as clean, keeps blocked
+or flagged boundaries binding, keeps PTRM separate from ordinary ARC, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and uses a terminal
+`honest_verdict` prefix.
+
+#### SCENARIO-REPORT-5578-MISSING-INPUT: Missing V504 Evidence Fails Closed
+
+**Given** any required `.504` task deliverable is absent or unreadable
+**When** the Exp5578 workflow runs
+**Then** the missing path appears in the artifact metadata, the verdict uses a
+blocked terminal prefix, and parser, memory, PTRM, ordinary ARC, and hardware
+claims remain bounded or blocked rather than promoted.
+
+#### SCENARIO-REPORT-5578-FIELD-PRINCIPLES: Transition Fields Stay Annotated
+
+**Given** the Exp5578 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required field has the listed `field_principles` entry,
+`ptrm_slot_separate` is true, `inference_substrate` is
+`aggregation_from_upstream_artifacts`, `research-roadmap.yaml` and
+`scripts/research_conductor.py` remain unchanged, and `honest_verdict` starts
+with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5578)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5578 | Planned (`python/carnot/experiment_5578_transition_v505.py`, `results/experiment_5578_transition_v505.json`) | Planned (`tests/python/test_experiment_5578_transition_v505.py`) |
