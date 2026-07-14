@@ -1,6 +1,6 @@
 """Experiment 5705: does the model the 3rd-place ARC-AGI-3 team ("forge") actually used --
-Gemma-4-31B-it, full (non-quantized) precision -- plan more reliably on Carnot's real
-reinduction path than exp5599's Q4-quantized Qwen3.6-27B candidate did (task 14,
+Gemma-4-31B-it, at Q8_0 (8-bit, near-lossless) precision -- plan more reliably on Carnot's
+real reinduction path than exp5599's Q4-quantized Qwen3.6-27B candidate did (task 14,
 operator-directed follow-up).
 
 Context: exp5599 found `Qwen3.6-27B-MTP` (Q4_K_M GGUF, non-MTP fallback, served on a single
@@ -15,43 +15,50 @@ weights instead of 4bit quants and/or full kv-cache key size."
 
 vLLM itself was found infeasible on this hardware (the PyPI `vllm` wheel is CUDA-only;
 vLLM's ROCm support has no PyPI distribution and has historically targeted MI-series
-datacenter cards, not this consumer gfx1150 iGPU). The FIRST candidate tried for the
-full-precision arm was `unsloth/Qwen3.6-27B` (same model family as exp5599's Q4 candidate,
-for a precision-only isolation) -- this was ABANDONED after three real, reproducible load
-failures on the HIP-built llama.cpp binary (`~/.cache/llama.cpp-master/build-hip/bin/
-llama-server`): the default `-fit` heuristic hard-hung (zero I/O progress for 12+ minutes,
-confirmed via `/proc/PID/io`); `-fit off` hard-stalled again at a later step (zero RSS/IO
-progress for 5+ minutes, one thread pinned near 100% CPU, no backtrace tooling available on
-this box -- `ptrace` restricted, no `perf`, no root); `-fit off --parallel 1` crawled at
-~11MB/s (over an hour to finish loading). All three failures are consistent with this
-specific HIP build mishandling Qwen3.6's unusual hybrid `Qwen3_5ForConditionalGeneration`
-architecture (mixed "linear_attention"/"full_attention" layers, a newer, less-common
-pattern) -- NOT a flag-tuning problem, a real compatibility gap, reported to and confirmed
-by the operator rather than guessed past indefinitely.
+datacenter cards, not this consumer gfx1150 iGPU).
 
-**Operator-directed pivot:** switch the full-precision candidate to `google/gemma-4-31B-it`
-(62.6GB, native BF16, `Gemma4ForConditionalGeneration`) -- the model forge ACTUALLY used, and
-a conventional sliding-window + full-attention architecture (the same mature pattern Gemma
-2/3 already used, well-supported in llama.cpp) rather than Qwen3.6's newer hybrid. This
-directly answers the operator's original question (why did forge succeed with a bigger model
-when our test showed a bigger model losing) with the ACTUAL model in question, at full
-precision, on Carnot's own real task -- a MORE informative test than the originally-planned
-same-model precision isolation, at the honest cost of no longer isolating precision as a
-single variable against exp5599's Q4 Qwen candidate (model family changes too). Converted to
-a NON-QUANTIZED BF16 GGUF via `convert_hf_to_gguf.py --outtype bf16`, served through the SAME
-HIP-built llama.cpp binary every other local-GGUF experiment in this project uses, with full
-(non-quantized) F16 KV cache (`kv_quant=None`, llama.cpp's own default) -- directly addressing
-the "full kv-cache key size" half of the operator's request. `-fit off` is passed proactively
-(learned from the Qwen3.6 diagnostic loop) even though this conventional architecture is
-expected not to need it.
+**Full (BF16/lossless) precision was tried and abandoned on THIS hardware, for TWO different
+models, before falling back to Q8_0 -- disclosed in full, not hidden:**
+
+1. `unsloth/Qwen3.6-27B` (same model family as exp5599's Q4 candidate, for a precision-only
+   isolation) -- ABANDONED after three real, reproducible load failures on the HIP-built
+   llama.cpp binary (`~/.cache/llama.cpp-master/build-hip/bin/llama-server`): the default
+   `-fit` heuristic hard-hung (zero I/O progress for 12+ minutes, confirmed via
+   `/proc/PID/io`); `-fit off` hard-stalled again at a later step (zero RSS/IO progress for
+   5+ minutes); `-fit off --parallel 1` crawled at ~11MB/s (over an hour to finish loading).
+2. **Operator-directed pivot to `google/gemma-4-31B-it`** (62.6GB, native BF16,
+   `Gemma4ForConditionalGeneration`) -- the model forge ACTUALLY used, and a conventional
+   sliding-window + full-attention architecture (unlike Qwen3.6's newer hybrid
+   linear/full-attention mix). This ALSO failed at full BF16 precision: the initial
+   page-cache-warm bulk read completed in 20s (RSS 0->36.1GB), but the final loading stage
+   then crawled to a near-stall (36.1->37.6->38.2GB over the following ~9 minutes, a rate
+   that would have taken hours more to finish) -- the SAME failure class as Qwen3.6, on a
+   structurally different, more conventional architecture, pointing to a broader HIP/ROCm
+   large-BF16-model-loading issue on this specific build rather than something specific to
+   either model's attention mechanism. No backtrace tooling is available on this box
+   (`ptrace` restricted, no `perf`, no root) to diagnose further.
+
+**Operator-directed second pivot: Q8_0 quantization, not full BF16.** Full precision is
+genuinely impractical on this hardware/build combination for models this size. Q8_0 is a
+real, well-tested quantization level (near-lossless -- 8 bits per weight vs BF16's 16, vs
+Q4_K_M's 4) that this HIP build handles routinely elsewhere in this project. This still
+directly answers "was 4-bit specifically too aggressive" -- Q8_0 is a much smaller quality
+step down from lossless than Q4_K_M -- WITHOUT literally being the lossless full-precision
+comparison originally planned. `google/gemma-4-31B-it` was converted via `convert_hf_to_gguf.py
+--outtype q8_0`, served through the SAME HIP-built llama.cpp binary every other local-GGUF
+experiment in this project uses, with full (non-quantized) F16 KV cache (`kv_quant=None`,
+llama.cpp's own default) -- directly addressing the "full kv-cache key size" half of the
+operator's request even though the WEIGHTS are no longer literally full precision. `-fit off`
+is passed proactively (learned from the diagnostic loop above).
 
 HONEST DISCLOSURE (not hidden): this does NOT reproduce exp5599's Q4 Qwen candidate_27b arm
 or the frozen current-9B arm fresh in this same run -- it cites their historical numbers
 (different session, different date, AND now a different model for the Q4 comparator) as
-context, not as a controlled precision-only baseline. The comparison this experiment DOES
-make cleanly is: does Gemma-4-31B-it (full precision, the leader's real model) plan
-competitively against the current 9B's historical plan rate on the SAME real task -- that
-is directly informative regardless of the Qwen-specific quantization question exp5599 raised.
+context, not as a controlled isolation. The comparison this experiment DOES make cleanly is:
+does Gemma-4-31B-it (Q8_0, the leader's real model at a near-lossless quantization) plan
+competitively against the current 9B's historical plan rate on the SAME real task -- that is
+directly informative regardless of the Qwen-specific quantization question exp5599 raised,
+and regardless of full-BF16-precision being impractical on this hardware.
 
 Spec refs: REQ-ARC-WMTE-5599-2 (extends REQ-ARC-WMTE-5599's cost/benefit finding).
 """
@@ -87,15 +94,19 @@ N_REPEATS = 3
 EXPLORE_BUDGET = 6
 TOTAL_BUDGET = 40
 REINDUCTION_N_CTX = 22000  # matches exp5599 -- lp85's 64x64 grid overflows the class default
+# NOTE: variable name predates the operator-directed pivot from full BF16 to Q8_0 (full BF16
+# was found impractical on this hardware for two different models -- see module docstring).
+# Retained to minimize churn; the ACTUAL weight precision served is Q8_0, not full/lossless.
 FULL_PRECISION_GGUF_PATH = (
-    Path.home() / ".cache" / "carnot-full-precision-gguf" / "gemma-4-31B-it-BF16.gguf"
+    Path.home() / ".cache" / "carnot-full-precision-gguf" / "gemma-4-31B-it-Q8_0.gguf"
 )
 FULL_PRECISION_PORT = 8950
+WEIGHT_PRECISION = "q8_0"  # NOT full/lossless -- see module docstring's two-pivot disclosure
 
 # Historical reference numbers from exp5599 (results/experiment_5599_reinduction_ab_lp85_levelup.json,
 # 2026-07-13) -- NOT re-measured here; cited as CONTEXT, not a controlled precision-only baseline (the
-# candidate_27b_q4 row is now a DIFFERENT model -- Qwen3.6-27B -- from this experiment's Gemma-4-31B-it
-# full-precision arm; see this module's docstring for why the candidate was switched).
+# candidate_27b_q4 row is now a DIFFERENT model -- Qwen3.6-27B -- AND a different quantization level --
+# Q4_K_M vs this experiment's Q8_0 Gemma-4-31B-it arm; see this module's docstring for why).
 EXP5599_HISTORICAL = {
     "current_9b_q4": {
         "experiment_id": 5599,
@@ -106,8 +117,8 @@ EXP5599_HISTORICAL = {
     "candidate_27b_q4": {
         "experiment_id": 5599,
         "model": "Qwen3.6-27B-MTP-GGUF (Q4_K_M, non-MTP fallback, GPU 1 CUDA) -- a DIFFERENT model "
-        "family from this experiment's full-precision Gemma-4-31B-it candidate; not a precision-only "
-        "comparator for this run",
+        "family AND a different quantization level from this experiment's Q8_0 Gemma-4-31B-it "
+        "candidate; not a precision-only comparator for this run",
         "plan_rate_given_levelup": 0.0 / 3.0,
         "mean_reinduce_duration_s": 401.0,
     },
@@ -115,11 +126,12 @@ EXP5599_HISTORICAL = {
 
 MODEL_SPECS = [
     {
-        "name": "Gemma-4-31B-it-BF16",
+        "name": "Gemma-4-31B-it-Q8_0",
         "hf_id": "google/gemma-4-31B-it",
-        "role": "full-precision (non-quantized) candidate -- the model forge (3rd-place ARC-AGI-3) "
-        "actually used, converted to BF16 GGUF locally after Qwen3.6-27B was abandoned (3 real load "
-        "failures on this hardware's HIP llama.cpp build, unrelated to precision)",
+        "role": "near-lossless Q8_0 candidate (8-bit, NOT full/lossless precision) -- the model "
+        "forge (3rd-place ARC-AGI-3) actually used, converted to Q8_0 GGUF locally after full BF16 "
+        "precision proved impractical on this hardware for two different models (Qwen3.6-27B AND "
+        "Gemma-4-31B-it both hit real, reproducible loading stalls on this HIP llama.cpp build)",
     },
 ]
 
@@ -130,6 +142,7 @@ REQUIRED_ARTIFACT_FIELDS = (
     "game",
     "n_repeats",
     "reinduction_n_ctx",
+    "weight_precision",
     "kv_cache_precision",
     "serving_hardware",
     "per_draw_results",
@@ -145,19 +158,25 @@ REQUIRED_ARTIFACT_FIELDS = (
 
 FIELD_PRINCIPLES = {
     "honest_verdict": {
-        "principle": "terminal-prefixed; the PRIMARY verdict compares full-precision Gemma-4-31B-it "
+        "principle": "terminal-prefixed; the PRIMARY verdict compares Q8_0-precision Gemma-4-31B-it "
         "against the current 9B baseline (same task/methodology) -- NOT against exp5599's Q4 Qwen "
-        "candidate, since that comparison changed both model family AND precision together"
+        "candidate, since that comparison changes both model family AND precision level together"
+    },
+    "weight_precision": {
+        "principle": "honestly discloses that the WEIGHTS served are Q8_0 (near-lossless 8-bit), "
+        "NOT the originally-planned full/lossless BF16 -- full precision was tried and abandoned "
+        "for two different models on this hardware (see module docstring); reporting this run as "
+        "'full precision' would misrepresent what was actually measured"
     },
     "kv_cache_precision": {
         "principle": "documents that this run uses llama.cpp's default full-precision (f16) KV "
         "cache, not exp5599's q8_0-quantized cache -- directly addresses the operator's "
-        "'full kv-cache key size' request"
+        "'full kv-cache key size' request even though the WEIGHTS are Q8_0, not full precision"
     },
     "serving_hardware": {
-        "principle": "honestly discloses the NECESSARY hardware confound: a 62.6GB BF16 model "
-        "cannot fit on the single 24GB RTX 3090 exp5599 used, so this arm runs on the AMD iGPU "
-        "instead -- serving stack (llama.cpp) is held constant, hardware is not"
+        "principle": "honestly discloses the NECESSARY hardware confound: even at Q8_0 (~31GB), "
+        "this model does not fit the single 24GB RTX 3090 exp5599 used, so this arm runs on the "
+        "AMD iGPU instead -- serving stack (llama.cpp) is held constant, hardware is not"
     },
     "exp5599_historical_reference": {
         "principle": "CLAUDE.md Failed-Experiment Rerun Discipline analog -- names the prior "
@@ -243,17 +262,17 @@ def _make_full_precision_proposer() -> Any:
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     # Explicitly unset the 3090-pinning env var so _generator_server_and_env() routes to the
-    # default iGPU HIP build (the 62.6GB weights do not fit a single 24GB 3090).
+    # default iGPU HIP build (Q8_0 weights, ~31GB, still do not fit a single 24GB 3090).
     os.environ.pop("CARNOT_ARC_GENERATOR_CUDA_GPU", None)
     return LocalGGUFProposer(
-        repo_substr="gemma-4-31B-it-BF16",
+        repo_substr="gemma-4-31B-it-Q8_0",
         model_path=str(FULL_PRECISION_GGUF_PATH),
         port=FULL_PRECISION_PORT,
         mtp=False,
         kv_quant=None,  # full-precision (f16) KV cache -- llama.cpp's own default
         max_tokens=2560,
         n_ctx=REINDUCTION_N_CTX,
-        timeout=1200,  # a 62.6GB BF16 model on the iGPU may be materially slower than the Q4 27B
+        timeout=1200,  # a ~31GB Q8_0 model on the iGPU may be materially slower than the Q4 27B
         extra_server_args=("-fit", "off"),  # proactive, learned from the Qwen3.6 diagnostic loop
     )
 
@@ -264,7 +283,7 @@ def _run_one_draw(*, proposer: Any, repeat: int) -> JsonDict:
     from carnot.agentic.arc_competition_agent import E3AgentPolicy
     from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
 
-    row: JsonDict = {"arm": "full_precision_27b_bf16", "repeat": repeat}
+    row: JsonDict = {"arm": "gemma_31b_q8_0", "repeat": repeat}
 
     policy = E3AgentPolicy(GAME, proposer=proposer, explore_budget=EXPLORE_BUDGET)
     lb.run_game(GAME, policy, budget=TOTAL_BUDGET)
@@ -318,6 +337,7 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
             "game": GAME,
             "n_repeats": int(n_repeats),
             "reinduction_n_ctx": REINDUCTION_N_CTX,
+            "weight_precision": WEIGHT_PRECISION,
             "kv_cache_precision": "f16_default_unquantized",
             "serving_hardware": "amd_strix_point_gfx1150_igpu_rocm_hip",
             "per_draw_results": [],
@@ -342,7 +362,7 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
             try:
                 rows.append(_run_one_draw(proposer=proposer, repeat=repeat))
             except Exception as exc:
-                rows.append({"arm": "full_precision_27b_bf16", "repeat": repeat, "error": repr(exc)[:200]})
+                rows.append({"arm": "gemma_31b_q8_0", "repeat": repeat, "error": repr(exc)[:200]})
     finally:
         proposer.stop()
         _wait_for_port_down(FULL_PRECISION_PORT)
@@ -382,31 +402,31 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
     # together), never the basis for the primary verdict.
     qwen_q4_context_comparison = "not_applicable_never_leveled_up"
     if not levelup_rows:
-        verdict = "complete: gemma_full_precision_lp85_never_leveled_up_inconclusive"
+        verdict = "complete: gemma_q8_0_lp85_never_leveled_up_inconclusive"
     else:
         fp_rate = arm_summary["plan_rate_given_levelup"]
         current_rate = EXP5599_HISTORICAL["current_9b_q4"]["plan_rate_given_levelup"]
         q4_rate = EXP5599_HISTORICAL["candidate_27b_q4"]["plan_rate_given_levelup"]
         if fp_rate is None:
-            verdict = "complete: gemma_full_precision_result_inconclusive_vs_current_9b_baseline"
+            verdict = "complete: gemma_q8_0_result_inconclusive_vs_current_9b_baseline"
         elif fp_rate > current_rate:
-            verdict = "complete: gemma_full_precision_plans_more_reliably_than_current_9b"
+            verdict = "complete: gemma_q8_0_plans_more_reliably_than_current_9b"
         elif fp_rate == current_rate:
-            verdict = "complete: gemma_full_precision_ties_current_9b_plan_rate"
+            verdict = "complete: gemma_q8_0_ties_current_9b_plan_rate"
         else:
-            verdict = "complete: gemma_full_precision_plans_less_reliably_than_current_9b"
+            verdict = "complete: gemma_q8_0_plans_less_reliably_than_current_9b"
         if fp_rate is not None:
             if fp_rate > q4_rate:
                 qwen_q4_context_comparison = (
-                    "gemma_full_precision_beats_qwen_q4_context_only_different_model_and_precision"
+                    "gemma_q8_0_beats_qwen_q4_context_only_different_model_and_precision"
                 )
             elif fp_rate == q4_rate:
                 qwen_q4_context_comparison = (
-                    "gemma_full_precision_ties_qwen_q4_context_only_different_model_and_precision"
+                    "gemma_q8_0_ties_qwen_q4_context_only_different_model_and_precision"
                 )
             else:
                 qwen_q4_context_comparison = (
-                    "gemma_full_precision_below_qwen_q4_context_only_different_model_and_precision"
+                    "gemma_q8_0_below_qwen_q4_context_only_different_model_and_precision"
                 )
 
     artifact = {
@@ -420,6 +440,7 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
         "game": GAME,
         "n_repeats": int(n_repeats),
         "reinduction_n_ctx": REINDUCTION_N_CTX,
+        "weight_precision": WEIGHT_PRECISION,
         "kv_cache_precision": "f16_default_unquantized",
         "serving_hardware": "amd_strix_point_gfx1150_igpu_rocm_hip",
         "per_draw_results": rows,

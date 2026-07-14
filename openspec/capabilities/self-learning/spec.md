@@ -22882,3 +22882,112 @@ duplicate-key, malformed, inconsistent, or source-hash-drifted
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5638 | Implemented (`python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py`, `results/experiment_5638_fr11_gate_schema_corrigendum.json`) | Implemented (`tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py`) |
+
+## REQ-LEARN-5639: Anytime-Valid Independent Replay Of Exp5628 CSL Evidence
+
+The self-learning tier SHALL provide Exp 5639, an independent replay audit of
+the immutable Exp 5628 conformal active-spline KAN CSL evidence after the Exp
+5638 scalar gate contract is available. Exp 5639 MUST enforce both structured
+eligibility gates before reading held-out outcomes: Exp 5628
+`continuous_self_learning_ready=true` from the immutable source artifact, and
+Exp 5638 `gate_contract_ready_score=1.0` with scalar
+`unsafe_false_accept_count_total=0`. The audit MUST freeze alpha, delta, the
+stopping-time schedule, group definitions, seed set, and acceptance thresholds
+before held-out outcomes are loaded or scored.
+
+Exp 5639 MUST recompute ALE, fixed-arm comparisons, paired benefit intervals,
+conditional regret, marginal and worst-group coverage, abstention, retention,
+poison rejection, delayed-regression recovery, and checkpoint replay from
+immutable row-level receipts and deterministic replay ledgers. Exp 5628
+aggregate metric fields are allowed only as immutable provenance and drift
+checks; they SHALL NOT be copied as audit results. Exact oracle rejection is authoritative:
+an anytime certificate, conformal action set, or replay control MUST NOT legalize an
+exact-unsafe row.
+
+Exp 5639 SHALL construct an anytime-valid risk process over the chronological
+exact unsafe-false-accept outcomes of the preregistered headline arm. The
+terminal artifact MUST report the pathwise upper bound at every preregistered
+stopping time and SHALL promote only when the bound stays within the
+preregistered risk limit at every stop. Stopping times below the registered
+minimum evidence size SHALL be treated as non-promotable prefixes, not as a
+reason to loosen the bound.
+
+The terminal artifact MUST be written to
+`results/experiment_5639_anytime_valid_csl_independent_audit.json` and include
+the following top-level required fields with field principles:
+`field_principles` -- evidence fields explain why they exist;
+`upstream_gate_receipts` -- eligibility is exact; `immutable_inputs` and
+`input_hashes` -- audit data is fixed; `preregistered_thresholds` -- outcomes
+do not set gates; `independent_metric_recomputation` -- self-reports are not
+authority; `ale_by_arm` -- action costs are explicit;
+`paired_benefit_intervals` -- benefit uncertainty is bounded;
+`conditional_regret_by_group` -- vulnerable groups are visible;
+`marginal_coverage` and `worst_group_coverage` -- coverage claims are complete;
+`anytime_method` -- certificate construction is inspectable;
+`stopping_time_schedule` -- pathwise scope is explicit;
+`pathwise_risk_upper_bound` -- safety is measured at any stop;
+`unsafe_false_accept_count_total` -- exact failures are scalar;
+`retention_pass` -- old rules persist; `poison_rejection_pass` -- corrupt
+updates fail closed; `checkpoint_replay_pass` -- state is reproducible;
+`adversarial_controls` -- failure modes are exercised; `critical_flag_count` --
+promotion requires zero; `fr11_independent_promotion_ready_score` -- downstream
+gate is mechanical; `inference_substrate` -- no LLM inference occurred;
+`random_seeds` and `reproducibility_checksum` -- audit replays; and
+`honest_verdict` -- starts with `complete:` or `blocked:` and preserves nulls.
+`inference_substrate` SHALL equal
+`independent_anytime_valid_replay_over_exact_labels`.
+
+`fr11_independent_promotion_ready_score` SHALL be exactly `1.0` only when the
+paired ALE benefit lower bound against every fixed non-oracle arm is positive,
+the pathwise anytime risk bound stays within the preregistered limit,
+held-out marginal and adequately powered worst-group coverage are at least
+`0.90`, `unsafe_false_accept_count_total=0`, retention, poison, and checkpoint
+replay controls pass, and `critical_flag_count=0`. If any criterion fails,
+`honest_verdict` SHALL be a terminal `blocked:` verdict and the ready score
+SHALL be `0.0`.
+
+### SCENARIO-LEARN-5639-GATES: Immutable Structured Gates Are Enforced First
+
+**Given** the immutable Exp 5628 and Exp 5638 artifacts are available
+**When** Exp 5639 builds its audit preregistration receipt
+**Then** both source hashes, source verdicts, source readiness fields, and the
+scalar unsafe-false-accept contract SHALL be recorded
+**And** the metric recomputation SHALL not start unless both gates are exact.
+
+### SCENARIO-LEARN-5639-RECOMPUTE: Metrics Come From Row-Level Replay
+
+**Given** the Exp 5616 exact rows and deterministic Exp 5618/5628 replay
+mechanics are available
+**When** Exp 5639 recomputes audit metrics
+**Then** ALE, fixed-arm paired intervals, conditional regret, coverage,
+retention, poison rejection, delayed regression, and checkpoint replay SHALL be
+derived from row-level receipts or replay ledgers rather than copied from Exp
+5628 aggregate fields.
+
+### SCENARIO-LEARN-5639-ANYTIME: Pathwise Risk Is Valid At Registered Stops
+
+**Given** chronological unsafe-false-accept outcomes for the preregistered
+headline arm
+**When** Exp 5639 applies its preregistered alpha, delta, and stopping-time
+schedule
+**Then** every reported stopping time SHALL include sample count, unsafe count,
+delta spend, and an upper risk bound
+**And** promotion SHALL be blocked if any registered upper bound exceeds the
+preregistered risk limit.
+
+### SCENARIO-LEARN-5639-ADVERSARIAL: Stress Controls Fail Closed
+
+**Given** unseen-family backoff, delayed labels, order-preserving block
+permutations, prefix stops, checkpoint restart, poison rows, inactive-spline
+substitution, conformal-layer disablement, and corrupted row/control artifacts
+are exercised
+**When** Exp 5639 computes its adversarial controls
+**Then** each control SHALL report pass/fail evidence
+**And** any critical failed control SHALL increase `critical_flag_count` and
+block `fr11_independent_promotion_ready_score`.
+
+## Implementation Status (Exp 5639)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5639 | Implemented (`python/carnot/experiment_5639_anytime_valid_csl_independent_audit.py`, `results/experiment_5639_anytime_valid_csl_independent_audit.json`) | Implemented (`tests/python/test_experiment_5639_anytime_valid_csl_independent_audit.py`) |
