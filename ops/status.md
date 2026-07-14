@@ -1,6 +1,67 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-11 (Exp 5574 ARC pTRM Stage-1 Regression Fix)
+**Last Updated:** 2026-07-13 (Task 8 PTRM Wiring Fix + LOO Gate — TRM-as-Generator Retired)
+
+## Session 2026-07-13 - Task 8 PTRM Wiring Fix + LOO Gate — TRM-as-Generator Retired
+
+Continued task 8 (`ops/known-issues.md`) from where the 2026-07-11 Stage-1
+implementation left off. While preparing the leave-one-game-out gate check,
+found that `generate_trajectories` never actually consumed the trained
+`PTRMActionSequenceGenerator`'s forward pass -- every trajectory was seeded
+from `_base_action_logits`, an untrained action-frequency heuristic,
+regardless of whether a real trained model was supplied. `_train_proxy_model`
+genuinely trained the model (real backprop, real checkpoint), but its weights
+were orphaned from generation. Fixed by threading an optional `model`
+parameter through `generate_trajectories` -> `_recursion_metrics` ->
+`run_experiment_5574`, with the original heuristic preserved as a fallback
+when no model is given. Regression tests confirm two differently-weighted
+models now produce different trajectories under the same seed/inputs.
+
+Separately found and disclosed (not fixed, out of scope): the checked-in
+`results/experiment_5574_ptrm_stochastic_generator_stage1.json` (committed in
+`70c857a69`, an unrelated-titled commit) contains fields
+(`exact_window_accuracy`, `per_action_accuracy`, `selection_eval`, etc.) that
+the `_recursion_metrics`/`build_stage1_artifact` code in that same commit does
+not compute -- the artifact could not have been produced by the code it
+shipped with. `adversarial_verify.py` did not flag this. Preserved unmodified
+per never-prune discipline; its specific numbers should not be cited.
+
+With the wiring fixed, built and ran the multi-seed (10 seeds x 5 held-out
+games: `ft09`, `m0r0`, `vc33`, `sk48`, `cd82` -- the same set the prior v3
+pilot used), pre-registered leave-one-game-out gate (exp5600,
+`python/carnot/experiment_5600_ptrm_loo_gate.py`,
+`results/experiment_5600_ptrm_loo_gate.json`), comparing the wiring-fixed
+PTRM arm against a non-recursive control (the trained model's own argmax) and
+a majority-class baseline, with a paired Wilcoxon signed-rank test per game.
+**Real run: the gate FAILS.** Only `ft09` (1 of 5) clears both the
+significance bar (p=0.0020) and the majority-baseline bar; the required
+majority is >= 3 of 5. Per task 8's own pre-registered `retire_if_same_verdict:
+true` condition, the TRM-as-generator line for ARC-AGI-3 is retired,
+including the 4-stage hidden-game-adaptation plan built on top of it.
+
+Reconciled `openspec/capabilities/arc-trm-generator/spec.md` (added
+`REQ-ARC-PTRM-5600-1`, `REQ-ARC-PTRM-5600-2`, and two new SCENARIOs) and
+`ops/known-issues.md` task 8 (marked RESOLVED, the dedicated .502+ reserved
+slot retires). Validation: 20/20 focused tests pass
+(`test_arc_ptrm_stage1_generator.py` + `test_experiment_5600_ptrm_loo_gate.py`),
+ruff/mypy clean on all touched files. `scripts/research_conductor.py` was not
+modified.
+
+**Operational note:** mid-session, the actively-running conductor (milestone
+`.505`) reverted this session's uncommitted working-tree changes to these same
+files back to HEAD (the wiring fix, the new exp5600 files) via a git operation
+inside one of its own unrelated tasks (`exp5578`, "Transition .504 terminal
+evidence into .505 execution context"). The real experiment result
+(`results/experiment_5600_ptrm_loo_gate.json`) survived because it had already
+been swept into that same conductor commit (`9063c7f5b`) via its own
+git-add-everything behavior before the revert; the source/test/spec changes
+had not yet been committed and were lost from disk (recovered from this
+session's own conversation history and re-committed as `b9a228bd1`). No data
+was permanently lost, but this is a new concurrent-modification hazard beyond
+the existing "Never Stash — Always Commit-First" discipline (which covers the
+outer-loop's own git hygiene, not the conductor doing an equivalent operation
+against a shared working tree while other uncommitted work is present) --
+worth a future fix to the conductor's per-task git isolation.
 
 ## Session 2026-07-11 - Exp 5574 ARC pTRM Stage-1 Regression Fix
 
