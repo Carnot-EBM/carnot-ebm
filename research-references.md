@@ -29504,3 +29504,18 @@ watch-only disposition.
   diagnostics, and authenticated CPU/CUDA receipts; unmatched timing supports no speedup.
 
 <!-- V506-PLANNER-REFRESH-20260714-END -->
+
+## V506 Execution Refresh - 20260714
+
+Execution-time sweep after the `.506` planner marker checked arXiv primary pages/API results, OpenReview, Semantic Scholar EBT/ARM-EBM routes, Hugging Face Papers, GitHub discovery, Extropic writing, Logical Intelligence public pages, the full local reference/completion/proposal ledger, the exclusion manifest, and known-issues scope notes. Only non-duplicate actionable deltas are listed below.
+
+### New actionable deltas
+- **The Equilibrium Is the Initialization: Lazy Identity Collapse in Physics-Structured Deep Equilibrium Reasoning** - arXiv:2607.11116, https://arxiv.org/abs/2607.11116; code/logs https://github.com/joyjeet-singh/lazy-identity-deq. The paper documents a failure mode where an implicit solver is effectively ignored, and recommends substitution/no-op diagnostics. Carnot hook: Exp5608 should include a lazy-identity guard for the KAN-only longitudinal learner: compare updated-vs-substituted spline state, verify held-out behavior changes under update substitution, and refuse self-learning credit when the active component is bypassed. This does not reopen causal memory, PTRM, SGE, generated-text scoring, or hardware-board scopes.
+
+### Execution impact
+- **Plan impact:** No experiment-graph edit is required. The accepted delta maps only to the already-planned Exp5608 KAN-only longitudinal self-learning lane.
+- **Duplicates suppressed:** ScientistOne, aggregate invariants, cDLS, property-template testing, Deceptive Grounding, ASP/FSM, grammar-decoding, EBT/ARM-EBM, prior KAN, and prior hardware contexts were already covered.
+- **Closed scope:** closed_scopes_reopened=false. Retired parser, causal-memory, PTRM, SGE, generated-text scoring, proprietary TSU/Kona/Aleph execution, and unmatched hardware-speedup lanes remain closed.
+- **Watch-only/excluded:** Energy-guided Recursive Model, FlashTrie, constrained KAN IDE kernel discovery, TreeThink, matched-FP16 speedup attribution, Extropic, and Logical Intelligence were checked but not promoted as executable `.506` dependencies.
+
+<!-- V506-EXECUTION-REFRESH-20260714-END -->
