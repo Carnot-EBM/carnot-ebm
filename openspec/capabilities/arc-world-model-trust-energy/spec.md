@@ -15026,3 +15026,68 @@ substitutions, and wrong-object changes
 When the transition-cycle verifier evaluates them
 Then corrupted transitions are rejected or abstained, never admitted as immutable update receipts,
 and `unsafe_transition_accept_count` remains zero.
+
+### REQ-ARC-WMTE-5630: Epistemic Object-Hypothesis Causal-Probe Planner
+
+The ARC live agent SHALL expose a generic development proxy that builds bounded object/effect
+hypotheses only from live-agent observations: rendered before/after grids, executable action ids,
+optional click coordinates, and level-progress metadata already carried by the observation trace.
+The planner SHALL reuse the shipped connected-component segmentation, translation-invariant
+`object_hash`, `blob_topology`, and observed action effects. It SHALL NOT read game source, call a
+per-game adapter, run exhaustive ground-truth BFS, use outer-loop recipes, or claim a new solve.
+
+When an observation trace supports more than one explanation, the planner SHALL maintain at least
+two competing generic object/effect hypotheses with normalized posterior weights. A bounded
+epistemic tree SHALL score executable probes by combining live-interface reachability,
+expected hypothesis-disagreement reduction, and bounded environment cost, then emit the chosen
+action through the same `{action, data}` shape consumed by the live policy interface rather than a
+post-hoc candidate ranking. Corrupted-effect and hallucinated-object hypotheses SHALL fail closed.
+
+Experiment 5630 SHALL write
+`results/experiment_5630_arc_epistemic_object_probe_prototype.json` from already reproduced public
+development levels only. The artifact SHALL include `field_principles`,
+`registry_precheck_receipt`, `evaluation_levels`, `solve_provenance="development_proxy"`,
+`live_observation_fields_used`, `object_hypothesis_non_degenerate_count`,
+`hypothesis_weights_by_trace`, `causal_probe_scores`, `informative_control_delta`,
+`uninformative_control_delta`, `unsafe_model_accept_count`, `live_interface_replay_rate`,
+`epistemic_probe_ready_score`,
+`inference_substrate="bounded_object_hypothesis_search_over_live_agent_observations"`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`. The ready score SHALL be `1.0`
+only when at least three traces have nondegenerate competing hypotheses, informative probes reduce
+held-out entropy or model error over equal-budget random legal controls, uninformative probes are
+rejected as noise, corrupted or hallucinated models are not accepted, and chosen actions replay
+through the live interface.
+
+Required field principles:
+
+- `registry_precheck_receipt`: principle "every evaluation target is reproduced in the registry and no solve is duplicated."
+- `evaluation_levels`: principle "development targets are explicit and carry no level credit."
+- `live_observation_fields_used`: principle "hypotheses are induced only from agent-owned before/action/data/successor/level observations."
+- `object_hypothesis_non_degenerate_count`: principle "the mechanism is not a single-model wrapper."
+- `hypothesis_weights_by_trace`: principle "posterior belief updates are inspectable per trace."
+- `causal_probe_scores`: principle "information-gain decisions are auditable before execution."
+- `informative_control_delta`: principle "positive controls must reduce uncertainty or model error over random legal probes."
+- `uninformative_control_delta`: principle "noise controls must not be credited as information gain."
+- `unsafe_model_accept_count`: principle "corrupted and hallucinated hypotheses fail closed."
+- `live_interface_replay_rate`: principle "emitted probes are reachable through the live policy action shape."
+- `epistemic_probe_ready_score`: principle "downstream gating is mechanical, not prose."
+- `reproducibility_checksum`: principle "trial inputs, thresholds, and decisions are replayable."
+- `honest_verdict`: principle "terminal prefix retires degenerate or unreachable prototypes cleanly."
+
+#### SCENARIO-ARC-WMTE-5630-INFORMATIVE-PROBE-POSITIVE
+
+Given a reproduced-level observation trace whose object/effect evidence supports two or more
+generic hypotheses
+When the bounded epistemic planner scores live-reachable probe actions
+Then it chooses an executable probe with higher expected disagreement reduction than an
+equal-budget random legal control and records normalized hypothesis weights before and after the
+held-out observation.
+
+#### SCENARIO-ARC-WMTE-5630-NEGATIVE-AND-UNSAFE-REJECTION
+
+Given no-object traces, uninformative probe actions, corrupted effects, hallucinated objects, and
+object permutations
+When the planner builds and evaluates hypotheses
+Then no-object traces fail closed, uninformative probes receive no positive delta, object
+permutation leaves compatible weights invariant, and corrupted or hallucinated hypotheses are not
+accepted.
