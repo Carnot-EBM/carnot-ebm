@@ -16,17 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (51 modul
 
 ## Hostile LLM review
 
-**TL;DR: 0 self-discovery advances; 2 DUPLICATES. Both are offline development-proxy replays, not evidence of autonomous live discovery.**
+**TL;DR: 0 `SELF_DISCOVERY_ADVANCE`; 2 `DUPLICATE`. Both are hand-adapter offline replays and would otherwise be `OUTER_LOOP_RE`.**
 
-- `results/arc_loop_solve_ar25.json`
+- [arc_loop_solve_ar25.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json)
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Claims level 3, while the registry already records level 8/full clear ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:3), [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). It explicitly declares `development_proxy` and offline/no-quota mode, with no live attempt or runtime-RE trace.
-  - **Recommended action:** Do not count or bank. Retain only as a replay/regression fixture; require registry precheck before emitting solve artifacts.
+  - **Evidence:** Reaches L3 while the registry already has L8/full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). Declares `development_proxy` and offline reproduction mode; contains a finished 66-action sequence, no live runtime-RE trace, and an unfitted hazard model. The registry explicitly attributes L1–L3 to the hand-built `_ar25` `GameAdapter`.
+  - **Recommended action:** No solve credit. Keep only as a regression replay; suppress from “recent solves.”
 
-- `results/arc_loop_solve_lf52.json`
+- [arc_loop_solve_lf52.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json)
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Claims level 2, while the registry already records level 6 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:3), [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). Again, provenance is `development_proxy`, execution is offline, and the artifact shows a finished action sequence—not autonomous discovery evidence.
-  - **Recommended action:** Do not count or bank. Classify as reproduction-only and suppress it from “recent solves.”
+  - **Evidence:** Reaches L2 while the registry already has L6 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). Again `development_proxy`, offline reproduction, and a completed 42-action sequence without attempt→observation→induction evidence. The registry explicitly says L1–L2 use the hand-built `_lf52` `GameAdapter`.
+  - **Recommended action:** No solve credit. Mark reproduction-only and require registry precheck before artifact emission.
 
-**Pattern watch:** Reachability is being confused with autonomy. A live-reachable wrapper replaying per-game adapter knowledge or precomputed paths is still outer-loop-shaped capability. Require `live_agent_self_discovery` plus an auditable attempt→observation→hypothesis/model-update→new-level trace; offline replay success alone proves nothing about hidden-game solving.
+**Pattern watch:** Reachability is laundering hand-built per-game adapters into “live-path” optics. A callable offline replay is not autonomous discovery. Empty outer-loop declarations and names like `learned_verifier_live_checkpoint` do not overcome explicit `development_proxy` provenance. Require a genuinely new registry level plus an auditable live attempt→observation→hypothesis/model-update→solve trace.
 
