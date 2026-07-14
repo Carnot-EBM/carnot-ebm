@@ -11723,3 +11723,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 08:36 UTC | Execution-time V507 source delta, citation-trail r | OK | 88 passed, 1 warning in 13.80s |
 | 2026-07-14 09:04 UTC | Native llama.cpp three-GGUF CUDA offload and respo | OK | 86 passed, 1 warning in 10.34s |
 | 2026-07-14 09:25 UTC | Exact space-time constraint-drift stream with dura | OK | 85 passed, 1 warning in 24.78s |
+| 2026-07-14 09:48 UTC | Gated on Exp5616 exact fixture: KAN retention-adap | OK | 87 passed, 1 warning in 38.06s |
