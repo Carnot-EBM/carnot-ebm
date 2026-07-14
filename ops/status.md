@@ -1,6 +1,35 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-13 (Tasks 9+10 Follow-ons — Live-Wired InertClickSigPruner + ObjectHistorySaliencePrior)
+**Last Updated:** 2026-07-13 (Milestone 2026.07.506 planning staged)
+
+## Session 2026-07-13 - Milestone 2026.07.506 planning staged
+
+Planned the next research milestone after the terminal `.505` conductor run and the
+subsequent exp5592-exp5602 outer-loop evidence. The plan is staged in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`; the active `research-roadmap.yaml` and
+`scripts/research_conductor.py` remain unchanged.
+
+The 10-task Exp5603-Exp5612 graph addresses the three largest remaining gaps:
+(1) no admissible local-SOTA solve-versus-verify result because raw responses were not
+retained, (2) no longitudinal FR-11 result after the causal-memory/PACE chain retired,
+and (3) no new live ARC level despite newly wired filters. It therefore adds a lossless
+response evidence envelope, a gated three-family local-SOTA panel and exact residual
+extension, KAN-only longitudinal self-learning, a reachability-controlled ARC filter
+A/B, an unconditional rotated live-agent `+1` attempt, a cDLS-inspired matched
+CPU/CUDA benchmark, and capstone reconciliation.
+
+`research-references.md` now includes the V506 planner sweep: ScientistOne
+chain-of-evidence, aggregate-invariant intermediate accounting, cDLS, and a watch-only
+temporal-difference representation line. Extropic TSU and Logical Intelligence Kona
+remain non-executable context.
+
+Planning preflight passed: 10/10 tasks parse, all tasks use
+`agent_type: codex` plus `model: gpt-5.5`, every prompt has the required sections and
+terminal instruction, all prior-failure entries carry the four mandatory fields, five
+structured gates cross-reference declared upstream fields, exclusion-manifest lint is
+clean, and the ARC level-up guarantee detects one runtime-rotated attempt. No research
+experiment or end-to-end workload was run during this planning-only change.
 
 ## Session 2026-07-13 - Tasks 9+10 Follow-ons — Live-Wired InertClickSigPruner + ObjectHistorySaliencePrior
 

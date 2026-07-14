@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (49 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (51 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,9 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (49 modul
 
 ## Hostile LLM review
 
-TL;DR: **UNCLEAR / NO ADVANCE** — zero recent ARC solve artifacts exist, so there is no evidence of new live-agent self-discovery.
+**TL;DR: 0 self-discovery advances; 2 DUPLICATES. Both are offline development-proxy replays, not evidence of autonomous live discovery.**
 
-Per-artifact: none.
+- `results/arc_loop_solve_ar25.json`
+  - **Verdict:** `DUPLICATE`
+  - **Evidence:** Claims level 3, while the registry already records level 8/full clear ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:3), [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). It explicitly declares `development_proxy` and offline/no-quota mode, with no live attempt or runtime-RE trace.
+  - **Recommended action:** Do not count or bank. Retain only as a replay/regression fixture; require registry precheck before emitting solve artifacts.
 
-Pattern watch: The reachability lint passing only proves solver modules are callable from live entrypoints. It does **not** prove the live agent discovered hidden-game solutions from its own attempts or runtime reverse-engineering. Do not credit capability without provenance-rich live solve artifacts; scrutinize any future per-game adapters, source-derived models, offline BFS results, or hand-authored strategies as `OUTER_LOOP_RE`.
+- `results/arc_loop_solve_lf52.json`
+  - **Verdict:** `DUPLICATE`
+  - **Evidence:** Claims level 2, while the registry already records level 6 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:3), [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). Again, provenance is `development_proxy`, execution is offline, and the artifact shows a finished action sequence—not autonomous discovery evidence.
+  - **Recommended action:** Do not count or bank. Classify as reproduction-only and suppress it from “recent solves.”
+
+**Pattern watch:** Reachability is being confused with autonomy. A live-reachable wrapper replaying per-game adapter knowledge or precomputed paths is still outer-loop-shaped capability. Require `live_agent_self_discovery` plus an auditable attempt→observation→hypothesis/model-update→new-level trace; offline replay success alone proves nothing about hidden-game solving.
 
