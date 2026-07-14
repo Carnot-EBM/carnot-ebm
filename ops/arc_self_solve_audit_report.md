@@ -16,19 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (51 modul
 
 ## Hostile LLM review
 
-**TL;DR — REJECT BOTH: 2× `DUPLICATE`, 0× self-discovery advances.** Reachability is irrelevant here: these are hardcoded, hand-adaptered offline replays below already-banked depths.
+**TL;DR: 0/2 advances — both are DUPLICATE, shallow development-proxy replays, not live self-discovery.**
 
 - `results/arc_loop_solve_ar25.json`
-
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches only L3, while the registry already records an L8 full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). The artifact explicitly declares `development_proxy` and offline mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:616)). Its exact L1–L3 solution is hardcoded as per-level action constants ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:291)), not discovered in this run. No `honest_verdict` or chronological attempt/induction evidence.
-  - **Recommended action:** Record as regression replay/checkpoint refresh only, with `new_levels_banked=0` and an explicit duplicate verdict. Never count it as a solve or capability advance.
+  - **Evidence:** Reaches L3, while the registry already records `ar25` L8/full clear. It declares `development_proxy` and `standing_arc_loop_offline_no_quota`. The reachable loop uses a hand-built `_ar25` adapter with hard-coded L1–L3 action tails and private hidden-state fields; no autonomous discovery trace exists.
+  - **Recommended action:** Do not count or advertise as a solve. Retain only as a regression replay and populate `honest_verdict=duplicate_depth_l3_vs_registry_l8`.
 
 - `results/arc_loop_solve_lf52.json`
-
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches only L2, while the registry records L6 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). The registry already calls this exact rerun `duplicate_depth_vs_registry_prior_l6` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2599)). The artifact declares `development_proxy`/offline mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:584)); its 42 actions are hardcoded and emitted one prescribed action at a time by the per-game adapter ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2750)). No live discovery trace or honest verdict.
-  - **Recommended action:** Mark `complete_duplicate_l2_vs_registry_l6`, `new_levels_banked=0`. Require an autonomously discovered L7 suffix—or preferably a clean unseen-game run—before claiming progress.
+  - **Evidence:** Reaches L2, while the registry already records `lf52` L6. Experiment 5585 explicitly calls it `same_depth_or_shallower_than_registry_not_creditable` with `new_levels_banked=0`. The `_lf52` adapter feeds frozen L1/L2 labels and a hand-built per-game state/verifier model. Again: `development_proxy`, offline simulator, no self-discovery trace.
+  - **Recommended action:** Exclude from solve-advance reporting. Keep as a regression fixture and set `honest_verdict=duplicate_depth_l2_vs_registry_l6`.
 
-**Pattern watch:** Severe outer-loop drift. The standing loop openly says adaptered runs use a hand-registered `GameAdapter` and are not scored live-agent discovery ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:212)). Hardcoded action rails, per-game hidden-state access, learned checkpoints trained after replaying known solutions, and outer-loop reproduction are being packaged as “solve artifacts.” The orphan/reachability lint cannot detect this provenance failure. These mechanisms would be `OUTER_LOOP_RE` if they were novel; being reachable does not make them autonomous.
+**Pattern watch:** Reachability is being confused with legitimacy. These modules are on-path, but the path executes hand-authored per-game adapters and frozen trajectories. Empty `outer_loop_inputs_declared` does not cleanse that provenance. Blank `honest_verdict` plus `offline_reproduced=true` makes stale proxy replays look like fresh solves; the recent-artifact scanner should reject any artifact that does not exceed registry depth and prove `live_agent_self_discovery`.
 

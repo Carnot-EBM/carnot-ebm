@@ -29817,3 +29817,88 @@ previously indexed work; duplicate discovery is not presented as novelty.
 Execution-time source check after the V509 planner marker accepted one non-duplicate local hook and left the dependency graph unchanged.
 
 - **Baba in Wonderland: Online Self-Supervised Dynamics Discovery for Executable World Models** - arXiv:2605.16725, https://arxiv.org/abs/2605.16725. The paper treats preservation conflicts as structural signal when a candidate update explains a new transition but breaks earlier ones. Carnot hook: add preservation-conflict and class-aware counterexample controls to Exp5641's generic ARC transition-hypothesis patcher using only agent-owned observation/action receipts. Downstream Exp5642 may consume the hook only if Exp5641 replay safety gates pass. Do not import Baba rules, external code, or benchmark results as Carnot evidence.
+
+## V510 Planner Refresh - 20260714
+
+Planning-time sweep for milestone `.510` after the terminal `.509` conductor run. The
+search covered 2025-2026 arXiv work on energy-based verification and reasoning, neural
+constraint satisfaction, Ising sampling, hallucination detection and mitigation, KANs,
+constrained generation, hardware-accelerated sampling, and continual/online constraint
+learning. It also checked OpenReview, Hugging Face Papers, GitHub discovery, Extropic
+writing, Logical Intelligence's public Kona material, and live Semantic Scholar citation
+routes for EBT `2507.02092` and ARM-EBM `2512.15605`. Entries below are non-duplicate
+deltas or explicit dispositions; repeated discovery is not presented as novelty.
+
+### New actionable deltas
+
+- **Understanding Why Language Models Hallucinate: Testing Reasoning Against Priors** -
+  arXiv:2607.00447, https://arxiv.org/abs/2607.00447. TrapQA separates missing knowledge
+  from inference misalignment by pairing prompt-supported constraints with statistically
+  salient shortcut answers. Carnot hook: add shortcut-dominated, exactly checkable rows to
+  the prospective local-GGUF canary. Each row must expose the exact constraint, the salient
+  distractor, the raw model response, and the independent validator outcome. The rows test
+  whether a current local model follows the supplied finite-state or arithmetic evidence;
+  they do not make factuality, latent-state, or general hallucination-detection claims.
+- **OEUVRE: OnlinE Unbiased Variance-Reduced Loss Estimation** - AISTATS 2026,
+  https://openreview.net/forum?id=5jJnGctZMf. OEUVRE evaluates each arriving example under
+  the current and preceding online predictors to obtain a prequential loss estimate without
+  a held-out future leak. Carnot hook: on a new chronological exact-label stream, record
+  current-versus-previous KAN decisions, exact outcomes, abstentions, and cumulative loss
+  before any label-conditioned update. Treat this as prospective evaluation telemetry only:
+  the `.509` anytime-valid conformal contract and exact rollback remain the release and
+  safety authorities.
+
+### Newly actionable local evidence
+
+- **GAP-5703: live placement-goal energy is constant on `sp80`.** The outer-loop trace in
+  `results/experiment_5703_sp80_candidate_stack_mechanism_trace.json` shows 771 live
+  `GoalSatisfactionEnergy` calls all returning `1.0`; both immediate candidate guidance and
+  the candidate router are behaviorally inert. The already-built relational target-match
+  representation separates the observed `sp80` win state from non-wins, but has never been
+  routed through the live goal-bias path. `.510` should add a generic zero-variance fallback
+  and a placement/spatial relational route, prove discrimination on exact synthetic and
+  reproduced-level controls, and then run a matched live-path A/B. This is a goal-state
+  representation repair, not a rerun of retired novelty, PTRM, transition-patcher, or generic
+  exploration-signal scopes.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the EBT route newly exposed arXiv:2607.11555, *Advancing Optimal
+  Subset Oracle via Learning Relaxation of Neural Set Functions*. Its learned continuous
+  surrogate replaces Monte Carlo gradients for a separate neural set-function problem and
+  does not justify replacing Carnot's exact validator or promoted sampler. ARM-EBM's visible
+  citations remain the already-indexed path-measure, safe-distillation, distributional-EBM,
+  LoopUS, ontology, graph-energy, and false-first-step lines. No citation-count claim is made.
+- **OpenReview:** OEUVRE is promoted only for prequential measurement. Agent-memory,
+  certifiable-continual-learning, adaptive generate-rank-verify, and EBM submissions repeat
+  already-indexed retention, exact-verifier, or abstention principles and do not displace the
+  `.509` anytime-valid FR-11 certificate.
+- **Hugging Face Papers:** TrapQA was the only newly useful fixture delta. LLM-as-a-Verifier,
+  Spilled Energy, first-token confidence, and span-level detector pages either repeat existing
+  history or depend on external/logit scoring paths that are not exact authority.
+- **GitHub:** no newly trending EBM, CSP, KAN, sampler, or constrained-decoding repository
+  superseded Carnot's local exact validators, active-spline KAN, Rust boundary, or llama.cpp
+  runtime. The roadmap therefore ports the proven one-axis algorithm instead of adopting a
+  new sampler package.
+- **Extropic:** the writing index still ends with the October 2025 X0/XTR-0/TSU launch
+  material. No authenticated Carnot-accessible TSU execution route exists, so `.510` makes no
+  TSU execution, power, or speedup claim.
+- **Logical Intelligence:** the current public site continues to advertise Kona 1.0 and Aleph
+  formal-verification results without local weights, an authenticated execution route, or a
+  reproducible benchmark artifact. Kona remains architecture context rather than a comparator.
+
+### V510 planning impact
+
+- Move FR-11 from immutable replay evidence to a prospective exact-label canary generated by
+  one mandated local SOTA GGUF, then measure shadow decisions prequentially and exercise any
+  accepted updates only inside an isolated rollback-capable canary. Do not enable the
+  production default or mutate model weights.
+- Repair the live ARC goal representation at the exact GAP-5703 failure point: detect
+  zero-variance energy, route placement/spatial states through the existing relational
+  representation, and require a matched live-path benefit before promotion. Run the standing
+  registry-prechecked live self-discovery attempt regardless of the mechanism gate.
+- Preserve two-axis replica exchange as terminally retired. Port the promoted one-axis
+  temperature-exchange sampler to the Rust/PyO3 boundary with exact distribution, deterministic
+  checkpoint, and hard-instance quality parity before making any performance claim.
+
+<!-- V510-PLANNER-REFRESH-20260714-END -->
