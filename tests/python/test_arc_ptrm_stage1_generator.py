@@ -222,6 +222,128 @@ def test_scenario_arc_ptrm_5574_stochastic_recursion_and_verifier_selection() ->
     assert selected.verifier_score_source == "carnot_action_language_model"
 
 
+def test_req_arc_ptrm_5574_3_generation_consumes_trained_model_weights() -> None:
+    """Regression test for the wiring bug found 2026-07-13: `generate_trajectories` must
+    actually consume the trained model's forward pass when supplied, not silently fall
+    back to the untrained action-frequency heuristic. Before the fix, `_train_proxy_model`
+    genuinely trained `PTRMActionSequenceGenerator` via real backprop and a real checkpoint,
+    but `generate_trajectories` never called the model at all -- two models with wildly
+    different weights, same seed/inputs, produced IDENTICAL output, because only
+    `_base_action_logits` (an untrained heuristic) fed the recursion."""
+
+    example = Stage1Example(
+        game="g1",
+        guid="guid",
+        start_step=1,
+        frame_features=[0.1, 0.2, 0.3, 0.4],
+        history_actions=[1, 2, 3],
+        history_coords=[(1, 1), (2, 2), (3, 3)],
+        history_intent_vector=[0.25, 0.5, 0.75, 1.0],
+        target_actions=[1, 2, 2, 2, 1, 2, 2, 2],
+        target_coords=[(1, 1)] * 8,
+    )
+    batch = Stage1InputBatch.from_examples([example], action_vocab_size=8)
+
+    model_a = ptrm.PTRMActionSequenceGenerator(
+        history_length=3, sequence_length=8, action_vocab_size=8, hidden_dim=12
+    )
+    model_b = ptrm.PTRMActionSequenceGenerator(
+        history_length=3, sequence_length=8, action_vocab_size=8, hidden_dim=12
+    )
+    with torch.no_grad():
+        for param in model_b.parameters():
+            param.add_(1.0)
+
+    with torch.no_grad():
+        assert not torch.allclose(model_a(batch), model_b(batch))
+
+    gen_kwargs = dict(
+        action_vocab_size=8,
+        sequence_length=8,
+        max_depth=3,
+        hidden_dim=12,
+        trajectories_per_input=2,
+        seed=42,
+        noise_std=0.0,
+    )
+    trajectories_no_model = generate_trajectories(batch, **gen_kwargs)
+    trajectories_model_a = generate_trajectories(batch, model=model_a, **gen_kwargs)
+    trajectories_model_b = generate_trajectories(batch, model=model_b, **gen_kwargs)
+
+    assert all(
+        row.base_logits_source == "action_frequency_heuristic" for row in trajectories_no_model
+    )
+    assert all(row.base_logits_source == "trained_ptrm_model" for row in trajectories_model_a)
+    assert all(row.base_logits_source == "trained_ptrm_model" for row in trajectories_model_b)
+
+    # noise_std=0.0 makes depth-1 energy a deterministic function of the base logits (plus a
+    # shared position bias) -- different model weights must therefore yield different energy.
+    assert (
+        trajectories_model_a[0].depth_metrics[0]["energy"]
+        != trajectories_model_b[0].depth_metrics[0]["energy"]
+    )
+    action_ids_a = [tuple(row.action_ids) for row in trajectories_model_a]
+    action_ids_b = [tuple(row.action_ids) for row in trajectories_model_b]
+    assert action_ids_a != action_ids_b
+
+
+def test_req_arc_ptrm_5574_3_recursion_metrics_and_runner_pass_model_through(
+    tmp_path: Path,
+) -> None:
+    """`_recursion_metrics` and `run_experiment_5574` must forward the trained model into
+    `generate_trajectories`, not just train it and discard it -- the artifact must record
+    that heldout generation used the trained model, not the untrained heuristic."""
+
+    model = ptrm.PTRMActionSequenceGenerator(
+        history_length=1, sequence_length=2, action_vocab_size=2, hidden_dim=4
+    )
+    example = Stage1Example(
+        game="g1",
+        guid="guid",
+        start_step=1,
+        frame_features=[0.0, 0.0, 0.0, 0.0],
+        history_actions=[1],
+        history_coords=[(-1, -1)],
+        history_intent_vector=[0.0, 0.0, 0.0, 0.0],
+        target_actions=[1, 1],
+        target_coords=[(-1, -1)] * 2,
+    )
+    verifier = CarnotTrajectoryVerifier.from_sequences([[1, 1]], action_vocab_size=2)
+
+    with_model = ptrm._recursion_metrics([example], Stage1Config(), 2, verifier, model=model)
+    without_model = ptrm._recursion_metrics([example], Stage1Config(), 2, verifier)
+
+    assert with_model  # both compute something; the point is no crash and no silent no-op
+    assert without_model
+
+    corpus_dir = tmp_path / "corpus"
+    run_dir = tmp_path / "run"
+    output = tmp_path / "experiment_5574_ptrm_stochastic_generator_stage1.json"
+    _write_fake_corpus(corpus_dir)
+    config = Stage1Config(
+        sequence_length=8,
+        history_length=3,
+        max_depth=2,
+        hidden_dim=16,
+        trajectories_per_input=2,
+        max_train_windows=8,
+        max_eval_windows=4,
+        batch_size=4,
+        epochs=1,
+        heldout_games=("held_game",),
+    )
+
+    artifact = run_experiment_5574(
+        output_path=output,
+        corpus_dir=corpus_dir,
+        run_dir=run_dir,
+        config=config,
+        require_cuda=False,
+    )
+
+    assert artifact["model_architecture"]["trajectory_generation_uses_trained_model"] is True
+
+
 def test_req_arc_ptrm_5574_3_energy_fallback_can_halt_early() -> None:
     """REQ-ARC-PTRM-5574-3: dynamic halting also works without verifier selection."""
 
