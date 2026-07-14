@@ -1,40 +1,57 @@
-"""Experiment 5705: does 4-bit GGUF quantization explain why the candidate_27b generator
-underperformed on exp5599's real reinduction path -- tested apples-to-apples against the
-SAME model at full (non-quantized) BF16 precision (task 14, operator-directed follow-up).
+"""Experiment 5705: does the model the 3rd-place ARC-AGI-3 team ("forge") actually used --
+Gemma-4-31B-it, full (non-quantized) precision -- plan more reliably on Carnot's real
+reinduction path than exp5599's Q4-quantized Qwen3.6-27B candidate did (task 14,
+operator-directed follow-up).
 
 Context: exp5599 found `Qwen3.6-27B-MTP` (Q4_K_M GGUF, non-MTP fallback, served on a single
 24GB RTX 3090) planned LESS reliably (0/3 vs the current 9B's 1/3) and took ~7x longer
 (~401s vs ~55s mean reinduce duration) on the REAL `execute_bounded_llm_reinduction` path
-against post-level-up `lp85` transitions. The operator asked why this contradicted the
-3rd-place ARC-AGI-3 team's real success running a comparably-sized model (Gemma-4-31B-it,
-full precision via vLLM on a 96GB RTX Pro 6000) -- multiple confounds were identified
-(different model, different quantization, different serving stack, different hardware, n=3),
-and the operator specifically asked to isolate the PRECISION confound: "we have plenty of
-VRAM on our AMD iGPU if we want to try the full model weights instead of 4bit quants and/or
-full kv-cache key size."
+against post-level-up `lp85` transitions. The operator asked why this contradicted forge's
+real success running Gemma-4-31B-it at full precision via vLLM on a 96GB RTX Pro 6000 --
+multiple confounds were identified (different model, different quantization, different
+serving stack, different hardware, n=3), and the operator asked to isolate what's tractable
+on this box: "we have plenty of VRAM on our AMD iGPU if we want to try the full model
+weights instead of 4bit quants and/or full kv-cache key size."
 
 vLLM itself was found infeasible on this hardware (the PyPI `vllm` wheel is CUDA-only;
 vLLM's ROCm support has no PyPI distribution and has historically targeted MI-series
-datacenter cards, not this consumer gfx1150 iGPU -- a from-source ROCm build for an
-unsupported architecture was judged too large/uncertain an undertaking for this task).
-Instead, this experiment converts `unsloth/Qwen3.6-27B` (the SAME base model family/version
-as exp5599's GGUF candidate, base safetensors, native BF16, ~54GB) to a NON-QUANTIZED BF16
-GGUF via `convert_hf_to_gguf.py --outtype bf16 --no-mtp`, then serves it through the SAME,
-already-proven HIP-built llama.cpp binary (`~/.cache/llama.cpp-master/build-hip/bin/
-llama-server`) that every other local-GGUF experiment in this project uses -- isolating
-PRECISION (4-bit vs full BF16) and, of necessity, HARDWARE (a single 24GB 3090 cannot hold a
-54GB BF16 27B model; the iGPU's ~92GB available unified memory can) as the controlled
-variables, while holding the SERVING STACK (llama.cpp), TASK (Carnot's own
-`execute_bounded_llm_reinduction` on real post-level-up `lp85` transitions), and METHODOLOGY
-(exp5599's exact per-draw protocol) constant. Full (non-quantized) F16 KV cache is used
-(`kv_quant=None`, llama.cpp's own default) rather than exp5599's `q8_0`-quantized cache,
-directly addressing the "full kv-cache key size" half of the operator's request.
+datacenter cards, not this consumer gfx1150 iGPU). The FIRST candidate tried for the
+full-precision arm was `unsloth/Qwen3.6-27B` (same model family as exp5599's Q4 candidate,
+for a precision-only isolation) -- this was ABANDONED after three real, reproducible load
+failures on the HIP-built llama.cpp binary (`~/.cache/llama.cpp-master/build-hip/bin/
+llama-server`): the default `-fit` heuristic hard-hung (zero I/O progress for 12+ minutes,
+confirmed via `/proc/PID/io`); `-fit off` hard-stalled again at a later step (zero RSS/IO
+progress for 5+ minutes, one thread pinned near 100% CPU, no backtrace tooling available on
+this box -- `ptrace` restricted, no `perf`, no root); `-fit off --parallel 1` crawled at
+~11MB/s (over an hour to finish loading). All three failures are consistent with this
+specific HIP build mishandling Qwen3.6's unusual hybrid `Qwen3_5ForConditionalGeneration`
+architecture (mixed "linear_attention"/"full_attention" layers, a newer, less-common
+pattern) -- NOT a flag-tuning problem, a real compatibility gap, reported to and confirmed
+by the operator rather than guessed past indefinitely.
 
-HONEST DISCLOSURE (not hidden): this does NOT reproduce exp5599's Q4 candidate_27b arm or
-the frozen current-9B arm fresh in this same run -- it cites their historical numbers
-(different session/date) as the comparison baseline, to avoid re-paying ~20+ minutes of
-already-well-characterized GPU time. This is a real, disclosed limitation (cross-session
-variance is a confound exp5598 already flagged for this project), not a hidden one.
+**Operator-directed pivot:** switch the full-precision candidate to `google/gemma-4-31B-it`
+(62.6GB, native BF16, `Gemma4ForConditionalGeneration`) -- the model forge ACTUALLY used, and
+a conventional sliding-window + full-attention architecture (the same mature pattern Gemma
+2/3 already used, well-supported in llama.cpp) rather than Qwen3.6's newer hybrid. This
+directly answers the operator's original question (why did forge succeed with a bigger model
+when our test showed a bigger model losing) with the ACTUAL model in question, at full
+precision, on Carnot's own real task -- a MORE informative test than the originally-planned
+same-model precision isolation, at the honest cost of no longer isolating precision as a
+single variable against exp5599's Q4 Qwen candidate (model family changes too). Converted to
+a NON-QUANTIZED BF16 GGUF via `convert_hf_to_gguf.py --outtype bf16`, served through the SAME
+HIP-built llama.cpp binary every other local-GGUF experiment in this project uses, with full
+(non-quantized) F16 KV cache (`kv_quant=None`, llama.cpp's own default) -- directly addressing
+the "full kv-cache key size" half of the operator's request. `-fit off` is passed proactively
+(learned from the Qwen3.6 diagnostic loop) even though this conventional architecture is
+expected not to need it.
+
+HONEST DISCLOSURE (not hidden): this does NOT reproduce exp5599's Q4 Qwen candidate_27b arm
+or the frozen current-9B arm fresh in this same run -- it cites their historical numbers
+(different session, different date, AND now a different model for the Q4 comparator) as
+context, not as a controlled precision-only baseline. The comparison this experiment DOES
+make cleanly is: does Gemma-4-31B-it (full precision, the leader's real model) plan
+competitively against the current 9B's historical plan rate on the SAME real task -- that
+is directly informative regardless of the Qwen-specific quantization question exp5599 raised.
 
 Spec refs: REQ-ARC-WMTE-5599-2 (extends REQ-ARC-WMTE-5599's cost/benefit finding).
 """
@@ -70,12 +87,15 @@ N_REPEATS = 3
 EXPLORE_BUDGET = 6
 TOTAL_BUDGET = 40
 REINDUCTION_N_CTX = 22000  # matches exp5599 -- lp85's 64x64 grid overflows the class default
-FULL_PRECISION_GGUF_PATH = Path.home() / ".cache" / "carnot-full-precision-gguf" / "Qwen3.6-27B-BF16.gguf"
+FULL_PRECISION_GGUF_PATH = (
+    Path.home() / ".cache" / "carnot-full-precision-gguf" / "gemma-4-31B-it-BF16.gguf"
+)
 FULL_PRECISION_PORT = 8950
 
 # Historical reference numbers from exp5599 (results/experiment_5599_reinduction_ab_lp85_levelup.json,
-# 2026-07-13) -- NOT re-measured here; cited for the apples-to-apples comparison per this task's own
-# disclosed cross-session-variance limitation.
+# 2026-07-13) -- NOT re-measured here; cited as CONTEXT, not a controlled precision-only baseline (the
+# candidate_27b_q4 row is now a DIFFERENT model -- Qwen3.6-27B -- from this experiment's Gemma-4-31B-it
+# full-precision arm; see this module's docstring for why the candidate was switched).
 EXP5599_HISTORICAL = {
     "current_9b_q4": {
         "experiment_id": 5599,
@@ -85,7 +105,9 @@ EXP5599_HISTORICAL = {
     },
     "candidate_27b_q4": {
         "experiment_id": 5599,
-        "model": "Qwen3.6-27B-MTP-GGUF (Q4_K_M, non-MTP fallback, GPU 1 CUDA)",
+        "model": "Qwen3.6-27B-MTP-GGUF (Q4_K_M, non-MTP fallback, GPU 1 CUDA) -- a DIFFERENT model "
+        "family from this experiment's full-precision Gemma-4-31B-it candidate; not a precision-only "
+        "comparator for this run",
         "plan_rate_given_levelup": 0.0 / 3.0,
         "mean_reinduce_duration_s": 401.0,
     },
@@ -93,9 +115,11 @@ EXP5599_HISTORICAL = {
 
 MODEL_SPECS = [
     {
-        "name": "Qwen3.6-27B-BF16",
-        "hf_id": "unsloth/Qwen3.6-27B",
-        "role": "full-precision (non-quantized) candidate, converted to BF16 GGUF locally",
+        "name": "Gemma-4-31B-it-BF16",
+        "hf_id": "google/gemma-4-31B-it",
+        "role": "full-precision (non-quantized) candidate -- the model forge (3rd-place ARC-AGI-3) "
+        "actually used, converted to BF16 GGUF locally after Qwen3.6-27B was abandoned (3 real load "
+        "failures on this hardware's HIP llama.cpp build, unrelated to precision)",
     },
 ]
 
@@ -111,6 +135,7 @@ REQUIRED_ARTIFACT_FIELDS = (
     "per_draw_results",
     "arm_summary",
     "exp5599_historical_reference",
+    "qwen_q4_context_comparison",
     "solve_provenance",
     "random_seed",
     "reproducibility_checksum",
@@ -120,9 +145,9 @@ REQUIRED_ARTIFACT_FIELDS = (
 
 FIELD_PRINCIPLES = {
     "honest_verdict": {
-        "principle": "terminal-prefixed; distinguishes 'full precision reverses exp5599's Q4 "
-        "finding' from 'full precision does not help either' from 'inconclusive (never leveled "
-        "up)' -- non-interchangeable outcomes"
+        "principle": "terminal-prefixed; the PRIMARY verdict compares full-precision Gemma-4-31B-it "
+        "against the current 9B baseline (same task/methodology) -- NOT against exp5599's Q4 Qwen "
+        "candidate, since that comparison changed both model family AND precision together"
     },
     "kv_cache_precision": {
         "principle": "documents that this run uses llama.cpp's default full-precision (f16) KV "
@@ -130,7 +155,7 @@ FIELD_PRINCIPLES = {
         "'full kv-cache key size' request"
     },
     "serving_hardware": {
-        "principle": "honestly discloses the NECESSARY hardware confound: a 54GB BF16 27B model "
+        "principle": "honestly discloses the NECESSARY hardware confound: a 62.6GB BF16 model "
         "cannot fit on the single 24GB RTX 3090 exp5599 used, so this arm runs on the AMD iGPU "
         "instead -- serving stack (llama.cpp) is held constant, hardware is not"
     },
@@ -138,6 +163,11 @@ FIELD_PRINCIPLES = {
         "principle": "CLAUDE.md Failed-Experiment Rerun Discipline analog -- names the prior "
         "measurement this compares against and discloses it is cross-session, not re-measured "
         "fresh in this same run"
+    },
+    "qwen_q4_context_comparison": {
+        "principle": "explicitly labeled CONTEXT ONLY, never the primary verdict -- comparing "
+        "Gemma-4-31B-it (full precision) against exp5599's Qwen3.6-27B (Q4) conflates model "
+        "family and precision; reporting it as a clean isolation would be dishonest"
     },
     "random_seed": {"principle": "determinism precondition for reproducibility"},
     "reproducibility_checksum": {"principle": "content hash catches silent drift on replay"},
@@ -213,17 +243,18 @@ def _make_full_precision_proposer() -> Any:
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     # Explicitly unset the 3090-pinning env var so _generator_server_and_env() routes to the
-    # default iGPU HIP build (the 54GB weights do not fit a single 24GB 3090).
+    # default iGPU HIP build (the 62.6GB weights do not fit a single 24GB 3090).
     os.environ.pop("CARNOT_ARC_GENERATOR_CUDA_GPU", None)
     return LocalGGUFProposer(
-        repo_substr="Qwen3.6-27B-BF16",
+        repo_substr="gemma-4-31B-it-BF16",
         model_path=str(FULL_PRECISION_GGUF_PATH),
         port=FULL_PRECISION_PORT,
         mtp=False,
         kv_quant=None,  # full-precision (f16) KV cache -- llama.cpp's own default
         max_tokens=2560,
         n_ctx=REINDUCTION_N_CTX,
-        timeout=900,  # a 54GB BF16 model on the iGPU may be materially slower than the Q4 27B
+        timeout=1200,  # a 62.6GB BF16 model on the iGPU may be materially slower than the Q4 27B
+        extra_server_args=("-fit", "off"),  # proactive, learned from the Qwen3.6 diagnostic loop
     )
 
 
@@ -292,6 +323,7 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
             "per_draw_results": [],
             "arm_summary": {},
             "exp5599_historical_reference": EXP5599_HISTORICAL,
+            "qwen_q4_context_comparison": "not_applicable_blocked",
             "solve_provenance": "development_proxy",
             "random_seed": RANDOM_SEED,
             "reproducibility_checksum": "",
@@ -344,19 +376,38 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
         ),
     }
 
+    # The CLEAN comparison this experiment supports: gemma-4-31B-it (full precision) vs the
+    # current 9B, same task/methodology (though cross-session -- see module docstring). The Q4
+    # Qwen candidate comparison is DISCLOSED CONTEXT ONLY (different model AND precision changed
+    # together), never the basis for the primary verdict.
+    qwen_q4_context_comparison = "not_applicable_never_leveled_up"
     if not levelup_rows:
-        verdict = "complete: full_precision_27b_lp85_never_leveled_up_inconclusive"
+        verdict = "complete: gemma_full_precision_lp85_never_leveled_up_inconclusive"
     else:
         fp_rate = arm_summary["plan_rate_given_levelup"]
+        current_rate = EXP5599_HISTORICAL["current_9b_q4"]["plan_rate_given_levelup"]
         q4_rate = EXP5599_HISTORICAL["candidate_27b_q4"]["plan_rate_given_levelup"]
-        if fp_rate is not None and fp_rate > q4_rate:
-            verdict = "complete: full_precision_27b_reverses_exp5599_q4_finding_plans_more_reliably"
-        elif fp_rate is not None and fp_rate == q4_rate == 0.0:
-            verdict = "complete: full_precision_27b_still_fails_to_plan_quantization_not_the_cause"
-        elif fp_rate is not None and fp_rate <= q4_rate:
-            verdict = "complete: full_precision_27b_no_better_than_q4_quantization_not_the_cause"
+        if fp_rate is None:
+            verdict = "complete: gemma_full_precision_result_inconclusive_vs_current_9b_baseline"
+        elif fp_rate > current_rate:
+            verdict = "complete: gemma_full_precision_plans_more_reliably_than_current_9b"
+        elif fp_rate == current_rate:
+            verdict = "complete: gemma_full_precision_ties_current_9b_plan_rate"
         else:
-            verdict = "complete: full_precision_27b_result_inconclusive_vs_q4_baseline"
+            verdict = "complete: gemma_full_precision_plans_less_reliably_than_current_9b"
+        if fp_rate is not None:
+            if fp_rate > q4_rate:
+                qwen_q4_context_comparison = (
+                    "gemma_full_precision_beats_qwen_q4_context_only_different_model_and_precision"
+                )
+            elif fp_rate == q4_rate:
+                qwen_q4_context_comparison = (
+                    "gemma_full_precision_ties_qwen_q4_context_only_different_model_and_precision"
+                )
+            else:
+                qwen_q4_context_comparison = (
+                    "gemma_full_precision_below_qwen_q4_context_only_different_model_and_precision"
+                )
 
     artifact = {
         "experiment": EXPERIMENT_ID,
@@ -374,6 +425,7 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
         "per_draw_results": rows,
         "arm_summary": arm_summary,
         "exp5599_historical_reference": EXP5599_HISTORICAL,
+        "qwen_q4_context_comparison": qwen_q4_context_comparison,
         "solve_provenance": "development_proxy",
         "random_seed": RANDOM_SEED,
         "duration_s": round(time.time() - started_at, 3),

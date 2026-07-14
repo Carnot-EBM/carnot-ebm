@@ -1348,6 +1348,11 @@ class LocalGGUFProposer:
         None  # explicit .gguf path; on Kaggle set to the bundled /kaggle/input/... path
     )
     tries: int = 3
+    extra_server_args: tuple = ()  # e.g. ("-fit", "off") -- raw args appended to the launch
+    # command verbatim. Added for exp5705 after llama-server's default -fit heuristic hard-hung
+    # (confirmed via /proc/PID/io: zero read progress for 12+ minutes) loading a large hybrid
+    # linear/full-attention model (Qwen3.6-27B) on this project's HIP/ROCm build -- -fit off has
+    # no downside when n_gpu_layers and n_ctx are both already explicit (nothing left to auto-fit).
     _proc: Any = None
 
     def _url(self) -> str:
@@ -1392,11 +1397,15 @@ class LocalGGUFProposer:
             args += ["--spec-type", "draft-mtp", "--model-draft", path]
         if self.kv_quant:  # 8-bit KV cache doubles usable context, near-lossless
             args += ["--cache-type-k", self.kv_quant, "--cache-type-v", self.kv_quant]
+        if self.extra_server_args:  # e.g. ("-fit", "off") -- see field docstring
+            args += list(self.extra_server_args)
         # env=launch_env: None inherits the ambient env (legacy iGPU path); a dict pins CUDA_VISIBLE_DEVICES.
         self._proc = subprocess.Popen(
             args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=launch_env
         )
-        for _ in range(90):  # model load on GPU can take ~10-30s
+        load_wait_attempts = max(90, int(self.timeout / 2))  # large full-precision models (e.g.
+        # a 62GB BF16 GGUF) can take far longer than the 180s the fixed 90-attempt budget allows
+        for _ in range(load_wait_attempts):
             if self._healthy():
                 return True
             time.sleep(2)

@@ -41282,6 +41282,120 @@ and `honest_verdict` starts with `complete:` or `blocked:`.
 |---|---|---|
 | REQ-REPORT-5625 | Implemented (`python/carnot/experiment_5625_transition_v508.py`, `results/experiment_5625_transition_v508.json`) | Implemented (`tests/python/test_experiment_5625_transition_v508.py`) |
 
+### REQ-REPORT-5636: V509 Transition Locks V508 Terminal Evidence And Dependency Gates
+
+The Exp5636 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/conductor-log.md`,
+`research-complete.yaml`, and every terminal `.508` artifact from Exp5625
+through Exp5635:
+`results/experiment_5625_transition_v508.json`,
+`results/experiment_5626_v508_source_delta_ingestion.json`,
+`results/experiment_5627_online_conformal_kan_qualification.json`,
+`results/experiment_5628_conformal_active_spline_kan_csl.json`,
+`results/experiment_5629_conformal_kan_independent_audit.json`,
+`results/experiment_5630_arc_epistemic_object_probe_prototype.json`,
+`results/experiment_5631_arc_epistemic_probe_live_ab.json`,
+`results/experiment_5632_arc_live_self_discovery_levelup_v508.json`,
+`results/experiment_5633_temperature_exchange_cdls_exact_audit.json`,
+`results/experiment_5634_temperature_exchange_cdls_quality.json`, and
+`results/experiment_5635_v508_capstone_reconciliation.json`. It SHALL classify
+those artifacts as complete, blocked, gate-skipped, promoted, retired, or
+adversarially flagged without upgrading flagged, unaudited, skipped, blocked,
+or bounded evidence into a clean prerequisite.
+
+The transition SHALL preserve Exp5627 and Exp5628 as clean internal FR-11
+evidence but SHALL NOT record an independent FR-11 promotion because Exp5629
+was a gate-schema failure and no scientific audit ran. It SHALL preserve
+Exp5629 as a schema-gate failure, not as a scientific negative. It SHALL retire
+Exp5630 at its blocked epistemic-object verdict, preserve Exp5631 as a
+gate-skipped A/B, and preserve every Exp5632 adversarial flag and null live ARC
+outcome. It SHALL promote Exp5633 and Exp5634 only as exact one-axis
+temperature-label exchange and hard-instance quality evidence. It SHALL keep
+timing, CPU/CUDA crossover, board, SNN, TSU, and hardware-speedup claims closed.
+
+The workflow SHALL record `previous_milestone=2026.07.508`,
+`current_milestone=2026.07.509`, `current_task_range=exp5636-exp5647`, and a
+collision check showing Exp5636 through Exp5647 do not collide with completed or
+retired experiment IDs in `research-complete.yaml` and `ops/conductor-log.md`.
+It SHALL emit dependency chains for FR-11 schema corrigendum to anytime-valid
+audit to shadow integration, executable ARC model to advisory known-level A/B
+plus an unconditional live attempt, and two-axis invariant audit to quality to
+Rust parity. It SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
+`research-roadmap.yaml` or `scripts/research_conductor.py`, and SHALL write
+`results/experiment_5636_transition_v509.json`.
+
+The artifact SHALL include required fields `field_principles`,
+`artifacts_read`, `terminal_findings`, `promoted_substrates`,
+`promising_unpromoted_substrates`, `retired_scopes`,
+`adversarial_flags_preserved`, `current_task_range`, `dependency_map`,
+`inference_substrate`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `artifacts_read`: principle "claims trace to files"
+- `terminal_findings`: principle "only observed outcomes cross milestones"
+- `promoted_substrates`: principle "clean prerequisites are explicit"
+- `promising_unpromoted_substrates`: principle "Exp5628 is not laundered"
+- `retired_scopes`: principle "Exp5630 and prior closures remain closed"
+- `adversarial_flags_preserved`: principle "Exp5632 flags remain visible"
+- `current_task_range`: principle "IDs do not collide"
+- `dependency_map`: principle "gates are auditable"
+- `inference_substrate`: principle "no new inference occurred"
+- `reproducibility_checksum`: principle "transition content is stable"
+- `honest_verdict`: principle "terminal status starts complete: or blocked:"
+
+#### SCENARIO-REPORT-5636: V509 Transition Preserves V508 Terminal Boundaries
+
+**Given** the `.508` artifacts from Exp5625 through Exp5635 are readable
+**And** Exp5627 and Exp5628 report clean internal FR-11 qualification and CSL
+evidence
+**And** Exp5629 is a conductor gate-schema failure rather than an executed
+independent scientific audit
+**And** Exp5630, Exp5631, and Exp5632 report blocked, gate-skipped, or flagged
+ARC evidence
+**And** Exp5633 and Exp5634 report exact one-axis temperature exchange and
+bounded hard-instance quality evidence with no timing or hardware claim
+**When** the Exp5636 workflow runs
+**Then** it emits `results/experiment_5636_transition_v509.json`, records
+`previous_milestone=2026.07.508`, records
+`current_milestone=2026.07.509`, records
+`current_task_range=exp5636-exp5647`, promotes only the one-axis exact sampler
+and quality substrates, records Exp5628 only in
+`promising_unpromoted_substrates`, keeps the closed scopes closed, preserves
+Exp5632 adversarial flags, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and uses a terminal
+`honest_verdict` prefix.
+
+#### SCENARIO-REPORT-5636-DEPENDENCY-MAP: V509 Gates Stay Auditable
+
+**Given** the `.509` roadmap defines Exp5636 through Exp5647
+**And** `research-complete.yaml` and `ops/conductor-log.md` have no completed
+or retired Exp5636 through Exp5647 IDs
+**When** the Exp5636 dependency map is built
+**Then** the map contains the chains `FR-11 schema corrigendum->anytime-valid
+audit->shadow integration`, `executable ARC model->advisory known-level
+A/B->unconditional live attempt`, and `two-axis invariant audit->quality->Rust
+parity`, and it records the non-collision boundary explicitly.
+
+#### SCENARIO-REPORT-5636-FIELD-PRINCIPLES: Transition Fields Stay Annotated
+
+**Given** the Exp5636 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `research-roadmap.yaml` is unchanged,
+`scripts/research_conductor.py` is unchanged, `inference_substrate` is
+`aggregation_from_upstream_artifacts`, `reproducibility_checksum` is populated,
+and `honest_verdict` starts with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5636)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5636 | Planned (`python/carnot/experiment_5636_transition_v509.py`, `results/experiment_5636_transition_v509.json`) | Planned (`tests/python/test_experiment_5636_transition_v509.py`) |
+
 ### REQ-REPORT-5626: Ingest V508 Execution-Time Source Delta Without Reopening Closed Scopes
 
 The Exp5626 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
