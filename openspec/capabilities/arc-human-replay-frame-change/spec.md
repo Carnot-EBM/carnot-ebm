@@ -3952,6 +3952,55 @@ escalation; a failed reproduction gate or a lower reached level on the
 treatment arm is classified as a regression regardless of any states_expanded
 number, overriding the efficiency signal with the correctness backstop
 
+### REQ-ARC-FCP-5699: SGE Anti-Stagnation Controller -- Genuine Live Collapse-Escape Re-Test
+
+`ops/known-issues.md` task 6's own "NEXT STEP" named the fix: detect repeated
+null-outcome LLM strategies and force diversity instead of converging on a
+passive "wait" strategy. The conductor built `AntiStagnationDiversityController`
+(now `SGECandidateRouter`'s default `anti_stagnation_controller`) and ran a
+DETERMINISTIC precheck (exp5575) replaying the original recorded collapse
+trace -- real evidence the controller LOGIC is correct, but not yet evidence
+a genuine LIVE run (fresh strategies from the model, not a replayed trace)
+actually escapes a collapse it would otherwise fall into. exp5575's own
+follow-on live attempt (exp5576) never ran -- it GATE_BLOCKed on unrelated
+project-wide gates (a pre-existing 16-failure full-suite pytest run and a
+1262-test spec-coverage backlog), not on anything about the SGE mechanism
+itself.
+
+This requirement runs the genuine live re-test. The ORIGINAL null target
+(g50t L3) is no longer usable as a registry-frontier attempt -- it was
+independently fully cleared (`levels_reproduced=7, full_game_clear=true`)
+one day after exp5575's precheck by an unrelated hand-derived mechanism. Per
+"(or the original null target)", this requirement structurally replicates the
+original scenario instead: a fresh-episode g50t session
+(`prior_levels=0, target_level=1`, no registry credit claimed) reproduces the
+early-exploration regime the original collapse occurred in, run TWICE (n=2
+independent episodes) per CLAUDE.md's cross-check-surprising-results
+discipline. A secondary, bonus real attempt at the current shallowest
+not-fully-cleared registry frontier (read live, not hardcoded) tests whether
+the fix also helps bank new territory.
+
+### SCENARIO-ARC-FCP-5699-LIVE-COLLAPSE-ESCAPE: Real Live Collapse, Real Live Escape
+
+Given a fresh `E3AgentPolicy` session on g50t with `SGECandidateRouter`'s
+default anti-stagnation controller active and real GPU-backed local-GGUF LLM
+inference (not a fake-completer, not a replayed trace)
+When the live strategy proposer genuinely converges on a repeated
+"observe/wait" strategy across several steps -- the exact failure mode task 6
+was filed against
+Then the controller detects the live collapse (`collapse_detected_live=True`,
+with a real `collapse_trigger_step`), switches ranking away from the LLM
+proposer to the deterministic forced diverse portfolio
+(`forced_portfolio_activated_live=True`, `post_collapse_strategy_diversity>1`),
+and this behavior reproduces independently across both replication episodes;
+the escape is reported honestly including its own limitation (the forced
+portfolio may itself settle into a smaller, static repetition on a frozen
+game state) rather than being overclaimed as full resolution; a genuine
+no-collapse observation on the secondary frontier pass (e.g. because the
+perception layer yields empty candidate lists at a deep, already-explored
+frontier) is reported as an honest, separately-flagged null, not silently
+folded into the headline collapse-escape claim
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
