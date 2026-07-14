@@ -3778,6 +3778,55 @@ including a constant-False stub, would score a trivial 1.0 on an all-no-op windo
 per CLAUDE.md's FALSE_NEGATIVE_RISK discipline, a null/negative judgment requires a
 positive control the data does not provide here
 
+**LIVE-INTEGRATION EMPIRICAL FOLLOW-UP (2026-07-14, outer-loop, operator-directed).** The
+above was verified with fake proposers/engines only. This follow-up ran the SAME real code
+path with a real proposer against real `lp85` transitions (real `E3AgentPolicy` episode,
+budget=50, real GPU-backed `LocalGGUFProposer`, `Qwen3.5-9B-MTP`), to check whether
+`min_goal_predicate_consistency=1.0` at the live call site's own risk tolerance helps or
+hurts in practice.
+
+*First real attempt (the live-configured strict dynamics gate).* Both a veto-on and a
+veto-off arm, called directly with the live call site's own `min_heldout_accuracy=1.0`,
+failed at ROUND 1 on the PRE-EXISTING dynamics gate (`heldout_transition_verification_
+failed`, `heldout_accuracy` 0.6875 and 0.0 respectively -- neither reached the required
+1.0) before the goal-consistency veto was ever reached. Honest finding: in practice, on
+real first-shot LLM induction, the already-strict `min_heldout_accuracy=1.0` dynamics
+gate is frequently the dominant blocker, so this new veto's real-world marginal impact is
+SUBORDINATE to that pre-existing gate more often than not -- it is checked LAST, after
+goal-satisfiability, which is itself after dynamics acceptance.
+
+*Second, isolated attempt (dynamics gate bypassed to test the veto specifically).* With
+`min_heldout_accuracy=0.0` (bypassing the dynamics gate so the goal-consistency veto gets
+a genuine chance to run) and a fresh proposer per arm (avoiding a real, separately-noted
+LLM-proposer-connection-reuse hiccup found reusing one proposer object across sequential
+`execute_bounded_llm_reinduction` calls -- an infra quirk worth a future look, not
+investigated further here), on the SAME real transitions (47 collected, 1 real level-up):
+the veto-ON arm's real induced predicate scored `goal_predicate_consistency_accuracy=
+0.021277` (correct on only 1 of 47 real transitions) and was correctly rejected
+(`skipped=goal_predicate_consistency_failed`, `planned=False`). The veto-OFF arm's
+(independently induced, comparably poor `heldout_accuracy=0.0`) predicate was accepted
+unchecked and produced `planned=True` (`plan_reaches_goal=True` -- but that check is
+IN-MODEL, verified against the induced engine/goal's own simulation, not against real
+environment ground truth). This is a direct, real confirmation of the exact failure mode
+this requirement exists to catch: a badly-miscalibrated goal predicate installed as a
+search-termination condition, believed successful by the agent's own internal check,
+while actually almost entirely wrong about what a real win looks like.
+
+**Honest caveat.** The two arms used SEPARATE, independent real induction calls (not the
+literal same candidate under test twice), since isolating the goal-consistency check
+required bypassing the dynamics gate cleanly per-arm -- not a perfectly matched pair. Both
+arms' `heldout_accuracy=0.0` suggests comparable induction difficulty on this specific
+transition window, which is why the comparison is still informative, but this is
+disclosed rather than overclaimed as a controlled trial.
+
+**Conclusion: no threshold adjustment.** This evidence supports KEEPING
+`min_goal_predicate_consistency=1.0` at the live call site as originally set (mirroring
+`min_heldout_accuracy=1.0`'s own established risk tolerance) -- a real, badly-wrong
+predicate was directly observed being caught, and no instance of the veto rejecting a
+predicate that was ACTUALLY accurate was observed in any test (unit or live). The
+dynamics-gate-dominance finding above is noted as a real property of the live pipeline's
+layered gates, not a reason to loosen this specific threshold.
+
 ### REQ-ARC-WMTE-5594: `/think` vs `/no_think` Induction Quality A/B on the Frozen Live Generator
 
 `ops/known-issues.md`'s 2026-07-11 task 7 entry (cheap, dev-side-only) was

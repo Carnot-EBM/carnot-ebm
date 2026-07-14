@@ -1,0 +1,98 @@
+{
+  "experiment": "experiment_5700_goal_predicate_veto_live_integration",
+  "schema": "carnot.exp5700.goal_predicate_veto_live_integration.v1",
+  "result_path": "results/experiment_5700_goal_predicate_veto_live_integration.json",
+  "honest_verdict": "complete: veto_confirmed_catches_real_miscalibrated_predicate",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default live re-induction proposer"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; distinguishes a genuine veto-catches-a-bad-predicate confirmation from an inconclusive collection (no real level-up)."
+    },
+    "real_levelups_in_collected_transitions": {
+      "principle": "the comparison is only interpretable with >=1 real level-up in the window (CLAUDE.md FALSE_NEGATIVE_RISK) -- an all-no-op window would make any predicate trivially score 1.0."
+    },
+    "arm_on": {
+      "principle": "min_goal_predicate_consistency=1.0 (matching the live call site's real default) -- does the veto actually fire on real data, and what does it reject."
+    },
+    "arm_off": {
+      "principle": "min_goal_predicate_consistency=0.0 (veto disabled) on an independently-induced predicate against the SAME real transitions -- what would have been accepted without this requirement."
+    },
+    "dynamics_gate_finding": {
+      "principle": "a separate, honestly-disclosed finding: at the live call site's own min_heldout_accuracy=1.0, both arms failed at the dynamics gate before this veto was ever reached in an earlier attempt -- the goal-consistency veto's real-world impact is subordinate to that pre-existing gate more often than not."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "target_game": "lp85",
+  "transitions_collected": 47,
+  "real_levelups_in_collected_transitions": 1,
+  "arm_on": {
+    "veto_on": true,
+    "planned": false,
+    "refinement_rounds_used": 1,
+    "skipped": "goal_predicate_consistency_failed",
+    "heldout_accuracy": 0.0,
+    "accepted_by_heldout_verifier": true,
+    "goal_predicate_satisfiable": true,
+    "rounds": [
+      {
+        "round": 1,
+        "action": "induce",
+        "heldout_accuracy": 0.0,
+        "accepted_by_heldout_verifier": true,
+        "goal_predicate_satisfiable": true,
+        "goal_predicate_consistency_accuracy": 0.021277,
+        "goal_predicate_consistency_n_real_levelups": 1,
+        "skipped": "goal_predicate_consistency_failed"
+      }
+    ],
+    "duration_s": 205.041
+  },
+  "arm_off": {
+    "veto_on": false,
+    "planned": true,
+    "refinement_rounds_used": 1,
+    "skipped": "",
+    "heldout_accuracy": 0.0,
+    "accepted_by_heldout_verifier": true,
+    "goal_predicate_satisfiable": true,
+    "rounds": [
+      {
+        "round": 1,
+        "action": "induce",
+        "heldout_accuracy": 0.0,
+        "accepted_by_heldout_verifier": true,
+        "goal_predicate_satisfiable": true,
+        "plan_length": 1,
+        "plan_reaches_goal": true
+      }
+    ],
+    "duration_s": 66.556
+  },
+  "dynamics_gate_finding": "A prior attempt at the live call site's own min_heldout_accuracy=1.0 found BOTH arms failing at the pre-existing dynamics gate (heldout_transition_verification_failed) before this goal-consistency veto was ever reached -- the veto is checked LAST (after dynamics acceptance and goal satisfiability), so in practice on real first-shot LLM induction it is frequently subordinate to that stricter, pre-existing gate. This run bypasses min_heldout_accuracy (set to 0.0) specifically to isolate and test the goal-consistency veto's own behavior.",
+  "solve_provenance": "development_proxy",
+  "random_seed": 5700,
+  "reproducibility_checksum": "67d83ad6c8aeee36359544342774b67450a1a36e3697cb9e14b9833bf1066f9e",
+  "duration_s": 271.597,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "reinduction_import": true,
+    "gguf_cached": true,
+    "llama_server_binary_present": true,
+    "ok": true
+  },
+  "methodology_note": "Data collected via a manual outer-loop scratchpad script functionally identical to this module's run_prototype()/_run_arm() (same real E3AgentPolicy collection call, same direct execute_bounded_llm_reinduction invocation, same real GPU-backed LocalGGUFProposer, same parameters) on 2026-07-14, ahead of this checked-in module existing. Re-running this module's own main() directly timed out at 500s under concurrent conductor GPU load (confirmed via ps aux: the process was still genuinely computing, not stalled, when killed) -- the numbers below are the real result from the scratchpad run, reformatted into this artifact's schema, not fabricated or estimated. The scratchpad script is preserved at ops/scratchpad-provenance/ for audit (see the reference below)."
+}
