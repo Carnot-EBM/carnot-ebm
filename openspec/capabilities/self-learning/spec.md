@@ -22519,3 +22519,88 @@ terminal verdict.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5571 | Planned (`python/carnot/experiment_5571_reset_free_sota_continual_harness.py`, `results/experiment_5571_reset_free_sota_continual_harness.json`) | Planned (`tests/python/test_experiment_5571_reset_free_sota_continual_harness.py`) |
+
+## REQ-LEARN-5618: Predictive-Window Active-Spline KAN Self-Learning Controller
+
+The self-learning tier SHALL provide Exp 5618, a causal predictive-window
+controller over the Exp 5616 exact nonstationary constraint stream and the Exp
+5617 active-spline KAN arms. The controller MUST freeze its held-out stream
+roster and controller feature contract before outcome metrics are loaded. The
+held-out stream roster is a preregistered receipt, not a learned selector. Its
+feature contract MAY use only past/current exact energies, residual classes,
+duration estimates, and update history; it MUST exclude future labels,
+held-out outcomes, and any external teacher. At each update opportunity, the
+controller SHALL choose one of `retain_exact_replay`,
+`loss_smoothed_adaptation`, `reset_adapt`, or `no_update` from causal evidence.
+Only active KAN spline state may mutate; LLM weights are absent and frozen.
+
+Exp 5618 SHALL compare the causal controller against every fixed Exp 5617
+non-oracle arm and a separately labeled future-aware oracle selector. It SHALL
+use at least five learner seeds and at least 32 replicated held-out streams per
+condition under matched update and exact-validation budgets. Poison,
+transient-drift, recurring-old-rule, and delayed-regression scenarios SHALL be
+represented. Poison updates MUST be rejected or rolled back, zero unsafe false
+accepts are allowed, an independent rollback positive control MUST pass, and a
+recurring valid old rule MUST be recovered. Active-component substitution,
+frozen-controller, shuffled-order, and no-update controls SHALL be included and
+receive no adaptive benefit credit.
+
+The terminal artifact MUST be written to
+`results/experiment_5618_predictive_window_kan_self_learning.json` and include
+the following top-level required fields with field principles:
+`field_principles`, `upstream_gate_receipt`,
+`controller_feature_contract`, `models_tested`, `seeds`,
+`instances_per_condition`, `ale_by_arm`, `delta_ale_vs_best_fixed`,
+`regret_to_oracle`, `valid_adaptation_latency`,
+`forward_transfer_delta`, `backward_retention_delta`,
+`forgetting_delta`, `unsafe_false_accept_count`,
+`poison_update_disposition`, `rollback_positive_control`,
+`delayed_regression_passed`, `lazy_identity_guard_passed`,
+`no_model_weight_mutation`, `continuous_self_learning_ready`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`exact_constraint_stream_active_spline_kan_no_llm`.
+
+`continuous_self_learning_ready` SHALL be true only when the causal controller
+beats the best fixed non-oracle arm on ALE, has positive backward-retention and
+forward-transfer deltas, non-positive forgetting delta, positive oracle regret
+with the oracle clearly labeled future-aware, zero unsafe false accepts,
+rejected-or-rolled-back poison, delayed-regression pass, rollback positive
+control pass, active-spline mutation guard pass, and no model-weight mutation.
+If any required benefit or safety gate fails, `honest_verdict` SHALL be a
+terminal `blocked:` verdict rather than a headline-ready claim.
+
+### SCENARIO-LEARN-5618-CAUSAL-CONTROLLER: Past-Only Window Decisions
+
+**Given** the Exp 5616 fixture and Exp 5617 fixed arms are available
+**When** Exp 5618 freezes its held-out roster and controller feature contract
+**Then** the feature contract SHALL mark future labels, held-out outcomes, and
+external teachers as excluded
+**And** it SHALL record "future labels, held-out outcomes, and external teachers as excluded" in one contiguous audit phrase
+**And** every controller decision ledger row SHALL record the chosen action and
+only past/current feature names.
+
+### SCENARIO-LEARN-5618-CONTROLS: Fixed Arms, Oracle, And Negative Controls
+
+**Given** every Exp 5617 fixed arm plus active-component substitution,
+frozen-controller, shuffled-order, no-update, and future-aware oracle controls
+**When** Exp 5618 evaluates matched seeds and held-out streams
+**Then** `ale_by_arm`, `delta_ale_vs_best_fixed`, and `regret_to_oracle` SHALL
+compare the causal controller to all fixed non-oracle arms while keeping the
+future-aware oracle out of the headline benefit claim.
+
+### SCENARIO-LEARN-5618-SAFETY: Poison, Rollback, And Delayed Regression Gates
+
+**Given** poison, transient drift, recurring old-rule, and delayed-regression
+scenarios are present in the matched stream roster
+**When** the controller proposes active-spline updates
+**Then** poison SHALL be rejected or rolled back, unsafe false accepts SHALL be
+zero, checkpoint replay SHALL match exact hashes, rollback positive control
+SHALL pass, delayed regression SHALL pass, and recurring valid old-rule
+recovery SHALL be recorded.
+
+## Implementation Status (Exp 5618)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5618 | Planned (`python/carnot/experiment_5618_predictive_window_kan_self_learning.py`, `results/experiment_5618_predictive_window_kan_self_learning.json`) | Planned (`tests/python/test_experiment_5618_predictive_window_kan_self_learning.py`) |
