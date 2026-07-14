@@ -3865,6 +3865,47 @@ Then `explorer.inert_click_pruner` is `None` (tracking
 behavior is unchanged until a matched-budget offline A/B validates flipping
 it on, per the `solve_rate_dropped` guardrail
 
+### REQ-ARC-FCP-5595-2: Matched-Budget A/B -- The Flip-Decision Measurement
+
+The `solve_rate_dropped` guardrail (REQ-ARC-FCP-5595-LIVE-WIRING-*'s own
+default-off framing) names a matched-budget offline A/B (states/actions-
+expanded reduction, zero regression in reproduced levels) as the precondition
+for ever flipping `SUBMITTED_INERT_CLICK_PRUNER_ENABLED` to `True`. This
+requirement runs that measurement, mirroring `HazardMovePruner`'s own tu93 A/B
+precedent exactly: `scripts/arc_loop_solve.solve_adaptered` (extended with a
+new `inert_click_prune: bool = False` parameter, composing
+`InertClickSigPruner` into the same `move_pruner` construction `hazard_prune`/
+`mask_prune` already use) SHALL be run twice at the SAME `--target-level` with
+`hazard_prune`/`mask_prune` held fixed at `False` in both arms, varying ONLY
+`inert_click_prune`, using the pruner's real, already-validated default
+parameters. `OfflineSolver.last_states_expanded` SHALL be the efficiency
+metric; `arc_solver_kit.reproduce` (the offline reproduction gate) SHALL be
+the correctness backstop for both arms -- a states_expanded reduction only
+counts as a genuine win if both arms reach the same target level and both
+pass `offline_reproduced=True`.
+
+Because `OfflineSolver`'s directed, verifier-guided search may never exercise
+repeated inert clicks the way broad live exploration does, this requirement
+ALSO runs an independent live-wired supplementary check: a real
+`E3AgentPolicy` construction with `inert_click_pruner=True` (matching
+exp5595's own real-game construction), reporting the pruner's own `stats()`
+after a real exploration run -- confirming (or refuting) engagement
+independent of the `OfflineSolver` harness.
+
+### SCENARIO-ARC-FCP-5595-2-MATCHED-BUDGET-AB: Honest Verdict Taxonomy
+
+Given the baseline (`inert_click_prune=False`) and treatment
+(`inert_click_prune=True`) `OfflineSolver` runs plus the live-wired
+supplementary check
+When both arms pass the reproduction gate and reach the same target level
+Then the verdict reports either a genuine `states_expanded` reduction (if
+either the offline treatment arm or the live-wired check actually pruned
+anything) or an honest no-op (if neither did) -- a zero-reduction result is
+valid and informative at the tested budget, not a failure requiring
+escalation; a failed reproduction gate or a lower reached level on the
+treatment arm is classified as a regression regardless of any states_expanded
+number, overriding the efficiency signal with the correctness backstop
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
