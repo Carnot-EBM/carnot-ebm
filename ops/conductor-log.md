@@ -11715,3 +11715,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 05:01 UTC | Spline-local KAN longitudinal exact-gated continuo | OK | 88 passed, 1 warning in 16.45s |
 | 2026-07-14 05:45 UTC | ARC inert-click and object-history filter matched- | OK | 154 passed, 1 warning in 19.78s |
 | 2026-07-14 06:06 UTC | ARC-AGI-3 unconditional rotated live-agent +1 repr | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-07-14 06:30 UTC | Continuous-intermediate discrete Langevin matched- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
