@@ -467,6 +467,111 @@ with `blocked:`.
 |---|---|---|
 | REQ-SAMPLE-5633 | Implemented (`python/carnot/experiment_5633_temperature_exchange_cdls_exact_audit.py`, `results/experiment_5633_temperature_exchange_cdls_exact_audit.json`) | Implemented (`tests/python/test_experiment_5633_temperature_exchange_cdls_exact_audit.py`) |
 
+### REQ-SAMPLE-5634: Paired Equal-Transition Temperature-Exchange cDLS Quality Trial
+
+Carnot MUST provide Exp 5634 at
+`python/carnot/experiment_5634_temperature_exchange_cdls_quality.py` and write
+`results/experiment_5634_temperature_exchange_cdls_quality.json` without
+modifying `scripts/research_conductor.py`. The experiment SHALL run only after
+Exp 5622 proves the corrected cDLS kernel exact and Exp 5633 proves the
+fixed-ladder temperature-label exchange kernel exact. Exp 5623 timing evidence
+SHALL NOT be imported as a speedup claim; wall time MAY be reported only as
+provenance.
+
+The trial SHALL preregister a frozen panel of frustrated Ising instances and
+exact-verifier CSP encodings with stated energy barriers or metastability,
+cover at least two size strata, use at least five paired seeds, and use a fixed
+total corrected-kernel transition budget before observing any treatment result.
+This SHALL be recorded as the fixed total corrected-kernel transition budget.
+The compared arms SHALL be `temperature_exchange_cdls`,
+`independent_corrected_cdls_replicas`, and `single_corrected_cold_chain`.
+Initialization, beta ladder where applicable, cold-target retained samples,
+corrected-kernel transition proposals, exact-validation calls, and stopping
+rules SHALL be matched by instance and seed. Exchange proposals MAY be counted
+separately, but they SHALL NOT replace the equal corrected-kernel transition
+budget.
+
+The artifact SHALL report round trips, accepted exchanges, barrier crossings,
+effective sample size, integrated autocorrelation, energy distribution
+diagnostics, best energy, mean energy, exact constraint satisfaction, solve
+probability, invalid rate, and paired confidence intervals by instance and size.
+It SHALL include a beta-ladder ablation, disabled-exchange control,
+label-shuffle diagnostic, transition-budget audit, seed-order permutation, and
+exact-verifier replay. Instances, seeds, burn-in, and endpoints SHALL remain
+fixed after preregistration.
+
+`quality_mixing_ready` SHALL equal true only when at least one preregistered
+quality or mixing endpoint improves for `temperature_exchange_cdls` versus both
+baselines with a paired interval excluding zero, no primary endpoint materially
+worsens, exact validity does not regress, and target diagnostics remain within
+Exp 5633 bounds. `hardware_speedup_claimed` SHALL be false, `timing_claimed`
+SHALL be false, and `inference_substrate` SHALL equal
+`paired_exact_corrected_cdls_replica_sampling`.
+`timing_claimed` SHALL be false.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `upstream_gate_receipts`, `instance_panel`,
+`paired_seed_schedule`, `transition_budget_receipt`, `method_arms`,
+`round_trip_stats`, `barrier_crossing_stats`, `ess_by_arm`,
+`autocorrelation_by_arm`, `energy_distribution_diagnostics`,
+`best_energy_by_arm`, `mean_energy_by_arm`, `solve_probability_by_arm`,
+`exact_valid_rate_by_arm`, `paired_deltas_and_intervals`,
+`wall_time_provenance_only`, `hardware_speedup_claimed`, `timing_claimed`,
+`quality_mixing_ready`, `inference_substrate`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every required artifact field exists before reviewer or conductor consumption."
+- `upstream_gate_receipts`: principle "Proves Exp5622 corrected-kernel exactness and Exp5633 exchange exactness are fixed prerequisites."
+- `instance_panel`: principle "Freezes the hard-instance difficulty scope before any arm result can select the panel."
+- `paired_seed_schedule`: principle "Matches every comparison by seed so deltas are paired rather than cherry-picked."
+- `transition_budget_receipt`: principle "Proves algorithmic work is equal under the fixed corrected-kernel transition budget."
+- `method_arms`: principle "Names the exchange treatment and both corrected-cDLS baselines explicitly."
+- `round_trip_stats`: principle "Measures whether temperature labels actually move through the ladder."
+- `barrier_crossing_stats`: principle "Measures the proposed mechanism directly on metastable basin changes."
+- `ess_by_arm`: principle "Quantifies usable cold-target sample count instead of raw sample volume."
+- `autocorrelation_by_arm`: principle "Quantifies serial dependence so mixing claims cannot hide slow chains."
+- `energy_distribution_diagnostics`: principle "Makes quality matching visible through comparable energy sufficient statistics."
+- `best_energy_by_arm`: principle "Reports optimization quality explicitly."
+- `mean_energy_by_arm`: principle "Reports target-quality central tendency explicitly."
+- `solve_probability_by_arm`: principle "Measures exact-constraint utility on CSP and Ising verifier targets."
+- `exact_valid_rate_by_arm`: principle "Prevents invalid samples from winning a quality gate."
+- `paired_deltas_and_intervals`: principle "Reports uncertainty from paired seeds by instance and size."
+- `wall_time_provenance_only`: principle "Records elapsed time only as provenance and blocks any speedup interpretation."
+- `hardware_speedup_claimed`: principle "Bare false keeps hardware and board timing scopes closed."
+- `timing_claimed`: principle "Bare false keeps Exp5623 timing mismatch from being laundered into this trial."
+- `quality_mixing_ready`: principle "Makes capstone promotion mechanical instead of manually declared."
+- `inference_substrate`: principle "Declares paired exact corrected cDLS replica sampling with no LLM inference."
+- `random_seeds`: principle "Records the paired seeds needed to replay the trial."
+- `reproducibility_checksum`: principle "Content-addresses the preregistered panel, seeds, budget, controls, and summaries."
+- `honest_verdict`: principle "States whether the repeated quality/mixing mismatch retires the hybrid."
+
+### SCENARIO-SAMPLE-5634: Temperature-Exchange Quality Trial Emits Paired Evidence
+
+**Given** Exp 5622 and Exp 5633 exactness gates are ready
+**When** Exp 5634 runs on the frozen hard-instance panel
+**Then** it compares temperature exchange, independent corrected replicas, and
+a corrected cold chain under matched paired seeds and equal corrected-kernel
+transition budgets, writes
+`results/experiment_5634_temperature_exchange_cdls_quality.json`, reports the
+required quality, mixing, validity, control, and uncertainty fields, and sets
+`quality_mixing_ready=true` only by the mechanical promotion gate.
+
+**If** upstream exactness gates fail, budgets are unequal, controls fail, exact
+validity regresses, or no preregistered endpoint improves with an interval
+excluding zero
+**Then** Exp 5634 SHALL still emit the same result path with
+`quality_mixing_ready=false`, `hardware_speedup_claimed=false`,
+`timing_claimed=false`, and an `honest_verdict` starting with `blocked:` or
+`complete:` as appropriate for terminal evidence.
+
+## Implementation Status (REQ-SAMPLE-5634)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5634 | Planned (`python/carnot/experiment_5634_temperature_exchange_cdls_quality.py`, `results/experiment_5634_temperature_exchange_cdls_quality.json`) | Planned (`tests/python/test_experiment_5634_temperature_exchange_cdls_quality.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
