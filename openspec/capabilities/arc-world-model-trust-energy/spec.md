@@ -15091,3 +15091,89 @@ When the planner builds and evaluates hypotheses
 Then no-object traces fail closed, uninformative probes receive no positive delta, object
 permutation leaves compatible weights invariant, and corrupted or hallucinated hypotheses are not
 accepted.
+
+### REQ-ARC-WMTE-5641: Counterexample-Patched Executable Transition Hypothesis
+
+The ARC live-agent development proxy SHALL expose a deterministic executable transition-hypothesis
+patcher over already reproduced public-level receipts. The patcher SHALL consume only
+agent-owned before/action/data/successor/reward/terminal observations after a registry precheck and
+after recording source-access guards. It SHALL NOT read game source, call a per-game adapter, run
+offline ground-truth BFS, use an LLM, claim a new solve, or encode game names, absolute
+coordinates, level constants, or hand adapters inside the hypothesis language.
+
+The hypothesis language SHALL be inspectable and typed. It SHALL allow only agent-visible object
+identity/hash, object topology/location relation, action id, changed-object attributes, reward,
+terminal event, and explicit abstention. It SHALL represent executable clauses as generic
+antecedent/consequent records, not Python source generated from game-specific examples.
+
+The patcher SHALL apply bounded deterministic patch operators: add, specialize, relax, and retire.
+Each operator SHALL run only after an observed transition falsifies the current executable model.
+Before a patch is accepted, the candidate patched model SHALL replay against every accumulated
+receipt; candidates that create wrong replay predictions, unsupported-object acceptance, or
+contradictory active clauses SHALL be rejected fail-closed. Accepted patches SHALL remain
+auditable as counterexample-triggered receipts.
+
+Experiment 5641 SHALL write
+`results/experiment_5641_arc_counterexample_executable_model.json` over already reproduced
+development levels only. It SHALL evaluate chronological next-effect prediction and calibrated
+abstention against last-transition, frequency-table, unpatched, and oracle-free generic controls.
+It SHALL include corrupted-transition, label-order, contradictory-patch, unsupported-object,
+irrelevant-question, and informative-mechanism-question controls. The artifact SHALL include
+`field_principles`, `registry_precheck_receipt`, `evaluation_levels`,
+`solve_provenance="development_proxy"`, `agent_owned_evidence_only=true`, `source_read=false`,
+`game_adapter_used=false`, `offline_ground_truth_bfs_used=false`, `model_specs=[]`,
+`hypothesis_language`, `patch_operator_set`, `counterexample_count`, `accepted_patch_count`,
+`rejected_patch_count`, `all_receipt_replay_pass`, `heldout_transition_error_by_arm`,
+`abstention_calibration`, `mechanism_question_controls`, `unsafe_patch_accept_count`,
+`executable_model_ready_score`,
+`inference_substrate="deterministic_counterexample_patched_executable_model"`, `random_seeds`,
+`reproducibility_checksum`, and a terminal `honest_verdict` starting with `complete:` or
+`blocked:`. The ready score SHALL be `1.0` only when accepted patches reduce held-out transition
+error or improve calibrated abstention with an interval excluding zero, all-receipt replay passes,
+informative controls exceed irrelevant controls, unsupported cases abstain, and
+`unsafe_patch_accept_count=0`; otherwise the honest verdict SHALL retire or block the mechanism.
+
+Required field principles:
+
+- `registry_precheck_receipt`: principle "development levels are already reproduced; no solve credit is claimed."
+- `evaluation_levels`: principle "the development scope is fixed before trace loading."
+- `solve_provenance`: principle "development_proxy -- the artifact evaluates a known-level method, not a level solve."
+- `agent_owned_evidence_only`: principle "evidence provenance is credited to live-agent receipts only."
+- `source_read`: principle "false excludes game source from the hypothesis and evaluation path."
+- `game_adapter_used`: principle "false excludes per-game transition models."
+- `offline_ground_truth_bfs_used`: principle "false excludes outer-loop exhaustive search labels."
+- `model_specs`: principle "empty list because no LLM participates."
+- `hypothesis_language`: principle "typed executable state is inspectable and excludes game constants."
+- `patch_operator_set`: principle "revision is bounded to add, specialize, relax, and retire."
+- `counterexample_count`: principle "every revision has falsifying transition evidence."
+- `accepted_patch_count`: principle "successful revisions are auditable."
+- `rejected_patch_count`: principle "fail-closed behavior is visible."
+- `all_receipt_replay_pass`: principle "accepted theory has no wrong prediction on accumulated receipts."
+- `heldout_transition_error_by_arm`: principle "utility is measured against generic controls."
+- `abstention_calibration`: principle "unsupported cases are bounded and reported."
+- `mechanism_question_controls`: principle "adaptive questions are auditable tests only."
+- `unsafe_patch_accept_count`: principle "contradictions cannot publish as accepted patches."
+- `executable_model_ready_score`: principle "downstream gating is scalar and mechanical."
+- `inference_substrate`: principle "deterministic_counterexample_patched_executable_model -- no LLM or source participated."
+- `random_seeds`: principle "development proxy replays deterministically."
+- `reproducibility_checksum`: principle "development proxy inputs and decisions are content-addressed."
+- `honest_verdict`: principle "terminal prefix records complete or blocked status; nulls retire the mechanism."
+
+#### SCENARIO-ARC-WMTE-5641-COUNTEREXAMPLE-PATCH-REPLAY
+
+Given agent-owned receipts from already reproduced levels and an executable model that abstains or
+predicts the wrong next effect
+When a transition falsifies the current model
+Then a bounded add, specialize, relax, or retire patch is proposed, accepted only if every
+accumulated receipt replays without a wrong prediction, and rejected if it introduces an active
+contradiction.
+
+#### SCENARIO-ARC-WMTE-5641-CONTROLS-AND-ABSTENTION
+
+Given held-out chronological receipts, corrupted transitions, label-order permutations,
+unsupported objects, contradictory patch candidates, irrelevant mechanism questions, and
+informative mechanism questions
+When Exp5641 evaluates the patched executable model
+Then patched next-effect error and abstention calibration are reported against last-transition,
+frequency-table, unpatched, and oracle-free controls, unsupported cases abstain, informative
+questions score above irrelevant controls, and unsafe patch accept count remains zero.
