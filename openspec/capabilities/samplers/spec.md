@@ -682,6 +682,127 @@ broken-control gate fails
 |---|---|---|
 | REQ-SAMPLE-5644 | Planned (`python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py`, `results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`) | Planned (`tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py`) |
 
+### REQ-SAMPLE-5645: Two-Axis Tempering Hard-Constraint Quality Trial
+
+Carnot MUST provide Exp 5645 at
+`python/carnot/experiment_5645_two_axis_tempering_hard_constraint_quality.py`
+and write
+`results/experiment_5645_two_axis_tempering_hard_constraint_quality.json`
+without modifying `scripts/research_conductor.py`. The trial SHALL run only
+after Exp 5644 proves the exact two-axis invariant, Exp 5634 promotes the
+one-axis temperature-exchange quality gate, and Exp 5622 proves the corrected
+cDLS kernel exact. The experiment is a matched quality and feasibility trial,
+not a speed benchmark; `timing_claimed` SHALL be false,
+`hardware_speedup_claimed` SHALL be false, and `inference_substrate` SHALL
+equal `cpu_two_axis_corrected_cdls_replica_exchange`.
+
+Before execution, Exp 5645 SHALL preregister at least two constrained
+Ising/CSP families, immutable instance hashes, sizes, exact violation
+penalty definitions, beta and penalty ladders, burn-in, sampling schedule,
+total corrected-kernel transition budget, at least five paired seeds, and
+promotion thresholds. The three primary arms SHALL be
+`two_axis_tempering`, `one_axis_temperature_exchange`, and
+`independent_corrected_cdls`. The total within-replica corrected-kernel
+proposal budget SHALL match by arm, instance, and seed; swap proposals MAY be
+reported separately but SHALL NOT replace within-kernel work. Outcome-driven
+tuning after inspecting test outcomes SHALL be excluded by the preregistered
+protocol.
+
+The artifact SHALL report exact constraint-validity checks, feasible-hit rate,
+violation magnitude, time-to-first-feasible in corrected-kernel transition
+counts, best and mean feasible energy, temperature and penalty round trips,
+barrier crossings, effective sample size, integrated autocorrelation,
+energy/violation distributions, solve probability, and paired bootstrap or
+randomization intervals. It SHALL include disabled-penalty-swap,
+collapsed-ladder, shuffled-label, fixed-weak-penalty, fixed-strong-penalty,
+and invalid-state controls. Zero-solve instances SHALL be separated from
+invalid execution and all denominators SHALL be published through
+`successful_seed_count` and `failed_seed_reasons`.
+
+`two_axis_quality_ready_score` SHALL equal exactly `1.0` only when the
+two-axis arm improves a preregistered feasibility or mixing primary metric
+over one-axis exchange with an interval excluding zero, exact validity does
+not materially regress, target diagnostics and feasible energy do not regress,
+all required seeds and families succeed, controls pass, transition budgets
+match, upstream exactness eligibility is explicit, and no timing or hardware
+claim is made. If any gate fails, Exp 5645 SHALL still emit the same result
+path with terminal evidence and an `honest_verdict` starting with `complete:`
+or `blocked:`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `upstream_gate_receipts`, `preregistered_protocol`,
+`instance_manifest`, `instance_hashes`, `sampler_configs`,
+`transition_budget_parity`, `successful_seed_count`, `failed_seed_reasons`,
+`constraint_validity_by_arm`, `feasible_hit_rate_by_arm`,
+`violation_distribution_by_arm`, `first_feasible_transition_by_arm`,
+`temperature_round_trips`, `penalty_round_trips`, `barrier_crossings_by_arm`,
+`ess_by_arm`, `autocorrelation_by_arm`, `feasible_energy_by_arm`,
+`solve_probability_by_arm`, `paired_intervals`,
+`material_quality_regression_count`, `timing_claimed`,
+`hardware_speedup_claimed`, `two_axis_quality_ready_score`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every required quality field exists before the artifact can promote a two-axis sampler."
+- `upstream_gate_receipts`: principle "Makes exactness eligibility explicit by pinning Exp5622, Exp5634, and Exp5644 readiness before quality evidence is interpreted."
+- `preregistered_protocol`: principle "Freezes families, ladders, schedules, budgets, seeds, metrics, controls, and promotion thresholds before outcomes are inspected."
+- `instance_manifest`: principle "Publishes the immutable constrained workloads, sizes, families, and exact penalty definitions used by every arm."
+- `instance_hashes`: principle "Content-addresses each workload so later reruns cannot silently change the hard-instance panel."
+- `sampler_configs`: principle "Makes every arm reconstructable, including fixed ladders, swaps, burn-in, sampling, and corrected-kernel settings."
+- `transition_budget_parity`: principle "Proves within-replica corrected-kernel proposals are matched while swap work is accounted for separately."
+- `successful_seed_count`: principle "Publishes the denominator of paired seeds that produced valid execution rows."
+- `failed_seed_reasons`: principle "Separates zero solves from invalid execution instead of hiding failed rows."
+- `constraint_validity_by_arm`: principle "Treats exact feasibility checks as authoritative for constrained quality."
+- `feasible_hit_rate_by_arm`: principle "Uses constraint feasibility as the primary utility metric for hard constrained instances."
+- `violation_distribution_by_arm`: principle "Keeps near-feasible violations visible instead of compressing them to pass/fail."
+- `first_feasible_transition_by_arm`: principle "Measures discovery cost in transition counts and avoids wall-time laundering."
+- `temperature_round_trips`: principle "Shows whether the temperature axis actually mixes through its ladder."
+- `penalty_round_trips`: principle "Shows whether the constraint-penalty axis actually mixes through its ladder."
+- `barrier_crossings_by_arm`: principle "Measures metastable basin movement as the proposed mechanism rather than inferring it from final energy."
+- `ess_by_arm`: principle "Reports usable sample count for the retained cold constrained target."
+- `autocorrelation_by_arm`: principle "Reports serial dependence so mixing gains are explicit."
+- `feasible_energy_by_arm`: principle "Checks that feasibility gains do not degrade feasible optimization quality."
+- `solve_probability_by_arm`: principle "Bounds success probability over paired hard instances and seeds."
+- `paired_intervals`: principle "Reports uncertainty for preregistered two-axis versus baseline comparisons."
+- `material_quality_regression_count`: principle "Requires zero material validity, diagnostic, or feasible-energy regressions before promotion."
+- `timing_claimed`: principle "Bare false keeps the trial scoped to quality rather than speed."
+- `hardware_speedup_claimed`: principle "Bare false prevents CPU evidence from becoming a board or hardware claim."
+- `two_axis_quality_ready_score`: principle "Provides a scalar downstream gate that is 1.0 only under the preregistered quality promotion rule."
+- `inference_substrate`: principle "Declares CPU corrected-cDLS two-axis replica exchange with no LLM or board participation."
+- `random_seeds`: principle "Records paired seeds for replay."
+- `reproducibility_checksum`: principle "Content-addresses the full trial payload after the self-checksum field is blanked."
+- `honest_verdict`: principle "Starts complete: or blocked: and a null verdict retires the extension."
+
+### SCENARIO-SAMPLE-5645: Two-Axis Hard-Constraint Quality Artifact
+
+**Given** Exp 5622 corrected-kernel exactness, Exp 5634 one-axis quality
+promotion, and Exp 5644 exact two-axis eligibility are ready
+**When** Exp 5645 runs the preregistered hard constrained-instance panel
+**Then** it compares two-axis tempering, one-axis exchange, and independent
+corrected cDLS under matched corrected-kernel transition budgets, records the
+required feasibility, violation, transition-to-feasible, round-trip, barrier,
+ESS, autocorrelation, feasible-energy, solve-probability, control, and
+uncertainty fields, writes
+`results/experiment_5645_two_axis_tempering_hard_constraint_quality.json`,
+and sets `two_axis_quality_ready_score=1.0` only by the mechanical promotion
+gate.
+
+**If** upstream exactness eligibility, budget parity, controls, exact validity,
+target diagnostics, feasible energy, seeds/families, or preregistered
+interval-improvement gates fail
+**Then** Exp 5645 SHALL still emit terminal evidence with
+`timing_claimed=false`, `hardware_speedup_claimed=false`,
+`two_axis_quality_ready_score=0.0`, and an `honest_verdict` starting with
+`complete:` or `blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5645)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5645 | Implemented (`python/carnot/experiment_5645_two_axis_tempering_hard_constraint_quality.py`, `results/experiment_5645_two_axis_tempering_hard_constraint_quality.json`) | Implemented (`tests/python/test_experiment_5645_two_axis_tempering_hard_constraint_quality.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
