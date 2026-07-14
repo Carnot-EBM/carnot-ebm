@@ -1,0 +1,92 @@
+{
+  "cached_rows_audited": 648,
+  "cached_sample_audit": {
+    "block_reason": "exp5567_artifact_preserves_hashes_not_raw_response_text",
+    "hand_checked_samples_per_model_family": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0
+    },
+    "raw_samples_available": false,
+    "required_samples_per_model_family": 30
+  },
+  "experiment": 5580,
+  "experiment_id": "exp5580-parser-forensics-positive-control",
+  "failure_taxonomy": {
+    "fenced_json": 0,
+    "field_alias": 0,
+    "numeric_list_shape": 0,
+    "other": 180,
+    "semantic_invalidity": 0,
+    "truncation": 468,
+    "wrapper_text": 0
+  },
+  "failure_taxonomy_notes": {
+    "other": "Non-empty Exp5567 response bodies are not preserved in the checked-in artifact, so wrapper/fence/alias/list causes cannot be claimed from hashes alone.",
+    "truncation": "Lower bound from response hashes equal to the SHA-256 digest of empty text; Qwen is entirely empty and Gemma batches 02-03 are empty."
+  },
+  "field_principles": {
+    "cached_rows_audited": "Diagnosis covers the failed denominator.",
+    "failure_taxonomy": "Fixes target observed causes.",
+    "field_principles": "Keeps every required field annotated by its evidence boundary.",
+    "honest_verdict": "Terminal status names readiness or block.",
+    "inference_substrate": "No new model evidence is claimed.",
+    "parsed_positive_control_rate": "A parser needs known-valid recall.",
+    "parser_repair_ready": "Downstream inference runs only after controlled readiness.",
+    "parser_stage_counts": "Permissive fallbacks stay visible.",
+    "per_model_cached_parse_rate": "One family cannot mask another.",
+    "semantic_false_accept_count": "Syntax repair cannot invent correctness.",
+    "tests_run": "Behavior is reproducible."
+  },
+  "honest_verdict": "blocked_cached_raw_responses_unavailable_hash_only_forensics",
+  "inference_substrate": "cached_exp5567_responses_no_llm",
+  "llm_invoked": false,
+  "milestone": "2026.07.505",
+  "parsed_positive_control_rate": 1.0,
+  "parser_repair_ready": false,
+  "parser_stage_counts": {
+    "field_alias": 2,
+    "numeric_list_shape": 2,
+    "strict_schema": 3,
+    "wrapper_text": 1
+  },
+  "per_model_cached_parse_rate": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "candidate_denominator": 324,
+      "candidate_failures": 324,
+      "original_parse_rate": 0.0,
+      "raw_response_text_available": false,
+      "repaired_parse_rate": null
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "candidate_denominator": 324,
+      "candidate_failures": 324,
+      "original_parse_rate": 0.0,
+      "raw_response_text_available": false,
+      "repaired_parse_rate": null
+    }
+  },
+  "positive_control_summary": {
+    "negative_total": 6,
+    "positive_passes": 8,
+    "positive_total": 8
+  },
+  "random_seed": 5580,
+  "raw_response_text_available": false,
+  "reproducibility_checksum": "323c4bab4532da43625377e2403cc334d1f7a79a1ab768430b9be17c16d60982",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5580_parser_forensics_positive_control.json",
+  "run_date": "2026-07-14",
+  "schema": "carnot.experiment_5580.parser_forensics_positive_control.v505",
+  "semantic_false_accept_count": 0,
+  "spec_refs": [
+    "REQ-VERIFY-5580",
+    "SCENARIO-VERIFY-5580",
+    "REQ-VERIFY-5567"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest -n0 --no-cov tests/python/test_experiment_5580_parser_forensics_positive_control.py -q",
+      "outcome": "passed"
+    }
+  ]
+}

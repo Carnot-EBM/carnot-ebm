@@ -42,6 +42,7 @@ from carnot.agentic.arc_program_synthesis_filter import (
     coerce_program_synthesis_filter,
     induce_action_effect_proposal_filter,
 )
+from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
     GroundTruthValidatedFrameChangeScorer,
@@ -122,6 +123,13 @@ SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED = False
 SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE = (
     "frequency_prior_from_cross_game_first_contact_traces"
 )
+# Task 9 follow-on (2026-07-13): InertClickSigPruner is wired (rank_candidates filter + a real
+# observe() hook from _ingest's per-transition OBSERVE site) but OFF by default, matching every
+# other freshly-wired-but-unvalidated component in this file. Flipping this for the SCORED agent
+# needs its own matched-budget offline A/B (states/actions-expanded reduction, zero regression in
+# reproduced levels) per the solve_rate_dropped guardrail -- not assumed safe just because it's
+# reachable. See python/carnot/agentic/arc_inert_click_pruner.py module docstring.
+SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
 # IGE-style LLM-guided cell selection on top of the Go-Explore archive (Intelligent Go-Explore,
@@ -547,6 +555,7 @@ class StepwiseExplorer:
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
         object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
         program_synthesis_filter: Any | None = None,
+        inert_click_pruner: Any | bool | None = SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
         amortized_first_contact_prior: Any | bool | None = (
             SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
         ),
@@ -708,6 +717,7 @@ class StepwiseExplorer:
             object_centric_proposal
         )
         self.program_synthesis_filter = coerce_program_synthesis_filter(program_synthesis_filter)
+        self.inert_click_pruner = coerce_inert_click_pruner(inert_click_pruner)
         self.amortized_first_contact_prior = coerce_amortized_first_contact_prior(
             amortized_first_contact_prior
         )
@@ -1222,6 +1232,11 @@ class StepwiseExplorer:
             )
         if self.program_synthesis_filter is not None:
             rows = self.program_synthesis_filter.rank_candidates(frame, rows)
+        if self.inert_click_pruner is not None and rows:
+            try:
+                rows = self.inert_click_pruner.rank_candidates(frame, rows)
+            except Exception:
+                pass
         if self.goal_candidate_guidance is not None and rows:
             try:
                 rows = self.goal_candidate_guidance.rank_candidates(frame, rows)
@@ -1485,6 +1500,23 @@ class StepwiseExplorer:
                         int(o["action"]),
                         o.get("data"),
                         latest,
+                    )
+                except Exception:
+                    pass
+            # Task 9 follow-on (2026-07-13): feed InertClickSigPruner the same realized
+            # (before, label, after, leveled_up) transition every sibling online-learning
+            # component above gets, so its tally actually accumulates from the search's own
+            # live clicks (matching HazardMovePruner's own online-observation discipline) --
+            # without this, rank_candidates would be wired but permanently a no-op (every
+            # signature stays "unproven" forever).
+            inert_click_pruner = getattr(self, "inert_click_pruner", None)
+            if inert_click_pruner is not None and o.get("previous_frame") is not None:
+                try:
+                    inert_click_pruner.observe(
+                        o.get("previous_frame") or o.get("grid"),
+                        {"action": int(o["action"]), "data": o.get("data")},
+                        latest,
+                        leveled_up=bool(level_increased),
                     )
                 except Exception:
                     pass
@@ -2426,6 +2458,7 @@ class E3AgentPolicy:
         program_synthesis_filter_trust_threshold: float = (
             SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
         ),
+        inert_click_pruner: Any | bool | None = SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
         amortized_first_contact_prior: Any | bool | None = (
             SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
         ),
@@ -2537,6 +2570,7 @@ class E3AgentPolicy:
             controllable_novelty=controllable_novelty,
             object_centric_proposal=object_centric_proposal,
             program_synthesis_filter=initial_program_filter,
+            inert_click_pruner=inert_click_pruner,
             amortized_first_contact_prior=amortized_first_contact_prior,
             go_explore_archive=go_explore_archive,
             similarity_retrieval=similarity_retrieval,

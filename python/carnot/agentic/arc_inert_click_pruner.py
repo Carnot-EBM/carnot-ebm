@@ -52,13 +52,23 @@ A SEPARATE ``rank_candidates(frame, rows) -> rows`` method implements the identi
 logic in the filter-protocol shape ``StepwiseExplorer._candidates``
 (``arc_competition_agent.py``) already composes with (matching
 ``program_synthesis_filter``/``goal_candidate_guidance``'s ``rank_candidates`` contract) --
-DROPPING click rows whose signature is confidently inert. This method is tested and ready
-but NOT YET wired into ``StepwiseExplorer._candidates``'s live composition chain: connecting
-it is a distinct, separately-scoped live-path change (a new constructor param + a call site
-in the SCORED agent's candidate pipeline), consistent with how the color-blob salience
-front-end (REQ-ARC-FCP-5591) was left additive-only pending its own live-wiring decision
-(``ops/known-issues.md`` task #97, still open). Building it here means the moment an
-operator/future task decides to wire it in, the filter itself needs no further design work.
+DROPPING click rows whose signature is confidently inert.
+
+WIRED 2026-07-13 (task 9 follow-on). ``coerce_inert_click_pruner`` (below) plugs an
+``InertClickSigPruner`` into ``StepwiseExplorer`` (constructor param + a ``rank_candidates``
+call inside ``_candidates``, alongside ``program_synthesis_filter``/``goal_candidate_guidance``)
+and into ``E3AgentPolicy`` (same param, threaded through). The pruner also gets a real
+``observe()`` call from ``_ingest``'s existing per-transition OBSERVE hook (the same site that
+feeds ``dense_curiosity``/``controllable_novelty_policy``/``object_centric_proposal_policy``),
+so it accumulates evidence from the search's OWN live clicks, exactly like its sibling
+``HazardMovePruner``. Gated OFF by default
+(``SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False`` in ``arc_competition_agent.py``), matching
+every other freshly-wired-but-unvalidated component in that file (``program_synthesis_filter``,
+``object_centric_proposal``, ``amortized_first_contact_prior``, etc.) -- per the
+``solve_rate_dropped`` guardrail (``docs/research-notes/trm-generator-hidden-game-plan-2026-07-04.md``
+Stage 4), flipping the default to ``True`` for the SCORED agent needs its own matched-budget
+offline A/B (states/actions-expanded reduction, zero regression in reproduced levels) before
+being enabled, mirroring how ``HazardMovePruner``'s own tu93 A/B was measured before trust.
 """
 
 from __future__ import annotations
@@ -262,3 +272,20 @@ class InertClickSigPruner:
             "min_specificity": self.min_specificity,
             "verifier_is_oracle": False,
         }
+
+
+def coerce_inert_click_pruner(value: Any) -> Optional[InertClickSigPruner]:
+    """``StepwiseExplorer``/``E3AgentPolicy`` constructor coercion, matching
+    ``coerce_program_synthesis_filter``/``coerce_amortized_first_contact_prior``'s shape:
+    ``None``/``False`` -> no pruner; an already-constructed instance -> passthrough;
+    ``True`` -> build the default instance with the standard live ``grid_of``."""
+
+    if value is None or value is False:
+        return None
+    if isinstance(value, InertClickSigPruner):
+        return value
+    if value is True:
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        return InertClickSigPruner(grid_of)
+    return None
