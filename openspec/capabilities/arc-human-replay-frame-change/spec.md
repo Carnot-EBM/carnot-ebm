@@ -4040,6 +4040,89 @@ escalation; a failed reproduction gate or a lower reached level on the
 treatment arm is classified as a regression regardless of any states_expanded
 number, overriding the efficiency signal with the correctness backstop
 
+### REQ-ARC-FCP-5609: Reachability-Controlled ARC Filter Intermediate-Invariance A/B
+
+Experiment 5609 SHALL write
+`results/experiment_5609_arc_filter_intermediate_invariance_ab.json` as the
+decision-grade matched-budget A/B for the already-wired inert-click filter
+(REQ-ARC-FCP-5595) and object-history salience filter (REQ-ARC-FCP-5591-2).
+The experiment SHALL run a registry-prechecked roster of at least three
+click/change-diverse games, excluding duplicate solve targets, without reading
+game source, running exhaustive offline BFS, creating a per-game adapter, or
+claiming a new solve. The measurement substrate is the existing offline
+arcade live-agent runtime with no new LLM calls:
+`inference_substrate=offline_arcade_live_agent_runtime_filters_no_new_llm`.
+
+Before the outcome A/B, the experiment SHALL run fixed, non-source-aware
+runtime reachability controls. The inert-click control SHALL demonstrate at
+least one click signature clearing the shipped evidence floor
+(`min_observations=4`, `min_specificity=0.9`). The object-history control
+SHALL demonstrate at least one same-base candidate pair whose ordering changes
+only after object-history evidence is observed. If either control is null, the
+artifact SHALL report that mechanism as unreachable and SHALL NOT tune
+thresholds on outcome data.
+
+The outcome A/B SHALL run baseline, inert-only, history-only, and combined
+arms on identical games, seeds, action budgets, proposer availability, target
+levels, and stopping rules while keeping the frozen live generator unchanged.
+Each arm SHALL report proposed candidates, pruned/reranked candidates,
+environment actions, distinct states, nodes expanded, level gains,
+actions-to-level, wall time, and exact offline reproduction receipts.
+Candidate-count reduction alone SHALL NOT promote a mechanism.
+
+Promotion SHALL require same-or-better reproduced level in every treatment, no
+safety regression, and a preregistered improvement in at least one downstream
+intermediate with paired uncertainty. If a reachable mechanism again produces
+the same no-op on downstream live-path work, the artifact SHALL retire that
+mechanism separately rather than aggregate it into a combined verdict.
+
+Required field principles:
+
+- `field_principles`: principle "principle annotations are carried in the artifact so the verifier can audit why every required 5609 field exists."
+- `registry_precheck`: principle "duplicate solve targets are excluded and roster selection is auditable from registry/public environment metadata, not from game source."
+- `roster`: principle "scope is auditable; at least three click/change-diverse games are measured under identical arms."
+- `mechanism_reachability_controls`: principle "a null is interpretable because each mechanism first proves its own shipped hook can fire on runtime frames."
+- `arm_configs`: principle "variables are isolated: only inert_click_pruner and object_history_salience vary across the four arms."
+- `matched_budget_receipt`: principle "comparisons are fair: games, seeds, action budgets, proposer availability, target levels, and stopping rules are identical."
+- `candidate_counts_by_arm`: principle "direct filter action is visible before downstream metrics are interpreted."
+- `environment_actions_by_arm`: principle "filters must affect the live path, not only an internal candidate list."
+- `distinct_states_by_arm`: principle "cosmetic candidate collapse is separated from real state-space change."
+- `nodes_expanded_by_arm`: principle "search work is measured independently of candidate counts."
+- `levels_gained_by_arm`: principle "the north-star outcome remains visible even though this is a development proxy."
+- `wall_time_by_arm`: principle "runtime overhead cannot be hidden by reporting only search counts."
+- `paired_effects_and_intervals`: principle "uncertainty controls promotion; no single aggregate delta can promote a filter."
+- `filter_promotion_decisions`: principle "each mechanism is decided separately so a combined arm cannot hide one mechanism's repeat no-op."
+- `solve_provenance`: principle "development_proxy -- public-game measurement receives no new-level credit."
+- `offline_reproduced`: principle "known-level safety is exact and never inferred from level counters alone."
+- `inference_substrate`: principle "offline_arcade_live_agent_runtime_filters_no_new_llm -- current reachable code is measured with no new LLM calls."
+- `honest_verdict`: principle "repeat reachable no-op retires the corresponding mechanism instead of re-running unconstrained prototypes."
+
+#### SCENARIO-ARC-FCP-5609-REACHABILITY-GATES-BLOCK-OUTCOME-TUNING
+
+Given the fixed inert-click and object-history runtime reachability controls
+When either control fails to demonstrate its required shipped mechanism signal
+Then the artifact reports the failed mechanism as unreachable, does not tune
+thresholds on outcome data, and records `filter_promotion_decisions` as
+blocked/retired for that mechanism instead of promoting from candidate-count
+movement alone.
+
+#### SCENARIO-ARC-FCP-5609-MATCHED-BUDGET-ARM-ISOLATION
+
+Given the baseline, inert-only, history-only, and combined arms
+When the A/B runner builds `arm_configs` and `matched_budget_receipt`
+Then every arm uses the same roster, seeds, action budget, target levels,
+proposer availability, and stopping rule, and differs only in
+`inert_click_pruner` and `object_history_salience`.
+
+#### SCENARIO-ARC-FCP-5609-DOWNSTREAM-PROMOTION-GATE
+
+Given paired per-game metrics for a reachable mechanism
+When candidate counts improve but environment actions, distinct states, nodes
+expanded, levels gained, and offline reproduction safety do not improve
+Then the mechanism is not promoted; if this repeats the prior no-op after a
+reachable control, the artifact retires that mechanism with an honest terminal
+verdict.
+
 ### REQ-ARC-FCP-5699: SGE Anti-Stagnation Controller -- Genuine Live Collapse-Escape Re-Test
 
 `ops/known-issues.md` task 6's own "NEXT STEP" named the fix: detect repeated
@@ -4088,6 +4171,80 @@ no-collapse observation on the secondary frontier pass (e.g. because the
 perception layer yields empty candidate lists at a deep, already-explored
 frontier) is reported as an honest, separately-flagged null, not silently
 folded into the headline collapse-escape claim
+
+### REQ-ARC-FCP-5699-2: Forced-Portfolio Rotation -- Closing the Partial-Escape Gap
+
+REQ-ARC-FCP-5699's own RESOLUTION disclosed a limitation, not hidden: the forced
+diverse portfolio genuinely escapes the LLM's repeated strategy TEXT, but
+`rank_forced_portfolio`'s `ranked_pool` sort was fully deterministic given an unchanging
+candidate list -- on a frozen game state, THREE of the five forced-portfolio categories
+(`observation`, `action_type_probe`, `recovery_reset`) intentionally tolerate a past
+OUTCOME failure (`allow_failed_signature=True`, a deliberate design choice) but nothing
+prevented them from re-selecting the exact same top-ranked candidate every subsequent
+call. A real 90-budget live run on g50t measured the IDENTICAL 5-candidate
+`forced_portfolio_selected` set on every one of 44 consecutive forced-portfolio calls
+(steps 47-90) -- a genuine escape from the LLM's own repetition, immediately followed by
+a NEW static repetition of the controller's own making.
+
+`AntiStagnationDiversityController` SHALL track `_recently_forced_signatures(history,
+window=5)` -- every candidate signature ANY forced-portfolio category selected in the
+last `window` forced-portfolio history rows, regardless of recorded outcome (a
+forced-portfolio row is appended with `outcome="pending"` and typically never gets a
+real outcome before the NEXT call, one step later, so outcome-gating alone cannot drive
+this). `rank_forced_portfolio`'s `add_from_pool` SHALL make two passes per category: pass
+1 excludes candidates whose signature is in `_recently_forced_signatures` (rotate to the
+next-best candidate in that category's ranked pool); pass 2, entered only when pass 1
+finds nothing in an otherwise non-empty pool, re-selects without that exclusion (the
+category-fill guarantee is not weakened -- a category with a truly-exhausted pool still
+gets filled, it simply can no longer avoid repeating). The router's own history-append
+SHALL record a NEW `forced_signatures` list field (every category's picks for that call,
+not just the first/observation one, which is all the pre-existing singular
+`chosen_signature` field ever captured) so the rotation tracker can see the FULL set of
+recently-forced candidates across all categories, not only the one the pre-existing field
+happened to record.
+
+**RESOLUTION (2026-07-14).** Verified two ways, deliberately not conflated:
+
+1. **Unit-level, mechanism correctness.** `test_anti_stagnation_forced_portfolio_rotates_across_repeated_calls`
+   uses a realistically-sized pool (20 candidates vs. `SGECandidateRouter`'s own
+   `max_candidates=8` default) and shows the `observation` category picks a genuinely
+   DIFFERENT signature on 2 consecutive calls (both `!=` assertions pass) --
+   the exact behavior the pre-fix code could not produce (a direct trace with the same
+   pool and the OLD code shows the identical top-ranked pick every call).
+   `test_anti_stagnation_forced_portfolio_rotation_falls_back_when_pool_exhausted`
+   confirms a single-candidate pool still fills the category (re-selecting the only
+   option) and correctly reports `rotation_exhausted_categories`, so the category-fill
+   guarantee holds.
+2. **Live-level, an honest non-bug finding.** Re-running the EXACT g50t scenario that
+   exposed the original bug, AFTER this fix, still measured static repetition. Direct
+   investigation (no GPU needed -- candidate generation does not invoke the LLM) found
+   the real, structural cause: `rich_action_candidates` on g50t's spawn frame returns
+   EXACTLY 5 candidates (`ACTION1`-`ACTION5`; `_available_action_ids` returns `[1,2,3,4,5]`
+   -- action 6, click, is not available at all, so there is zero coordinate diversity) --
+   matching the anti-stagnation controller's 5 forced-portfolio categories exactly. Every
+   category's pool is exhausted the FIRST time it fills; there is no alternative candidate
+   for ANY selection algorithm to rotate to on this specific game/state. This is a genuine
+   limit of g50t's candidate space at this frame, not evidence the fix does not work --
+   the unit tests are the correct place to verify the rotation MECHANISM, since they can
+   construct a pool with real headroom that this particular frozen g50t frame does not
+   have. `sk48` (45 candidates at spawn, action 6 available) was tried as a
+   richer-candidate live target but did not trigger collapse within a 90-step budget in
+   this session's attempt -- an inconclusive, not a negative, result (sk48's real
+   candidates likely give the LLM strategy proposer enough genuine variety that it does
+   not degenerate into the repeated-"wait" pattern this whole mechanism targets).
+
+#### SCENARIO-ARC-FCP-5699-2-FORCED-PORTFOLIO-ROTATES
+
+Given a frozen candidate pool (unchanging across consecutive `rank_forced_portfolio`
+calls, matching a stalled game state) with genuine headroom (more distinct candidates
+than the portfolio consumes per call)
+When forced-portfolio mode is invoked on consecutive calls with accumulating history
+Then a category that tolerates re-selecting a past-failed signature (`observation`,
+`action_type_probe`, `recovery_reset`) selects a DIFFERENT candidate than it selected on
+the immediately preceding call, for as many consecutive calls as the pool has
+unconsumed alternatives; once the pool is genuinely exhausted, the category still gets
+filled (re-selecting a recently-forced signature) rather than being left empty, and this
+is reported via `rotation_exhausted_categories`
 
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
