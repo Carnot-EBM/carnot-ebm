@@ -2253,3 +2253,84 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5624 | Planned (`python/carnot/experiment_5624_v507_capstone_reconciliation.py`, `results/experiment_5624_v507_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5624_v507_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-5635: The `.508` capstone reconciliation workflow
+  `exp5635-v508-capstone-reconciliation` in
+  `python/carnot/experiment_5635_v508_capstone_reconciliation.py` SHALL write
+  `results/experiment_5635_v508_capstone_reconciliation.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  and without recreating a missing `research-roadmap-next.yaml`. It SHALL read
+  every expected Exp5625 through Exp5634 upstream artifact that exists on disk:
+  `results/experiment_5625_transition_v508.json`,
+  `results/experiment_5626_v508_source_delta_ingestion.json`,
+  `results/experiment_5627_online_conformal_kan_qualification.json`,
+  `results/experiment_5628_conformal_active_spline_kan_csl.json`,
+  `results/experiment_5629_conformal_kan_independent_audit.json`,
+  `results/experiment_5630_arc_epistemic_object_probe_prototype.json`,
+  `results/experiment_5631_arc_epistemic_probe_live_ab.json`,
+  `results/experiment_5632_arc_live_self_discovery_levelup_v508.json`,
+  `results/experiment_5633_temperature_exchange_cdls_exact_audit.json`, and
+  `results/experiment_5634_temperature_exchange_cdls_quality.json`. It SHALL
+  classify complete, blocked, gate-skipped, development-proxy, flagged,
+  promoted, retired, and live-solve evidence separately. Missing or malformed
+  upstream artifacts SHALL block dependent promotion without fabricating a
+  substitute result.
+- SCENARIO-CAPSTONE-5635: The artifact
+  `results/experiment_5635_v508_capstone_reconciliation.json` must emit
+  top-level fields `field_principles`, `artifacts_expected`,
+  `artifacts_read`, `gate_outcomes`, `promotion_ledger`,
+  `retirement_ledger`, `adversarial_flags`,
+  `continuous_self_learning_promotion`, `arc_mechanism_promotion`,
+  `arc_registry_count_before`, `arc_registry_count_after`,
+  `arc_registry_delta`, `replica_exchange_exact`,
+  `replica_exchange_quality_promoted`, `hardware_speedup_claimed`,
+  `timing_claimed`, `documents_reconciled`, `validation_commands`,
+  `validation_results`, `research_roadmap_unchanged`,
+  `research_conductor_unchanged`, `inference_substrate`,
+  `reproducibility_checksum`, and `honest_verdict`. The default `.508`
+  aggregation must preserve Exp5627 and Exp5628 as internally ready
+  self-learning evidence, refuse broad FR-11 promotion when Exp5629 is
+  gate-skipped or lacks independent certification, keep Exp5630 and Exp5631 as
+  development or skipped ARC evidence rather than a promoted mechanism, credit
+  a new ARC solve only when Exp5632 reports `solve_provenance` equal to
+  `live_agent_self_discovery`, `offline_reproduced=true`, and
+  `registry_delta=1`, promote replica-exchange exactness only from Exp5633's
+  invariant gates, promote replica-exchange quality only from Exp5634's paired
+  quality/mixing gate, and keep `hardware_speedup_claimed=false` and
+  `timing_claimed=false`.
+- SCENARIO-CAPSTONE-5635-MISSING-MALFORMED: If any expected `.508` primary
+  result artifact is missing or malformed, the workflow must still write the
+  capstone artifact, list the affected path under the appropriate evidence
+  completeness field, keep dependent claim gates false, preserve available
+  gate and adversarial evidence, and start `honest_verdict` with `blocked:`.
+- SCENARIO-CAPSTONE-5635-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required capstone field.",
+  `artifacts_expected` = "fixed .508 upstream denominator; must list Exp5625 through Exp5634 primary artifacts.",
+  `artifacts_read` = "readable upstream evidence actually consumed by the capstone.",
+  `gate_outcomes` = "conductor gate skips are distinct from failures and successes.",
+  `promotion_ledger` = "only independently supported claims advance.",
+  `retirement_ledger` = "repeated failures close mechanically while non-retired nulls stay bounded.",
+  `adversarial_flags` = "critical issues remain visible after aggregation.",
+  `continuous_self_learning_promotion` = "FR-11 status separates internal readiness from independent promotion.",
+  `arc_mechanism_promotion` = "development evidence stays separate from live mechanism promotion.",
+  `arc_registry_count_before` = "authoritative live-credit baseline before Exp5632 banking.",
+  `arc_registry_count_after` = "authoritative live-credit total after Exp5632 banking.",
+  `arc_registry_delta` = "exactly 0 or 1 so live solve credit is auditable.",
+  `replica_exchange_exact` = "invariant evidence is explicit and independent from quality.",
+  `replica_exchange_quality_promoted` = "quality evidence is separate from exactness.",
+  `hardware_speedup_claimed` = "bare false keeps retired hardware-speedup scopes closed.",
+  `timing_claimed` = "bare false keeps retired timing/crossover scopes closed.",
+  `documents_reconciled` = "internal specs and ops ledgers align or are explicitly delegated by stop rule.",
+  `validation_commands` = "verification commands are reproducible.",
+  `validation_results` = "observed validation outcomes are recorded.",
+  `research_roadmap_unchanged` = "protected-file discipline derived from git status or test override.",
+  `research_conductor_unchanged` = "protected-file discipline derived from git status or test override.",
+  `inference_substrate` = "must equal aggregation_from_upstream_artifacts.",
+  `reproducibility_checksum` = "content-addressed capstone output is stable.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5635)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5635 | Planned (`python/carnot/experiment_5635_v508_capstone_reconciliation.py`, `results/experiment_5635_v508_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5635_v508_capstone_reconciliation.py`) |
