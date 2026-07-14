@@ -11712,3 +11712,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 04:37 UTC | Property-template and entity-attribution exact ver | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-p |
 | 2026-07-14 04:39 UTC | Property-template and entity-attribution exact ver | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-p |
 | 2026-07-14 04:42 UTC | Property-template and entity-attribution exact ver | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-p |
+| 2026-07-14 05:01 UTC | Spline-local KAN longitudinal exact-gated continuo | OK | 88 passed, 1 warning in 16.45s |
