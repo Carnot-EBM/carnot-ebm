@@ -1,6 +1,6 @@
-"""Exp5604: SGE anti-stagnation controller -- genuine live re-test (task 6 completion).
+"""Exp5699: SGE anti-stagnation controller -- genuine live re-test (task 6 completion).
 
-Spec refs: REQ-ARC-FCP-5604, SCENARIO-ARC-FCP-5604-LIVE-COLLAPSE-ESCAPE.
+Spec refs: REQ-ARC-FCP-5699, SCENARIO-ARC-FCP-5699-LIVE-COLLAPSE-ESCAPE.
 
 Context (2026-07-10/11 outer-loop history this module completes): `outer_loop_sge_smoke_test.py`
 ran the real `SGECandidateRouter` (genuine local GGUF LLM strategy proposals, no anti-stagnation
@@ -86,19 +86,23 @@ import yaml
 JsonDict = dict[str, Any]
 
 REPO = Path(__file__).resolve().parents[2]
-EXPERIMENT_ID = 5604
-EXPERIMENT = "experiment_5604_sge_anti_stagnation_live_retest"
-RESULT_RELATIVE_PATH = "results/experiment_5604_sge_anti_stagnation_live_retest.json"
-TRAJECTORY_RELATIVE_PATH = "results/experiment_5604_sge_anti_stagnation_live_retest_trajectory.json"
+EXPERIMENT_ID = 5699
+EXPERIMENT = "experiment_5699_sge_anti_stagnation_live_retest"
+RESULT_RELATIVE_PATH = "results/experiment_5699_sge_anti_stagnation_live_retest.json"
+TRAJECTORY_RELATIVE_PATH = "results/experiment_5699_sge_anti_stagnation_live_retest_trajectory.json"
 REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
 SPEC_RELATIVE_PATH = "openspec/capabilities/arc-human-replay-frame-change/spec.md"
-SPEC_REFS = ["REQ-ARC-FCP-5604", "SCENARIO-ARC-FCP-5604-LIVE-COLLAPSE-ESCAPE"]
-SCHEMA = "carnot.experiment_5604_sge_anti_stagnation_live_retest.v1"
+SPEC_REFS = ["REQ-ARC-FCP-5699", "SCENARIO-ARC-FCP-5699-LIVE-COLLAPSE-ESCAPE"]
+SCHEMA = "carnot.experiment_5699_sge_anti_stagnation_live_retest.v1"
 SOLVE_PROVENANCE = "live_agent_self_discovery"
-RANDOM_SEED = 5604
+RANDOM_SEED = 5699
 REPLICATION_GAME = "g50t"  # the original null target; fresh-episode structural replication only
-REPLICATION_BUDGET = 90  # large enough that both prior real runs (46, 90) observed live collapse by step <=44
-FRONTIER_BUDGET = 46  # matches outer_loop_sge_smoke_test.py / exp5534 for apples-to-apples comparison
+REPLICATION_BUDGET = (
+    90  # large enough that both prior real runs (46, 90) observed live collapse by step <=44
+)
+FRONTIER_BUDGET = (
+    46  # matches outer_loop_sge_smoke_test.py / exp5534 for apples-to-apples comparison
+)
 DEFAULT_PORT = 8929  # fresh port; 8919/8921 already host unrelated HIP servers (verified live)
 MODEL_SPECS = ["unsloth/gemma-4-12B-it-GGUF"]
 
@@ -128,15 +132,22 @@ REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
 def _read_yaml(path: Path) -> JsonDict:
     if not path.exists():
         return {"reproducible_total_levels": 0, "games": []}
-    return yaml.safe_load(path.read_text(encoding="utf-8")) or {"reproducible_total_levels": 0, "games": []}
+    return yaml.safe_load(path.read_text(encoding="utf-8")) or {
+        "reproducible_total_levels": 0,
+        "games": [],
+    }
 
 
 def _registry_rows(registry: Mapping[str, Any]) -> list[Mapping[str, Any]]:
-    return [row for row in registry.get("games", []) or [] if isinstance(row, Mapping) and row.get("game")]
+    return [
+        row
+        for row in registry.get("games", []) or []
+        if isinstance(row, Mapping) and row.get("game")
+    ]
 
 
 def select_target(registry: Mapping[str, Any]) -> JsonDict:
-    """REQ-ARC-FCP-5604: pick the current shallowest not-fully-cleared game, live."""
+    """REQ-ARC-FCP-5699: pick the current shallowest not-fully-cleared game, live."""
 
     rows = _registry_rows(registry)
     candidates = [row for row in rows if row.get("full_game_clear") is not True]
@@ -153,7 +164,9 @@ def select_target(registry: Mapping[str, Any]) -> JsonDict:
     }
 
 
-def preconditions(*, root: Path = REPO) -> JsonDict:
+def preconditions(
+    *, root: Path = REPO
+) -> JsonDict:  # pragma: no cover - environment probe, heavy ARC imports
     """PRECONDITIONS (Pre-Launch Preconditions Discipline). Checked before any live inference."""
 
     checks: JsonDict = {}
@@ -177,7 +190,9 @@ def preconditions(*, root: Path = REPO) -> JsonDict:
     except Exception:
         checks["sge_and_e3_import"] = False
     cache = Path.home() / ".cache" / "huggingface" / "hub"
-    checks["gguf_cached"] = any(cache.glob("models--*gemma-4-12B-it-GGUF*")) if cache.exists() else False
+    checks["gguf_cached"] = (
+        any(cache.glob("models--*gemma-4-12B-it-GGUF*")) if cache.exists() else False
+    )
     checks["ok"] = all(checks.values())
     return checks
 
@@ -191,7 +206,7 @@ def _first_precondition_miss(checked: Mapping[str, Any]) -> str:
 
 class _NoOpInductionProposer:  # pragma: no cover - ARC runtime boundary
     def induce(self, *_args: Any, **_kwargs: Any) -> tuple[bool, str]:
-        return False, "disabled_exp5604_no_induction"
+        return False, "disabled_exp5699_no_induction"
 
     def world_model_candidates(self, _game: str) -> list[Any]:
         return []
@@ -262,7 +277,9 @@ def _live_run(  # pragma: no cover - ARC runtime boundary, real GPU + real env
         diag = dict(router.last_diagnostics)
         anti = dict(diag.get("anti_stagnation") or {})
         forced_selected = anti.get("forced_portfolio_selected")
-        collapsed_this_step = bool(anti.get("collapse_detected")) and isinstance(forced_selected, list)
+        collapsed_this_step = bool(anti.get("collapse_detected")) and isinstance(
+            forced_selected, list
+        )
         if collapsed_this_step and collapse_trigger_step is None:
             collapse_trigger_step = step
         if collapsed_this_step:
@@ -362,7 +379,7 @@ def build_artifact(
             "spec_refs": list(SPEC_REFS),
             "field_principles": dict(FIELD_PRINCIPLES),
             "random_seed": RANDOM_SEED,
-            "reproducibility_checksum": hashlib.sha256(f"blocked-{reason}".encode("utf-8")).hexdigest(),
+            "reproducibility_checksum": hashlib.sha256(f"blocked-{reason}".encode()).hexdigest(),
             "solve_provenance": SOLVE_PROVENANCE,
             "collapse_detected_live": False,
             "forced_portfolio_activated_live": False,
@@ -382,7 +399,9 @@ def build_artifact(
             "honest_verdict": f"blocked: {reason}",
         }
         (root / RESULT_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
-        (root / RESULT_RELATIVE_PATH).write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
+        (root / RESULT_RELATIVE_PATH).write_text(
+            json.dumps(artifact, indent=2, sort_keys=True) + "\n"
+        )
         return artifact
 
     # Pass A: fresh-episode structural replication of the original null scenario, run TWICE
@@ -392,17 +411,29 @@ def build_artifact(
     # on a single observation. No registry credit is possible (g50t is already fully cleared) or
     # claimed by either episode.
     replication_runs = [
-        _live_run(game=REPLICATION_GAME, target_level=1, prior_levels=0, budget=replication_budget, port=port + i)
+        _live_run(
+            game=REPLICATION_GAME,
+            target_level=1,
+            prior_levels=0,
+            budget=replication_budget,
+            port=port + i,
+        )
         for i in range(2)
     ]
     replication_episodes = [_summarize_run(run, prior_levels=0) for run in replication_runs]
     replication_summary = {
         "episodes": replication_episodes,
         "collapse_detected_live": all(ep["collapse_detected_live"] for ep in replication_episodes),
-        "forced_portfolio_activated_live": all(ep["forced_portfolio_activated_live"] for ep in replication_episodes),
+        "forced_portfolio_activated_live": all(
+            ep["forced_portfolio_activated_live"] for ep in replication_episodes
+        ),
         "collapse_trigger_step": replication_episodes[0]["collapse_trigger_step"],
-        "post_collapse_strategy_diversity": min(ep["post_collapse_strategy_diversity"] for ep in replication_episodes),
-        "llm_strategy_proposer_used_any_step": any(ep["llm_strategy_proposer_used_any_step"] for ep in replication_episodes),
+        "post_collapse_strategy_diversity": min(
+            ep["post_collapse_strategy_diversity"] for ep in replication_episodes
+        ),
+        "llm_strategy_proposer_used_any_step": any(
+            ep["llm_strategy_proposer_used_any_step"] for ep in replication_episodes
+        ),
         "model_specs": replication_episodes[0]["model_specs"],
         "duration_s": sum(ep["duration_s"] for ep in replication_episodes),
     }
@@ -438,7 +469,7 @@ def build_artifact(
             for row in rows:
                 if isinstance(row, dict) and row.get("game") == target["target_game"]:
                     row["levels_reproduced"] = reached
-                    row["latest_exp5604_sge_anti_stagnation_live_retest"] = {
+                    row["latest_exp5699_sge_anti_stagnation_live_retest"] = {
                         "artifact": RESULT_RELATIVE_PATH,
                         "reproduced_levels": reproduced_levels,
                         "reached_level": reached,
@@ -453,6 +484,7 @@ def build_artifact(
             registry_updated = True
 
     trajectory_path = TRAJECTORY_RELATIVE_PATH
+    (root / trajectory_path).parent.mkdir(parents=True, exist_ok=True)
     (root / trajectory_path).write_text(
         json.dumps(
             {
@@ -533,7 +565,9 @@ def build_artifact(
         "registry_updated": bool(registry_updated),
         "trajectory_path": trajectory_path,
         "model_specs": list(replication_summary["model_specs"]),
-        "inference_substrate": "live_llm_inference" if llm_used else "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+        "inference_substrate": "live_llm_inference"
+        if llm_used
+        else "offline_arcade_live_agent_runtime_self_discovery_no_llm",
         "preconditions_checked": checked,
         "duration_s": time.monotonic() - started,
         "honest_verdict": f"complete: {collapse_clause}; {frontier_clause}",
@@ -543,7 +577,7 @@ def build_artifact(
     return artifact
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - thin CLI wrapper
     parser = argparse.ArgumentParser()
     parser.add_argument("--replication-budget", type=int, default=REPLICATION_BUDGET)
     parser.add_argument("--frontier-budget", type=int, default=FRONTIER_BUDGET)
@@ -558,5 +592,5 @@ def main(argv: Sequence[str] | None = None) -> int:
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
     raise SystemExit(main())

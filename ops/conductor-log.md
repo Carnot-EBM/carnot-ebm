@@ -11704,3 +11704,6 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 03:05 UTC | Plan milestone 2026.07.506 | OK | 10 tasks proposed |
 | 2026-07-14 03:08 UTC | Milestone 2026.07.506 activated | OK | 10 tasks queued |
 | 2026-07-14 03:23 UTC | Transition .505 terminal evidence and post-milesto | OK | 92 passed, 1 warning in 13.49s |
+| 2026-07-14 03:40 UTC | Execution-time V506 source delta, scope deduplicat | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-14 03:42 UTC | Lossless local-SOTA raw-response evidence envelope | SKIP | Pre-tests failing, self-heal failed: 3 failed, 84 passed, 1 warning in 11.57s |
+| 2026-07-14 03:45 UTC | Lossless local-SOTA raw-response evidence envelope | SKIP | Pre-tests failing, self-heal failed: 2 failed, 85 passed, 1 warning in 12.23s |
