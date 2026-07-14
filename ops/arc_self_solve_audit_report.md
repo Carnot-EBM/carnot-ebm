@@ -16,19 +16,19 @@ OK: all solver-like ARC modules are reachable from the live agent path (51 modul
 
 ## Hostile LLM review
 
-**TL;DR: 0/2 self-discovery advances. Both are `DUPLICATE`, and both replay through outer-loop, per-game development proxies.**
+**TL;DR — REJECT BOTH: 2× `DUPLICATE`, 0× self-discovery advances.** Reachability is irrelevant here: these are hardcoded, hand-adaptered offline replays below already-banked depths.
 
 - `results/arc_loop_solve_ar25.json`
 
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Artifact reaches L3 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:3)); registry already records L8/full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). It declares `development_proxy` and offline/no-quota mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:616)), with no honest verdict or live-attempt provenance. Worse, `_ar25` emits the next action from hardcoded per-level label arrays and reads game internals with a hand verifier ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2093)). Its last content commit was June 28; only its mtime is recent.
-  - **Recommended action:** Exclude from advancement counts; retain only as a replay fixture. Never relabel as self-discovery.
+  - **Evidence:** Reaches only L3, while the registry already records an L8 full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). The artifact explicitly declares `development_proxy` and offline mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:616)). Its exact L1–L3 solution is hardcoded as per-level action constants ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:291)), not discovered in this run. No `honest_verdict` or chronological attempt/induction evidence.
+  - **Recommended action:** Record as regression replay/checkpoint refresh only, with `new_levels_banked=0` and an explicit duplicate verdict. Never count it as a solve or capability advance.
 
 - `results/arc_loop_solve_lf52.json`
 
   - **Verdict:** `DUPLICATE`
-  - **Evidence:** Artifact reaches L2 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:3)); registry already records L6 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). It likewise declares `development_proxy` and offline/no-quota mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:584)). `_lf52` feeds hardcoded L1/L2 action tails and uses game-specific internal fields plus a hand verifier ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2745)). Last content commit was June 28; recentness is mtime churn.
-  - **Recommended action:** Exclude from advancement counts and classify as a reproduction-only fixture.
+  - **Evidence:** Reaches only L2, while the registry records L6 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). The registry already calls this exact rerun `duplicate_depth_vs_registry_prior_l6` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2599)). The artifact declares `development_proxy`/offline mode ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:584)); its 42 actions are hardcoded and emitted one prescribed action at a time by the per-game adapter ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2750)). No live discovery trace or honest verdict.
+  - **Recommended action:** Mark `complete_duplicate_l2_vs_registry_l6`, `new_levels_banked=0`. Require an autonomously discovered L7 suffix—or preferably a clean unseen-game run—before claiming progress.
 
-**Pattern watch:** Reachability is being confused with agency. Importing a solver from a live entrypoint does not make hardcoded action tails, internal-state readers, or hand verifiers self-discovery. The `learned_verifier_live_checkpoint` label is cosmetic when candidate generation is a prewritten per-game sequence. Fix the recent-artifact scan to require a new content hash/run timestamp, registry depth increase, live attempt transcript, and `live_agent_self_discovery` provenance.
+**Pattern watch:** Severe outer-loop drift. The standing loop openly says adaptered runs use a hand-registered `GameAdapter` and are not scored live-agent discovery ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:212)). Hardcoded action rails, per-game hidden-state access, learned checkpoints trained after replaying known solutions, and outer-loop reproduction are being packaged as “solve artifacts.” The orphan/reachability lint cannot detect this provenance failure. These mechanisms would be `OUTER_LOOP_RE` if they were novel; being reachable does not make them autonomous.
 

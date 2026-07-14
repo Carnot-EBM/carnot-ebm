@@ -29711,3 +29711,103 @@ re-added as new.
   imply a CPU/CUDA, board, SNN, or TSU speedup.
 
 <!-- V508-PLANNER-REFRESH-20260714-END -->
+
+## V509 Planner Refresh - 20260714
+
+Planning-time sweep for milestone `.509` after the terminal `.508` conductor run. The
+search covered 2025-2026 arXiv work on EBM verification and reasoning, neural constraint
+satisfaction, Ising sampling, hallucination detection, KANs, constrained generation,
+hardware-accelerated sampling, and continual/online constraint learning. It also checked
+OpenReview, Hugging Face Papers, GitHub, Extropic writing, Logical Intelligence's public
+Kona material, and Semantic Scholar routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`. The entries below are either new local deltas or explicit promotions of
+previously indexed work; duplicate discovery is not presented as novelty.
+
+### New actionable deltas
+
+- **Anytime-Valid Conformal Risk Control** - arXiv:2602.04364,
+  https://arxiv.org/abs/2602.04364. The paper extends fixed-calibration conformal risk
+  control to a cumulatively growing calibration sequence with guarantees that remain
+  valid at any stopping time, including under evaluated distribution shifts. Carnot
+  hook: after repairing the `.508` artifact/gate schema mismatch, independently replay
+  the immutable Exp5628 stream with an anytime pathwise certificate. The certificate is
+  an additional release condition; it may abstain or roll back, but may never override
+  an exact-oracle rejection. This is a changed certification layer, not a rerun of the
+  already-positive learner.
+- **PatchWorld: Gradient-Free Optimization of Executable World Models** -
+  arXiv:2605.30880, https://arxiv.org/abs/2605.30880; code:
+  https://github.com/HKBU-KnowComp/PatchWorld. PatchWorld induces inspectable symbolic
+  belief-state programs from trajectories and repairs them with counterexamples, while
+  keeping next-observation prediction executable rather than making an LLM call at each
+  prediction. Carnot hook: test a generic, live-reachable transition-hypothesis patcher
+  whose only evidence is the ARC agent's own attempts and observation deltas. The
+  mechanism must patch generic predicates and transition clauses, replay every accepted
+  patch against accumulated receipts, and fail closed on contradiction. Reading game
+  source, using a hand GameAdapter, exhaustive offline search, or claiming an off-path
+  model as a solve remains forbidden.
+- **Learning Explicit Behavioral Models with Adaptive Questions and World-Model
+  Probes** - arXiv:2606.07127, https://arxiv.org/abs/2606.07127. ESBM converts rollout
+  failures, transition-prediction errors, and adaptive mechanism questions into
+  constraints on typed rules and bounded options. Carnot hook: use mechanism questions
+  only as auditable tests of the live patcher's hypotheses (predicted changed object,
+  reward/terminal consequence, and falsifying observation); do not add a second opaque
+  policy or treat question-answer agreement as game progress.
+
+### Promoted existing sources
+
+- **Two-dimensional Parallel Tempering for Constrained Optimization** -
+  arXiv:2506.14781, https://arxiv.org/abs/2506.14781. This source was already indexed,
+  but `.508` has now supplied the missing prerequisite: exact small-state parity and a
+  clean hard-instance quality promotion for temperature-only replica exchange. The
+  natural changed experiment is therefore a bounded two-axis ladder over temperature
+  and constraint-penalty strength. It must first reproduce the exact target on
+  enumerable constrained Ising systems and then compare feasibility, mixing, and energy
+  quality against both independent corrected cDLS and the promoted one-axis replica
+  exchange. No hardware or speedup claim follows from simulator results.
+- **Conformal Selective Acting: Anytime-Valid Risk Control for RLVR-Trained LLMs** -
+  arXiv:2605.20270, https://arxiv.org/abs/2605.20270. Already indexed in the Carnot
+  bibliography, CSA corroborates the need for per-deployment, pathwise act/abstain
+  certificates on adaptive streams. `.509` uses only the general selective-release
+  principle and does not import its LLM/RLVR claims into the KAN controller.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** direct EBT and ARM-EBM API requests returned HTTP 429 during
+  this pass, so no citation-count delta or new citation claim is made. Existing EBT and
+  ARM-EBM theory remains context only and does not reopen the retired external
+  generated-text scorer lane.
+- **OpenReview:** 2025-2026 results on test-time exploration in unknown environments and
+  active world models reinforce the importance of explicit hidden-rule hypotheses, but
+  the PatchWorld/ESBM pair is the cleaner local dependency because its proposed state is
+  inspectable and replayable. Workshop or withdrawn claims are not treated as Carnot
+  evidence.
+- **Hugging Face Papers:** current verification pages repeated DiffuTruth, Spilled
+  Energy, and zero-source textual hallucination detectors. Those output/logit-only
+  families remain outside the admissible live exact-verifier path and do not justify a
+  `.509` task.
+- **GitHub:** the official PatchWorld repository supplies a reproducible implementation
+  reference, but `.509` must implement a generic Carnot-local mechanism and may not copy
+  environment-specific adapters. No newly trending EBM, CSP, KAN, or sampler repository
+  superseded Carnot's exact validators or promoted replica-exchange baseline.
+- **Extropic:** the public writing index still ends with the October 2025 X0/XTR-0/TSU
+  material. There is no authenticated Carnot-accessible TSU route, so `.509` makes no TSU
+  execution or efficiency claim.
+- **Logical Intelligence:** public Kona pages still provide architecture motivation but
+  no local weights, authenticated execution path, or reproducible benchmark artifact.
+  Kona remains strategic context rather than an executable comparator.
+
+### V509 planning impact
+
+- Treat Exp5628 as immutable positive learner evidence. Repair the scalar gate contract,
+  independently reproduce the safety/coverage results, and add an anytime-valid
+  pathwise release certificate before any FR-11 production promotion.
+- Retire the `.508` epistemic-object probe at its blocked verdict. Replace it with a
+  generic counterexample-patched executable transition hypothesis learned solely from
+  live ARC attempts, then run the mandatory registry-rotated level-up attempt regardless
+  of prototype outcome.
+- Build a two-dimensional temperature/penalty replica-exchange qualification on top of
+  Exp5633/5634's exact and hard-instance receipts. Promote only if exactness, feasibility,
+  and mixing improve without a material quality regression; otherwise preserve the
+  one-axis sampler and retire the extension.
+
+<!-- V509-PLANNER-REFRESH-20260714-END -->
