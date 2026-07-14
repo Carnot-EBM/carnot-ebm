@@ -2108,7 +2108,7 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
-### NEW 2026-07-03 (MANDATORY — outer-loop escalation after 4th recurrence): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY
+### RESOLVED 2026-07-14 (MANDATORY — outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY
 
 **Origin:** operational retrospectives for milestones .469, .473 (three separate generation
 passes), and .474 (two separate generation passes) have ALL reported a false "no experiment
@@ -2206,6 +2206,41 @@ drift in a test not touched here, independent of the import fix. Left as-is per 
 operational-retrospective tasks are explicitly barred from editing `scripts/research_conductor.py`
 (per that task's own prompt), so no retro pass — including the ones that diagnosed this — can
 close the gap directly. It requires a dedicated non-retro task, which is what this entry queues.
+
+### CLOSED 2026-07-14 (outer-loop, operator-directed): fix verified live, falsifiable gate satisfied
+
+The import fix (the exact content of `experiment_5195_research_conductor_import_fix.patch`)
+was already live in `scripts/research_conductor.py` as of 2026-07-13 20:43:30 EDT (commit
+`95b41d00d5`, `[conductor] Checkpoint: preserve uncommitted work from interrupted run` —
+landed via the conductor's own checkpoint mechanism, not a literal `git apply` of the patch
+file, which is why `git apply --check` now reports "already applied" rather than a clean
+apply). The operator directed this session to verify and close the item out.
+
+**Verification, 2026-07-14:**
+- `tests/python/test_experiment_5195_retro_timing_real_fix.py`: 3/3 passed.
+- The falsifiable gate this entry itself specified ("the next operational-retrospective task
+  for any milestone after this task lands MUST show non-zero `experiments_completed` and
+  `total_wall_time_minutes`") is satisfied by the FIRST retro to run after the fix landed:
+  `results/operational_retro_2026_07_505.json` reports `experiments_completed=7`,
+  `total_wall_time_minutes=84.0`, `timing_integrity_mismatch=false`,
+  `reconstructed_from_disk_mtime=true` — the fallback path is genuinely firing and producing
+  real numbers, not the false-zero this entry was filed against. (Confirms the `.499`–`.504`
+  retros quoted earlier in `ops/changelog.md`, which still show the false-zero pattern, all
+  ran BEFORE the fix landed — consistent, not a sign the fix is incomplete.)
+
+**Not done (optional follow-up, not required to close this entry):** the original note's
+"backfill corrected retros for `.469/.473/.474/.475`" — regenerating those four historical
+retro artifacts with correct reconstructed timing via a direct
+`build_retro_timing_fallback(...)` call. The falsifiable gate only required a clean retro
+GOING FORWARD, which is now demonstrated; the four historical artifacts remain honestly
+labeled `timing_integrity_mismatch=true` rather than silently corrected. Revisit only if the
+historical record specifically needs to be accurate (e.g., a milestone-timing analysis that
+spans that window).
+
+The unrelated pre-existing test drift noted above
+(`test_retro_timing_fallback.py::test_2026_07_03_wiring_real_469_473_474_reconstruct_non_zero`,
+`.474 compute_bound_experiments_count` expects `3`, reconstructs `2`) is still failing,
+confirmed 2026-07-14, still out of scope for this entry.
 
 ### MMLU-PRO FEW-SHOT GENERATOR IMPROVEMENT 2026-07-01 (outer-loop, "let's improve the generator first (few-shot prompting) to help SC-vote land somewhere meaningful")
 
