@@ -54,8 +54,12 @@ def test_scenario_arc_fcp_5595_stepwise_explorer_uses_live_rank_candidates() -> 
         navigation_cost_tiebreak=False,
         frame_change_scorer=None,
         action_effect_expansion_prior=False,
-        inert_click_pruner=spy,
     )
+    # coerce_inert_click_pruner only accepts True/False/None/a real InertClickSigPruner
+    # (matching coerce_program_synthesis_filter's own strict isinstance discipline) -- set the
+    # attribute directly to isolate "does _candidates consume self.inert_click_pruner correctly"
+    # from "does the coercion function accept this value" (separately covered above).
+    explorer.inert_click_pruner = spy
     frame = SimpleNamespace(frame=np.array([[1]], dtype=np.int16), available_actions=[1, 2])
 
     candidates = explorer._candidates(frame, path=[])
@@ -99,8 +103,8 @@ def test_scenario_arc_fcp_5595_stepwise_explorer_rank_candidates_failure_is_non_
         navigation_cost_tiebreak=False,
         frame_change_scorer=None,
         action_effect_expansion_prior=False,
-        inert_click_pruner=_Raises(),
     )
+    explorer.inert_click_pruner = _Raises()
     frame = SimpleNamespace(frame=np.array([[1]], dtype=np.int16), available_actions=[1, 2])
 
     candidates = explorer._candidates(frame, path=[])
@@ -134,7 +138,8 @@ def test_scenario_arc_fcp_5595_ingest_feeds_inert_click_pruner_observe() -> None
     inert_click_pruner.observe with the realized (before, label, after, leveled_up) transition."""
 
     spy = _SpyObservePruner()
-    explorer = StepwiseExplorer(inert_click_pruner=spy)
+    explorer = StepwiseExplorer()
+    explorer.inert_click_pruner = spy
     grid0 = np.zeros((3, 3), dtype=int)
     explorer._ingest(_FakeFrame(grid0.copy()))
     origin = explorer.cur
