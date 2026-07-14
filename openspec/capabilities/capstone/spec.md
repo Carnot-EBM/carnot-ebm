@@ -2334,3 +2334,90 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5635 | Planned (`python/carnot/experiment_5635_v508_capstone_reconciliation.py`, `results/experiment_5635_v508_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5635_v508_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-5647: The `.509` capstone reconciliation workflow
+  `exp5647-v509-capstone-reconciliation` in
+  `python/carnot/experiment_5647_v509_capstone_reconciliation.py` SHALL write
+  `results/experiment_5647_v509_capstone_reconciliation.json` without modifying
+  `research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL read
+  every expected Exp5636 through Exp5646 upstream artifact directly:
+  `results/experiment_5636_transition_v509.json`,
+  `results/experiment_5637_v509_source_delta_ingestion.json`,
+  `results/experiment_5638_fr11_gate_schema_corrigendum.json`,
+  `results/experiment_5639_anytime_valid_csl_independent_audit.json`,
+  `results/experiment_5640_fr11_shadow_pipeline_integration.json`,
+  `results/experiment_5641_arc_counterexample_executable_model.json`,
+  `results/experiment_5642_arc_executable_model_live_ab.json`,
+  `results/experiment_5643_arc_live_self_discovery_levelup_v509.json`,
+  `results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`,
+  `results/experiment_5645_two_axis_tempering_hard_constraint_quality.json`,
+  and `results/experiment_5646_two_axis_tempering_rust_parity.json`. It SHALL
+  classify schema repair, independent audit promotion, disabled-by-default
+  shadow integration, blocked gate checks, critical adversarial flags, retired
+  ARC mechanisms, live ARC solve credit, exact two-axis invariants, quality
+  gates, and Rust portability gates separately. Gate-skipped, blocked, flagged,
+  proxy, or unaudited upstream outputs SHALL NOT promote downstream claims.
+- SCENARIO-CAPSTONE-5647: The artifact
+  `results/experiment_5647_v509_capstone_reconciliation.json` must emit
+  top-level fields `field_principles`, `upstream_artifacts`,
+  `upstream_gate_statuses`, `adversarial_verification_summary`,
+  `fr11_schema_corrigendum_status`, `fr11_independent_promotion_status`,
+  `fr11_shadow_integration_status`, `arc_executable_model_status`,
+  `arc_registry_count_before`, `arc_registry_count_after`,
+  `arc_solve_provenance`, `one_axis_replica_exchange_preserved`,
+  `two_axis_invariant_status`, `two_axis_quality_status`,
+  `rust_parity_status`, `timing_claimed`, `hardware_speedup_claimed`,
+  `retirements_applied`, `spec_reconciliation`, `ops_reconciliation`,
+  `test_commands`, `test_exit_codes`, `e2e_check_receipts`,
+  `inference_substrate`, `reproducibility_checksum`, and `honest_verdict`.
+  The default `.509` aggregation must treat Exp5638 as schema evidence only,
+  promote FR-11 only when Exp5639 independently passes benefit, pathwise-risk,
+  group-coverage, exact-safety, retention, poison, and replay gates, report
+  Exp5640 only as opt-in disabled-by-default shadow integration, keep Exp5630
+  retired, refuse ARC executable-model promotion unless Exp5641 and Exp5642
+  pass exact replay, live reachability, known-level utility, and zero-unsafe
+  gates, credit no ARC solve from Exp5643 unless live self-discovery provenance,
+  registry delta, independent generic reproduction, and no critical flag all
+  hold, preserve one-axis replica exchange, promote two-axis exact invariants
+  only from Exp5644, refuse two-axis quality promotion when Exp5645 fails its
+  preregistered quality gates, refuse Rust portability when Exp5646 is
+  gate-blocked, and keep `timing_claimed=false` and
+  `hardware_speedup_claimed=false`.
+- SCENARIO-CAPSTONE-5647-MISSING-MALFORMED: If any expected `.509` primary
+  result artifact is missing or malformed, the workflow must still write the
+  capstone artifact, list the affected path under the upstream artifact and
+  terminal status fields, keep dependent claim gates false, preserve available
+  gate and adversarial evidence, and start `honest_verdict` with `blocked:`.
+- SCENARIO-CAPSTONE-5647-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required capstone field.",
+  `upstream_artifacts` = "fixed .509 upstream denominator; every claim traces to a hashed primary artifact.",
+  `upstream_gate_statuses` = "gate-skipped, blocked, flagged, and complete work stay distinct.",
+  `adversarial_verification_summary` = "critical flags block promotion even when an artifact otherwise completed.",
+  `fr11_schema_corrigendum_status` = "schema repair is not scientific recomputation or promotion.",
+  `fr11_independent_promotion_status` = "FR-11 promotion depends on independent anytime-valid audit gates.",
+  `fr11_shadow_integration_status` = "shadow integration is opt-in and disabled by default.",
+  `arc_executable_model_status` = "changed ARC mechanisms need exact replay, live reachability, utility, and zero-unsafe gates.",
+  `arc_registry_count_before` = "authoritative live-credit baseline before Exp5643 banking.",
+  `arc_registry_count_after` = "authoritative live-credit total after Exp5643 banking.",
+  `arc_solve_provenance` = "only live self-discovery plus independent reproduction and registry delta can credit a solve.",
+  `one_axis_replica_exchange_preserved` = "prior one-axis promotion remains true regardless of two-axis outcome.",
+  `two_axis_invariant_status` = "exactness evidence is separate from quality evidence.",
+  `two_axis_quality_status` = "quality promotion requires bounded hard-constraint evidence without material regression.",
+  `rust_parity_status` = "Rust portability is separate from exactness, quality, speed, and timing.",
+  `timing_claimed` = "bare false keeps retired timing scopes closed.",
+  `hardware_speedup_claimed` = "bare false keeps retired hardware-speedup scopes closed.",
+  `retirements_applied` = "repeated terminal failures close or bound scopes without weakening flags.",
+  `spec_reconciliation` = "REQ-* alignment and backing tests are recorded.",
+  `ops_reconciliation` = "ops records, registries, and delegated stop-rule files are explicit.",
+  `test_commands` = "verification commands are reproducible.",
+  `test_exit_codes` = "observed command exits are recorded without inferring success.",
+  `e2e_check_receipts` = "applicable operations checks ran and nonapplicable checks are justified.",
+  `inference_substrate` = "must equal aggregation_from_upstream_artifacts.",
+  `reproducibility_checksum` = "content-addressed capstone output is stable.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5647)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5647 | Planned (`python/carnot/experiment_5647_v509_capstone_reconciliation.py`, `results/experiment_5647_v509_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5647_v509_capstone_reconciliation.py`) |
