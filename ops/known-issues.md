@@ -397,6 +397,18 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    > correctly flagged `DURATION_TOO_SHORT` (19.3s measured vs the 60s live-inference floor) — the
    > proposer is wired but never actually invoked during pure exploration. Spec: `REQ-ARC-FCP-5595`
    > in `openspec/capabilities/arc-human-replay-frame-change/spec.md`.
+   >
+   > **WIRED 2026-07-13 (same-day follow-on).** The `rank_candidates` live-wiring gap above is
+   > closed: `coerce_inert_click_pruner` plugs `InertClickSigPruner` into both `StepwiseExplorer`
+   > (`_candidates` calls `rank_candidates`) and `E3AgentPolicy` (threaded through), plus a real
+   > `observe()` call from `_ingest`'s existing per-transition OBSERVE hook (without this the
+   > filter would be wired but permanently a no-op — its tally never accumulates). Gated OFF by
+   > default (`SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False`), matching every other
+   > freshly-wired-but-unvalidated component in `arc_competition_agent.py` — flipping it on for
+   > the SCORED agent needs its own matched-budget offline A/B first, per the `solve_rate_dropped`
+   > guardrail. 8 new tests (`tests/python/test_arc_inert_click_pruner_live_wiring.py`); 46
+   > pre-existing `arc_competition_agent.py`-adjacent tests still pass unchanged. Spec additions:
+   > `SCENARIO-ARC-FCP-5595-LIVE-WIRING-CANDIDATES`, `-LIVE-WIRING-OBSERVE`, `-DEFAULT-OFF-PARITY`.
 10. **(New 2026-07-11, folds into task 2 above, do not run as a separate experiment) Extend the
     classical color-blob segmentation front-end (task 2) with translation-invariant object-hash
     tracking + containment/adjacency.** Full writeup: same SOTA-ingestion note (O4). The 1st-place
@@ -432,6 +444,30 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > mechanism (e.g. preferring an object whose hash was seen to change in a prior frame) — that is
     > a distinct, separately-scoped design + empirical-validation step per the Phase Prototype +
     > Empirical Validation discipline, not done here.
+    >
+    > **LIVE-WIRING GAP CLOSED 2026-07-13 (outer-loop follow-on).** Built `ObjectHistorySaliencePrior`
+    > (`python/carnot/agentic/arc_object_history_salience.py`), wrapping `ColorBlobSaliencePrior`
+    > (mirroring the existing `GeometricSaliencePrior` precedent) with a per-`object_hash` `(obs,
+    > changed)` tally, boosting click candidates on objects with a track record of changing the frame
+    > (inverted polarity + identity-hash keying vs. `InertClickSigPruner`'s structural-signature
+    > pruning). Threaded through `E3AgentPolicy` as `object_history_salience`, gated OFF by default
+    > (`SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED = False`) pending its own matched-budget A/B, per
+    > the `solve_rate_dropped` guardrail. `action_prior` was ALREADY a generic composable slot, so
+    > (unlike task 9) no new hook call sites were needed in `arc_competition_agent.py` — `_ingest`'s
+    > existing `observe_transition`/`reset` hooks and `_candidates`' existing `action_prior.score`
+    > consumption dispatch to the wrapper automatically (confirmed directly). 28 new tests (unit +
+    > live-wiring), 71 related tests still pass. **Real empirical validation (exp5601, the deferred
+    > Phase Prototype discipline step): ran against `m0r0` (confirmed click-heavy by exp5595) — 37
+    > real transitions, 32 clicks, 15 hashes tracked, 2 cleared the evidence floor and BOTH show a
+    > real nonzero change rate.** `honest_verdict: complete: object_history_salience_prototype_
+    > confirmed_2_hashes_with_real_change_signal_across_1_games`. The adversarial degeneracy
+    > sub-check found 0/8 same-base-tier real pairs diverging in this specific sample — an honest
+    > sample-size limitation for that sub-check, not a mechanism failure (the synthetic unit test
+    > already proves differentiation when history diverges). Spec: `REQ-ARC-FCP-5591-2` in
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md`. **Remaining (not done this
+    > session, matches `InertClickSigPruner`'s own still-open item):** the matched-budget offline A/B
+    > (states/actions-expanded reduction, zero regression in reproduced levels) needed before flipping
+    > `SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED` to `True` for the scored agent.
 11. **(New 2026-07-11, genuinely new but small, directly in-thesis) Hallucination-consistency
     checks: claimed-diff vs measured-diff, goal-hypothesis vs observed transitions.** Full writeup:
     same SOTA-ingestion note (O3, and O5 as its time-extended follow-on — do not build O5's NL

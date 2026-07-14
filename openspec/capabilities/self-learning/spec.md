@@ -22054,6 +22054,125 @@ thresholds, rollback evidence, and an honest terminal verdict.
 |---|---|---|
 | REQ-LEARN-5569 | Planned (`python/carnot/experiment_5569_causal_memory_policy_tournament.py`, `results/experiment_5569_causal_memory_policy_tournament.json`) | Planned (`tests/python/test_experiment_5569_causal_memory_policy_tournament.py`) |
 
+## REQ-LEARN-5583: Causal Memory Metric Corrigendum From Cached Row Outcomes
+
+The Exp5583 workflow SHALL write
+`results/experiment_5583_causal_memory_metric_corrigendum.json` as a
+no-inference corrigendum for Exp5569. It SHALL read cached row-level outcomes
+from `results/experiment_5569_causal_memory_policy_tournament.json`, reconstruct
+seed, arm, session, family, phase, and delayed-evaluation membership from the
+artifact's row evidence, and SHALL block rather than synthesize missing rows or
+memberships. The workflow MAY cite Exp5558 as upstream context, but all corrected
+Exp5569 estimands SHALL trace to the cached Exp5569 rows.
+
+The corrected estimands SHALL keep the causal-memory questions distinct:
+forward transfer is the optimized-minus-static success delta on later-family
+first-exposure rows, backward retention is the optimized-minus-static success
+delta on earlier-family delayed replay rows, forgetting is the optimized
+within-family delayed loss from first delayed replay to final delayed replay,
+and policy cost is reported from cached retrieval/read evidence rather than
+folded into either transfer metric. The same cached rows SHALL also rerun
+no-memory, shuffled-memory, static-causal, always-full, and optimized-causal arm
+comparisons.
+
+For audit searchability, forgetting is the optimized within-family delayed loss
+and not a second name for forward transfer or backward retention.
+
+The corrigendum SHALL include a deterministic label/session permutation control
+that destroys causal order and a metric-independence positive control proving
+that the forward-transfer formula can change while backward-retention remains
+fixed. `policy_ready` SHALL remain false unless the corrected policy benefit and
+the controls both pass. When Exp5569's repeated forward/backward tautology is
+retired by this corrigendum, the artifact SHALL preserve raw outcomes, set
+`flagged_adversarial=false` only for the corrigendum itself, and state the
+retired policy lane in `honest_verdict`.
+
+The artifact SHALL include required fields `rows_reconstructed`,
+`estimand_definitions`, `forward_transfer_delta`, `backward_retention_delta`,
+`forgetting_delta`, `permutation_control_passed`,
+`metric_independence_positive_control`, `flagged_adversarial`, `policy_ready`,
+`inference_substrate`, `field_principles`, and `honest_verdict`. It SHALL set
+`inference_substrate="cached_row_level_memory_outcomes"` and SHALL carry the
+required field principles: `rows_reconstructed` = "metrics trace to observations";
+`estimand_definitions` = "forward and backward questions are
+distinct"; `forward_transfer_delta` = "later-family adaptation is isolated";
+`backward_retention_delta` = "earlier-family durability is isolated";
+`forgetting_delta` = "retention loss stays visible";
+`permutation_control_passed` = "causal order must matter";
+`metric_independence_positive_control` = "formulas cannot be aliases";
+`flagged_adversarial` = "downstream use requires a clean audit";
+`policy_ready` = "controls and policy benefit must both pass";
+`inference_substrate` = "no new inference"; and `honest_verdict` = "repeated tautology retires the policy lane".
+
+Required field principle literals for coverage: "metrics trace to observations";
+"forward and backward questions are distinct"; "later-family adaptation is isolated";
+"earlier-family durability is isolated"; "retention loss stays visible";
+"causal order must matter"; "formulas cannot be aliases";
+"downstream use requires a clean audit"; "controls and policy benefit must both pass";
+"no new inference"; "repeated tautology retires the policy lane".
+
+### REQ-LEARN-5583 Sub-requirements
+
+- REQ-LEARN-5583-1: The row reconstructor SHALL require all Exp5569 seeds,
+  five tournament arms, 120 rows per arm/seed, and a session membership entry
+  for every row `event_id`; otherwise it SHALL raise a blocking error.
+- REQ-LEARN-5583-2: The corrected forward, backward, forgetting, and policy-cost
+  estimands SHALL be computed by separate row predicates and SHALL expose their
+  denominators.
+- REQ-LEARN-5583-3: The arm comparison SHALL rerun no-memory,
+  shuffled-memory, static-causal, always-full, and optimized-causal scores from
+  cached rows only.
+- REQ-LEARN-5583-4: The permutation control SHALL deterministically permute
+  row labels and session membership and SHALL pass only when the causal-order
+  metrics change enough to invalidate policy promotion.
+- REQ-LEARN-5583-5: The metric-independence positive control SHALL include a
+  test fixture where forward transfer changes while backward retention remains
+  unchanged.
+- REQ-LEARN-5583-6: `policy_ready` SHALL be false when corrected first-exposure
+  forward transfer is not positive or when visible forgetting remains, even if
+  backward retention improves.
+
+### SCENARIO-LEARN-5583-ROWS: Cached Rows Reconstruct Or Block
+
+**Given** the Exp5569 artifact contains cached `seed_results.arm_rows`
+**When** Exp5583 reconstructs rows
+**Then** every row SHALL recover seed, arm, session, family, phase, and
+membership evidence
+**And** removing a cached row or session membership SHALL produce a blocking
+error instead of invented evidence.
+
+### SCENARIO-LEARN-5583-ESTIMANDS: Corrected Metrics Are Not Aliases
+
+**Given** reconstructed Exp5569 rows
+**When** Exp5583 computes corrected causal-memory estimands
+**Then** forward transfer SHALL use later-family first exposure
+**And** backward retention SHALL use earlier-family delayed replay
+**And** forgetting SHALL use within-family delayed loss
+**And** the three headline metrics SHALL not be algebraic aliases.
+
+### SCENARIO-LEARN-5583-CONTROLS: Permutation And Positive Controls Gate Policy
+
+**Given** row labels and session membership can be permuted without new
+inference
+**When** the permutation control destroys causal order
+**Then** policy promotion SHALL be invalidated
+**And** the positive-control unit fixture SHALL demonstrate that forward
+transfer can change while backward retention is fixed.
+
+### SCENARIO-LEARN-5583-ARTIFACT: Corrigendum Receipt Is Conductor Visible
+
+**Given** the cached-row corrigendum completes
+**When** Exp5583 writes its receipt
+**Then** the JSON SHALL include required fields, field principles, no-inference
+substrate, raw-outcome provenance, corrected policy gate, and an honest
+terminal verdict retiring Exp5569's policy lane.
+
+## Implementation Status (Exp 5583)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5583 | Planned (`python/carnot/experiment_5583_causal_memory_metric_corrigendum.py`, `results/experiment_5583_causal_memory_metric_corrigendum.json`) | Planned (`tests/python/test_experiment_5583_causal_memory_metric_corrigendum.py`) |
+
 ## REQ-LEARN-5570: Active-Spline Online KAN Exact-Constraint Energy
 
 The Exp5570 workflow SHALL write

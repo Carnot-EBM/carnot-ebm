@@ -14,6 +14,7 @@ Covers three behaviours the outer-loop session added:
 These trace to the CLAUDE.md "Adversarial Artifact Verification" rule:
 FALSE_NEGATIVE_RISK + TAUTOLOGY-excludes-identifiers (2026-05-31).
 """
+
 import json
 import sys
 from pathlib import Path
@@ -37,6 +38,7 @@ def _report_for_payload(tmp_path: Path, payload: dict) -> dict:
 
 # --- 1. TAUTOLOGY excludes identifier/seed fields --------------------------
 
+
 @pytest.mark.parametrize(
     "d",
     [
@@ -55,14 +57,24 @@ def test_tautology_excludes_identifier_seed_pairs(d):
 
 
 def test_is_identifier_field():
-    for k in ("experiment_id", "experiment", "random_seed", "rng_seed",
-              "np_seed", "milestone", "run_id", "task_id", "gpu_id"):
+    for k in (
+        "experiment_id",
+        "experiment",
+        "random_seed",
+        "rng_seed",
+        "np_seed",
+        "milestone",
+        "run_id",
+        "task_id",
+        "gpu_id",
+    ):
         assert av._is_identifier_field(k), k
     for k in ("final_loss", "auroc", "v1_recall", "gradient_norm", "accuracy"):
         assert not av._is_identifier_field(k), k
 
 
 # --- 2. TAUTOLOGY still catches genuine distinct-metric coincidence ---------
+
 
 def test_tautology_still_fires_on_distinct_float_metrics():
     """REQ: two distinct measured metrics agreeing to >5 sig figs is still a
@@ -150,6 +162,7 @@ def test_req_report_5225_discordant_count_fields_are_not_fabrication_metrics(tmp
 
 # --- 3. FALSE_NEGATIVE_RISK on degenerate null claims ----------------------
 
+
 def test_fnr_flip_count_zero():
     """REQ: a null claim with flip_count==0 means the method never acted →
     cannot conclude it fails (exp3507)."""
@@ -230,6 +243,29 @@ def test_implausible_perfect_allows_receipted_zero_arc_level_delta():
     assert "IMPLAUSIBLE_PERFECT" not in _kinds(flags)
 
 
+def test_implausible_perfect_allows_receipted_zero_forward_transfer_delta():
+    """REQ-LEARN-5583: a measured zero first-exposure transfer delta is not a stub."""
+
+    flags = []
+    av.check_implausible_perfect(
+        {
+            "experiment": "experiment_5583_causal_memory_metric_corrigendum",
+            "honest_verdict": "complete: exp5569_policy_lane_retired_metric_corrigendum_from_cached_rows",
+            "forward_transfer_delta": 0.0,
+            "positive_control_passed": True,
+            "false_negative_risk_checked": True,
+            "null_delta_methodology_note": (
+                "forward_transfer_delta=0.0 is measured from cached Exp5569 later-family "
+                "first-exposure rows: optimized and static both scored 0/80, while the "
+                "metric-independence positive control flips forward transfer without "
+                "changing backward retention."
+            ),
+        },
+        flags,
+    )
+    assert "IMPLAUSIBLE_PERFECT" not in _kinds(flags)
+
+
 def test_fnr_does_not_fire_when_oracle_exceeds_baseline_even_if_null():
     """REQ: if there IS headroom (oracle>baseline) the null is informative —
     the signal-2 false-negative guard must not fire."""
@@ -288,6 +324,7 @@ def test_req_capstone_4563_passed_positive_control_null_does_not_fire():
 
 # --- 4. DEGENERATE_SEPARATION catches wrong-majority synthetic wins --------
 
+
 def test_degenerate_separation_flags_vote_zero_delta_one_arcgen_win():
     """REQ-VERIFY-4291: a +1 selector-vs-vote win with vote@1=0 and oracle@K=1
     is a degenerate ARC-GEN pool construction, not transfer evidence."""
@@ -324,15 +361,14 @@ def test_degenerate_separation_allows_nondegenerate_arcgen_read():
 
 # --- 4. Backfill backstop precision (DURATION live-claim guard) -------------
 
+
 def test_claims_live_model():
     assert av._claims_live_model({"model_specs": [{"name": "Qwen"}]})
     assert av._claims_live_model({"target_model": "gemma-4-31B"})
     assert av._claims_live_model({"inference_substrate": "live_llm_inference"})
     # an aggregation/audit artifact that names no model does NOT claim a live run
     assert not av._claims_live_model({"roce_success_rate": 0.8})
-    assert not av._claims_live_model(
-        {"inference_substrate": "aggregation_from_upstream_artifacts"}
-    )
+    assert not av._claims_live_model({"inference_substrate": "aggregation_from_upstream_artifacts"})
 
 
 def test_backfill_dryrun_does_not_mutate(tmp_path):
@@ -397,6 +433,7 @@ def test_backfill_idempotent_skips_already_stamped(tmp_path):
 
 
 # --- 4b. Inference-substrate floor for learned CNN action models ------------
+
 
 def test_req_arc_fcp_4575_learned_cnn_torch_marker_uses_offline_floor(
     tmp_path: Path,
@@ -492,6 +529,7 @@ def test_req_arc_fcp_4575_summary_surfaces_applied_floor(
 
 # --- 4c. Offline ARC methodology descriptor suppresses false warn ----------
 
+
 def _offline_arc_methodology_fixture() -> dict:
     return {
         "experiment": "experiment_4587_offline_arc_fixture",
@@ -522,9 +560,7 @@ def test_req_arc_wmte_4587_offline_arc_descriptor_suppresses_methodology_warn(
     sufficient without model_specs."""
     report = _report_for_payload(tmp_path, _offline_arc_methodology_fixture())
 
-    methodology_flags = [
-        flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"
-    ]
+    methodology_flags = [flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"]
 
     assert methodology_flags == []
 
@@ -544,9 +580,7 @@ def test_req_arc_wmte_4587_dot422_arc_artifacts_do_not_methodology_warn(
     fixture = Path(__file__).resolve().parents[2] / "results" / artifact_name
     report = av.verify_artifact(fixture)
 
-    methodology_flags = [
-        flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"
-    ]
+    methodology_flags = [flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"]
 
     assert methodology_flags == []
 
@@ -565,9 +599,7 @@ def test_req_arc_wmte_4587_live_llm_missing_model_specs_still_warns(
     }
 
     report = _report_for_payload(tmp_path, artifact)
-    methodology_flags = [
-        flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"
-    ]
+    methodology_flags = [flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"]
 
     assert methodology_flags
     assert "model_specs/target_model" in methodology_flags[0]["detail"]
@@ -590,6 +622,7 @@ def test_req_arc_wmte_4587_summary_surfaces_offline_methodology_descriptor(
 
 
 # --- 5. CEILING_SATURATION (positive-claim no-headroom partner) -------------
+
 
 def test_ceiling_saturation_trivial_baseline_ties():
     """REQ: a superiority claim where a trivial baseline also saturates the
@@ -620,9 +653,7 @@ def test_ceiling_saturation_difficulty_inert():
             "honest_verdict": "complete: method_beats_baseline",
             "baseline_solve_rate": 0.4,
             "solve_rate": 1.0,
-            "solve_rate_by_difficulty": {
-                "easy": 1.0, "medium": 1.0, "hard": 1.0, "extreme": 1.0
-            },
+            "solve_rate_by_difficulty": {"easy": 1.0, "medium": 1.0, "hard": 1.0, "extreme": 1.0},
         },
         flags,
     )
@@ -652,9 +683,7 @@ def test_ceiling_saturation_silent_with_real_headroom():
             "honest_verdict": "complete: energy_beats_ar",
             "ar_baseline_solve_rate": 0.3,
             "solve_rate": 0.9,
-            "solve_rate_by_optimizer_variant": {
-                "vanilla_descent": 0.4, "parallel_tempering": 0.9
-            },
+            "solve_rate_by_optimizer_variant": {"vanilla_descent": 0.4, "parallel_tempering": 0.9},
             "solve_rate_by_difficulty": {"easy": 1.0, "hard": 0.6},
         },
         flags,
@@ -829,7 +858,9 @@ def test_chance_floor_score_recognizes_auroc_probe_control_but_not_metrics():
     assert av._is_chance_floor_score("loo_auroc_majority_control") is True
     assert av._is_chance_floor_score("shuffled_label_control_auroc") is True
     assert av._is_chance_floor_score("heldout_first_win_rate") is False
-    assert av._is_chance_floor_score("loo_auroc_structural") is True  # auroc-named (ok; needs ==0.5 to skip)
+    assert (
+        av._is_chance_floor_score("loo_auroc_structural") is True
+    )  # auroc-named (ok; needs ==0.5 to skip)
 
 
 # --------------------------------------------------------------------------- #
@@ -877,14 +908,18 @@ def test_degenerate_candidate_pool_does_not_fire_when_pool_is_diverse():
 
 def test_degenerate_candidate_pool_does_not_fire_on_non_selection_artifact():
     flags = []
-    av.check_engine_selection_candidate_diversity({"honest_verdict": "success_foo", "loo_auroc": 0.7}, flags)
+    av.check_engine_selection_candidate_diversity(
+        {"honest_verdict": "success_foo", "loo_auroc": 0.7}, flags
+    )
     assert not flags
 
 
 # --- hardening regressions (adversarial verify wf_3c4337f4) ------------------ #
 def test_degen_self_declared_min_games_cannot_dodge():
     # FN-3: an artifact declaring min_heldout_games=1 (or 0) at effective=2/5 must STILL flag
-    assert _run_degen(_s2_artifact([[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [0.3, 0.7], [0.4, 0.9]], min_games=1))
+    assert _run_degen(
+        _s2_artifact([[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [0.3, 0.7], [0.4, 0.9]], min_games=1)
+    )
     assert _run_degen(_s2_artifact([[1.0, 1.0]] * 5, min_games=0))
 
 
@@ -902,14 +937,18 @@ def test_degen_noise_manufactured_diversity_flags():
 
 def test_degen_pass_verdict_on_degenerate_pool_now_flags():
     # attack #3: a PASS off a degenerate pool is NOT exempt (the old test codified this hole)
-    d = _s2_artifact([[1.0, 1.0]] * 5, verdict="success_structural_energy_s2_trust_gate_authorizes_s3")
+    d = _s2_artifact(
+        [[1.0, 1.0]] * 5, verdict="success_structural_energy_s2_trust_gate_authorizes_s3"
+    )
     d["energy_minus_accuracy_delta"] = 0.21
     assert _run_degen(d)
 
 
 def test_degen_genuinely_diverse_pass_does_not_flag():
     # a PASS on a genuinely diverse pool (5 effective) must NOT flag
-    d = _s2_artifact([[0.3, 0.9]] * 12, verdict="success_structural_energy_s2_trust_gate_authorizes_s3")
+    d = _s2_artifact(
+        [[0.3, 0.9]] * 12, verdict="success_structural_energy_s2_trust_gate_authorizes_s3"
+    )
     d["energy_minus_accuracy_delta"] = 0.21
     assert not _run_degen(d)
 
@@ -932,7 +971,9 @@ def test_degen_non_s2_incidental_energy_delta_not_flagged():
     d = {
         "experiment": "some_other_unrelated_experiment",
         "honest_verdict": "complete_no_value",
-        "game_results": [{"candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]}],
+        "game_results": [
+            {"candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]}
+        ],
     }
     # no delta/margin key, no S2 schema token -> not recognized
     flags = []
@@ -945,7 +986,11 @@ def test_real_exp4791_still_flags():
     import json as _json
     from pathlib import Path as _Path
 
-    p = _Path(__file__).resolve().parents[2] / "results" / "experiment_4791_structural_energy_s2_offpath_trust_gate.json"
+    p = (
+        _Path(__file__).resolve().parents[2]
+        / "results"
+        / "experiment_4791_structural_energy_s2_offpath_trust_gate.json"
+    )
     if p.exists():
         assert _run_degen(_json.load(open(p)))
 
@@ -969,7 +1014,9 @@ def test_degen_corpus_coverage_under_declaration_cannot_dodge():
 
 def test_effective_selection_games_count():
     gr = [
-        {"candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]},  # degenerate (spread 0)
+        {
+            "candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]
+        },  # degenerate (spread 0)
         {"candidate_rows": [{"heldout_cell_recall": 0.3}, {"heldout_cell_recall": 0.7}]},  # diverse
         {"candidate_rows": [{"heldout_cell_recall": 0.5}]},  # single candidate -> not effective
     ]
