@@ -10,6 +10,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+REPO = Path(__file__).resolve().parents[2]
+SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+
 from carnot.agentic.arc_llm_strategy_proposer import (
     AntiStagnationDiversityController,
     StrategyCollapseThresholds,
@@ -44,7 +47,9 @@ class FakeCompleter:
 
     def complete_text(self, prompt, *, max_tokens=None, temperature=0.1, stop=None):
         index = min(len(self.calls), len(self.script) - 1)
-        self.calls.append({"prompt": prompt, "max_tokens": max_tokens, "temperature": temperature, "stop": stop})
+        self.calls.append(
+            {"prompt": prompt, "max_tokens": max_tokens, "temperature": temperature, "stop": stop}
+        )
         return self.script[index]
 
 
@@ -87,7 +92,10 @@ def test_parse_propose_reply_empty_text():
 
 
 def test_parse_reflect_reply_well_formed():
-    assert parse_reflect_reply("REVISED_STRATEGY: try the left panel next\n") == "try the left panel next"
+    assert (
+        parse_reflect_reply("REVISED_STRATEGY: try the left panel next\n")
+        == "try the left panel next"
+    )
 
 
 def test_parse_reflect_reply_malformed():
@@ -102,7 +110,9 @@ def test_parse_reflect_reply_malformed():
 def test_propose_one_parses_completer_output():
     completer = FakeCompleter([(True, "STRATEGY: try salient blob\nCHOICE: 1\n")])
     proposer = LLMStrategyProposer(completer=completer)
-    result = proposer.propose_one("Game: g1", ["[0] action=6 x=1,y=1", "[1] action=6 x=2,y=2"], temperature=0.5)
+    result = proposer.propose_one(
+        "Game: g1", ["[0] action=6 x=1,y=1", "[1] action=6 x=2,y=2"], temperature=0.5
+    )
     assert result["parse_ok"] is True
     assert result["chosen_index"] == 1
     assert result["strategy_text"] == "try salient blob"
@@ -160,7 +170,12 @@ def test_reflect_handles_completer_failure():
     completer = FakeCompleter([(False, "GPU down")])
     proposer = LLMStrategyProposer(completer=completer)
     result = proposer.reflect("Game: g1", [{"strategy_text": "x", "outcome": "y"}])
-    assert result == {"parse_ok": False, "revised_strategy": "", "raw": "GPU down", "completer_ok": False}
+    assert result == {
+        "parse_ok": False,
+        "revised_strategy": "",
+        "raw": "GPU down",
+        "completer_ok": False,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -169,7 +184,9 @@ def test_reflect_handles_completer_failure():
 
 
 def test_rank_empty_candidates_returns_empty_and_honest_diagnostics():
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=FakeCompleter([])), game_id="g1")
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=FakeCompleter([])), game_id="g1"
+    )
     result = router.rank(frame=None, candidates=[])
     assert result == []
     assert router.last_diagnostics["llm_strategy_proposer_used"] is False
@@ -186,7 +203,9 @@ def test_rank_uses_llm_votes_to_promote_a_candidate():
             (True, "STRATEGY: chase the moving sprite\nCHOICE: 1\n"),
         ]
     )
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=3)
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=3
+    )
     candidates = [
         _candidate(6, 0, 0, salience_score=9.0),  # high deterministic score, zero votes
         _candidate(6, 5, 5),  # zero deterministic score, all three votes
@@ -200,7 +219,9 @@ def test_rank_uses_llm_votes_to_promote_a_candidate():
 
 def test_rank_falls_back_to_deterministic_scores_when_completer_unavailable():
     completer = FakeCompleter([(False, "GPU llama-server failed")] * 3)
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=3)
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=3
+    )
     candidates = [
         _candidate(6, 0, 0, salience_score=1.0),
         _candidate(6, 5, 5, salience_score=9.0),
@@ -213,7 +234,9 @@ def test_rank_falls_back_to_deterministic_scores_when_completer_unavailable():
 
 def test_rank_falls_back_when_all_samples_fail_to_parse():
     completer = FakeCompleter([(True, "not the expected format")] * 3)
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=3)
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=3
+    )
     candidates = [_candidate(6, 0, 0, salience_score=1.0), _candidate(6, 5, 5, salience_score=9.0)]
     ranked = router.rank(frame=None, candidates=candidates)
     assert ranked[0] is candidates[1]
@@ -237,7 +260,9 @@ def test_rank_suppresses_repeated_coordinates_across_calls():
 
 def test_rank_degrades_gracefully_when_every_candidate_is_a_repeat():
     completer = FakeCompleter([(True, "STRATEGY: a\nCHOICE: 0\n")] * 10)
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=1, temperatures=(0.5,))
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=1, temperatures=(0.5,)
+    )
     router.rank(frame=None, candidates=[_candidate(6, 1, 1)])
     # every candidate offered next call repeats the only coordinate seen so far
     second = router.rank(frame=None, candidates=[_candidate(6, 1, 1)])
@@ -284,7 +309,9 @@ def test_rank_triggers_reflection_on_schedule():
 
 def test_record_outcome_updates_last_history_row():
     completer = FakeCompleter([(True, "STRATEGY: a\nCHOICE: 0\n")])
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=1, temperatures=(0.5,))
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer), game_id="g1", k=1, temperatures=(0.5,)
+    )
     router.rank(frame=None, candidates=[_candidate(6, 0, 0)])
     router.record_outcome("level_advanced")
     assert router.history[-1]["outcome"] == "level_advanced"
@@ -298,7 +325,9 @@ def test_record_outcome_no_op_with_empty_history():
 
 
 def test_portfolio_descriptors_shape():
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=FakeCompleter([])), game_id="g1", k=4)
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=FakeCompleter([])), game_id="g1", k=4
+    )
     descriptors = router.portfolio_descriptors()
     assert len(descriptors) == 1
     assert descriptors[0]["k"] == 4
@@ -306,7 +335,9 @@ def test_portfolio_descriptors_shape():
 
 
 def test_context_without_reflection_note():
-    router = SGECandidateRouter(proposer=LLMStrategyProposer(completer=FakeCompleter([])), game_id="g42")
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=FakeCompleter([])), game_id="g42"
+    )
     assert router._context() == "Game: g42"
 
 
@@ -386,7 +417,10 @@ def test_anti_stagnation_reports_diversity_increase_after_forced_portfolio():
     assert metrics["before"]["unique_normalized_strategy_count"] == 1
     assert metrics["before"]["max_normalized_strategy_repeat"] >= 4
     assert metrics["after"]["forced_portfolio_category_count"] >= 5
-    assert metrics["after"]["selected_unique_signature_count"] > metrics["before"]["unique_action_signature_count"]
+    assert (
+        metrics["after"]["selected_unique_signature_count"]
+        > metrics["before"]["unique_action_signature_count"]
+    )
 
 
 def test_anti_stagnation_stable_fallback_when_portfolio_cannot_fill():
@@ -468,7 +502,12 @@ def test_anti_stagnation_helper_edges_for_fixed_collapse_definition():
     assert _candidate_action(WeirdCandidate()) == 0
     assert _candidate_signature({"action": 6, "data": {"x": "bad", "y": 1}}, 3) == "A6#3"
     assert _candidate_signature({"action": 2, "data": {}}, 4) == "A2#4"
-    assert _fallback_score({"salience_score": "not-a-float", "score": 2.0}, ("salience_score", "score")) == 2.0
+    assert (
+        _fallback_score(
+            {"salience_score": "not-a-float", "score": 2.0}, ("salience_score", "score")
+        )
+        == 2.0
+    )
 
 
 def test_anti_stagnation_forced_portfolio_avoids_recent_failed_signature():
@@ -501,6 +540,119 @@ def test_anti_stagnation_forced_portfolio_avoids_recent_failed_signature():
     selected = router.last_diagnostics["anti_stagnation"]["forced_portfolio_selected"]
     active = [row for row in selected if row["name"] == "active_coordinate_probe"]
     assert active == [{"name": "active_coordinate_probe", "signature": "A6@7,7"}]
+
+
+def test_anti_stagnation_forced_portfolio_rotates_across_repeated_calls():
+    # REQ-ARC-FCP-5699-2 / SCENARIO-ARC-FCP-5699-2-FORCED-PORTFOLIO-ROTATES: a frozen
+    # candidate pool (unchanging across calls, matching a stalled game state) must not
+    # collapse the "observation" category onto the exact same signature every call --
+    # exp5699's real live run measured the SAME 2-signature pair selected on 44
+    # consecutive forced-portfolio calls once collapse fired, a partial-escape bug.
+    controller = AntiStagnationDiversityController(
+        thresholds=StrategyCollapseThresholds(window_size=8)
+    )
+    # A realistically-sized pool: `SGECandidateRouter.max_candidates` defaults to 8, and
+    # `rank_forced_portfolio`'s own `fallback_fill` step tops up every call to that many
+    # selections -- a pool sized close to max_candidates would exhaust globally within a
+    # round or two purely from fallback_fill sweeping the remainder (not a bug; a separate
+    # test below covers that exhaustion-then-fallback path explicitly). 20 candidates vs.
+    # max_candidates=8 leaves real headroom to observe rotation across multiple rounds.
+    candidates = [_candidate(1, i, i, score=float(20 - i)) for i in range(20)]
+    history: list[dict] = []
+    observation_signatures: list[str] = []
+
+    for step in range(1, 4):
+        forced = controller.rank_forced_portfolio(
+            candidates,
+            history=history,
+            fallback_score_fields=("score",),
+            max_candidates=8,
+            seen_coordinates=set(),
+        )
+        selected = forced["forced_portfolio_selected"]
+        observation = next(row for row in selected if row["name"] == "observation")
+        observation_signatures.append(observation["signature"])
+        history.append(
+            {
+                "step": step,
+                "strategy_text": "anti_stagnation_forced:"
+                + ",".join(row["name"] for row in selected),
+                "chosen_signature": selected[0]["signature"],
+                "forced_signatures": [row["signature"] for row in selected],
+                "outcome": "pending",
+            }
+        )
+
+    # A genuinely diverse pool must rotate: no two consecutive calls select the same
+    # "observation" candidate, unlike the pre-fix behavior (the exact same signature
+    # every single call, confirmed live on exp5699's real 44-step run).
+    assert observation_signatures[0] != observation_signatures[1]
+    assert observation_signatures[1] != observation_signatures[2]
+
+
+def test_anti_stagnation_forced_portfolio_rotation_falls_back_when_pool_exhausted():
+    # REQ-ARC-FCP-5699-2: once every candidate in a category's pool has been recently
+    # forced, rotation must fall back to re-selecting rather than leaving the category
+    # unfilled -- the pre-existing category-fill guarantee is not weakened by rotation.
+    controller = AntiStagnationDiversityController(
+        thresholds=StrategyCollapseThresholds(window_size=8)
+    )
+    candidates = [_candidate(1, 0, 0, score=3.0)]  # single-candidate pool, no alternative
+    history = [
+        {
+            "step": 1,
+            "strategy_text": "anti_stagnation_forced:observation",
+            "chosen_signature": _candidate_signature(candidates[0], 0),
+            "forced_signatures": [_candidate_signature(candidates[0], 0)],
+            "outcome": "pending",
+        }
+    ]
+
+    forced = controller.rank_forced_portfolio(
+        candidates,
+        history=history,
+        fallback_score_fields=("score",),
+        max_candidates=5,
+        seen_coordinates=set(),
+    )
+
+    selected = forced["forced_portfolio_selected"]
+    observation = next(row for row in selected if row["name"] == "observation")
+    assert observation["signature"] == _candidate_signature(candidates[0], 0)
+    assert "observation" in forced["rotation_exhausted_categories"]
+
+
+def test_recently_forced_signatures_reads_plural_field():
+    controller = AntiStagnationDiversityController()
+    history = [
+        {
+            "strategy_text": "anti_stagnation_forced:observation,recovery_reset",
+            "chosen_signature": "A1@0,0",
+            "forced_signatures": ["A1@0,0", "A5@3,3"],
+            "outcome": "pending",
+        },
+        {
+            "strategy_text": "Observe and wait.",
+            "chosen_signature": "A1@0,0",
+            "outcome": "no_change",
+        },
+    ]
+    assert controller._recently_forced_signatures(history) == {"A1@0,0", "A5@3,3"}
+
+
+def test_recently_forced_signatures_falls_back_to_singular_field_legacy_row():
+    controller = AntiStagnationDiversityController()
+    # A forced-portfolio row recorded before `forced_signatures` existed (or by any other
+    # caller that only sets the singular field) should still contribute its one known
+    # signature rather than being silently ignored.
+    history = [
+        {
+            "strategy_text": "anti_stagnation_forced:observation",
+            "chosen_signature": "A2@1,1",
+            "outcome": "pending",
+        }
+    ]
+    assert controller._recently_forced_signatures(history) == {"A2@1,1"}
 
 
 def test_anti_stagnation_forced_portfolio_fallback_fills_to_budget():
@@ -574,3 +726,16 @@ def test_rank_respects_max_candidates_after_normal_vote():
     ranked = router.rank(frame=None, candidates=candidates)
 
     assert ranked == [candidates[0]]
+
+
+def test_req_arc_fcp_5699_2_spec_declares_rotation_fix() -> None:
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-2") :]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-2",
+        "SCENARIO-ARC-FCP-5699-2-FORCED-PORTFOLIO-ROTATES",
+        "_recently_forced_signatures",
+        "rotation_exhausted_categories",
+    ):
+        assert marker in section

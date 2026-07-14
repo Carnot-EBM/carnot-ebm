@@ -186,13 +186,25 @@ def _consecutive_null_outcomes(history: Sequence[Mapping[str, Any]]) -> int:
 def _format_candidate_lines(candidates: Sequence[Any]) -> list[str]:
     lines: list[str] = []
     for index, candidate in enumerate(candidates):
-        data = candidate.get("data") if isinstance(candidate, Mapping) else getattr(candidate, "data", None)
+        data = (
+            candidate.get("data")
+            if isinstance(candidate, Mapping)
+            else getattr(candidate, "data", None)
+        )
         data = data if isinstance(data, Mapping) else {}
-        action = candidate.get("action") if isinstance(candidate, Mapping) else getattr(candidate, "action", None)
+        action = (
+            candidate.get("action")
+            if isinstance(candidate, Mapping)
+            else getattr(candidate, "action", None)
+        )
         coord = f"x={data['x']},y={data['y']}" if "x" in data and "y" in data else "no-coordinate"
         hints = []
         for hint_field in ("salience_score", "effect_score", "verifier_score", "score"):
-            value = candidate.get(hint_field) if isinstance(candidate, Mapping) else getattr(candidate, hint_field, None)
+            value = (
+                candidate.get(hint_field)
+                if isinstance(candidate, Mapping)
+                else getattr(candidate, hint_field, None)
+            )
             if value is not None:
                 hints.append(f"{hint_field}={float(value):.2f}")
         hint_text = f" ({', '.join(hints)})" if hints else ""
@@ -210,12 +222,27 @@ def parse_propose_reply(text: str) -> dict[str, Any]:
     choice_match = _CHOICE_RE.search(text)
     strategy_text = strategy_match.group(1).strip() if strategy_match else ""
     if choice_match is None or not strategy_text:
-        return {"parse_ok": False, "strategy_text": strategy_text, "chosen_index": None, "raw": text}
+        return {
+            "parse_ok": False,
+            "strategy_text": strategy_text,
+            "chosen_index": None,
+            "raw": text,
+        }
     try:
         chosen_index = int(choice_match.group(1))
     except ValueError:
-        return {"parse_ok": False, "strategy_text": strategy_text, "chosen_index": None, "raw": text}
-    return {"parse_ok": True, "strategy_text": strategy_text, "chosen_index": chosen_index, "raw": text}
+        return {
+            "parse_ok": False,
+            "strategy_text": strategy_text,
+            "chosen_index": None,
+            "raw": text,
+        }
+    return {
+        "parse_ok": True,
+        "strategy_text": strategy_text,
+        "chosen_index": chosen_index,
+        "raw": text,
+    }
 
 
 def parse_reflect_reply(text: str) -> str:
@@ -232,8 +259,16 @@ class LLMStrategyProposer:
     completer: TextCompleter
     max_tokens: int = 96
 
-    def propose_one(self, context: str, candidate_lines: Sequence[str], *, temperature: float) -> dict[str, Any]:
-        prompt = _PROPOSE_INSTRUCTIONS + context + "\n\nCandidates:\n" + "\n".join(candidate_lines) + "\n\n"
+    def propose_one(
+        self, context: str, candidate_lines: Sequence[str], *, temperature: float
+    ) -> dict[str, Any]:
+        prompt = (
+            _PROPOSE_INSTRUCTIONS
+            + context
+            + "\n\nCandidates:\n"
+            + "\n".join(candidate_lines)
+            + "\n\n"
+        )
         ok, text = self.completer.complete_text(
             prompt, max_tokens=self.max_tokens, temperature=temperature, stop=["\n\n"]
         )
@@ -260,19 +295,36 @@ class LLMStrategyProposer:
         if not history:
             return {"parse_ok": False, "revised_strategy": "", "raw": ""}
         history_lines = [
-            f"- strategy: \"{row.get('strategy_text', '')}\" -> outcome: {row.get('outcome', 'unknown')}"
+            f'- strategy: "{row.get("strategy_text", "")}" -> outcome: {row.get("outcome", "unknown")}'
             for row in history
         ]
-        prompt = _REFLECT_INSTRUCTIONS + context + "\n\nRecent attempts:\n" + "\n".join(history_lines) + "\n\n"
-        ok, text = self.completer.complete_text(prompt, max_tokens=self.max_tokens, temperature=0.2, stop=["\n\n"])
+        prompt = (
+            _REFLECT_INSTRUCTIONS
+            + context
+            + "\n\nRecent attempts:\n"
+            + "\n".join(history_lines)
+            + "\n\n"
+        )
+        ok, text = self.completer.complete_text(
+            prompt, max_tokens=self.max_tokens, temperature=0.2, stop=["\n\n"]
+        )
         if not ok:
             return {"parse_ok": False, "revised_strategy": "", "raw": text, "completer_ok": False}
         revised = parse_reflect_reply(text)
-        return {"parse_ok": bool(revised), "revised_strategy": revised, "raw": text, "completer_ok": True}
+        return {
+            "parse_ok": bool(revised),
+            "revised_strategy": revised,
+            "raw": text,
+            "completer_ok": True,
+        }
 
 
 def _candidate_coordinate(candidate: Any) -> tuple[int, int] | None:
-    data = candidate.get("data") if isinstance(candidate, Mapping) else getattr(candidate, "data", None)
+    data = (
+        candidate.get("data")
+        if isinstance(candidate, Mapping)
+        else getattr(candidate, "data", None)
+    )
     data = data if isinstance(data, Mapping) else {}
     if "x" in data and "y" in data:
         try:
@@ -304,7 +356,11 @@ def _candidate_signature(candidate: Any, index: int) -> str:
 def _fallback_score(candidate: Any, fields: Sequence[str]) -> float:
     best = 0.0
     for field_name in fields:
-        value = candidate.get(field_name) if isinstance(candidate, Mapping) else getattr(candidate, field_name, None)
+        value = (
+            candidate.get(field_name)
+            if isinstance(candidate, Mapping)
+            else getattr(candidate, field_name, None)
+        )
         try:
             best = max(best, float(value or 0.0))
         except (TypeError, ValueError):
@@ -338,22 +394,32 @@ class AntiStagnationDiversityController:
 
     def diversity_metrics(self, history: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         rows = list(history)[-self.thresholds.window_size :]
-        strategy_texts = [str(row.get("strategy_text", "")) for row in rows if row.get("strategy_text")]
-        normalized = [_normalize_strategy_text(text) for text in strategy_texts if _normalize_strategy_text(text)]
+        strategy_texts = [
+            str(row.get("strategy_text", "")) for row in rows if row.get("strategy_text")
+        ]
+        normalized = [
+            _normalize_strategy_text(text)
+            for text in strategy_texts
+            if _normalize_strategy_text(text)
+        ]
         strategy_counts = Counter(normalized)
         distances = [
             _strategy_distance(left, right)
             for i, left in enumerate(strategy_texts)
             for right in strategy_texts[i + 1 :]
         ]
-        action_signatures = [str(row.get("chosen_signature", "")) for row in rows if row.get("chosen_signature")]
+        action_signatures = [
+            str(row.get("chosen_signature", "")) for row in rows if row.get("chosen_signature")
+        ]
         action_counts = Counter(action_signatures)
         return {
             "history_window_size": len(rows),
             "strategy_text_count": len(strategy_texts),
             "unique_normalized_strategy_count": len(strategy_counts),
             "max_normalized_strategy_repeat": max(strategy_counts.values(), default=0),
-            "mean_pairwise_strategy_distance": (sum(distances) / len(distances) if distances else 1.0),
+            "mean_pairwise_strategy_distance": (
+                sum(distances) / len(distances) if distances else 1.0
+            ),
             "unique_action_signature_count": len(action_counts),
             "max_action_signature_repeat": max(action_counts.values(), default=0),
             "consecutive_null_outcomes": _consecutive_null_outcomes(rows),
@@ -404,6 +470,57 @@ class AntiStagnationDiversityController:
             if _outcome_is_null(row.get("outcome")) and row.get("chosen_signature")
         }
 
+    def _recently_forced_signatures(
+        self, history: Sequence[Mapping[str, Any]], *, window: int = 5
+    ) -> set[str]:
+        """Signatures a recent FORCED-PORTFOLIO call already selected, regardless of outcome
+        (which may not be recorded yet -- a forced-portfolio history row is appended with
+        outcome='pending' and only gets a real outcome on the NEXT rank() call, one step
+        later). Distinct from `_recent_failed_signatures` (outcome-gated): this exists to fix
+        a real, live-observed failure mode (exp5699, 2026-07-14) -- once collapse correctly
+        fires and escapes the LLM's own repeated strategy, `rank_forced_portfolio`'s
+        deterministic `ranked_pool` sort re-picked the EXACT SAME top-ranked candidate for
+        `observation`/`action_type_probe`/`recovery_reset` every single subsequent call,
+        because those three categories intentionally tolerate a past OUTCOME failure
+        (`allow_failed_signature=True`) but nothing rotated the pool away from a candidate
+        just chosen by forced-portfolio mode itself when the underlying candidate list didn't
+        change frame-to-frame (a stalled game state). A real 44-step run measured the SAME
+        2-signature pair selected on every one of those 44 steps. This turns "escape the
+        LLM's repetition" into a genuine escape, not a swap into a NEW static repetition.
+
+        Verified two ways, 2026-07-14: (1) unit tests with a realistic candidate pool
+        (`test_anti_stagnation_forced_portfolio_rotates_across_repeated_calls`, 20
+        candidates) show genuine rotation across consecutive calls, and correct
+        fall-back-to-re-select only once the pool is truly exhausted
+        (`test_anti_stagnation_forced_portfolio_rotation_falls_back_when_pool_exhausted`).
+        (2) A real live re-run against g50t (the exact scenario that exposed the bug)
+        STILL showed static repetition after this fix -- investigated and found to be an
+        honest, structural non-bug: g50t's spawn frame offers exactly 5 total candidates
+        (`rich_action_candidates` returns ACTION1-5, no click action 6, hence no
+        coordinate diversity at all) against the controller's 5 forced-portfolio
+        categories, so every category's pool is exhausted the FIRST time it fills --
+        there is no alternative candidate to rotate to, on this specific game/state, no
+        matter what selection algorithm is used. This is a real limit of the candidate
+        SPACE, not of this rotation mechanism; the unit tests are the correct place to
+        verify the mechanism itself, since they can construct a pool with genuine
+        headroom that a frozen g50t frame does not have."""
+        recent = [
+            row
+            for row in list(history)
+            if str(row.get("strategy_text", "")).startswith("anti_stagnation_forced:")
+        ]
+        out: set[str] = set()
+        for row in recent[-window:]:
+            forced_signatures = row.get("forced_signatures")
+            if isinstance(forced_signatures, Sequence) and not isinstance(forced_signatures, str):
+                out.update(str(sig) for sig in forced_signatures if sig)
+            elif row.get("chosen_signature"):
+                # Legacy/defensive fallback for a forced-portfolio row recorded before
+                # `forced_signatures` existed (or by any other caller that only sets the
+                # singular field) -- still rotate away from at least the one signature we know.
+                out.add(str(row["chosen_signature"]))
+        return out
+
     def rank_forced_portfolio(
         self,
         candidates: Sequence[Any],
@@ -418,24 +535,36 @@ class AntiStagnationDiversityController:
         selected_ids: set[int] = set()
         selected_rows: list[dict[str, Any]] = []
         failed_signatures = self._recent_failed_signatures(history)
+        recently_forced = self._recently_forced_signatures(history)
+        rotation_exhausted_categories: list[str] = []
         recent_action_counts = Counter()
         for signature in failed_signatures:
             match = re.match(r"A(-?\d+)", signature)
             if match:
                 recent_action_counts[int(match.group(1))] += 1
 
-        def add(candidate: Any, category: str, *, allow_failed_signature: bool = False) -> bool:
+        def add(
+            candidate: Any,
+            category: str,
+            *,
+            allow_failed_signature: bool = False,
+            allow_recently_forced: bool = True,
+        ) -> bool:
             if id(candidate) in selected_ids or len(selected) >= max_candidates:
                 return False
             signature = _candidate_signature(candidate, ordered.index(candidate))
             if not allow_failed_signature and signature in failed_signatures:
+                return False
+            if not allow_recently_forced and signature in recently_forced:
                 return False
             selected.append(candidate)
             selected_ids.add(id(candidate))
             selected_rows.append({"name": category, "signature": signature})
             return True
 
-        def ranked_pool(pool: Sequence[Any], *, prefer_low_recent_action: bool = False) -> list[Any]:
+        def ranked_pool(
+            pool: Sequence[Any], *, prefer_low_recent_action: bool = False
+        ) -> list[Any]:
             def sort_key(candidate: Any) -> tuple[float, float, str]:
                 recent = float(recent_action_counts.get(_candidate_action(candidate), 0))
                 return (
@@ -453,7 +582,23 @@ class AntiStagnationDiversityController:
             allow_failed_signature: bool = False,
             prefer_low_recent_action: bool = False,
         ) -> bool:
-            for candidate in ranked_pool(pool, prefer_low_recent_action=prefer_low_recent_action):
+            ranked = ranked_pool(pool, prefer_low_recent_action=prefer_low_recent_action)
+            # Pass 1: rotate away from whatever forced-portfolio just picked last time, so a
+            # frozen candidate pool doesn't collapse this category onto one static signature.
+            for candidate in ranked:
+                if add(
+                    candidate,
+                    category,
+                    allow_failed_signature=allow_failed_signature,
+                    allow_recently_forced=False,
+                ):
+                    return True
+            # Pass 2: rotation genuinely exhausted every candidate in this category's pool --
+            # fall back to re-selecting rather than under-filling the portfolio below what it
+            # currently guarantees (matches the pre-existing category-fill contract).
+            if ranked:
+                rotation_exhausted_categories.append(category)
+            for candidate in ranked:
                 if add(candidate, category, allow_failed_signature=allow_failed_signature):
                     return True
             return False
@@ -537,6 +682,14 @@ class AntiStagnationDiversityController:
                 "normalize recently failed strategy text from null outcomes; ignore matching "
                 "LLM proposals and force deterministic portfolio categories on collapse"
             ),
+            "recently_forced_signatures": sorted(recently_forced),
+            "rotation_exhausted_categories": rotation_exhausted_categories,
+            "rotation_policy": (
+                "each category first excludes signatures a recent forced-portfolio call "
+                "already selected (rotate to the next-best candidate in that category's "
+                "ranked pool); only re-selects a recently-forced signature when rotation "
+                "would otherwise leave the category empty"
+            ),
         }
 
 
@@ -580,10 +733,16 @@ class SGECandidateRouter:
     _seen_coordinates: set[tuple[int, int]] = field(default_factory=set, init=False)
 
     def _context(self) -> str:
-        note = f"Current guidance from reflection: {self._reflection_note}\n" if self._reflection_note else ""
+        note = (
+            f"Current guidance from reflection: {self._reflection_note}\n"
+            if self._reflection_note
+            else ""
+        )
         return f"Game: {self.game_id}\n{note}".strip()
 
-    def rank(self, frame: Any, candidates: Sequence[Any], *, previous_frame: Any | None = None) -> list[Any]:
+    def rank(
+        self, frame: Any, candidates: Sequence[Any], *, previous_frame: Any | None = None
+    ) -> list[Any]:
         del frame, previous_frame
         self._step += 1
         ordered = list(candidates)
@@ -633,6 +792,9 @@ class SGECandidateRouter:
                     "step": self._step,
                     "strategy_text": "anti_stagnation_forced:" + ",".join(forced_names),
                     "chosen_signature": _candidate_signature(first, first_index),
+                    "forced_signatures": [
+                        row["signature"] for row in forced["forced_portfolio_selected"]
+                    ],
                     "votes": {},
                     "outcome": "pending",
                 }
@@ -640,7 +802,9 @@ class SGECandidateRouter:
             anti_diagnostics = dict(anti_before)
             anti_diagnostics.update(
                 {
-                    "forced_portfolio": [dict(row) for row in self.anti_stagnation_controller.forced_portfolio],
+                    "forced_portfolio": [
+                        dict(row) for row in self.anti_stagnation_controller.forced_portfolio
+                    ],
                     "forced_portfolio_selected": forced["forced_portfolio_selected"],
                     "taboo_set": forced["taboo_set"],
                     "taboo_policy": forced["taboo_policy"],
@@ -668,7 +832,9 @@ class SGECandidateRouter:
 
         temperatures = tuple(self.temperatures[: self.k]) or (0.5,)
         candidate_lines = _format_candidate_lines(ordered)
-        proposals = self.proposer.propose_many(self._context(), candidate_lines, temperatures=temperatures)
+        proposals = self.proposer.propose_many(
+            self._context(), candidate_lines, temperatures=temperatures
+        )
         taboo_set = (
             set(self.anti_stagnation_controller.taboo_set(self.history))
             if self.anti_stagnation_controller is not None
@@ -726,7 +892,14 @@ class SGECandidateRouter:
         self._seen_coordinates |= seen_this_call
 
         top_index, _ = ranked_pairs[0]
-        chosen_strategy = next((p["strategy_text"] for p in proposals if p.get("chosen_index") == top_index and p.get("parse_ok")), "")
+        chosen_strategy = next(
+            (
+                p["strategy_text"]
+                for p in proposals
+                if p.get("chosen_index") == top_index and p.get("parse_ok")
+            ),
+            "",
+        )
         self.history.append(
             {
                 "step": self._step,
