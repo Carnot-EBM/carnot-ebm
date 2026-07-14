@@ -5925,3 +5925,9 @@ The critical path for milestone .250:
 - theme: bounded operational attribution for a synthesis-heavy slowest-path set
 - key result: honest operational result -- the slowest-five list contains one compute-bound entry, and the task-conditioned GPU-idle indicator is false; runtime causes and any concurrent multi-model runner miss are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.509
+- exp_range: exp5638-exp5639 (only IDs present in authoritative timing data; the complete milestone range is not available)
+- theme: operational execution led by transition mapping and cross-area evidence reconciliation
+- key result: honest operational result -- the visible compute-bound slow paths are identified, but task-conditioned GPU idle, causal phase timing, and a concurrent multi-model runner miss are not established
+- acceptance: 4/4 operational questions answered
