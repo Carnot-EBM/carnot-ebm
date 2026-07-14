@@ -1,0 +1,91 @@
+{
+  "experiment": "experiment_5704_dynamics_gate_relaxed_threshold_ab",
+  "schema": "carnot.exp5704.dynamics_gate_relaxed_threshold_ab.v1",
+  "result_path": "results/experiment_5704_dynamics_gate_relaxed_threshold_ab.json",
+  "honest_verdict": "complete: inconclusive_no_attempt_in_relaxed_only_band",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default live re-induction proposer"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; distinguishes 'relaxing the threshold unlocks a real usable plan the strict gate discards' from 'the strict gate is correctly protecting against bad plans' from 'inconclusive -- no attempt landed in the interesting band' -- these are different, non-interchangeable findings"
+    },
+    "n_relaxed_only_accepts": {
+      "principle": "count of real attempts that would be accepted under the relaxed bar but rejected under the strict bar -- the direct evidence for whether the strict threshold discards recoverable attempts"
+    },
+    "relaxed_only_accepts_with_good_plan": {
+      "principle": "of the relaxed-only accepts, how many produced a plan that ALSO passed plan_reaches_goal (in-model verification) -- an accepted-but-useless model would not support loosening the gate"
+    },
+    "real_levelups_in_collected_transitions": {
+      "principle": "CLAUDE.md FALSE_NEGATIVE_RISK discipline -- the comparison is only interpretable with >=1 real level-up in the collection window"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "target_game": "lp85",
+  "n_attempts": 3,
+  "strict_threshold": 1.0,
+  "relaxed_threshold": 0.7,
+  "attempts": [
+    {
+      "attempt_index": 0,
+      "duration_s": 794.259,
+      "heldout_accuracy": 0.0,
+      "accepted_by_strict": false,
+      "accepted_by_relaxed": false,
+      "planned": true,
+      "goal_predicate_satisfiable": true,
+      "plan_reaches_goal": true,
+      "skipped": ""
+    },
+    {
+      "attempt_index": 1,
+      "duration_s": 94.213,
+      "heldout_accuracy": 0.0,
+      "accepted_by_strict": false,
+      "accepted_by_relaxed": false,
+      "planned": true,
+      "goal_predicate_satisfiable": true,
+      "plan_reaches_goal": true,
+      "skipped": ""
+    },
+    {
+      "attempt_index": 2,
+      "duration_s": 89.807,
+      "heldout_accuracy": 0.0,
+      "accepted_by_strict": false,
+      "accepted_by_relaxed": false,
+      "planned": true,
+      "goal_predicate_satisfiable": true,
+      "plan_reaches_goal": true,
+      "skipped": ""
+    }
+  ],
+  "n_strict_accepts": 0,
+  "n_relaxed_only_accepts": 0,
+  "relaxed_only_accepts_with_good_plan": 0,
+  "real_levelups_in_collected_transitions": 1,
+  "transitions_collected": 47,
+  "solve_provenance": "development_proxy",
+  "random_seed": 5704,
+  "duration_s": 989.518,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "e3_policy_import": true,
+    "reinduction_import": true,
+    "gguf_cached": true,
+    "llama_server_binary_present": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "7b0ebf17aaeac7d27cc5c87fa530d0f6ebbb6c1d10c583a002a726ebf9dfeaf7"
+}

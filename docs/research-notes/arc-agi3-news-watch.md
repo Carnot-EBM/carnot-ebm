@@ -24,3 +24,7 @@ Daily automated check (systemd timer `arc-news-watch.timer`, see `scripts/arc_ne
 
 - NoOneAhead reached **1.56**, joining Mathurin Ache and anngle in a new three-way tie for second behind Tecnod8.AI (**1.61**). [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-07-14 13:09 UTC -- NEW
+
+- YUTO KOJIMA took the lead with **1.86**, ahead of Tecnod8.AI (**1.61**); the **1.56** trio now ties for third. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+

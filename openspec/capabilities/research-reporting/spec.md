@@ -41171,3 +41171,113 @@ prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5614 | Implemented (`python/carnot/experiment_5614_v507_source_delta_ingestion.py`, `results/experiment_5614_v507_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5614_v507_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5625: V508 Transition Locks V507 Terminal Evidence And Dependency Gates
+
+The Exp5625 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/conductor-log.md`,
+`research-complete.yaml`, and the terminal `.507` artifacts
+`results/experiment_5613_transition_v507.json`,
+`results/experiment_5614_v507_source_delta_ingestion.json`,
+`results/experiment_5615_native_llamacpp_cuda_runtime_certificate.json`,
+`results/experiment_5616_exact_nonstationary_constraint_stream.json`,
+`results/experiment_5617_kan_critical_task_duration_map.json`,
+`results/experiment_5618_predictive_window_kan_self_learning.json`,
+`results/experiment_5619_arc_forward_inverse_transition_cycle.json`,
+`results/experiment_5620_arc_cycle_guarded_live_update_ab.json`,
+`results/experiment_5621_arc_live_self_discovery_levelup_v507.json`,
+`results/experiment_5622_cdls_exact_kernel_audit.json`,
+`results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json`, and
+`results/experiment_5624_v507_capstone_reconciliation.json`. It SHALL
+classify those artifacts as complete, blocked, gate-skipped, promoted,
+retired, or adversarially flagged without upgrading flagged or unpromoted
+evidence into a clean prerequisite.
+
+The transition SHALL preserve Exp5616's exact nonstationary stream and
+Exp5622's corrected exact cDLS kernel as clean substrates. It SHALL preserve
+Exp5618 as a promising but unpromoted substrate because Exp5617's
+`critical_duration_fit_r2` failed the preregistered duration-fit gate. It SHALL
+keep the native runtime certificate, solve-versus-verify chain, ARC
+transition-cycle proxy and guarded live branch, and cDLS timing/crossover
+scopes closed according to the upstream terminal evidence. The workflow SHALL
+record `previous_milestone=2026.07.507`, `current_milestone=2026.07.508`,
+`current_task_range=exp5625-exp5635`, and a collision check showing Exp5625
+through Exp5635 do not collide with completed or retired experiment IDs in
+`research-complete.yaml` and the conductor log.
+
+The artifact SHALL emit dependency chains for conformal qualification to KAN
+replication and independent audit, epistemic-object ARC prototype to advisory
+live A/B plus an unconditional level attempt, and exact temperature exchange
+to a gated cDLS quality trial. It SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
+`research-roadmap.yaml` or `scripts/research_conductor.py`, and SHALL write
+`results/experiment_5625_transition_v508.json`.
+
+The artifact SHALL include required fields `field_principles`,
+`artifacts_read`, `terminal_findings`, `promoted_substrates`,
+`promising_unpromoted_substrates`, `retired_scopes`,
+`adversarial_flags_preserved`, `current_task_range`, `dependency_map`,
+`inference_substrate`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `artifacts_read`: principle "every claim traces to a file"
+- `terminal_findings`: principle "only observed outcomes cross milestones"
+- `promoted_substrates`: principle "clean prerequisites are explicit"
+- `promising_unpromoted_substrates`: principle "Exp5618 is not laundered into a promotion"
+- `retired_scopes`: principle "failed chains remain closed"
+- `adversarial_flags_preserved`: principle "flags remain visible"
+- `current_task_range`: principle "IDs do not collide"
+- `dependency_map`: principle "gates are auditable"
+- `inference_substrate`: principle "no new inference occurred"
+- `reproducibility_checksum`: principle "transition content is stable"
+- `honest_verdict`: principle "terminal status starts complete: or blocked:"
+
+#### SCENARIO-REPORT-5625: V508 Transition Preserves V507 Terminal Boundaries
+
+**Given** the `.507` artifacts from Exp5613 through Exp5624 are readable
+**And** Exp5616 reports an exact nonstationary stream with zero oracle errors
+**And** Exp5622 reports a corrected exact cDLS kernel with passed exactness
+controls
+**And** Exp5618 reports internal readiness while Exp5617 fails the
+preregistered duration-fit gate
+**And** Exp5615, Exp5619, Exp5620, Exp5621, and Exp5623 report blocked,
+flagged, gate-skipped, or closed evidence
+**When** the Exp5625 workflow runs
+**Then** it emits `results/experiment_5625_transition_v508.json`, records
+`previous_milestone=2026.07.507`, records
+`current_milestone=2026.07.508`, records
+`current_task_range=exp5625-exp5635`, promotes only Exp5616 and Exp5622 as
+clean substrates, records Exp5618 only in `promising_unpromoted_substrates`,
+keeps the closed scopes closed, preserves adversarial flags, declares
+`inference_substrate=aggregation_from_upstream_artifacts`, and uses a terminal
+`honest_verdict` prefix.
+
+#### SCENARIO-REPORT-5625-DEPENDENCY-MAP: V508 Gates Stay Auditable
+
+**Given** the `.508` roadmap defines Exp5625 through Exp5635
+**And** `research-complete.yaml` and `ops/conductor-log.md` have no completed
+or retired Exp5625 through Exp5635 IDs
+**When** the Exp5625 dependency map is built
+**Then** the map contains the chains `conformal qualification->KAN
+replication->independent audit`, `epistemic object prototype->advisory live
+A/B->unconditional level attempt`, and `exact temperature exchange->gated
+quality trial`, and it records the non-collision boundary explicitly.
+
+#### SCENARIO-REPORT-5625-FIELD-PRINCIPLES: Transition Fields Stay Annotated
+
+**Given** the Exp5625 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `research-roadmap.yaml` is unchanged,
+`scripts/research_conductor.py` is unchanged, `inference_substrate` is
+`aggregation_from_upstream_artifacts`, `reproducibility_checksum` is populated,
+and `honest_verdict` starts with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5625)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5625 | Implemented (`python/carnot/experiment_5625_transition_v508.py`, `results/experiment_5625_transition_v508.json`) | Implemented (`tests/python/test_experiment_5625_transition_v508.py`) |
