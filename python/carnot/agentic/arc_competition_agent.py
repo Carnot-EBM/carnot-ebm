@@ -43,6 +43,7 @@ from carnot.agentic.arc_program_synthesis_filter import (
     induce_action_effect_proposal_filter,
 )
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
+from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
     GroundTruthValidatedFrameChangeScorer,
@@ -117,6 +118,12 @@ SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
 SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = True
 SUBMITTED_COLOR_BLOB_SALIENCE_MODE = "single_color_connected_component_tiers"
+# Task 10 follow-on (2026-07-13): ObjectHistorySaliencePrior wraps action_prior with a
+# per-object_hash change-history bonus (REQ-ARC-FCP-5591-2) but OFF by default, matching every
+# other freshly-wired-but-unvalidated component in this file. Flipping this for the SCORED agent
+# needs its own matched-budget offline A/B first, per the solve_rate_dropped guardrail. See
+# python/carnot/agentic/arc_object_history_salience.py module docstring.
+SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED = False
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED = False
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD = 0.75
 SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED = False
@@ -2459,6 +2466,7 @@ class E3AgentPolicy:
             SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
         ),
         inert_click_pruner: Any | bool | None = SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
+        object_history_salience: Any | bool | None = SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED,
         amortized_first_contact_prior: Any | bool | None = (
             SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
         ),
@@ -2505,6 +2513,9 @@ class E3AgentPolicy:
             frame_change_scorer = _load_submitted_frame_change_scorer()
         if action_prior is None and SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED:
             action_prior = ColorBlobSaliencePrior()
+        action_prior = coerce_object_history_salience_prior(
+            object_history_salience, base_prior=action_prior
+        )
         if action_effect_expansion_prior is None:
             action_effect_expansion_prior = bool(
                 SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED and frame_change_scorer is not None
@@ -3627,6 +3638,7 @@ SUBMITTED_AGENT_CONFIG = {
     "object_centric_proposal_mode": SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE,
     "color_blob_salience_enabled": SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED,
     "color_blob_salience_mode": SUBMITTED_COLOR_BLOB_SALIENCE_MODE,
+    "object_history_salience_enabled": SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED,
     "program_synthesis_proposal_filter_enabled": (
         SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED
     ),
