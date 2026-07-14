@@ -1242,5 +1242,23 @@
     "terminal_reason": "action_budget_exhausted"
   },
   "tests_run": [],
-  "trace_replay_checksum": "sha256:2aa1fe926ed8a758b023a32062d66bae5bf5b22454aa7c6983bca403639202df"
+  "trace_replay_checksum": "sha256:2aa1fe926ed8a758b023a32062d66bae5bf5b22454aa7c6983bca403639202df",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=10.006 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }

@@ -1,0 +1,745 @@
+{
+  "baselines": {
+    "independent_replicas_no_exchange": {
+      "description": "Fixed-label independent corrected cDLS replicas with the exchange layer removed.",
+      "exact_distribution_tv_max": 7.643741783053054e-17
+    },
+    "single_chain_equal_transition": {
+      "description": "Cold-beta corrected cDLS chain with the same number of transition attempts as one exchange sweep.",
+      "exact_distribution_tv_max": 1.478851763270228e-16
+    }
+  },
+  "beta_ladder": [
+    0.45,
+    0.8,
+    1.25
+  ],
+  "broken_controls": [
+    {
+      "control_id": "missing_beta_factors",
+      "detected": true,
+      "max_stationarity_tv": null,
+      "max_swap_detailed_balance_residual": 0.000844033165,
+      "state_mutation_detected": false,
+      "systems_tested": [
+        "ising_n3_frustrated_triangle",
+        "ising_n3_frustrated_triangle_field_shift"
+      ]
+    },
+    {
+      "control_id": "wrong_energy_sign",
+      "detected": true,
+      "max_stationarity_tv": null,
+      "max_swap_detailed_balance_residual": 0.000532171072,
+      "state_mutation_detected": false,
+      "systems_tested": [
+        "ising_n3_frustrated_triangle",
+        "ising_n3_frustrated_triangle_field_shift"
+      ]
+    },
+    {
+      "control_id": "state_copy_swap",
+      "detected": true,
+      "max_stationarity_tv": 0.776635227845,
+      "max_swap_detailed_balance_residual": null,
+      "state_mutation_detected": true,
+      "systems_tested": [
+        "ising_n3_frustrated_triangle",
+        "ising_n3_frustrated_triangle_field_shift"
+      ]
+    },
+    {
+      "control_id": "asynchronous_stale_energy",
+      "detected": true,
+      "max_stationarity_tv": null,
+      "max_swap_detailed_balance_residual": 0.000362677442,
+      "state_mutation_detected": false,
+      "systems_tested": [
+        "ising_n3_frustrated_triangle",
+        "ising_n3_frustrated_triangle_field_shift"
+      ]
+    },
+    {
+      "control_id": "one_way_exchange",
+      "detected": true,
+      "max_stationarity_tv": null,
+      "max_swap_detailed_balance_residual": 0.001908131026,
+      "state_mutation_detected": false,
+      "systems_tested": [
+        "ising_n3_frustrated_triangle",
+        "ising_n3_frustrated_triangle_field_shift"
+      ]
+    },
+    {
+      "control_id": "biased_proposal_schedule",
+      "detected": true,
+      "max_stationarity_tv": null,
+      "max_swap_detailed_balance_residual": 0.001144514685,
+      "state_mutation_detected": false,
+      "systems_tested": [
+        "ising_n3_frustrated_triangle",
+        "ising_n3_frustrated_triangle_field_shift"
+      ]
+    }
+  ],
+  "cold_replica_energy_error": 1.1102230246251565e-16,
+  "corrected_kernel_receipt": {
+    "acceptance_rule": "alpha(x,y)=min(1, pi(y) q(x|y) / (pi(x) q(y|x))) with pi(x) proportional to exp(-beta E(x))",
+    "continuous_bound": 3.0,
+    "drift_scale": 0.17,
+    "final_kernel": "corrected_cdls_projection_mh",
+    "large_n_timing_tuned": false,
+    "proposal_std": 0.72,
+    "result_path": "results/experiment_5622_cdls_exact_kernel_audit.json",
+    "result_sha256": "26d2b4a2f0de19ee73e215908a5dfa0e2f1f81e4ec93064fe9187fb86d71e2ab",
+    "source_path": "python/carnot/experiment_5622_cdls_exact_kernel_audit.py",
+    "source_reproducibility_checksum": "7932f264ba60a2639f47f59ec0868d422f3a20392b6508f45f96a3743529c2fd",
+    "source_sha256": "2f614b9498bf6bd258e4ae17bda3998e86ec9cb7ef2e0b9f564af26df2beeba1",
+    "substrate_unchanged": true
+  },
+  "deterministic_replay_pass": true,
+  "enumerable_targets": [
+    {
+      "beta_targets": [
+        {
+          "beta": 0.45,
+          "beta_label": 0,
+          "energy_distribution": [
+            {
+              "energy": -0.68,
+              "probability": 0.157571357894016
+            },
+            {
+              "energy": -0.66,
+              "probability": 0.156159578211043
+            },
+            {
+              "energy": -0.62,
+              "probability": 0.153373852548395
+            },
+            {
+              "energy": -0.6,
+              "probability": 0.151999680923418
+            },
+            {
+              "energy": -0.38,
+              "probability": 0.137672602618292
+            },
+            {
+              "energy": -0.2,
+              "probability": 0.126960805619349
+            },
+            {
+              "energy": 1.18,
+              "probability": 0.068229595453841
+            },
+            {
+              "energy": 1.96,
+              "probability": 0.048032526731646
+            }
+          ],
+          "energy_mean": -0.299558517210537,
+          "spin_marginals": {
+            "probability_plus": [
+              0.515435628831571,
+              0.46882551318033,
+              0.50892133717825
+            ],
+            "spin_mean": [
+              0.030871257663143,
+              -0.06234897363934,
+              0.017842674356499
+            ]
+          },
+          "target_probability_checksum": "a98ce626213b9b540b0177368e8e089fbba6c6260f547193dc9301ea771911e3"
+        },
+        {
+          "beta": 0.8,
+          "beta_label": 1,
+          "energy_distribution": [
+            {
+              "energy": -0.68,
+              "probability": 0.175751712670846
+            },
+            {
+              "energy": -0.66,
+              "probability": 0.172962061985886
+            },
+            {
+              "energy": -0.62,
+              "probability": 0.167514895483321
+            },
+            {
+              "energy": -0.6,
+              "probability": 0.164855985161342
+            },
+            {
+              "energy": -0.38,
+              "probability": 0.138251193817051
+            },
+            {
+              "energy": -0.2,
+              "probability": 0.119710014880743
+            },
+            {
+              "energy": 1.18,
+              "probability": 0.039688928732733
+            },
+            {
+              "energy": 1.96,
+              "probability": 0.021265207268079
+            }
+          ],
+          "energy_mean": -0.424403666299892,
+          "spin_marginals": {
+            "probability_plus": [
+              0.518417080018991,
+              0.452188477951759,
+              0.508112718270208
+            ],
+            "spin_mean": [
+              0.036834160037981,
+              -0.095623044096483,
+              0.016225436540416
+            ]
+          },
+          "target_probability_checksum": "92ba5f98c7d94da0910294a67f6ef1c3a9fa5f987b7c2fa8ae0e7c5b7365e901"
+        },
+        {
+          "beta": 1.25,
+          "beta_label": 2,
+          "energy_distribution": [
+            {
+              "energy": -0.68,
+              "probability": 0.193100207393244
+            },
+            {
+              "energy": -0.66,
+              "probability": 0.188332546285358
+            },
+            {
+              "energy": -0.62,
+              "probability": 0.179147459617775
+            },
+            {
+              "energy": -0.6,
+              "probability": 0.174724293079911
+            },
+            {
+              "energy": -0.38,
+              "probability": 0.13271570227369
+            },
+            {
+              "energy": -0.2,
+              "probability": 0.105975640749582
+            },
+            {
+              "energy": 1.18,
+              "probability": 0.018882003325941
+            },
+            {
+              "energy": 1.96,
+              "probability": 0.007122147274499
+            }
+          ],
+          "energy_mean": -0.506900544817998,
+          "spin_marginals": {
+            "probability_plus": [
+              0.519077711502764,
+              0.434146036583129,
+              0.506290397754125
+            ],
+            "spin_mean": [
+              0.038155423005527,
+              -0.131707926833743,
+              0.01258079550825
+            ]
+          },
+          "target_probability_checksum": "f0e8d8c9242ddb07cb5bd361b952aa70f3ad66db74117dffcb5aa630366909da"
+        }
+      ],
+      "couplings": [
+        [
+          0.0,
+          0.58,
+          -0.47
+        ],
+        [
+          0.58,
+          0.0,
+          0.52
+        ],
+        [
+          -0.47,
+          0.52,
+          0.0
+        ]
+      ],
+      "fields": [
+        0.12,
+        -0.18,
+        0.09
+      ],
+      "n_spins": 3,
+      "state_count": 8,
+      "system_id": "ising_n3_frustrated_triangle",
+      "topology": "frustrated_triangle_mixed_sign_cycle"
+    },
+    {
+      "beta_targets": [
+        {
+          "beta": 0.45,
+          "beta_label": 0,
+          "energy_distribution": [
+            {
+              "energy": -1.02,
+              "probability": 0.182081598219089
+            },
+            {
+              "energy": -0.66,
+              "probability": 0.154849693714052
+            },
+            {
+              "energy": -0.46,
+              "probability": 0.141521964114971
+            },
+            {
+              "energy": -0.42,
+              "probability": 0.277994716753068
+            },
+            {
+              "energy": -0.34,
+              "probability": 0.134082452577719
+            },
+            {
+              "energy": 1.46,
+              "probability": 0.059647660568153
+            },
+            {
+              "energy": 1.86,
+              "probability": 0.049821914052949
+            }
+          ],
+          "energy_mean": -0.335615601872356,
+          "spin_marginals": {
+            "probability_plus": [
+              0.471724829898939,
+              0.535576310877828,
+              0.477751418721254
+            ],
+            "spin_mean": [
+              -0.056550340202121,
+              0.071152621755656,
+              -0.044497162557492
+            ]
+          },
+          "target_probability_checksum": "79f33eb3ee36cfa26f88de524e99fd50b49b1d55c5f990c0f78bd418eebbf7f6"
+        },
+        {
+          "beta": 0.8,
+          "beta_label": 1,
+          "energy_distribution": [
+            {
+              "energy": -1.02,
+              "probability": 0.22502089977034
+            },
+            {
+              "energy": -0.66,
+              "probability": 0.168712028098872
+            },
+            {
+              "energy": -0.46,
+              "probability": 0.143766906868347
+            },
+            {
+              "energy": -0.42,
+              "probability": 0.278478391174321
+            },
+            {
+              "energy": -0.34,
+              "probability": 0.130607061591394
+            },
+            {
+              "energy": 1.46,
+              "probability": 0.030944438370907
+            },
+            {
+              "energy": 1.86,
+              "probability": 0.02247027412582
+            }
+          ],
+          "energy_mean": -0.481397768809181,
+          "spin_marginals": {
+            "probability_plus": [
+              0.440029891136622,
+              0.563916561827279,
+              0.461028559403246
+            ],
+            "spin_mean": [
+              -0.119940217726757,
+              0.127833123654558,
+              -0.077942881193508
+            ]
+          },
+          "target_probability_checksum": "cc06a29f6c88010a0ae7a6773651f5034e31662341d3eda7aceb5d4187692f59"
+        },
+        {
+          "beta": 1.25,
+          "beta_label": 2,
+          "energy_distribution": [
+            {
+              "energy": -1.02,
+              "probability": 0.279428390958091
+            },
+            {
+              "energy": -0.66,
+              "probability": 0.178171408437254
+            },
+            {
+              "energy": -0.46,
+              "probability": 0.138760032411868
+            },
+            {
+              "energy": -0.42,
+              "probability": 0.263985251549684
+            },
+            {
+              "energy": -0.34,
+              "probability": 0.119431866705894
+            },
+            {
+              "energy": 1.46,
+              "probability": 0.012588026138777
+            },
+            {
+              "energy": 1.86,
+              "probability": 0.007635023798432
+            }
+          ],
+          "energy_mean": -0.585340681158471,
+          "spin_marginals": {
+            "probability_plus": [
+              0.396005144394355,
+              0.602180451308963,
+              0.437230924716422
+            ],
+            "spin_mean": [
+              -0.20798971121129,
+              0.204360902617926,
+              -0.125538150567156
+            ]
+          },
+          "target_probability_checksum": "2edc3513087dfb4aedafd8f1b4d6930b4e8ad153b85ddd70c7c9acc0f898ea4a"
+        }
+      ],
+      "couplings": [
+        [
+          0.0,
+          -0.61,
+          0.56
+        ],
+        [
+          -0.61,
+          0.0,
+          0.49
+        ],
+        [
+          0.56,
+          0.49,
+          0.0
+        ]
+      ],
+      "fields": [
+        -0.07,
+        0.16,
+        -0.11
+      ],
+      "n_spins": 3,
+      "state_count": 8,
+      "system_id": "ising_n3_frustrated_triangle_field_shift",
+      "topology": "frustrated_triangle_field_shift"
+    }
+  ],
+  "exact_distribution_tv_max": 3.0747973611688906e-16,
+  "exchange_schedule": [
+    {
+      "adjacent_beta_label_pair": [
+        0,
+        1
+      ],
+      "phase": "temperature_label_exchange",
+      "proposal": "swap_temperature_labels",
+      "state_copy_allowed": false,
+      "transition_count": 1
+    },
+    {
+      "adjacent_beta_label_pair": [
+        1,
+        2
+      ],
+      "phase": "temperature_label_exchange",
+      "proposal": "swap_temperature_labels",
+      "state_copy_allowed": false,
+      "transition_count": 1
+    }
+  ],
+  "experiment": 5633,
+  "experiment_id": "exp5633-temperature-exchange-cdls-exact-audit",
+  "field_principles": {
+    "beta_ladder": "Freezes the temperature scope so later quality differences cannot come from an unreported ladder search.",
+    "broken_controls": "Demonstrates the audit rejects biased exchange variants that would otherwise look superficially normalized.",
+    "cold_replica_energy_error": "Reports target-temperature energy parity explicitly instead of hiding it in aggregate TV.",
+    "corrected_kernel_receipt": "Proves the exact Exp5622 corrected within-replica substrate is unchanged and source-hash pinned.",
+    "deterministic_replay_pass": "Proves fixed seeds reproduce the same label-exchange trace.",
+    "enumerable_targets": "Preserves deterministic Ising ground truth, marginals, and energy distributions for replay.",
+    "exact_distribution_tv_max": "Measures exact product-target and cold-label parity for the composed exchange sampler.",
+    "exchange_schedule": "Records which adjacent beta-label pairs are proposed and in what fixed order.",
+    "field_principles": "Explains why each audit and gate field exists before any exchange quality trial can consume it.",
+    "hardware_speedup_claimed": "Bare false prevents CUDA, board, SNN, TSU, or hardware inference from entering this artifact.",
+    "honest_verdict": "States whether invariant failure blocks later quality trials.",
+    "inference_substrate": "Declares exact corrected cDLS plus replica temperature-label exchange, not LLM inference or hardware timing.",
+    "random_seeds": "Records replay seeds for deterministic trace and accounting checks.",
+    "replica_exchange_kernel_ready_score": "Provides a mechanical downstream gate that is 1.0 only when exactness and control-rejection gates pass.",
+    "reproducibility_checksum": "Content-addresses the artifact so future reruns can detect silent drift.",
+    "round_trip_accounting_error": "Checks that label movement is accounted for without copying or losing temperature labels.",
+    "swap_detailed_balance_residual_max": "Measures reversibility of the temperature-label exchange instead of assuming it.",
+    "swap_rule": "Makes the exact label-exchange acceptance ratio inspectable.",
+    "timing_claimed": "Bare false keeps Exp5633 an exactness audit and does not reopen retired crossover timing.",
+    "transition_normalization_error_max": "Confirms the within-replica and exchange kernels are stochastic before stationarity is trusted.",
+    "within_replica_schedule": "Records the exact corrected-cDLS transition accounting applied at each physical replica."
+  },
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete: exact temperature-label exchange cDLS audit ready; invariant gates permit later quality trials",
+  "inference_substrate": "exact_corrected_cdls_with_replica_temperature_exchange",
+  "milestone": "2026.07.508",
+  "product_stationarity_rows": [
+    {
+      "cold_label_distribution_tv": 2.0816681711721685e-16,
+      "cold_replica_energy_error": 0.0,
+      "product_target_state_count": 3072,
+      "product_target_stationarity_tv": 9.157834352093797e-17,
+      "swap_detailed_balance_residual": 3.2526065174565133e-19,
+      "system_id": "ising_n3_frustrated_triangle",
+      "transition_normalization_error": 1.1102230246251565e-16
+    },
+    {
+      "cold_label_distribution_tv": 3.0747973611688906e-16,
+      "cold_replica_energy_error": 1.1102230246251565e-16,
+      "product_target_state_count": 3072,
+      "product_target_stationarity_tv": 7.551012851152389e-17,
+      "swap_detailed_balance_residual": 4.336808689942018e-19,
+      "system_id": "ising_n3_frustrated_triangle_field_shift",
+      "transition_normalization_error": 2.220446049250313e-16
+    }
+  ],
+  "random_seeds": [
+    5633,
+    5634,
+    5635,
+    5636,
+    5637
+  ],
+  "replica_exchange_kernel_ready_score": 1.0,
+  "reproducibility_checksum": "d8209783307a49770f9ddbad5cb29aaf26e3678b1cf29581e9cfd14303f4d326",
+  "round_trip_accounting": {
+    "pass": true,
+    "round_trip_accounting_error_max": 0.0,
+    "rows": [
+      {
+        "accepted_swaps": 84,
+        "attempted_swaps": 96,
+        "rejected_swaps": 12,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 10,
+          "1": 16,
+          "2": 13
+        },
+        "seed": 5633,
+        "system_id": "ising_n3_frustrated_triangle",
+        "trace_checksum": "5f40ef961b174b11115e33d404e8f40f74b12fd132ea361c9c03f1548ac197e9"
+      },
+      {
+        "accepted_swaps": 85,
+        "attempted_swaps": 96,
+        "rejected_swaps": 11,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 14,
+          "1": 14,
+          "2": 10
+        },
+        "seed": 5634,
+        "system_id": "ising_n3_frustrated_triangle",
+        "trace_checksum": "a1fc48b6f327b989f874e8c5a3a0c01ba9eb0531a69b6d0934a097e33911bab3"
+      },
+      {
+        "accepted_swaps": 89,
+        "attempted_swaps": 96,
+        "rejected_swaps": 7,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 13,
+          "1": 15,
+          "2": 13
+        },
+        "seed": 5635,
+        "system_id": "ising_n3_frustrated_triangle",
+        "trace_checksum": "d5ba286b74daf9d34ff969de94078990511213125bb1b5d414fa3f4bd7efb8cd"
+      },
+      {
+        "accepted_swaps": 86,
+        "attempted_swaps": 96,
+        "rejected_swaps": 10,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 12,
+          "1": 14,
+          "2": 12
+        },
+        "seed": 5636,
+        "system_id": "ising_n3_frustrated_triangle",
+        "trace_checksum": "c3f3f56afa1f7f7b98db359ad4402498eba67f9d576eafa85c62a37064a81c34"
+      },
+      {
+        "accepted_swaps": 90,
+        "attempted_swaps": 96,
+        "rejected_swaps": 6,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 13,
+          "1": 15,
+          "2": 14
+        },
+        "seed": 5637,
+        "system_id": "ising_n3_frustrated_triangle",
+        "trace_checksum": "066427f473d04b6e716002204ee0f16534a80b78382b06c670d90fd18f3b3791"
+      },
+      {
+        "accepted_swaps": 89,
+        "attempted_swaps": 96,
+        "rejected_swaps": 7,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 13,
+          "1": 15,
+          "2": 15
+        },
+        "seed": 5633,
+        "system_id": "ising_n3_frustrated_triangle_field_shift",
+        "trace_checksum": "e5f56c4420492ab70ea74110324c69135b656656c1a8a6cb0bcad002996d5b08"
+      },
+      {
+        "accepted_swaps": 89,
+        "attempted_swaps": 96,
+        "rejected_swaps": 7,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 13,
+          "1": 15,
+          "2": 13
+        },
+        "seed": 5634,
+        "system_id": "ising_n3_frustrated_triangle_field_shift",
+        "trace_checksum": "b3034895845c2e62cf79bc4a3bec224023408098a3b13211fadf0b6ef62248c6"
+      },
+      {
+        "accepted_swaps": 88,
+        "attempted_swaps": 96,
+        "rejected_swaps": 8,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 13,
+          "1": 16,
+          "2": 15
+        },
+        "seed": 5635,
+        "system_id": "ising_n3_frustrated_triangle_field_shift",
+        "trace_checksum": "c95c55bdbaf68df9376990b57644e4cdc5d5b9725a9665b2a63f5a8ee5b4f8cf"
+      },
+      {
+        "accepted_swaps": 94,
+        "attempted_swaps": 96,
+        "rejected_swaps": 2,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 15,
+          "1": 15,
+          "2": 14
+        },
+        "seed": 5636,
+        "system_id": "ising_n3_frustrated_triangle_field_shift",
+        "trace_checksum": "1ec37a9cbeaaf82b4f585a649e2f7a7d51d5189e2f641e4498fef96ab9a7b44c"
+      },
+      {
+        "accepted_swaps": 89,
+        "attempted_swaps": 96,
+        "rejected_swaps": 7,
+        "replay_match": true,
+        "round_trip_accounting_error": 0.0,
+        "round_trips_by_label": {
+          "0": 13,
+          "1": 14,
+          "2": 13
+        },
+        "seed": 5637,
+        "system_id": "ising_n3_frustrated_triangle_field_shift",
+        "trace_checksum": "2b3f880ab2279e13e06832399b4a30a02ebacd32f1bf7c752b4ef88b0be82e12"
+      }
+    ]
+  },
+  "round_trip_accounting_error": 0.0,
+  "run_date": "2026-07-14",
+  "schema": "carnot.experiment_5633.temperature_exchange_cdls_exact_audit.v1",
+  "spec_refs": [
+    "REQ-SAMPLE-5633",
+    "SCENARIO-SAMPLE-5633"
+  ],
+  "swap_detailed_balance_residual_max": 4.336808689942018e-19,
+  "swap_rule": {
+    "acceptance_ratio": "min(1, exp((beta_a - beta_b) * (E(x_a) - E(x_b))))",
+    "energy_convention": "Exp5622 E(x) = -0.5 x^T J x - h^T x",
+    "proposal_symmetry": "fixed adjacent beta-label pair proposal; reverse label swap has the same schedule mass",
+    "state_copy_allowed": false,
+    "state_update": "temperature_labels_only"
+  },
+  "tests_added_or_reused": [
+    "results/experiment_5633_temperature_exchange_cdls_exact_audit.json",
+    "tests/python/test_experiment_5633_temperature_exchange_cdls_exact_audit.py"
+  ],
+  "timing_claimed": false,
+  "transition_normalization_error_max": 2.220446049250313e-16,
+  "validity_regression_detected": false,
+  "within_replica_schedule": [
+    {
+      "kernel": "corrected_cdls_projection_mh",
+      "phase": "within_replica",
+      "physical_replica_index": 0,
+      "temperature_source": "current_label_beta",
+      "transition_count": 1
+    },
+    {
+      "kernel": "corrected_cdls_projection_mh",
+      "phase": "within_replica",
+      "physical_replica_index": 1,
+      "temperature_source": "current_label_beta",
+      "transition_count": 1
+    },
+    {
+      "kernel": "corrected_cdls_projection_mh",
+      "phase": "within_replica",
+      "physical_replica_index": 2,
+      "temperature_source": "current_label_beta",
+      "transition_count": 1
+    }
+  ]
+}
