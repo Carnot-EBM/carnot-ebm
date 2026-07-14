@@ -29811,3 +29811,9 @@ previously indexed work; duplicate discovery is not presented as novelty.
   one-axis sampler and retire the extension.
 
 <!-- V509-PLANNER-REFRESH-20260714-END -->
+
+## V509 Execution Refresh - 20260714
+
+Execution-time source check after the V509 planner marker accepted one non-duplicate local hook and left the dependency graph unchanged.
+
+- **Baba in Wonderland: Online Self-Supervised Dynamics Discovery for Executable World Models** - arXiv:2605.16725, https://arxiv.org/abs/2605.16725. The paper treats preservation conflicts as structural signal when a candidate update explains a new transition but breaks earlier ones. Carnot hook: add preservation-conflict and class-aware counterexample controls to Exp5641's generic ARC transition-hypothesis patcher using only agent-owned observation/action receipts. Downstream Exp5642 may consume the hook only if Exp5641 replay safety gates pass. Do not import Baba rules, external code, or benchmark results as Carnot evidence.
