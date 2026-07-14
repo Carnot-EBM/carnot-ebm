@@ -4355,6 +4355,85 @@ and a terminal honest null. When a trace reaches the selected target and
 independent replay matches the trace checksum, then and only then the artifact
 records a new reproducible level and increments `levels_after`.
 
+### REQ-ARC-FCP-5621: V507 Unconditional Live Self-Discovery Level-Up Attempt
+
+Experiment 5621 SHALL write
+`results/experiment_5621_arc_live_self_discovery_levelup_v507.json` after one
+unconditional live-agent self-discovery attempt against a non-duplicate ARC
+frontier level. The experiment SHALL registry-precheck all public offline-arcade
+games before target selection. The precheck SHALL exclude levels already
+reproduced by `scripts/arc_loop_solve.py`, levels already recorded in
+`ops/arc_solve_registry.yaml`, prior artifact targets, Exp5610's attempted
+target, and any same-v507 attempted target.
+
+Exp5620 is advisory only. If Exp5620 emits `live_branch_promotion_score=1.0`
+with no safety regression, Exp5621 SHALL enable exactly that emitted live branch
+configuration. Otherwise Exp5621 SHALL run the unchanged no-new-LLM live
+baseline. A blocked or negative Exp5620 result SHALL NOT gate, skip, or replace
+the live attempt with a development proxy.
+
+The live attempt SHALL discover from its own runtime observations, actions,
+state transitions, and runtime reverse-engineering signals. It SHALL NOT inspect
+game source, run exhaustive offline ground-truth BFS, inject a hand-built
+per-game adapter, or replay a hidden solution recipe. The action budget, seed,
+target, stopping rule, and mechanism configuration SHALL be fixed before the
+attempt. If no LLM is invoked, the artifact SHALL declare
+`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+`llm_invoked=false`, and `model_specs=[]`. A candidate level SHALL count only
+when it exceeds the registry precheck, the action trace checksum replays exactly,
+and `offline_reproduced=true` through the generic offline reproduction path.
+
+Required field principles:
+
+- `field_principles`: principle "principle annotations are carried in the artifact so every required 5621 field is auditable."
+- `registry_precheck`: principle "duplicate levels receive no credit; all public games, registry depths, arc_loop_solve depths, prior artifact targets, Exp5610's attempted target, and same-v507 attempts are checked before target selection."
+- `target_selection_receipt`: principle "rotation and authenticated public-game headroom are explicit, so the selected next level is not a duplicate."
+- `live_attempt_executed`: principle "bare bool true proves the ARC standing floor was a real runtime attempt, not an advisory precheck."
+- `live_branch_configuration`: principle "Exp5620 promotion use is auditable; blocked or unsafe Exp5620 receipts leave the no-new-LLM baseline unchanged and cannot skip the attempt."
+- `action_budget`: principle "search cost is bounded before runtime begins."
+- `attempt_trace_path`: principle "discovery evidence is replayable from a durable trace."
+- `levels_before`: principle "authoritative registry total before the attempt; the north-star delta is exact."
+- `levels_after`: principle "authoritative registry total after accepted banking; unchanged on honest nulls."
+- `new_reproducible_levels`: principle "only newly reproduced levels beyond the precheck depth count."
+- `offline_reproduced`: principle "a live reach needs independent replay; duplicate or unreplayed reaches do not bank."
+- `registry_updated`: principle "successful evidence becomes durable, while null attempts leave the registry unchanged."
+- `solve_provenance`: principle "must equal live_agent_self_discovery for any credited path."
+- `source_files_read`: principle "must be false; outer-loop source reverse engineering is excluded."
+- `per_game_adapter_used`: principle "must be false; hidden per-game solvers are not smuggled into live self-discovery credit."
+- `model_specs`: principle "empty only when no LLM is invoked; otherwise it contains a mandated cached V507 model with invocation receipt."
+- `inference_substrate`: principle "offline_arcade_live_agent_runtime_self_discovery_no_llm when no LLM fires; otherwise the authenticated local GGUF substrate."
+- `random_seeds`: principle "deterministic seeds make the attempt replayable and auditable."
+- `reproducibility_checksum`: principle "content-addressed artifact checksum catches silent target, trace, or branch-configuration drift."
+- `honest_verdict`: principle "no-new-level is terminal; a blocked or negative Exp5620 A/B is not permission to skip the attempt."
+
+#### SCENARIO-ARC-FCP-5621-PRECHECK-ROTATES-PAST-EXP5610
+
+Given public environment metadata, registry depths, arc_loop_solve outputs,
+prior artifacts, Exp5610's attempted target, and same-v507 attempts
+When Exp5621 runs its registry precheck
+Then it selects the first rotated target whose next level is beyond both the
+registry and arc_loop_solve depths, has authenticated public headroom, and is
+not Exp5610's attempted target or a same-v507 duplicate.
+
+#### SCENARIO-ARC-FCP-5621-BRANCH-ADVISORY-NOT-GATING
+
+Given Exp5620 is blocked, negative, unsafe, or safely promoted
+When Exp5621 builds its live branch configuration
+Then the live attempt still executes, enabling only an exactly emitted
+non-regressing promotion when present and otherwise using the unchanged
+no-new-LLM live baseline.
+
+#### SCENARIO-ARC-FCP-5621-REPRODUCTION-GATE-BANKS-ONLY-NEW-LEVELS
+
+Given a bounded live-agent trace
+When the trace does not reach and independently reproduce the selected target
+Then the artifact records `live_attempt_executed=true`, `model_specs=[]`,
+`offline_reproduced=false`, `new_reproducible_levels=[]`,
+`registry_updated=false`, and a terminal honest null. When a trace reaches the
+selected target and independent replay matches the trace checksum, then and only
+then the artifact records a new reproducible level and increments
+`levels_after`.
+
 ### REQ-ARC-FCP-5699: SGE Anti-Stagnation Controller -- Genuine Live Collapse-Escape Re-Test
 
 `ops/known-issues.md` task 6's own "NEXT STEP" named the fix: detect repeated
