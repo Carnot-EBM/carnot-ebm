@@ -11696,3 +11696,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 01:07 UTC | Counterexample-guided exact verifier extension fro | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5581-clean-sota-solve-verify-remeasuremen |
 | 2026-07-14 01:48 UTC | Causal-memory tournament metric independence corri | OK | 165 passed, 1 warning in 8.41s |
 | 2026-07-14 01:50 UTC | Counterexample-guided exact verifier extension fro | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5581-clean-sota-solve-verify-remeasuremen |
+| 2026-07-14 01:50 UTC | PACE-style two-timescale exact-gated continuous se | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5583-causal-memory-metric-corrigendum.p |
+| 2026-07-14 01:52 UTC | Counterexample-guided exact verifier extension fro | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5581-clean-sota-solve-verify-remeasuremen |
