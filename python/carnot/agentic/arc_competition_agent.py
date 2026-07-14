@@ -183,6 +183,12 @@ _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
 _DEFAULT_GOAL_BIAS = object()
+# REQ-ARC-FCP-5703 / GAP-5703: thresholds for goal_bias_diagnostics()'s degenerate-score
+# self-audit. Mirrors GoalEnergyCandidateGuidance's arms_non_degenerate variance floor
+# (arc_goal_energy_live.py: `variance > 1e-12`); the minimum-sample floor guards against a
+# false "degenerate" read on a short episode that simply has not scored enough nodes yet.
+_GOAL_BIAS_DEGENERACY_MIN_SAMPLES = 20
+_GOAL_BIAS_DEGENERACY_VARIANCE_EPS = 1e-12
 
 
 def _object_identity_perception_hook() -> type:
@@ -711,6 +717,15 @@ class StepwiseExplorer:
         self.goal_bias_lower_is_better = bool(goal_bias_lower_is_better and goal_bias is not None)
         self._goal_bias_scored = 0
         self._goal_bias_errors = 0
+        # REQ-ARC-FCP-5703 / GAP-5703: streaming (not stored-list, to avoid unbounded memory on
+        # long episodes) mean/variance/min/max so goal_bias_diagnostics() can self-audit whether
+        # this source is degenerate (constant score) on the current game -- mirrors the
+        # arms_non_degenerate audit GoalEnergyCandidateGuidance already has. Observability only:
+        # this does NOT disable goal_bias mid-episode, it only surfaces the finding.
+        self._goal_bias_score_sum = 0.0
+        self._goal_bias_score_sumsq = 0.0
+        self._goal_bias_score_min: float | None = None
+        self._goal_bias_score_max: float | None = None
         self.goal_candidate_guidance = goal_candidate_guidance
         self.qd_generator = coerce_qd_generator(
             qd_generator,
@@ -964,12 +979,32 @@ class StepwiseExplorer:
                 pass
 
     def goal_bias_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-FCP-5703: `score_variance`/`degenerate` are a self-audit mirroring
+        GoalEnergyCandidateGuidance's `arms_non_degenerate` check -- a goal_bias source
+        that returns the same constant score on every real node (e.g. because its
+        underlying frame-state extraction cannot parse this game's visual encoding, per
+        GAP-5703's sp80 finding) mathematically cannot influence frontier ordering. This
+        is observability only: `degenerate=True` does not disable goal_bias mid-episode."""
+
+        n = int(self._goal_bias_scored)
+        variance = 0.0
+        if n > 0:
+            mean = self._goal_bias_score_sum / n
+            variance = max(0.0, self._goal_bias_score_sumsq / n - mean * mean)
+        degenerate = bool(
+            n >= _GOAL_BIAS_DEGENERACY_MIN_SAMPLES
+            and variance <= _GOAL_BIAS_DEGENERACY_VARIANCE_EPS
+        )
         return {
             "enabled": self.goal_bias is not None,
             "label": self.goal_bias_label,
             "lower_is_better": bool(self.goal_bias_lower_is_better),
-            "nodes_scored": int(self._goal_bias_scored),
+            "nodes_scored": n,
             "errors": int(self._goal_bias_errors),
+            "score_variance": round(variance, 10),
+            "score_min": self._goal_bias_score_min,
+            "score_max": self._goal_bias_score_max,
+            "degenerate": degenerate,
         }
 
     def goal_candidate_guidance_diagnostics(self) -> dict[str, Any]:
@@ -1131,6 +1166,12 @@ class StepwiseExplorer:
         try:
             score = float(self.goal_bias(frame))
             self._goal_bias_scored += 1
+            self._goal_bias_score_sum += score
+            self._goal_bias_score_sumsq += score * score
+            if self._goal_bias_score_min is None or score < self._goal_bias_score_min:
+                self._goal_bias_score_min = score
+            if self._goal_bias_score_max is None or score > self._goal_bias_score_max:
+                self._goal_bias_score_max = score
             return score
         except Exception:
             self._goal_bias_errors += 1
