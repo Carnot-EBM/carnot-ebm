@@ -29835,6 +29835,94 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5580: Cached Parser Forensics Positive Control
+
+The repository SHALL provide Exp 5580 at
+`python/carnot/experiment_5580_parser_forensics_positive_control.py` and
+write `results/experiment_5580_parser_forensics_positive_control.json`. Exp
+5580 SHALL diagnose the Exp 5567 parser failures before any new local-SOTA
+solve-versus-verify inference is run. It SHALL consume
+`results/experiment_5567_local_sota_solve_verify_asymmetry.json` and
+`results/experiment_5566_exact_asp_fsm_near_miss_corpus.json`, SHALL NOT invoke an LLM, SHALL NOT modify `scripts/research_conductor.py`, and SHALL declare
+`inference_substrate=cached_exp5567_responses_no_llm`.
+
+Exp 5580 SHALL implement a bounded deterministic parser cascade for the
+Exp 5567 structured responses. The cascade SHALL try strict JSON object schema
+validation first, then deterministic fenced-JSON extraction, then balanced
+object extraction from wrapper text, then documented field aliases and
+one-element wrapper shapes. It SHALL cap extraction work by input length and
+candidate-object count, SHALL reject truncated or adversarially ambiguous brace
+streams, and SHALL never repair semantic content. Solve candidates SHALL still
+be accepted only by the Exp 5566 exact validator, and verifier labels SHALL be
+accepted only when a syntactic label or score maps deterministically to the
+existing valid/invalid label set.
+
+Exp 5580 SHALL enumerate the 648 Exp 5567 candidate-level parser failures by
+exact observed cause where raw cached response text is present. The required
+taxonomy keys are `wrapper_text`, `fenced_json`, `field_alias`,
+`numeric_list_shape`, `truncation`, `semantic_invalidity`, and `other`. If the
+preserved Exp 5567 artifact contains only hashes and aggregate failure counts,
+Exp 5580 SHALL make that limitation explicit, SHALL derive only the failure
+denominator and empty-response lower bound from hashes, SHALL classify the
+uninspectable remainder as `other`, and SHALL set `parser_repair_ready=false`.
+
+Exp 5580 SHALL run positive and negative controls over deterministic synthetic
+responses that cover valid strict objects, fenced JSON, wrapper text, documented
+aliases, numeric/list shapes, malformed negatives, adversarial nested braces,
+and truncation. It SHALL also audit at least 30 cached response samples per
+model family when raw cached text exists; if raw cached text is absent, the
+artifact SHALL record that the cached-sample audit is blocked rather than
+inventing samples from hashes. A parser may be marked ready only when
+`parsed_positive_control_rate>=0.95`,
+`semantic_false_accept_count=0`, and cached raw response audit coverage is
+sufficient to support remeasurement.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `cached_rows_audited`, `failure_taxonomy`,
+`parser_stage_counts`, `parsed_positive_control_rate`,
+`semantic_false_accept_count`, `per_model_cached_parse_rate`, `tests_run`,
+`parser_repair_ready`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL equal `cached_exp5567_responses_no_llm`.
+
+Field principles:
+
+- `field_principles`: Keeps every required field annotated by its evidence
+  boundary.
+- `cached_rows_audited`: Diagnosis covers the failed denominator.
+- `failure_taxonomy`: Fixes target observed causes.
+- `parser_stage_counts`: Permissive fallbacks stay visible.
+- `parsed_positive_control_rate`: A parser needs known-valid recall.
+- `semantic_false_accept_count`: Syntax repair cannot invent correctness.
+- `per_model_cached_parse_rate`: One family cannot mask another.
+- `tests_run`: Behavior is reproducible.
+- `parser_repair_ready`: Downstream inference runs only after controlled
+  readiness.
+- `inference_substrate`: No new model evidence is claimed.
+- `honest_verdict`: Terminal status names readiness or block.
+
+### SCENARIO-VERIFY-5580: Parser Repair Readiness Or Blocked Cache Forensics
+
+Given Exp 5567 has an authenticated local-SOTA panel artifact and Exp 5566 has
+a ready exact-labeled corpus, when Exp 5580 runs, then it loads those cached
+artifacts without LLM calls, enumerates all 648 parser failures from the
+preserved denominator, validates the deterministic parser cascade against
+positive and negative controls, writes
+`results/experiment_5580_parser_forensics_positive_control.json`, and sets
+`parser_repair_ready=true` only if positive-control recall is at least 0.95,
+semantic false accepts are zero, and cached raw response coverage is sufficient.
+
+If raw Exp 5567 response bodies are absent and only hashes plus aggregate
+failure counts remain, then Exp 5580 SHALL still write the terminal artifact
+with `cached_rows_audited=648`, a precise hash-only failure taxonomy,
+`parser_repair_ready=false`, and an `honest_verdict` beginning with
+`blocked_` rather than claiming model accuracy or verifier asymmetry.
+
+## Implementation Status (REQ-VERIFY-5580)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5580 | Implemented (`python/carnot/experiment_5580_parser_forensics_positive_control.py`, `results/experiment_5580_parser_forensics_positive_control.json`) | Implemented (`tests/python/test_experiment_5580_parser_forensics_positive_control.py`) |
+
 ### REQ-VERIFY-5568: Cached Verifier Coevolution Trigger Audit
 
 The repository SHALL provide Exp 5568 at
@@ -29883,8 +29971,8 @@ SHALL be `false`; and `inference_substrate` SHALL equal
 
 Field principles:
 
-- `field_principles`: Keeps every headline and gate field annotated by the
-  evidence boundary it protects.
+- `field_principles`: Keeps every required field annotated by its evidence
+  boundary.
 - `upstream_panel_path`: Pins the Exp 5567 cached verifier-output artifact
   being audited.
 - `cached_only`: Prevents hidden fresh inference, retraining, or threshold
