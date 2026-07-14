@@ -1,0 +1,262 @@
+{
+  "abstention_calibration": {
+    "patched_vs_unpatched_error_reduction_interval": {
+      "lower": -0.003893,
+      "mean": 0.002778,
+      "n": 360,
+      "upper": 0.009449
+    },
+    "supported_receipt_count": 360,
+    "unsupported_abstention_rate": 1.0
+  },
+  "accepted_patch_count": 51,
+  "adversarial_controls": {
+    "contradictory_patch": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "corrupted_transition": {
+      "accepted": 0,
+      "rejected": 3
+    },
+    "label_order": {
+      "failed": 0,
+      "passed": 3
+    },
+    "unsupported_object": {
+      "abstained": 3,
+      "accepted": 0
+    }
+  },
+  "agent_owned_evidence_only": true,
+  "all_receipt_replay_pass": true,
+  "counterexample_count": 356,
+  "date": "20260714",
+  "evaluation_levels": [
+    {
+      "agent_owned_receipts": 120,
+      "game": "dc22",
+      "level_scope": "L<= 6"
+    },
+    {
+      "agent_owned_receipts": 120,
+      "game": "bp35",
+      "level_scope": "L<= 8"
+    },
+    {
+      "agent_owned_receipts": 120,
+      "game": "s5i5",
+      "level_scope": "L<= 8"
+    }
+  ],
+  "executable_model_ready_score": 0.0,
+  "experiment": "experiment_5641_arc_counterexample_executable_model",
+  "experiment_id": 5641,
+  "field_principles": {
+    "abstention_calibration": {
+      "principle": "unsupported cases are bounded and reported."
+    },
+    "accepted_patch_count": {
+      "principle": "successful revisions are auditable."
+    },
+    "agent_owned_evidence_only": {
+      "principle": "evidence provenance is credited to live-agent receipts only."
+    },
+    "all_receipt_replay_pass": {
+      "principle": "accepted theory has no wrong prediction on accumulated receipts."
+    },
+    "counterexample_count": {
+      "principle": "every revision has falsifying transition evidence."
+    },
+    "evaluation_levels": {
+      "principle": "the development scope is fixed before trace loading."
+    },
+    "executable_model_ready_score": {
+      "principle": "downstream gating is scalar and mechanical."
+    },
+    "field_principles": {
+      "principle": "principle annotations make every required 5641 field auditable."
+    },
+    "game_adapter_used": {
+      "principle": "false excludes per-game transition models."
+    },
+    "heldout_transition_error_by_arm": {
+      "principle": "utility is measured against generic controls."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix records complete or blocked status; nulls retire the mechanism."
+    },
+    "hypothesis_language": {
+      "principle": "typed executable state is inspectable and excludes game constants."
+    },
+    "inference_substrate": {
+      "principle": "deterministic_counterexample_patched_executable_model -- no LLM or source participated."
+    },
+    "mechanism_question_controls": {
+      "principle": "adaptive questions are auditable tests only."
+    },
+    "model_specs": {
+      "principle": "empty list because no LLM participates."
+    },
+    "offline_ground_truth_bfs_used": {
+      "principle": "false excludes outer-loop exhaustive search labels."
+    },
+    "patch_operator_set": {
+      "principle": "revision is bounded to add, specialize, relax, and retire."
+    },
+    "random_seeds": {
+      "principle": "development proxy replays deterministically."
+    },
+    "registry_precheck_receipt": {
+      "principle": "development levels are already reproduced; no solve credit is claimed."
+    },
+    "rejected_patch_count": {
+      "principle": "fail-closed behavior is visible."
+    },
+    "reproducibility_checksum": {
+      "principle": "development proxy inputs and decisions are content-addressed."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- the artifact evaluates a known-level method, not a level solve."
+    },
+    "source_access_guards": {
+      "principle": "guards are recorded before loading traces and exclude source, adapters, BFS, and LLMs."
+    },
+    "source_read": {
+      "principle": "false excludes game source from the hypothesis and evaluation path."
+    },
+    "unsafe_patch_accept_count": {
+      "principle": "contradictions cannot publish as accepted patches."
+    }
+  },
+  "game_adapter_used": false,
+  "heldout_transition_error_by_arm": {
+    "frequency_table": 0.956944,
+    "last_transition": 0.920833,
+    "oracle_free_generic": 0.918056,
+    "patched": 0.497222,
+    "unpatched": 0.5
+  },
+  "honest_verdict": "blocked: counterexample_patched_executable_model_retired_terminal",
+  "hypothesis_language": {
+    "allowed_field_types": [
+      "object_identity_hash",
+      "object_topology_hash",
+      "location_relation",
+      "action_id",
+      "changed_object_attributes",
+      "reward",
+      "terminal_event",
+      "abstention"
+    ],
+    "clause_shape": {
+      "antecedent": [
+        "selector_kind",
+        "selector_value",
+        "action"
+      ],
+      "consequent": [
+        "changed_count",
+        "changed_bbox_shape",
+        "changed_object_topology_hash",
+        "changed_attributes",
+        "reward",
+        "terminal_event"
+      ],
+      "fallback": "abstain"
+    },
+    "forbidden_field_types": [
+      "game_name",
+      "absolute_coordinate",
+      "level_constant",
+      "per_game_adapter",
+      "source_symbol"
+    ],
+    "forbidden_literals_present": [],
+    "name": "arc.generic_transition_clause.v1"
+  },
+  "inference_substrate": "deterministic_counterexample_patched_executable_model",
+  "mechanism_question_controls": {
+    "informative": {
+      "question": "predict_changed_attributes_reward_terminal",
+      "score": 0.011111
+    },
+    "irrelevant": {
+      "question": "permuted_label_order_or_unrelated_probe",
+      "score": 0.0
+    }
+  },
+  "model_specs": [],
+  "offline_ground_truth_bfs_used": false,
+  "patch_operator_set": [
+    "add",
+    "specialize",
+    "relax",
+    "retire"
+  ],
+  "random_seeds": [
+    5641
+  ],
+  "registry_precheck_receipt": {
+    "development_levels_are_already_reproduced": true,
+    "no_solve_credit_claimed": true,
+    "ok": true,
+    "only_already_reproduced_levels": true,
+    "registry_total_levels": 177,
+    "roster_rows": [
+      {
+        "agent_owned_transition_count": 120,
+        "game": "dc22",
+        "levels_reproduced": 6,
+        "registry_reproduced": true,
+        "selected": true
+      },
+      {
+        "agent_owned_transition_count": 120,
+        "game": "bp35",
+        "levels_reproduced": 8,
+        "registry_reproduced": true,
+        "selected": true
+      },
+      {
+        "agent_owned_transition_count": 120,
+        "game": "s5i5",
+        "levels_reproduced": 8,
+        "registry_reproduced": true,
+        "selected": true
+      }
+    ],
+    "selected_games": [
+      "dc22",
+      "bp35",
+      "s5i5"
+    ],
+    "source_access_guard_recorded_before_trace_load": true
+  },
+  "rejected_patch_count": 338,
+  "reproducibility_checksum": "sha256:d1c285813ecb316287a743230c2d67f19b9c4f94977020cf8dc7e5c1a42bfda7",
+  "schema": "carnot.exp5641.arc_counterexample_executable_model.v1",
+  "solve_provenance": "development_proxy",
+  "source_access_guards": {
+    "agent_owned_evidence_roots": [
+      "data/arc_transition_corpus"
+    ],
+    "allowed_metadata": [
+      "ops/arc_solve_registry.yaml"
+    ],
+    "forbidden_path_fragments": [
+      "environment_files",
+      "arc_game_adapters.py",
+      "scripts/arc_loop_solve.py",
+      "outer_loop",
+      "game.py"
+    ],
+    "game_adapter_used": false,
+    "model_specs": [],
+    "offline_ground_truth_bfs_used": false,
+    "recorded_before_trace_load": true,
+    "source_read": false
+  },
+  "source_read": false,
+  "unsafe_patch_accept_count": 0
+}
