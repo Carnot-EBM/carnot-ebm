@@ -11761,3 +11761,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 20:30 UTC | Gated on Exp5641 exact replay and zero unsafe patc | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-mode |
 | 2026-07-14 20:32 UTC | Gated on Exp5641 exact replay and zero unsafe patc | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-mode |
 | 2026-07-14 20:34 UTC | Gated on Exp5641 exact replay and zero unsafe patc | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-mode |
+| 2026-07-14 20:52 UTC | Registry-rotated bounded live-agent self-discovery | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
