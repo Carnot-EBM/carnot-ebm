@@ -4873,6 +4873,106 @@ Then `offline_reproduced=true`, `reproduced_levels=1`, `registry_delta=1`, and
 only the selected target level is banked even if the terminal level counter is
 deeper.
 
+### REQ-ARC-FCP-5643: V509 Registry-Rotated Live Self-Discovery Level-Up Attempt
+
+Experiment 5643 SHALL write
+`results/experiment_5643_arc_live_self_discovery_levelup_v509.json` after one
+bounded live-agent self-discovery attempt against exactly one authenticated ARC
+target fixed before interaction. The registry precheck SHALL run at execution
+time across every public offline-arcade game, SHALL exclude every level already
+reproduced in `ops/arc_solve_registry.yaml`, SHALL exclude `bp35` level 9,
+`sk48` level 8, `lf52` level 7, and every recent failed ARC target recorded by
+the V509 transition receipt, and SHALL record the selected target plus a
+target-selection hash before any live observation or action is taken. If the
+immediate next level is closed by a recent failed-target receipt but the same
+game still has authenticated public-game headroom, the selector MAY rotate to
+the next non-closed unreproduced level, but the artifact SHALL record the closed
+intermediate level explicitly and SHALL NOT count any registry delta unless the
+generic clean-state reproduction gate proves the selected target.
+
+Exp5642 is advisory only. Experiment 5643 SHALL use Exp5642's executable-model
+policy only when that artifact has `live_executable_model_ready_score=1.0`,
+`unsafe_model_accept_count=0`, and `known_level_regression_count=0`. Otherwise
+the experiment SHALL run the unchanged no-new-LLM live E3 baseline. The selected
+target, policy source, thresholds, and budget SHALL NOT change after any live
+outcome is observed.
+
+The live attempt SHALL use only the agent's own runtime observations, actions,
+memory, and runtime reverse-engineering signals. It SHALL NOT inspect game
+source, run exhaustive offline ground-truth BFS, use a hand `GameAdapter`, import
+an outer-loop recipe, or precompute the solution. Seeds, wall time, model calls,
+environment actions, retries, checkpoint cadence, and terminal conditions SHALL
+be bounded before execution. If no LLM is invoked, `model_specs` SHALL be `[]`;
+if an LLM is invoked, the artifact SHALL name a mandated cached SOTA GGUF model
+receipt rather than a legacy smoke-only model.
+
+A level SHALL count only when the selected target level is reached by the live
+environment, the same trace independently reproduces through the generic live
+path from a clean state, `offline_reproduced=true`, and the trace checksum
+matches. The registry delta SHALL be exactly `0` for a bounded null or `1` for
+one newly banked target level.
+
+Required field principles:
+
+- `field_principles`: principle "principle annotations are carried in the artifact so every required 5643 field is auditable."
+- `registry_count_before`: principle "authoritative reproduced-level total before target selection; the level-up baseline is explicit."
+- `registry_precheck_receipt`: principle "execution-time precheck proves the selected target is unreproduced before any live observation."
+- `excluded_targets`: principle "bp35 L9, sk48 L8, lf52 L7, transition-receipt failures, and registry-duplicate levels stay closed and cannot receive duplicate credit."
+- `selected_game`: principle "the game scope is fixed before live observation, preventing outcome-driven target switching."
+- `selected_level`: principle "the level scope is fixed before live observation, preventing outcome-driven target switching."
+- `target_selection_hash`: principle "content hash of the pre-outcome target receipt proves the target was not changed after seeing results."
+- `policy_source`: principle "records whether Exp5642 promoted cleanly or the unchanged baseline ran."
+- `methodology_receipt`: principle "records target precheck, policy freeze, budget freeze, no-source/no-adapter/no-outer-loop provenance, and reproduction criteria so the run is not a short opaque artifact."
+- `model_specs`: principle "empty for a no-LLM run; otherwise names the mandated cached SOTA GGUF receipt exactly."
+- `budget_receipt`: principle "seeds, wall time, model calls, environment actions, retries, checkpoint cadence, and terminal conditions are bounded before execution."
+- `live_trace_path`: principle "complete live observation/action evidence is durable and replayable."
+- `live_path_reachability_counters`: principle "the scored live mechanism that generated actions is identified by runtime counters."
+- `solve_provenance`: principle "must equal live_agent_self_discovery; only the credited path can solve."
+- `level_reached`: principle "terminal environment level fact is explicit and separate from reproduction credit."
+- `reproduced_levels`: principle "newly reproduced target levels; solve credit requires at least one."
+- `offline_reproduced`: principle "exactly true is mandatory for solve credit after independent generic reproduction."
+- `registry_count_after`: principle "authoritative reproduced-level total after accepted banking; unchanged on honest nulls."
+- `registry_delta`: principle "exactly 0 or 1 so the banked-level delta is auditable."
+- `source_read`: principle "must be false; game source is excluded from live self-discovery credit."
+- `game_adapter_used`: principle "must be false; no per-game adapter can be smuggled into the live path."
+- `outer_loop_re_used`: principle "must be false; off-path recipes are excluded from live self-discovery credit."
+- `inference_substrate`: principle "live_agent_environment_interaction -- environment observations/actions are the authority, not an offline solver."
+- `random_seeds`: principle "deterministic seeds make the bounded attempt replayable and auditable."
+- `reproducibility_checksum`: principle "content-addressed target, trace, budget, methodology, and banking decision catch silent drift."
+- `honest_verdict`: principle "a bounded no-level result is terminal and must not be upgraded without reproduction."
+
+#### SCENARIO-ARC-FCP-5643-PRECHECK-EXCLUDES-TRANSITION-FAILURES
+
+Given the current registry, authenticated public-game headroom, the explicit
+`bp35` L9, `sk48` L8, and `lf52` L7 exclusions, and a V509 transition receipt
+that records `lf52` L7 as a failed live-level credit target
+When Experiment 5643 runs its execution-time registry precheck
+Then it closes every reproduced registry level, excludes all explicit and
+transition-receipt failed targets, rotates only among unreproduced authenticated
+targets, and records a target-selection hash before live execution.
+
+#### SCENARIO-ARC-FCP-5643-EXECUTABLE-POLICY-ADVISORY-NOT-GATING
+
+Given Exp5642 is blocked, missing, unsafe, or regresses a known level
+When Experiment 5643 builds its live policy receipt
+Then the attempt still executes using the unchanged no-new-LLM baseline. Given
+Exp5642 has ready score 1.0, zero unsafe accepts, and zero known-level
+regressions
+Then the promoted executable-model policy source is recorded without changing
+the preselected target after outcomes.
+
+#### SCENARIO-ARC-FCP-5643-METHODOLOGY-AND-REPRODUCTION-GATE
+
+Given a bounded live-agent trace
+When the trace does not reach and independently reproduce the selected target
+Then `offline_reproduced=false`, `reproduced_levels=0`, `registry_delta=0`,
+`methodology_receipt` records the no-source/no-adapter/no-outer-loop path, and
+the verdict is a terminal honest null. When the trace reaches and independently
+reproduces the selected target from a clean state
+Then `offline_reproduced=true`, `reproduced_levels=1`, `registry_delta=1`, and
+only the selected target level is banked even if the terminal level counter is
+deeper.
+
 ### REQ-ARC-FCP-5699: SGE Anti-Stagnation Controller -- Genuine Live Collapse-Escape Re-Test
 
 `ops/known-issues.md` task 6's own "NEXT STEP" named the fix: detect repeated
@@ -5359,3 +5459,100 @@ Given a large-grid game whose induction prompt previously overflowed the default
 When the reinduction call is made with a widened `n_ctx`
 Then the call completes without a context-size error, isolating any subsequent
 planning-quality result from the context-budget confound
+
+### REQ-ARC-WMTE-5599-2: Apples-to-Apples Precision Isolation -- the Model Forge Actually Used, at the Highest Precision Tractable on This Hardware
+
+REQ-ARC-WMTE-5599 found `Qwen3.6-27B-MTP` (Q4_K_M) planned LESS reliably (0/3) than the current
+9B (1/3) and took ~7x longer on the real reinduction path -- but that comparison left open
+whether 4-bit quantization itself was the cause, since forge (3rd-place ARC-AGI-3) ran a
+comparably-sized model (Gemma-4-31B-it) at FULL precision via vLLM on 96GB of VRAM. The operator
+directed a genuine apples-to-apples attempt on this project's own hardware: "we have plenty of
+VRAM on our AMD iGPU if we want to try the full model weights instead of 4bit quants and/or full
+kv-cache key size."
+
+`python/carnot/experiment_5705_full_precision_27b_vs_4bit_quant_ab.py` SHALL isolate precision
+(and, of necessity, hardware and serving stack) as cleanly as this hardware allows, reusing
+REQ-ARC-WMTE-5599's exact per-draw methodology (real post-level-up `lp85` transitions,
+`execute_bounded_llm_reinduction`, the same widened `n_ctx`).
+
+**RESOLUTION (2026-07-14) -- three pivots, all disclosed, ending in a real measured result.**
+
+1. **vLLM ruled out.** The PyPI `vllm` wheel is CUDA-only; vLLM's ROCm support has no PyPI
+   distribution and has historically targeted MI-series datacenter cards, not this consumer
+   gfx1150 iGPU. A from-source ROCm build for an unsupported architecture was judged too large
+   an undertaking for this task.
+2. **First attempt (`unsloth/Qwen3.6-27B`, full BF16, precision-only isolation against the SAME
+   model REQ-ARC-WMTE-5599 tested) -- ABANDONED after three real, reproducible load failures**
+   on the project's HIP-built llama.cpp binary: the default `-fit` auto-memory-fit heuristic
+   hard-hung (zero `/proc/PID/io` read progress for 12+ minutes); `-fit off` hard-stalled again
+   at a later step (zero RSS/IO progress for 5+ minutes, one thread pinned near 100% CPU);
+   `-fit off --parallel 1` crawled at ~11MB/s (over an hour to finish loading). No backtrace
+   tooling is available on this box (`ptrace` restricted, no `perf`, no root) to diagnose the
+   exact stuck call; the pattern is consistent with this specific build mishandling Qwen3.6's
+   unusual hybrid `Qwen3_5ForConditionalGeneration` architecture (mixed
+   "linear_attention"/"full_attention" layers).
+3. **Operator-directed pivot to `google/gemma-4-31B-it`** (the model forge ACTUALLY used, and a
+   conventional sliding-window + full-attention architecture, the same mature pattern Gemma 2/3
+   already used) -- **this ALSO failed at full BF16 precision**: the initial page-cache-warm
+   bulk read completed in 20s (RSS 0->36.1GB), but the final loading stage then crawled to a
+   near-stall (36.1->37.6->38.2GB over ~9 minutes, a rate that would have taken hours more) --
+   the SAME failure class as Qwen3.6, on a structurally different, more conventional
+   architecture. This points to a broader HIP/ROCm large-BF16-model-loading issue on this
+   specific llama.cpp build, not something specific to either model's attention mechanism.
+4. **Operator-directed second pivot: Q8_0 quantization, not full BF16.** Q8_0 (8-bit,
+   near-lossless -- NOT literally full/lossless precision) is a well-tested quantization level
+   this HIP build handles routinely elsewhere in this project. `google/gemma-4-31B-it` was
+   converted via `convert_hf_to_gguf.py --outtype q8_0` (32.6GB) and loaded CLEANLY -- healthy
+   within ~20s, confirmed via a real `/completion` call ("The capital of France is Paris.") --
+   a sharp, informative contrast with both BF16 failures. Full (non-quantized) F16 KV cache was
+   used throughout (`kv_quant=None`), addressing the "full kv-cache key size" half of the
+   operator's request even though the WEIGHTS ended up at Q8_0, not full precision.
+
+**The real measurement (n=1, reduced from the planned n=3 -- disclosed, not hidden).** The
+first repeat of a 3-repeat run took ~40 minutes (real, slow token generation at ~2.4 tok/s on
+this iGPU, ~5x slower than the frozen 9B's ~13 tok/s) and the script has no incremental
+checkpointing (writes its artifact only once, at the end) -- continuing to a full n=3 risked
+losing ALL data, including the already-completed first repeat, to a timeout kill. The run was
+stopped and re-launched at `n_repeats=1` with a matched timeout, mirroring REQ-ARC-WMTE-5593-5's
+same n-reduction pattern for the same reason (real GPU-bound cost, not a shortcut).
+
+The single real draw reached a real level-up (`actions_to_levelup=7`, 8 induction transitions),
+then genuinely FAILED to induce: `skipped="proposer_failed"` after `reinduce_duration_s=2408.163`
+(~40 minutes -- consistent with 3 near-full-budget generation retries, `generate()`'s default
+`tries=3`, at this model's slow token rate) -- never even reaching the held-out-accuracy scoring
+stage (`heldout_accuracy=null`). This is a genuine induction failure at the code-generation
+step, not a quality-threshold rejection. `plan_rate_given_levelup=0.0` (0/1).
+
+**Honest conclusion.** Comparing against the current-9B historical baseline (the CLEAN
+comparison this experiment supports, same task/methodology):
+`gemma_q8_0_plans_less_reliably_than_current_9b` -- the current 9B's historical plan rate
+(1/3 = 0.333) beat the near-lossless Q8_0 Gemma-4-31B-it (0/1) on this single real draw, and
+took roughly 44x longer per attempt.
+Comparing (as disclosed CONTEXT ONLY, not a controlled isolation -- model family AND
+quantization level both differ) against REQ-ARC-WMTE-5599's Q4 Qwen candidate:
+`gemma_q8_0_ties_qwen_q4_context_only_different_model_and_precision` -- both larger candidates
+scored 0/N on this specific reinduction task, a real convergence across two different model
+families and two different quantization levels. **This is now the THIRD independent measurement
+(Q4 Qwen, Q8_0 Gemma, both vs the current 9B baseline) pointing the same direction: on Carnot's
+own real induction PROMPT and task, larger 27-31B-class models have not yet demonstrated an
+advantage over the frozen 9B, regardless of quantization level or model family.** The n=1
+sample for this specific run is a real, disclosed limitation -- not conclusive on its own -- but
+it is consistent with, not contradictory to, the prior Q4 finding, strengthening rather than
+reversing REQ-ARC-WMTE-5599's original cost/benefit conclusion (do NOT switch the frozen
+live-submission generator).
+
+Required field principles:
+
+- `weight_precision`: principle "honestly discloses that the WEIGHTS served are Q8_0 (near-lossless 8-bit), NOT the originally-planned full/lossless BF16 -- full precision was tried and abandoned for two different models on this hardware; reporting this run as 'full precision' would misrepresent what was actually measured."
+- `serving_hardware`: principle "honestly discloses the NECESSARY hardware confound: even at Q8_0 (~31GB), this model does not fit the single 24GB RTX 3090 REQ-ARC-WMTE-5599 used, so this arm runs on the AMD iGPU instead -- serving stack (llama.cpp) is held constant, hardware is not."
+- `qwen_q4_context_comparison`: principle "explicitly labeled CONTEXT ONLY, never the primary verdict -- comparing Gemma-4-31B-it (Q8_0) against the Q4 Qwen candidate conflates model family and precision; reporting it as a clean isolation would be dishonest."
+
+#### SCENARIO-ARC-WMTE-5599-2-PRECISION-ISOLATION-WITH-DISCLOSED-PIVOTS
+
+Given full (lossless) precision proves impractical to load on this hardware for the originally-
+planned candidate AND its operator-directed replacement
+When the experiment pivots to the highest precision level that DOES load and run cleanly (Q8_0)
+Then every pivot (model swap, precision fallback, sample-size reduction) is disclosed in the
+artifact and spec with its concrete cause, and the resulting verdict is scoped to what was
+ACTUALLY measured (Q8_0, not full precision; n=1, not n=3) rather than overclaiming the
+originally-planned comparison
