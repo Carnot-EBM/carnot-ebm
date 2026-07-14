@@ -1,0 +1,33 @@
+{
+  "experiment": 5607,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-14",
+  "started_at": "2026-07-14T04:37:55.497587+00:00",
+  "finished_at": "2026-07-14T04:37:55.497587+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Property-template and entity-attribution exact verifier extension from clean residuals",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-panel.panel_complete (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5606-clean-sota-solve-verify-evidence-panel",
+      "artifact_field": "panel_complete",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp5606-clean-sota-solve-verify-evidence-panel",
+      "artifact_field": "maximum_parser_failure_rate",
+      "op": "<=",
+      "expected": 0.05,
+      "actual": 1.0,
+      "passed": false,
+      "reason": "actual=1.0 <= expected=0.05"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
