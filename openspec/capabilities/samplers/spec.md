@@ -572,6 +572,116 @@ excluding zero
 |---|---|---|
 | REQ-SAMPLE-5634 | Planned (`python/carnot/experiment_5634_temperature_exchange_cdls_quality.py`, `results/experiment_5634_temperature_exchange_cdls_quality.json`) | Planned (`tests/python/test_experiment_5634_temperature_exchange_cdls_quality.py`) |
 
+### REQ-SAMPLE-5644: Exact Two-Axis Temperature-By-Penalty Label-Exchange Audit
+
+Carnot MUST provide Exp 5644 at
+`python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py` and
+write `results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`
+without modifying `scripts/research_conductor.py`. The experiment SHALL add a
+rectangular inverse-temperature by nonnegative constraint-penalty label-exchange
+layer around Exp 5622's final `corrected_cdls_projection_mh` kernel only. Exp
+5644 SHALL reuse Exp 5622's corrected within-replica cDLS proposal and Exp
+5633's exact label-swap semantics unchanged: exchange moves swap parameter labels
+attached to physical replicas and SHALL NOT copy or swap replica states.
+
+The target for slot `(beta, lambda)` SHALL be proportional to
+`exp(-beta * (E(x) + lambda * C(x)))`, where `E(x)` is the exact Ising energy
+and `C(x)` is a nonnegative exact constraint-violation penalty. The audit SHALL
+freeze a small rectangular ladder over beta and lambda before running. For a
+horizontal adjacent temperature-label exchange at common lambda, states
+`x_a,x_b` currently wearing beta labels `beta_a,beta_b` SHALL accept with
+`min(1, exp((beta_a - beta_b) * ((E(x_a) + lambda*C(x_a)) - (E(x_b) + lambda*C(x_b)))))`.
+For a vertical adjacent penalty-label exchange at common beta, states `x_a,x_b`
+currently wearing penalty labels `lambda_a,lambda_b` SHALL accept with
+`min(1, exp(beta * (lambda_a - lambda_b) * (C(x_a) - C(x_b))))`.
+
+On at least three exactly enumerable constrained Ising fixtures with multiple
+energy and feasibility barriers, Exp 5644 SHALL enumerate the exact joint label
+and state target and the target-replica distribution at the strongest beta and
+lambda. It SHALL verify transition row normalization, nonnegative transition
+probabilities, horizontal and vertical detailed balance, fixed-schedule
+stationary parity, target-replica total variation, target feasibility marginal
+parity, and deterministic replay. It SHALL compare exactness only against the
+promoted one-axis exchange and equal-transition independent corrected chains.
+It SHALL include broken controls for missing penalty terms, sign reversal,
+state swapping, asymmetric scheduling, extreme lambda, and disabled swaps.
+Every broken control SHALL be detected before `two_axis_invariant_ready_score`
+can equal `1.0`.
+
+`two_axis_invariant_ready_score` SHALL equal exactly `1.0` only when all
+enumerated target total-variation and detailed-balance errors meet
+preregistered tolerances, the target-replica feasibility marginal matches the
+exact value, deterministic replay passes, every broken control is rejected, and
+no timing or hardware speedup is claimed. `timing_claimed` SHALL be false,
+`hardware_speedup_claimed` SHALL be false, and `inference_substrate` SHALL
+equal `cpu_exact_enumeration_and_corrected_cdls`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `upstream_kernel_receipts`,
+`openspec_requirement_ids`, `fixture_definitions`, `temperature_ladder`,
+`penalty_ladder`, `horizontal_swap_rule`, `vertical_swap_rule`, `scheduler`,
+`transition_row_error_max`, `horizontal_detailed_balance_error_max`,
+`vertical_detailed_balance_error_max`, `exact_joint_target_tv`,
+`exact_target_replica_tv`, `target_feasibility_marginal_error`,
+`deterministic_replay_pass`, `broken_controls`,
+`broken_control_rejected`, `timing_claimed`, `hardware_speedup_claimed`,
+`two_axis_invariant_ready_score`, `inference_substrate`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every required audit field exists before any two-axis quality trial can consume it."
+- `upstream_kernel_receipts`: principle "Pins Exp5622 corrected cDLS and Exp5633 exact label semantics so Exp5644 cannot silently retune substrates."
+- `openspec_requirement_ids`: principle "Keeps the implementation and tests anchored to REQ-SAMPLE-5644 and SCENARIO-SAMPLE-5644."
+- `fixture_definitions`: principle "Makes every constrained Ising target reconstructable, including energies, constraints, and feasibility barriers."
+- `temperature_ladder`: principle "Freezes the beta axis before exactness is measured."
+- `penalty_ladder`: principle "Freezes the nonnegative constraint-penalty axis before exactness is measured."
+- `horizontal_swap_rule`: principle "Makes the temperature-label acceptance ratio inspectable at fixed penalty."
+- `vertical_swap_rule`: principle "Makes the penalty-label acceptance ratio inspectable at fixed temperature."
+- `scheduler`: principle "Records the fixed within, horizontal, and vertical update order required for deterministic replay."
+- `transition_row_error_max`: principle "Confirms every composed transition is stochastic before stationary parity is trusted."
+- `horizontal_detailed_balance_error_max`: principle "Measures exact reversibility along the temperature axis."
+- `vertical_detailed_balance_error_max`: principle "Measures exact reversibility along the penalty axis."
+- `exact_joint_target_tv`: principle "Measures full joint state and label stationary parity instead of checking only marginals."
+- `exact_target_replica_tv`: principle "Measures the strongest-beta strongest-penalty target replica that downstream constrained optimization would consume."
+- `target_feasibility_marginal_error`: principle "Checks that exact constraint feasibility is preserved by the two-axis invariant."
+- `deterministic_replay_pass`: principle "Proves fixed seeds reproduce the same schedule, labels, and RNG trace."
+- `broken_controls`: principle "Documents invalid two-axis kernels that the audit must reject."
+- `broken_control_rejected`: principle "Provides a single mechanical gate proving every broken control was detected."
+- `timing_claimed`: principle "Bare false keeps this exactness audit from becoming a timing or crossover claim."
+- `hardware_speedup_claimed`: principle "Bare false prevents CPU enumeration from being read as CUDA, board, SNN, or TSU evidence."
+- `two_axis_invariant_ready_score`: principle "Equals 1.0 only when exactness, feasibility, replay, and control-rejection gates all pass."
+- `inference_substrate`: principle "Declares CPU exact enumeration plus corrected cDLS, not LLM inference or board execution."
+- `random_seeds`: principle "Records deterministic replay seeds."
+- `reproducibility_checksum`: principle "Content-addresses the audit so future reruns can detect silent drift."
+- `honest_verdict`: principle "Starts complete: or blocked: and treats exactness failure as terminal."
+
+### SCENARIO-SAMPLE-5644: Two-Axis Label Exchange Emits Exact Audit Evidence
+
+**Given** Exp 5622's corrected `corrected_cdls_projection_mh` kernel, Exp 5633's
+label-only exchange semantics, and exactly enumerable constrained Ising fixtures
+**When** Exp 5644 runs a fixed rectangular beta/lambda label-exchange audit
+**Then** it enumerates exact joint and target-replica distributions, verifies
+normalization, nonnegativity, horizontal and vertical detailed balance,
+stationary parity, target feasibility marginals, deterministic replay, promoted
+one-axis and independent-chain exactness baselines, and all broken-control
+rejections, writes
+`results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`, and
+sets `two_axis_invariant_ready_score=1.0` only when every exactness gate passes.
+
+**If** any substrate receipt, invariant, feasibility marginal, replay, or
+broken-control gate fails
+**Then** Exp 5644 SHALL still emit the same result path with
+`timing_claimed=false`, `hardware_speedup_claimed=false`,
+`two_axis_invariant_ready_score=0.0`, and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5644)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5644 | Planned (`python/carnot/experiment_5644_two_axis_parallel_tempering_exact_audit.py`, `results/experiment_5644_two_axis_parallel_tempering_exact_audit.json`) | Planned (`tests/python/test_experiment_5644_two_axis_parallel_tempering_exact_audit.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
