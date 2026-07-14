@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.506",
+  "generated_at": "2026-07-14T07:02:35Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 78.1,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "V506 capstone, promotion-retirement ledger, and spec/ops reconciliation",
+      "duration_minutes": 24.95,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Spline-local KAN longitudinal exact-gated continuous self-learning",
+      "duration_minutes": 19.63,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Transition .505 terminal evidence and post-milestone outer-loop findings into .5",
+      "duration_minutes": 15.88,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Evidence-preserving local-SOTA solve-versus-verify panel gated on lossless repla",
+      "duration_minutes": 8.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Lossless local-SOTA raw-response evidence envelope and replay positive control",
+      "duration_minutes": 5.68,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 10 experiments in 78.1 minutes, with 4 marked compute-bound. Among the reported slowest rows, the compute-bound V506 capstone and reconciliation took 24.95 minutes, the solve-versus-verify panel took 8.01 minutes, and the raw-response envelope took 5.68 minutes; the timing data do not establish the causes of those durations, and the task-conditioned GPU-idle field is false.",
+  "bottlenecks_identified": [
+    "The compute-bound V506 capstone, promotion-retirement ledger, and spec/ops reconciliation was the longest recorded experiment at 24.95 minutes; no stage-level timing is available to attribute that duration more precisely.",
+    "The disk-mtime reconstruction provides experiment-level durations but no phase breakdown or GPU samples aligned to active compute-bound windows, limiting causal diagnosis and scheduling decisions."
+  ],
+  "improvements_suggested": [
+    "Persist per-stage start and finish receipts for capstone assembly, promotion-retirement ledger work, and spec/ops reconciliation so the longest compute-bound path can be optimized from measured phases.",
+    "Add a dependency-aware scheduler that overlaps independent synthesis-only work with other eligible work while preserving task gates.",
+    "Record GPU utilization against active experiment windows and declare model count in the run manifest; select DualGPURunner only when at least 2 models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument stage-level timing inside the V506-style capstone and reconciliation workflow.",
+    "Schedule dependency-independent synthesis and compute work concurrently.",
+    "Correlate GPU telemetry with active compute-bound tasks and dispatch DualGPURunner only for declared parallel-model runs."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "The 25% savings estimate is a conditional upper bound from fully overlapping the 19.63-minute synthesis task with dependency-compatible work: 19.63 divided by 78.1 rounds to 25%. The timing block contains no dependency graph or stage telemetry, so actual savings must be measured next milestone; the idle snapshot does not establish compute-bound GPU idleness, and runner selection cannot be graded because no concurrent multi-model run appears in the authorized data."
+}

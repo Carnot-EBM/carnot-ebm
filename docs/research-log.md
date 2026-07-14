@@ -5907,3 +5907,9 @@ The critical path for milestone .250:
 - theme: synthesis handoff and parser-control work dominated operational time
 - key result: honest operational result -- 84 minutes were concentrated in the 66-minute context transition and 18-minute parser-control task; the lone compute-bound entry recorded 0 minutes, task-conditioned GPU idle is false, and no parallel-model runner miss is established
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.506
+- exp_range: no data available this milestone
+- theme: capstone closeout dominated the recorded compute-bound runtime
+- key result: honest operational result -- the compute-bound capstone and reconciliation was the longest recorded experiment at 24.95 minutes; the locked task-level idle indicator rules out an idle-GPU bottleneck, while the evidence includes no concurrent multi-model run to evaluate runner selection
+- acceptance: no data available this milestone
