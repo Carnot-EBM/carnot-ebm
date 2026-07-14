@@ -40963,3 +40963,102 @@ emits a terminal no-op artifact.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5604 | Implemented (`python/carnot/experiment_5604_v506_source_delta_ingestion.py`, `results/experiment_5604_v506_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5604_v506_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5613: V507 Transition Locks V506 Terminal Evidence And Dependency Gates
+
+The Exp5613 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/conductor-log.md`,
+`research-complete.yaml`, and the terminal `.506` artifacts
+`results/experiment_5603_transition_v506.json`,
+`results/experiment_5604_v506_source_delta_ingestion.json`,
+`results/experiment_5605_raw_response_evidence_envelope.json`,
+`results/experiment_5606_clean_sota_solve_verify_evidence_panel.json`,
+`results/experiment_5607_property_template_exact_residual_extension.json`,
+`results/experiment_5608_kan_longitudinal_self_learning.json`,
+`results/experiment_5609_arc_filter_intermediate_invariance_ab.json`,
+`results/experiment_5610_arc_live_self_discovery_levelup_v506.json`,
+`results/experiment_5611_cdls_matched_sampler_crossover.json`, and
+`results/experiment_5612_v506_capstone_reconciliation.json`. It SHALL classify
+those artifacts as complete, blocked, gate-skipped, promoted, retired, or
+adversarially flagged without upgrading flagged evidence into a clean
+prerequisite.
+
+The transition SHALL preserve the Exp5605 lossless response envelope and the
+Exp5608 exact-gated active-spline KAN as clean substrates. It SHALL keep the
+Exp5606 solve-versus-verify panel, the Exp5607 exact residual extension chain,
+the Exp5609 ARC inert-click/object-history filters, and the Exp5611 unmatched
+cDLS crossover closed or blocked according to the upstream terminal evidence.
+The workflow SHALL record `previous_milestone=2026.07.506`,
+`current_milestone=2026.07.507`, `current_task_range=exp5613-exp5624`, and a
+collision check showing Exp5613 through Exp5624 do not collide with completed
+experiment IDs in `research-complete.yaml`.
+
+The artifact SHALL emit dependency chains for native-runtime certification,
+exact drift fixture to duration map to predictive KAN, ARC transition-cycle
+prototype to live A/B with an unconditional level attempt, and cDLS exactness
+to gated crossover. It SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
+`research-roadmap.yaml` or `scripts/research_conductor.py`, and SHALL write
+`results/experiment_5613_transition_v507.json`.
+
+The artifact SHALL include required fields `field_principles`,
+`artifacts_read`, `terminal_findings`, `promoted_substrates`, `retired_scopes`,
+`adversarial_flags_preserved`, `current_task_range`, `dependency_map`,
+`inference_substrate`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `artifacts_read`: principle "claims trace to files"
+- `terminal_findings`: principle "only observed outcomes cross milestones"
+- `promoted_substrates`: principle "clean prerequisites are explicit"
+- `retired_scopes`: principle "failed chains stay closed"
+- `adversarial_flags_preserved`: principle "flagged artifacts are not upgraded"
+- `current_task_range`: principle "IDs do not collide"
+- `dependency_map`: principle "gates are auditable"
+- `inference_substrate`: principle "no new inference occurred"
+- `reproducibility_checksum`: principle "the transition is stable"
+- `honest_verdict`: principle "terminal status starts complete: or blocked:"
+
+#### SCENARIO-REPORT-5613: V507 Transition Preserves V506 Terminal Boundaries
+
+**Given** the `.506` artifacts from Exp5603 through Exp5612 are readable
+**And** Exp5605 reports a lossless response envelope
+**And** Exp5608 reports a clean exact-gated active-spline KAN
+**And** Exp5606, Exp5607, Exp5609, Exp5610, and Exp5611 report blocked,
+gate-skipped, retired, no-level, or unmatched evidence
+**When** the Exp5613 workflow runs
+**Then** it emits `results/experiment_5613_transition_v507.json`, records
+`previous_milestone=2026.07.506`, records
+`current_milestone=2026.07.507`, records
+`current_task_range=exp5613-exp5624`, promotes only the response envelope and
+active-spline KAN substrates, keeps the closed scopes closed, preserves
+adversarial flags, declares `inference_substrate=aggregation_from_upstream_artifacts`,
+and uses a terminal `honest_verdict` prefix.
+
+#### SCENARIO-REPORT-5613-DEPENDENCY-MAP: V507 Gates Stay Auditable
+
+**Given** the `.507` roadmap defines Exp5613 through Exp5624
+**And** `research-complete.yaml` has no completed Exp5613 through Exp5624 IDs
+**When** the Exp5613 dependency map is built
+**Then** the map contains the chains `native-runtime certification`, `exact
+drift fixture->duration map->predictive KAN`, `ARC transition-cycle
+prototype->live A/B->unconditional level attempt`, and `cDLS exactness->gated
+crossover`, and it records the non-collision boundary explicitly.
+
+#### SCENARIO-REPORT-5613-FIELD-PRINCIPLES: Transition Fields Stay Annotated
+
+**Given** the Exp5613 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `research-roadmap.yaml` is unchanged,
+`scripts/research_conductor.py` is unchanged, `inference_substrate` is
+`aggregation_from_upstream_artifacts`, `reproducibility_checksum` is populated,
+and `honest_verdict` starts with `complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5613)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5613 | Implemented (`python/carnot/experiment_5613_transition_v507.py`, `results/experiment_5613_transition_v507.json`) | Implemented (`tests/python/test_experiment_5613_transition_v507.py`) |
