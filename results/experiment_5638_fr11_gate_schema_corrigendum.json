@@ -1,0 +1,82 @@
+{
+  "by_arm_reconciliation_pass": true,
+  "by_arm_sum": 0,
+  "expected_source_artifact_sha256": "sha256:241d7dfb5db9c5984c4d6353d3e6dc7ef64dece658bf6f4babeb247403307bea",
+  "experiment": 5638,
+  "experiment_id": "experiment_5638_fr11_gate_schema_corrigendum",
+  "field_principles": {
+    "by_arm_reconciliation_pass": "shape consistency is tested",
+    "by_arm_sum": "reconciliation is explicit",
+    "field_principles": "receipt fields explain why they exist",
+    "gate_contract_ready_score": "downstream gating is mechanical",
+    "honest_verdict": "terminal status starts with complete: or blocked: without claiming independent FR-11",
+    "inference_substrate": "no model inference occurred",
+    "normalization_json_path": "derivation is unambiguous",
+    "raw_unsafe_false_accept_count": "structured evidence is not discarded",
+    "reproducibility_checksum": "receipt is stable",
+    "scientific_recompute_performed": "this is not a rerun",
+    "source_artifact_modified": "Exp5628 remains immutable",
+    "source_artifact_path": "provenance is explicit",
+    "source_artifact_sha256": "immutability is enforced",
+    "source_continuous_self_learning_ready": "no readiness value is invented",
+    "source_hash_exact": "pre-registered source hash match is explicit",
+    "source_honest_verdict": "upstream status is preserved",
+    "unsafe_false_accept_count_total": "the conductor-safe value is a scalar integer"
+  },
+  "gate_contract_ready_score": 1.0,
+  "honest_verdict": "complete: hash_bound_scalar_gate_contract_ready",
+  "inference_substrate": "deterministic_artifact_schema_normalization",
+  "milestone": "2026.07.509",
+  "normalization_json_path": "unsafe_false_accept_count.total",
+  "raw_unsafe_false_accept_count": {
+    "by_arm": {
+      "active_component_substitution_control": 0,
+      "frozen_controller_control": 0,
+      "frozen_no_update": 0,
+      "frozen_spline_control": 0,
+      "loss_smoothed_adaptation": 0,
+      "no_update_control": 0,
+      "predictive_window_controller": 0,
+      "reset_adapt": 0,
+      "retain_exact_replay": 0,
+      "shuffled_order_control": 0,
+      "update_substitution_control": 0
+    },
+    "total": 0
+  },
+  "reproducibility_checksum": "sha256:2a1921755b27d1c5847291415e52b0f27aeec067fc3256a9255e777742201b70",
+  "run_date": "20260714",
+  "schema": "carnot.experiment_5638.fr11_gate_schema_corrigendum.v1",
+  "scientific_recompute_performed": false,
+  "source_artifact_modified": false,
+  "source_artifact_path": "results/experiment_5628_conformal_active_spline_kan_csl.json",
+  "source_artifact_sha256": "sha256:241d7dfb5db9c5984c4d6353d3e6dc7ef64dece658bf6f4babeb247403307bea",
+  "source_continuous_self_learning_ready": true,
+  "source_file_checksums": {
+    "module": "sha256:8728e9be9ba320365485286273bdf51618fc7c204f22977a4c8a478515219aa3",
+    "spec": "sha256:2e159b883f96ec5e977b001453c2e5c50e630ce4f0fa3bc0bed8eb6e35a576bd",
+    "test": "sha256:498eb27ccad7b59f685a23c9a6cc2600dfcbca1264e6b76fbfd894cd2fec2971"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "test": "tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py"
+  },
+  "source_hash_exact": true,
+  "source_honest_verdict": "complete: conformal_active_spline_kan_continuous_self_learning_ready",
+  "spec_refs": [
+    "REQ-LEARN-5638",
+    "SCENARIO-LEARN-5638-ORIGINAL-SHAPE",
+    "SCENARIO-LEARN-5638-FAIL-CLOSED",
+    "SCENARIO-LEARN-5638-DETERMINISTIC"
+  ],
+  "task_id": "exp5638-fr11-gate-schema-corrigendum",
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py -m pytest tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5638_fr11_gate_schema_corrigendum.json"
+  ],
+  "unsafe_false_accept_count_total": 0
+}
