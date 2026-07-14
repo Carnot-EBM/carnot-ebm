@@ -40762,3 +40762,95 @@ prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5579 | Planned (`python/carnot/experiment_5579_v505_source_delta_ingestion.py`, `results/experiment_5579_v505_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5579_v505_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5603: V506 Transition Locks V505 Terminal Evidence And Outer-Loop Dependencies
+
+The Exp5603 workflow SHALL read the terminal `.505` conductor evidence,
+including `results/experiment_5578_transition_v505.json`,
+`results/experiment_5579_v505_source_delta_ingestion.json`,
+`results/experiment_5580_parser_forensics_positive_control.json`,
+`results/experiment_5581_clean_sota_solve_verify_remeasurement.json`,
+the Exp5582 preemptive skip evidence from `ops/conductor-log.md`,
+`results/experiment_5583_causal_memory_metric_corrigendum.json`,
+`results/experiment_5584_two_timescale_exact_self_learning.json`, and
+`results/experiment_5585_arc_levelup_attempt_v505.json`. It SHALL also read
+the named post-milestone outer-loop artifacts from Exp5592 through Exp5602
+when present, and SHALL distinguish conductor tasks, preemptive skips, and
+outer-loop results rather than merging their claim authority.
+
+The transition SHALL preserve Exp5580's hash-only parser evidence as
+unrecoverable instrumentation, SHALL keep the causal-memory/PACE chain
+retired after Exp5583 and Exp5584, SHALL treat the clean KAN evidence inherited
+from `.505` as the only FR-11 prerequisite, SHALL keep the ARC registry delta
+at zero after Exp5585, and SHALL keep PTRM-as-generator retired after the
+Exp5600 leave-one-out gate. The workflow SHALL record
+`previous_milestone=2026.07.505`, `current_milestone=2026.07.506`,
+`current_task_range=exp5603-exp5612`, and the ID collision avoided by starting
+the `.506` transition at Exp5603 immediately after Exp5602 outer-loop work.
+
+The artifact SHALL emit dependency chains for `envelope->SOTA panel->exact
+extension`, `KAN-only longitudinal learning`, `ARC filter A/B->advisory live
+attempt`, and `independent cDLS benchmark->capstone`. It SHALL declare
+`inference_substrate="aggregation_from_repository_artifacts"`, SHALL NOT
+modify `research-roadmap.yaml` or `scripts/research_conductor.py`, and SHALL
+write `results/experiment_5603_transition_v506.json`.
+
+The artifact SHALL include required fields `field_principles`,
+`artifacts_read`, `terminal_findings`, `retired_scopes`, `clean_substrates`,
+`post_milestone_outer_loop_artifacts`, `current_task_range`, `dependency_map`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `artifacts_read`: principle "terminal claims trace to files"
+- `terminal_findings`: principle "only observed outcomes cross milestones"
+- `retired_scopes`: principle "failed chains remain closed"
+- `clean_substrates`: principle "only unflagged evidence becomes a prerequisite"
+- `post_milestone_outer_loop_artifacts`: principle "concurrent work is explicit"
+- `current_task_range`: principle "IDs cannot collide"
+- `dependency_map`: principle "gates are auditable"
+- `inference_substrate`: principle "no live inference occurred"
+- `honest_verdict`: principle "terminal status starts complete: or blocked:"
+
+#### SCENARIO-REPORT-5603: V506 Transition Preserves V505 Terminal Boundaries
+
+**Given** the `.505` conductor artifacts through Exp5585 are readable
+**And** Exp5580 has no raw response text available
+**And** Exp5583 reports `policy_ready=false`
+**And** Exp5585 reports `new_levels_banked=0`
+**When** the Exp5603 workflow runs
+**Then** it emits `results/experiment_5603_transition_v506.json`, records
+`previous_milestone=2026.07.505`, records
+`current_milestone=2026.07.506`, records
+`current_task_range=exp5603-exp5612`, preserves hash-only parser evidence as
+instrumentation, keeps the causal-memory/PACE and PTRM generator scopes
+retired, keeps KAN as the clean FR-11 substrate, keeps ARC registry delta zero,
+declares `inference_substrate=aggregation_from_repository_artifacts`, and uses
+a terminal `honest_verdict` prefix.
+
+#### SCENARIO-REPORT-5603-DEPENDENCY-MAP: V506 Gates Stay Auditable
+
+**Given** the `.506` roadmap defines Exp5603 through Exp5612
+**And** Exp5602 is the immediately preceding outer-loop artifact
+**When** the Exp5603 dependency map is built
+**Then** the map contains the chains `envelope->SOTA panel->exact extension`,
+`KAN-only longitudinal learning`, `ARC filter A/B->advisory live attempt`, and
+`independent cDLS benchmark->capstone`, and it records the Exp5602-to-Exp5603
+collision boundary explicitly.
+
+#### SCENARIO-REPORT-5603-FIELD-PRINCIPLES: Transition Fields Stay Annotated
+
+**Given** the Exp5603 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `research-roadmap.yaml` is unchanged,
+`scripts/research_conductor.py` is unchanged, `inference_substrate` is
+`aggregation_from_repository_artifacts`, and `honest_verdict` starts with
+`complete:` or `blocked:`.
+
+## Implementation Status (REQ-REPORT-5603)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5603 | Planned (`python/carnot/experiment_5603_transition_v506.py`, `results/experiment_5603_transition_v506.json`) | Planned (`tests/python/test_experiment_5603_transition_v506.py`) |
