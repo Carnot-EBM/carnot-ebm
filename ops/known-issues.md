@@ -646,6 +646,28 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > (see the exp5703 entry above), could safely use a "good but imperfect" induced model instead
     > of an all-or-nothing accept/reject at `1.0`. `adversarial_verify.py` clean. Full write-up:
     > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5593-4.
+
+    > **DONE 2026-07-14 (outer-loop, exp5704, live A/B testing the calibration question raised
+    > above):** collected real transitions on `lp85` (47 collected, 1 real level-up), then ran 3
+    > independent fresh real induction attempts (real GPU-backed `Qwen3.5-9B-MTP`,
+    > `min_heldout_accuracy=0.0` to observe the raw held-out score, gate bypassed) comparing what
+    > the strict (`1.0`) vs a relaxed (`0.7`) threshold would each accept. **All 3 attempts scored
+    > `heldout_accuracy=0.0`** — none landed in the `[0.7, 1.0)` relaxed-only band this experiment
+    > needed to characterize the question. **Honest verdict:
+    > `inconclusive_no_attempt_in_relaxed_only_band`** — NOT forced into "relaxing helps" or
+    > "relaxing doesn't help." This null is itself consistent with exp5702's corpus survey: `0.0`
+    > is the single most common real-world outcome there (47.4% of the historical corpus), while
+    > the `[0.7, 1.0)` band is much narrower (~6.3 percentage points), so a 3-attempt live sample
+    > missing it entirely is unsurprising, not anomalous. **Separately-disclosed, orthogonal
+    > observation:** despite `heldout_accuracy=0.0` on every attempt, `plan_reaches_goal=True` on
+    > all 3 (in-model verification, not real environment ground truth) — flagged as an open
+    > question about whether the held-out dynamics check and downstream planning usefulness are
+    > perfectly aligned metrics, but explicitly NOT claimed as evidence the strict gate is
+    > miscalibrated. A conclusive answer would need a larger N (costly — each real attempt is a
+    > genuine GPU-backed induction call, 90-800s observed) or a corpus selection biased toward the
+    > interesting band; not pursued further in this task's scope. `adversarial_verify.py` clean.
+    > Full write-up: `openspec/capabilities/arc-human-replay-frame-change/spec.md`
+    > REQ-ARC-WMTE-5593-5.
 13. **(New 2026-07-12, HIGH PRIORITY — the frozen live generator's sizing constraint appears to be
     stale, not just conservative) Re-verify the Kaggle VRAM budget and A/B a larger generator before
     trusting the current 9B choice.** Operator question: "are we still using qwen-3.5-9B when the
