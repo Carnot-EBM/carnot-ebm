@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.505",
+  "generated_at": "2026-07-14T02:14:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 84.0,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Transition .504 terminal evidence into .505 execution context",
+      "duration_minutes": 66.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Cached local-SOTA parser forensics, repair, and positive control",
+      "duration_minutes": 17.97,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Execution-time V505 source delta and experiment mapping",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Local-SOTA solve-versus-verify remeasurement gated on parser controls",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Causal-memory tournament metric independence corrigendum",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Seven experiments occupied 84 minutes: one compute-bound experiment and six synthesis-only experiments. The 66-minute context transition, not the compute-bound entry recorded at 0 minutes, was the dominant operational cost.",
+  "bottlenecks_identified": [
+    "The synthesis-only transition of .504 terminal evidence into .505 execution context took 66 minutes, making milestone handoff the primary bottleneck.",
+    "Cached local-SOTA parser forensics, repair, and positive control took 18 minutes, making parser-control preparation the secondary bottleneck."
+  ],
+  "improvements_suggested": [
+    "Generate the next milestone's execution context mechanically from terminal evidence, then validate the generated handoff before launch.",
+    "Persist parser diagnostics and the positive control as a reusable preflight bundle so parser forensics is not reconstructed during the milestone.",
+    "Record task-scoped GPU utilization between each compute-bound start and finish, together with declared model count, so an idle monitor snapshot is not mistaken for task-time behavior.",
+    "Enable DualGPURunner only when a compute-bound receipt declares at least 2 models loaded in parallel; the supplied data does not establish such a workload."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Automate terminal-evidence-to-execution-context handoff generation.",
+    "Make parser diagnostics and positive controls reusable preflight artifacts.",
+    "Add task-scoped GPU telemetry and model-count declarations to compute-bound receipts."
+  ],
+  "estimated_time_savings_pct": 79,
+  "meta_reflection": "The only compute-bound experiment, Local-SOTA solve-versus-verify remeasurement gated on parser controls, was recorded at 0 minutes; the timing block gives no duration cause, and the locked task-conditioned GPU-idle flag is false despite the idle monitor snapshot. The timing data does not identify any compute-bound task with at least 2 models loaded in parallel; therefore no DualGPURunner miss is established. The 79% estimate is the rounded 66/84 share of the dominant transition and is an upper-bound opportunity, not a measured post-change saving."
+}

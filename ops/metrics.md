@@ -3266,3 +3266,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | 10 | 2026-07-01T05:18:55Z | 2026-07-01T05:36:39Z | Planned milestone 2026.07.466: read requested project context, performed 2025-2026 source sweep, appended V466 references, wrote research-roadmap-vNEXT.md and research-roadmap-next.yaml (14 tasks), updated status/changelog, validation clean. | ~90k |
 | 11 | 2026-07-02T14:37:45Z | 2026-07-02T14:46:05Z | "Write an operational retrospective for milestone 2026.07.473": filled interpretive fields in the pre-locked skeleton JSON; git-log-verified the supplied zero-commit TIMING DATA is a FALSE-ZERO (exp5156/5161/5164 landed post-activation, exp5164's own fix module scripts/retro_timing_fallback.py is unwired); appended ops/changelog.md entry + docs/research-log.md addendum (did not duplicate the immutable prior 2026.07.473 entry). | ~35k |
 | 12 | 2026-07-03T05:30:54Z | 2026-07-03T05:36:46Z | "Write an operational retrospective for milestone 2026.07.474": second retro pass for this milestone (skeleton had been reset); filled interpretive fields only, locked numeric fields left untouched; re-verified the FALSE-ZERO via `git log cd06fc3f0..HEAD` (43 real commits) and direct checks of the .469/.473 retro artifacts; broke the 4-pass diagnose-but-never-escalate cycle by filing the missing ops/known-issues.md MANDATORY-NEXT-MILESTONE entry (retro_timing_fallback wiring) with a deliverable slug; appended changelog entry + research-log same-day addendum (existing .474 entry is immutable). | ~35k |
+
+## Session: 2026-07-14 Milestone 2026.07.505 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-07-14T02:14:49Z | 2026-07-14T02:20:09Z | Wrote the milestone operational retrospective from the supplied bounded data, preserved locked fields, and appended the required changelog and research-log entries. | TBD |

@@ -5901,3 +5901,9 @@ The critical path for milestone .250:
 - theme: empty post-activation timing evidence prevents operational efficiency assessment
 - key result: honest negative -- no data available this milestone; 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries provide no basis for runtime ranking, GPU-efficiency evaluation, or DualGPURunner assessment
 - acceptance: 0/0 criteria met -- no milestone-scoped timing entries were available for evaluation
+
+### Milestone 2026.07.505
+- exp_range: no data available this milestone
+- theme: synthesis handoff and parser-control work dominated operational time
+- key result: honest operational result -- 84 minutes were concentrated in the 66-minute context transition and 18-minute parser-control task; the lone compute-bound entry recorded 0 minutes, task-conditioned GPU idle is false, and no parallel-model runner miss is established
+- acceptance: no data available this milestone
