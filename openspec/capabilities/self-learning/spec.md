@@ -22260,6 +22260,152 @@ verdict.
 |---|---|---|
 | REQ-LEARN-5570 | Planned (`python/carnot/experiment_5570_spline_local_kan_online_energy.py`, `results/experiment_5570_spline_local_kan_online_energy.json`) | Planned (`tests/python/test_experiment_5570_spline_local_kan_online_energy.py`) |
 
+## REQ-LEARN-5608: KAN Longitudinal Exact-Gated Self-Learning Evaluation
+
+The Exp5608 workflow SHALL write
+`results/experiment_5608_kan_longitudinal_self_learning.json` as a
+deterministic no-LLM evaluation of KAN-only exact-gated online energy
+adaptation over ordered constraint-family sessions. It SHALL reuse Exp5570's
+active-spline updater for every proposed KAN update; the audit literal is
+"reuse Exp5570's active-spline updater". It SHALL NOT add memory-policy
+evolution, LLM calls, LLM-weight training, LoRA, GRPO, or an external teacher.
+The exact validator outcomes from the Exp5566 ASP/FSM corpus SHALL be the only
+labels.
+
+The workflow SHALL construct at least four ordered constraint-family sessions,
+held-out family slices that are never used as online update observations, and a
+delayed replay schedule for earlier families. Before running, it SHALL fix the
+seed list, sample budget, update budget, checkpoint cadence, and exact
+validator identity in `session_manifest` and `adaptation_budget`.
+
+The experiment SHALL compare `frozen`, `shuffled_session_order`,
+`always_update`, and `exact_gated_kan` arms on the same feature rows. It SHALL
+compute held-out benefit independently for every arm, forward transfer on
+later-family first exposure, backward retention on earlier-family delayed
+replay, within-family forgetting on delayed replay, and update/evaluation cost
+outside those benefit metrics. The shuffled-session-order arm SHALL preserve
+the same rows and update rule while destroying the preregistered longitudinal
+order.
+
+Every proposed spline update SHALL create an immutable `decision_ledger` row
+containing observations, exact train and held-out energy before and after the
+proposal, accept/reject reason, active-spline indices, parameter hashes,
+checkpoint hashes, cost, and rollback target. The ledger SHALL include one
+known-bad poisoned update. That poisoned update SHALL either be rejected by the
+exact gate or trigger exact rollback, and `rollback_positive_control` SHALL
+prove checkpoint restoration reproduces the pre-update outputs.
+
+The artifact SHALL include required fields `field_principles`,
+`continuous_self_learning_task`, `session_manifest`, `adaptation_budget`,
+`decision_ledger`, `heldout_delta_by_arm`, `forward_transfer_delta`,
+`backward_retention_delta`, `forgetting_delta`, `unsafe_false_accept_count`,
+`poison_update_disposition`, `rollback_positive_control`,
+`delayed_regression_passed`, `no_model_weight_mutation`,
+`kan_longitudinal_ready`, `inference_substrate`, and `honest_verdict`. It
+SHALL set
+`inference_substrate="exact_constraint_stream_active_spline_kan_no_llm"` and
+SHALL carry these required field principles: `field_principles` =
+"field purposes are explicit"; `continuous_self_learning_task` =
+"milestone obligation is explicit"; `session_manifest` = "longitudinal order is
+reproducible"; `adaptation_budget` = "learning has a fixed ceiling";
+`decision_ledger` = "every update is attributable"; `heldout_delta_by_arm` =
+"baselines remain visible"; `forward_transfer_delta` = "later-family benefit
+is isolated"; `backward_retention_delta` = "prior constraints cannot be
+erased"; `forgetting_delta` = "delayed loss is explicit";
+`unsafe_false_accept_count` = "exact safety is non-negotiable";
+`poison_update_disposition` = "bad adaptation cannot silently persist";
+`rollback_positive_control` = "governance reverses a known bad state";
+`delayed_regression_passed` = "immediate gains must survive";
+`no_model_weight_mutation` = "only KAN component weights adapt";
+`kan_longitudinal_ready` = "all benefit and safety gates pass";
+`inference_substrate` = "adaptation substrate is explicit"; and
+`honest_verdict` = "bounded null is terminal".
+
+`kan_longitudinal_ready` SHALL be true only when `heldout_delta > 0` with an
+uncertainty interval excluding zero, `backward_retention_delta >= 0`,
+`unsafe_false_accept_count == 0`, `rollback_positive_control == true`,
+`delayed_regression_passed == true`, and `no_model_weight_mutation == true`.
+If any benefit gate fails, `honest_verdict` SHALL be a terminal bounded-null or
+blocked verdict rather than a promotion claim.
+
+Required field principle literals for coverage: "field purposes are explicit";
+"milestone obligation is explicit"; "longitudinal order is reproducible";
+"learning has a fixed ceiling"; "every update is attributable";
+"baselines remain visible"; "later-family benefit is isolated";
+"prior constraints cannot be erased"; "delayed loss is explicit";
+"exact safety is non-negotiable"; "bad adaptation cannot silently persist";
+"governance reverses a known bad state"; "immediate gains must survive";
+"only KAN component weights adapt"; "all benefit and safety gates pass";
+"adaptation substrate is explicit"; "bounded null is terminal".
+
+### REQ-LEARN-5608 Sub-requirements
+
+- REQ-LEARN-5608-1: The session builder SHALL expose at least four ordered
+  constraint-family sessions, held-out family slices, delayed replay slices,
+  fixed seeds, sample budget, update budget, checkpoint cadence, and exact
+  validator identity before any arm runs.
+- REQ-LEARN-5608-2: The arm runner SHALL compare frozen,
+  shuffled-session-order, always-update, and exact-gated KAN arms using the
+  same rows, seeds, feature schema, and Exp5570 active-spline updater.
+- REQ-LEARN-5608-3: The metrics SHALL separately compute held-out benefit,
+  later-family first-exposure forward transfer, earlier-family delayed-replay
+  backward retention, within-family forgetting, and cost.
+- REQ-LEARN-5608-4: The immutable decision ledger SHALL record every proposed
+  spline update with observation IDs, exact train and held-out energies,
+  accept/reject reason, active spline indices, parameter/checkpoint hashes,
+  cost, and rollback target.
+- REQ-LEARN-5608-5: A known-bad poisoned update SHALL be rejected or rolled
+  back, and checkpoint restoration SHALL reproduce the pre-update outputs.
+- REQ-LEARN-5608-6: `kan_longitudinal_ready` SHALL remain false unless heldout
+  delta is positive with uncertainty excluding zero, backward retention is
+  nonnegative, unsafe false accepts are zero, rollback positive control passes,
+  delayed regression passes, and non-KAN model weights remain immutable.
+
+### SCENARIO-LEARN-5608-SESSIONS: Ordered Families And Budgets Are Fixed
+
+**Given** the Exp5566 exact ASP/FSM corpus is ready
+**When** Exp5608 constructs its longitudinal manifest
+**Then** at least four ordered family sessions, held-out family slices, delayed
+replay slices, fixed seeds, sample budget, update budget, checkpoint cadence,
+and exact validator identity SHALL be reproducible before adaptation.
+
+### SCENARIO-LEARN-5608-ARMS: Exact-Gated KAN Competes With Controls
+
+**Given** frozen, shuffled-session-order, always-update, and exact-gated KAN
+arms share rows and seeds
+**When** the arms run across the ordered sessions
+**Then** held-out benefit, forward transfer, backward retention, forgetting,
+and cost SHALL be reported independently without using memory-policy evolution
+or LLM training.
+
+### SCENARIO-LEARN-5608-LEDGER: Every Proposed Update Is Attributable
+
+**Given** an arm proposes an active-spline update
+**When** Exp5608 accepts, rejects, or rolls back the proposal
+**Then** the immutable decision ledger SHALL include observations, exact
+train/held-out energies, active spline indices, parameter/checkpoint hashes,
+cost, accept/reject reason, and rollback target for that proposal.
+
+### SCENARIO-LEARN-5608-POISON: Bad Adaptation Cannot Persist
+
+**Given** a known-bad poisoned exact-feedback update is injected
+**When** the exact gate evaluates it
+**Then** the poisoned update SHALL not persist silently
+**And** checkpoint restoration SHALL reproduce pre-update outputs.
+
+### SCENARIO-LEARN-5608-ARTIFACT: Longitudinal KAN Receipt Is Conductor Visible
+
+**Given** all arms, delayed replay, poison control, and promotion gates finish
+**When** Exp5608 writes its receipt
+**Then** the JSON SHALL include all required fields, required field principles,
+the exact active-spline KAN no-LLM substrate, and an honest terminal verdict.
+
+## Implementation Status (Exp 5608)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5608 | Planned (`python/carnot/experiment_5608_kan_longitudinal_self_learning.py`, `results/experiment_5608_kan_longitudinal_self_learning.json`) | Planned (`tests/python/test_experiment_5608_kan_longitudinal_self_learning.py`) |
+
 ## REQ-LEARN-5571: Reset-Free Local SOTA Continual Harness
 
 The Exp5571 workflow SHALL write
