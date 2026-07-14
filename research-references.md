@@ -29407,3 +29407,19 @@ non-duplicate sources changed the executable plan.
   claim.
 
 <!-- V505-PLANNER-REFRESH-20260711-END -->
+
+## V505 Execution Refresh - 20260714
+
+Execution-time sweep after the `.505` planner refresh checked arXiv primary pages and direct API results, OpenReview public pages, Hugging Face Papers, Semantic Scholar EBT/ARM-EBM routes, GitHub discovery, Extropic writing, Logical Intelligence public pages, local duplicate history, the exclusion manifest, and known-issues scope notes. Only non-duplicate actionable deltas are listed below.
+
+### New actionable deltas
+- **Agentic Proof and Property-Based Testing via Property-Templates in Data-Intensive Computing** (arXiv:2607.09072, https://arxiv.org/abs/2607.09072; HF mirror https://huggingface.co/papers/2607.09072): Use property templates as the admissible shape for Exp5582 exact predicate candidates, and require executable counterexample evidence whenever a formal predicate model and implementation behavior diverge. This sharpens the existing exact-residual extension lane; it does not authorize an LLM judge, broad theorem prover buildout, or external Spark benchmark claim.
+- **Deceptive Grounding: Entity Attribution Failure in Clinical Retrieval-Augmented Generation** (arXiv:2607.09349, https://arxiv.org/abs/2607.09349; HF mirror https://huggingface.co/papers/2607.09349 checked but not present): Add entity/variable attribution as a bounded Exp5582 residual stress class when clean ASP/FSM rows expose a real wrong-entity or wrong-variable binding. This does not add a clinical RAG benchmark, citation-faithfulness scorer, or external generated-text detector.
+
+### Execution impact
+- **Plan impact:** No roadmap edit is required. The accepted deltas map only to the already-planned Exp5582 exact verifier extension after the Exp5581 clean-panel gate.
+- **Duplicates suppressed:** PACE, EvoPolicyGym, LLM-as-a-Verifier, Verification Horizon, Blind Curator, ASP Energised, ClassicLogic, Gram2Token/XGrammar/llguidance, SelfMem, Continual Harness, EBT, ARM-EBM, and prior memory/KAN/hardware lines were already covered or stayed non-promoted.
+- **Closed scope:** closed_scopes_reopened=false. Retired grammar-row completion, SGE, cross-family CSL, external generated-text scoring, broad GRPO/RL/fine-tuning, proprietary TSU/Kona/Aleph execution, and unmatched hardware speedup claims remain closed.
+- **Watch-only/excluded:** Shared Selective Persistent Memory, XVada grammar inference, Mosaic, open-ended verifier-gap position work, Extropic TSU/XTR/Z1, and Logical Intelligence Kona/Aleph were checked but not promoted as executable `.505` dependencies.
+
+<!-- V505-EXECUTION-REFRESH-20260714-END -->

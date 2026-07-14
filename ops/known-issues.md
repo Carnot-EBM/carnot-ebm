@@ -33,6 +33,21 @@
 > the standing floor's normal >=1-slot minimum. `track: arc-trm-generator` for auditability, distinct from
 > the general `track: arc` tag.
 
+> **UPDATE 2026-07-13 (outer-loop): task 8 reached its verdict — dedicated reserved slot RETIRES.** Found
+> and fixed a real wiring bug first: `generate_trajectories` never consumed the trained
+> `PTRMActionSequenceGenerator`'s forward pass, seeding every trajectory from the untrained
+> `_base_action_logits` frequency heuristic instead (see
+> `openspec/capabilities/arc-trm-generator/spec.md` REQ-ARC-PTRM-5600-1). Also found the checked-in
+> exp5574 artifact could not have been produced by the code it was committed with (same spec file,
+> Implementation Status) — flagged, not cited, original preserved unmodified. With the fix in place, ran
+> the pre-registered multi-seed (10 seeds x 5 games) leave-one-game-out gate (exp5600,
+> `results/experiment_5600_ptrm_loo_gate.json`): **the gate FAILS.** Only `ft09` (1 of 5 held-out games)
+> beats the non-recursive control significantly (Wilcoxon p=0.0020) AND the majority-class baseline; the
+> required majority is >= 3 of 5. Per task 8's own `retire_if_same_verdict: true` condition below, the
+> TRM-as-generator line for ARC-AGI-3 is retired — do not re-propose a 5th/6th variant. The dedicated
+> reserved slot (UPDATE 2026-07-10 above) retires as of this milestone; future milestones revert to the
+> standing floor's normal >=1-ARC-task minimum.
+
 **Origin:** 2026-07-06 operator directive. Per the 2026-06-30 Phase D entry below, ARC dropped from
 majority lever to opportunistic-only once the submission sprint deadline passed. The operator asked to
 resume ACTIVE novel-idea generation for ARC-AGI-3 — but first confirm we haven't tried the idea before. This
@@ -317,6 +332,24 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    genuinely different, constraint-structured task, 18.2% solve vs AR's ~0-0.2%) — only that four
    deterministic, fixed-depth, non-history-conditioned reimplementations don't replicate the effect on this
    specific interactive-action-sequence task.
+   **RESOLVED 2026-07-13 — GATE FAILS, RETIRED.** All three promised fixes landed for real this time
+   (PTRM Gaussian-noise stochastic recursion + Carnot-verifier selection, history/intent conditioning,
+   ACT-style dynamic halting — `python/carnot/agentic/arc_ptrm_stage1_generator.py`, exp5574). But a real
+   wiring bug meant Stage 1's own generation path never actually consulted the trained model's weights
+   (`generate_trajectories` fell back to an untrained frequency heuristic regardless); fixed in exp5600
+   (REQ-ARC-PTRM-5600-1). With the fix in place, ran the actual pre-registered leave-one-game-out gate
+   this task always deferred to a "next stage" (10 seeds x the same 5 held-out games as v3: `ft09`,
+   `m0r0`, `vc33`, `sk48`, `cd82`), against a non-recursive control and a majority-class baseline, paired
+   Wilcoxon per game. **Result: only `ft09` (1 of 5) clears both the significance bar (p=0.0020) and the
+   majority-baseline bar; `cd82`/`vc33` beat the baseline but not significantly; `m0r0`/`sk48` clear
+   neither.** 1 of 5 is below the required majority of 3 — `retire_if_same_verdict: true` fires.
+   `results/experiment_5600_ptrm_loo_gate.json`. Per this entry's own retirement clause: the whole
+   TRM-as-generator line for ARC-AGI-3, including the 4-stage hidden-game-adaptation plan
+   (`docs/research-notes/trm-generator-hidden-game-plan-2026-07-04.md`), is retired. Do not re-propose a
+   5th/6th variant of this specific approach. Separately flagged (not part of this retirement, but found
+   during the same investigation): the checked-in exp5574 artifact contains fields the code it was
+   committed with cannot compute — see `openspec/capabilities/arc-trm-generator/spec.md` Implementation
+   Status for detail; its specific numbers should not be cited.
 
 9. **(New 2026-07-11, cheap, reuses an existing code shape) InertClickPruner — extend the
    HazardMovePruner pattern to the inert/no-op-click axis.** Full writeup + citations:
