@@ -1,0 +1,279 @@
+{
+  "arm_comparison": {
+    "always_full": {
+      "earlier_family_delayed_replay_success": 0.0,
+      "final_delayed_success": 0.0,
+      "first_delayed_success": 0.0,
+      "forgetting_loss": 0.0,
+      "heldout_retrieval_candidates_mean": 3.0,
+      "heldout_success": 0.0,
+      "later_family_first_exposure_success": 0.0,
+      "read_rate": 0.8,
+      "row_count": 600
+    },
+    "no_memory": {
+      "earlier_family_delayed_replay_success": 0.25,
+      "final_delayed_success": 0.25,
+      "first_delayed_success": 0.25,
+      "forgetting_loss": 0.0,
+      "heldout_retrieval_candidates_mean": 0.0,
+      "heldout_success": 0.25,
+      "later_family_first_exposure_success": 0.0,
+      "read_rate": 0.0,
+      "row_count": 600
+    },
+    "self_optimized_causal": {
+      "earlier_family_delayed_replay_success": 0.9166666667,
+      "final_delayed_success": 0.75,
+      "first_delayed_success": 1.0,
+      "forgetting_loss": 0.25,
+      "heldout_retrieval_candidates_mean": 2.0,
+      "heldout_success": 0.9166666667,
+      "later_family_first_exposure_success": 0.0,
+      "read_rate": 0.8,
+      "row_count": 600
+    },
+    "shuffled_memory": {
+      "earlier_family_delayed_replay_success": 0.0,
+      "final_delayed_success": 0.05,
+      "first_delayed_success": 0.0416666667,
+      "forgetting_loss": -0.0083333333,
+      "heldout_retrieval_candidates_mean": 60.5,
+      "heldout_success": 0.0472222222,
+      "later_family_first_exposure_success": 0.0125,
+      "read_rate": 0.9916666667,
+      "row_count": 600
+    },
+    "static_causal": {
+      "earlier_family_delayed_replay_success": 0.5833333333,
+      "final_delayed_success": 0.75,
+      "first_delayed_success": 0.0,
+      "forgetting_loss": -0.75,
+      "heldout_retrieval_candidates_mean": 3.0,
+      "heldout_success": 0.5833333333,
+      "later_family_first_exposure_success": 0.0,
+      "read_rate": 0.8,
+      "row_count": 600
+    }
+  },
+  "backward_retention_delta": 0.3333333334,
+  "duration_s": 0.01,
+  "estimand_definitions": {
+    "backward_retention_delta": "optimized minus static success on earlier-family delayed replay: session_index < 2 and delayed_eval",
+    "forgetting_delta": "optimized first delayed success minus optimized final delayed success: phase 2 delayed rows minus phase 4 delayed rows",
+    "forward_transfer_delta": "optimized minus static success on later-family first exposure: session_index >= 2 and phase == 0",
+    "policy_cost": "read rates and retrieval-candidate burden from cached rows, reported outside transfer and retention deltas"
+  },
+  "estimand_details": {
+    "backward_retention": {
+      "denominator_per_arm": 120,
+      "optimized_success": 0.9166666667,
+      "row_predicate": "session_index < 2 and delayed_eval",
+      "static_success": 0.5833333333
+    },
+    "backward_retention_delta": 0.3333333334,
+    "forgetting": {
+      "final_delayed_denominator": 120,
+      "first_delayed_denominator": 120,
+      "optimized_final_delayed_success": 0.75,
+      "optimized_first_delayed_success": 1.0,
+      "row_predicate": "optimized phase 2 delayed success minus phase 4 delayed success"
+    },
+    "forgetting_delta": 0.25,
+    "forward_transfer": {
+      "denominator_per_arm": 80,
+      "optimized_success": 0.0,
+      "row_predicate": "session_index >= 2 and phase == 0",
+      "static_success": 0.0
+    },
+    "forward_transfer_delta": 0.0,
+    "policy_cost": {
+      "always_full": {
+        "heldout_retrieval_candidates_mean": 3.0,
+        "read_rate_all_rows": 0.8
+      },
+      "no_memory": {
+        "heldout_retrieval_candidates_mean": 0.0,
+        "read_rate_all_rows": 0.0
+      },
+      "self_optimized_causal": {
+        "heldout_retrieval_candidates_mean": 2.0,
+        "read_rate_all_rows": 0.8
+      },
+      "shuffled_memory": {
+        "heldout_retrieval_candidates_mean": 60.5,
+        "read_rate_all_rows": 0.9916666667
+      },
+      "static_causal": {
+        "heldout_retrieval_candidates_mean": 3.0,
+        "read_rate_all_rows": 0.8
+      }
+    }
+  },
+  "experiment": 5583,
+  "experiment_id": "experiment_5583_causal_memory_metric_corrigendum",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "arm_comparison": "Reruns every tournament arm from the same cached rows.",
+    "backward_retention_delta": "earlier-family durability is isolated",
+    "duration_s": "Declares bounded JSON replay work rather than live inference.",
+    "estimand_definitions": "forward and backward questions are distinct",
+    "false_negative_risk_checked": "Records that a null policy gate has controls.",
+    "field_principles": "Keeps the audit reason next to each required field.",
+    "flagged_adversarial": "downstream use requires a clean audit",
+    "forgetting_delta": "retention loss stays visible",
+    "forward_transfer_delta": "later-family adaptation is isolated",
+    "honest_verdict": "repeated tautology retires the policy lane",
+    "inference_substrate": "no new inference",
+    "metric_independence_positive_control": "formulas cannot be aliases",
+    "null_delta_methodology_note": "Explains why the zero forward transfer delta is measured.",
+    "permutation_control_passed": "causal order must matter",
+    "policy_cost": "Reports retrieval/read burden outside transfer and retention.",
+    "policy_ready": "controls and policy benefit must both pass",
+    "positive_control_passed": "Makes the null-risk control conductor visible.",
+    "rows_reconstructed": "metrics trace to observations",
+    "source_artifacts": "Shows the corrigendum preserves upstream raw outcomes."
+  },
+  "flagged_adversarial": false,
+  "forgetting_delta": 0.25,
+  "forward_transfer_delta": 0.0,
+  "honest_verdict": "complete: exp5569_policy_lane_retired_metric_corrigendum_from_cached_rows",
+  "inference_substrate": "cached_row_level_memory_outcomes",
+  "metric_independence_positive_control": {
+    "after": {
+      "backward_retention_delta": 1.0,
+      "forgetting_delta": 0.0,
+      "forward_transfer_delta": 1.0
+    },
+    "before": {
+      "backward_retention_delta": 1.0,
+      "forgetting_delta": 0.0,
+      "forward_transfer_delta": 0.0
+    },
+    "fixture": "later-family first-exposure flip only",
+    "passed": true
+  },
+  "milestone": "2026.07.505",
+  "null_delta_methodology_note": "forward_transfer_delta=0.0 is measured from cached Exp5569 later-family first-exposure rows: optimized and static both scored 0/80. The metric-independence positive control flips forward transfer while backward retention remains fixed, so the zero is not a stub default.",
+  "permutation_control": {
+    "label_rotation": 3,
+    "original_metrics": {
+      "backward_retention_delta": 0.3333333334,
+      "forgetting_delta": 0.25,
+      "forward_transfer_delta": 0.0
+    },
+    "passed": true,
+    "permuted_metrics": {
+      "backward_retention_delta": 0.0833333334,
+      "forgetting_delta": 1.0,
+      "forward_transfer_delta": 0.0
+    },
+    "permuted_policy_ready": false,
+    "session_index_rotation": 1
+  },
+  "permutation_control_passed": true,
+  "policy_cost": {
+    "always_full": {
+      "heldout_retrieval_candidates_mean": 3.0,
+      "read_rate_all_rows": 0.8
+    },
+    "no_memory": {
+      "heldout_retrieval_candidates_mean": 0.0,
+      "read_rate_all_rows": 0.0
+    },
+    "self_optimized_causal": {
+      "heldout_retrieval_candidates_mean": 2.0,
+      "read_rate_all_rows": 0.8
+    },
+    "shuffled_memory": {
+      "heldout_retrieval_candidates_mean": 60.5,
+      "read_rate_all_rows": 0.9916666667
+    },
+    "static_causal": {
+      "heldout_retrieval_candidates_mean": 3.0,
+      "read_rate_all_rows": 0.8
+    }
+  },
+  "policy_gate": {
+    "backward_retention_nonnegative": true,
+    "controls_passed": true,
+    "forgetting_max_allowed": 0.02,
+    "forgetting_within_bound": false,
+    "forward_transfer_positive": false,
+    "policy_benefit_passed": false,
+    "retirement_reasons": [
+      "forward_transfer_delta_not_positive",
+      "optimized_forgetting_loss_visible"
+    ]
+  },
+  "policy_ready": false,
+  "positive_control_passed": true,
+  "random_seed": 5583,
+  "reproducibility_checksum": "sha256:84d94e5ed7bfff56ee59a00160ea681310348204a51aa27068d414ccef81a391",
+  "rows_reconstructed": {
+    "arms": [
+      "no_memory",
+      "shuffled_memory",
+      "static_causal",
+      "always_full",
+      "self_optimized_causal"
+    ],
+    "blocked_if_missing": true,
+    "complete": true,
+    "families": 6,
+    "rows_per_arm_seed": 120,
+    "seeds": [
+      5569,
+      5570,
+      5571,
+      5572,
+      5573
+    ],
+    "sessions": 6,
+    "source_artifact": "results/experiment_5569_causal_memory_policy_tournament.json",
+    "source_experiment_id": "experiment_5569_causal_memory_policy_tournament",
+    "source_flagged_adversarial": true,
+    "source_sha256": "sha256:bde9f955bab82cf114e25b81810168ffb2806437286d1d4b998a50f713dbeace",
+    "total_rows": 3000
+  },
+  "run_date": "2026-07-14",
+  "schema": "carnot.experiment_5583.causal_memory_metric_corrigendum.v1",
+  "source_artifacts": {
+    "exp5558": {
+      "loadable": true,
+      "path": "results/experiment_5558_causal_write_manage_read_csl_memory.json",
+      "sha256": "sha256:28bbcace6e9237af1dd8287fdad028b78c81e38ceb9a641a2ae69ec214577930"
+    },
+    "exp5569": {
+      "corrigendum_pending_count": 1,
+      "flagged_adversarial": true,
+      "path": "results/experiment_5569_causal_memory_policy_tournament.json",
+      "raw_outcomes_preserved": true,
+      "sha256": "sha256:bde9f955bab82cf114e25b81810168ffb2806437286d1d4b998a50f713dbeace"
+    }
+  },
+  "source_file_checksums": {
+    "module": "sha256:73b5edd607ad746ef2d75d3dd9ff452767e7d5d683133eabf51541eee0e25c81",
+    "spec": "sha256:35ea3ca745bc14b05c6dfb7ca8984f7402a973d33d36bd5f96c019dc08437138",
+    "test": "sha256:3c30ff5edc855c1923cec3ea4a0cd7321946ba4e7ff55742e251d59597684f54"
+  },
+  "source_files": {
+    "module": "python/carnot/experiment_5583_causal_memory_metric_corrigendum.py",
+    "spec": "openspec/capabilities/self-learning/spec.md",
+    "test": "tests/python/test_experiment_5583_causal_memory_metric_corrigendum.py"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5583",
+    "SCENARIO-LEARN-5583-ROWS",
+    "SCENARIO-LEARN-5583-ESTIMANDS",
+    "SCENARIO-LEARN-5583-CONTROLS",
+    "SCENARIO-LEARN-5583-ARTIFACT"
+  ],
+  "task_id": "exp5583-causal-memory-metric-corrigendum",
+  "tests_added_or_reused": [
+    ".venv/bin/pytest tests/python/test_experiment_5583_causal_memory_metric_corrigendum.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5583_causal_memory_metric_corrigendum.py -m pytest tests/python/test_experiment_5583_causal_memory_metric_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5583_causal_memory_metric_corrigendum.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5583_causal_memory_metric_corrigendum.json"
+  ]
+}
