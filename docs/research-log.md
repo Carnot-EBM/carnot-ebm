@@ -5913,3 +5913,9 @@ The critical path for milestone .250:
 - theme: capstone closeout dominated the recorded compute-bound runtime
 - key result: honest operational result -- the compute-bound capstone and reconciliation was the longest recorded experiment at 24.95 minutes; the locked task-level idle indicator rules out an idle-GPU bottleneck, while the evidence includes no concurrent multi-model run to evaluate runner selection
 - acceptance: no data available this milestone
+
+### Milestone 2026.07.507
+- exp_range: no data available this milestone
+- theme: CUDA certification and closeout reconciliation led the recorded operational runtime
+- key result: honest operational result -- the supplied evidence identifies the longest compute-bound paths but does not establish an idle-GPU bottleneck, a causal phase breakdown, or a concurrent multi-model DualGPURunner miss
+- acceptance: no data available this milestone

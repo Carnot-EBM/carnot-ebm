@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.507",
+  "generated_at": "2026-07-14T12:09:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 159.6,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "Native llama.cpp three-GGUF CUDA offload and response-runtime certificate",
+      "duration_minutes": 28.4,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V507 capstone, promotion-retirement ledger, and spec-ops reconciliation",
+      "duration_minutes": 27.22,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5617 nondegenerate duration map: predictive-window KAN continuous se",
+      "duration_minutes": 25.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5616 exact fixture: KAN retention-adaptation Critical Task Duration ",
+      "duration_minutes": 22.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "ARC own-observation forward-inverse transition-cycle verifier prototype",
+      "duration_minutes": 21.38,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 159.6 minutes, including 6 compute-bound experiments. The longest recorded runs were the 28.4-minute native llama.cpp three-GGUF CUDA certificate and the 27.22-minute capstone/reconciliation, while the locked task-level indicator does not identify GPU idle on compute-bound tasks. The data does not establish that any task ran at least two models concurrently or missed DualGPURunner.",
+  "bottlenecks_identified": [
+    "Native llama.cpp three-GGUF CUDA offload and response-runtime certification was the longest recorded compute-bound path at 28.4 minutes; the supplied data identifies its scope but contains no phase-level timing breakdown from which to assign a narrower cause.",
+    "The V507 capstone, promotion-retirement ledger, and spec-ops reconciliation was the next-longest compute-bound path at 27.22 minutes, making closeout and reconciliation a long operational path without establishing which component dominated it.",
+    "The ARC own-observation forward-inverse transition-cycle verifier was the third compute-bound path visible in the slowest set at 21.38 minutes; its title establishes scope but the supplied data does not establish a causal timing breakdown.",
+    "The gated predictive-window KAN and Critical Task Duration synthesis-only paths took 25.9 and 22.6 minutes; their CPU-only execution is correct, and the supplied data does not isolate dependency wait time from synthesis work.",
+    "The supplied GPU report is an idle snapshot rather than a task-correlated trace, so it cannot explain utilization during the compute-bound runs; this is a measurement gap, not a finding that synthesis-only work should have used a GPU."
+  ],
+  "improvements_suggested": [
+    "Add per-experiment GPU telemetry bounded by task start and end, including utilization, memory, assigned device, model count, and whether models execute concurrently.",
+    "Emit phase-level timings for model loading, CUDA offload, inference, certificate generation, ledger work, and spec-ops reconciliation so the longest paths have causal timing breakdowns.",
+    "Route tasks to DualGPURunner only when their execution manifest declares at least two models running in parallel; retain one-GPU execution for single-model tasks and CPU execution for synthesis-only tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument task-correlated GPU utilization and model-concurrency telemetry.",
+    "Persist phase-level timing receipts for the CUDA certificate and capstone/reconciliation paths.",
+    "Add manifest-driven DualGPURunner selection for confirmed parallel multi-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The available data supports duration ranking but not causal attribution because it lacks phase-level timings and task-correlated GPU traces. A zero savings estimate is retained rather than inventing an unmeasured counterfactual, and future retrospectives should record model concurrency before assessing DualGPURunner engagement."
+}

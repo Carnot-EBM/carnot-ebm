@@ -3558,6 +3558,135 @@ game, so the resulting `honest_verdict` (tie, win, loss, or efficiency-only
 edge) rests on multiple independent games' worth of real signal rather than
 one game's floor-effect tie
 
+### REQ-ARC-FCP-5703: Mechanism-Level Diagnosis of the sp80 Candidate-Scoring-Stack Regression
+
+exp5701 found `sp80` was the one game (of 5 with measured headroom) where
+`bare_control` beat `full_stack` by a level. Restating the number is not a
+diagnosis -- `python/carnot/experiment_5703_sp80_candidate_stack_mechanism_trace.py`
+SHALL directly instrument all three mechanisms that differ between the arms
+(`candidate_router`, `goal_bias`, `goal_candidate_guidance`) during a real
+sp80 replay of both arms, to determine whether any of them ACTIVELY steered
+`full_stack` toward a worse choice, or whether the regression's cause lies
+elsewhere in the stack.
+
+The artifact SHALL report, per mechanism: whether it was present, how many
+times it was genuinely invoked, and whether it ever changed the outcome it
+influences (`candidate_router_changed_order_count` for candidate reordering;
+`goal_bias_score_variance` across every real frontier-node scoring call for
+the goal-energy bias). `inert_mechanisms` SHALL list any mechanism confirmed
+structurally incapable of having caused the regression this run.
+
+**RESOLUTION (2026-07-14).** Replayed sp80 under both arms, budget=500,
+offline (no LLM). Regression reproduced (`full_stack.levels_gained=0` vs
+`bare_control.levels_gained=1`, `bare_control` reaching L1 in 425 actions).
+**All three learned mechanisms were confirmed structurally inert this run:**
+`goal_bias` (`arc_goal_energy_live.GoalSatisfactionEnergy`, source
+`exp4020_graded_goal_satisfaction_energy`) scored EXACTLY `1.0` on all 771
+real frontier-node invocations (`goal_bias_score_variance=0.0`) -- a
+mathematical proof it could not have influenced the A*-style frontier
+ordering, since a constant score maps to a constant sort key
+(`_goal_bias_key`). `goal_candidate_guidance` (the same energy source
+applied to the immediate candidate pool) also scored uniformly and
+correctly self-detected its own degeneracy (`arms_non_degenerate=False`)
+via its existing audit, falling back to the unranked candidate order by
+design. `candidate_router` was genuinely invoked 33 times but never once
+changed the candidate ordering it was given
+(`candidate_router_changed_order_count=0`).
+
+**Honest conclusion: the sp80 regression is NOT caused by a bad learned
+signal actively misleading search -- it is structurally impossible for
+these three mechanisms to be the cause here, since two contribute a
+provable no-op and the third self-audited its own uselessness and
+correctly disengaged.** The real cause must trace to one of the other
+differing knobs (`value_weight`/DAgger value head, `navigation_cost_
+tiebreak`, `action_effect_expansion_prior`) -- not further isolated in
+this investigation's scope. Separately, this run surfaced a genuine,
+independently-useful finding: `GoalSatisfactionEnergy`'s frame-state
+extraction is structurally blind on sp80 (falls to its constant-1.0
+default because `visible_state()` cannot parse sp80's placement mechanic
+into a target-fraction), corroborating `ops/verifier_gaps.md` GAP-4891's
+independent finding (via a completely different code path -- the offline
+self-induction operator, not the live goal-bias stack) that sp80's goal is
+spatial/placement and not discriminable by the count/generic-fraction
+features these mechanisms use. Logged as GAP-5703 (`ops/verifier_gaps.md`)
+per the Missing-Verifier Gap Logging discipline, with a concrete,
+general-purpose fix recommendation: give `goal_bias`'s frontier scoring the
+same degenerate-score self-audit `goal_candidate_guidance` already has.
+
+Required field principles:
+
+- `goal_bias_score_variance`: principle "zero variance across every real invocation is direct, mechanical proof the goal-energy source could not have influenced frontier ordering on this game, independent of any post-hoc narrative."
+- `candidate_router_changed_order_count`: principle "counts how many of the router's real invocations actually altered the candidate ordering it was given -- distinguishes 'present and consulted' from 'present and load-bearing'."
+- `prior_result`: principle "CLAUDE.md Failed-Experiment Rerun Discipline analog for a diagnostic task -- names the exp5701 finding this investigates so the connection is traceable."
+
+#### SCENARIO-ARC-FCP-5703-MECHANISM-INERT-OR-IMPLICATED
+
+Given a real replay of the sp80 regression with all three learned
+candidate-scoring mechanisms instrumented for actual influence (not just
+presence)
+When the regression reproduces
+Then `inert_mechanisms` correctly distinguishes mechanisms that were merely
+present from mechanisms that measurably changed a decision, so the
+diagnosis names what did NOT cause the regression with the same rigor as
+what might have
+
+### REQ-ARC-WMTE-5593-4: Real-World Pass-Rate Survey of the `min_heldout_accuracy=1.0` Dynamics Gate
+
+REQ-ARC-WMTE-5593-3's live-integration follow-up found both arms failing at
+the pre-existing dynamics gate before the goal-consistency veto was ever
+reached in its first real attempt, and disclosed this as a
+`dynamics_gate_finding` rather than investigating further.
+`python/carnot/experiment_5702_dynamics_gate_pass_rate_survey.py` SHALL
+follow up: aggregate every real `heldout_accuracy` value recorded across the
+checked-in corpus of `inference_substrate == "live_llm_inference"` result
+artifacts (excluding exp5700, which deliberately bypassed the gate for an
+unrelated isolation test) to estimate how often a real induction round
+actually clears the live call site's own threshold of `1.0`.
+
+The artifact SHALL report `pass_rate_at_live_threshold`, `exact_zero_rate`,
+`mean`/`median`, a `threshold_sweep` across common alternative bars, and
+`cited_upstream_artifacts` (CLAUDE.md Inference-Substrate Declaration
+Discipline audit trail -- every row must trace back to the real artifact
+that measured it).
+
+**RESOLUTION (2026-07-14).** Aggregated 95 real round-level
+`heldout_accuracy` values across 12 real `live_llm_inference` artifacts.
+**`pass_rate_at_live_threshold=0.1263`** (12.6% of real induction rounds
+ever reach the exact `1.0` bar the live pipeline enforces).
+`exact_zero_rate=0.4737` (47.4% of real rounds score a complete `0.0`).
+`mean=0.3069`, `median=0.12` -- a strongly right-skewed, mostly-poor
+distribution, not a narrow miss clustered just below the bar.
+
+**Honest conclusion and limitation.** This measures the PER-ROW pass rate,
+not the bounded 3-round retry loop's eventual within-budget success rate --
+the checked-in corpus does not contain enough same-attempt multi-round
+traces to reconstruct that distinct statistic (most artifacts in this
+corpus measure first-shot induction quality, not a full bounded-retry
+trace). The per-row rate is still the direct, real answer to "how strict is
+`1.0` in practice": across a large, diverse, real historical corpus, the
+overwhelming majority of individual real induction attempts miss the live
+threshold entirely. This corroborates, with corpus-scale evidence, task 8's
+single-attempt observation that the dynamics gate is "frequently the
+dominant blocker" -- and raises a genuine calibration question (not
+resolved here) of whether a graduated-trust tier, mirroring
+`GoalEnergyCandidateGuidance`'s own degenerate-score self-audit pattern
+(REQ-ARC-FCP-5703 above), could safely make use of a "good but imperfect"
+induced model instead of an all-or-nothing accept/reject at `1.0`.
+
+Required field principles:
+
+- `pass_rate_at_live_threshold`: principle "the direct answer to task 11's question -- how often a real induction round clears the exact threshold (1.0) the live call site enforces."
+- `excluded_artifacts`: principle "exp5700 deliberately set min_heldout_accuracy=0.0 to isolate an unrelated veto test; including its rows would understate how strict the REAL live threshold is by mixing in rows collected under a different, lower bar."
+
+#### SCENARIO-ARC-WMTE-5593-4-CORPUS-PASS-RATE
+
+Given the full checked-in corpus of real `live_llm_inference` artifacts,
+excluding any artifact that deliberately used a non-default gate threshold
+When every real round-level `heldout_accuracy` value is aggregated
+Then the resulting `pass_rate_at_live_threshold` reflects only genuine
+real-world attempts at the live pipeline's actual configured threshold, with
+a full audit trail (`cited_upstream_artifacts`) back to the source artifacts
+
 ### REQ-ARC-WMTE-5593: Goal-Predicate Consistency Against Real Observed Level-Progress
 
 `ops/known-issues.md`'s 2026-07-11 task 11 entry (hallucination-consistency

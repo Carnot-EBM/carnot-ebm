@@ -2884,3 +2884,67 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   discipline — not an all-no-op degenerate test). The check ITSELF is now demonstrated working on
   real induced output, not just synthetic fixtures; still NOT wired into any live decision
   (vetoing a goal predicate before planning) — that remains a distinct, separately-scoped step.
+
+### GAP-5703: `GoalSatisfactionEnergy` (Exp4020) is structurally blind on sp80 — constant score, zero variance, live path (not just offline self-induction)
+- status: open
+- evidence: `results/experiment_5703_sp80_candidate_stack_mechanism_trace.json` (2026-07-14,
+  outer-loop, task 10 — follow-up to exp5701's finding that sp80 was the one game where
+  `bare_control` beat `full_stack` by a level in the candidate-scoring-stack ablation). Directly
+  instrumented all three "richer stack" mechanisms live during a real sp80 episode
+  (`E3AgentPolicy(game)`, budget=500, offline_arcade substrate, no LLM): `goal_bias`
+  (`arc_goal_energy_live.GoalSatisfactionEnergy`, source `exp4020_graded_goal_satisfaction_energy`)
+  scored **every one of 771 real frontier-node invocations at exactly 1.0** (`goal_bias_score_
+  variance=0.0`); `goal_candidate_guidance` (the same energy source, applied to the immediate
+  14-candidate pool) also scored uniformly (`score_min=score_max=1.0`) and correctly self-detected
+  its own degeneracy (`arms_non_degenerate=False`) and no-op'd (`candidate_pool_differs_from_
+  baseline=False`, by the existing design in `arc_goal_energy_live.py:274-275`); `candidate_router`
+  was genuinely invoked 33 times but never once changed the candidate ordering it was given
+  (`candidate_router_changed_order_count=0`). adversarial_verify clean.
+- failure mode: `GoalSatisfactionEnergy.__call__` (`arc_goal_energy_live.py:338-353`) falls back to
+  a constant `1.0` ("totally unsatisfied") whenever `visible_state(value)` returns `None` or the
+  extracted state's `total_targets <= 0.0`. A constant score across an entire real episode means
+  `_state_from_visible()` extracts no usable target-state from sp80's frames at all — the energy
+  source has literally zero information about sp80's spill-splitter/placement mechanic, not just
+  weak/noisy information. Since `_goal_bias_key` maps a constant score to a constant sort key
+  (`arc_competition_agent.py:1139-1144`), this is not merely a weak signal, it is a mathematically
+  guaranteed no-op on frontier ordering — confirmed by direct instrumentation, not inferred.
+- **corroborates GAP-4891 via an independent code path.** GAP-4891 (above) found the SAME
+  underlying problem — sp80's goal is SPATIAL/placement, not discriminable by
+  object-count/colour-count style features — via the OFFLINE self-induction operator
+  (`induce_goal_energy_*` in `arc_agi3_goal_induction.py`), a completely different module from
+  `GoalSatisfactionEnergy`/`arc_goal_energy_live.py`. This entry shows the SAME game's SAME class
+  of failure also reaches the LIVE submitted agent's own search behavior (`goal_bias` +
+  `goal_candidate_guidance`, both wired into `E3AgentPolicy`'s default "full stack" per
+  `SUBMITTED_AGENT_CONFIG`) — not just an offline diagnostic tool. The gap is broader and more
+  load-bearing than GAP-4891 alone suggested: it affects what the scored agent actually does on
+  this game class, not only a research-side self-induction experiment.
+- missing discriminator: a placement/spatial-aware `visible_state()` extraction (or an alternate
+  goal-energy source entirely) that can represent progress toward a target CONFIGURATION — cell
+  values/positions matching an induced or hard-coded target — for games whose win condition is
+  "put things in the right place" rather than "make a count/fraction go to zero." The relational
+  target-match representation GAP-4891's UPDATE-2 already built and validated
+  (`induce_goal_energy_relational`, separates sp80's win from every non-win, `winE=0, nonE=3.27`)
+  is a candidate signal source that could replace or supplement `GoalSatisfactionEnergy` for games
+  in this class — it already exists and is proven to discriminate on this exact game, just not
+  wired into the LIVE `goal_bias`/`goal_candidate_guidance` path.
+- candidate design: (a) a degenerate-score self-audit on `goal_bias`'s frontier-node scoring,
+  mirroring the audit `goal_candidate_guidance` already has (`arms_non_degenerate`) — so a
+  zero-variance goal-energy source safely falls back to no-goal-bias search instead of silently
+  contributing an inert-but-unaudited key, closing the asymmetry this investigation found between
+  the two mechanisms; (b) route `goal_bias`/`goal_candidate_guidance` through GAP-4891's
+  already-validated relational target-match energy on games flagged as placement/spatial-class
+  (the mechanic-class routing infrastructure already exists per `arc_solve_learning.recommend_
+  approach` / `_recommend_live_approach`), rather than the generic Exp4020 predicate-fraction
+  formula.
+- what does NOT explain the sp80 regression: since all three learned mechanisms are proven inert
+  on this game (constant score / no reordering / self-audited no-op), they cannot be the cause of
+  `full_stack` losing a level to `bare_control` there. The regression's real cause is one of the
+  remaining differing knobs (`value_weight`/DAgger value head, `navigation_cost_tiebreak`,
+  `action_effect_expansion_prior`) — NOT further isolated in exp5703's scope; a natural follow-up
+  if sp80 specifically becomes headline-relevant.
+- priority: medium — real and load-bearing for the live agent's search quality on placement-class
+  games (not just a research diagnostic), but the exp5701 sweep found sp80 is the ONLY game (of 5
+  with measured headroom) where this class of degeneracy corresponded to a measured regression;
+  candidate design (a) is cheap and should be paired with any future goal_bias work regardless of
+  priority tier, since it is a general robustness fix (fail-safe on ANY out-of-distribution game),
+  not sp80-specific.
