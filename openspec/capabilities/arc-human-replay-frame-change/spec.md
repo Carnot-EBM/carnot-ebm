@@ -3675,6 +3675,109 @@ Then the token count is below the 13,824-token available budget (`n_ctx=16384` m
 `max_tokens=2560`), where it previously measured 18,355 tokens and overflowed with
 `exceed_context_size_error`
 
+### REQ-ARC-WMTE-5593-3: Wire `score_goal_predicate_consistency` Into a Live Veto
+
+REQ-ARC-WMTE-5593 built `score_goal_predicate_consistency` and left it explicitly
+additive-only: "NOT yet wired into any live decision (e.g. vetoing a goal predicate
+before planning); that is a distinct, separately-scoped design + empirical-validation
+step." Its own docstring names the exact gap: `execute_bounded_llm_reinduction`
+"installs `outcome.goal_predicate` as a search termination condition on the strength of
+the proposer's own code, unchecked against any observed transition." This requirement
+closes that gap.
+
+**Prerequisite bug found and fixed first.** `score_goal_predicate_consistency`'s core
+logic (`real_levelup = t.level_after > t.level_before`) depends on `Transition.
+level_before` being correct. Investigation found the LIVE path's `Transition`
+construction sites in `E3AgentPolicy` (`arc_competition_agent.py`, `next_move` and
+`_remember_active_probe_origin`) hardcoded `level_before=0` unconditionally -- wiring
+the consistency check against raw live `transitions` without fixing this would have
+judged every predicate against systematically wrong ground truth once the real level
+ever exceeded 0. Fixed by adding `self._prev_level` (mirroring the
+`previous_best_level` pattern already used correctly by `AutonomousExplorer._ingest`):
+captured alongside every real `self._prev` assignment, consumed as the `Transition`'s
+`level_before` instead of the hardcoded `0`. Verified safe via a ~280-test regression
+sweep across every `E3AgentPolicy`-touching test file; the one hardcoded-registry-
+snapshot test that failed (`test_experiment_5176_...`) was confirmed pre-existing
+registry drift unrelated to this change (`ops/arc_solve_registry.yaml`'s `cd82` has
+legitimately advanced past the test's stale hardcoded expectation).
+
+**Safety precondition confirmed before wiring.** `is_level_complete` is used ONLY as
+`plan_in_model`'s in-model BFS terminal condition -- a pure simulation-internal search
+hint. The live agent's REAL win-recognition (`E3AgentPolicy._current_goal_reached()`,
+comparing `self.explorer.best_level` against the real environment's own level signal
+via `_level_of`/`_levels_completed`) is entirely independent of the induced predicate.
+A veto is therefore low-risk: worst case, `plan_in_model` fails to find a plan that
+round and the phase machine falls back to `self.explorer.next_move(...)` (real
+exploration) -- the agent's actual level-progress detection is untouched either way.
+
+**Design, mirroring the existing dynamics-veto pattern rather than inventing a new
+one.** `execute_bounded_llm_reinduction` gains a new `min_goal_predicate_consistency:
+float = 0.0` parameter (default OFF, matching `min_heldout_accuracy`'s own default).
+When `> 0.0`, right after `goal_check`/`_repair_degenerate_goal` confirms the predicate
+is SATISFIABLE (not degenerate) and BEFORE `plan_in_model` is called,
+`score_goal_predicate_consistency(selected_goal, transitions)` scores it against the
+SAME `transitions` the dynamics check already uses. The veto fires ONLY when BOTH (a)
+`accuracy < threshold` AND (b) `n_real_levelups >= 1` (CLAUDE.md FALSE_NEGATIVE_RISK
+discipline -- a window with zero real level-ups makes any predicate, including a
+constant-False stub, trivially score 1.0, so judging on that data would be
+uninformative, not merely lenient). On veto, a `goal_predicate_consistency_failed`
+counterexample (accuracy, threshold, and per-transition mismatches) is attached the
+same way `heldout_transition_verification_failed` attaches dynamics mismatches, the
+round is marked `skipped`, and the loop `continue`s to the next round -- `refactor()`
+receives the counterexample via the EXISTING generic `_counterexample_result` fallback
+path (not the DYNAMICS-specific BEFORE/PREDICTED/OBSERVED shape, since a goal mismatch
+isn't a grid-prediction mismatch; `_counterexample_result`'s own docstring names this
+exact fallback "safe for any caller that has not attached real evidence").
+
+**RESOLUTION (2026-07-14).** The live call site (`arc_competition_agent.py`'s
+`execute_bounded_llm_reinduction(...)` invocation, `reason == "level_up_reinduction"`)
+now passes `min_goal_predicate_consistency=1.0` -- mirroring that SAME call site's own
+existing `min_heldout_accuracy=1.0`, the established risk tolerance for this specific
+gate (strict acceptance, trust the bounded 3-round refinement loop to repair a failure,
+safe fallback to real exploration if it cannot). This is a GENUINELY LIVE wire, not
+inert plumbing: a goal predicate that disagrees with a real observed level-up during
+live re-induction will now be rejected and trigger a refactor attempt, rather than
+being installed unchecked. 4 new tests
+(`tests/python/test_arc_goal_predicate_live_veto.py`) cover the veto firing on a real
+mismatch, the opt-in default (disabled, backward-compatible with every existing
+caller), and the false-negative-risk guard. Full ~280-test regression sweep across
+every `E3AgentPolicy`/`execute_bounded_llm_reinduction`-touching test file passed
+(one pre-existing, unrelated `Memory leak` teardown-watchdog false-positive and one
+pre-existing, unrelated registry-drift failure, both confirmed present on the
+pre-change tree too).
+
+#### SCENARIO-ARC-WMTE-5593-3-VETO-FIRES
+
+Given a re-induced goal predicate that is satisfiable (not degenerate) in the induced
+model, but disagrees with a real observed level-up in `transitions` (claims the
+post-transition grid is not level-complete when a real level-up occurred there)
+When `execute_bounded_llm_reinduction` runs with `min_goal_predicate_consistency` set
+above the predicate's real accuracy
+Then the round is skipped with `goal_predicate_consistency_failed` BEFORE
+`plan_in_model` is ever called, the mismatch is attached as a counterexample fed to the
+next round's `refactor()` call, and `planned` is `False` if no later round produces a
+consistent, satisfiable, plan-reaching predicate within the round budget
+
+#### SCENARIO-ARC-WMTE-5593-3-VETO-OPT-IN
+
+Given the exact same mismatching goal predicate and transitions as above
+When `min_goal_predicate_consistency` is left at its default (`0.0`)
+Then the veto never fires, no `goal_predicate_consistency_*` fields appear on the round,
+and planning proceeds exactly as it did before this requirement existed -- every
+existing caller of `execute_bounded_llm_reinduction` that does not pass the new kwarg
+is unaffected
+
+#### SCENARIO-ARC-WMTE-5593-3-FALSE-NEGATIVE-RISK-GUARD
+
+Given a `transitions` window containing ZERO real level-ups (every transition has
+`level_after == level_before`) and a strict `min_goal_predicate_consistency` threshold
+When `execute_bounded_llm_reinduction` scores the goal predicate against this window
+Then the veto does NOT fire regardless of the predicate's raw accuracy score, because
+`n_real_levelups == 0` makes the score structurally uninformative (any predicate,
+including a constant-False stub, would score a trivial 1.0 on an all-no-op window) --
+per CLAUDE.md's FALSE_NEGATIVE_RISK discipline, a null/negative judgment requires a
+positive control the data does not provide here
+
 ### REQ-ARC-WMTE-5594: `/think` vs `/no_think` Induction Quality A/B on the Frozen Live Generator
 
 `ops/known-issues.md`'s 2026-07-11 task 7 entry (cheap, dev-side-only) was
@@ -4122,6 +4225,86 @@ expanded, levels gained, and offline reproduction safety do not improve
 Then the mechanism is not promoted; if this repeats the prior no-op after a
 reachable control, the artifact retires that mechanism with an honest terminal
 verdict.
+
+### REQ-ARC-FCP-5610: Unconditional Live Self-Discovery Level-Up Attempt
+
+Experiment 5610 SHALL write
+`results/experiment_5610_arc_live_self_discovery_levelup_v506.json` after one
+unconditional live-agent self-discovery attempt against a non-duplicate ARC
+frontier level. The experiment SHALL first run a registry precheck across all
+public offline-arcade games, excluding target levels already present in
+`scripts/arc_loop_solve.py` outputs, `ops/arc_solve_registry.yaml`, the
+previous milestone ARC artifact, and any already-recorded current-milestone
+attempt. The selected target SHALL rotate toward a game with authenticated
+public environment headroom and an adjacent next level beyond the registry
+depth.
+
+The live attempt SHALL use the live ARC runtime's own observations, attempted
+actions, state transitions, and runtime reverse-engineering signals. It SHALL
+NOT inspect game source, run exhaustive offline ground-truth BFS, inject a
+hand-built per-game adapter, or replay a hidden solution recipe. Exp5609 is
+advisory only: if it promoted a filter without safety regression, Exp5610 MAY
+enable only that promoted configuration; otherwise Exp5610 SHALL run the
+unchanged current no-LLM live-agent baseline. Exp5609 SHALL NOT gate or skip the
+attempt.
+
+The action budget, seed, target, stopping rule, filter configuration, and frozen
+generator choice SHALL be fixed before the attempt. If the live path invokes no
+LLM, the artifact SHALL declare
+`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+`llm_invoked=false`, and `no_model_specs_required=true` instead of inventing a
+model receipt. If a candidate level at or beyond the selected target is reached,
+the experiment SHALL reproduce that exact live-discovered trace through the
+generic offline reproduction path before banking. A level SHALL count only when
+`offline_reproduced=true`, the reached level exceeds the registry precheck, and
+the action trace checksum replays exactly.
+
+Required field principles:
+
+- `field_principles`: principle "principle annotations are carried in the artifact so every required 5610 field is auditable."
+- `registry_precheck`: principle "duplicate levels receive no credit; all public games, registry depths, arc_loop_solve depths, previous milestone targets, and current milestone attempts are checked before target selection."
+- `target_selection_receipt`: principle "rotation and authenticated public-game headroom are explicit, so the selected next level is not a duplicate."
+- `live_attempt_executed`: principle "bare bool true proves the ARC standing floor was a real runtime attempt, not an advisory precheck."
+- `filter_configuration`: principle "Exp5609 promotion use is auditable and cannot gate or skip the level-up attempt."
+- `action_budget`: principle "search cost is bounded before runtime begins."
+- `attempt_trace_path`: principle "discovery evidence is replayable from a durable trace."
+- `levels_before`: principle "authoritative registry total before the attempt; the north-star delta is exact."
+- `levels_after`: principle "authoritative registry total after accepted banking; unchanged on honest nulls."
+- `new_reproducible_levels`: principle "only newly reproduced levels beyond the precheck depth count."
+- `offline_reproduced`: principle "a live reach needs independent replay; duplicate or unreplayed reaches do not bank."
+- `registry_updated`: principle "successful evidence becomes durable, while null attempts leave the registry unchanged."
+- `solve_provenance`: principle "must equal live_agent_self_discovery for any credited path."
+- `source_files_read`: principle "must be false; outer-loop source reverse engineering is excluded."
+- `per_game_adapter_used`: principle "must be false; hidden per-game solvers are not smuggled into live self-discovery credit."
+- `inference_substrate`: principle "offline_arcade_live_agent_runtime_self_discovery_no_llm when no LLM call is made."
+- `honest_verdict`: principle "no-new-level is terminal; a failed Exp5609 filter A/B is not permission to skip the attempt."
+
+#### SCENARIO-ARC-FCP-5610-PRECHECK-ROTATES-NON-DUPLICATE-HEADROOM
+
+Given public environment metadata, registry depths, arc_loop_solve outputs, and
+the previous milestone ARC artifact
+When Exp5610 runs its registry precheck
+Then it selects the first rotated target whose next level is beyond both the
+registry and arc_loop_solve depths, has authenticated public headroom, and is
+not the previous or current milestone's duplicate target.
+
+#### SCENARIO-ARC-FCP-5610-FILTER-ADVISORY-NOT-GATING
+
+Given Exp5609 either retired its filters, blocked a mechanism, or promoted one
+safe configuration
+When Exp5610 builds the live attempt configuration
+Then the live attempt still executes, enabling only safe promoted filters when
+present and otherwise using the unchanged current live-agent baseline.
+
+#### SCENARIO-ARC-FCP-5610-REPRODUCTION-GATE-BANKS-ONLY-NEW-LEVELS
+
+Given a bounded live-agent trace
+When the trace does not reach and independently reproduce the selected target
+Then the artifact records `live_attempt_executed=true`,
+`offline_reproduced=false`, `new_reproducible_levels=[]`, `registry_updated=false`,
+and a terminal honest null. When a trace reaches the selected target and
+independent replay matches the trace checksum, then and only then the artifact
+records a new reproducible level and increments `levels_after`.
 
 ### REQ-ARC-FCP-5699: SGE Anti-Stagnation Controller -- Genuine Live Collapse-Escape Re-Test
 
