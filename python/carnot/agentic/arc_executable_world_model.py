@@ -85,27 +85,34 @@ def to_ascii(logical: np.ndarray) -> str:
 
 
 def _rle_grid(g: np.ndarray) -> str:
-    """Lossless run-length encoding of a FULL grid for the induce prompt: every row is walked
-    left-to-right and collapsed into maximal same-value horizontal runs
-    'r<row>c<col0>:<value>x<count>'. On large boards (e.g. lp85's 64x64 logical grid), `to_ascii`'s
+    """Lossless run-length encoding of a FULL grid for the induce prompt: one line per row,
+    'r<row>:<v0>x<n0>,<v1>x<n1>,...' -- each row's runs cover ALL columns left-to-right with NO
+    gaps, so the column position is implicit (the running sum of prior run counts in that row),
+    never spelled out. On large boards (e.g. lp85's 64x64 logical grid), `to_ascii`'s
     one-char-per-cell render was the dominant fixed cost of `induce_prompt` -- a SINGLE full grid
     measured ~6-7K tokens, so an 8-transition window (up to two full-grid renders + per-transition
     deltas) measured 18,355 tokens against a 13,824-token available budget and overflowed with
-    `exceed_context_size_error` (ops/known-issues.md task 11, exp5593). ARC boards are typically
-    blocky (large same-color regions), which run-length encoding exploits directly: a uniform
-    64-cell background row collapses to one run instead of 64 characters."""
+    `exceed_context_size_error` (ops/known-issues.md task 11, exp5593). An earlier attempt at this
+    fix spelled out an explicit `r<row>c<col>:<value>x<count>` per run (matching `_rle_delta`'s
+    style) -- measured on lp85's REAL grids, that per-run column overhead made the encoding barely
+    smaller than `to_ascii` for medium-length runs and up to 24% LARGER for a grid with many short
+    runs (`_rle_delta` pays that overhead once per DIFF, a rare event; a FULL grid pays it once per
+    RUN, hundreds of times). Dropping the explicit column (implicit from the row's own running
+    count) removed that dominant per-run overhead."""
     g = np.asarray(g)
     h, w = g.shape
-    runs = []
+    lines = []
     for r in range(h):
         c = 0
+        runs = []
         while c < w:
             v = g[r, c]
             c0 = c
             while c < w and g[r, c] == v:
                 c += 1
-            runs.append(f"r{r}c{c0}:{int(v)}x{c - c0}")
-    return " ".join(runs)
+            runs.append(f"{int(v)}x{c - c0}")
+        lines.append(f"r{r}:" + ",".join(runs))
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
@@ -1082,9 +1089,11 @@ form r<row>c<col>:<v0,v1,...> — each run is a horizontal span of changed cells
 transition's delta to the prior grid, for each run set grid[row, col+i] = the i-th run value;
 all other cells are unchanged. The delta is COMPLETE (not truncated). Full grids (the INITIAL
 grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
-boards: r<row>c<col0>:<value>x<count> — a horizontal run of <count> cells starting at
-(row, col0), ALL equal to <value>. To reconstruct a full grid, for each run set
-grid[row, col0:col0+count] = value; runs cover every cell in the row left-to-right with no gaps.
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
 Actions are integers 1-7; ACTION6 is a click
 with data={{'x':px,'y':py}} in PIXEL coords (pixel = logical*{cell}); others are
 keyboard/directional with data=None.
