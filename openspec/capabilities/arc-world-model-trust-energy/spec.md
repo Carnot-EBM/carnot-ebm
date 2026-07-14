@@ -14902,3 +14902,66 @@ When `experiment_5589_tier3_induction_normal_budget_capability_check.build_artif
 runs
 Then it emits `honest_verdict` starting with `complete: blocked_` naming the
 missing resource, and does not attempt to construct or run the policy
+
+### REQ-ARC-WMTE-5585-LEVELUP: V505 Standing-Loop ARC Level-Up Attempt Receipt
+
+Experiment 5585 SHALL satisfy the V505 ARC level-up floor by running the
+standing development-twin ARC loop (`scripts/arc_loop_solve.py`) rather than a
+bespoke solver. The workflow SHALL read `ops/arc_solve_registry.yaml`, record
+the `--auto` standing-loop probe, and, when the auto target is not the
+rotation-preferred target, run one explicit `--game <target>` attempt selected
+from the shallowest eligible frontier while rotating away from the most recent
+level-up attempts. The workflow SHALL treat `arc_loop_solve.py` output as
+`solve_provenance="development_proxy"` unless the loop result itself declares a
+live-agent self-discovery mode.
+
+Experiment 5585 SHALL write
+`results/experiment_5585_arc_levelup_attempt_v505.json` with required
+top-level fields `game_targeted`, `offline_reproduced`, `reproduced_levels`,
+`solve_provenance`, `registry_updated`, `honest_verdict`, and
+`field_principles`. The artifact SHALL also record the prior registry depth,
+the new-level banking decision, the standing-loop command/result path, the
+auto-probe result, transfer-routing recommendation evidence when available,
+dead ends found, gotchas discovered, and a reproducibility checksum. A banked
+level SHALL require `offline_reproduced=true`, a reproduction gate whose
+`reproduced` value is true, and `reproduced_levels` strictly greater than the
+selected game's prior registry depth. Same-depth or shallower reproductions
+SHALL keep `new_levels_banked=0` and report an honest terminal no-bank verdict
+instead of inflating progress.
+
+Required field principles:
+
+- `game_targeted`: principle "the ARC Level-Up Attempt Guarantee requires rotation across games, not repeated attempts on one."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort, only reproduced levels count."
+- `reproduced_levels`: principle "the headline progress metric."
+- `solve_provenance`: principle "distinguishes live-agent self-discovery from the offline dev-twin proxy, per the ARC Live-Path Reachability Discipline."
+- `registry_updated`: principle "knowledge must be captured as reusable scaffolding, not lost."
+- `honest_verdict`: principle "a null attempt (no new level) is still a valid, honestly-reported outcome."
+
+#### SCENARIO-ARC-WMTE-5585-LEVELUP-ROTATED-TARGET
+
+Given the registry has no unsolved public game and the latest attempts already
+targeted other games
+When Experiment 5585 selects an explicit target after the required `--auto`
+probe
+Then it selects a shallow eligible frontier target, records the skipped recent
+targets and auto target, and writes the selected `game_targeted` into the
+artifact.
+
+#### SCENARIO-ARC-WMTE-5585-LEVELUP-REPRODUCTION-GATE
+
+Given the standing-loop result reproduces only a level that is less than or
+equal to the registry's prior depth for the selected game
+When Experiment 5585 builds the artifact
+Then `offline_reproduced` may remain true for the loop result, but
+`new_levels_banked=0`, `registry_total_after` equals `registry_total_before`,
+and `honest_verdict` starts with `complete: no_new_arc_level_banked`.
+
+#### SCENARIO-ARC-WMTE-5585-LEVELUP-STABLE-ARTIFACT
+
+Given the artifact is complete
+When its schema is validated
+Then every required field principle is present verbatim, `solve_provenance` is
+one of `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`,
+and the reproducibility checksum matches the content hash of the target,
+registry depths, loop evidence, provenance, and banking decision.
