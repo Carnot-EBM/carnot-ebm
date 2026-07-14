@@ -1,0 +1,1120 @@
+{
+  "adversarial_verification_summary": {
+    "critical_flag_count": 1,
+    "critical_flags": [
+      {
+        "artifact_path": "results/experiment_5643_arc_live_self_discovery_levelup_v509.json",
+        "critical_flag_count": 0,
+        "flagged_adversarial": true,
+        "flags": [
+          {
+            "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          {
+            "detail": "duration_s=5.071 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "max_severity": "critical",
+        "status": "flagged",
+        "task_id": "exp5643-arc-live-self-discovery-levelup-v509"
+      }
+    ],
+    "critical_flags_block_promotion": true,
+    "exp5639_adversarial_controls_pass": true,
+    "exp5639_failed_adversarial_controls": [],
+    "flagged_task_count": 1,
+    "flagged_tasks": [
+      {
+        "artifact_path": "results/experiment_5643_arc_live_self_discovery_levelup_v509.json",
+        "critical_flag_count": 0,
+        "flagged_adversarial": true,
+        "flags": [
+          {
+            "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          {
+            "detail": "duration_s=5.071 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "max_severity": "critical",
+        "status": "flagged",
+        "task_id": "exp5643-arc-live-self-discovery-levelup-v509"
+      }
+    ],
+    "promotion_blocked_task_ids": [
+      "exp5643-arc-live-self-discovery-levelup-v509"
+    ]
+  },
+  "arc_executable_model_status": {
+    "boundary": "changed_mechanism_not_promoted_without_live_ab_and_utility",
+    "exp5630_retired_preserved": true,
+    "exp5641_exact_replay_pass": true,
+    "exp5641_known_level_utility_lower_bound": 0.0027780000000000027,
+    "exp5641_ready_score": 0.0,
+    "exp5641_zero_unsafe_pass": true,
+    "exp5642_gate_skipped": true,
+    "exp5642_known_level_utility_pass": false,
+    "exp5642_live_reachability_pass": false,
+    "failed_condition": "exp5641_executable_model_not_ready",
+    "promoted": false
+  },
+  "arc_registry_count_after": 177,
+  "arc_registry_count_before": 177,
+  "arc_solve_provenance": {
+    "critical_flag_blocks_credit": true,
+    "failed_condition": "no_registry_delta_independent_reproduction_or_critical_flag",
+    "flagged_adversarial": true,
+    "game_adapter_used": false,
+    "independent_generic_reproduction": false,
+    "live_attempt_executed": true,
+    "max_flag_severity": "critical",
+    "new_reproducible_levels": [],
+    "offline_bfs_used": false,
+    "offline_reproduced": false,
+    "outer_loop_re_used": false,
+    "registry_count_after": 177,
+    "registry_count_before": 177,
+    "registry_delta": 0,
+    "registry_updated": false,
+    "solve_credited": false,
+    "solve_provenance": "live_agent_self_discovery",
+    "source_read": false
+  },
+  "artifact_metadata": {
+    "results/experiment_5636_transition_v509.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:f70ff33d63d913a2d73d85686add66e9242f57efd1ec560d91c7c2c5fb016087"
+    },
+    "results/experiment_5637_v509_source_delta_ingestion.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:944bbf2a3ab35a5df80c55f92b51533ff7bdca1a17ad37995dc1f9ad7da8e5af"
+    },
+    "results/experiment_5638_fr11_gate_schema_corrigendum.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:a22660e9dc6afd256b1185b94df2344c266b3894f7ee8089982bc261f01c632c"
+    },
+    "results/experiment_5639_anytime_valid_csl_independent_audit.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:ec8c0d905087d30fcbbe5391c3a03fa57625e318ceb074479a6c2b5b9452a587"
+    },
+    "results/experiment_5640_fr11_shadow_pipeline_integration.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:f346307b073d5c2adc3cdb9035a4c9fe3f7b59f949135dc21bb659cbdf56df56"
+    },
+    "results/experiment_5641_arc_counterexample_executable_model.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:118a2b16fd4e1a4038781557d4c3ba176d75302a8447a549d5263f0ef42888c9"
+    },
+    "results/experiment_5642_arc_executable_model_live_ab.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:0c6ab60fc269da7fb39e49078f581736e8fb5e95472c672666b472f23e175cdc"
+    },
+    "results/experiment_5643_arc_live_self_discovery_levelup_v509.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:36aa4447a9f624e0679cd4a529d8dcea55f020f3dade49fbd0d868e24aa12185"
+    },
+    "results/experiment_5644_two_axis_parallel_tempering_exact_audit.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:d2c190da5fd395af28db2c01f81941a80f3d623c6e56aa4b7986192b8833bc8c"
+    },
+    "results/experiment_5645_two_axis_tempering_hard_constraint_quality.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:f18a715239d0931bcd909c059e3646cbf615bfe44ce922e17ef30f0a613ca9fe"
+    },
+    "results/experiment_5646_two_axis_tempering_rust_parity.json": {
+      "error": null,
+      "exists": true,
+      "json_type": "dict",
+      "loadable": true,
+      "sha256": "sha256:742bd69acf78d2b3d3307884215cb2550d522ad4569c2d3da61e9a6fca8cfc45"
+    }
+  },
+  "e2e_check_receipts": [
+    {
+      "check_id": "E2E-001",
+      "justification": "Capstone aggregation adds no Rust Ising training or sampling path.",
+      "status": "non_applicable"
+    },
+    {
+      "check_id": "E2E-002",
+      "justification": "Capstone aggregation adds no Python/JAX Ising training path.",
+      "status": "non_applicable"
+    },
+    {
+      "check_id": "E2E-003",
+      "justification": "No PyO3 binding behavior changed in Exp5647.",
+      "status": "non_applicable"
+    },
+    {
+      "check_id": "E2E-004",
+      "justification": "No serialization cross-language surface changed in Exp5647.",
+      "status": "non_applicable"
+    },
+    {
+      "check_id": "E2E-005",
+      "justification": "No packaged code-verification surface changed in Exp5647.",
+      "status": "non_applicable"
+    },
+    {
+      "check_id": "E2E-006",
+      "justification": "No EBRM CPU/KV260 scoring path or hardware claim changed in Exp5647.",
+      "status": "non_applicable"
+    },
+    {
+      "check_id": "E2E-007",
+      "justification": "FR-11 evidence is reconciled from Exp5639 independent replay receipts.",
+      "status": "upstream_receipts_reconciled",
+      "supporting_artifact": "results/experiment_5639_anytime_valid_csl_independent_audit.json"
+    },
+    {
+      "check_id": "artifact_adversarial_verification",
+      "command": "python scripts/adversarial_verify.py results/experiment_5647_v509_capstone_reconciliation.json",
+      "status": "passed"
+    }
+  ],
+  "experiment": "experiment_5647_v509_capstone_reconciliation",
+  "experiment_id": "exp5647-v509-capstone-reconciliation",
+  "field_principles": {
+    "adversarial_verification_summary": "critical flags block promotion even when an artifact otherwise completed.",
+    "arc_executable_model_status": "changed ARC mechanisms need exact replay, live reachability, utility, and zero-unsafe gates.",
+    "arc_registry_count_after": "authoritative live-credit total after Exp5643 banking.",
+    "arc_registry_count_before": "authoritative live-credit baseline before Exp5643 banking.",
+    "arc_solve_provenance": "only live self-discovery plus independent reproduction and registry delta can credit a solve.",
+    "e2e_check_receipts": "applicable operations checks ran and nonapplicable checks are justified.",
+    "field_principles": "one-line annotations for every required capstone field.",
+    "fr11_independent_promotion_status": "FR-11 promotion depends on independent anytime-valid audit gates.",
+    "fr11_schema_corrigendum_status": "schema repair is not scientific recomputation or promotion.",
+    "fr11_shadow_integration_status": "shadow integration is opt-in and disabled by default.",
+    "hardware_speedup_claimed": "bare false keeps retired hardware-speedup scopes closed.",
+    "honest_verdict": "terminal summary starting with complete: or blocked:.",
+    "inference_substrate": "must equal aggregation_from_upstream_artifacts.",
+    "one_axis_replica_exchange_preserved": "prior one-axis promotion remains true regardless of two-axis outcome.",
+    "ops_reconciliation": "ops records, registries, and delegated stop-rule files are explicit.",
+    "reproducibility_checksum": "content-addressed capstone output is stable.",
+    "retirements_applied": "repeated terminal failures close or bound scopes without weakening flags.",
+    "rust_parity_status": "Rust portability is separate from exactness, quality, speed, and timing.",
+    "spec_reconciliation": "REQ-* alignment and backing tests are recorded.",
+    "test_commands": "verification commands are reproducible.",
+    "test_exit_codes": "observed command exits are recorded without inferring success.",
+    "timing_claimed": "bare false keeps retired timing scopes closed.",
+    "two_axis_invariant_status": "exactness evidence is separate from quality evidence.",
+    "two_axis_quality_status": "quality promotion requires bounded hard-constraint evidence without material regression.",
+    "upstream_artifacts": "fixed .509 upstream denominator; every claim traces to a hashed primary artifact.",
+    "upstream_gate_statuses": "gate-skipped, blocked, flagged, and complete work stay distinct."
+  },
+  "fr11_independent_promotion_status": {
+    "benefit_receipt": {
+      "count": 6,
+      "minimum_lower": 0.087842
+    },
+    "checklist": {
+      "adversarial_controls_pass": true,
+      "benefit_gate_pass": true,
+      "checkpoint_replay_pass": true,
+      "clean_complete_payload": true,
+      "critical_flag_count_zero": true,
+      "exact_safety_gate_pass": true,
+      "independent_recomputation_pass": true,
+      "pathwise_risk_gate_pass": true,
+      "poison_rejection_pass": true,
+      "ready_score_one": true,
+      "retention_pass": true,
+      "structured_gate_receipts_enforced": true,
+      "worst_group_coverage_gate_pass": true
+    },
+    "failed_adversarial_controls": [],
+    "failed_condition": null,
+    "independent_recomputation_receipt": {
+      "checkpoint_receipts_replayed": 900,
+      "conformal_prediction_rows_replayed": 4464,
+      "decision_ledger_rows_replayed": 14400,
+      "exp5628_aggregate_metrics_used_as_authority": false,
+      "row_level_replay_performed": true
+    },
+    "pathwise_risk_receipt": {
+      "count": 8,
+      "max_upper": 0.076237,
+      "risk_limit": 0.1
+    },
+    "promoted": true,
+    "ready_score": 1.0,
+    "worst_group_coverage_receipt": {
+      "adequately_powered_groups_only": true,
+      "coverage": 0.904762,
+      "floor": 0.9,
+      "n": 168
+    }
+  },
+  "fr11_schema_corrigendum_status": {
+    "boundary": "schema_contract_only_not_scientific_recompute",
+    "by_arm_reconciliation_pass": true,
+    "gate_contract_ready_score": 1.0,
+    "promoted": false,
+    "promoted_as_science": false,
+    "schema_repair_ready": true,
+    "scientific_recompute_performed": false,
+    "source_artifact_modified": false,
+    "source_hash_exact": true,
+    "unsafe_false_accept_count_total": 0
+  },
+  "fr11_shadow_integration_status": {
+    "automatic_production_enablement": false,
+    "default_enabled": false,
+    "default_path_equivalence": true,
+    "deployment_boundary": "opt_in_shadow_only_disabled_by_default",
+    "feature_flag": "CARNOT_FR11_SHADOW_ADAPTER",
+    "model_weight_mutation": false,
+    "production_enabled": false,
+    "ready": true,
+    "shadow_offline_parity": true,
+    "unsafe_update_accept_count": 0
+  },
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete: v509 reconciled; fr11_promoted=True; fr11_shadow_opt_in=True; arc_mechanism_promoted=False; arc_registry_delta=0; two_axis_exact=True; two_axis_quality_promoted=False; rust_parity_promoted=False; timing_claimed=false; hardware_speedup_claimed=false",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "malformed_artifacts": [],
+  "milestone": "2026.07.509",
+  "missing_artifacts": [],
+  "one_axis_replica_exchange_preserved": true,
+  "ops_reconciliation": {
+    "arc_registry_update_required": false,
+    "arc_registry_updated": false,
+    "delegated_by_stop_rule": [
+      "ops/status.md",
+      "ops/changelog.md",
+      "_bmad/traceability.md"
+    ],
+    "exclusion_manifest_update_required": true,
+    "exclusion_manifest_updated": false,
+    "ops_changelog_updated": false,
+    "ops_status_updated": false,
+    "protected_files": {
+      "research-roadmap.yaml": true,
+      "scripts/research_conductor.py": true
+    },
+    "read_only_ledgers_reviewed": [
+      "research-complete.yaml",
+      "research-references.md",
+      "ops/exclusion_manifest.yaml",
+      "ops/arc_solve_registry.yaml",
+      "ops/known-issues.md",
+      "ops/conductor-log.md",
+      "ops/e2e-test-plan.md"
+    ],
+    "research_conductor_unchanged": true,
+    "research_roadmap_next_present": false,
+    "research_roadmap_unchanged": true,
+    "traceability_updated": false
+  },
+  "random_seed": 5647,
+  "reproducibility_checksum": "sha256:50d481ad049273788fbcb4e8b55f8b82cb2954f8514fe5923f0f6ff0d6a02dc8",
+  "result_path": "results/experiment_5647_v509_capstone_reconciliation.json",
+  "retirements_applied": [
+    {
+      "applied_to_capstone_claims": true,
+      "decision": "preserved_retired_from_v508",
+      "manifest_update_required": false,
+      "manifest_updated": false,
+      "reason": "Exp5636 transition preserves the Exp5630 retirement.",
+      "scope": "arc_epistemic_object_probe_exp5630"
+    },
+    {
+      "applied_to_capstone_claims": true,
+      "decision": "retired_terminal_not_promoted",
+      "manifest_update_required": true,
+      "manifest_updated": false,
+      "reason": "exp5641_executable_model_not_ready",
+      "scope": "arc_counterexample_executable_model_exp5641"
+    },
+    {
+      "applied_to_capstone_claims": true,
+      "decision": "no_solve_credit_bounded_flagged_attempt",
+      "manifest_update_required": false,
+      "manifest_updated": false,
+      "reason": "no_registry_delta_independent_reproduction_or_critical_flag",
+      "scope": "arc_live_solve_credit_exp5643"
+    },
+    {
+      "applied_to_capstone_claims": true,
+      "decision": "two_axis_extension_retired_preserve_one_axis",
+      "manifest_update_required": true,
+      "manifest_updated": false,
+      "reason": "quality_gate_failed_or_material_regression_present",
+      "scope": "two_axis_quality_extension_exp5645"
+    },
+    {
+      "applied_to_capstone_claims": true,
+      "decision": "not_promoted_gate_skipped",
+      "manifest_update_required": false,
+      "manifest_updated": false,
+      "reason": "quality_gate_not_promoted_or_rust_parity_gate_skipped",
+      "scope": "two_axis_tempering_rust_portability_exp5646"
+    }
+  ],
+  "run_date": "2026-07-14",
+  "rust_parity_status": {
+    "failed_condition": "quality_gate_not_promoted_or_rust_parity_gate_skipped",
+    "gate_skipped": true,
+    "hardware_speedup_claimed": false,
+    "parity_pass": false,
+    "promoted": false,
+    "ready_score": 0.0,
+    "timing_claimed": false
+  },
+  "schema": "carnot.experiment_5647.v509_capstone_reconciliation.v1",
+  "source_context": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "read_only": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "read_only": true,
+      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "read_only": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-program.md",
+      "read_only": true,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "read_only": true,
+      "sha256": "sha256:302bf95492c6045f18ec982c62ed38eb54e4d8d76c3e3c1ef2f6d9a299591c19"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "read_only": true,
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "read_only": true,
+      "sha256": "sha256:9ec1b28de0e5de9697ff8851bd19a96d3593d0414fa28634302dac5b260bca1f"
+    },
+    {
+      "exists": true,
+      "path": "research-complete.yaml",
+      "read_only": true,
+      "sha256": "sha256:80b0b834c26fd29060d0c12d0d3b2afe37ed54fe546f19830270e28c47cb7a4d"
+    },
+    {
+      "exists": true,
+      "path": "research-references.md",
+      "read_only": true,
+      "sha256": "sha256:2bc821e56b7b62badebbb374db33f1f97de74a802c9999217f99fbaf5d1ce715"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "read_only": true,
+      "sha256": "sha256:54fe9677f977c8c90c1d79ec9e5b8b52afee176651315d5dea8107bdbae94c7b"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "read_only": true,
+      "sha256": "sha256:72529fdc61042309ac2f06b8eba10f56717f2e300291603e8f8e3e60971eb579"
+    },
+    {
+      "exists": true,
+      "path": "ops/known-issues.md",
+      "read_only": true,
+      "sha256": "sha256:1b718d2f0a365fa72c91f08bc94eef4c898ec627bd01384bc5bc5a8f8eab3ec0"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "read_only": true,
+      "sha256": "sha256:b4d4d80a7d3299b5e652912840d841ea1dc5e04ed09505775b9215cda5077b86"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "read_only": true,
+      "sha256": "sha256:64d4d6008f10e715c85cafa08dac718778c383d2cbf732bac4a89d48d3664d53"
+    },
+    {
+      "exists": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "read_only": true,
+      "sha256": "sha256:a26d41b31e9085b0abe442c51a165ebca1be77ca9357f643497856764c02c53a"
+    },
+    {
+      "exists": true,
+      "path": "ops/e2e-test-plan.md",
+      "read_only": true,
+      "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/traceability.md",
+      "read_only": true,
+      "sha256": "sha256:478b6cb65edca6fabf4f14da129135f1459e30ebcb81c9287fa817225f665d08"
+    },
+    {
+      "exists": true,
+      "path": "scripts/research_conductor.py",
+      "read_only": true,
+      "sha256": "sha256:409e5e8ca53a6665d7de54c1b08f226ad742c680b342595592eb82830e37a340"
+    }
+  ],
+  "source_context_missing": [
+    "research-roadmap-next.yaml"
+  ],
+  "spec_reconciliation": {
+    "implementation_file": "python/carnot/experiment_5647_v509_capstone_reconciliation.py",
+    "req_alignment_recorded": true,
+    "result_path": "results/experiment_5647_v509_capstone_reconciliation.json",
+    "spec_path": "openspec/capabilities/capstone/spec.md",
+    "spec_refs": [
+      "REQ-CAPSTONE-5647",
+      "SCENARIO-CAPSTONE-5647",
+      "SCENARIO-CAPSTONE-5647-MISSING-MALFORMED",
+      "SCENARIO-CAPSTONE-5647-FIELD-PRINCIPLES"
+    ],
+    "test_file": "tests/python/test_experiment_5647_v509_capstone_reconciliation.py"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-5647",
+    "SCENARIO-CAPSTONE-5647",
+    "SCENARIO-CAPSTONE-5647-MISSING-MALFORMED",
+    "SCENARIO-CAPSTONE-5647-FIELD-PRINCIPLES"
+  ],
+  "terminal_status_by_task": {
+    "exp5636-transition-v509": {
+      "artifact_path": "results/experiment_5636_transition_v509.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: archived .508 terminal evidence into .509 dependency map; current_task_range=exp5636-exp5647; fr11_internal_ready=True; fr11_independent_promoted=False; exp5629_schema_gate_failure=True; arc_epistemic_probe_retired=True; exp5632_flags_preserved=True; one_axis_temperature_exchange_promoted=True; timing_hardware_claims_closed=True.",
+      "metadata_error": null,
+      "sha256": "sha256:f70ff33d63d913a2d73d85686add66e9242f57efd1ec560d91c7c2c5fb016087",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5637-v509-source-delta-ingestion": {
+      "artifact_path": "results/experiment_5637_v509_source_delta_ingestion.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: accepted 1 non-duplicate actionable V509 source delta and kept retired scopes closed",
+      "metadata_error": null,
+      "sha256": "sha256:944bbf2a3ab35a5df80c55f92b51533ff7bdca1a17ad37995dc1f9ad7da8e5af",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5638-fr11-gate-schema-corrigendum": {
+      "artifact_path": "results/experiment_5638_fr11_gate_schema_corrigendum.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hash_bound_scalar_gate_contract_ready",
+      "metadata_error": null,
+      "sha256": "sha256:a22660e9dc6afd256b1185b94df2344c266b3894f7ee8089982bc261f01c632c",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5639-anytime-valid-csl-independent-audit": {
+      "artifact_path": "results/experiment_5639_anytime_valid_csl_independent_audit.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: anytime_valid_csl_independent_audit_ready",
+      "metadata_error": null,
+      "sha256": "sha256:ec8c0d905087d30fcbbe5391c3a03fa57625e318ceb074479a6c2b5b9452a587",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5640-fr11-shadow-pipeline-integration": {
+      "artifact_path": "results/experiment_5640_fr11_shadow_pipeline_integration.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: fr11_shadow_ready_not_default_enabled",
+      "metadata_error": null,
+      "sha256": "sha256:f346307b073d5c2adc3cdb9035a4c9fe3f7b59f949135dc21bb659cbdf56df56",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5641-arc-counterexample-executable-model": {
+      "artifact_path": "results/experiment_5641_arc_counterexample_executable_model.json",
+      "corrigendum_pending": [],
+      "development_proxy": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked: counterexample_patched_executable_model_retired_terminal",
+      "metadata_error": null,
+      "sha256": "sha256:118a2b16fd4e1a4038781557d4c3ba176d75302a8447a549d5263f0ef42888c9",
+      "status": "blocked",
+      "supports_positive_claim": false
+    },
+    "exp5642-arc-executable-model-live-ab": {
+      "artifact_path": "results/experiment_5642_arc_executable_model_live_ab.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "metadata_error": null,
+      "sha256": "sha256:0c6ab60fc269da7fb39e49078f581736e8fb5e95472c672666b472f23e175cdc",
+      "status": "gate_skipped",
+      "supports_positive_claim": false
+    },
+    "exp5643-arc-live-self-discovery-levelup-v509": {
+      "artifact_path": "results/experiment_5643_arc_live_self_discovery_levelup_v509.json",
+      "corrigendum_pending": [
+        {
+          "detail": "registry_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "duration_s=5.071 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "development_proxy": false,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: no_new_arc_level_banked_lf52_L8_bounded_live_attempt_v509",
+      "metadata_error": null,
+      "sha256": "sha256:36aa4447a9f624e0679cd4a529d8dcea55f020f3dade49fbd0d868e24aa12185",
+      "status": "flagged",
+      "supports_positive_claim": false
+    },
+    "exp5644-two-axis-parallel-tempering-exact-audit": {
+      "artifact_path": "results/experiment_5644_two_axis_parallel_tempering_exact_audit.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: exact two-axis beta-lambda label-exchange invariant audit ready for downstream quality trials",
+      "metadata_error": null,
+      "sha256": "sha256:d2c190da5fd395af28db2c01f81941a80f3d623c6e56aa4b7986192b8833bc8c",
+      "status": "complete",
+      "supports_positive_claim": true
+    },
+    "exp5645-two-axis-tempering-hard-constraint-quality": {
+      "artifact_path": "results/experiment_5645_two_axis_tempering_hard_constraint_quality.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked: two-axis constraint-penalty exchange did not clear every preregistered quality promotion gate",
+      "metadata_error": null,
+      "sha256": "sha256:f18a715239d0931bcd909c059e3646cbf615bfe44ce922e17ef30f0a613ca9fe",
+      "status": "blocked",
+      "supports_positive_claim": false
+    },
+    "exp5646-two-axis-tempering-rust-parity": {
+      "artifact_path": "results/experiment_5646_two_axis_tempering_rust_parity.json",
+      "corrigendum_pending": [],
+      "development_proxy": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "metadata_error": null,
+      "sha256": "sha256:742bd69acf78d2b3d3307884215cb2550d522ad4569c2d3da61e9a6fca8cfc45",
+      "status": "gate_skipped",
+      "supports_positive_claim": false
+    }
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5647_v509_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --include=python/carnot/experiment_5647_v509_capstone_reconciliation.py -m pytest tests/python/test_experiment_5647_v509_capstone_reconciliation.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5647_v509_capstone_reconciliation.py --fail-under=100",
+    ".venv/bin/python -m ruff check python/carnot/experiment_5647_v509_capstone_reconciliation.py tests/python/test_experiment_5647_v509_capstone_reconciliation.py openspec/capabilities/capstone/spec.md",
+    "python scripts/check_spec_coverage.py",
+    "python scripts/exclusion_manifest_lint.py",
+    "python scripts/root_clutter_sweep.py --check",
+    "python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/pytest tests/python/test_roadmap_schema.py -q --no-cov -n 0",
+    "python -c \"import yaml; data=yaml.safe_load(open('research-roadmap.yaml', encoding='utf-8')); assert isinstance(data, dict) and data.get('milestone') == '2026.07.509' and len(data.get('tasks', [])) == 12; print('roadmap_yaml_ok milestone=2026.07.509 tasks=12')\"",
+    "python scripts/research_conductor.py --dry-run --no-push",
+    "python scripts/adversarial_verify.py results/experiment_5647_v509_capstone_reconciliation.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage erase && .venv/bin/coverage run --include=python/carnot/experiment_5647_v509_capstone_reconciliation.py -m pytest tests/python/test_experiment_5647_v509_capstone_reconciliation.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5647_v509_capstone_reconciliation.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5647_v509_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_roadmap_schema.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m ruff check python/carnot/experiment_5647_v509_capstone_reconciliation.py tests/python/test_experiment_5647_v509_capstone_reconciliation.py openspec/capabilities/capstone/spec.md": 0,
+    "python -c \"import yaml; data=yaml.safe_load(open('research-roadmap.yaml', encoding='utf-8')); assert isinstance(data, dict) and data.get('milestone') == '2026.07.509' and len(data.get('tasks', [])) == 12; print('roadmap_yaml_ok milestone=2026.07.509 tasks=12')\"": 0,
+    "python scripts/adversarial_verify.py results/experiment_5647_v509_capstone_reconciliation.json": 0,
+    "python scripts/check_spec_coverage.py": 1,
+    "python scripts/exclusion_manifest_lint.py": 0,
+    "python scripts/research_conductor.py --dry-run --no-push": 0,
+    "python scripts/root_clutter_sweep.py": 0,
+    "python scripts/root_clutter_sweep.py --check": 2
+  },
+  "timing_claimed": false,
+  "two_axis_invariant_status": {
+    "broken_control_rejected": true,
+    "deterministic_replay_pass": true,
+    "exact_metrics": {
+      "exact_joint_target_tv": 1.0370285253727483e-16,
+      "exact_target_replica_tv": 3.4867941867133823e-16,
+      "horizontal_detailed_balance_error_max": 8.673617379884035e-19,
+      "target_feasibility_marginal_error": 4.440892098500626e-16,
+      "transition_row_error_max": 2.220446049250313e-16,
+      "vertical_detailed_balance_error_max": 1.734723475976807e-18
+    },
+    "hardware_speedup_claimed": false,
+    "promoted": true,
+    "ready_score": 1.0,
+    "timing_claimed": false
+  },
+  "two_axis_quality_status": {
+    "failed_condition": "quality_gate_failed_or_material_regression_present",
+    "hardware_speedup_claimed": false,
+    "invalid_execution_count": 0,
+    "material_quality_regression_count": 2,
+    "promoted": false,
+    "ready_score": 0.0,
+    "successful_seed_count": 5,
+    "timing_claimed": false,
+    "within_exactness_bounds": true
+  },
+  "upstream_artifacts": [
+    {
+      "exists": true,
+      "experiment_id": "exp5636-transition-v509",
+      "honest_verdict": "complete: archived .508 terminal evidence into .509 dependency map; current_task_range=exp5636-exp5647; fr11_internal_ready=True; fr11_independent_promoted=False; exp5629_schema_gate_failure=True; arc_epistemic_probe_retired=True; exp5632_flags_preserved=True; one_axis_temperature_exchange_promoted=True; timing_hardware_claims_closed=True.",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "loadable": true,
+      "milestone": null,
+      "path": "results/experiment_5636_transition_v509.json",
+      "schema": "carnot.experiment_5636.transition_v509.v1",
+      "sha256": "sha256:f70ff33d63d913a2d73d85686add66e9242f57efd1ec560d91c7c2c5fb016087",
+      "task_id": "exp5636-transition-v509",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp5637-v509-source-delta-ingestion",
+      "honest_verdict": "complete: accepted 1 non-duplicate actionable V509 source delta and kept retired scopes closed",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "loadable": true,
+      "milestone": "2026.07.509",
+      "path": "results/experiment_5637_v509_source_delta_ingestion.json",
+      "schema": "carnot.experiment_5637.v509_source_delta_ingestion.v1",
+      "sha256": "sha256:944bbf2a3ab35a5df80c55f92b51533ff7bdca1a17ad37995dc1f9ad7da8e5af",
+      "task_id": "exp5637-v509-source-delta-ingestion",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": "experiment_5638_fr11_gate_schema_corrigendum",
+      "honest_verdict": "complete: hash_bound_scalar_gate_contract_ready",
+      "inference_substrate": "deterministic_artifact_schema_normalization",
+      "loadable": true,
+      "milestone": "2026.07.509",
+      "path": "results/experiment_5638_fr11_gate_schema_corrigendum.json",
+      "schema": "carnot.experiment_5638.fr11_gate_schema_corrigendum.v1",
+      "sha256": "sha256:a22660e9dc6afd256b1185b94df2344c266b3894f7ee8089982bc261f01c632c",
+      "task_id": "exp5638-fr11-gate-schema-corrigendum",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": "experiment_5639_anytime_valid_csl_independent_audit",
+      "honest_verdict": "complete: anytime_valid_csl_independent_audit_ready",
+      "inference_substrate": "independent_anytime_valid_replay_over_exact_labels",
+      "loadable": true,
+      "milestone": "2026.07.509",
+      "path": "results/experiment_5639_anytime_valid_csl_independent_audit.json",
+      "schema": "carnot.experiment_5639.anytime_valid_csl_independent_audit.v1",
+      "sha256": "sha256:ec8c0d905087d30fcbbe5391c3a03fa57625e318ceb074479a6c2b5b9452a587",
+      "task_id": "exp5639-anytime-valid-csl-independent-audit",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": "experiment_5640_fr11_shadow_pipeline_integration",
+      "honest_verdict": "complete: fr11_shadow_ready_not_default_enabled",
+      "inference_substrate": "exact_verifier_gated_conformal_kan_shadow_adapter",
+      "loadable": true,
+      "milestone": null,
+      "path": "results/experiment_5640_fr11_shadow_pipeline_integration.json",
+      "schema": "carnot.experiment_5640.fr11_shadow_pipeline_integration.v1",
+      "sha256": "sha256:f346307b073d5c2adc3cdb9035a4c9fe3f7b59f949135dc21bb659cbdf56df56",
+      "task_id": "exp5640-fr11-shadow-pipeline-integration",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": 5641,
+      "honest_verdict": "blocked: counterexample_patched_executable_model_retired_terminal",
+      "inference_substrate": "deterministic_counterexample_patched_executable_model",
+      "loadable": true,
+      "milestone": null,
+      "path": "results/experiment_5641_arc_counterexample_executable_model.json",
+      "schema": "carnot.exp5641.arc_counterexample_executable_model.v1",
+      "sha256": "sha256:118a2b16fd4e1a4038781557d4c3ba176d75302a8447a549d5263f0ef42888c9",
+      "task_id": "exp5641-arc-counterexample-executable-model",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": 5642,
+      "honest_verdict": "blocked_gate_check_failed",
+      "inference_substrate": null,
+      "loadable": true,
+      "milestone": null,
+      "path": "results/experiment_5642_arc_executable_model_live_ab.json",
+      "schema": "blocked_gate_check_v1",
+      "sha256": "sha256:0c6ab60fc269da7fb39e49078f581736e8fb5e95472c672666b472f23e175cdc",
+      "task_id": "exp5642-arc-executable-model-live-ab",
+      "terminal_prefix_valid": false
+    },
+    {
+      "exists": true,
+      "experiment_id": 5643,
+      "honest_verdict": "complete: no_new_arc_level_banked_lf52_L8_bounded_live_attempt_v509",
+      "inference_substrate": "live_agent_environment_interaction",
+      "loadable": true,
+      "milestone": "2026.07.509",
+      "path": "results/experiment_5643_arc_live_self_discovery_levelup_v509.json",
+      "schema": "arc_live_self_discovery_levelup_attempt.v4",
+      "sha256": "sha256:36aa4447a9f624e0679cd4a529d8dcea55f020f3dade49fbd0d868e24aa12185",
+      "task_id": "exp5643-arc-live-self-discovery-levelup-v509",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp5644-two-axis-parallel-tempering-exact-audit",
+      "honest_verdict": "complete: exact two-axis beta-lambda label-exchange invariant audit ready for downstream quality trials",
+      "inference_substrate": "cpu_exact_enumeration_and_corrected_cdls",
+      "loadable": true,
+      "milestone": "2026.07.509",
+      "path": "results/experiment_5644_two_axis_parallel_tempering_exact_audit.json",
+      "schema": "carnot.experiment_5644.two_axis_parallel_tempering_exact_audit.v1",
+      "sha256": "sha256:d2c190da5fd395af28db2c01f81941a80f3d623c6e56aa4b7986192b8833bc8c",
+      "task_id": "exp5644-two-axis-parallel-tempering-exact-audit",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": "exp5645-two-axis-tempering-hard-constraint-quality",
+      "honest_verdict": "blocked: two-axis constraint-penalty exchange did not clear every preregistered quality promotion gate",
+      "inference_substrate": "cpu_two_axis_corrected_cdls_replica_exchange",
+      "loadable": true,
+      "milestone": "2026.07.509",
+      "path": "results/experiment_5645_two_axis_tempering_hard_constraint_quality.json",
+      "schema": "carnot.experiment_5645.two_axis_tempering_hard_constraint_quality.v1",
+      "sha256": "sha256:f18a715239d0931bcd909c059e3646cbf615bfe44ce922e17ef30f0a613ca9fe",
+      "task_id": "exp5645-two-axis-tempering-hard-constraint-quality",
+      "terminal_prefix_valid": true
+    },
+    {
+      "exists": true,
+      "experiment_id": 5646,
+      "honest_verdict": "blocked_gate_check_failed",
+      "inference_substrate": null,
+      "loadable": true,
+      "milestone": null,
+      "path": "results/experiment_5646_two_axis_tempering_rust_parity.json",
+      "schema": "blocked_gate_check_v1",
+      "sha256": "sha256:742bd69acf78d2b3d3307884215cb2550d522ad4569c2d3da61e9a6fca8cfc45",
+      "task_id": "exp5646-two-axis-tempering-rust-parity",
+      "terminal_prefix_valid": false
+    }
+  ],
+  "upstream_gate_statuses": {
+    "exp5636-transition-v509": {
+      "artifact_path": "results/experiment_5636_transition_v509.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5637-v509-source-delta-ingestion": {
+      "artifact_path": "results/experiment_5637_v509_source_delta_ingestion.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5638-fr11-gate-schema-corrigendum": {
+      "artifact_path": "results/experiment_5638_fr11_gate_schema_corrigendum.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5639-anytime-valid-csl-independent-audit": {
+      "artifact_path": "results/experiment_5639_anytime_valid_csl_independent_audit.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5640-fr11-shadow-pipeline-integration": {
+      "artifact_path": "results/experiment_5640_fr11_shadow_pipeline_integration.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5641-arc-counterexample-executable-model": {
+      "artifact_path": "results/experiment_5641_arc_counterexample_executable_model.json",
+      "blocked": true,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "blocked",
+      "supports_promotion": false
+    },
+    "exp5642-arc-executable-model-live-ab": {
+      "artifact_path": "results/experiment_5642_arc_executable_model_live_ab.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5641-arc-counterexample-executable-model.executable_model_ready_score (actual=0.0 >= expected=1.0)",
+      "gate_skipped": true,
+      "gates_evaluated": [
+        {
+          "actual": 0.0,
+          "artifact_field": "executable_model_ready_score",
+          "expected": 1.0,
+          "op": ">=",
+          "passed": false,
+          "reason": "actual=0.0 >= expected=1.0",
+          "upstream": "exp5641-arc-counterexample-executable-model"
+        },
+        {
+          "actual": 0,
+          "artifact_field": "unsafe_patch_accept_count",
+          "expected": 0,
+          "op": "==",
+          "passed": true,
+          "reason": "actual=0 == expected=0",
+          "upstream": "exp5641-arc-counterexample-executable-model"
+        }
+      ],
+      "skipped_work_is_success": false,
+      "status": "gate_skipped",
+      "supports_promotion": false
+    },
+    "exp5643-arc-live-self-discovery-levelup-v509": {
+      "artifact_path": "results/experiment_5643_arc_live_self_discovery_levelup_v509.json",
+      "blocked": false,
+      "flagged": true,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "flagged",
+      "supports_promotion": false
+    },
+    "exp5644-two-axis-parallel-tempering-exact-audit": {
+      "artifact_path": "results/experiment_5644_two_axis_parallel_tempering_exact_audit.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5645-two-axis-tempering-hard-constraint-quality": {
+      "artifact_path": "results/experiment_5645_two_axis_tempering_hard_constraint_quality.json",
+      "blocked": true,
+      "flagged": false,
+      "gate_check_summary": null,
+      "gate_skipped": false,
+      "gates_evaluated": [],
+      "skipped_work_is_success": false,
+      "status": "blocked",
+      "supports_promotion": false
+    },
+    "exp5646-two-axis-tempering-rust-parity": {
+      "artifact_path": "results/experiment_5646_two_axis_tempering_rust_parity.json",
+      "blocked": false,
+      "flagged": false,
+      "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5645-two-axis-tempering-hard-constraint-quality.two_axis_quality_ready_score (actual=0.0 >= expected=1.0)",
+      "gate_skipped": true,
+      "gates_evaluated": [
+        {
+          "actual": 0.0,
+          "artifact_field": "two_axis_quality_ready_score",
+          "expected": 1.0,
+          "op": ">=",
+          "passed": false,
+          "reason": "actual=0.0 >= expected=1.0",
+          "upstream": "exp5645-two-axis-tempering-hard-constraint-quality"
+        },
+        {
+          "actual": 2,
+          "artifact_field": "material_quality_regression_count",
+          "expected": 0,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=2 == expected=0",
+          "upstream": "exp5645-two-axis-tempering-hard-constraint-quality"
+        }
+      ],
+      "skipped_work_is_success": false,
+      "status": "gate_skipped",
+      "supports_promotion": false
+    }
+  },
+  "validation_results": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5647_v509_capstone_reconciliation.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "8 passed in 0.87s"
+    },
+    {
+      "command": ".venv/bin/coverage erase && .venv/bin/coverage run --include=python/carnot/experiment_5647_v509_capstone_reconciliation.py -m pytest tests/python/test_experiment_5647_v509_capstone_reconciliation.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5647_v509_capstone_reconciliation.py --fail-under=100",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "8 passed; coverage 480 statements, 0 missed, 100%"
+    },
+    {
+      "command": ".venv/bin/python -m ruff check python/carnot/experiment_5647_v509_capstone_reconciliation.py tests/python/test_experiment_5647_v509_capstone_reconciliation.py openspec/capabilities/capstone/spec.md",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "All checks passed"
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "status": "failed_pre_existing_untraced_tests",
+      "summary": "1262 existing tests lack spec traceability; new Exp5647 tests include REQ/SCENARIO refs"
+    },
+    {
+      "command": "python scripts/exclusion_manifest_lint.py",
+      "exit_code": 0,
+      "status": "passed_no_next_roadmap",
+      "summary": "No research-roadmap-next.yaml found; nothing to lint"
+    },
+    {
+      "command": "python scripts/root_clutter_sweep.py --check",
+      "exit_code": 2,
+      "status": "failed_unsupported_argument",
+      "summary": "root_clutter_sweep.py supports dry-run by default and --apply, not --check"
+    },
+    {
+      "command": "python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "status": "passed_dry_run",
+      "summary": "0 files to quarantine; 0 regenerable artifacts to delete"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "status": "interrupted_after_unrelated_failures_and_worker_crash",
+      "summary": "Interrupted after 12:36 at 22%; 8 failed, 11030 passed, 27 skipped, 120 warnings; worker gw2 segfaulted in z3 path before interrupt"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_roadmap_schema.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "22 passed in 14.75s"
+    },
+    {
+      "command": "python -c \"import yaml; data=yaml.safe_load(open('research-roadmap.yaml', encoding='utf-8')); assert isinstance(data, dict) and data.get('milestone') == '2026.07.509' and len(data.get('tasks', [])) == 12; print('roadmap_yaml_ok milestone=2026.07.509 tasks=12')\"",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "roadmap_yaml_ok milestone=2026.07.509 tasks=12"
+    },
+    {
+      "command": "python scripts/research_conductor.py --dry-run --no-push",
+      "exit_code": 0,
+      "status": "passed_dry_run_preflight",
+      "summary": "Dry-run selected Exp5647 and reported Exp5642/Exp5646 skipped after 3 failures"
+    },
+    {
+      "command": "python scripts/adversarial_verify.py results/experiment_5647_v509_capstone_reconciliation.json",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "Scanned 1 artifact(s); 0 flagged"
+    }
+  ]
+}
