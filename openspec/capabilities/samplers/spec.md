@@ -261,6 +261,111 @@ and all control gates pass.
 |---|---|---|
 | REQ-SAMPLE-5622 | Planned (`python/carnot/experiment_5622_cdls_exact_kernel_audit.py`, `results/experiment_5622_cdls_exact_kernel_audit.json`) | Planned (`tests/python/test_experiment_5622_cdls_exact_kernel_audit.py`) |
 
+### REQ-SAMPLE-5623: Quality-Matched Multi-Seed Corrected-cDLS CPU/CUDA Crossover
+
+Carnot MUST provide Exp 5623 at
+`python/carnot/experiment_5623_cdls_multiseed_cpu_cuda_crossover.py` and write
+`results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json` without
+modifying `scripts/research_conductor.py`. The experiment SHALL run only after
+Exp 5622's corrected-kernel exactness gate is authenticated from
+`results/experiment_5622_cdls_exact_kernel_audit.json`; if that upstream gate is
+missing, stale, unparseable, checksum-invalid, or not ready, Exp 5623 SHALL emit
+blocked rows rather than allocating CUDA work.
+
+The benchmark SHALL preserve the unchanged discrete Langevin/heat-bath baseline
+and compare it only with Exp 5622's corrected final kernel named
+`corrected_cdls_projection_mh`. It SHALL NOT substitute
+`uncorrected_cdls_projection` or any biased control kernel. The tested targets
+SHALL be deterministic exact Ising Hamiltonians at `n=128,256,512,1024` where
+memory permits. Both methods and both devices SHALL share target descriptors,
+seeds, temperature, warmup, retained sample count, thinning, schedules,
+precision, and measurement boundaries. At least five paired seeds SHALL be
+recorded, and successful matched rows SHALL retain at least 10000 post-warmup
+samples. Each successful retained row therefore has at least 10000 post-warmup
+samples before it can enter quality or speed summaries. OOM, timeout,
+CUDA-blocked, upstream-gate-blocked, memory-blocked, and failed-quality rows
+SHALL remain explicit timing rows and SHALL NOT enter speedup summaries.
+In short, no successful matched row may enter a claim without at least 10000 post-warmup samples.
+
+Before timing can support any crossover claim, Exp 5623 SHALL apply Exp 5622's
+preregistered quality-equivalence rules to acceptance, effective sample size,
+integrated autocorrelation, energy-distribution distance, best and mean energy,
+exact constraint satisfaction, and uncertainty. Each size/seed pair SHALL have
+an inclusion or exclusion explanation. The experiment SHALL compute paired
+CPU/CUDA speedups and corrected-cDLS/discrete-DLS speedups with intervals across
+paired seeds. `crossover_claim_allowed=true` SHALL be allowed only when a
+successful quality-matched pair set has a timing interval excluding 1.0 in the
+favorable direction. `crossover_size` MAY be null. No physical board or TSU
+speedup claim is in scope, and `board_speedup_claimed` SHALL be false.
+
+The experiment SHALL preserve raw samples or stable sufficient-statistic files
+so ESS, integrated autocorrelation, energy summaries, exact constraint
+satisfaction, and timing summaries can be recomputed independently. The terminal
+artifact SHALL include at minimum these top-level fields: `field_principles`,
+`upstream_gate_receipt`, `target_descriptors`, `instance_sizes`,
+`models_tested`, `seeds`, `samples_per_pair`, `cpu_device_receipt`,
+`cuda_device_receipt`, `timing_rows`, `energy_quality_metrics`,
+`mixing_metrics`, `quality_gate_results_by_pair`,
+`successful_matched_pairs`, `speedup_by_pair`, `timing_intervals_by_size`,
+`sufficient_statistics_path`, `sufficient_statistics_sha256`,
+`crossover_size`, `crossover_claim_allowed`, `board_speedup_claimed`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+`inference_substrate` SHALL equal `matched_cpu_cuda_exact_ising_sampling`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every headline and gate field exists before a reviewer trusts the JSON shape."
+- `upstream_gate_receipt`: principle "Proves Exp5622 exactness prerequisites are fixed before GPU work is allocated."
+- `target_descriptors`: principle "Proves both methods sample identical exact Ising Hamiltonians."
+- `instance_sizes`: principle "Makes the tested crossover range explicit instead of implying unmeasured scale."
+- `models_tested`: principle "Names sampler methods only, keeping the unchanged discrete baseline and corrected cDLS kernel separate with no LLM implied."
+- `seeds`: principle "Records at least five paired seeds so every CPU/CUDA and method comparison is reproducible."
+- `samples_per_pair`: principle "Guards the >=10000 retained-sample floor required for mixing estimates."
+- `cpu_device_receipt`: principle "Authenticates CPU identity, runtime, and free memory for the local benchmark."
+- `cuda_device_receipt`: principle "Authenticates CUDA identity, driver/runtime, and free memory or records a precise blocker."
+- `timing_rows`: principle "Preserves raw matched timing evidence, including failed rows, before any summary ratio."
+- `energy_quality_metrics`: principle "Prevents speed from hiding wrong samples by reporting energy and exact constraint quality."
+- `mixing_metrics`: principle "Reports ESS and autocorrelation to test whether the corrected cDLS mechanism actually mixes."
+- `quality_gate_results_by_pair`: principle "Explains every pair's inclusion or exclusion before timing enters a speedup claim."
+- `successful_matched_pairs`: principle "Lists only quality-matched complete method/device pairs; failed rows do not enter speedups."
+- `speedup_by_pair`: principle "Reports only matched ratios with intervals; failed or quality-inferior rows cannot enter speedups."
+- `timing_intervals_by_size`: principle "Aggregates paired-seed ratios into intervals so a crossover cannot rest on one lucky row."
+- `sufficient_statistics_path`: principle "Points to recomputable energy, constraint, and timing evidence instead of trusting summaries."
+- `sufficient_statistics_sha256`: principle "Pins the sufficient-statistic file used to recompute ESS, autocorrelation, quality, and timing."
+- `crossover_size`: principle "Records the smallest gated crossover size, or null when no crossover is proven."
+- `crossover_claim_allowed`: principle "Requires quality and timing gates to pass together before any crossover claim."
+- `board_speedup_claimed`: principle "Bare false prevents this CPU/CUDA sampler study from reopening board or TSU scope."
+- `inference_substrate`: principle "Declares matched CPU/CUDA exact Ising sampling, not LLM inference or board timing."
+- `random_seeds`: principle "Duplicates the paired seeds in methodology form for verifier compatibility."
+- `reproducibility_checksum`: principle "Content-addresses the benchmark artifact and sufficient-statistic receipt."
+- `honest_verdict`: principle "Terminal complete: or blocked: verdict states whether no-crossover evidence is final."
+
+### SCENARIO-SAMPLE-5623: Corrected-cDLS Multi-Seed Crossover Emits Gated Evidence Or Blockers
+
+**Given** Exp 5622's corrected-kernel exact audit is ready
+**When** Exp 5623 runs on a host with CPU and CUDA available
+**Then** it builds deterministic exact Ising targets for `n=128,256,512,1024`,
+runs unchanged discrete DLS and `corrected_cdls_projection_mh` under the same
+schedule and at least five paired seeds, writes raw timing rows and recomputable
+sufficient-statistic evidence, applies quality gates before speedups, and writes
+`results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json`
+**And** sets `crossover_claim_allowed=true` only when the quality and timing
+interval gates both pass.
+
+**If** Exp 5622 readiness, CUDA, memory, or runtime is unavailable
+**Then** Exp 5623 SHALL still write the same result path with explicit blocker
+rows, `successful_matched_pairs` excluding failed rows,
+`crossover_claim_allowed=false`, `board_speedup_claimed=false`, and an
+`honest_verdict` starting with `blocked:` or `complete:` as appropriate for the
+available matched evidence.
+
+## Implementation Status (REQ-SAMPLE-5623)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5623 | Planned (`python/carnot/experiment_5623_cdls_multiseed_cpu_cuda_crossover.py`, `results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json`) | Planned (`tests/python/test_experiment_5623_cdls_multiseed_cpu_cuda_crossover.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
