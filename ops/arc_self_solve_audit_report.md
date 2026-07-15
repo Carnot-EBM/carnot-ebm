@@ -16,17 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (51 modul
 
 ## Hostile LLM review
 
-**TL;DR: 0/2 advances — both are DUPLICATE, shallow development-proxy replays, not live self-discovery.**
+**TL;DR: Both artifacts are `OUTER_LOOP_RE`; zero live self-discovery advances.** They are reachable, but only as hand-adapter-driven offline replays. Both are also stale and now subsumed by deeper registry entries.
 
 - `results/arc_loop_solve_ar25.json`
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches L3, while the registry already records `ar25` L8/full clear. It declares `development_proxy` and `standing_arc_loop_offline_no_quota`. The reachable loop uses a hand-built `_ar25` adapter with hard-coded L1–L3 action tails and private hidden-state fields; no autonomous discovery trace exists.
-  - **Recommended action:** Do not count or advertise as a solve. Retain only as a regression replay and populate `honest_verdict=duplicate_depth_l3_vs_registry_l8`.
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Explicitly declares `development_proxy` and `standing_arc_loop_offline_no_quota` ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:616)). The entrypoint itself says this path uses a “hand-registered GameAdapter” and is not hidden-game self-discovery ([arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:212)). `_ar25` feeds frozen L1–L3 action tails, reads opaque game internals, hard-codes target coordinates, and supplies a hand verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2093)). No runtime discovery trace or `honest_verdict` exists. Historically it banked L3 over L2, so it was not originally a duplicate; today the registry already has L8 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)).
+  - **Recommended action:** Exclude from live-capability accounting. Retain only as a regression/reproduction fixture. Require a fresh `live_agent_self_discovery` artifact from the scored policy with no per-game adapter, frozen tail, or internal-state access.
 
 - `results/arc_loop_solve_lf52.json`
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** Reaches L2, while the registry already records `lf52` L6. Experiment 5585 explicitly calls it `same_depth_or_shallower_than_registry_not_creditable` with `new_levels_banked=0`. The `_lf52` adapter feeds frozen L1/L2 labels and a hand-built per-game state/verifier model. Again: `development_proxy`, offline simulator, no self-discovery trace.
-  - **Recommended action:** Exclude from solve-advance reporting. Keep as a regression fixture and set `honest_verdict=duplicate_depth_l2_vs_registry_l6`.
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Same explicit `development_proxy`/offline mode declaration ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:584)). `_lf52` emits a predetermined coordinate/action sequence, introspects obfuscated internal objects and flags, and uses a hand-written peg-count verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2745)). The registry itself identifies this as a GameAdapter solve and says it banked L2 over prior L1 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2257)); current registry depth is L6. Empty `outer_loop_inputs_declared` is contradicted by the implementation.
+  - **Recommended action:** Exclude from self-discovery metrics; keep as a deterministic replay test only. Re-attempt through the live policy with attempt-by-attempt runtime evidence and adapter/internal-state access disabled.
 
-**Pattern watch:** Reachability is being confused with legitimacy. These modules are on-path, but the path executes hand-authored per-game adapters and frozen trajectories. Empty `outer_loop_inputs_declared` does not cleanse that provenance. Blank `honest_verdict` plus `offline_reproduced=true` makes stale proxy replays look like fresh solves; the recent-artifact scanner should reject any artifact that does not exceed registry depth and prove `live_agent_self_discovery`.
+**Pattern watch:** Severe drift toward calling an offline deterministic dev twin “standing live/self-play.” Reachability proves only that the live entrypoint can call the machinery—not that the agent discovered anything. The recent-artifact scan also appears mtime-driven: both files were last changed in Git on June 28 but surfaced as recent after July 13 filesystem touches. Provenance gates should reject `development_proxy` before counting solves.
 

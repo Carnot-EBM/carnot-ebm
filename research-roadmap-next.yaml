@@ -1,0 +1,706 @@
+milestone: "2026.07.511"
+milestone_title: "Attested Exact Streams, Lifecycle-Audited Self-Learning, Production Rust Sampling, and ARC Epistemic State"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp5717-transition-v511
+    milestone: "2026.07.511"
+    title: "Transition terminal .510 evidence, apply the narrow stream retirement, and allocate .511"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5717_transition_v511.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 120
+    operator_override: "Standing 2026-05-29 versioned-continuation authorization permits one evidence-preserving transition task per milestone."
+    prior_failures:
+      - experiment_id: exp5716-v510-capstone-reconciliation
+        verdict: "blocked: v510 reconciled; exp5708_stream_promoted=False; exp5709_promoted=False; exp5710_promoted=False; arc_registry_delta=0; arc_solve_credited=False; one_axis_rust_parity=True; one_axis_quality_restart=True; timing_claimed=false; hardware_speedup_claimed=false"
+        addressed_by: "This archives terminal .510, applies its remaining narrow Exp5709 stream retirement while preserving future clean streams, and allocates the non-colliding Exp5717-Exp5728 graph."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.07.510 is terminal. Authenticated GGUF CUDA offload worked but 47 of 50 exact-stream responses failed parsing; prospective FR-11 gate-blocked and the isolated task was pre-emptively skipped. The ARC relational route qualified but its matched A/B was null, the live attempt banked no level, and one-axis Rust parity plus hard-instance restart/quality passed without timing. Exp5716 requires a narrow retirement for the parse-failed Exp5709 stream while preserving future clean prospective streams. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5708_sota_exact_constraint_canary.json
+      - {project_root}/results/experiment_5709_fr11_prospective_shadow_stream.json
+      - {project_root}/results/experiment_5711_arc_relational_goal_energy_live_qualification.json
+      - {project_root}/results/experiment_5712_arc_relational_goal_energy_live_ab.json
+      - {project_root}/results/experiment_5713_arc_live_self_discovery_levelup_v510.json
+      - {project_root}/results/experiment_5714_one_axis_tempering_rust_parity.json
+      - {project_root}/results/experiment_5715_one_axis_tempering_rust_quality_restart.json
+      - {project_root}/results/experiment_5716_v510_capstone_reconciliation.json
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/research-complete.yaml
+
+      TASK:
+      Archive terminal .510 evidence into a collision-free .511 dependency map, apply the capstone's narrow missing retirement, and emit results/experiment_5717_transition_v511.json.
+
+      CONCRETE STEPS:
+      1. Read every Exp5706-Exp5716 artifact and conductor outcome. Preserve missing, gate-skipped, blocked, null, and promoted states exactly.
+      2. Preserve the Exp5708 root cause: authenticated CUDA and 50 manifest rows, but 21 truncations, 26 missing answers, 3 parses, and zero validator disagreements.
+      3. Add one narrow exclusion-manifest entry for `fr11_prospective_shadow_stream_exp5709_same_verdict`. Preserve the .509 controller, disabled adapter, future clean streams, and generic lifecycle learning.
+      4. Preserve Exp5711 as qualification-only, Exp5712 as a safe matched null, and Exp5713's `solve_provenance=live_agent_self_discovery`, registry count 177, and delta 0. Do not retire generic ARC working memory or live attempts.
+      5. Preserve one-axis Python promotion and Exp5714/Exp5715 Rust readiness; keep two-axis exchange retired. Emit `one_axis_rust_quality_ready_score=1.0` only when the direct artifacts validate.
+      6. Collision-check artifacts, roadmaps, history, logs, scripts, and tests before allocating `current_task_range=exp5717-exp5728`. Emit dependency and structured-gate maps.
+      7. Reconcile transition-only entries in research-complete.yaml, ops/status.md, ops/changelog.md, ops/conductor-log.md, and ops/exclusion_manifest.yaml without changing scientific verdicts.
+      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `source_capstone_hash`, `v510_task_verdicts`, and `v510_conductor_outcomes` — provenance/denominator exact; `sota_parse_failure_taxonomy` and `cuda_offload_authenticated=true` — root cause exact; `fr11_prospective_promoted=false`, `fr11_isolated_promoted=false`, `model_weight_mutation=false`, and `production_default_enabled=false` — FR-11 boundary exact; `arc_registry_count=177`, `arc_registry_delta=0`, and `arc_relational_route_promoted=false` — ARC exact; `one_axis_rust_parity_ready_score=1.0` and `one_axis_rust_quality_ready_score=1.0` — prerequisites scalar; `retirements_required`, `retirements_applied`, `preserved_scopes`, and `retired_scopes` — exclusions reconstruct; `current_task_range=exp5717-exp5728`, `dependency_map`, and `gate_map` — allocation canonical; `timing_claimed=false` and `hardware_speedup_claimed=false` — no inflation; `inference_substrate=artifact_reconciliation_only`, `test_commands`, `test_exit_codes`, `reproducibility_checksum`, and `honest_verdict` — replay/verdict explicit.
+      9. Run YAML, roadmap schema, prior-failure, exclusion-manifest, gate, conductor-preflight, adversarial, and root-clutter checks. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5718-v511-source-delta-ingestion
+    milestone: "2026.07.511"
+    title: "Ingest post-V511 2025-2026 source deltas with duplicate and retirement guards"
+    priority: high
+    track: infrastructure
+    deliverable: results/experiment_5718_v511_source_delta_ingestion.json
+    model: sonnet
+    max_turns: 30
+    estimated_wall_time_min: 90
+    operator_override: "Standing 2026-05-29 versioned-continuation authorization permits one bounded source-delta ingestion task per milestone."
+    prior_failures:
+      - experiment_id: exp5707-v510-source-delta-ingestion
+        verdict: "complete: no new nonduplicate actionable source delta; V510 task graph unchanged"
+        addressed_by: "This search starts after the V511 marker and accepts only newly actionable hooks respecting attested streams, lifecycle learning, Rust backend, and ARC epistemic boundaries."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The V511 planner already indexes EG-VAR, MemOps, Compliance Trap, SLEUTH, MaxSAT feedback, continual weight-write limits, calibrated e-CUSUM, ERM watch-only status, OpenReview continual-learning signals, and no local TSU/Kona access. This bounded execution-time check may not silently redesign the roadmap or reopen retired scopes. A no-op is success. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/research-complete.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+
+      TASK:
+      Search the mandated 2025-2026 sources for post-V511-marker deltas, append only non-duplicate actionable findings to research-references.md, and emit results/experiment_5718_v511_source_delta_ingestion.json.
+
+      CONCRETE STEPS:
+      1. Search arXiv for EBM verification/reasoning, neural CSPs, Ising ML, hallucination mitigation, KANs, constrained generation, hardware sampling, and continual constraint learning. Also check OpenReview, Extropic, Semantic Scholar citations of EBT 2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers, GitHub, and Logical Intelligence.
+      2. Use timestamps after `V511-PLANNER-REFRESH-20260715-END`. Deduplicate identifiers, titles, techniques, repositories, and experiment mappings against references and completed history.
+      3. For each accepted finding, state its exact Carnot hook, target Exp5719-Exp5727 task, substrate, validator boundary, and falsifiable metric. Mark watch-only, inaccessible, duplicate, and excluded findings.
+      4. Reject findings that reopen JSON grammar, external generated-text scoring, token/logit authority, model-weight writes, PTRM generation, generic exploration signals, transition patching, two-axis exchange, TSU/Kona execution, or unsupported speedups.
+      5. Update references only for a genuine delta. Do not change IDs/gates; set `roadmap_change_required=true` and block when operator scope expansion is needed.
+      6. REQUIRED ARTIFACT FIELDS: with `field_principles`, `search_timestamp_utc`, `planner_marker`, `sources_checked`, and `queries` — freshness/coverage exact; `accepted_findings`, `duplicate_findings`, `watch_only_findings`, and `excluded_findings` — dispositions explicit; `semantic_scholar_status`, `extropic_status`, `logical_intelligence_status`, `huggingface_status`, and `github_status` — secondary routes honest; `target_experiment_map`, `roadmap_change_required`, and `references_updated` — effects explicit; `inference_substrate=web_and_bibliographic_search_only`, `reproducibility_checksum`, and `honest_verdict` — no benchmark claim and zero findings allowed.
+      7. Run reference-marker, URL, duplicate-ID, YAML, exclusion-manifest, and artifact-schema checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5719-sota-answer-channel-forensics
+    milestone: "2026.07.511"
+    title: "Diagnose the .510 GGUF answer-channel failure across the mandated SOTA model families"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_5719_sota_answer_channel_forensics.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "This is a disjoint positive-control diagnostic, not another stream: it reproduces raw completion then changes to GGUF-native chat templates, removes newline truncation, budgets termination, and freezes a protocol only after exact controls pass."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp5708 authenticated CUDA for `unsloth/gemma-4-26B-A4B-it-GGUF`, but raw completion used max_tokens=32 and newline stop. Of 50 rows, 21 ended by length, 26 lacked the answer, and 3 parsed; repeated text appeared. Validator disagreement was zero. Diagnose the completion/chat boundary on small exact controls, not a full panel or grammar-engine retry. arXiv:2607.11317 motivates direct termination/repetition telemetry. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/model_cache.py
+      - {project_root}/results/experiment_5708_sota_exact_constraint_canary.json
+      - {project_root}/results/experiment_5708_sota_exact_constraint_canary.rows.jsonl
+      - {project_root}/tests/python/test_experiment_5708_sota_exact_constraint_canary.py
+      - {project_root}/python/carnot/pipeline/cross_model_typed_memory_retry.py
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Reproduce and classify the Exp5708 failure, qualify a bounded GGUF-native answer protocol across mandated models, and emit results/experiment_5719_sota_answer_channel_forensics.json.
+
+      CONCRETE STEPS:
+      1. Add/extend OpenSpec REQ-* before implementation. Declare `MODEL_SPECS` for `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Use cached `.gguf` files and llama.cpp APIs, never transformers tokenization. Legacy small models are smoke-only.
+      2. Resolve/hash models, record quantization/size, and authenticate CUDA llama-cpp-python, positive layer offload, devices, and before/during/after memory. CPU fallback cannot qualify.
+      3. Freeze at least 6 positive finite-label/arithmetic controls and 4 negative malformed/truncation/repetition controls per model. Do not use Exp5720 science rows.
+      4. Run a preregistered matrix: exact Exp5708 raw-completion control; `create_chat_completion` with embedded native template; newline-stop versus EOS-only; adequate answer budget; and a reason-then-`FINAL: <value>` envelope. Preserve template hash, raw text, finish reason, tokens, timing, repetition, and parser outcome.
+      5. Do not use JSON grammar, XGrammar, llguidance, external scorers, an LLM parser, or logit bias as semantic authority. Deterministic parsing and exact validators decide controls.
+      6. Classify template mismatch, length truncation, premature stop, sentinel omission, repetition, malformed envelope, runtime failure, and semantic exact error separately.
+      7. Freeze one protocol only if at least two mandated families each achieve 100% positive-control parse success, zero missing/truncated positives, zero validator disagreement, bounded repetition, and authenticated CUDA. Selection uses controls only.
+      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `MODEL_SPECS`, `resolved_model_receipts`, `model_hashes`, `gguf_filenames`, and `quantizations` — weights exact; `llama_cpp_version`, `llama_cpp_build_info`, and `native_chat_template_receipts` — runtime reconstructs; `cuda_device_receipts`, `n_gpu_layers_offloaded`, `gpu_memory_before_mb`, `gpu_memory_peak_mb`, `gpu_memory_after_mb`, and `cuda_offload_authenticated` — GPU evidence; `control_manifest`, `protocol_matrix`, `raw_response_manifest_path`, and `raw_response_hashes` — diagnosis lossless; `finish_reason_counts`, `truncation_count`, `missing_answer_count`, `repetition_failure_count`, `parse_failure_count`, `semantic_error_count`, and `validator_disagreement_count` — failures separate; `root_cause_attribution`, `qualified_protocol`, `qualified_model_ids`, `qualified_model_count`, `positive_control_parse_rate`, and `answer_channel_ready_score` — downstream gate explicit; `native_json_grammar_used=false`, `external_scorer_used=false`, and `retired_runtime_used=false` — closed paths; `inference_substrate=local_llama_cpp_python_cuda_gguf_diagnostic`, `random_seeds`, `reproducibility_checksum`, and `honest_verdict` — replay/verdict.
+      REQUIRED GATE SCALAR: `cuda_offload_authenticated_score` — 1.0 only when at least two qualified models have positive layer/memory receipts, otherwise 0.0.
+      9. Run model, CUDA, template, parser, validator, repetition/truncation, schema, adversarial, spec-coverage, and root-clutter tests. Release GPU resources on every path.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5720-sota-attested-exact-envelope-canary
+    milestone: "2026.07.511"
+    title: "Gated on Exp5719 channel readiness: build a sealed attested exact-envelope SOTA canary"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_5720_sota_attested_exact_envelope_canary.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 360
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "Exp5719 first qualifies native chat on disjoint controls; this uses that frozen protocol, two flagship families, termination-safe budgets, attested exact envelopes, and conflict-set receipts on a new corpus."
+        retire_if_same_verdict: true
+      - experiment_id: exp5615-native-llamacpp-cuda-runtime-certificate
+        verdict: "blocked_native_cuda_runtime_certificate_failed_terminal_retirement_evidence"
+        addressed_by: "The retired JSON-grammar certificate stays closed; this uses ordinary GGUF-native chat plus deterministic exact validation and does not require three-model grammar parity."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5719-sota-answer-channel-forensics
+        artifact_field: answer_channel_ready_score
+        op: ">="
+        value: 1.0
+        principle: "A sealed stream is inadmissible until disjoint exact controls pass."
+      - upstream: exp5719-sota-answer-channel-forensics
+        artifact_field: positive_control_parse_rate
+        op: "=="
+        value: 1.0
+        principle: "Every qualified positive control must parse."
+      - upstream: exp5719-sota-answer-channel-forensics
+        artifact_field: qualified_model_count
+        op: ">="
+        value: 2
+        principle: "The flagship pair requires two qualified model families."
+      - upstream: exp5719-sota-answer-channel-forensics
+        artifact_field: cuda_offload_authenticated_score
+        op: ">="
+        value: 1.0
+        principle: "CPU fallback cannot masquerade as the SOTA stream."
+    prompt: |
+      CONTEXT:
+      Exp5719 must provide a frozen non-retired protocol qualified on controls disjoint from this task. EG-VAR motivates the authority split: model outputs are proposals; only deterministic exact-validator receipts admit an envelope. MaxSAT feedback motivates bounded conflict sets while hard constraints stay authoritative. This replaces the parse-failed Exp5708 stream. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/results/experiment_5708_sota_exact_constraint_canary.json
+      - {project_root}/results/experiment_5719_sota_answer_channel_forensics.json
+      - {project_root}/python/carnot/model_cache.py
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Generate a new sealed chronological exact-constraint stream with flagship local GGUFs, admit only exact-validator-attested envelopes, and emit results/experiment_5720_sota_attested_exact_envelope_canary.json.
+
+      CONCRETE STEPS:
+      1. Enforce all gates and verify Exp5719 artifact/hash/protocol receipts. Add/extend OpenSpec REQ-* before implementation.
+      2. Declare `MODEL_SPECS` using the cached_sota_pair() pattern for `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`. Resolve immutable `.gguf` files, hashes, quantizations, and CUDA receipts. Never load GGUF through transformers.
+      3. Before inference, preregister/seal at least 64 chronological balanced rows across exact finite-state, finite-domain arithmetic, hard/soft preference, format stress, and TrapQA-style shortcut families. Balance denominators across both models and include answer/abstention cases.
+      4. Use only Exp5719's protocol. Preserve prompt, template hash, raw response, finish reason, tokens, timing, telemetry, and raw hash. Missing, truncated, repeated, or unparsable rows fail; never impute them.
+      5. Parse the bounded `FINAL:` envelope deterministically. Run independent exact FSM/arithmetic/SAT-or-MaxSAT validators. For inconsistent proposals record hard constraints, soft assignments, largest mutually consistent subset, and exact conflict set. Only the exact validator mints the admitted label.
+      6. Double-check a stratified sample with independent enumeration/validation. Any disagreement blocks. Record validator versions/hashes.
+      7. Commit row order before learner access. Seal a prospective prefix and untouched suffix with IDs, family/model strata, timestamps, prompt/model/raw/label receipt hashes, split hashes, and stream-root commitment. No outcome-driven split tuning.
+      8. Set `sota_stream_ready_score=1.0` only if both models have authenticated CUDA, every row exists/parses, repetition/truncation/missing counts are zero, disagreement is zero, every admitted row has attestation, commitments verify, and no retired runtime/external scorer ran.
+      9. REQUIRED ARTIFACT FIELDS: with `field_principles`, `MODEL_SPECS`, `resolved_model_receipts`, `model_hashes`, `gguf_filenames`, `quantizations`, and `llama_cpp_runtime_receipt` — execution exact; `cuda_device_receipts`, `n_gpu_layers_offloaded`, `gpu_memory_receipts`, and `cuda_offload_authenticated` — offload evidence; `qualified_protocol_hash`, `generation_config`, `preregistered_panel`, `family_counts`, and `model_family_counts` — design fixed; `row_manifest_path`, `raw_response_hashes`, and `attested_envelope_hashes` — output lossless; `attestation_schema`, `exact_validator_versions`, `conflict_set_receipts`, and `validator_disagreement_count` — authority explicit; `missing_row_count`, `truncation_count`, `repetition_failure_count`, and `parse_failure_count` — failures visible; `prospective_prefix_hash`, `sealed_suffix_hash`, and `stream_root_commitment` — chronology immutable; `headline_model_count=2` and `sota_stream_ready_score` — gates honest; `model_weight_mutation=false`, `native_json_grammar_used=false`, `external_scorer_used=false`, and `retired_runtime_used=false` — boundaries; `inference_substrate=flagship_local_llama_cpp_cuda_gguf_attested_exact_stream`, `random_seeds`, `reproducibility_checksum`, and `honest_verdict` — replay/verdict.
+      10. Run gate, model, CUDA, parser, exact/conflict/independent-validator, commitment, schema, adversarial, spec-coverage, and root-clutter tests. Release GPUs on all paths.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5721-fr11-memops-lifecycle-shadow-stream
+    milestone: "2026.07.511"
+    title: "Gated on Exp5720 exact stream: prospective MemOps lifecycle FR-11 shadow learning"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_5721_fr11_memops_lifecycle_shadow_stream.json
+    model: sonnet
+    max_turns: 50
+    estimated_wall_time_min: 300
+    continuous_self_learning_task: true
+    prior_failures:
+      - experiment_id: exp5709-fr11-prospective-shadow-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The parse-failed stream is not reused: Exp5720 supplies a newly attested two-family stream, and this adds MemOps traces, forgetting/supersession, and independent chronological metrics."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5720-sota-attested-exact-envelope-canary
+        artifact_field: sota_stream_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Prospective learning requires a complete attested stream."
+      - upstream: exp5720-sota-attested-exact-envelope-canary
+        artifact_field: parse_failure_count
+        op: "=="
+        value: 0
+        principle: "Unparsable generations cannot become learner events."
+      - upstream: exp5720-sota-attested-exact-envelope-canary
+        artifact_field: validator_disagreement_count
+        op: "=="
+        value: 0
+        principle: "The exact learning label must be unambiguous."
+    prompt: |
+      CONTEXT:
+      This is the milestone's continuous self-learning experiment. The .509 active-spline conformal controller and disabled adapter remain the baseline; .510 produced no prospective evidence. Exp5720 supplies an attested prefix. MemOps motivates explicit remember, update, supersede, reflect, forget, reject, and rollback operations rather than final accuracy alone. GGUF weights stay immutable; no LLM runs here. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5638_fr11_gate_schema_corrigendum.json
+      - {project_root}/results/experiment_5639_anytime_valid_csl_independent_audit.json
+      - {project_root}/results/experiment_5640_fr11_shadow_pipeline_integration.json
+      - {project_root}/results/experiment_5720_sota_attested_exact_envelope_canary.json
+      - {project_root}/python/carnot
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Consume Exp5720's committed prefix once in order, audit every FR-11 lifecycle operation prospectively, and emit results/experiment_5721_fr11_memops_lifecycle_shadow_stream.json.
+
+      CONCRETE STEPS:
+      1. Enforce gates; verify Exp5720 commitments and Exp5639/Exp5640 controller hashes. Prove the suffix remains unopened.
+      2. Freeze controller parameters, label delay, groups, stopping times, baselines, retention margins, operation schema, and promotion rules before opening outcomes. Preserve chronology.
+      3. Per row record frozen/current/previous-checkpoint decisions and losses before delayed exact label reveal. Exact rejection dominates and unusable rows cannot enter.
+      4. Represent each event with trigger, target, scope, operation type, evidence, prior/proposed/committed hashes, and decision. Cover remember, update, supersede, reflect, forget, reject, rollback, and compositions.
+      5. Update only the shadow active-spline/KAN controller when conformal rules permit. Never mutate GGUF weights, validators, prompts, order, or production defaults. Record no-op/abstention.
+      6. Compare lifecycle adaptation with frozen, no-memory, last-window, inactive-KAN, always-adapt, always-abstain, corrupted-order, stale-evidence, and poisoned-label controls using paired metrics.
+      7. Measure current/previous/frozen prequential loss, anytime risk, group coverage, ALE, critical-duration regret, retention, update utility, operation correctness, abstention, poison/stale rejection, and checkpoint replay.
+      8. Set `fr11_lifecycle_shadow_ready_score=1.0` only if unsafe accepts/updates are zero, risk/coverage pass, preregistered benefit lower bound is positive, retention margins pass, operations/commitments replay, controls fail closed, and production stays disabled.
+      9. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipts`, `source_MODEL_SPECS`, and `source_stream_root_commitment` — eligibility/source exact; `prospective_prefix_hash_verified`, `sealed_suffix_unopened=true`, `preregistered_protocol`, `chronological_order_preserved`, and `label_delay_schedule` — split/design fixed; `memory_operation_schema`, `operation_trace_path`, `operation_counts_by_type`, `operation_validation_errors`, `pre_state_hashes`, `post_state_hashes`, and `evidence_support_links` — lifecycle auditable; `prelabel_decisions`, `exact_outcomes`, `current_previous_frozen_losses`, `paired_benefit_intervals`, `anytime_pathwise_risk`, `group_coverage`, `retention_metrics`, and `abstention_burden` — metrics bounded; `unsafe_false_accept_count`, `unsafe_update_accept_count`, `negative_transfer_count`, `retention_regression_count`, and `poison_or_stale_accept_count` — failures visible; `checkpoint_restart_replay_pass` and `rollback_receipts` — recovery; `continuous_self_learning_task=true`, `model_weight_mutation=false`, `production_default_enabled=false`, and `automatic_production_enablement=false` — boundary; `fr11_lifecycle_shadow_ready_score`, `inference_substrate=attested_exact_prefix_plus_cpu_active_spline_kan_shadow`, `random_seeds`, `reproducibility_checksum`, and `honest_verdict` — gate/replay.
+      10. Run lifecycle, chronology, exact-safety, conformal, KAN, poison/stale, retention, checkpoint/rollback, schema, adversarial, spec-coverage, and applicable E2E tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5722-fr11-compliance-recovery-rollback-canary
+    milestone: "2026.07.511"
+    title: "Gated on Exp5721 lifecycle readiness: isolated Compliance-Trap recovery and rollback canary"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_5722_fr11_compliance_recovery_rollback_canary.json
+    model: sonnet
+    max_turns: 50
+    estimated_wall_time_min: 300
+    prior_failures:
+      - experiment_id: exp5710-fr11-isolated-act-on-advice-canary
+        verdict: "missing: pre-emptive gate skip after exp5709 retired; no experiment artifact emitted"
+        addressed_by: "This does not assume .510 work occurred: it requires a new lifecycle-positive upstream, opens a new suffix, and adds Entry-Propagation-Recovery conflicts before advice acts."
+        retire_if_same_verdict: true
+      - experiment_id: exp5640-fr11-shadow-pipeline-integration
+        verdict: "complete: fr11_shadow_ready_not_default_enabled"
+        addressed_by: "Exp5640 replayed shadow recommendations; this uses a current suffix, isolated sidecar changes, conflict recovery, crash atomicity, and rollback evidence."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5721-fr11-memops-lifecycle-shadow-stream
+        artifact_field: fr11_lifecycle_shadow_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Act-on-advice requires prospective lifecycle safety and benefit."
+      - upstream: exp5721-fr11-memops-lifecycle-shadow-stream
+        artifact_field: unsafe_false_accept_count
+        op: "=="
+        value: 0
+        principle: "No unsafe shadow decision may cross into canary."
+      - upstream: exp5721-fr11-memops-lifecycle-shadow-stream
+        artifact_field: unsafe_update_accept_count
+        op: "=="
+        value: 0
+        principle: "Unsafe update advice cannot be exercised."
+    prompt: |
+      CONTEXT:
+      Exp5721 must establish prospective lifecycle safety. Compliance Trap says to identify the first decision changed by conflicting memory, whether it propagates, and whether policy recovers. Open only the untouched suffix inside an isolated controller checkpoint. Exact validators win; production and GGUF weights stay frozen. No LLM runs. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_5639_anytime_valid_csl_independent_audit.json
+      - {project_root}/results/experiment_5640_fr11_shadow_pipeline_integration.json
+      - {project_root}/results/experiment_5720_sota_attested_exact_envelope_canary.json
+      - {project_root}/results/experiment_5721_fr11_memops_lifecycle_shadow_stream.json
+      - {project_root}/python/carnot
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Run isolated sidecar act-on-advice with conflicting-memory Entry-Propagation-Recovery and exact rollback tests, then emit results/experiment_5722_fr11_compliance_recovery_rollback_canary.json.
+
+      CONCRETE STEPS:
+      1. Enforce gates. Verify suffix hash/unopened status. Snapshot production configuration and an isolated atomic controller checkpoint.
+      2. Freeze chronology, delays, retention panel, drift, conflict/stale/poison injections, E/P/R definitions, crash points, baselines, and rollback rules before reveal.
+      3. Only in isolation, let admissible retain/adapt/reset/abstain advice change KAN state/checkpoint. Never mutate GGUF weights, prompts, validators, or production. Exact reject cannot be overridden.
+      4. Inject scoped conflicts/stale constraints. Record first changed decision (Entry), downstream persistence (Propagation), and restoration by contradiction/reset/rollback (Recovery).
+      5. Compare act-on-advice with shadow-only, frozen, no-memory, always-adapt, corrupted-checkpoint, stale/conflict-memory, and no-rollback controls. Link every change to operation/evidence.
+      6. Exercise crash before/after propose/commit, restart, duplicate delivery, delayed regression, rollback, and replay. Verify atomicity/idempotence/state restoration.
+      7. Set `fr11_recovery_canary_ready_score=1.0` only with zero unsafe accepts/updates, passing risk/coverage and retention, positive benefit, all conflicts detected, threshold recovery, fail-closed controls, exact replay, and production disabled.
+      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipts`, `source_MODEL_SPECS`, `sealed_suffix_hash_verified`, and `suffix_open_timestamp_utc` — provenance exact; `preregistered_protocol`, `chronological_order_preserved`, `isolated_environment_receipt`, `production_default_hash_before`, and `production_default_hash_after` — separation; `controller_checkpoint_before`, `controller_checkpoints_after`, and `atomic_commit_receipts` — state explicit; `memory_conflict_manifest`, `entry_events`, `propagation_events`, `recovery_events`, `entry_compliance_rate`, `propagation_depth`, `recovery_rate`, and `recovery_latency` — E/P/R measured; `action_support_links`, `memory_operation_trace_path`, `exact_outcomes_by_arm`, `paired_benefit_intervals`, `anytime_pathwise_risk`, `group_coverage`, `retention_metrics`, and `abstention_burden` — grounding/metrics; `unsafe_false_accept_count`, `unsafe_update_accept_count`, `conflict_or_stale_accept_count`, and `retention_regression_count` — failures; `rollback_receipts`, `crash_restart_replay_pass`, `atomicity_pass`, and `idempotence_pass` — recovery; `model_weight_mutation=false`, `production_default_enabled=false`, and `automatic_production_enablement=false` — boundary; `fr11_recovery_canary_ready_score`, `inference_substrate=sealed_attested_suffix_plus_isolated_cpu_kan_adapter`, `random_seeds`, `reproducibility_checksum`, and `honest_verdict` — gate/replay.
+      9. Run gate, isolation, exact-safety, conformal/KAN, E/P/R, atomicity, rollback, poison/stale, retention, schema, adversarial, spec-coverage, and E2E tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5723-one-axis-rust-samplerbackend-integration
+    milestone: "2026.07.511"
+    title: "Gated on Exp5717 Rust quality: expose one-axis tempering through production SamplerBackend"
+    priority: high
+    track: sampler-portability
+    deliverable: results/experiment_5723_one_axis_rust_samplerbackend_integration.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 300
+    prior_failures:
+      - experiment_id: exp5715-one-axis-tempering-rust-quality-restart
+        verdict: "complete: one-axis Rust/Python hard-instance quality and cross-language restart parity pass; no timing or hardware claim"
+        addressed_by: "Exp5715 qualified an experiment kernel; this changes the deliverable to a production SamplerBackend/factory adapter with exact fallback, public checkpoints, and broken-binding controls."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5717-transition-v511
+        artifact_field: one_axis_rust_quality_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Production integration requires terminal Rust quality/restart promotion."
+    prompt: |
+      CONTEXT:
+      Exp5714/Exp5715 proved exact Rust/Python one-axis corrected-cDLS parity, hard-instance quality, and restart. The kernel is experiment-specific and has no timing claim. The PRD requires a swappable Rust/Python sampler boundary. Integrate the promoted algorithm without changing its ladder, adding two-axis exchange, or claiming speed. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/_bmad/prd.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/results/experiment_5714_one_axis_tempering_rust_parity.json
+      - {project_root}/results/experiment_5715_one_axis_tempering_rust_quality_restart.json
+      - {project_root}/python/carnot/experiment_5714_one_axis_tempering_rust_parity.py
+      - {project_root}/python/carnot/experiment_5715_one_axis_tempering_rust_quality_restart.py
+      - {project_root}/crates/carnot-samplers/src/one_axis_tempering.rs
+      - {project_root}/python/carnot/samplers/backend.py
+      - {project_root}/tests/python/test_sampler_backend.py
+      - {project_root}/tests/python/test_pyo3_integration.py
+      - {project_root}/openspec/capabilities
+
+      TASK:
+      Expose the promoted Rust one-axis kernel through production SamplerBackend and factory with exact fallback, then emit results/experiment_5723_one_axis_rust_samplerbackend_integration.json.
+
+      CONCRETE STEPS:
+      1. Enforce the gate; verify Exp5714/5715 hashes, ready scores, algorithm hash, checkpoint schema, and two-axis-closed receipts. Add/extend OpenSpec REQ-*.
+      2. Implement a production `OneAxisRustBackend` following existing naming conventions, satisfying `carnot.samplers.backend.SamplerBackend`, and register it without changing defaults.
+      3. Route supported descriptors through the Rust/PyO3 kernel. Preserve seed semantics, ladder, swap schedule, transition budget, energy convention, decision log, checkpoint, and restart behavior.
+      4. Provide an explicit exact Python fallback for missing extension, unsupported dtype/shape, and declared compatibility cases. Never silently change algorithms; record backend/fallback reason.
+      5. Define stable input/output/checkpoint receipts. Validate cross-language restart through the production adapter, duplicate save/load, and corruption rejection.
+      6. Add broken-extension, wrong-symbol, malformed descriptor, unsupported topology, corrupt checkpoint, seed mismatch, and energy-sign controls. Fail closed or take declared exact fallback.
+      7. Set `one_axis_samplerbackend_ready_score=1.0` only if protocol/factory conformance, exact parity, checkpoint/restart, fallback equivalence, and broken controls pass. Make no timing claim.
+      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipts`, `source_algorithm_hash`, `rust_source_hash`, `pyo3_binding_hash`, and `python_adapter_hash` — lineage exact; `sampler_backend_protocol` and `factory_registration_receipt` — production exposure; `supported_descriptor_schema` and `unsupported_case_policy` — scope; `seed_semantics`, `temperature_ladder_receipt`, `swap_schedule_receipt`, and `transition_budget_receipt` — algorithm unchanged; `energy_parity_max_error`, `proposal_parity_max_error`, `swap_parity_max_error`, and `decision_log_parity` — semantics; `checkpoint_schema_version`, `checkpoint_roundtrip_pass`, `python_to_rust_restart_pass`, and `rust_to_python_restart_pass` — persistence; `fallback_cases`, `fallback_equivalence_pass`, and `exact_fallback_equivalence_score` — fallback; `broken_control_results` and `one_axis_samplerbackend_ready_score` — audit/gate; `two_axis_code_added=false`, `timing_claimed=false`, and `hardware_speedup_claimed=false` — boundaries; `inference_substrate=production_python_samplerbackend_plus_rust_pyo3_one_axis`, `random_seeds`, `reproducibility_checksum`, and `honest_verdict` — replay.
+      9. Run Rust unit, fmt/clippy/test, PyO3, SamplerBackend/factory, parity, checkpoint/restart, fallback, broken-control, schema, adversarial, spec-coverage, root-clutter, and serialization/sampling E2E tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5724-one-axis-rust-python-matched-crossover
+    milestone: "2026.07.511"
+    title: "Gated on Exp5723 production backend: matched Rust/Python quality-throughput crossover"
+    priority: high
+    track: sampler-portability
+    deliverable: results/experiment_5724_one_axis_rust_python_matched_crossover.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 360
+    prior_failures:
+      - experiment_id: exp5611-cdls-matched-sampler-crossover
+        verdict: "blocked: cDLS matched CPU/CUDA comparison unavailable; blocked_reasons=0; board_speedup_claimed=false"
+        addressed_by: "This uses two locally available implementations of the same promoted one-axis algorithm through production SamplerBackend, with quality parity before timing and no CUDA/board dependency."
+        retire_if_same_verdict: true
+      - experiment_id: exp5623-cdls-multiseed-cpu-cuda-crossover
+        verdict: "complete: no quality-matched crossover pairs entered speedups; blocked_reasons=0; no-crossover evidence is terminal for this run"
+        addressed_by: "Exp5723 supplies quality-matched Rust/Python paths; this preregisters warmup, PyO3/serialization overhead, affinity, and a null terminal result instead of repeating CPU/CUDA."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5723-one-axis-rust-samplerbackend-integration
+        artifact_field: one_axis_samplerbackend_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Timing requires a production adapter with exact semantics."
+      - upstream: exp5723-one-axis-rust-samplerbackend-integration
+        artifact_field: exact_fallback_equivalence_score
+        op: ">="
+        value: 1.0
+        principle: "Fallback and extension paths must be equivalent before comparison."
+    prompt: |
+      CONTEXT:
+      Exp5723 must expose exact Rust and Python one-axis paths through one contract. Earlier CPU/CUDA crossover work could not form quality-matched pairs and is terminal for that substrate. Ask where, if anywhere, production Rust/PyO3 beats Python under identical CPU work and quality. A null is valid; no FPGA/TSU/GPU claim is allowed. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_5611_cdls_matched_sampler_crossover.json
+      - {project_root}/results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json
+      - {project_root}/results/experiment_5714_one_axis_tempering_rust_parity.json
+      - {project_root}/results/experiment_5715_one_axis_tempering_rust_quality_restart.json
+      - {project_root}/results/experiment_5723_one_axis_rust_samplerbackend_integration.json
+      - {project_root}/python/carnot/samplers/backend.py
+      - {project_root}/crates/carnot-samplers
+      - {project_root}/tests/python/test_pyo3_integration.py
+      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities
+
+      TASK:
+      Run a preregistered matched-work and matched-quality Rust/Python production-backend crossover study, then emit results/experiment_5724_one_axis_rust_python_matched_crossover.json.
+
+      CONCRETE STEPS:
+      1. Enforce gates. Freeze build profile, hardware/OS/compiler/Python, CPU affinity, threads, workloads, sizes, seeds, ladders, work budgets, restarts, warmups, repetitions, quality margins, and thresholds before timing.
+      2. Use at least six sizes from PyO3-overhead to kernel-dominated, three topology/hardness families, and 10 seeds through the identical SamplerBackend API.
+      3. Match transitions, energy evaluations, replicas, swaps, restarts, stopping, checkpoints, initial states, and validation. Record work counters.
+      4. Warm both arms and randomize/interleave order. Record at least 30 repetitions per qualified size/family, affinity, frequency/governor where observable, peak RSS, build mode, and noise.
+      5. Separate kernel, setup, PyO3, serialization/checkpoint, validation, and end-to-end time. Do not subtract overhead from primary end-to-end timing.
+      6. Require quality matching before speedups on feasibility, best energy, acceptance/swaps, target distributions where enumerable, and restart. Report preregistered exclusions.
+      7. Compute paired ratios/bootstrap intervals. Qualify crossover only at the first consecutive range with matched quality and Rust end-to-end interval entirely above 1.0; otherwise report terminal null.
+      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipts`, `hardware_receipt`, `software_receipt`, `build_profile`, `cpu_affinity`, and `thread_receipts` — environment exact; `preregistered_protocol`, `workload_manifest`, `problem_sizes`, `topology_families`, `random_seeds`, `warmup_count`, and `measured_repetition_count` — design fixed; `arm_configs` and `matched_work_receipts` — equal work; `quality_metrics_by_pair`, `quality_margins`, `quality_matched_pair_count`, and `excluded_pair_reasons` — denominator; `kernel_times`, `pyo3_overhead_times`, `serialization_times`, `validation_times`, `end_to_end_times`, and `peak_rss_by_arm` — costs; `paired_speedup_ratios`, `paired_speedup_intervals`, `qualified_crossover_n`, and `rust_crossover_ready_score` — conclusion; `software_speedup_claimed`, `timing_claimed=true`, `hardware_speedup_claimed=false`, `gpu_speedup_claimed=false`, and `fpga_or_tsu_used=false` — claim scope; `inference_substrate=matched_cpu_python_vs_rust_pyo3_production_samplerbackend`, `reproducibility_checksum`, and `honest_verdict` — replay/null allowed.
+      9. Run benchmark self-tests, quality/work matching, exact small-size validation, restart, statistics, schema, adversarial, spec-coverage, root-clutter, and sampling/PyO3 E2E tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5725-arc-epistemic-ledger-live-qualification
+    milestone: "2026.07.511"
+    title: "Qualify an agent-owned ARC epistemic ledger on the submitted live E3AgentPolicy path"
+    priority: critical
+    track: arc-live
+    deliverable: results/experiment_5725_arc_epistemic_ledger_live_qualification.json
+    model: sonnet
+    max_turns: 50
+    estimated_wall_time_min: 360
+    prior_failures:
+      - experiment_id: exp5712-arc-relational-goal-energy-live-ab
+        verdict: "complete: relational_live_route_null_no_promotion"
+        addressed_by: "This replaces null scalar goal energy with explicit agent-owned confirmed/hypothesis/question state and an evidence-sufficiency commitment trigger; it does not reuse relational scoring or claim a solve."
+        retire_if_same_verdict: true
+      - experiment_id: exp4653-energy-fitness-qd-generation-live
+        verdict: "complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened"
+        addressed_by: "No sequence population, mutation, crossover, QD archive, or energy-as-fitness generator is used; the ledger organizes facts/questions already reachable from live observations/actions."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The .510 relational goal route was live-reachable and safe but null, so it is not promoted. SLEUTH (arXiv:2607.12267) externalizes confirmed facts, ranked hypotheses, and open questions, with bounded evidence-sufficient commitment. Adapt only that generic state organization to E3AgentPolicy using agent-owned observations/actions. This is not PTRM, QD, transition patching, novelty scoring, or a per-game model. Claim no new solve; use no LLM. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5703_sp80_candidate_stack_mechanism_trace.json
+      - {project_root}/results/experiment_5712_arc_relational_goal_energy_live_ab.json
+      - {project_root}/results/experiment_5713_arc_live_self_discovery_levelup_v510.json
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py
+      - {project_root}/python/carnot/agentic/arc_goal_energy_live.py
+      - {project_root}/python/carnot/agentic
+      - {project_root}/openspec/capabilities
+      - {project_root}/tests/python
+
+      TASK:
+      Add and qualify a generic agent-owned epistemic ledger reachable from submitted E3AgentPolicy, without claiming a new solve, then emit results/experiment_5725_arc_epistemic_ledger_live_qualification.json.
+
+      CONCRETE STEPS:
+      1. Registry-precheck before fixtures. Use only synthetic controls and reproduced levels; claim no novel level and include `solve_provenance=development_proxy`.
+      2. Add/extend OpenSpec REQ-*. Define confirmed observation/action facts, active hypotheses with support/contradiction, open discriminating questions, superseded entries, evidence sufficiency, and bounded commitment reasons.
+      3. Populate/update only from visible states, actions, immediate outcomes, and current runtime feature receipts. Never read game source, use GameAdapters, hard-code IDs/colors/coordinates/actions/goals, import solutions, or run offline BFS.
+      4. Wire read/write into submitted E3AgentPolicy before proposal/routing and after transitions. Questions may prioritize an existing legal proposal only when tied to a generic discriminating observation; no off-path solver.
+      5. Add an evidence-sufficiency commitment trigger that stops redundant verification or chooses already-reachable candidates only under frozen generic conditions. Record support/counterevidence.
+      6. Freeze schema, updates, ranking, expiration/supersession, thresholds, leave-one-game-out, and resource caps. Test exact synthetic and diverse reproduced navigation, placement, count, toggle, and negatives.
+      7. Include stale evidence, contradictions, repeated no-ops, misleading hypotheses, shuffled links, missing observations, corrupted hashes, always/never-commit, and ledger-disabled controls. Verify recovery/fallback.
+      8. Prove live-path reachability. Measure ledger operations, hypothesis revisions, questions resolved, candidate/action reorderings, commitments, false commits, redundant verification, overhead, and retention.
+      9. Set `arc_epistemic_ledger_ready_score=1.0` only if live read/write are exercised, controls update exactly, leave-one-game-out/integrity pass, false/unsafe commits are zero, levels do not regress, intended decisions change, and leakage/off-path scans are clean. No solve required.
+      10. REQUIRED ARTIFACT FIELDS: with `field_principles`, `registry_precheck`, and `solve_provenance=development_proxy` — no duplicate/live solve claim; `openspec_requirement_ids`, `source_paths`, `call_graph_receipt`, `ledger_schema`, `ledger_update_rules`, `commitment_policy`, and `resource_caps` — mechanism auditable; `synthetic_fixture_manifest`, `reproduced_level_fixture_manifest`, and `leave_one_game_out_protocol` — controls fixed; `live_read_call_count`, `live_write_call_count`, `ledger_operation_counts`, `hypothesis_revision_count`, `open_question_resolution_count`, `candidate_order_change_count`, `action_order_change_count`, and `commitment_count` — exercised; `false_commit_count`, `unsafe_commit_count`, `stale_or_conflict_recovery_results`, `known_level_regression_count`, `redundant_verification_delta`, and `ledger_budget_overhead` — safety/utility; `integrity_control_results` and `fallback_equivalence` — fail closed; `game_source_read_count=0`, `game_adapter_count=0`, `outer_loop_bfs_used=false`, `per_game_constant_scan`, and `per_game_leakage_detected=false` — provenance; `live_path_reachable`, `live_path_reachable_score`, and `arc_epistemic_ledger_ready_score` — gates; `new_levels_claimed=0`, `registry_updated=false`, `inference_substrate=arc_visible_state_epistemic_ledger_no_llm`, `random_seeds`, `reproducibility_checksum`, and `honest_verdict` — scope/replay.
+      11. Run unit, leave-one-game-out, live-call-graph, integrity, commitment, stale/conflict, retention, orphan-solver, provenance, schema, adversarial, spec-coverage, and ARC E2E tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5726-arc-epistemic-ledger-live-ab
+    milestone: "2026.07.511"
+    title: "Gated on Exp5725 ledger readiness: matched known-level ARC live A/B"
+    priority: critical
+    track: arc-live
+    deliverable: results/experiment_5726_arc_epistemic_ledger_live_ab.json
+    model: sonnet
+    max_turns: 50
+    estimated_wall_time_min: 420
+    prior_failures:
+      - experiment_id: exp5712-arc-relational-goal-energy-live-ab
+        verdict: "complete: relational_live_route_null_no_promotion"
+        addressed_by: "Treatment is now explicit confirmed/hypothesis/question state and evidence-sufficient commitment, not relational goal scoring, while preserving the full control and budgets."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5725-arc-epistemic-ledger-live-qualification
+        artifact_field: arc_epistemic_ledger_ready_score
+        op: ">="
+        value: 1.0
+        principle: "Matched utility requires a qualified generic ledger."
+      - upstream: exp5725-arc-epistemic-ledger-live-qualification
+        artifact_field: live_path_reachable_score
+        op: ">="
+        value: 1.0
+        principle: "Off-path memory receives no live credit."
+      - upstream: exp5725-arc-epistemic-ledger-live-qualification
+        artifact_field: per_game_leakage_detected
+        op: "=="
+        value: false
+        principle: "Per-game knowledge invalidates the mechanism."
+    prompt: |
+      CONTEXT:
+      Exp5725 must prove a generic live ledger with zero leakage and safe commitment. Measure utility on registry-prechecked reproduced levels under matched budgets. Control is the unchanged current full stack; treatment adds only ledger/commitment. No new-solve claim, no gate on Exp5727, and no LLM. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5701_candidate_scoring_stack_bare_control_ab_headroom.json
+      - {project_root}/results/experiment_5712_arc_relational_goal_energy_live_ab.json
+      - {project_root}/results/experiment_5725_arc_epistemic_ledger_live_qualification.json
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py
+      - {project_root}/python/carnot/agentic
+      - {project_root}/tests/python
+      - {project_root}/openspec/capabilities
+
+      TASK:
+      Run a preregistered matched-budget known-level E3AgentPolicy A/B for the epistemic ledger and emit results/experiment_5726_arc_epistemic_ledger_live_ab.json.
+
+      CONCRETE STEPS:
+      1. Enforce gates. Registry-precheck/freeze diverse reproduced navigation, placement, toggle, count, and spatial levels plus negatives. Record `solve_provenance=development_proxy`; no registry update.
+      2. Freeze levels, seeds, action/restart budgets, stack config, ledger thresholds, primary metrics, regression margins, and promotion before execution.
+      3. Compare unchanged full stack with identical stack plus Exp5725. Match seeds, states, budgets, knobs, caches, stopping, legal proposals, and observation access.
+      4. Record levels retained, actions per level, frontier expansions, proposals/actions, ledger operations, revisions/questions, reorderings, commitments, invalid/no-op rates, latency, and paired deltas.
+      5. Measure verification calls avoided versus evidence lost, CPU/memory overhead, first-decision divergence, propagation depth, and recovery after stale/conflicting injection.
+      6. Include ledger-disabled, shuffled/stale ledger, corrupted links, always/never-commit, and budget-matched inert controls. Verify exercise/fallback.
+      7. Set `arc_epistemic_live_ab_ready_score=1.0` only if a frozen efficiency or retention primary improves with interval excluding zero, zero material level regressions/unsafe commits, intended decisions change, negatives pass, and overhead cap passes. Null is terminal but does not block Exp5727.
+      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipts`, `registry_precheck`, and `solve_provenance=development_proxy` — eligibility/no solve; `preregistered_protocol`, `game_level_manifest`, `fixture_hashes`, `arm_configs`, and `budget_parity_receipt` — comparison fixed/matched; `successful_pair_count`, `failed_pair_reasons`, `levels_reproduced_by_arm`, `known_level_regression_count`, `environment_actions_by_arm`, `frontier_expansions_by_arm`, `actions_per_reproduced_level`, and `solve_latency_actions_by_arm` — denominator/outcomes; `ledger_operation_counts_by_arm`, `hypothesis_revisions_by_arm`, `open_questions_resolved_by_arm`, `action_order_change_count`, `commitment_count`, and `first_decision_divergence` — mechanism; `verification_calls_by_arm`, `redundant_verification_delta`, `ledger_cpu_overhead`, and `ledger_memory_overhead` — costs; `entry_propagation_recovery_metrics`, `invalid_actions_by_arm`, `noop_rate_by_arm`, `unsafe_commit_count`, and `control_results` — safety; `paired_intervals`, `material_regression_margins`, and `arc_epistemic_live_ab_ready_score` — promotion; `new_levels_claimed=0`, `registry_updated=false`, `inference_substrate=matched_arc_live_policy_epistemic_ledger_no_llm`, `random_seeds`, `reproducibility_checksum`, and `honest_verdict` — scope/replay.
+      9. Run matched-budget, known-level, ledger-exercise, E/P/R, controls, provenance, orphan-solver, schema, adversarial, spec-coverage, and ARC E2E tests.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5727-arc-live-self-discovery-levelup-v511
+    milestone: "2026.07.511"
+    title: "Unconditional registry-rotated ARC live-agent self-discovery level-up attempt"
+    priority: critical
+    track: arc-live
+    deliverable: results/experiment_5727_arc_live_self_discovery_levelup_v511.json
+    model: sonnet
+    max_turns: 50
+    estimated_wall_time_min: 480
+    prior_failures:
+      - experiment_id: exp5713-arc-live-self-discovery-levelup-v510
+        verdict: "complete: no_new_arc_level_banked_lf52_L9_bounded_live_attempt_v510"
+        addressed_by: "Rotation excludes lf52 L9 and all reproduced/recent targets; this may use only a promoted generic ledger learned from target-local observations, otherwise baseline runs."
+        retire_if_same_verdict: true
+      - experiment_id: exp5643-arc-live-self-discovery-levelup-v509
+        verdict: "complete: no_new_arc_level_banked_lf52_L8_bounded_live_attempt_v509"
+        addressed_by: "Target and recent-failure window rotate again while credit stays limited to the live agent's observations, attempts, and runtime RE with full duration/method receipts."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The standing floor requires a genuine ARC level-up attempt. This task is deliberately ungated. Exp5726 is advisory: enable its ledger only if promoted and populated solely from this target's live observations; otherwise run unchanged baseline. Registry has 177 reproduced levels and Exp5713 failed at lf52 L9. Only the live agent's attempts/runtime RE count. Preferred execution uses no LLM. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5713_arc_live_self_discovery_levelup_v510.json
+      - {project_root}/results/experiment_5725_arc_epistemic_ledger_live_qualification.json
+      - {project_root}/results/experiment_5726_arc_epistemic_ledger_live_ab.json
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py
+      - {project_root}/python/carnot/agentic/arc_loop_solve.py
+      - {project_root}/python/carnot/agentic
+      - {project_root}/tests/python
+      - {project_root}/openspec/capabilities
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Run one bounded registry-rotated ARC live-agent self-discovery level-up attempt and emit results/experiment_5727_arc_live_self_discovery_levelup_v511.json.
+
+      CONCRETE STEPS:
+      1. Registry-precheck before target selection. Exclude every registered/reproduced level and recent failures including lf52 L8/L9. Freeze one eligible target via generic rotation; never re-solve a known level.
+      2. Snapshot baseline, registry hash/count, target receipt, source hashes, environment, seeds, budgets, and stop rules before action.
+      3. Enable Exp5726 ledger only if ready score 1.0 with zero unsafe commits/regressions and target-local population; otherwise baseline. Record decision and never skip.
+      4. Use only visible live states, own action/outcome history, and runtime receipts. No source, GameAdapter, hand solution/model, offline BFS, prior solution, or off-path solver.
+      5. Execute submitted E3AgentPolicy. Preserve observations, proposed/legal/executed actions, responses, retries/restarts, verifier/features/ledger, hypotheses/questions/commits, errors, times, and hashes in linked trace.
+      6. Record wall and active environment duration; exercise enough preregistered budget for a bounded live attempt. Do not emit bootstrap-only setup.
+      7. Credit only if a new level is reached and reproduced from the agent's trace under fresh replay, precheck confirms novelty, and provenance is clean; then atomically bank. Otherwise report honest null and do not update registry.
+      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `registry_precheck`, `registry_hash_before`, `registry_count_before`, `target_selection_protocol`, `selected_game_level`, and `recent_targets_excluded` — novelty exact; `solve_provenance=live_agent_self_discovery` — credited path; `baseline_config_hash`, `advisory_ledger_receipt`, and `ledger_enabled` — mechanism; `environment_receipt`, `source_hashes`, `random_seeds`, `action_budget`, `restart_budget`, `time_budget_s`, `budget_used`, `duration_s`, and `active_environment_duration_s` — execution; `trace_path`, `trace_root_hash`, `observation_count`, `candidate_count`, `legal_action_count`, `executed_action_count`, `restart_count`, `verifier_call_count`, `feature_route_counts`, `ledger_operation_counts`, `hypothesis_revision_count`, `open_question_resolution_count`, and `commitment_count` — method; `levels_before`, `levels_after`, `registry_delta`, `new_level_banked`, `fresh_replay_pass`, and `registry_updated` — outcome; `game_source_read_count=0`, `game_adapter_count=0`, `outer_loop_bfs_used=false`, `prior_solution_used=false`, and `off_path_solver_used=false` — forbidden paths; `inference_substrate=arc_live_submitted_agent_self_discovery_no_llm`, `reproducibility_checksum`, and `honest_verdict` — substrate/replay.
+      9. Run registry duplicate/rotation, provenance, trace, duration/method, replay-if-solved, orphan-solver, schema, adversarial, spec-coverage, and ARC live E2E checks. Preserve failure traces.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5728-v511-capstone-reconciliation
+    milestone: "2026.07.511"
+    title: "Reconcile .511 attested FR-11, Rust backend, ARC epistemic, specification, and operations evidence"
+    priority: high
+    track: reconciliation
+    deliverable: results/experiment_5728_v511_capstone_reconciliation.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 360
+    prior_failures:
+      - experiment_id: exp5716-v510-capstone-reconciliation
+        verdict: "blocked: v510 reconciled; exp5708_stream_promoted=False; exp5709_promoted=False; exp5710_promoted=False; arc_registry_delta=0; arc_solve_credited=False; one_axis_rust_parity=True; one_axis_quality_restart=True; timing_claimed=false; hardware_speedup_claimed=false"
+        addressed_by: "This aggregates changed channel/attestation and lifecycle paths, production Rust backend/crossover, new ARC epistemic work, and unconditional .511 live attempt while preserving all null/missing boundaries."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Close milestone 2026.07.511 without counting gate-skipped, missing, blocked, null, proxy, or malformed artifacts as success. Outcome may remain blocked if the stream/self-learning fail, Rust crossover is null, or ARC banks no level. Exact validators, immutable GGUF weights, disabled production FR-11, and live ARC provenance remain mandatory. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/_bmad/prd.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_5717_transition_v511.json
+      - {project_root}/results/experiment_5718_v511_source_delta_ingestion.json
+      - {project_root}/results/experiment_5719_sota_answer_channel_forensics.json
+      - {project_root}/results/experiment_5720_sota_attested_exact_envelope_canary.json
+      - {project_root}/results/experiment_5721_fr11_memops_lifecycle_shadow_stream.json
+      - {project_root}/results/experiment_5722_fr11_compliance_recovery_rollback_canary.json
+      - {project_root}/results/experiment_5723_one_axis_rust_samplerbackend_integration.json
+      - {project_root}/results/experiment_5724_one_axis_rust_python_matched_crossover.json
+      - {project_root}/results/experiment_5725_arc_epistemic_ledger_live_qualification.json
+      - {project_root}/results/experiment_5726_arc_epistemic_ledger_live_ab.json
+      - {project_root}/results/experiment_5727_arc_live_self_discovery_levelup_v511.json
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Reconcile all terminal .511 scientific, specification, traceability, exclusion, operations, and E2E evidence and emit results/experiment_5728_v511_capstone_reconciliation.json.
+
+      CONCRETE STEPS:
+      1. Load/hash Exp5717-Exp5727 plus gate artifacts. Record missing, malformed, skipped, blocked, complete-null, and promoted separately; never synthesize results.
+      2. Verify Exp5717 applied only the Exp5709 retirement and preserved future clean streams, generic ARC memory, one-axis exchange, and terminal .510 evidence.
+      3. Reconcile GGUF channel causes, qualified models/protocol, CUDA, rows, parse/truncation/repetition/missing, attestations/conflicts, disagreements, commitments, weight mutation, and closed runtime/scorer paths.
+      4. Reconcile FR-11 chronology, lifecycle operations, prospective benefit/safety, E/P/R conflicts, retention/negative transfer, unsafe accepts/updates, rollback/crash replay, frozen weights, and disabled production. Stream alone is not learning.
+      5. Reconcile sampler prerequisites, SamplerBackend integration, fallback, checkpoints, matched quality/work, timing intervals, crossover/null, and software/hardware boundaries. Preserve two-axis retirement.
+      6. Reconcile ARC prechecks, ledger reachability, matched A/B, unconditional execution duration/method, provenance, fresh replay, registry delta, and forbidden counters. Credit only live self-discovery.
+      7. Apply mechanically required same-verdict retirements narrowly. Do not over-retire clean streams, external-memory CSL, SamplerBackend, epistemic state, or live attempts.
+      8. Reconcile OpenSpec, `_bmad/traceability.md`, `_bmad/architecture.md`, research-complete.yaml, ops/status.md, ops/changelog.md, ops/conductor-log.md, exclusions, known issues, verifier gaps, north-star, and docs/roadmap.md where evidence requires.
+      9. Run relevant unit/lint/spec-coverage and E2E checks for training/sampling, serialization, PyO3, verify/repair or FR-11, and ARC provenance. Record commands/exits and pre-existing debt.
+      10. REQUIRED ARTIFACT FIELDS: with `field_principles`, `milestone=2026.07.511`, `expected_task_ids`, `artifact_metadata`, `missing_artifacts`, `malformed_artifacts`, and `conductor_gate_statuses` — denominator; `transition_status` and `source_ingestion_status` — infrastructure; `answer_channel_status`, `qualified_model_ids`, `sota_attested_stream_status`, `parse_failure_count`, `validator_disagreement_count`, `attestation_coverage`, and `stream_commitment_status` — model evidence; `fr11_lifecycle_shadow_status`, `fr11_recovery_canary_status`, `continuous_self_learning_credited`, `unsafe_false_accept_count`, `unsafe_update_accept_count`, `negative_transfer_count`, `retention_regression_count`, `model_weight_mutation=false`, and `production_default_enabled=false` — learning; `rust_samplerbackend_status`, `rust_python_crossover_status`, `quality_matched_pair_count`, `qualified_crossover_n`, `software_speedup_claimed`, `hardware_speedup_claimed=false`, and `two_axis_retirement_preserved=true` — sampler; `arc_epistemic_qualification_status`, `arc_epistemic_live_ab_status`, `arc_live_attempt_status`, `arc_solve_provenance`, `arc_registry_count_before`, `arc_registry_count_after`, `arc_registry_delta`, `arc_solve_credited`, and `arc_forbidden_path_counts` — ARC; `promotion_retirement_ledger`, `retirements_applied`, `preserved_scopes`, `spec_reconciliation`, `traceability_reconciliation`, `ops_reconciliation`, and `e2e_check_receipts` — alignment; `timing_claimed`, `claim_boundaries`, `inference_substrate=artifact_reconciliation_and_validation_only`, `test_commands`, `test_exit_codes`, `reproducibility_checksum`, and `honest_verdict` — scope/replay.
+      11. Run capstone schema, prior-failure/exclusion/gate audits, adversarial verification, reconciliation validation, diff check, and root-clutter sweep. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
