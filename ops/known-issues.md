@@ -962,6 +962,40 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > Tests: `tests/python/test_experiment_5713_qwen27b_q4_mtp_enabled_ab.py` (5 tests) +
     > `tests/python/test_adversarial_verify_blocked_verdict_duration_exemption.py` (+5 new tests).
 
+    > **SUBMISSION-PREP PRE-FLIGHT, 2026-07-15 — severe live-path hang found and fixed
+    > (`REQ-ARC-FCP-5591-3`, operator: "let's prepare for a proper submission").** Running
+    > `scripts/kaggle/arc_local_submission_gate.py --check` against the current live scored config
+    > surfaced 0/8 core solves vs the verified baseline's 4/8, 7/8 games timed out at the 115s cap.
+    > **Root cause, found via a live `faulthandler` stack trace on a real hung `lp85` run (not
+    > guesswork):** `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` (flipped True 7/7) recomputed a
+    > full-grid flood-fill from scratch on EVERY candidate click action instead of reusing the
+    > decomposition its own caller (`action_tier_rows`) already computed once —
+    > O(candidates x grid_cells) per step, tens of millions of redundant cell-visits on a 64x64
+    > grid — a de facto hang. **Fixed:** `ColorBlobSaliencePrior.score()` now accepts an optional
+    > per-frame `blobs`/`color_counts` cache, threaded through from `action_tier_rows()`;
+    > preserves the shared 2-arg `score(frame, candidate)` protocol every other action-prior
+    > caller depends on. Verified: a previously-hanging `lp85` run now completes in 25-68s
+    > (was 180s+ with zero progress); efficiency (`eff=2.0069`) exactly matches the gate's own
+    > documented baseline floor constant. **Flag stays disabled** pending re-validation — even
+    > fixed, still measurably slower per action than baseline, for zero measured benefit (three
+    > follow-on live-path attempts using it, same day, all `honest_null`). Committed `620bf5f65`.
+    > A re-run of the gate post-fix (on a quieter system, load 33.93→0.75) showed real improvement
+    > (1/8 solved, `vc33` recovered, median actions on the solve matches baseline within 0.2%) but
+    > **still not fully clean** — 7/8 still time out, `lp85`/`m0r0`/`sp80` remain unsolved within
+    > the cap. An isolated quiet-system `lp85` check ran ~3x slower per action than baseline's
+    > implied rate even with the fix applied — not fully explained by this bug alone or by
+    > residual contention; a second, smaller, undiagnosed factor may remain (candidates: the
+    > goal-predicate-consistency veto, the AUTO_HUD_MASK pass, or the tier-3 NameError fix now
+    > actually EXECUTING a previously-dead code path). Flagged honestly, not hidden — see
+    > `docs/research-notes/arc-agi3-submission-refresh-2026-07-14.md` for the full pre-flight
+    > report + operator checklist. All 4 submission payloads staged + verified (agent-code fresh
+    > with today's fixes at `/tmp/cac_stage_daily/`; binary/GGUF/kernel-metadata confirmed
+    > byte-identical to the 6/30 build via SHA-256 + diff); a real local end-to-end smoke test of
+    > the exact submission kernel logic against the real staged binary+GGUF PASSED cleanly
+    > (`LLM TIER RESOLVED` + `LLM GENERATOR HEALTHY`, `make_carnot_agent()` builds, clean exit).
+    > Tests: `tests/python/test_arc_color_blob_salience_per_frame_cache.py` (4 new tests) +
+    > `tests/python/test_arc_submitted_agent_parity.py` (updated to assert the disabled state).
+
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
 (exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect
