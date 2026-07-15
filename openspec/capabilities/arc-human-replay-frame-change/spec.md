@@ -5689,6 +5689,71 @@ enable flag at its default-off value -- integration alone, however clean, never 
 this comparison, and a null result here is exactly as actionable as a positive one (it closes the
 question rather than leaving it open)
 
+### REQ-ARC-FCP-5699-13: CORRIGENDUM -- The "Exploration Exhaustion" Finding Was Scoped To The Smoke-Test's Narrow Generator, Not Production
+
+Operator: "continue there" (state-hashing/dedup investigation, following the recommendation to
+look at whether `StepwiseExplorer`'s state identity could be aliasing distinct states). Reading
+`StepwiseExplorer._hash()` found state identity is `frame_hash(grid_of(frame))` -- a documented,
+pre-existing architectural limitation (`ops/verifier_gaps.md` GAP-ARCH-GRID-ONLY-STATE;
+`HIDDEN_STATE_GAME_IDS`/`select_trusted_world_model` is the partial mitigation), not a new bug.
+sp80 is NOT in `HIDDEN_STATE_GAME_IDS`, making this an unlikely primary explanation for its
+specific wall. Investigating further (comparing `StepwiseExplorer._candidates()` -- the actual
+live click-candidate generator, `arc_graph_explore.rich_action_candidates()`, `max_click=48`,
+salience-sorted, its own docstring documenting a HISTORICAL fix of exactly a naive 12-click cap
+-- against `scripts/outer_loop_sge_smoke_test.py`'s harness config) found something more
+consequential than the original question.
+
+**The REQ-ARC-FCP-5699-7/8/9/10 "explorer frontier exhausts at ~25 transitions regardless of
+budget" finding was measured entirely through `outer_loop_sge_smoke_test.py`, which passes
+`action_prior=generator` AND `qd_generator=generator` where `generator =
+ActionDiverseLiveGenerator(max_candidates=8)` -- an explicit, hard 8-candidate cap forced onto
+EVERY step via the `qd_generator.generate_candidate_pool(...)` override in `_candidates()`.**
+Production's `SUBMITTED_QD_GENERATION_ENABLED = False` means `qd_generator` defaults to `None`
+(`coerce_qd_generator(None) -> None`) on the real live path, so `_candidates()` never overrides
+`rich_action_candidates()`'s own output -- production genuinely uses up to 48 salience-sorted
+candidates per frame, not 8. **The REQ-ARC-FCP-5699-12 real live-path A/B (this same session, run
+on the identical game, sp80) directly confirms the two stacks behave differently**: its
+`navigation_diagnostics` show `reset_replay_steps=6` and `forward_walk_hit_rate=~0.54` across
+`actions=241` (near-full `budget=250` consumption) for BOTH arms -- a small reset count relative
+to 241 actions is the signature of an explorer that found and rode ONE-ish long, mostly-novel
+branch for most of the budget, not one that hit a fast, repeated frontier-exhaustion wall the way
+the 8-candidate-capped smoke-test harness did at transition_count=25.
+
+**What this narrows, and what it does NOT narrow.** REQ-ARC-FCP-5699-12's own headline conclusion
+(SGE vs. the discriminative router: byte-identical outcome, SGE ~3.9x slower) is UNAFFECTED --
+that comparison ran on the real, unstripped production stack directly, so router-choice-doesn't-
+matter still holds as measured. What DOES need re-scoping: REQ-ARC-FCP-5699-7's "budget cannot
+help" and REQ-ARC-FCP-5699-8/9/10's "induction is trust-gated by exploration exhaustion" findings
+were established entirely on the smoke-test's artificially-narrow 8-candidate generator. Whether
+the SAME trust-gate/induction-never-fires pattern holds on the real, ~48-candidate production
+generator is an OPEN, not-yet-directly-tested question -- REQ-ARC-FCP-5699-12's A/B did not
+capture `induction_attempts`/`explorer.explored_out` (unlike the smoke-test script), so this
+corrigendum identifies the gap without yet closing it.
+
+**Honest bottom line.** Production's own explorer, with its real (much richer) candidate
+generator, still never leveled up sp80 within 250 actions (REQ-ARC-FCP-5699-12) -- so the
+headline "sp80 doesn't level up in this budget" finding stands on the real stack too, independent
+of the smoke-test's narrower generator. What's now uncertain is WHY, specifically: the smoke-
+test's "explorer exhausts its frontier at ~25 transitions" mechanism is confirmed specific to that
+harness's 8-candidate cap, not shown (yet) to be what happens on the real 48-candidate stack. A
+genuine next step, if this thread continues, is capturing `policy.explorer.explored_out` and
+`policy.induction_attempts` from a REAL production run (extending `arc_sge_live_path_ab.py` or a
+sibling script) to see whether the real generator's richer candidate pool changes the induction-
+trigger picture, rather than assuming the smoke-test's mechanism transfers unmodified.
+
+#### SCENARIO-ARC-FCP-5699-13-DIAGNOSTIC-HARNESS-FINDINGS-DO-NOT-AUTOMATICALLY-TRANSFER-TO-PRODUCTION
+
+Given a diagnostic harness was built to isolate ONE variable (candidate-router choice) by
+stripping several OTHER production features to fixed, simplified stand-ins (here: a hard
+8-candidate generator replacing production's ~48-candidate salience-sorted one)
+When a finding from that harness (frontier exhaustion at a fixed transition count, independent of
+budget) is used to explain behavior on the REAL production stack
+Then the finding must be re-verified directly on production before being treated as an
+explanation for production's behavior -- a mechanism specific to the harness's simplification
+(here, an artificially narrow candidate pool) can produce a superficially similar symptom (no
+level-up) for a DIFFERENT underlying reason on the real stack, and conflating the two
+misattributes the real stack's failure to a mechanism that was never actually exercised there
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

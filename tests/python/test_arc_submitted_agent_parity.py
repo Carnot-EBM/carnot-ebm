@@ -438,3 +438,18 @@ def test_req_arc_fcp_5699_12_spec_declares_real_live_path_ab() -> None:
         "3.9x",
     ):
         assert marker in section
+
+
+def test_req_arc_fcp_5699_13_spec_declares_generator_scope_corrigendum() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-13") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-13",
+        "SCENARIO-ARC-FCP-5699-13-DIAGNOSTIC-HARNESS-FINDINGS-DO-NOT-AUTOMATICALLY-TRANSFER-TO-PRODUCTION",
+        "ActionDiverseLiveGenerator(max_candidates=8)",
+        "SUBMITTED_QD_GENERATION_ENABLED",
+        "rich_action_candidates",
+    ):
+        assert marker in section
