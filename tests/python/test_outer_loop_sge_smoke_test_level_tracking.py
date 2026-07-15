@@ -239,3 +239,35 @@ def test_req_arc_fcp_5699_6_spec_declares_baseline_control() -> None:
         "--baseline",
     ):
         assert marker in section
+
+
+def test_req_arc_fcp_5699_7_spec_declares_budget_flag() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-7") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-7",
+        "SCENARIO-ARC-FCP-5699-7-BUDGET-INCREASE-ALONE-DOES-NOT-CHANGE-A-STRUCTURAL-NULL",
+        "--budget",
+        "budget=250",
+        "real_max_level_observed=0",
+    ):
+        assert marker in section
+
+
+def test_budget_override_flows_through_to_run_game(monkeypatch):
+    """--budget N is a CLI-level parse concern in main(); this verifies the underlying
+    run_game() budget parameter (already covered by real usage above) is what actually
+    bounds the loop, by checking a small budget caps attempts at that count."""
+    mod = _load_smoke_test_module()
+    fake_env = _ScriptedFakeEnv([0] * 20)
+    fake_arcade = MagicMock()
+    fake_arcade.make.return_value = fake_env
+    fake_arcade.open_scorecard.return_value = "sc-1"
+    mod.kit.offline_arcade = MagicMock(return_value=fake_arcade)  # type: ignore[attr-defined]
+    mod.E3AgentPolicy = MagicMock(return_value=_ScriptedFakePolicy(50))  # type: ignore[attr-defined]
+    fake_gguf = MagicMock()
+    fake_gguf.repo_substr = "fake-model"
+    result = mod.run_game("fake_game", 1, 2, budget=3, gguf=fake_gguf, router_mode="baseline")
+    assert result["attempts"] <= 3
