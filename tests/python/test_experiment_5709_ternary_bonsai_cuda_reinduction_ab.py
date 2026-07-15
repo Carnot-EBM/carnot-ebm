@@ -37,6 +37,26 @@ def test_req_arc_wmte_5599_3_spec_declares_the_audit_and_real_result() -> None:
         assert marker in section
 
 
+def test_req_arc_wmte_5599_3_spec_declares_the_n3_sample_size_followup() -> None:
+    """REQ-ARC-WMTE-5599-3 n=3 follow-up: the operator's sample-size fairness question is
+    disclosed verbatim, the n=1 result is named as statistically uninformative on its own, and
+    the n=3 result is disclosed as the real apples-to-apples comparison (0/3 vs the 9B's 1/3)."""
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-WMTE-5599-3") :]
+
+    for marker in (
+        "Should we allow this model the same",
+        "statistically uninformative on its own",
+        "unsurprising (67% likely)",
+        "cheap and the honest fix",
+        "arm_summary.plan_rate_given_levelup = 0/3 = 0.0",
+        "apples-to-apples comparison the operator asked for",
+        "REPRODUCIBLE failure mode",
+    ):
+        assert marker in section
+
+
 def test_first_precondition_miss_reports_failing_key() -> None:
     assert mod._first_precondition_miss({"ok": False, "a": True, "b": False}) == "b"
     assert mod._first_precondition_miss({"ok": True}) is None
@@ -133,11 +153,13 @@ def test_build_artifact_plans_more_reliably_than_current_9b(monkeypatch, tmp_pat
 
 
 def test_req_arc_wmte_5599_3_repository_artifact_is_a_real_measured_result() -> None:
-    """The checked-in real run collected real transitions on lp85, reached a real level-up,
-    got FURTHER than exp5705 (round 1 produced valid code, rejected as a degenerate goal
-    predicate -- a semantic failure, not a syntax failure), then genuinely failed to produce a
-    usable plan on the refactor retry -- an honest, non-forced result at 212.948s, 11x faster
-    than exp5705's Q8_0/iGPU run. Adversarially clean."""
+    """The checked-in real n=3 run (upgraded from a provisional n=1 after the operator flagged
+    the sample-size mismatch against exp5599's 9B n=3 baseline) collected real transitions on
+    lp85 three independent times, reached a real level-up each time, got FURTHER than exp5705 on
+    every draw (round 1 produced valid code, rejected as a degenerate goal predicate -- a
+    semantic failure, not a syntax failure), then genuinely failed to produce a usable plan on
+    the refactor retry each time -- an honest, non-forced, apples-to-apples 0/3 result.
+    Adversarially clean."""
 
     result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
 
@@ -146,16 +168,20 @@ def test_req_arc_wmte_5599_3_repository_artifact_is_a_real_measured_result() -> 
     assert (
         result["serving_stack_provenance"] == "third_party_fork_prismml_eng_llama_cpp_branch_prism"
     )
-    assert result["n_repeats"] == 1
+    assert result["n_repeats"] == 3
     assert result["game"] == "lp85"
-    assert len(result["per_draw_results"]) == 1
-    draw = result["per_draw_results"][0]
-    assert draw["levelup_reached"] is True
-    assert draw["planned"] is False
-    assert draw["skipped"] == "proposer_failed"
-    assert 60.0 < draw["reinduce_duration_s"] < 2408.163  # real, and faster than exp5705's Q8_0 run
-    assert draw["rounds"][0]["proposer_ok"] is True  # got further than exp5705: valid code round 1
-    assert draw["rounds"][0]["skipped"] == "degenerate_goal_predicate"
+    assert len(result["per_draw_results"]) == 3
+    for draw in result["per_draw_results"]:
+        assert draw["levelup_reached"] is True
+        assert draw["planned"] is False
+        assert draw["skipped"] == "proposer_failed"
+        assert (
+            60.0 < draw["reinduce_duration_s"] < 2408.163
+        )  # real, and faster than exp5705's Q8_0 run
+        assert draw["rounds"][0]["proposer_ok"] is True  # got further: valid code round 1
+        assert draw["rounds"][0]["skipped"] == "degenerate_goal_predicate"
+    assert result["arm_summary"]["n_planned"] == 0
+    assert result["arm_summary"]["plan_rate_given_levelup"] == 0.0
     assert (
         result["honest_verdict"] == "complete: ternary_bonsai_plans_less_reliably_than_current_9b"
     )

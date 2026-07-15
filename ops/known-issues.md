@@ -911,6 +911,23 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5599-3. Tests:
     > `tests/python/test_experiment_5709_ternary_bonsai_cuda_reinduction_ab.py` (7 tests).
 
+    > **EXP5709 N=3 FOLLOW-UP, SAME DAY — sample-size fairness.** Operator caught a real
+    > asymmetry: "If the final was 0/1 plan rate vs the 9B's 1/3, does that mean that the 9B was
+    > allowed 3 plans? Should we allow this model the same?" Correct — a single 0/1 draw cannot
+    > statistically distinguish "0% success" from "33% success" (matching the 9B); observing 0/1
+    > by chance alone is 67% likely even if the true rates were identical. Fast on the real 3090
+    > (~213s/attempt, unlike exp5705's ~40min/attempt), so re-running at `n_repeats=3` to match
+    > exp5599's 9B baseline sample size was cheap — done as a real re-measurement, not a caveat.
+    > **Real n=3 result: all three draws reached a level-up, all three replicated the IDENTICAL
+    > failure shape** (round 1 produces valid code every time, rejected `degenerate_goal_predicate`
+    > every time; round 2 refactor fails every time) — `mean_reinduce_duration_s=168.805`
+    > (156.4s/165.9s/184.2s, consistent). **`plan_rate_given_levelup=0/3=0.0`.** This is now the
+    > real apples-to-apples comparison: **Ternary Bonsai 0/3 vs the frozen 9B's 1/3** — same
+    > sample size, same task. The perfect 3/3 reproduction of the same failure also sharpens the
+    > finding: this is a REPRODUCIBLE failure mode (a systematically wrong goal predicate), not
+    > stochastic noise a larger n might average away. Verdict direction unchanged, now backed by a
+    > fair comparison. `adversarial_verify.py` clean. Spec + tests updated same-day (8 tests, was 7).
+
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
 (exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect

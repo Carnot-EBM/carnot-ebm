@@ -38,7 +38,7 @@
     }
   },
   "game": "lp85",
-  "n_repeats": 1,
+  "n_repeats": 3,
   "reinduction_n_ctx": 22000,
   "weight_precision": "ternary_q2_0_g128",
   "kv_cache_precision": "f16_default_unquantized",
@@ -52,7 +52,67 @@
       "levelup_reached": true,
       "actions_to_levelup": 7,
       "induce_transition_count": 8,
-      "reinduce_duration_s": 212.948,
+      "reinduce_duration_s": 156.387,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.0,
+      "refinement_rounds_used": 2,
+      "rounds": [
+        {
+          "round": 1,
+          "action": "induce",
+          "proposer_ok": true,
+          "message": "local gguf (GPU server) wrote world_model.py",
+          "skipped": "degenerate_goal_predicate"
+        },
+        {
+          "round": 2,
+          "action": "refactor",
+          "proposer_ok": false,
+          "message": "local model code unusable after 3 tries (missing ('engine', 'is_level_complete') in output)",
+          "skipped": "proposer_failed"
+        }
+      ]
+    },
+    {
+      "arm": "ternary_bonsai_27b_q2_0",
+      "repeat": 1,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 165.86,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.0,
+      "refinement_rounds_used": 2,
+      "rounds": [
+        {
+          "round": 1,
+          "action": "induce",
+          "proposer_ok": true,
+          "message": "local gguf (GPU server) wrote world_model.py",
+          "skipped": "degenerate_goal_predicate"
+        },
+        {
+          "round": 2,
+          "action": "refactor",
+          "proposer_ok": false,
+          "message": "local model code unusable after 3 tries (missing ('engine', 'is_level_complete') in output)",
+          "skipped": "proposer_failed"
+        }
+      ]
+    },
+    {
+      "arm": "ternary_bonsai_27b_q2_0",
+      "repeat": 2,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 184.168,
       "planned": false,
       "skipped": "proposer_failed",
       "plan_length": 0,
@@ -77,11 +137,11 @@
     }
   ],
   "arm_summary": {
-    "n_attempted": 1,
-    "n_levelup_reached": 1,
+    "n_attempted": 3,
+    "n_levelup_reached": 3,
     "n_planned": 0,
     "plan_rate_given_levelup": 0.0,
-    "mean_reinduce_duration_s": 212.948,
+    "mean_reinduce_duration_s": 168.805,
     "mean_heldout_accuracy": 0.0
   },
   "exp5599_historical_reference": {
@@ -108,7 +168,7 @@
   },
   "solve_provenance": "development_proxy",
   "random_seed": 5709,
-  "duration_s": 226.989,
+  "duration_s": 545.212,
   "preconditions_checked": {
     "offline_arcade_importable": true,
     "offline_arcade_makes_env": true,
@@ -118,5 +178,5 @@
     "ternary_bonsai_server_already_healthy": true,
     "ok": true
   },
-  "reproducibility_checksum": "f1c714fbe360893bcc719fdcc296185afe5248fa9f88455b6adf5731aad452c5"
+  "reproducibility_checksum": "7ee3df2f88d5604356471c250867619f630d101591a9c31eb365c2eb7dda6f57"
 }
