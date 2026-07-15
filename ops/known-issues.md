@@ -433,6 +433,31 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    evidence against) the still-open REQ-ARC-FCP-5699-7 follow-up: whether a much larger budget
    gives these pre-checks enough transitions to pass at all, on any game -- that, not another new
    game or another metric override, is the next real step.
+
+   **BUDGET-FOR-INDUCTION HYPOTHESIS CLOSED 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-10, operator:
+   "run it"): more budget cannot help, by construction -- the induction trigger is exploration
+   exhaustion, not action count.** Ran `--induction --budget 250` on sp80 (the one untested
+   combination) -- `results/outer_loop_sge_smoke_test_sp80_budget250_induction.json`. Still
+   `real_max_level_observed=0`, and the decisive part: **exactly ONE induction attempt, at
+   `transition_count=25`, byte-identical to the budget=46 run** -- despite consuming 242 real
+   actions (near-full budget). Induction never got a SECOND chance, let alone more transitions.
+   Traced to source (`arc_competition_agent.py:3261-3293`): the trigger is `len(self.transitions)
+   >= self.explore_budget OR self.explorer.explored_out`, and `explored_out` (set when
+   `StepwiseExplorer._frontier()` returns `None`) means the graph-explorer's frontier of untested
+   candidate states is genuinely EMPTY -- a property of the game's reachable-state graph size from
+   this harness's generic domain-blind explorer, not of the budget ceiling. sp80's frontier
+   exhausts at ~25 transitions regardless of whether 46 or 250 actions are available; the extra
+   ~217 actions in the budget=250 run go to whatever non-induction fallback follows the single
+   skipped attempt, not to gathering fresh transitions. `explorer_explored_out` added to the
+   artifact schema (`run_game()`, reads `policy.explorer.explored_out` directly) so future runs
+   can check this without re-deriving it from `induction_attempts`. **Every reasonably-cheap lever
+   this investigation has tried is now exhausted**: router choice (5699-6), budget (5699-7),
+   induction re-enablement (5699-8/9/10), and the codebase's own documented trust-metric override
+   (5699-9) -- none move the headline result on this specific 4-game/stripped-config harness. What
+   remains is structural, not parametric: re-enabling one of the OTHER still-disabled features
+   (frame-change scorer, goal-bias, go-explore archive), or accepting this harness's generic
+   explorer simply doesn't generate enough distinct transitions on these games for any trust-gated
+   mechanism to ever engage, independent of every axis tried so far.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
