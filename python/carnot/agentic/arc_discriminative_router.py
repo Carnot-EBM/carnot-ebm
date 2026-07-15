@@ -12,9 +12,11 @@ from pathlib import Path
 from typing import Any
 
 from carnot.agentic.arc_value_learner import (
+    CrossGameFrameContextV3,
     DiscriminativeVerifier,
     cross_game_feature_slices_v3,
     cross_game_features_v3,
+    cross_game_frame_context_v3,
 )
 
 
@@ -60,13 +62,21 @@ class CrossGameDiscriminativeCandidateRouter:
         self.prune_threshold = prune_threshold
         self.min_candidates = max(1, int(min_candidates))
 
-    def score(self, frame: Any, action: Any, *, previous_frame: Any | None = None) -> float:
+    def score(
+        self,
+        frame: Any,
+        action: Any,
+        *,
+        previous_frame: Any | None = None,
+        frame_context: CrossGameFrameContextV3 | None = None,
+    ) -> float:
         try:
             features = cross_game_features_v3(
                 frame,
                 previous_frame=previous_frame,
                 action_id=_action_id(action),
                 goal_frame=None,
+                frame_context=frame_context,
             )
             return float(self.verifier.proba_features(features))
         except Exception:
@@ -79,8 +89,19 @@ class CrossGameDiscriminativeCandidateRouter:
         *,
         previous_frame: Any | None = None,
     ) -> list[Any]:
+        # Computed once per rank() call and reused across every candidate -- see
+        # CrossGameFrameContextV3's docstring for the O(candidates x components^2) incident this
+        # fixes (score() previously recomputed the frame-level features from scratch per
+        # candidate even though only the cheap action_id slice actually varies).
+        frame_context = cross_game_frame_context_v3(frame, previous_frame, goal_frame=None)
         scored = [
-            (self.score(frame, action, previous_frame=previous_frame), index, action)
+            (
+                self.score(
+                    frame, action, previous_frame=previous_frame, frame_context=frame_context
+                ),
+                index,
+                action,
+            )
             for index, action in enumerate(candidates)
         ]
         if self.prune_threshold is not None and len(scored) > self.min_candidates:
@@ -88,7 +109,10 @@ class CrossGameDiscriminativeCandidateRouter:
             if len(kept) < self.min_candidates:
                 kept = sorted(scored, key=lambda item: (-item[0], item[1]))[: self.min_candidates]
             scored = kept
-        return [action for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))]
+        return [
+            action
+            for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))
+        ]
 
 
 class RandomCandidateRouter:
@@ -112,8 +136,13 @@ class RandomCandidateRouter:
         return int(hashlib.sha256(payload).hexdigest()[:16], 16) / float(16**16 - 1)
 
     def rank(self, frame: Any, candidates: Sequence[Any], **_: Any) -> list[Any]:
-        scored = [(self._score(frame, action), index, action) for index, action in enumerate(candidates)]
-        return [action for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))]
+        scored = [
+            (self._score(frame, action), index, action) for index, action in enumerate(candidates)
+        ]
+        return [
+            action
+            for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))
+        ]
 
 
 class CrossGameDiscriminativeExpansionPriority:
