@@ -222,6 +222,28 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    raise `reflect()`'s output token budget specifically on the nudge-fired path, or run a LONGER budget
    so `reflect_every` boundaries fire more than once and n>1 reflect-parse outcomes can be compared.
 
+   **`reflect_nudge_max_tokens` shipped + 3-game sample re-run 2026-07-15 (outer-loop, operator: "can we
+   also add more games to the sample?"):** `LLMStrategyProposer` now gives the reflect() completion call
+   more output-token room (160 vs the default 96) specifically when the nudge fires, directly testing
+   the "was max_tokens the bottleneck" hypothesis without touching the non-nudged path. Extended
+   `scripts/outer_loop_sge_smoke_test.py` from single-game (g50t) to a 3-game suite (g50t unchanged +
+   sk48, already flagged as a richer-candidate target + cd82, a third independent data point), each
+   using that game's own precedented shallow-frontier levels from `ops/arc_solve_registry.yaml`. Real
+   run: **0/3 leveled up** (g50t stayed L2, sk48 stayed L1, cd82 stayed L1 -- all honest nulls; per-game
+   artifacts `results/outer_loop_sge_smoke_test{,_sk48,_cd82}.json`,
+   `results/outer_loop_sge_smoke_test_suite.json`). More informative than the headline null: **the soft
+   reflect-prompt nudge never got a chance to fire in ANY of the 3 games this run** (so the
+   `reflect_nudge_max_tokens` fix is STILL untested) -- 2 of 3 games (g50t, sk48) instead hit the HARD
+   deterministic collapse override at least once, which bypasses the LLM/reflect() call entirely once
+   triggered. This surfaces a real architectural question for a future follow-up, not yet acted on: the
+   soft nudge only gets checked inside `reflect()`, itself only called every `reflect_every=6` router
+   steps AND only on the `llm_used` (non-collapsed) branch -- so on a game whose candidate dynamics trip
+   the (checked-every-call) hard collapse gate before the periodic reflect boundary arrives, the soft
+   intervention this session built never gets a turn at all. If the goal is "catch stagnation earlier
+   and more gently than the hard override," the nudge may need to be checked more frequently (e.g. every
+   `rank()` call, not just every `reflect_every`th) or raced against collapse-detection directly, rather
+   than nested strictly inside the periodic reflect cadence as currently wired.
+
    **GPU-offload gotcha found + fixed 2026-07-10 (outer-loop, durable lesson for future GPU-backed outer-
    loop work):** `LocalGGUFProposer`'s default resolution (`_generator_server_and_env()` in
    `arc_executable_world_model.py`) intentionally defaults to the AMD iGPU HIP build unless

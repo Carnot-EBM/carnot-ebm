@@ -271,6 +271,15 @@ class LLMStrategyProposer:
 
     completer: TextCompleter
     max_tokens: int = 96
+    # The 2026-07-15 real-GPU re-test of REQ-ARC-FCP-5699-3 (results/outer_loop_sge_
+    # smoke_test_pre_5699_3_nudge_baseline.json vs the nudge run) found the ONE reflect()
+    # call that got a nudge failed to parse its reply (empty revised_strategy) -- the
+    # nudge sentence adds real prompt length/complexity, and the default max_tokens=96
+    # output budget may not give the model enough room to still land the exact
+    # REVISED_STRATEGY: format after processing it. This gives the nudge-fired path
+    # strictly more room to test that hypothesis directly, without touching the
+    # non-nudged reflect()/propose_one() budget at all.
+    reflect_nudge_max_tokens: int = 160
 
     def propose_one(
         self, context: str, candidate_lines: Sequence[str], *, temperature: float
@@ -356,8 +365,9 @@ class LLMStrategyProposer:
             + "\n".join(history_lines)
             + "\n\n"
         )
+        completion_max_tokens = self.reflect_nudge_max_tokens if nudge_fired else self.max_tokens
         ok, text = self.completer.complete_text(
-            prompt, max_tokens=self.max_tokens, temperature=0.2, stop=["\n\n"]
+            prompt, max_tokens=completion_max_tokens, temperature=0.2, stop=["\n\n"]
         )
         if not ok:
             return {

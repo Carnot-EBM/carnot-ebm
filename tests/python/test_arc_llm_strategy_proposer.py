@@ -214,6 +214,29 @@ def test_reflect_nudge_fires_on_consecutive_null_outcomes():
     assert "must NOT be another minor variation" in prompt
 
 
+def test_reflect_uses_wider_max_tokens_when_nudge_fires():
+    """The nudge lengthens the prompt; the completion call gets more output-token room
+    specifically on that path, not on every reflect() call (found empirically necessary
+    2026-07-15: a real-GPU nudge-fired reflect call failed to parse at the default
+    budget)."""
+    completer = FakeCompleter([(True, "REVISED_STRATEGY: try a different action type\n")])
+    proposer = LLMStrategyProposer(completer=completer, max_tokens=96, reflect_nudge_max_tokens=160)
+    history = [
+        {"strategy_text": "wait and observe", "outcome": "no_change"},
+        {"strategy_text": "wait and observe again", "outcome": "no_change"},
+    ]
+    proposer.reflect("Game: g1", history)
+    assert completer.calls[0]["max_tokens"] == 160
+
+
+def test_reflect_uses_default_max_tokens_without_nudge():
+    completer = FakeCompleter([(True, "REVISED_STRATEGY: keep going\n")])
+    proposer = LLMStrategyProposer(completer=completer, max_tokens=96, reflect_nudge_max_tokens=160)
+    history = [{"strategy_text": "probe corners", "outcome": "level_up"}]
+    proposer.reflect("Game: g1", history)
+    assert completer.calls[0]["max_tokens"] == 96
+
+
 def test_reflect_nudge_names_taboo_strategies_when_given():
     """Explicit taboo_strategies (from AntiStagnationDiversityController.taboo_set) are
     named verbatim in the nudge, so the model sees exactly what NOT to repeat."""
