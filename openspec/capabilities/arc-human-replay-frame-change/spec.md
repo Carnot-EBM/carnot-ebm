@@ -5754,6 +5754,98 @@ explanation for production's behavior -- a mechanism specific to the harness's s
 level-up) for a DIFFERENT underlying reason on the real stack, and conflating the two
 misattributes the real stack's failure to a mechanism that was never actually exercised there
 
+### REQ-ARC-FCP-5699-14: Closes The 5699-13 Gap -- Real Generator Does Not Exhaust; The Wall Is Downstream, In Plan-Finding And Trust-Verify, Not Exploration
+
+REQ-ARC-FCP-5699-13 closed with an explicit open gap: capture `policy.explorer.explored_out` and
+`policy.induction_attempts` from a real production run rather than assuming the smoke-test's
+exhaustion mechanism transfers unmodified. `scripts/arc_sge_live_path_ab.py` was extended to
+record both fields for each arm immediately after `run_game()` returns (the same `policy` object
+mutated during the run, so both attributes are still valid to read post-hoc), then re-run on sp80,
+`budget=250`, matching REQ-ARC-FCP-5699-12's configuration exactly so the two runs are directly
+comparable (`results/arc_sge_live_path_ab_sp80.json`, both arms overwritten with the instrumented
+re-run; `duration_s` 63.18s baseline / 251.65s SGE -- both similar to the original 5699-12 timings,
+confirming the instrumentation itself added negligible overhead).
+
+**Finding 1 -- the gap is closed, and the corrigendum's suspicion is confirmed.**
+`explorer_explored_out=False` for BOTH arms. The real ~48-candidate `rich_action_candidates()`
+generator does NOT hit the frontier-exhaustion wall the smoke-test's 8-candidate-capped
+`ActionDiverseLiveGenerator` hit at `transition_count=25`. REQ-ARC-FCP-5699-7/8/9/10's "induction
+is trust-gated by exploration exhaustion" framing is now confirmed to be an artifact of that
+harness's narrow generator, not a property of the real live-agent stack, closing the open question
+5699-13 left unresolved.
+
+**Finding 2 -- induction DOES fire, but for a different, previously-uncharacterized reason than
+"never triggers."** Both arms recorded exactly one induction attempt
+(`policy.induction_attempts`), `reason="stall"` at `transition_count=25` (matching
+`_should_enter_induction`'s `stalled = len(self.transitions) >= self.explore_budget` branch --
+i.e. the trigger IS action-count-based stall, same as always documented, and it DOES fire on the
+real stack). Reading `arc_competition_agent.py`'s induction handler (~line 3443-3709) alongside
+the recorded attempt shows the single attempt actually threads through TWO distinct tiers, and
+BOTH decline to produce a plan, for two DIFFERENT reasons:
+
+- **Tier 1 (CNN-dynamics-prior warm-start, `gated_engine_from_transitions` in `arc_live_ttt.py`)
+  PASSES its own held-out trust gate** -- `ttt_prior_engine.gate: "PASS"`,
+  `heldout_cell_recall=1.0` (baseline) / `0.9794` (sge), both well above the `trust_threshold=0.5`
+  bar that gate uses (`trust_metric="cell_recall"` internally, per REQ-ARC-FCP-4715's own docstring
+  rationale for using the lenient graded metric here). Per `gated_engine_from_transitions`'s
+  return contract, a `"PASS"` gate always returns a non-None `engine` -- so `_eng is not None`
+  held, and `e3.plan_in_model` was actually invoked against a TRUSTED engine. It returned no plan
+  (`attempt` shows no `engine_source: "ttt_prior_warmstarted"` and `planned: false`), so execution
+  fell through past tier 1 without using it.
+- **Tier 2 (the DSL/LLM-induced engine gated by `e3.WorldModelVerifier`, since sp80 is not in
+  `HIDDEN_STATE_GAME_IDS`) FAILS its trust gate on BOTH metrics it records** --
+  `verify_accuracy=0.0` (exact-match, the active `CARNOT_ARC_TRUST_METRIC` default) AND
+  `verify_cell_recall=0.0012` (baseline) / `0.0` (sge) -- both near zero, both below the `0.5`
+  gate. `attempt["skipped"] = "world_model_accuracy_below_threshold"` is the recorded outcome.
+  Notably, switching `CARNOT_ARC_TRUST_METRIC=cell_recall` (the escape hatch REQ-ARC-FCP-4715
+  added specifically because "the online CNN can be useful at changed-cell granularity even when
+  exact full-grid accuracy is near zero") would NOT have rescued this specific attempt -- tier 2's
+  `verify_cell_recall` is also near-zero here, unlike the imperfect-but-useful case that env var
+  was designed for.
+
+**What this narrows.** The wall on sp80 is not "induction never gets a chance" (it does, exactly
+once per stall, on the real stack) and not "the trust gate always rejects" (tier 1's gate PASSES).
+The previously-uncharacterized failure mode is: a dynamics model can pass its own held-out trust
+gate and still have `plan_in_model` find no executable plan against it -- a planner-level gap
+distinct from every trust-gating explanation REQ-ARC-FCP-5699-7 through -13 considered. Tier 2's
+failure is the already-understood trust-gate story, and confirmed genuinely inapplicable to
+`cell_recall` rescue here (unlike the case that metric was built for).
+
+**Honest scope limit -- do not over-generalize from this.** This is n=1 game (sp80), n=1 induction
+attempt per arm (the budget only reaches one stall trigger). It establishes that "the trusted-tier-1
+engine yields no plan" CAN happen on the real stack; it does not establish how often, on how many
+games, or whether it is the dominant contributor to the wall generally. Per Sample-Size Rigor
+discipline, this is a diagnostic lead, not a headline capability claim.
+
+**Concrete next step if this thread continues.** Investigate why `e3.plan_in_model` finds no plan
+against a tier-1 engine whose own held-out gate passed -- e.g. instrument
+`_call_plan_in_model`/`plan_in_model` to record WHY it returns empty (search exhausted vs. goal
+predicate never satisfied vs. some other structural cause) on this same sp80 trace, and/or repeat
+this measurement on 1-2 more games from `ops/arc_solve_registry.yaml`'s unsolved set to see if the
+tier-1-passes-but-no-plan pattern recurs.
+
+#### SCENARIO-ARC-FCP-5699-14-EXPLORATION-EXHAUSTION-RULED-OUT-ON-REAL-GENERATOR
+
+Given REQ-ARC-FCP-5699-13 left open whether the real ~48-candidate generator ever hits the same
+frontier-exhaustion wall the smoke test's 8-candidate generator hit
+When `arc_sge_live_path_ab.py` is extended to record `policy.explorer.explored_out` and
+`policy.induction_attempts` and re-run on the real production `E3AgentPolicy` stack (both the
+baseline discriminative-router arm and the SGE arm)
+Then `explorer_explored_out` is `False` for both arms, closing the gap: exploration exhaustion is
+confirmed specific to the smoke-test harness's narrow generator and does not explain production's
+sp80 wall
+
+#### SCENARIO-ARC-FCP-5699-14-TIER-1-ENGINE-PASSES-TRUST-GATE-BUT-YIELDS-NO-PLAN
+
+Given the real stack's single stall-triggered induction attempt on sp80 runs the CNN-dynamics-prior
+warm-start tier (`gated_engine_from_transitions`) before falling through to the DSL/LLM tier
+When the warm-start tier's own held-out cell-recall trust gate passes (`gate: "PASS"`,
+`heldout_cell_recall` >= 0.5 threshold, confirmed 0.98-1.0 on this trace)
+Then `e3.plan_in_model` may still return no executable plan against that trusted engine, and
+execution falls through to the second (DSL/LLM) tier rather than using the passed-gate engine --
+a planner-level gap distinct from any trust-gating explanation the prior REQ-ARC-FCP-5699-N chain
+considered, and not yet root-caused
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

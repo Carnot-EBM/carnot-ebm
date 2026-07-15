@@ -107,10 +107,21 @@ def main() -> int:
         result["candidate_router_type"] = candidate_router_type
         result["duration_s"] = duration_s
         result["arm"] = arm
+        # REQ-ARC-FCP-5699-13's own concrete next step: capture the REAL production explorer's
+        # exhaustion/induction state directly, rather than assuming outer_loop_sge_smoke_test.py's
+        # 8-candidate-generator mechanism transfers unmodified to the real ~48-candidate generator.
+        result["explorer_explored_out"] = bool(getattr(policy.explorer, "explored_out", False))
+        result["induction_attempts"] = list(getattr(policy, "induction_attempts", []))
+        result["induction_attempts_not_skipped"] = sum(
+            1 for a in result["induction_attempts"] if not a.get("skipped")
+        )
         print(
             f"   duration_s={duration_s:.2f} levels={result['levels']} "
             f"reached=L{result['reached']} actions={result['actions']} "
-            f"efficiency={result['efficiency']} router={candidate_router_type}",
+            f"efficiency={result['efficiency']} router={candidate_router_type} "
+            f"explored_out={result['explorer_explored_out']} "
+            f"induction_attempts={len(result['induction_attempts'])} "
+            f"(not_skipped={result['induction_attempts_not_skipped']})",
             flush=True,
         )
         results[arm] = result
