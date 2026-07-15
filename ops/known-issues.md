@@ -458,6 +458,32 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    (frame-change scorer, goal-bias, go-explore archive), or accepting this harness's generic
    explorer simply doesn't generate enough distinct transitions on these games for any trust-gated
    mechanism to ever engage, independent of every axis tried so far.
+
+   **SGE WIRED INTO THE LIVE PATH 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-11, operator: "wire SGE
+   into the live path" -> "try it" -> AskUserQuestion answer "Wire SGE into the live path"):
+   `arc_llm_strategy_proposer.py` was never imported by the live scored-agent entrypoint at all --
+   only by this diagnostic harness and its own experiment script.** The live agent's real
+   `candidate_router` (`_load_submitted_candidate_router()`) has always been
+   `CrossGameDiscriminativeCandidateRouter`, a different module (the one fixed in this session's
+   FIRST bug-fix round, REQ-CAPSTONE-4556-2, which shipped in the actual 0.12-scoring Kaggle
+   submission). Fixed: `_load_submitted_candidate_router(game_id)` gains
+   `SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED` (default `False`, matching the
+   `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` built-but-gated-off precedent). When enabled,
+   `_load_sge_candidate_router(game_id)` builds `SGECandidateRouter` wired to a `LocalGGUFProposer`
+   configured IDENTICALLY to the induction proposer's own defaults (same frozen Qwen3.5-9B-MTP
+   config, same default port 8919) -- `LocalGGUFProposer`'s existing port-based server-reuse means
+   this shares ONE warm llama-server with induction, never a second model load that would risk the
+   Kaggle 16GB VRAM budget. Falls through to the discriminative router on any SGE construction
+   failure (never breaks the live path). `scripts/arc_orphan_solver_lint.py` now passes clean (52
+   live-closure modules, up from 51) -- SGE is genuinely live-path-reachable per this project's ARC
+   Live-Path Reachability Discipline. 20 pre-existing + 5 new tests in
+   `test_arc_submitted_agent_parity.py` (17 total in that file with the spec-declaration test) all
+   pass, including the file's own strict parity guards, proving the DEFAULT live-path behavior
+   (flag `False`) is byte-for-byte unchanged. **This is integration, not validation** -- the flag
+   stays `False`; whether SGE actually helps on the real live path (with induction/frame-change-
+   scorer/goal-bias all live together, unlike the deliberately-stripped smoke-test harness) is a
+   separate, not-yet-run experiment: a real matched-budget A/B on the local submission gate or the
+   live scored path.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
