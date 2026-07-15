@@ -341,6 +341,10 @@ class ColorBlobSaliencePrior:
             if self.large_flat_deprioritization
             else self.max_component_fraction,
         )
+        # Computed once and passed to every score() call below -- see score()'s docstring
+        # for why per-candidate recomputation of these two frame-level quantities was a
+        # severe (O(candidates x grid_cells)) performance bug.
+        color_counts = Counter(int(value) for value in grid.flatten().tolist())
         rows: list[dict[str, Any]] = []
         for index, candidate in enumerate(candidates):
             action_id = self._candidate_action_id(candidate)
@@ -358,7 +362,9 @@ class ColorBlobSaliencePrior:
                         "data": dict(data),
                         "source": str(source),
                         "tier": None,
-                        "score": float(self.score(frame, candidate)),
+                        "score": float(
+                            self.score(frame, candidate, blobs=blobs, color_counts=color_counts)
+                        ),
                     }
                 )
                 continue
@@ -381,7 +387,9 @@ class ColorBlobSaliencePrior:
                     "data": dict(data),
                     "source": str(source),
                     "tier": tier,
-                    "score": float(self.score(frame, candidate)),
+                    "score": float(
+                        self.score(frame, candidate, blobs=blobs, color_counts=color_counts)
+                    ),
                     "color": int(blob.color),
                     "button_like": bool(self.is_button_like_blob(blob)),
                     "button_likelihood": float(self.button_likelihood(blob)),
@@ -399,8 +407,28 @@ class ColorBlobSaliencePrior:
             ),
         )
 
-    def score(self, frame: Any, candidate: Any) -> float:
-        """Score a live candidate; higher values are tried earlier."""
+    def score(
+        self,
+        frame: Any,
+        candidate: Any,
+        *,
+        blobs: Sequence[ColorBlob] | None = None,
+        color_counts: Counter | None = None,
+    ) -> float:
+        """Score a live candidate; higher values are tried earlier.
+
+        `blobs`/`color_counts` are an optional per-frame cache: computing them is
+        O(grid cells) via a flood-fill, and `action_tier_rows` calls `score()` once per
+        candidate action (up to one per grid cell on a click-heavy game) -- recomputing
+        the SAME frame's decomposition from scratch on every call made a single
+        `next_move()` on a large grid (e.g. lp85's 64x64) take O(candidates x grid_cells),
+        multi-minute-plus in practice (found 2026-07-14 via a real hang: the offline
+        submission gate timed out on 7/8 canonical games with SUBMITTED_COLOR_BLOB_
+        SALIENCE_ENABLED=True). Callers outside this module (arc_frame_change_predictor,
+        arc_geometric_salience, arc_discriminative_router, etc.) use the generic
+        `score(frame, candidate)` two-arg protocol shared across action-prior classes;
+        omitting the cache args here preserves that exact call signature.
+        """
 
         if self._candidate_action_id(candidate) != 6:
             return float(self.keyboard_score)
@@ -410,17 +438,19 @@ class ColorBlobSaliencePrior:
         grid = _as_grid(frame)
         x = int(data["x"])
         y = int(data["y"])
-        blobs = connected_color_blobs(
-            grid,
-            min_pixels=self.min_pixels,
-            max_component_fraction=1.0
-            if self.large_flat_deprioritization
-            else self.max_component_fraction,
-        )
+        if blobs is None:
+            blobs = connected_color_blobs(
+                grid,
+                min_pixels=self.min_pixels,
+                max_component_fraction=1.0
+                if self.large_flat_deprioritization
+                else self.max_component_fraction,
+            )
         blob = self._blob_for_click(blobs, x, y)
         if blob is None:
             return 0.0
-        color_counts = Counter(int(value) for value in grid.flatten().tolist())
+        if color_counts is None:
+            color_counts = Counter(int(value) for value in grid.flatten().tolist())
         if len(color_counts) <= 1:
             return 0.0
         tier = self.tier(blob)

@@ -23,8 +23,6 @@ from carnot.agentic.arc_competition_agent import (
     StepwiseExplorer,
     make_carnot_agent,
 )
-from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior
-
 
 REPO = Path(__file__).resolve().parents[2]
 SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
@@ -127,9 +125,15 @@ def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
     assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["frame_change_prune_threshold"] is None
     assert SUBMITTED_AGENT_CONFIG["action_effect_expansion_prior_enabled"] is True
-    assert isinstance(exp.action_prior, ColorBlobSaliencePrior)
+    # 2026-07-14 (submission-prep pre-flight incident, REQ-ARC-FCP-5591-3): disabled after a
+    # real near-hang was found on the local submission gate (7/8 canonical games timed out) --
+    # root cause (O(candidates x grid_cells) per-frame recomputation) is fixed, but the flag
+    # stays off pending a fresh matched-budget A/B, since three follow-on live-path attempts
+    # using it this same day all returned honest_null (zero measured benefit to offset the
+    # residual per-step cost even post-fix).
+    assert exp.action_prior is None
     assert exp.action_prior_prune_quantile is None
-    assert SUBMITTED_AGENT_CONFIG["color_blob_salience_enabled"] is True
+    assert SUBMITTED_AGENT_CONFIG["color_blob_salience_enabled"] is False
     assert (
         SUBMITTED_AGENT_CONFIG["color_blob_salience_mode"]
         == "single_color_connected_component_tiers"

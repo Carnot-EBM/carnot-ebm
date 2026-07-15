@@ -116,8 +116,17 @@ SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
 SUBMITTED_CONTROLLABLE_NOVELTY_MODE = "episodic_knn_plus_rnd_action_effect_embedding"
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
-SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = True
+SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = False  # 2026-07-14: disabled -- see below
 SUBMITTED_COLOR_BLOB_SALIENCE_MODE = "single_color_connected_component_tiers"
+# Disabled pending re-validation (2026-07-14, submission-prep pre-flight): this flag caused a
+# severe near-hang on the local submission gate (7/8 canonical games timed out at 115s/game,
+# 0 solved vs baseline's 4) -- root cause was O(candidates x grid_cells) per-frame recomputation
+# in ColorBlobSaliencePrior.score()/action_tier_rows() (fixed in arc_color_blob_salience.py, see
+# that fix's own comments), but even after the fix this feature is still meaningfully slower per
+# step than the baseline (measured: lp85 budget=500 took 68s, vs baseline's ~7761 actions/115s --
+# roughly 9x slower per action) for ZERO measured benefit (three follow-on live-path level-up
+# attempts using it, this same day, all returned honest_null). Re-enable only after a fresh
+# matched-budget A/B shows a real win that justifies the residual per-step cost.
 # Task 10 follow-on (2026-07-13): ObjectHistorySaliencePrior wraps action_prior with a
 # per-object_hash change-history bonus (REQ-ARC-FCP-5591-2) but OFF by default, matching every
 # other freshly-wired-but-unvalidated component in this file. Flipping this for the SCORED agent

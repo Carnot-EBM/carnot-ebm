@@ -5784,3 +5784,64 @@ Then a real, computed precondition check (2x on-disk file size vs free VRAM) blo
 honestly and fast, backed by a manual diagnostic's crash log as concrete evidence, rather than
 either fabricating a performance result or burning up to an hour polling a subprocess that
 already crashed
+
+### REQ-ARC-FCP-5591-3: ColorBlobSaliencePrior Per-Frame Caching (Submission-Prep Pre-Flight Incident)
+
+Discovered 2026-07-14 during ARC-AGI-3 submission-prep pre-flight (operator: "let's prepare for
+a proper submission"). Running `scripts/kaggle/arc_local_submission_gate.py --check` against the
+current live scored config (`SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = True`, flipped on 7/7,
+after the last staged submission on 6/30) produced a catastrophic result: 0/8 core solves vs the
+verified baseline's 4/8, with 7 of 8 canonical games timing out at the gate's 115s cap.
+
+**Root cause, found via `faulthandler` stack trace (not guesswork).** A direct manual
+reproduction of `lp85` (a 64x64-grid game) with a 60-180s timeout hung with ZERO progress --
+no per-step log line ever printed. `PYTHONFAULTHANDLER=1` + `SIGABRT` produced a live stack
+trace pinpointing the hang inside
+`ColorBlobSaliencePrior.score() -> connected_color_blobs()` (`arc_color_blob_salience.py`).
+`action_tier_rows()` (the caller inside `_record_action_salience_diagnostics` ->
+`_candidates()` -> `_ingest()` -> `next_move()`, i.e. the live per-step hot path) already
+computed the frame's blob decomposition ONCE at its own top -- but then called
+`self.score(frame, candidate)` once per candidate action (up to one per grid cell on a
+click-heavy game), and `score()` INDEPENDENTLY recomputed the SAME full-grid flood-fill from
+scratch on every call, ignoring the decomposition its own caller had just computed. Net cost:
+O(candidates x grid_cells) per `next_move()` call -- on a 64x64 grid with thousands of click
+candidates, this is tens of millions of redundant cell-visits per step, in pure Python
+(list/tuple/dict + numpy-scalar-indexing, not vectorized) -- a de facto hang, not a true
+infinite loop, but indistinguishable from one at any realistic time budget.
+
+**Fix.** `score()` now accepts optional keyword-only `blobs`/`color_counts` cache arguments
+(default `None`, preserving the exact two-positional-argument `score(frame, candidate)`
+protocol shared by every other action-prior class in this codebase --
+`arc_frame_change_predictor.py`, `arc_geometric_salience.py`, `arc_discriminative_router.py`,
+`arc_perception_generation.py`, `arc_object_history_salience.py` all call `.score(frame,
+candidate)` generically and are unaffected). `action_tier_rows()` now computes `color_counts`
+once alongside its existing once-computed `blobs`, and passes both through to every
+`self.score(...)` call within the same invocation, eliminating the redundant recomputation.
+
+**Verified.** A direct `lp85` run (budget=500, `CARNOT_ARC_DISABLE_INDUCTION=1`) that previously
+hung indefinitely (180s+, zero actions taken) now completes in 25-68s (496 actions, reaches
+L1, `eff=2.0069` -- an exact match to `arc_local_submission_gate.py`'s own
+`CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR` constant, strong evidence the fix restores the
+documented baseline behavior). Existing coverage
+(`tests/python/test_arc_color_blob_salience_object_topology.py`, 5 tests) still passes
+unchanged.
+
+**Even fixed, the flag stays disabled for now.** Post-fix, the feature is still measurably
+slower per action than the pre-color-blob-salience baseline (a full 8-game/8000-action gate run
+still could not complete within the local gate's 115s/game cap, though this specific
+measurement is confounded by heavy concurrent system load -- load average 33.93 at measurement
+time, from the concurrently-running research conductor plus an unrelated pytest invocation).
+Combined with the fact that three follow-on live-path level-up attempts using this feature
+(same day, per `ops/known-issues.md`) all returned `honest_null` -- zero measured benefit --
+`SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` is set back to `False` pending a fresh matched-budget
+A/B under a quiet system state that shows a real win justifying the residual per-step cost.
+
+#### SCENARIO-ARC-FCP-5591-3-PER-FRAME-CACHE-NOT-PER-CANDIDATE
+
+Given a frame-level quantity (a full-grid connected-component decomposition) is expensive
+(O(grid_cells)) and is needed once per next_move() call
+When multiple candidate actions in the same call each need to consult that quantity
+Then it is computed ONCE per frame and threaded through to every consultation, not recomputed
+independently inside each per-candidate scoring call -- a redundant per-candidate recomputation
+of a per-frame quantity turns an O(grid_cells) cost into an O(candidates x grid_cells) one, which
+at realistic candidate counts on a large grid is indistinguishable from a hang
