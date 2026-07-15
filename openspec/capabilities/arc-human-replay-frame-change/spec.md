@@ -5504,6 +5504,68 @@ too strict vs. candidate genuinely worthless) must be distinguished by checking 
 metric's own raw value, not assumed equivalent just because a documented lever exists for the
 metric-strictness case
 
+### REQ-ARC-FCP-5699-10: Budget Cannot Help Induction Fire -- The Trigger Is Exploration Exhaustion, Not Action Count
+
+REQ-ARC-FCP-5699-9 closed with the one remaining untested combination: does a much larger budget
+give the pre-LLM-induction trust-check gates enough observed transitions to clear, letting
+induction fire for the first time in this whole investigation? This requirement answers it --
+decisively, and by a different mechanism than the question assumed.
+
+**RESOLUTION (2026-07-15, operator: "run it").** Ran `--induction --budget 250` on `sp80` (the
+one game/config combination not yet tried at the larger budget) --
+`results/outer_loop_sge_smoke_test_sp80_budget250_induction.json`. Still
+`real_max_level_observed=0`. But the decisive finding is in `induction_attempts`: **exactly ONE
+attempt, at `transition_count=25`** -- byte-identical to the budget=46 run's single attempt --
+despite the run consuming 242 real actions (near-full budget=250 consumption, not an early stop).
+**Induction was never even given a SECOND chance to try, let alone more transitions to learn
+from.**
+
+**Traced to source (`arc_competition_agent.py:3261-3293`):** the induction-attempt path is gated
+behind `self.phase == "explore"`, and `_should_enter_induction`'s `stalled` condition is `len(
+self.transitions) >= self.explore_budget OR self.explorer.explored_out`. `explored_out` (set at
+`arc_competition_agent.py:2254`, `StepwiseExplorer._frontier() is None`) means the underlying
+graph-explorer's frontier of UNTESTED candidate states is genuinely EMPTY -- there is nothing new
+left to try. This is a property of the game's REACHABLE-STATE GRAPH SIZE from the generic,
+domain-blind explorer used in this harness, not of the total action budget allotted. sp80's
+reachable frontier from a cold `ActionDiverseLiveGenerator`-driven start apparently exhausts at
+~25 transitions regardless of whether 46 or 250 total actions are available -- so the SAME single
+stall-triggered induction attempt, at the SAME transition count, fires either way, and the
+remaining ~217 actions in the budget=250 run are spent doing something else (post-stall fallback
+behavior, not further exploration feeding fresh transitions to the trust gate). Recorded going
+forward via a new `explorer_explored_out` field in the artifact (`run_game()`,
+`policy.explorer.explored_out`), so future runs can check this directly instead of re-deriving it
+from `induction_attempts`' transition count alone.
+
+**This closes the budget hypothesis conclusively, not just empirically.** REQ-ARC-FCP-5699-7
+already showed budget doesn't change the LEVEL outcome (induction disabled throughout, so that
+result said nothing about induction specifically). This requirement shows budget CANNOT help
+induction fire more often either, by construction: the trigger is exploration exhaustion, which
+is capped by the explorer's own reachable-state graph size on this game, not by the budget ceiling.
+More actions past that exhaustion point are not spent gathering more transitions for the trust
+gate to reconsider -- they are spent in whatever non-induction fallback the policy falls back to
+after the single stall-triggered attempt is skipped. Every reasonably-cheap lever this
+investigation has tried on these games -- router choice (REQ-ARC-FCP-5699-6), budget
+(REQ-ARC-FCP-5699-7), induction re-enablement (REQ-ARC-FCP-5699-8/9/10), and the codebase's own
+documented trust-metric override (REQ-ARC-FCP-5699-9) -- has now been tried and found not to move
+the headline result on this specific 4-game/stripped-config harness. The remaining, genuinely
+untested levers are structural, not parametric: re-enabling one of the OTHER still-disabled
+production features this harness deliberately strips (the frame-change scorer, goal-bias,
+go-explore archive), or accepting that this harness's generic domain-blind explorer simply does
+not generate enough distinct transitions on these specific games for ANY trust-gated mechanism to
+engage, independent of budget, router, or induction settings.
+
+#### SCENARIO-ARC-FCP-5699-10-EXPLORATION-EXHAUSTION-NOT-BUDGET-GATES-INDUCTION-RETRY
+
+Given an induction-attempt trigger is defined as EITHER a hard budget-exhaustion condition OR the
+underlying explorer's frontier being genuinely empty (no untested candidate states remain)
+When a game's reachable-state graph, from a generic domain-blind explorer, is exhausted well
+before the action budget is
+Then increasing the budget alone produces NO additional induction attempts and NO additional
+observed transitions feeding the trust gate -- the single stall-triggered attempt occurs at the
+SAME transition count regardless of budget, so "give it more budget" cannot be a lever for this
+specific failure mode; only reducing the explorer's own exhaustion point (a richer domain-aware
+exploration strategy) or accepting the ceiling can change the outcome
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

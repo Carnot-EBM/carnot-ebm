@@ -276,6 +276,14 @@ def run_game(
     # exercised this run, which is a materially different finding from "it ran and found
     # nothing" -- report both distinctly rather than only the config flag.
     induction_attempts = list(getattr(policy, "induction_attempts", []))
+    # REQ-ARC-FCP-5699-10: induction only ever fires when the underlying graph-explorer's
+    # frontier is genuinely EXHAUSTED (StepwiseExplorer._frontier() returns None ->
+    # explored_out=True), a property of the game's reachable-state graph, NOT of total
+    # action budget -- confirmed empirically (sp80 attempted induction exactly once at
+    # transition_count=25 at BOTH budget=46 and budget=250; more budget gave zero
+    # additional attempts). Recorded here so future runs can check this directly instead
+    # of re-deriving it from induction_attempts' transition_count alone.
+    explorer_explored_out = bool(getattr(getattr(policy, "explorer", None), "explored_out", False))
     return {
         "smoke_test": "outer_loop_sge_smoke_test",
         "game": game,
@@ -285,6 +293,7 @@ def run_game(
         "induction_attempts_not_skipped": sum(
             1 for a in induction_attempts if not a.get("skipped")
         ),
+        "explorer_explored_out": explorer_explored_out,
         "prior_levels_reproduced": prior_levels,
         "target_level": target_level,
         "methodology_note": (

@@ -397,3 +397,32 @@ def test_req_arc_fcp_5699_9_spec_declares_non_hidden_state_finding() -> None:
         "verify_cell_recall",
     ):
         assert marker in section
+
+
+def test_explorer_explored_out_defaults_false_when_absent():
+    """The fake policy has no .explorer at all -- run_game() must not crash reading it,
+    and should honestly report False (not fabricate a value)."""
+    mod = _load_smoke_test_module()
+    result = _run_with_fakes(
+        mod,
+        level_sequence=[0] * 10,
+        num_actions=3,
+        prior_levels=1,
+        target_level=2,
+    )
+    assert result["explorer_explored_out"] is False
+
+
+def test_req_arc_fcp_5699_10_spec_declares_exploration_exhaustion_finding() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-10") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-10",
+        "SCENARIO-ARC-FCP-5699-10-EXPLORATION-EXHAUSTION-NOT-BUDGET-GATES-INDUCTION-RETRY",
+        "explored_out",
+        "explorer_explored_out",
+        "transition_count=25",
+    ):
+        assert marker in section
