@@ -7201,6 +7201,73 @@ no-goal-bias order, game-source reads and `GameAdapter` usage are absent,
 `outer_loop_bfs_used=false`, `per_game_leakage_detected=false`, and
 `relational_goal_energy_ready_score` is emitted as the scalar gate.
 
+### REQ-ARC-WMTE-5712: Matched-Budget Relational Goal-Energy Live A/B
+
+Experiment 5712 SHALL run a preregistered matched-budget known-level
+`E3AgentPolicy` A/B comparing the unchanged submitted full stack against the
+identical full stack with the Exp5711 relational-plus-legacy
+`RelationalGoalEnergy` route installed as the live goal-bias source. The
+comparison SHALL freeze, before execution, the random seeds, game/level
+manifest, action budgets, restart policy, policy knobs, cache policy, stopping
+rules, material regression margins, thresholds, primary metrics, and promotion
+rules. The control arm SHALL remain the submitted full stack and SHALL NOT be
+weakened to the prior bare-control arm.
+
+The workload SHALL be development-proxy only: a registry precheck freezes
+already reproduced placement/spatial route-positive games plus count/navigation
+negative controls, records `solve_provenance=development_proxy`, and forbids a
+registry update or new solve claim. The A/B SHALL record, per arm and per
+paired game, retained levels, actions, actions per reproduced level, frontier
+expansions, generated candidates, candidate reordering counts, score variance,
+route activations, invalid actions, no-op/fallback rates, action latency to the
+first reproduced level, and explicit failure denominators.
+
+Experiment 5712 SHALL also run disabled-route, shuffled-score, corrupted-mask,
+always-route, and zero-variance controls. These controls SHALL prove the route
+can change intended ordering when supported, and that unsupported/corrupt/
+disabled/constant cases fail closed without unsafe route accepts.
+
+The terminal artifact
+`results/experiment_5712_arc_relational_goal_energy_live_ab.json` SHALL include
+principle-annotated top-level fields for `field_principles`,
+`upstream_gate_receipts`, `registry_precheck`, `solve_provenance`,
+`preregistered_protocol`, `game_level_manifest`, `fixture_hashes`,
+`arm_configs`, `budget_parity_receipt`, `successful_pair_count`,
+`failed_pair_reasons`, `levels_reproduced_by_arm`, `level_regression_count`,
+`environment_actions_by_arm`, `frontier_expansions_by_arm`,
+`actions_per_reproduced_level`, `candidate_order_change_count`,
+`score_variance_by_arm`, `route_activation_count`, `invalid_actions_by_arm`,
+`noop_rate_by_arm`, `fallback_rate_by_arm`, `paired_intervals`,
+`material_regression_margins`, `unsafe_route_accept_count`, `control_results`,
+`relational_live_ab_ready_score`, `new_levels_claimed`, `registry_updated`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+`relational_live_ab_ready_score` SHALL be `1.0` only when the treatment improves
+the frozen efficiency primary or retained-level count with a paired interval
+excluding zero, has zero level regressions beyond the frozen margin, changes
+intended orderings, preserves negative controls, and records zero unsafe route
+accepts. A null or negative result SHALL be terminal and advisory, and SHALL NOT
+block a later Exp5713.
+
+#### SCENARIO-ARC-WMTE-5712-MATCHED-BUDGET-AB
+
+Given the frozen known-level manifest and arm configs
+When both arms run under matched seeds, budgets, policy knobs, cache policy, and
+stopping rules
+Then the artifact reports honest pair denominators, paired deltas, retained
+levels, efficiency/action metrics, and promotion intervals without claiming a
+new level or updating the registry.
+
+#### SCENARIO-ARC-WMTE-5712-ROUTE-CONTROLS
+
+Given disabled-route, shuffled-score, corrupted-mask, always-route, and
+zero-variance controls
+When Exp5712 evaluates route behavior
+Then intended supported controls exercise candidate ordering, unsupported
+controls fall back safely, negatives are preserved, and
+`unsafe_route_accept_count` remains zero.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD

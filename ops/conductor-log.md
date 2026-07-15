@@ -11778,3 +11778,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-15 00:36 UTC | Gated on Exp5708 exact canary: prospective prequen | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5708-sota-exact-constraint-canary.sota_ |
 | 2026-07-15 00:38 UTC | Gated on Exp5708 exact canary: prospective prequen | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5708-sota-exact-constraint-canary.sota_ |
 | 2026-07-15 00:40 UTC | Gated on Exp5709 prospective promotion: isolated F | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5709-fr11-prospective-shadow-stream, exp5 |
+| 2026-07-15 00:57 UTC | Qualify zero-variance-safe relational placement go | OK | 112 passed, 1 warning in 14.32s |
+| 2026-07-15 00:59 UTC | Gated on Exp5709 prospective promotion: isolated F | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5709-fr11-prospective-shadow-stream, exp5 |
