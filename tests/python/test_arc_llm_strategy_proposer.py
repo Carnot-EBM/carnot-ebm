@@ -422,6 +422,82 @@ def test_rank_reflection_nudge_fires_after_null_outcome():
     assert "wait quietly" in reflect_prompt
 
 
+def test_rank_reflects_early_when_soft_signal_precedes_schedule():
+    """REQ-ARC-FCP-5699-4: a null outcome triggers reflect() on the VERY NEXT call even
+    when reflect_every is far from its own boundary (here reflect_every=6, but the
+    stagnation signal appears at step 2) -- catching stagnation before the harder
+    collapse gate (checked every call too) can pre-empt the whole propose/reflect path
+    for the rest of the game, the exact 2026-07-15 real-GPU failure mode."""
+    completer = FakeCompleter(
+        [
+            (True, "STRATEGY: wait quietly\nCHOICE: 0\n"),  # step 1 propose
+            (True, "STRATEGY: wait quietly again\nCHOICE: 0\n"),  # step 2 propose
+            (True, "REVISED_STRATEGY: try clicking instead\n"),  # step 2 EARLY reflect
+        ]
+    )
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+        reflect_every=6,  # would not schedule until step 6 on its own
+    )
+    router.rank(frame=None, candidates=[_candidate(6, 0, 0), _candidate(6, 1, 1)])
+    assert router.last_diagnostics["reflected_this_call"] is False
+    router.record_outcome("no_change")  # step 1's chosen strategy led nowhere
+    router.rank(frame=None, candidates=[_candidate(6, 2, 2), _candidate(6, 3, 3)])
+    assert router.last_diagnostics["reflected_this_call"] is True
+    assert router.last_diagnostics["reflection_trigger"] == "early_stagnation_signal"
+    assert "ANTI-STAGNATION WARNING" in completer.calls[-1]["prompt"]
+
+
+def test_rank_scheduled_reflection_trigger_label_without_stagnation():
+    """A healthy run (no null outcomes) still reflects on the periodic schedule, labeled
+    'scheduled' -- the early-trigger path does not change the pre-existing cadence when
+    nothing is stagnating."""
+    completer = FakeCompleter(
+        [
+            (True, "STRATEGY: a\nCHOICE: 0\n"),
+            (True, "STRATEGY: b\nCHOICE: 0\n"),
+            (True, "REVISED_STRATEGY: focus elsewhere\n"),
+        ]
+    )
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+        reflect_every=2,
+    )
+    router.rank(frame=None, candidates=[_candidate(6, 0, 0), _candidate(6, 1, 1)])
+    router.record_outcome("level_advanced")  # NOT a null outcome
+    router.rank(frame=None, candidates=[_candidate(6, 2, 2), _candidate(6, 3, 3)])
+    assert router.last_diagnostics["reflected_this_call"] is True
+    assert router.last_diagnostics["reflection_trigger"] == "scheduled"
+    assert "ANTI-STAGNATION" not in completer.calls[-1]["prompt"]
+
+
+def test_rank_no_reflection_when_neither_scheduled_nor_stagnating():
+    """A run with no null outcomes at all, and reflect_every far off, does not trigger
+    reflect() at all -- the early-trigger path is not a blanket 'reflect every call'
+    change; it only fires on a genuine stagnation signal (a null outcome populates the
+    taboo set immediately, so this test must avoid null outcomes entirely, not just
+    stay below the streak threshold)."""
+    completer = FakeCompleter([(True, "STRATEGY: a\nCHOICE: 0\n")] * 3)
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+        reflect_every=6,
+    )
+    router.rank(frame=None, candidates=[_candidate(6, 0, 0), _candidate(6, 1, 1)])
+    router.record_outcome("level_advanced")  # NOT a null outcome
+    router.rank(frame=None, candidates=[_candidate(6, 2, 2), _candidate(6, 3, 3)])
+    assert router.last_diagnostics["reflected_this_call"] is False
+    assert router.last_diagnostics["reflection_trigger"] is None
+
+
 def test_rank_no_reflection_nudge_without_anti_stagnation_controller():
     """A router configured with anti_stagnation_controller=None still reflects on schedule
     (backward-compatible), just never nudges -- matching reflect()'s own default of an
@@ -885,7 +961,7 @@ def test_req_arc_fcp_5699_2_spec_declares_rotation_fix() -> None:
 
 def test_req_arc_fcp_5699_3_spec_declares_reflect_prompt_nudge() -> None:
     spec = SPEC_PATH.read_text(encoding="utf-8")
-    section = spec[spec.index("### REQ-ARC-FCP-5699-3") : spec.index("### REQ-ARC-WMTE-5596")]
+    section = spec[spec.index("### REQ-ARC-FCP-5699-3") : spec.index("### REQ-ARC-FCP-5699-4")]
 
     for marker in (
         "REQ-ARC-FCP-5699-3",
@@ -893,5 +969,19 @@ def test_req_arc_fcp_5699_3_spec_declares_reflect_prompt_nudge() -> None:
         "_REFLECT_NUDGE_NULL_STREAK",
         "taboo_strategies",
         "nudge_fired",
+    ):
+        assert marker in section
+
+
+def test_req_arc_fcp_5699_4_spec_declares_early_trigger() -> None:
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-4") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-4",
+        "SCENARIO-ARC-FCP-5699-4-EARLY-TRIGGER-RACES-HARD-COLLAPSE",
+        "reflection_trigger",
+        "early_stagnation_signal",
+        "nudge_would_fire_early",
     ):
         assert marker in section

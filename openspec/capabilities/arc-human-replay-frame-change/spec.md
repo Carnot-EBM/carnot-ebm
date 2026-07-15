@@ -5154,6 +5154,65 @@ category, rather than relying solely on the model to infer from raw (strategy, o
 that its recent choices have not been working -- the documented g50t failure showed that
 inference does not reliably happen on its own across multiple reflection cycles
 
+### REQ-ARC-FCP-5699-4: Early-Trigger the Soft Nudge -- Racing the Hard Collapse Gate, Not Nested Inside It
+
+REQ-ARC-FCP-5699-3 shipped the reflect()-prompt nudge (above) but left it gated ENTIRELY by
+`SGECandidateRouter.rank()`'s pre-existing periodic schedule (`self._step % reflect_every ==
+0`, default every 6th call) -- `reflect()` was only ever invoked from that one call site. A
+2026-07-15 real-GPU 3-game re-test (`scripts/outer_loop_sge_smoke_test.py`, extended per
+operator request "can we also add more games to the sample?" from g50t-only to g50t + sk48 +
+cd82) found the soft nudge NEVER fired in any of the 3 games. Root cause: 2 of 3 games (g50t,
+sk48) instead hit `AntiStagnationDiversityController`'s HARD collapse gate first --
+`assess()` is checked at the TOP of every `rank()` call (not gated by any schedule), and once
+`collapse_detected` is true, `rank()` returns early via the `rank_forced_portfolio` branch,
+which structurally never reaches the propose/reflect code path again for the rest of that
+game's run. The soft signal (checked only every `reflect_every`th call) and the hard signal
+(checked every call) were racing on unequal terms by construction -- the hard gate wins
+essentially every time its own thresholds are anywhere close to firing, because the soft gate
+simply isn't looking yet.
+
+`SGECandidateRouter.rank()` SHALL check the SAME soft signal `reflect()` itself uses
+(`_consecutive_null_outcomes` over the `reflect_window`, OR a non-empty
+`anti_stagnation_controller.taboo_set(reflect_window)`) on EVERY call in the non-collapsed
+branch -- not just when `self._step % reflect_every == 0`. When the soft signal is present on
+a call where the periodic schedule has NOT yet arrived, `reflect()` SHALL fire immediately
+anyway (an "early" trigger), racing the hard gate on genuinely equal terms: both signals are
+now evaluated every call, so whichever threshold the accumulating history crosses first is the
+one that acts -- and since the soft threshold (`_REFLECT_NUDGE_NULL_STREAK = 2`, OR any single
+null-outcome entry populating a non-empty taboo set) is structurally easier to satisfy than the
+hard gate's (`consecutive_null_outcomes >= 4` AND at least 2 more of 3 other rolling-window
+signals, `min_triggered_signals = 3` of 4), the soft path should now usually get a genuine turn
+before the hard gate can pre-empt it. This is a strictly additive OR-condition on the
+pre-existing schedule (`scheduled_reflect or nudge_would_fire_early`) -- the periodic cadence
+is unchanged for any call where no stagnation signal is present, so a healthy (non-stagnating)
+run's LLM-call budget is unaffected; only calls that were ALREADY heading toward the hard
+collapse gate anyway get an extra, cheap (no LLM call to decide) early check.
+
+`last_diagnostics` SHALL record `reflection_trigger: "scheduled" | "early_stagnation_signal" |
+None`, distinguishing which condition caused (or didn't cause) a reflect() call, for the same
+auditability reasons as every other anti-stagnation decision this module records.
+
+**Not a full fix.** This closes the "soft nudge is nested inside the periodic-only cadence"
+gap specifically. It does NOT change what happens ONCE collapse has already triggered on an
+EARLIER call (the forced-portfolio branch still bypasses propose/reflect entirely for the rest
+of that game) -- it only widens the WINDOW in which the soft path can act BEFORE collapse ever
+triggers in the first place. Whether this actually changes real outcomes (more games leveling
+up, or the nudge actually parsing successfully more often) is an open empirical question for a
+follow-up real-GPU run, not established by this requirement alone.
+
+#### SCENARIO-ARC-FCP-5699-4-EARLY-TRIGGER-RACES-HARD-COLLAPSE
+
+Given a game whose candidate/outcome dynamics are on a trajectory toward
+`AntiStagnationDiversityController`'s hard collapse gate (checked every `rank()` call)
+When the same underlying history ALSO crosses the softer reflect()-nudge signal
+(`_consecutive_null_outcomes` or a non-empty taboo set) on a call that does not fall on the
+periodic `reflect_every` schedule
+Then `reflect()` fires immediately on that call (`reflection_trigger =
+"early_stagnation_signal"`) rather than waiting for the next scheduled boundary or losing the
+race entirely to the hard gate's own every-call check -- a healthy run with no stagnation
+signal present is unaffected, still reflecting only on the periodic schedule
+(`reflection_trigger = "scheduled"`)
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

@@ -244,6 +244,37 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    `rank()` call, not just every `reflect_every`th) or raced against collapse-detection directly, rather
    than nested strictly inside the periodic reflect cadence as currently wired.
 
+   **Early-trigger fix shipped + re-tested 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-4, operator: "let's try
+   and make the second option work"):** `SGECandidateRouter.rank()` now checks the SAME soft signal
+   `reflect()` uses on EVERY call (cheap, no LLM call -- pure history bookkeeping), not just at the
+   periodic `reflect_every` boundary; when the soft signal is present early, `reflect()` fires immediately
+   (`reflection_trigger="early_stagnation_signal"`) instead of waiting for the schedule or losing the race
+   to the hard collapse gate entirely. Re-ran the SAME 3-game suite (prior run preserved as
+   `results/outer_loop_sge_smoke_test{,_sk48,_cd82,_suite}_pre_5699_4_early_trigger_baseline.json`).
+   **Result: the fix works as designed -- `nudge_fired=True` on ALL 3 games this time** (vs 0/3 before),
+   with reflect() firing 4/2/6 times respectively (g50t/sk48/cd82) instead of 0-1 total. Parse quality,
+   now that it's actually being exercised repeatedly: **9/12 reflect calls parsed successfully overall**
+   (g50t 3/4, sk48 0/2, cd82 6/6) -- the `reflect_nudge_max_tokens=160` widening from the prior session
+   clearly helps (cd82 went from never-fires to 100% clean, on-topic parses, e.g. "Perform an
+   active-commitment action like 'Attack' or 'Interact' at a specific coordinate instead of..."), but sk48
+   STILL failed to parse both of its attempts even at the wider budget -- an open, game-specific gap, not
+   fully explained yet. g50t showed a THIRD failure mode, distinct from both prior ones: one parse
+   "succeeded" in the sense of extracting text after `REVISED_STRATEGY:`, but the extracted text was the
+   model meta-commenting on its own prompt instructions ("(The prompt asks for 'State ONE short
+   sentence...'") rather than actually answering -- a format-compliance issue `parse_reflect_reply`'s
+   regex doesn't currently distinguish from a genuine answer. **Headline metric unchanged: still 0/3
+   leveled up** (g50t=L2, sk48=L1, cd82=L1) -- even cd82's clean, sensible, repeatedly-reinforced advice
+   didn't translate into escaping the L1 wall within budget. This is the honest, now-answerable open
+   question the prior session's fix couldn't even ask: the mechanism CAN deliver working advice
+   end-to-end, and it still isn't enough on its own within a 46-action budget. Next steps, not yet done:
+   (a) sk48's persistent 0/2 parse failure warrants its own investigation (raw completion text isn't
+   currently captured by the smoke-test artifact -- would need added instrumentation to see WHY it fails
+   there specifically); (b) whether cd82's genuinely-good advice is being FOLLOWED by subsequent propose()
+   calls at all (the note only enters `_context()`'s free-text guidance, competing with the model's own
+   per-call sampling -- unverified whether it measurably shifts `propose_many()`'s vote distribution); (c)
+   a longer budget on cd82 specifically, since its reflect mechanism is now demonstrably healthy and it's
+   the one game where "the mechanism doesn't work" is no longer a plausible confound.
+
    **GPU-offload gotcha found + fixed 2026-07-10 (outer-loop, durable lesson for future GPU-backed outer-
    loop work):** `LocalGGUFProposer`'s default resolution (`_generator_server_and_env()` in
    `arc_executable_world_model.py`) intentionally defaults to the AMD iGPU HIP build unless

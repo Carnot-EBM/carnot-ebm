@@ -980,21 +980,41 @@ class SGECandidateRouter:
             }
         )
 
+        # REQ-ARC-FCP-5699-4: the soft anti-stagnation signal is checked on EVERY call
+        # (cheap -- pure history bookkeeping, no LLM call), not just at the periodic
+        # reflect_every boundary. Origin: a 2026-07-15 real-GPU 3-game re-test found the
+        # soft reflect()-prompt nudge (REQ-ARC-FCP-5699-3) never fired in ANY of 3 games,
+        # because 2 of 3 hit the HARD collapse gate (checked every call, via anti_before
+        # above) before the periodic schedule's next boundary arrived -- collapse then
+        # permanently bypasses this whole propose/reflect path for the rest of the game.
+        # Checking the SAME soft signal reflect() itself uses (consecutive null
+        # outcomes / a non-empty taboo set) on every call, not just every Nth one, lets
+        # the gentler intervention race the harder one instead of losing by construction.
+        reflect_window = (
+            self.history[-self.reflect_every :] if self.reflect_every > 0 else self.history
+        )
+        reflect_taboo = (
+            self.anti_stagnation_controller.taboo_set(reflect_window)
+            if self.anti_stagnation_controller is not None
+            else ()
+        )
+        early_null_streak = _consecutive_null_outcomes(reflect_window)
+        nudge_would_fire_early = early_null_streak >= _REFLECT_NUDGE_NULL_STREAK or bool(
+            reflect_taboo
+        )
+        scheduled_reflect = self.reflect_every > 0 and self._step % self.reflect_every == 0
+
         reflected = False
         reflection_result: dict[str, Any] = {}
-        if llm_used and self.reflect_every > 0 and self._step % self.reflect_every == 0:
-            reflect_window = self.history[-self.reflect_every :]
-            reflect_taboo = (
-                self.anti_stagnation_controller.taboo_set(reflect_window)
-                if self.anti_stagnation_controller is not None
-                else ()
-            )
+        reflection_trigger: str | None = None
+        if llm_used and (scheduled_reflect or nudge_would_fire_early):
             reflection_result = self.proposer.reflect(
                 self._context(), reflect_window, taboo_strategies=reflect_taboo
             )
             if reflection_result.get("parse_ok"):
                 self._reflection_note = reflection_result["revised_strategy"]
             reflected = True
+            reflection_trigger = "scheduled" if scheduled_reflect else "early_stagnation_signal"
 
         self.last_diagnostics = {
             "llm_strategy_proposer_used": bool(llm_used),
@@ -1004,6 +1024,7 @@ class SGECandidateRouter:
             "completer_failure_count": sum(1 for p in proposals if not p.get("completer_ok")),
             "reflection_note": self._reflection_note,
             "reflected_this_call": reflected,
+            "reflection_trigger": reflection_trigger,
             "reflection_nudge_fired": reflection_result.get("nudge_fired", False),
             "suppressed_coordinate_count": suppressed,
             "step": self._step,
