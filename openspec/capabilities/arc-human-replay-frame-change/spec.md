@@ -5593,3 +5593,83 @@ Then every pivot (model swap, precision fallback, sample-size reduction) is disc
 artifact and spec with its concrete cause, and the resulting verdict is scoped to what was
 ACTUALLY measured (Q8_0, not full precision; n=1, not n=3) rather than overclaiming the
 originally-planned comparison
+
+### REQ-ARC-WMTE-5599-3: Third-Party Ternary Quantization on a Real Discrete GPU (exp5709)
+
+Same-day operator follow-up: "I would like to try
+https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf on CUDA." Ternary Bonsai is a ~1.71
+bits/weight ternary ({-1,0,+1}) quantization of Qwen3.6-27B (GGUF `Q2_0_g128` packing),
+requiring a bespoke third-party fork (`github.com/PrismML-Eng/llama.cpp`, branch `prism`) --
+standard llama.cpp cannot load its tensor type.
+
+**Pre-integration audit (before building or running anything).** The fork was cloned and
+inspected: normal llama.cpp fork layout, no curl-pipe-to-shell or remote-code-eval patterns,
+217 stars, released same-day. One genuine concern was raised: grepping `ggml-cuda`/`ggml-hip`/
+`ggml-metal` for the ternary type names (`Q2_0_g128`, `TQ1_0`, `TQ2_0`, `PQ2_0`) found no
+dedicated CUDA kernel files, only generic CPU-side hits -- raising the possibility of a silent
+CPU-fallback or a load failure on GPU. `src/models/dspark.cpp` (the file HF's own API
+auto-parser mis-summarized as the whole model's "architecture," inflating confusion about a
+3.65B-param mismatch against the "27B" branding) turned out to be the separate EAGLE-style
+speculative-decoding drafter, not the ternary trunk -- confirming genuine, non-trivial custom
+C++ work in the fork, not a thin wrapper.
+
+**This audit-stage concern did NOT materialize empirically.** Built via
+`cmake -B build-cuda -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=86` (this project's own RTX 3090
+compute capability), the fork compiled cleanly (`ggml-cuda` built, `llama-server`/`llama-cli`
+linked, ~8 minutes wall-clock on 24 cores). Loading `Ternary-Bonsai-27B-Q2_0.gguf` (7.17GB, the
+file the model card's own quickstart names) on GPU 1 (`CUDA_VISIBLE_DEVICES=1` -- GPU 0 is
+reserved for the conductor per the standing hardware-allocation rule) used 22.5GB of real GPU
+memory and a real `/completion` smoke call ("The capital of France is" -> "Paris. Paris is the
+largest city in France...") returned coherent, correct text at **67.5 tok/s decode** -- genuinely
+fast, real GPU-accelerated ternary inference. The kernel implementation exists somewhere this
+audit's naming-based grep missed; it is not a functional gap.
+
+**The real measurement.** `python/carnot/experiment_5709_ternary_bonsai_cuda_reinduction_ab.py`
+reused the exact same methodology as exp5599/exp5705 (real post-level-up `lp85` transitions,
+`execute_bounded_llm_reinduction`). The single real draw reached a real level-up
+(`actions_to_levelup=7`) and completed the full reinduction attempt in **212.948s (~3.5 min)** --
+**11x faster than exp5705's Q8_0/iGPU run (2408.163s)** and closer to (though still ~4x slower
+than) the frozen 9B's ~55s. This time the attempt got FURTHER than exp5705's: round 1
+(`action=induce`) actually produced valid, parseable code (`proposer_ok=true`) but was rejected
+as `degenerate_goal_predicate` -- the induced world model's goal condition did not meaningfully
+discriminate win states, a semantic failure rather than a syntax failure. Round 2
+(`action=refactor`) then failed to produce usable code after 3 retries
+(`missing ('engine', 'is_level_complete') in output`), landing on the same terminal
+`skipped=proposer_failed` / `heldout_accuracy=0.0` outcome as exp5705, just via a different,
+more informative failure path.
+
+**Honest verdict:** `complete: ternary_bonsai_plans_less_reliably_than_current_9b` -- 0/1 vs the
+frozen 9B's historical 1/3. **This is now the FOURTH independent measurement (Q4 Qwen, Q8_0
+Gemma, ternary-Q2_0 Bonsai, all vs the current 9B baseline) pointing the same direction**, across
+three different quantization schemes, two different base model families, and now two
+structurally different serving stacks (this project's own HIP/CUDA build vs a real third-party
+CUDA fork) and two different hardware classes (iGPU vs discrete 3090). The one variable NOT yet
+disproven as a confound is base-model-family-independent code-induction reliability itself --
+every 27B-class candidate tested so far, regardless of precision or serving stack, has failed
+this project's specific reinduction task while the frozen 9B has not. Frozen live-submission
+generator remains UNCHANGED.
+
+**Confound disclosure (not hidden).** Unlike exp5705 (same serving stack as every other
+experiment, different hardware only), this run changes model family, quantization scheme,
+serving stack (`serving_stack_provenance`), AND hardware simultaneously versus the 9B baseline --
+several confounds move together, so this is informative but not a controlled isolation of any
+single variable. It IS a controlled comparison against exp5705 on one dimension (both are 27-31B
+candidates that failed the SAME task), strengthening the cross-candidate pattern even though it
+does not isolate why.
+
+Required field principles: see `FIELD_PRINCIPLES` in
+`python/carnot/experiment_5709_ternary_bonsai_cuda_reinduction_ab.py` (`weight_precision`,
+`serving_hardware`, `serving_stack_provenance` -- the third-party-fork disclosure -- and the two
+historical-reference fields, each principle-annotated per CLAUDE.md's Principle-Annotated
+Artifact Fields discipline).
+
+#### SCENARIO-ARC-WMTE-5599-3-THIRD-PARTY-TERNARY-ON-REAL-GPU
+
+Given a third-party llama.cpp fork is required to load a novel ternary quantization format, and
+an audit of that fork's CUDA kernel coverage cannot conclusively confirm GPU support from source
+inspection alone
+When the fork is built and the model is actually loaded and exercised on a real GPU
+Then the empirical result (real GPU memory used, real tok/s, real task outcome) is trusted over
+the audit's inconclusive static finding, and the serving-stack provenance (third-party, not this
+project's own build) is disclosed as a confound in the artifact and spec rather than treated as
+equivalent to every other experiment's serving stack

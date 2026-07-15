@@ -883,6 +883,34 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > live reinduction task in a bounded, practically-usable window, independent of timeout value
     > chosen. Spec + tests updated same-day (8 tests now, was 7).
 
+    > **EXP5709, SAME DAY — third-party ternary quantization on a real discrete GPU
+    > (`REQ-ARC-WMTE-5599-3`, operator-directed: "I would like to try
+    > https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf on CUDA").** Ternary Bonsai:
+    > ~1.71 bits/weight ternary quantization of Qwen3.6-27B, requires a bespoke third-party fork
+    > (`github.com/PrismML-Eng/llama.cpp`, branch `prism`) — standard llama.cpp cannot load its
+    > tensor type. **Pre-integration audit first:** cloned + inspected before building anything —
+    > normal fork layout, no curl-pipe-to-shell/remote-eval patterns, but grepping
+    > `ggml-cuda`/`ggml-hip`/`ggml-metal` found no dedicated ternary-type kernel files, raising a
+    > real concern about silent CPU fallback or load failure on GPU.
+    > **Empirically, that concern did not materialize.** Built clean
+    > (`-DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=86`), loaded on GPU 1 (RTX 3090, real 22.5GB GPU
+    > memory used), real `/completion` smoke call returned coherent text at **67.5 tok/s decode**.
+    > **Real reinduction result (same lp85 methodology as exp5599/exp5705):** reached a real
+    > level-up, completed the FULL attempt in **212.948s — 11x faster than exp5705's Q8_0/iGPU run
+    > (2408s)**. Got FURTHER than exp5705 too: round 1 produced valid, parseable code
+    > (`proposer_ok=true`) but was rejected as `degenerate_goal_predicate` (semantic failure, not
+    > syntax failure); round 2 (refactor) then failed after 3 retries, landing on the same terminal
+    > `proposer_failed`/`heldout_accuracy=0.0` outcome via a more informative path. **Honest verdict:
+    > `ternary_bonsai_plans_less_reliably_than_current_9b`** (0/1 vs the 9B's historical 1/3).
+    > **This is now the FOURTH independent measurement (Q4 Qwen, Q8_0 Gemma, ternary-Q2_0 Bonsai,
+    > all vs the 9B baseline) pointing the same direction** — across 3 quantization schemes, 2 base
+    > model families, 2 serving stacks, and 2 hardware classes. Confounds disclosed, not hidden:
+    > model family, quantization, serving stack, AND hardware all differ from the 9B baseline
+    > simultaneously — informative, not a controlled isolation. Frozen live-submission generator
+    > remains UNCHANGED. `adversarial_verify.py` clean (0 flagged). Full write-up:
+    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5599-3. Tests:
+    > `tests/python/test_experiment_5709_ternary_bonsai_cuda_reinduction_ab.py` (7 tests).
+
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
 (exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect
