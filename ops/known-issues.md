@@ -406,6 +406,33 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    where this specific gate does not apply and a real LLM induction call would actually be
    attempted from the first stall. Either of those, not a third re-run of g50t/sk48/cd82, is the
    next real step on this thread.
+
+   **NON-HIDDEN-STATE GAME TESTED 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-9, operator: "do
+   that"): a different gate, and the codebase's own documented fix for it doesn't clear it
+   either.** `sp80` (registry: same "reached_level=2, banked +1 over the current L1 row" L1->L2
+   framing as sk48/cd82) added to `GAMES` -- it is NOT in `HIDDEN_STATE_GAME_IDS`. **Correctness
+   fix found first:** running sp80 alone silently overwrote the committed g50t/sk48/cd82
+   `outer_loop_sge_smoke_test_suite.json` with a 1-game summary (restored via `git checkout`,
+   uncommitted at the time); fixed so a subset run (explicit game args) always gets a
+   `_<game>`-suffixed summary path. Then ran sp80 three ways: baseline (`real_max_level_observed=
+   0`, consistent with the other 3 games); `--induction` (still 0, but skipped with
+   `"world_model_accuracy_below_threshold"`, NOT `"hidden_state_trust_below_threshold"` --
+   confirming sp80 takes the OTHER code branch, `arc_competition_agent.py:3620-3636`, gated on
+   `WorldModelVerifier(...).score(engine) < 0.5`); `--induction` WITH
+   `CARNOT_ARC_TRUST_METRIC=cell_recall` set -- the branch's OWN source comment names this exact
+   env var "the coordinated-redesign lever for the 0.08 wall: exact-match reads ~0 for an
+   imperfect-but-useful induced model and gates it out." **Still skipped, still 0** --
+   `verify_cell_recall: 0.0` in the raw attempt, not just `verify_accuracy: 0.0` under the
+   stricter default. The documented lever exists to rescue an imperfect-but-useful model the
+   strict metric unfairly zeroes; sp80's candidate scores genuinely zero on the lenient metric
+   too, so switching metrics doesn't help here. **Net effect:** across all 4 games tested so far
+   (3 hidden-state + sp80), induction has NEVER reached the actual LLM call, for two distinct but
+   structurally similar reasons -- a cheap non-LLM candidate (CNN prior / DSL baseline) is
+   trust-checked before the expensive LLM call, and with only ~25 transitions from a cold
+   `budget=46` start, none of the 4 candidates clear their bar. This is consistent with (not new
+   evidence against) the still-open REQ-ARC-FCP-5699-7 follow-up: whether a much larger budget
+   gives these pre-checks enough transitions to pass at all, on any game -- that, not another new
+   game or another metric override, is the next real step.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

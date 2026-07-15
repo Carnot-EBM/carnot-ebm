@@ -5445,6 +5445,65 @@ had a chance to run" (env-disabled) from "induction was allowed to run but a rea
 safety gate declined to invoke the LLM this time" (trust-gated), since conflating the two would
 misattribute a null result to the wrong cause
 
+### REQ-ARC-FCP-5699-9: Non-Hidden-State Game -- A Different Gate, A Documented Lever That Still Doesn't Clear It
+
+REQ-ARC-FCP-5699-8 found g50t/sk48/cd82 are ALL coincidentally members of `HIDDEN_STATE_GAME_IDS`,
+so induction had never been tested where that SPECIFIC gate does not apply. `sp80` (registry:
+"Exp4535 ... reached_level=2, banked +1 over the current L1 registry row", the same L1->L2
+shallow-frontier framing as sk48/cd82) is NOT in `HIDDEN_STATE_GAME_IDS` and was added to `GAMES`
+as the fourth suite member for this test.
+
+**Correctness fix found first (while running sp80 alone).** A single-game `main()` invocation
+(`... sp80`, no `--baseline`/`--budget`) wrote its one-game summary to the SAME
+`outer_loop_sge_smoke_test_suite.json` path the full 3-game default run uses, silently
+overwriting the committed g50t/sk48/cd82 summary with a 1-game summary. Restored via `git
+checkout` (uncommitted at the time, safely recoverable) and fixed: the summary filename now
+includes a `_<game1>_<game2>...` suffix whenever `requested` (the explicit game-id CLI args) is
+non-empty, so a subset run never collides with the full-suite summary path again.
+
+**RESOLUTION (2026-07-15, operator: "do that").** Ran sp80 three ways: (1) baseline (no
+`--induction`, matching every other game's default config) -- `real_max_level_observed=0`,
+consistent with g50t/sk48/cd82. (2) `--induction` -- still `real_max_level_observed=0`, and
+`induction_attempts` shows a DIFFERENT skip reason than REQ-ARC-FCP-5699-8's finding:
+`"world_model_accuracy_below_threshold"`, NOT `"hidden_state_trust_below_threshold"` --
+confirming sp80 genuinely takes the non-hidden-state code branch
+(`arc_competition_agent.py:3620-3636`, `WorldModelVerifier(...).score(engine)` gated at
+`< 0.5` on the `CARNOT_ARC_TRUST_METRIC` env var's chosen metric, default `"exact"`). That
+branch's own source comment explicitly names itself "the coordinated-redesign lever for the 0.08
+wall: exact-match reads ~0 for an imperfect-but-useful induced model and gates it out." (3) Same
+`--induction` run WITH `CARNOT_ARC_TRUST_METRIC=cell_recall` set (the documented lever) -- STILL
+`real_max_level_observed=0`, STILL skipped with the same reason, and critically `verify_cell_recall:
+0.0` in the raw attempt (not just `verify_accuracy: 0.0` under the stricter default metric). **The
+documented lever does not apply here**: it exists to rescue an "imperfect-but-useful" induced
+model that the strict exact-match metric would unfairly zero out; sp80's candidate engine scores
+genuinely 0.0 on the LENIENT graded metric too, meaning the underlying candidate is producing zero
+correct held-out predictions regardless of which metric grades it -- a harder floor than metric
+strictness, not fixed by switching metrics.
+
+**Net effect on the open question.** Induction still never reaches the actual LLM call on ANY of
+the 4 games tested so far in this harness, for THREE distinct, now-documented reasons across two
+code branches (`hidden_state_trust_below_threshold` for hidden-state games;
+`world_model_accuracy_below_threshold`, both under the default AND the documented alternative
+metric, for sp80). Every gate traces to the same root shape: a cheap non-LLM candidate engine
+(the CNN prior / DSL-induced baseline) is checked for trustworthiness BEFORE the expensive LLM
+induction call is attempted, and with only ~25 transitions from a cold `budget=46` start, none of
+the 4 tested games' cheap candidates clear their respective bar. This is consistent with (not
+additional evidence against) REQ-ARC-FCP-5699-7's still-open follow-up: whether a substantially
+larger budget gives these cheap-candidate pre-checks enough observed transitions to pass, letting
+the actual LLM induction call fire for the first time in this whole investigation.
+
+#### SCENARIO-ARC-FCP-5699-9-DOCUMENTED-LEVER-DOES-NOT-RESCUE-A-GENUINELY-ZERO-SCORING-CANDIDATE
+
+Given a pre-LLM-induction trust gate offers an alternative, more lenient scoring metric
+specifically to rescue "imperfect-but-useful" candidates that a stricter default metric would
+unfairly zero out
+When the candidate's score under the LENIENT metric is ALSO genuinely zero (not merely
+suppressed by the stricter metric's exactness requirement)
+Then switching to the lenient metric does not change the gate's verdict -- the two cases (metric
+too strict vs. candidate genuinely worthless) must be distinguished by checking the lenient
+metric's own raw value, not assumed equivalent just because a documented lever exists for the
+metric-strictness case
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

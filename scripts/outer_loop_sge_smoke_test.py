@@ -112,6 +112,16 @@ GAMES: tuple[tuple[str, int, int, int], ...] = (
     # Third, independent data point. Registry: "Exp4525 ... reached_level=2, banked +1
     # over the current L1 registry row" -- same L1->L2 shallow-frontier framing.
     ("cd82", 1, 2, 46),
+    # Fourth game, added 2026-07-15 (REQ-ARC-FCP-5699-9, operator: "do that", following up
+    # on REQ-ARC-FCP-5699-8's finding that g50t/sk48/cd82 are ALL coincidentally members of
+    # HIDDEN_STATE_GAME_IDS -- meaning induction never got a genuine chance to fire on any
+    # of them, gated by select_trusted_world_model's trust_pass check before this game was
+    # added. sp80 is NOT in HIDDEN_STATE_GAME_IDS (arc_world_model_trust_energy.py:22-34),
+    # so a real LLM induction call should actually be attempted here from the first stall.
+    # Registry: "Exp4535 ... reached_level=2, banked +1 over the current L1 registry row"
+    # -- same L1->L2 shallow-frontier framing as sk48/cd82, for a clean apples-to-apples
+    # comparison on the one axis that differs (hidden-state-gated vs not).
+    ("sp80", 1, 2, 46),
 )
 
 
@@ -412,9 +422,14 @@ def main() -> int:
         ],
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
+    # 2026-07-15 fix (found while testing sp80: a single-game run silently overwrote the
+    # full-suite summary with just that one game's row, discarding the g50t/sk48/cd82 data
+    # the file had recorded). A subset run (explicit game args, not "all GAMES") gets its
+    # own suffix so it never clobbers the shared full-suite summary.
     summary_budget_suffix = f"_budget{budget_override}" if budget_override is not None else ""
     summary_induction_suffix = "_induction" if induction else ""
-    summary_suffix = summary_budget_suffix + summary_induction_suffix
+    summary_subset_suffix = "" if not requested else "_" + "_".join(requested)
+    summary_suffix = summary_budget_suffix + summary_induction_suffix + summary_subset_suffix
     summary_name = (
         f"outer_loop_sge_smoke_test_baseline_suite{summary_suffix}.json"
         if baseline
