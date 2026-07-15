@@ -3352,5 +3352,9 @@
       },
       "win_check_used_for_ranking": false
     }
-  ]
+  ],
+  "corrigendum_2026_07_15": "max_level_reached/prior_levels_reproduced above were an unenforced-floor artifact -- this harness never seeds the env at prior_levels (bare env.reset() only), so max_level_reached silently reported the assumed prior_levels forever regardless of the real run. real_initial_level/real_max_level_observed/leveled_up below are computed directly from this same action_log and are the honest numbers. See REQ-ARC-FCP-5699-5 and ops/known-issues.md task 6.",
+  "real_initial_level": 0,
+  "real_max_level_observed": 0,
+  "leveled_up": false
 }

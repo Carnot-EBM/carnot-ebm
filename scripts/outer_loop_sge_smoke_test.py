@@ -22,6 +22,20 @@ documented shallow L1->L2 frontier (`ops/arc_solve_registry.yaml`). Each game's
 prior_levels/target_level pair matches that game's own already-precedented "shallow
 frontier" framing in the registry -- not invented from scratch.
 
+CORRECTED 2026-07-15 (REQ-ARC-FCP-5699-5): `prior_levels`/`target_level` are
+INFORMATIONAL labels only -- this harness has NEVER seeded the env at `prior_levels`
+(no GameAdapter, no banked-trajectory replay, just a bare `env.reset()`; every game
+starts at whatever level a true cold reset lands on, observed to be 0 for all 3 games
+in every run to date). An earlier version of this script folded the unverified
+`prior_levels` value into the SAME variable used to track the real observed level
+(`max_level = prior_levels`, then `max(max_level, after_level)`), so `max_level_reached`
+silently reported the assumed prior_levels forever regardless of what the run actually
+did -- every prior write-up of this smoke test's results (including the original
+2026-07-10 g50t run) reported an artifact of that unenforced floor, not a real
+achievement. Fixed: `real_initial_level`/`real_max_level_observed`/`leveled_up` in the
+returned dict are computed honestly from the actual observed level trajectory,
+independent of the prior_levels/target_level labels.
+
 Usage: .venv/bin/python scripts/outer_loop_sge_smoke_test.py [game ...]
   No args -> runs the full GAMES suite below. One or more game ids -> runs just those.
 """
@@ -109,27 +123,44 @@ def run_game(game: str, prior_levels: int, target_level: int, budget: int, gguf)
 
     from arcengine import GameAction
 
+    # HONEST LEVEL TRACKING (fixed 2026-07-15, REQ-ARC-FCP-5699-5): this harness never
+    # seeds the env at `prior_levels` -- there is no GameAdapter, no banked-trajectory
+    # replay, nothing before the loop but a bare `env.reset()`. Every game therefore
+    # starts at whatever level a true cold reset lands on (observed to be 0 for all 3
+    # games in every run to date). The ORIGINAL code initialized `max_level = prior_levels`
+    # and folded real observations into that same variable via `max(max_level,
+    # after_level)` -- since `prior_levels` (1 or 2) was always >= the real level ever
+    # observed (0, every single run), `max_level_reached` silently reported the assumed
+    # prior_levels forever, regardless of what the run actually did. Fixed: track the
+    # REAL observed level honestly from the actual first frame, independent of the
+    # informational prior_levels/target_level labels (which describe what OTHER solve
+    # methods -- GameAdapters, banked trajectories -- have reached for this game per
+    # ops/arc_solve_registry.yaml, not what this generic cold-start harness starts at).
+    real_initial_level: int | None = None
+    real_max_level = 0
+    action_log = []
+    diagnostics_log = []
     start = time.time()
     frames = []
     latest = None
-    max_level = prior_levels
-    action_log = []
-    diagnostics_log = []
     for step in range(1, budget + 1):
         if policy.is_done(frames, latest):
             break
-        before_level = int(_level_of(latest)) if latest is not None else max_level
+        before_level = int(_level_of(latest)) if latest is not None else real_max_level
         kind, data = policy.next_move(frames, latest)
         diag = dict(router.last_diagnostics)
         diagnostics_log.append({"step": step, **diag})
         if kind == "RESET":
             latest = env.reset()
+            if real_initial_level is None:
+                real_initial_level = int(_level_of(latest))
+                real_max_level = real_initial_level
         elif kind is None:
             break
         else:
             latest = env.step(getattr(GameAction, f"ACTION{int(kind)}"), data=data)
             after_level = int(_level_of(latest))
-            max_level = max(max_level, after_level)
+            real_max_level = max(real_max_level, after_level)
             router.record_outcome("level_advanced" if after_level != before_level else "no_change")
             action_log.append(
                 {
@@ -144,10 +175,11 @@ def run_game(game: str, prior_levels: int, target_level: int, budget: int, gguf)
                 }
             )
         frames.append(latest)
-        if latest is None or max_level >= target_level:
+        if latest is None or real_max_level > max(prior_levels, target_level):
             break
 
     duration_s = time.time() - start
+    real_initial_level = real_initial_level if real_initial_level is not None else 0
     any_llm_used = any(row.get("llm_strategy_proposer_used") for row in diagnostics_log)
     any_nudge_fired = any(row.get("reflection_nudge_fired") for row in diagnostics_log)
     return {
@@ -155,7 +187,17 @@ def run_game(game: str, prior_levels: int, target_level: int, budget: int, gguf)
         "game": game,
         "prior_levels_reproduced": prior_levels,
         "target_level": target_level,
-        "max_level_reached": max_level,
+        "methodology_note": (
+            "prior_levels_reproduced/target_level are INFORMATIONAL labels from "
+            "ops/arc_solve_registry.yaml (what OTHER solve methods reached for this game) "
+            "-- this harness does NOT seed the env at that level; it always explores from "
+            "a true cold env.reset(). real_initial_level/real_max_level_observed are the "
+            "actual measured trajectory and are what leveled_up is computed from."
+        ),
+        "real_initial_level": real_initial_level,
+        "real_max_level_observed": real_max_level,
+        "leveled_up": real_max_level > real_initial_level,
+        "max_level_reached": real_max_level,
         "attempts": len(action_log),
         "duration_s": duration_s,
         "llm_strategy_proposer_used_any_step": any_llm_used,
@@ -195,7 +237,8 @@ def main() -> int:
         result = run_game(game, prior_levels, target_level, budget, gguf)
         print(
             f"   duration_s={result['duration_s']:.2f} "
-            f"max_level_reached={result['max_level_reached']} "
+            f"real_level={result['real_initial_level']}->{result['real_max_level_observed']} "
+            f"leveled_up={result['leveled_up']} "
             f"llm_used={result['llm_strategy_proposer_used_any_step']} "
             f"nudge_fired={result['reflection_nudge_fired_any_step']}",
             flush=True,
@@ -219,8 +262,9 @@ def main() -> int:
                 "game": r["game"],
                 "prior_levels_reproduced": r["prior_levels_reproduced"],
                 "target_level": r["target_level"],
-                "max_level_reached": r["max_level_reached"],
-                "leveled_up": r["max_level_reached"] > r["prior_levels_reproduced"],
+                "real_initial_level": r["real_initial_level"],
+                "real_max_level_observed": r["real_max_level_observed"],
+                "leveled_up": r["leveled_up"],
                 "attempts": r["attempts"],
                 "duration_s": r["duration_s"],
                 "llm_strategy_proposer_used_any_step": r["llm_strategy_proposer_used_any_step"],

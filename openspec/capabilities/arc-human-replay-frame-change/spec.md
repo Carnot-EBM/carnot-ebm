@@ -5213,6 +5213,64 @@ race entirely to the hard gate's own every-call check -- a healthy run with no s
 signal present is unaffected, still reflecting only on the periodic schedule
 (`reflection_trigger = "scheduled"`)
 
+### REQ-ARC-FCP-5699-5: Honest Level Tracking in the SGE Smoke-Test Harness -- Corrigendum
+
+Discovered 2026-07-15 while checking whether cd82's reflection advice (REQ-ARC-FCP-5699-3/5699-4)
+actually changed subsequent `propose_many()` behavior (operator: "do that"). Direct inspection of
+`action_log` in every artifact `scripts/outer_loop_sge_smoke_test.py` had ever produced (the
+original 2026-07-10 g50t run through this session's 3-game REQ-ARC-FCP-5699-4 re-test, 7 real-GPU
+runs total) found `level_before`/`level_after` = 0 on every single logged action, in every run,
+on all 3 games -- the real environment level never left 0, not once.
+
+**Root cause.** `run_game()` initialized `max_level = prior_levels` and folded the real observed
+level into that SAME variable (`max_level = max(max_level, after_level)`). This harness has NEVER
+seeded the env at `prior_levels` -- there is no `GameAdapter`, no banked-trajectory replay, just a
+bare `env.reset()` before the exploration loop; every game therefore starts at whatever level a
+true cold reset lands on (observed to be 0 in every run). Because `prior_levels` (1 or 2, taken
+from `ops/arc_solve_registry.yaml`'s per-game shallow-frontier labels -- what OTHER solve methods,
+GameAdapters and banked trajectories, have reached for that game) was always >= the real level
+ever actually observed, `max(max_level, after_level)` silently reported the ASSUMED starting point
+forever, independent of what the run genuinely achieved. Every prior write-up of this smoke test's
+results (chat summaries and `ops/known-issues.md` task 6 entries alike) reported this artifact
+(e.g. "g50t stayed at L2") as if it were a real measurement; the actual, more informative fact was
+"g50t (and every other game tested) never left level 0 at all."
+
+`run_game()` SHALL track the real observed level trajectory (`real_initial_level`, set from the
+FIRST post-reset frame; `real_max_level_observed`, the max over every subsequent `level_after`)
+independently of the `prior_levels`/`target_level` parameters, which SHALL be documented
+explicitly as informational-only labels (never applied as an env seed) via a `methodology_note`
+field on the artifact. `leveled_up` SHALL be computed as `real_max_level_observed >
+real_initial_level`, never blended with `prior_levels`. `max_level_reached` (the pre-existing
+field name, kept for backward-compat readability) SHALL report `real_max_level_observed`, not the
+unenforced floor.
+
+**RESOLUTION (2026-07-15).** Fixed in `scripts/outer_loop_sge_smoke_test.py`. Every existing
+artifact this harness had ever produced (`results/outer_loop_sge_smoke_test*.json`, 9 files
+including both REQ-ARC-FCP-5699-3/5699-4 baseline snapshots) was retroactively patched with
+`real_initial_level`/`real_max_level_observed`/`leveled_up` computed directly from each file's own
+already-recorded `action_log`, plus a `corrigendum_2026_07_15` field explaining the fix -- the
+original (misleading) `max_level_reached`/`prior_levels_reproduced` fields were preserved
+unmodified alongside the correction, per this project's adversarial-artifact-verification
+corrigendum convention (never silently overwrite a wrong number; disclose the correction next to
+it). Result: `real_initial_level=0, real_max_level_observed=0, leveled_up=false` for every one of
+the 7 runs. **This does NOT invalidate the REQ-ARC-FCP-5699-3/5699-4 mechanism findings** (the
+nudge firing, parse-rate improvements, cd82's strategy-text language genuinely shifting toward
+"active-commitment" advice after each reflection) -- those are facts about the router's internal
+behavior verified directly from `diagnostics_log`, independent of this level-tracking bug. What
+changes is the INTERPRETATION of "0/3 leveled up": never "0/3 escaped their assumed L1/L2 starting
+point," always "0/3 escaped level 0 at all" -- a starker, more honest null.
+
+#### SCENARIO-ARC-FCP-5699-5-LEVEL-TRACKING-NEVER-BLENDS-WITH-UNVERIFIED-PRIOR
+
+Given a smoke-test harness explores a game from a bare `env.reset()` with no game-specific seeding
+mechanism (no `GameAdapter`, no banked-trajectory replay)
+When the harness also carries an INFORMATIONAL `prior_levels` label describing what a DIFFERENT
+solve method has reached for that game (from a registry, not from this run)
+Then the harness's own tracked "level reached this run" variable is NEVER initialized from or
+blended with that informational label -- it is computed strictly from the real observed
+`level_before`/`level_after` trajectory of THIS run, so a `leveled_up` claim always reflects a
+genuine measured transition and never an unverified assumption carried through a `max()` call
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
