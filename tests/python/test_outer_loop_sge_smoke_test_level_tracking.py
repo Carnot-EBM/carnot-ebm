@@ -261,6 +261,52 @@ def test_induction_enabled_passes_real_local_gguf_proposer_on_a_dedicated_port()
     assert result["induction_attempts"] == []
 
 
+def _canned_run_game_result(game: str, *_args, **_kwargs) -> dict:
+    return {
+        "game": game,
+        "router_mode": "sge",
+        "induction_enabled": False,
+        "induction_attempts": [],
+        "induction_attempts_not_skipped": 0,
+        "prior_levels_reproduced": 1,
+        "target_level": 2,
+        "real_initial_level": 0,
+        "real_max_level_observed": 0,
+        "leveled_up": False,
+        "attempts": 0,
+        "duration_s": 0.0,
+        "llm_strategy_proposer_used_any_step": False,
+        "reflection_nudge_fired_any_step": False,
+    }
+
+
+def test_req_arc_fcp_5699_9_single_game_subset_run_does_not_clobber_full_suite_summary(
+    monkeypatch, tmp_path
+):
+    """REQ-ARC-FCP-5699-9: the exact bug found while running sp80 alone -- a subset run
+    (explicit game args) must write its summary to a suffixed path, never overwriting
+    the shared outer_loop_sge_smoke_test_suite.json a full default run produces."""
+    mod = _load_smoke_test_module()
+    monkeypatch.setattr(mod, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    # simulate a pre-existing full-suite summary (as the real committed one is)
+    full_suite_path = tmp_path / "results" / "outer_loop_sge_smoke_test_suite.json"
+    full_suite_path.write_text('{"games": ["g50t", "sk48", "cd82"]}')
+
+    monkeypatch.setattr(mod, "run_game", _canned_run_game_result)
+    monkeypatch.setattr(mod.sys, "argv", ["outer_loop_sge_smoke_test.py", "sp80"])
+
+    rc = mod.main()
+    assert rc == 0
+    # the pre-existing full-suite summary must be untouched
+    assert full_suite_path.read_text() == '{"games": ["g50t", "sk48", "cd82"]}'
+    # the sp80 subset run gets its own, non-colliding summary path
+    subset_summary_path = tmp_path / "results" / "outer_loop_sge_smoke_test_suite_sp80.json"
+    assert subset_summary_path.exists()
+    per_game_path = tmp_path / "results" / "outer_loop_sge_smoke_test_sp80.json"
+    assert per_game_path.exists()
+
+
 def test_req_arc_fcp_5699_5_spec_declares_honest_level_tracking() -> None:
     spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
     spec = spec_path.read_text(encoding="utf-8")
@@ -334,5 +380,20 @@ def test_req_arc_fcp_5699_8_spec_declares_induction_trust_gate() -> None:
         "hidden_state_trust_below_threshold",
         "HIDDEN_STATE_GAME_IDS",
         "--induction",
+    ):
+        assert marker in section
+
+
+def test_req_arc_fcp_5699_9_spec_declares_non_hidden_state_finding() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-9") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-9",
+        "SCENARIO-ARC-FCP-5699-9-DOCUMENTED-LEVER-DOES-NOT-RESCUE-A-GENUINELY-ZERO-SCORING-CANDIDATE",
+        "world_model_accuracy_below_threshold",
+        "CARNOT_ARC_TRUST_METRIC",
+        "verify_cell_recall",
     ):
         assert marker in section
