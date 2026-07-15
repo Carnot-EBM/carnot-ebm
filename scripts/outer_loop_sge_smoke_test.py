@@ -45,12 +45,15 @@ far used SGE with no control -- this establishes whether ANY exploration method 
 level 0 in this harness, or whether the harness itself (not SGE specifically) is what
 caps progress.
 
-Usage: .venv/bin/python scripts/outer_loop_sge_smoke_test.py [--baseline] [game ...]
+Usage: .venv/bin/python scripts/outer_loop_sge_smoke_test.py [--baseline] [--budget N] [game ...]
   No args -> runs the full GAMES suite below with the real SGE router.
   One or more game ids -> runs just those (still SGE unless --baseline is also given).
   --baseline -> runs the same games with the deterministic control router instead;
     writes to outer_loop_sge_smoke_test_baseline_<game>.json (never collides with the
     SGE-mode output paths, including g50t's unsuffixed backward-compat path).
+  --budget N -> overrides every selected game's default budget (46) with N. Always writes
+    to a _budgetN-suffixed path, so a longer run never overwrites the 46-budget artifacts
+    it's meant to be compared against (REQ-ARC-FCP-5699-7).
 """
 
 from __future__ import annotations
@@ -252,13 +255,22 @@ class _NoLLMModelStandin:
 
 
 def main() -> int:
-    argv = sys.argv[1:]
+    argv = list(sys.argv[1:])
     baseline = "--baseline" in argv
-    requested = [a for a in argv if a != "--baseline"]
+    if baseline:
+        argv.remove("--baseline")
+    budget_override: int | None = None
+    if "--budget" in argv:
+        idx = argv.index("--budget")
+        budget_override = int(argv[idx + 1])
+        del argv[idx : idx + 2]
+    requested = argv
     rows = [row for row in GAMES if row[0] in requested] if requested else list(GAMES)
     if not rows:
         print(f"no matching games in {requested!r}; known games: {[g[0] for g in GAMES]}")
         return 1
+    if budget_override is not None:
+        rows = [(g, pl, tl, budget_override) for g, pl, tl, _ in rows]
     router_mode = "baseline" if baseline else "sge"
 
     if baseline:
@@ -292,15 +304,18 @@ def main() -> int:
             f"nudge_fired={result['reflection_nudge_fired_any_step']}",
             flush=True,
         )
-        # per-game file. g50t (SGE mode only) keeps the unsuffixed pre-2026-07-15 path for
-        # backward compat with the existing REQ-ARC-FCP-5699-3/5699-4 baselines; every other
-        # combination gets an explicit, non-colliding name.
-        if game == "g50t" and not baseline:
+        # per-game file. g50t (SGE mode, default budget) keeps the unsuffixed pre-2026-07-15
+        # path for backward compat with the existing REQ-ARC-FCP-5699-3/5699-4 baselines;
+        # every other combination gets an explicit, non-colliding name -- a --budget override
+        # always gets its own suffix so a longer run never clobbers the 46-budget artifacts
+        # this and the REQ-ARC-FCP-5699-6 control were compared against.
+        budget_suffix = f"_budget{budget}" if budget_override is not None else ""
+        if game == "g50t" and not baseline and not budget_suffix:
             out_name = "outer_loop_sge_smoke_test.json"
         elif baseline:
-            out_name = f"outer_loop_sge_smoke_test_baseline_{game}.json"
+            out_name = f"outer_loop_sge_smoke_test_baseline_{game}{budget_suffix}.json"
         else:
-            out_name = f"outer_loop_sge_smoke_test_{game}.json"
+            out_name = f"outer_loop_sge_smoke_test_{game}{budget_suffix}.json"
         out_path = REPO / "results" / out_name
         out_path.write_text(json.dumps(result, indent=2, default=str))
         print(f"   wrote {out_path.relative_to(REPO)}", flush=True)
@@ -326,10 +341,11 @@ def main() -> int:
         ],
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
+    summary_budget_suffix = f"_budget{budget_override}" if budget_override is not None else ""
     summary_name = (
-        "outer_loop_sge_smoke_test_baseline_suite.json"
+        f"outer_loop_sge_smoke_test_baseline_suite{summary_budget_suffix}.json"
         if baseline
-        else "outer_loop_sge_smoke_test_suite.json"
+        else f"outer_loop_sge_smoke_test_suite{summary_budget_suffix}.json"
     )
     summary_path = REPO / "results" / summary_name
     summary_path.write_text(json.dumps(summary, indent=2, default=str))

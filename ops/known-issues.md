@@ -352,6 +352,27 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    features to see whether THAT is what's actually required to reach level 1 here at all -- in which
    case this specific harness configuration may not be a useful SGE-vs-baseline comparison ground
    regardless of budget, and a different game selection or a less-stripped-down config would be needed.
+
+   **BUDGET RULED OUT 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-7, operator: "run it with a longer
+   budget"): still 0/3 for BOTH routers at 5.4x the budget.** `--budget N` added to the harness
+   CLI. Ran BOTH SGE and the REQ-ARC-FCP-5699-6 deterministic baseline at `budget=250` (vs the
+   original 46) against all 3 games --
+   `results/outer_loop_sge_smoke_test{,_baseline}_{g50t,sk48,cd82,suite}_budget250.json`. **All 6
+   runs (3 games x 2 router modes) again show `real_max_level_observed=0`**, confirmed against
+   each artifact's raw `action_log`, with 239-248 real attempts per game (near-full budget
+   consumption, not an early stop) -- SGE took 141-486s/game (real LLM calls), baseline 2.4-5.4s/
+   game (no LLM), a ~5.4x wall-clock scaling matching the ~5.4x action-count increase (i.e. no
+   early termination hid a shorter effective run). **This rules out "maybe it just needs more
+   time" for this harness.** Combined with the REQ-ARC-FCP-5699-6 router-independence finding, the
+   two most obvious explanations for every "0/3 leveled up" result in this whole investigation
+   (SGE specifically underperforms; not enough budget) are BOTH now ruled out. The one remaining,
+   untested hypothesis: one of the OTHER deliberately-disabled production features
+   (`_NoOpInductionProposer`, no frame-change scorer, no goal-bias, no go-explore archive) is what's
+   actually load-bearing for a first level-up on g50t/sk48/cd82, independent of router choice and
+   budget. That is the next real fork if this thread is picked up again -- re-enable one disabled
+   feature at a time (starting with induction, the most heavily-disabled system) under the same
+   controlled-comparison discipline established across REQ-ARC-FCP-5699-3 through 5699-7, rather
+   than re-testing router choice or budget further on these 3 games.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

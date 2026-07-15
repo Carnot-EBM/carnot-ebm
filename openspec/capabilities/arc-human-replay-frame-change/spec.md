@@ -5338,6 +5338,48 @@ control -- if the control ALSO nulls, the null is evidence about the stripped-do
 configuration itself, not about the router under test, and must be reported as such rather than
 as a finding against the router
 
+### REQ-ARC-FCP-5699-7: Budget Was Not The Limiting Factor Either
+
+REQ-ARC-FCP-5699-6's control left an explicit open follow-up: "whether a MUCH longer budget
+(200-500+ actions) lets either router eventually escape level 0." Every prior run in this
+investigation (SGE and the REQ-ARC-FCP-5699-6 baseline alike) used `budget=46`.
+
+`main()` SHALL accept a `--budget N` flag overriding every selected game's default budget,
+writing to a `_budgetN`-suffixed output path so a longer run never overwrites the 46-budget
+artifacts it needs to be compared against (`run_game()` already accepted `budget` as a plain
+parameter; this is a CLI-level convenience, not a new code path).
+
+**RESOLUTION (2026-07-15, operator: "run it with a longer budget").** Ran BOTH router modes at
+`budget=250` (~5.4x the original) against all 3 games:
+`results/outer_loop_sge_smoke_test_baseline_{g50t,sk48,cd82,suite}_budget250.json` and
+`results/outer_loop_sge_smoke_test_{g50t,sk48,cd82,suite}_budget250.json`. **All 6 runs (3 games x
+2 router modes) again show `real_max_level_observed=0`**, confirmed against each artifact's raw
+`action_log` (not just the summary field), with 239-248 real attempts per game (near-full budget
+consumption, not an early stop) -- SGE completing in 141-486s per game (real LLM calls) and the
+baseline in 2.4-5.4s per game (no LLM), matching the ~5.4x wall-clock scaling expected from a
+~5.4x action-count increase.
+
+**This closes the "maybe it just needs more budget" hypothesis for this specific harness
+configuration.** Neither exploration strategy escapes level 0 on g50t, sk48, or cd82 within 250
+actions, any more than within 46. Combined with REQ-ARC-FCP-5699-6's router-independence finding,
+the two most obvious explanations for the REQ-ARC-FCP-5699-3/5699-4/5699-6 null results (SGE is
+worse than a simpler router; the harness just needed more time) are both now ruled out for these 3
+games in this configuration. The remaining, not-yet-tested hypothesis is REQ-ARC-FCP-5699-6's
+other open thread: whether one of the OTHER deliberately-disabled production features
+(`_NoOpInductionProposer`, no frame-change scorer, no goal-bias, no go-explore archive) is what's
+actually load-bearing for a first level-up on these specific games, independent of both router
+choice and budget.
+
+#### SCENARIO-ARC-FCP-5699-7-BUDGET-INCREASE-ALONE-DOES-NOT-CHANGE-A-STRUCTURAL-NULL
+
+Given two router modes both null (no level-up) on the same 3 games at the harness's default budget
+When both router modes are re-run at a substantially larger budget (>=5x) under the otherwise
+identical stripped-down configuration
+Then a null that persists unchanged at the larger budget, with near-full budget consumption
+confirmed via attempt counts (not an early termination), rules out "insufficient budget" as the
+explanation and narrows the remaining hypothesis space to the other deliberately-disabled
+components of the configuration, not to the exploration strategy or the time allotted
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
