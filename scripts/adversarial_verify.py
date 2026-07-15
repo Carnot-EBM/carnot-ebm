@@ -1752,26 +1752,63 @@ def _is_live_llm_inference(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, LIVE_LLM_SUBSTRATE)
 
 
+_VERDICT_TERMINAL_PREFIXES = (
+    "complete:",
+    "complete ",
+    "complete_",
+    "success:",
+    "success ",
+    "success_",
+    "passed:",
+    "passed ",
+    "passed_",
+    "shipped:",
+    "shipped ",
+    "shipped_",
+)
+
+
+def _strip_verdict_terminal_prefix(verdict: str) -> str:
+    """Strip a leading terminal-prefix marker (per CLAUDE.md's Verdict Terminal-Prefix
+    Discipline) plus any following whitespace, so downstream string-shape checks (like
+    `blocked_` recognition) see the same content whether or not the script prefixed it.
+    Mirrors `research_conductor.py:_verdict_is_untrustworthy`'s own terminal-prefix list."""
+    stripped = verdict.strip()
+    lowered = stripped.lower()
+    for prefix in _VERDICT_TERMINAL_PREFIXES:
+        if lowered.startswith(prefix):
+            return stripped[len(prefix) :].lstrip()
+    return stripped
+
+
 def _is_precondition_check_only_blocked(d: dict[str, Any]) -> bool:
     """True when an artifact stopped before invoking the compute substrate.
 
     Recognizes two forms (either is sufficient): the explicit `precondition_check_only`
-    substrate declaration, OR a bare `blocked_`-prefixed honest_verdict on its own.
-    The latter is trusted directly per this project's own Pre-Launch Preconditions
-    Discipline + Verdict Terminal-Prefix Discipline: a `blocked_*` verdict is a
-    MANDATED, structured admission that the compute-bound work did not happen --
-    scripts are not required to also switch their declared `inference_substrate` on
-    the blocked path (some hardcode the same substrate value for both the live and
-    blocked branches of the same experiment, e.g. exp5274's INFERENCE_SUBSTRATE
-    constant, discovered 2026-07-05), so requiring a specific substrate string here
-    was over-narrow and produced a false DURATION_TOO_SHORT on an honest, zero-work
-    blocked artifact (duration_s=0.14, extraction_results=[], rows_total=0 -- fully
-    consistent with "nothing ran").
+    substrate declaration, OR a `blocked_`-prefixed honest_verdict -- with or WITHOUT a
+    leading terminal-prefix marker (`complete:`/`success:`/etc.). The latter is trusted
+    directly per this project's own Pre-Launch Preconditions Discipline + Verdict
+    Terminal-Prefix Discipline: a `blocked_*` verdict is a MANDATED, structured admission
+    that the compute-bound work did not happen -- scripts are not required to also switch
+    their declared `inference_substrate` on the blocked path (some hardcode the same
+    substrate value for both the live and blocked branches of the same experiment, e.g.
+    exp5274's INFERENCE_SUBSTRATE constant, discovered 2026-07-05), so requiring a
+    specific substrate string here was over-narrow and produced a false DURATION_TOO_SHORT
+    on an honest, zero-work blocked artifact (duration_s=0.14, extraction_results=[],
+    rows_total=0 -- fully consistent with "nothing ran").
+
+    Fixed 2026-07-14 (exp5713 incident): the ORIGINAL fix only recognized a BARE
+    `blocked_` prefix, missing the far more common `complete: blocked_<resource>` form
+    that CLAUDE.md's Verdict Terminal-Prefix Discipline actually MANDATES every terminal
+    verdict use (a clean precondition-block IS a terminal state, not an ambiguous
+    partial one). Any script following that discipline correctly for its blocked branch
+    -- as exp5705's, exp5709's, and exp5713's all do (`f"complete: blocked_{miss}"`) --
+    would have been false-flagged the moment its blocked path became the actual checked-
+    in artifact. Now strips the terminal prefix first via `_strip_verdict_terminal_prefix`
+    before checking for `blocked_`, so both forms are recognized consistently.
     """
     verdict = str(d.get("honest_verdict") or "")
-    if not verdict.startswith("blocked_"):
-        return False
-    return True
+    return _strip_verdict_terminal_prefix(verdict).startswith("blocked_")
 
 
 def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:

@@ -928,6 +928,40 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > stochastic noise a larger n might average away. Verdict direction unchanged, now backed by a
     > fair comparison. `adversarial_verify.py` clean. Spec + tests updated same-day (8 tests, was 7).
 
+    > **EXP5713, SAME DAY — "one last time" Qwen3.6-27B Q4 check (`REQ-ARC-WMTE-5599-4`, operator:
+    > "We should try Qwen3.6-27B 4bit quant one last time with a Q8 kv-cache and see how well it
+    > does").** Pre-check first: this EXACT config was already run in exp5599, cleanly, at n=3
+    > (`plan_rate_given_levelup=0/3`, `mean_reinduce_duration_s=401.0`, real `heldout_accuracy`
+    > signal 0.333/0.0/0.333, never crossing threshold). Re-running verbatim would be a doomed
+    > rerun. Surfaced to the operator via `AskUserQuestion` instead of silently re-running or
+    > refusing — operator confirmed pivoting to the one genuinely untested variable: `mtp=False`
+    > was set for exp5599's candidate_27b arm with NO recorded rationale, despite the model being
+    > named `*-MTP-GGUF`. **Real finding: MTP structurally cannot run for this model on this
+    > hardware — a hard OOM, not a quality result.** Background n=3 run stalled (driver polling a
+    > `<defunct>` llama-server for up to 20min/repeat with `DEVNULL`-redirected output hiding the
+    > crash reason); killed and diagnosed manually instead — self-speculative MTP loads the SAME
+    > GGUF file TWICE (target + draft, same weights, two separate CUDA buffers); target loaded
+    > fine (~15.9GiB), draft alloc failed: `cudaMalloc failed: out of memory` trying to reserve
+    > another ~15.6GiB. Total demand (~32.6GB) exceeds the single RTX 3090's 24GB outright — almost
+    > certainly the undocumented reason exp5599 set `mtp=False` in the first place. Precondition
+    > check now computes this directly (2x on-disk file size vs free VRAM, not a magic number),
+    > blocking in <1s with concrete numbers instead of burning up to an hour re-confirming a
+    > deterministic crash 3x. Honest verdict:
+    > `complete: blocked_gpu1_free_vram_sufficient_for_mtp_dual_load`, with the manual diagnostic's
+    > crash log embedded verbatim in the artifact as evidence. **Answers the operator's question
+    > directly: Q4_K_M+Q8-KV-cache Qwen3.6-27B has now been tried as thoroughly as this hardware
+    > allows (MTP off: 0/3 clean; MTP on: structurally impossible) — neither beats the frozen 9B.**
+    > **Sibling fix, same incident:** `scripts/adversarial_verify.py`'s
+    > `_is_precondition_check_only_blocked` only recognized a BARE `blocked_` prefix, missing the
+    > `complete: blocked_<resource>` form CLAUDE.md's own Verdict Terminal-Prefix Discipline
+    > mandates — false-flagged this experiment's correctly-formed blocked artifact
+    > `DURATION_TOO_SHORT` before the fix (exp5705/exp5709's blocked branches use the identical
+    > pattern and would hit the same false positive). Fixed via `_strip_verdict_terminal_prefix`;
+    > 5-test regression suite added, full adversarial_verify suite (299 tests) still green. Full
+    > write-up: `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5599-4.
+    > Tests: `tests/python/test_experiment_5713_qwen27b_q4_mtp_enabled_ab.py` (5 tests) +
+    > `tests/python/test_adversarial_verify_blocked_verdict_duration_exemption.py` (+5 new tests).
+
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
 (exp4512, `imitation_prior_solve_rate_guard_failed`) and a self-supervised clickability-CNN action-effect

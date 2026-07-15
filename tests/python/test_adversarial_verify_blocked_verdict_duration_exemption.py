@@ -17,7 +17,17 @@ specific substrate string in addition to that was over-narrow. Both existing cal
 (duration_floor_for_artifact, check_duration_vs_claim) are duration-related only, so this does not
 weaken the tautology, methodology, or gate checks.
 
-Spec refs: none (operational lint fix, no OpenSpec capability).
+2026-07-14 follow-up (TestExp5713TerminalPrefixedBlockedVerdict below): the original fix only
+recognized a BARE `blocked_` prefix, missing the `complete: blocked_<resource>` form CLAUDE.md's
+own Verdict Terminal-Prefix Discipline actually mandates every terminal verdict use. Surfaced by
+exp5713 (Qwen3.6-27B Q4_K_M + Q8 KV-cache with MTP enabled -- a real, fast precondition block on
+a hard GPU-memory OOM, written with the mandated terminal prefix and false-flagged before this
+follow-up fix). See REQ-ARC-WMTE-5599-4 in
+openspec/capabilities/arc-human-replay-frame-change/spec.md for the full incident this operational
+lint fix traces to (this file itself has no OpenSpec capability of its own -- it tests a script,
+not a product requirement).
+
+Spec refs: REQ-ARC-WMTE-5599-4 (operational lint fix motivated by that experiment's incident).
 """
 
 from __future__ import annotations
@@ -67,6 +77,50 @@ class TestIsPreconditionCheckOnlyBlocked:
 
     def test_missing_verdict_is_not_exempted(self) -> None:
         assert av._is_precondition_check_only_blocked({}) is False
+
+
+class TestExp5713TerminalPrefixedBlockedVerdict:
+    """2026-07-14: the ORIGINAL fix above only recognized a BARE `blocked_` prefix, missing
+    the `complete: blocked_<resource>` form CLAUDE.md's Verdict Terminal-Prefix Discipline
+    actually mandates every terminal verdict use. exp5713 (Qwen3.6-27B Q4_K_M + Q8 KV-cache
+    with MTP enabled) hit exactly this: its precondition check found the self-speculative
+    MTP dual-load (target + draft, same GGUF loaded twice) needs ~32.6GB, exceeding the
+    single RTX 3090's 24GB -- a real, fast (duration_s=0.0), honest precondition block,
+    written as `complete: blocked_gpu1_free_vram_sufficient_for_mtp_dual_load` per the
+    terminal-prefix discipline, and false-flagged DURATION_TOO_SHORT before this fix."""
+
+    def test_complete_colon_prefixed_blocked_verdict_is_recognized(self) -> None:
+        d = {
+            "honest_verdict": "complete: blocked_gpu1_free_vram_sufficient_for_mtp_dual_load",
+            "inference_substrate": "live_llm_inference",
+        }
+        assert av._is_precondition_check_only_blocked(d) is True
+
+    def test_complete_underscore_prefixed_blocked_verdict_is_recognized(self) -> None:
+        d = {"honest_verdict": "complete_blocked_model_not_cached"}
+        assert av._is_precondition_check_only_blocked(d) is True
+
+    def test_success_and_passed_and_shipped_prefixes_also_recognized(self) -> None:
+        for prefix in ("success:", "passed:", "shipped:"):
+            d = {"honest_verdict": f"{prefix} blocked_resource_x"}
+            assert av._is_precondition_check_only_blocked(d) is True, prefix
+
+    def test_terminal_prefixed_non_blocked_verdict_still_not_exempted(self) -> None:
+        d = {"honest_verdict": "complete: qwen27b_mtp_plans_more_reliably_than_current_9b"}
+        assert av._is_precondition_check_only_blocked(d) is False
+
+    def test_exp5713_style_artifact_no_longer_flags_duration_too_short(
+        self, tmp_path: Path
+    ) -> None:
+        payload = {
+            "experiment": "exp5713_repro",
+            "honest_verdict": "complete: blocked_gpu1_free_vram_sufficient_for_mtp_dual_load",
+            "inference_substrate": "live_llm_inference",
+            "duration_s": 0.0,
+            "per_draw_results": [],
+        }
+        report = _report_for_payload(tmp_path, payload)
+        assert "DURATION_TOO_SHORT" not in _flag_kinds(report)
 
 
 class TestExp5274IncidentReproduction:

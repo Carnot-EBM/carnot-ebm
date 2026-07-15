@@ -5706,3 +5706,81 @@ Then the empirical result (real GPU memory used, real tok/s, real task outcome) 
 the audit's inconclusive static finding, and the serving-stack provenance (third-party, not this
 project's own build) is disclosed as a confound in the artifact and spec rather than treated as
 equivalent to every other experiment's serving stack
+
+### REQ-ARC-WMTE-5599-4: One-Last-Time Qwen3.6-27B Q4 Check -- Already Measured, One Variable Left
+
+Same-day operator follow-up: "We should try Qwen3.6-27B 4bit quant one last time with a Q8
+kv-cache and see how well it does."
+
+**Pre-check found the requested config already measured, cleanly, at n=3.** exp5599
+(`results/experiment_5599_reinduction_ab_lp85_levelup.json`) already ran EXACTLY Q4_K_M
+`Qwen3.6-27B-MTP-GGUF` with `kv_quant="q8_0"` on the real reinduction path, n=3, not a loading
+failure or a degenerate n=1: `plan_rate_given_levelup=0/3`, `mean_reinduce_duration_s=401.0`
+(294.9s/476.4s/431.2s), `heldout_accuracy` 0.333/0.0/0.333 (real signal, never crossing the 1.0
+acceptance threshold). Re-running that identical configuration would be a doomed rerun per
+CLAUDE.md's Failed-Experiment Rerun Discipline -- surfaced to the operator via
+`AskUserQuestion` rather than silently re-run or silently refused; operator confirmed pivoting to
+the one genuinely untested variable.
+
+**The one untested variable: `mtp=False` was set for exp5599's `candidate_27b` arm with no
+recorded rationale**, despite the model being named `Qwen3.6-27B-MTP-GGUF` (the 9B baseline arm
+used `mtp=True`). `python/carnot/experiment_5713_qwen27b_q4_mtp_enabled_ab.py` isolates exactly
+that one variable: same weights (Q4_K_M), same KV-cache precision (Q8_0), same hardware (GPU 1,
+RTX 3090, this project's own CUDA build), same task/methodology -- ONLY `mtp` flips
+`False -> True`. Launched at `n_repeats=3` from the start, applying the sample-size-fairness
+lesson from the SAME day's exp5709 n=1->n=3 upgrade before it could recur.
+
+**RESOLUTION: the first attempt found a real, hard OOM -- not a quality question.** The
+background `n_repeats=3` run stalled: the driver dropped to near-zero CPU and the launched
+`llama-server` subprocess was found `<defunct>` (crashed, zombie) within the first health-check
+poll window. `LocalGGUFProposer._ensure_server()` redirects the subprocess's stdout/stderr to
+`DEVNULL`, so the crash reason was invisible from the automated run alone, and the driver would
+have polled a dead server for up to `load_wait_attempts` (600 x 2s = 20 minutes) per repeat --
+60 minutes total -- for no new information. Killed and diagnosed directly instead: a manual
+launch with visible output showed the target model (Q4_K_M, ~15.9GiB on disk) loaded fine, but
+loading the DRAFT model -- self-speculative MTP loads the SAME GGUF file a SECOND time as a
+separate CUDA buffer, even though target and draft are literally the same weights -- failed:
+`cudaMalloc failed: out of memory` trying to allocate ~15.6GiB on top of the already-loaded
+target. Total demand (~32.6GB) exceeds the single RTX 3090's 24GB outright. This almost
+certainly is the root cause exp5599 hit too (undocumented at the time, hence `mtp=False` with no
+recorded rationale) -- and explains why MTP works for the 9B arm (9B x 2 copies comfortably fits
+24GB) but not for a 27B-class model on a single card.
+
+**The precondition check now computes this directly** (`2 x on-disk file size vs free VRAM`,
+not a magic number) so the experiment blocks in well under a second with the concrete numbers
+(`mtp_dual_load_estimated_mb=32628.6` vs `gpu1_free_mb=24120.0`) instead of burning up to an hour
+confirming a deterministic, instantly-reproducible failure a second and third time. Honest
+verdict: `complete: blocked_gpu1_free_vram_sufficient_for_mtp_dual_load` -- a real, fast,
+non-fabricated precondition block, with the manual diagnostic's crash log excerpt embedded
+verbatim in the artifact (`manual_diagnostic_crash_confirmation`) as concrete evidence, not just
+an arithmetic inference.
+
+**Answering the operator's original question directly.** The Q4_K_M + Q8-KV-cache config for
+Qwen3.6-27B has now been tried as thoroughly as this hardware allows: with MTP off (exp5599,
+0/3, clean) and with MTP on (this experiment, structurally cannot run -- OOM). Neither path
+beats the frozen 9B. The frozen live-submission generator remains UNCHANGED.
+
+**Sibling fix, same incident: `scripts/adversarial_verify.py`'s `_is_precondition_check_only_blocked`
+only recognized a BARE `blocked_` prefix**, missing the `complete: blocked_<resource>` form
+CLAUDE.md's own Verdict Terminal-Prefix Discipline mandates every terminal verdict use (a clean
+precondition-block IS a terminal state). This experiment's first (correctly-formed, terminal-
+prefixed) blocked artifact was false-flagged `DURATION_TOO_SHORT` before the fix -- exp5705's
+and exp5709's blocked branches use the identical `complete: blocked_{miss}` pattern and would
+have hit the same false positive had their blocked paths ever become the checked-in artifact.
+Fixed via `_strip_verdict_terminal_prefix` (mirrors `research_conductor.py:_verdict_is_untrustworthy`'s
+terminal-prefix list), with a 5-test regression suite added to
+`tests/python/test_adversarial_verify_blocked_verdict_duration_exemption.py`.
+
+Required field principles: see `FIELD_PRINCIPLES` in
+`python/carnot/experiment_5713_qwen27b_q4_mtp_enabled_ab.py`.
+
+#### SCENARIO-ARC-WMTE-5599-4-MTP-DUAL-LOAD-OOM-NOT-QUALITY
+
+Given a self-speculative MTP configuration requires loading the same GGUF file twice (target and
+draft), and the requested weights/KV-cache combination was already cleanly measured with MTP
+disabled
+When the one remaining variable (MTP enabled) is isolated and attempted on a single 24GB GPU
+Then a real, computed precondition check (2x on-disk file size vs free VRAM) blocks the attempt
+honestly and fast, backed by a manual diagnostic's crash log as concrete evidence, rather than
+either fabricating a performance result or burning up to an hour polling a subprocess that
+already crashed
