@@ -290,6 +290,41 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    `libamdhip64.so.7`/`librocblas.so.5` (ROCm) while the fresh one on 8929 links `libcuda.so.1`/
    `libcublas.so.13` (CUDA). Any future outer-loop script using `LocalGGUFProposer` should set BOTH
    `CARNOT_ARC_GENERATOR_CUDA_GPU=1` AND a non-default `port=` to reliably get real 3090 throughput.
+
+   **CORRIGENDUM 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-5): every `max_level_reached` /
+   `leveled_up` figure reported above (and in every prior chat summary of this smoke test, going
+   back to the ORIGINAL 2026-07-10 g50t run) was an unenforced-floor artifact, not a real
+   achievement.** Found while checking whether cd82's reflection advice was actually followed by
+   subsequent proposals (operator: "do that"). `scripts/outer_loop_sge_smoke_test.py` initialized
+   `max_level = prior_levels` and then folded real observations into that SAME variable via
+   `max(max_level, after_level)` -- but this harness has NEVER seeded the env at `prior_levels`
+   (no GameAdapter, no banked-trajectory replay, just a bare `env.reset()`). Since `prior_levels`
+   (1 or 2) was always >= the real level ever observed, `max_level_reached` silently reported the
+   ASSUMED starting point forever, regardless of what the run actually did. **Direct inspection of
+   every `action_log` in this investigation (7 real-GPU runs: the original 2026-07-10 g50t run,
+   both this session's pre/post-5699-3-nudge g50t runs, and all three games' pre/post-5699-4-
+   early-trigger runs) shows `level_before`/`level_after` = 0 on EVERY single action, in EVERY
+   run.** The environment's real level never left 0 -- not once, on any of the 3 games, across the
+   whole investigation. The honest finding was never "g50t stayed at L2" / "sk48 and cd82 stayed
+   at L1" (what was reported in this session's own chat turns) -- it was "none of these games ever
+   left level 0, with a bare generic cold-start SGE-only policy (no induction, no world-model
+   verifier, no frame-change scorer, no go-explore archive -- deliberately isolated to test the SGE
+   mechanism alone), across 46-90 actions." Fixed: the script now tracks `real_initial_level`/
+   `real_max_level_observed`/`leveled_up` directly from the observed trajectory, independent of the
+   `prior_levels`/`target_level` labels (now explicitly documented as informational-only, describing
+   what OTHER solve methods reached per `ops/arc_solve_registry.yaml`, not an env seed). Every
+   existing artifact (`results/outer_loop_sge_smoke_test*.json`, all 9 files including both baseline
+   snapshots) was retroactively patched with the corrected fields + a `corrigendum_2026_07_15` note,
+   preserving the original (misleading) fields unmodified alongside the correction, per this
+   project's adversarial-artifact-verification corrigendum convention. **This does NOT invalidate
+   the REQ-ARC-FCP-5699-3/5699-4 mechanism findings themselves** (the nudge firing, the parse-rate
+   improvements, cd82's strategy-text language genuinely shifting toward "active-commitment" advice
+   after each reflection) -- those are facts about the router's internal behavior, verified directly
+   from `diagnostics_log`, independent of the level-tracking bug. What changes is the INTERPRETATION
+   of "0/3 leveled up": it was never "0/3 escaped their assumed L1/L2 starting point," it was "0/3
+   escaped level 0 at all" -- a starker, more informative null than what was reported, and a
+   reminder to verify a headline metric against its own raw per-step data before trusting it, even
+   (especially) when the number seems to move in a plausible-looking way run to run.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
