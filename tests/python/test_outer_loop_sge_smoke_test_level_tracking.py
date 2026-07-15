@@ -97,6 +97,7 @@ def _run_with_fakes(
     prior_levels: int,
     target_level: int,
     router_mode: str = "sge",
+    induction_enabled: bool = False,
 ):
     fake_env = _ScriptedFakeEnv(level_sequence)
     fake_arcade = MagicMock()
@@ -105,7 +106,8 @@ def _run_with_fakes(
     mod.kit.offline_arcade = MagicMock(return_value=fake_arcade)  # type: ignore[attr-defined]
 
     fake_policy = _ScriptedFakePolicy(num_actions)
-    mod.E3AgentPolicy = MagicMock(return_value=fake_policy)  # type: ignore[attr-defined]
+    e3_policy_mock = MagicMock(return_value=fake_policy)
+    mod.E3AgentPolicy = e3_policy_mock  # type: ignore[attr-defined]
 
     fake_gguf = MagicMock()
     fake_gguf.repo_substr = "fake-model"
@@ -126,14 +128,17 @@ def _run_with_fakes(
 
     mod.SGECandidateRouter = _make_router  # type: ignore[assignment]
     try:
-        return mod.run_game(
+        result = mod.run_game(
             "fake_game",
             prior_levels,
             target_level,
             budget=50,
             gguf=fake_gguf,
             router_mode=router_mode,
+            induction_enabled=induction_enabled,
         )
+        result["_e3_policy_call_kwargs"] = dict(e3_policy_mock.call_args.kwargs)
+        return result
     finally:
         mod.SGECandidateRouter = real_router_cls
 
@@ -211,6 +216,51 @@ def test_baseline_router_mode_uses_deterministic_router_and_still_tracks_honestl
     )
 
 
+def test_induction_disabled_by_default_passes_noop_stub():
+    """The pre-existing default: E3AgentPolicy gets the _NoOpInductionProposer stub, never
+    a real GPU-backed proposer, unless induction_enabled=True is explicitly passed."""
+    mod = _load_smoke_test_module()
+    result = _run_with_fakes(
+        mod,
+        level_sequence=[0] * 10,
+        num_actions=3,
+        prior_levels=1,
+        target_level=2,
+    )
+    assert result["induction_enabled"] is False
+    passed_proposer = result["_e3_policy_call_kwargs"]["proposer"]
+    assert isinstance(passed_proposer, mod._NoOpInductionProposer)
+    assert result["induction_attempts"] == []
+    assert result["induction_attempts_not_skipped"] == 0
+
+
+def test_induction_enabled_passes_real_local_gguf_proposer_on_a_dedicated_port():
+    """REQ-ARC-FCP-5699-8: induction_enabled=True constructs a REAL LocalGGUFProposer (not
+    mocked -- construction is lazy/cheap, no GPU/network call happens until .induce() is
+    invoked, which this fake policy never calls) using the frozen live-submission
+    generator's defaults, on port 8930 -- distinct from the SGE completer's own 8929, so
+    the two different models (Qwen3.5-9B-MTP for induction, gemma-4-12B-it for SGE
+    strategy proposals) never fight over the same llama-server."""
+    mod = _load_smoke_test_module()
+    result = _run_with_fakes(
+        mod,
+        level_sequence=[0] * 10,
+        num_actions=3,
+        prior_levels=1,
+        target_level=2,
+        induction_enabled=True,
+    )
+    assert result["induction_enabled"] is True
+    passed_proposer = result["_e3_policy_call_kwargs"]["proposer"]
+    assert isinstance(passed_proposer, mod.LocalGGUFProposer)
+    assert passed_proposer.repo_substr == "Qwen3.5-9B-MTP"
+    assert passed_proposer.port == 8930
+    assert passed_proposer.mtp is True
+    # a fake policy never calls .induce(), so induction_attempts stays empty here -- this
+    # test verifies WHAT was configured, not that induction ran (that needs a real GPU run)
+    assert result["induction_attempts"] == []
+
+
 def test_req_arc_fcp_5699_5_spec_declares_honest_level_tracking() -> None:
     spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
     spec = spec_path.read_text(encoding="utf-8")
@@ -271,3 +321,18 @@ def test_budget_override_flows_through_to_run_game(monkeypatch):
     fake_gguf.repo_substr = "fake-model"
     result = mod.run_game("fake_game", 1, 2, budget=3, gguf=fake_gguf, router_mode="baseline")
     assert result["attempts"] <= 3
+
+
+def test_req_arc_fcp_5699_8_spec_declares_induction_trust_gate() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-8") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-8",
+        "SCENARIO-ARC-FCP-5699-8-INDUCTION-RE-ENABLED-STILL-GATED-BY-TRUST-CHECK",
+        "hidden_state_trust_below_threshold",
+        "HIDDEN_STATE_GAME_IDS",
+        "--induction",
+    ):
+        assert marker in section

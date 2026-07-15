@@ -373,6 +373,39 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    feature at a time (starting with induction, the most heavily-disabled system) under the same
    controlled-comparison discipline established across REQ-ARC-FCP-5699-3 through 5699-7, rather
    than re-testing router choice or budget further on these 3 games.
+
+   **INDUCTION RE-ENABLED 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-8, operator: "re-enable
+   induction and run it"): still 0/3, but for a NEW, specific, non-obvious reason -- a real
+   production safety gate, not the harness's own disable flag.** `--induction` added to the CLI:
+   constructs a real `LocalGGUFProposer` (Qwen3.5-9B-MTP, the frozen live-submission defaults) on
+   a dedicated port instead of the no-op stub, and stops setting `CARNOT_ARC_DISABLE_INDUCTION=1`.
+   Ran SGE + `--induction` at default budget=46 on all 3 games --
+   `results/outer_loop_sge_smoke_test_{g50t,sk48,cd82,suite}_induction.json`. Still
+   `real_max_level_observed=0` on all 3 -- but `induction_attempts_not_skipped=0` too, and every
+   game's real `induction_attempts` log (E3AgentPolicy's own record, not inferred) shows the LLM
+   call was skipped with `"skipped": "hidden_state_trust_below_threshold"`, NOT
+   `"disabled_by_env"` -- confirming the harness disable really was bypassed this time, and
+   induction hit a genuine, separate, pre-existing gate instead. **Traced to source:** all 3 games
+   (`g50t`, `sk48`, `cd82`) happen to be members of `HIDDEN_STATE_GAME_IDS`
+   (`arc_world_model_trust_energy.py:22-32`) -- not a deliberate selection; g50t was exp5534's
+   original scope, sk48/cd82 were added for candidate-space diversity. For a hidden-state game,
+   `select_trusted_world_model` fits a CNN dynamics prior from observed transitions and requires
+   `trust_pass` (which needs `heldout_change_consistency >= threshold`, per
+   `arc_world_model_trust_energy.py:388`) BEFORE any LLM call is attempted. All 3 games' real
+   attempts show `heldout_change_consistency` at or near zero (0.0, 0.0, 0.0165) after only 25
+   observed transitions from a cold `budget=46` start -- `trust_pass` fails regardless of other
+   reported sub-metrics (sk48 even shows `binary_gate_pass: true` but is still skipped, since
+   `trust_pass` is the stricter compound condition actually gating the call). **Honest framing:**
+   this is NOT "induction was tried and didn't help" -- it's "induction was never actually invoked,
+   for a specific, traced, pre-existing reason distinct from every prior null in this
+   investigation." Two genuinely new, not-yet-tested follow-ups this surfaces: (1) whether a
+   larger budget increases `transition_count` enough for `heldout_change_consistency` to clear the
+   threshold naturally (REQ-ARC-FCP-5699-7 already ruled out budget changing the LEVEL outcome,
+   but that run had induction disabled throughout -- this is a different question: does budget
+   change whether induction ever FIRES); (2) testing on a game NOT in `HIDDEN_STATE_GAME_IDS`,
+   where this specific gate does not apply and a real LLM induction call would actually be
+   attempted from the first stall. Either of those, not a third re-run of g50t/sk48/cd82, is the
+   next real step on this thread.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

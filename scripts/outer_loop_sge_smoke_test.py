@@ -45,12 +45,16 @@ far used SGE with no control -- this establishes whether ANY exploration method 
 level 0 in this harness, or whether the harness itself (not SGE specifically) is what
 caps progress.
 
-Usage: .venv/bin/python scripts/outer_loop_sge_smoke_test.py [--baseline] [--budget N] [game ...]
-  No args -> runs the full GAMES suite below with the real SGE router.
+Usage: .venv/bin/python scripts/outer_loop_sge_smoke_test.py [--baseline] [--induction] [--budget N] [game ...]
+  No args -> runs the full GAMES suite below with the real SGE router, induction disabled.
   One or more game ids -> runs just those (still SGE unless --baseline is also given).
   --baseline -> runs the same games with the deterministic control router instead;
     writes to outer_loop_sge_smoke_test_baseline_<game>.json (never collides with the
     SGE-mode output paths, including g50t's unsuffixed backward-compat path).
+  --induction -> re-enables the LLM world-model induction proposer (REQ-ARC-FCP-5699-8,
+    a real LocalGGUFProposer/Qwen3.5-9B-MTP instead of the _NoOpInductionProposer stub)
+    instead of the induction-disabled config every other run in this investigation used.
+    Always writes to an _induction-suffixed path.
   --budget N -> overrides every selected game's default budget (46) with N. Always writes
     to a _budgetN-suffixed path, so a longer run never overwrites the 46-budget artifacts
     it's meant to be compared against (REQ-ARC-FCP-5699-7).
@@ -65,7 +69,17 @@ import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
+# REQ-ARC-FCP-5699-8 (operator: "re-enable induction and run it"): CARNOT_ARC_DISABLE_INDUCTION
+# is read at CALL time inside E3AgentPolicy (arc_competition_agent.py's escape hatch, "skip the
+# LLM world-model induction tier entirely"), not at import time -- but it must still be set
+# BEFORE run_game() constructs the policy, and --induction needs to be visible this early (before
+# argparse-style parsing happens in main()) so a plain sys.argv membership check is used here
+# rather than deferring to main(). Every OTHER run in this investigation left this =1 (induction
+# disabled) to isolate the router under test; --induction is the one flag that flips it, letting
+# a real LocalGGUFProposer (the frozen live-submission generator, same defaults E3AgentPolicy._
+# proposer() would build) actually run instead of the _NoOpInductionProposer stub.
+if "--induction" not in sys.argv:
+    os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
 
 sys.path.insert(0, str(REPO / "python"))
 
@@ -110,7 +124,14 @@ class _NoOpInductionProposer:
 
 
 def run_game(
-    game: str, prior_levels: int, target_level: int, budget: int, gguf, *, router_mode: str = "sge"
+    game: str,
+    prior_levels: int,
+    target_level: int,
+    budget: int,
+    gguf,
+    *,
+    router_mode: str = "sge",
+    induction_enabled: bool = False,
 ) -> dict:
     """router_mode="sge" (default): the real LLM Strategy-Guided Exploration router under
     test. router_mode="baseline": the CONTROL -- exp5534's deterministic, non-LLM
@@ -118,7 +139,17 @@ def run_game(
     (same budget, same disabled induction/world-model/scorer). Added 2026-07-15 (operator:
     "run it", following the observation that every run in this investigation used SGE --
     there was no control showing whether ANY exploration method escapes level 0 in this
-    harness, or whether the harness itself (not SGE specifically) is what caps progress."""
+    harness, or whether the harness itself (not SGE specifically) is what caps progress.
+
+    induction_enabled=False (default): every prior run in this investigation stripped LLM
+    world-model induction to isolate the candidate router under test
+    (_NoOpInductionProposer, a stub that always reports False/no candidates).
+    induction_enabled=True (REQ-ARC-FCP-5699-8, operator: "re-enable induction and run
+    it"): a real LocalGGUFProposer is constructed instead, using the SAME defaults
+    E3AgentPolicy._proposer() would lazily build in production (Qwen3.5-9B-MTP, MTP, q8
+    KV, /no_think) but on a dedicated port (8930) so it never collides with the SGE
+    router's own gemma-4-12B-it server on 8929 -- these are two DIFFERENT models serving
+    two DIFFERENT roles (induction vs. strategy proposal) and must not share a server."""
     if router_mode == "baseline":
         router = BoundedStrategyCandidateRouter(max_candidates=8)
     else:
@@ -133,11 +164,23 @@ def run_game(
         )
     generator = ActionDiverseLiveGenerator(max_candidates=8)
 
+    if induction_enabled:
+        induction_proposer = LocalGGUFProposer(
+            repo_substr="Qwen3.5-9B-MTP",
+            mtp=True,
+            kv_quant="q8_0",
+            no_think_prefix="/no_think\n",
+            max_tokens=2560,
+            port=8930,
+        )
+    else:
+        induction_proposer = _NoOpInductionProposer()
+
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     policy = E3AgentPolicy(
         game,
-        proposer=_NoOpInductionProposer(),
+        proposer=induction_proposer,
         explore_budget=budget,
         target_levels=target_level,
         value_head=None,
@@ -216,10 +259,22 @@ def run_game(
     real_initial_level = real_initial_level if real_initial_level is not None else 0
     any_llm_used = any(row.get("llm_strategy_proposer_used") for row in diagnostics_log)
     any_nudge_fired = any(row.get("reflection_nudge_fired") for row in diagnostics_log)
+    # Honest evidence of whether induction actually ran, not just that a real proposer was
+    # configured -- policy.induction_attempts is E3AgentPolicy's own real-time log of every
+    # induction attempt (planned, skipped-and-why, or genuinely invoked). A real proposer
+    # with zero attempts (or every attempt skipped) means induction was never actually
+    # exercised this run, which is a materially different finding from "it ran and found
+    # nothing" -- report both distinctly rather than only the config flag.
+    induction_attempts = list(getattr(policy, "induction_attempts", []))
     return {
         "smoke_test": "outer_loop_sge_smoke_test",
         "game": game,
         "router_mode": router_mode,
+        "induction_enabled": induction_enabled,
+        "induction_attempts": induction_attempts,
+        "induction_attempts_not_skipped": sum(
+            1 for a in induction_attempts if not a.get("skipped")
+        ),
         "prior_levels_reproduced": prior_levels,
         "target_level": target_level,
         "methodology_note": (
@@ -259,6 +314,9 @@ def main() -> int:
     baseline = "--baseline" in argv
     if baseline:
         argv.remove("--baseline")
+    induction = "--induction" in argv
+    if induction:
+        argv.remove("--induction")
     budget_override: int | None = None
     if "--budget" in argv:
         idx = argv.index("--budget")
@@ -291,31 +349,42 @@ def main() -> int:
     results = []
     for game, prior_levels, target_level, budget in rows:
         print(
-            f"== [{router_mode}] {game}: prior=L{prior_levels} target=L{target_level} "
-            f"budget={budget} ==",
+            f"== [{router_mode}{'+induction' if induction else ''}] {game}: "
+            f"prior=L{prior_levels} target=L{target_level} budget={budget} ==",
             flush=True,
         )
-        result = run_game(game, prior_levels, target_level, budget, gguf, router_mode=router_mode)
+        result = run_game(
+            game,
+            prior_levels,
+            target_level,
+            budget,
+            gguf,
+            router_mode=router_mode,
+            induction_enabled=induction,
+        )
         print(
             f"   duration_s={result['duration_s']:.2f} "
             f"real_level={result['real_initial_level']}->{result['real_max_level_observed']} "
             f"leveled_up={result['leveled_up']} "
             f"llm_used={result['llm_strategy_proposer_used_any_step']} "
-            f"nudge_fired={result['reflection_nudge_fired_any_step']}",
+            f"nudge_fired={result['reflection_nudge_fired_any_step']} "
+            f"induction_attempts_not_skipped={result['induction_attempts_not_skipped']}",
             flush=True,
         )
-        # per-game file. g50t (SGE mode, default budget) keeps the unsuffixed pre-2026-07-15
-        # path for backward compat with the existing REQ-ARC-FCP-5699-3/5699-4 baselines;
-        # every other combination gets an explicit, non-colliding name -- a --budget override
-        # always gets its own suffix so a longer run never clobbers the 46-budget artifacts
-        # this and the REQ-ARC-FCP-5699-6 control were compared against.
+        # per-game file. g50t (SGE mode, default budget, induction still disabled) keeps the
+        # unsuffixed pre-2026-07-15 path for backward compat with the existing REQ-ARC-FCP-
+        # 5699-3/5699-4 baselines; every other combination gets an explicit, non-colliding
+        # name -- a --budget or --induction flag always gets its own suffix so a differently-
+        # configured run never clobbers the artifacts it's meant to be compared against.
         budget_suffix = f"_budget{budget}" if budget_override is not None else ""
-        if game == "g50t" and not baseline and not budget_suffix:
+        induction_suffix = "_induction" if induction else ""
+        suffix = budget_suffix + induction_suffix
+        if game == "g50t" and not baseline and not suffix:
             out_name = "outer_loop_sge_smoke_test.json"
         elif baseline:
-            out_name = f"outer_loop_sge_smoke_test_baseline_{game}{budget_suffix}.json"
+            out_name = f"outer_loop_sge_smoke_test_baseline_{game}{suffix}.json"
         else:
-            out_name = f"outer_loop_sge_smoke_test_{game}{budget_suffix}.json"
+            out_name = f"outer_loop_sge_smoke_test_{game}{suffix}.json"
         out_path = REPO / "results" / out_name
         out_path.write_text(json.dumps(result, indent=2, default=str))
         print(f"   wrote {out_path.relative_to(REPO)}", flush=True)
@@ -324,6 +393,7 @@ def main() -> int:
     summary = {
         "smoke_test_suite": "outer_loop_sge_smoke_test_suite",
         "router_mode": router_mode,
+        "induction_enabled": induction,
         "games": [
             {
                 "game": r["game"],
@@ -336,16 +406,19 @@ def main() -> int:
                 "duration_s": r["duration_s"],
                 "llm_strategy_proposer_used_any_step": r["llm_strategy_proposer_used_any_step"],
                 "reflection_nudge_fired_any_step": r["reflection_nudge_fired_any_step"],
+                "induction_attempts_not_skipped": r["induction_attempts_not_skipped"],
             }
             for r in results
         ],
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     summary_budget_suffix = f"_budget{budget_override}" if budget_override is not None else ""
+    summary_induction_suffix = "_induction" if induction else ""
+    summary_suffix = summary_budget_suffix + summary_induction_suffix
     summary_name = (
-        f"outer_loop_sge_smoke_test_baseline_suite{summary_budget_suffix}.json"
+        f"outer_loop_sge_smoke_test_baseline_suite{summary_suffix}.json"
         if baseline
-        else f"outer_loop_sge_smoke_test_suite{summary_budget_suffix}.json"
+        else f"outer_loop_sge_smoke_test_suite{summary_suffix}.json"
     )
     summary_path = REPO / "results" / summary_name
     summary_path.write_text(json.dumps(summary, indent=2, default=str))

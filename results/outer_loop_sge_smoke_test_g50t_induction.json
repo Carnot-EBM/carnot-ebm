@@ -1,0 +1,3674 @@
+{
+  "smoke_test": "outer_loop_sge_smoke_test",
+  "game": "g50t",
+  "router_mode": "sge",
+  "induction_enabled": true,
+  "induction_attempts": [
+    {
+      "reason": "stall",
+      "goal_level": 1,
+      "transition_count": 25,
+      "dsl_transition_count": 25,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "planned": false,
+      "skipped": "hidden_state_trust_below_threshold",
+      "ttt_prior_engine": {
+        "backend": "cnn",
+        "n_transitions": 25,
+        "warm_start": false,
+        "prior_transition_count": 0,
+        "prior_loaded": true,
+        "heldout_accuracy": 0.0,
+        "heldout_cell_recall": 0.9728,
+        "trust_threshold": 0.5,
+        "trust_metric": "cell_recall",
+        "gate": "PASS"
+      },
+      "trust_energy": -1.956042,
+      "heldout_change_consistency": 0.0,
+      "heldout_accuracy": 0.0,
+      "correct_changed_cells": 0,
+      "binary_gate_pass": false
+    }
+  ],
+  "induction_attempts_not_skipped": 0,
+  "prior_levels_reproduced": 2,
+  "target_level": 3,
+  "methodology_note": "prior_levels_reproduced/target_level are INFORMATIONAL labels from ops/arc_solve_registry.yaml (what OTHER solve methods reached for this game) -- this harness does NOT seed the env at that level; it always explores from a true cold env.reset(). real_initial_level/real_max_level_observed are the actual measured trajectory and are what leveled_up is computed from.",
+  "real_initial_level": 0,
+  "real_max_level_observed": 0,
+  "leveled_up": false,
+  "max_level_reached": 0,
+  "attempts": 43,
+  "duration_s": 64.61414790153503,
+  "llm_strategy_proposer_used_any_step": true,
+  "reflection_nudge_fired_any_step": true,
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    "gemma-4-12B-it"
+  ],
+  "action_log": [
+    {
+      "step": 2,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state and any automatic transitions to identify the game's starting conditions.",
+        "Observe the initial state to see if any automatic transitions or environmental changes occur without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 3,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state and any automatic transitions to identify the game's starting conditions.",
+        "Observe the initial state to see if any automatic transitions or environmental changes occur without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 4,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 5,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 6,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 7,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 8,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 9,
+      "action": 4,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 10,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 11,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 12,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 13,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 14,
+      "action": 5,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      }
+    },
+    {
+      "step": 15,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      }
+    },
+    {
+      "step": 16,
+      "action": 5,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      }
+    },
+    {
+      "step": 17,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      }
+    },
+    {
+      "step": 18,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      }
+    },
+    {
+      "step": 19,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      }
+    },
+    {
+      "step": 20,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      }
+    },
+    {
+      "step": 21,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      }
+    },
+    {
+      "step": 22,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      }
+    },
+    {
+      "step": 23,
+      "action": 4,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      }
+    },
+    {
+      "step": 24,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 25,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 26,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 27,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 29,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 30,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 31,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 32,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 33,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 34,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 35,
+      "action": 4,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 36,
+      "action": 5,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 38,
+      "action": 4,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 39,
+      "action": 4,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 40,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance's baseline.",
+        "Since all candidates are \"None\" actions, I will select one to see if the system registers a \"wait\" or \"pass\" state.",
+        "Test the current guidance by attempting a movement sequence toward the origin."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 41,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance's baseline.",
+        "Since all candidates are \"None\" actions, I will select one to see if the system registers a \"wait\" or \"pass\" state.",
+        "Test the current guidance by attempting a movement sequence toward the origin."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 42,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 43,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 44,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 45,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    },
+    {
+      "step": 46,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      }
+    }
+  ],
+  "diagnostics_log": [
+    {
+      "step": 1
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state and any automatic transitions to identify the game's starting conditions.",
+        "Observe the initial state to see if any automatic transitions or environmental changes occur without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state and any automatic transitions to identify the game's starting conditions.",
+        "Observe the initial state to see if any automatic transitions or environmental changes occur without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Observe the initial state to see if any automatic events occur without player input.",
+        "Observe the initial state to see if any automatic progression occurs without input."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 3,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 2,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.6666666666666667,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 2
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 3,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 2,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.6666666666666667,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 2
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 3,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 2,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.6666666666666667,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 2
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 3,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 2,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.6666666666666667,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 2
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 3,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a state change as suggested by the reflection.",
+        "Test if moving to a specific grid coordinate triggers a state change as suggested."
+      ],
+      "votes_by_index": {
+        "0": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a deliberate move to a different grid coordinate to trigger a state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 2,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.6666666666666667,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 2
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.7970940170940172,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 1,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.7970940170940172,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 1,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.7970940170940172,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 1,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Attempt to move to a different coordinate to observe if it triggers a state change or a new rule.",
+        "Attempt to move to a new grid coordinate to observe if it triggers a state change or provides new information."
+      ],
+      "votes_by_index": {
+        "4": 1,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.7970940170940172,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 1,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.685982905982906,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 4,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.685982905982906,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 4,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.685982905982906,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 4,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.685982905982906,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 4,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner to test boundary behavior.",
+        "Move to the extreme opposite corner of the grid at (0, 0) to force a boundary state change."
+      ],
+      "votes_by_index": {
+        "0": 2,
+        "1": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.685982905982906,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 4,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "scheduled",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.763970695970696,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 5,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "scheduled",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.763970695970696,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 5,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "scheduled",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.763970695970696,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 5,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "scheduled",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.763970695970696,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 5,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "scheduled",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.763970695970696,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 5,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "scheduled",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.763970695970696,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 5,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change towards the target.",
+        "Test if providing no coordinate results in any change or error to establish a baseline.",
+        "Initiate a movement sequence to test the high-intensity multi-step instruction towards (0, 0)."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "scheduled",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.763970695970696,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 5,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to begin the sequence.",
+        "Initiate the movement sequence to the (0, 0) coordinate to test the high-intensity instruction.",
+        "Execute a high-intensity movement sequence to (0,0) as directed by the reflection."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 6,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7807454767454768,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 6,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance's baseline.",
+        "Since all candidates are \"None\" actions, I will select one to see if the system registers a \"wait\" or \"pass\" state.",
+        "Test the current guidance by attempting a movement sequence toward the origin."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 7,
+          "unique_normalized_strategy_count": 6,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7552278720345947,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 7,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change to begin the sequence",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance's baseline.",
+        "Since all candidates are \"None\" actions, I will select one to see if the system registers a \"wait\" or \"pass\" state.",
+        "Test the current guidance by attempting a movement sequence toward the origin."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a high-intensity, multi-step movement sequence to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 7,
+          "unique_normalized_strategy_count": 6,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7552278720345947,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 7,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change to begin the sequence",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 9,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a rapid diagonal dash across the entire grid to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 8,
+          "strategy_text_count": 8,
+          "unique_normalized_strategy_count": 7,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7342525366790074,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 8,
+          "consecutive_null_outcomes": 8
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change to begin the sequence",
+          "test if the none action triggers a default movement or state change to verify the current guidance s baseline",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 9,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a rapid diagonal dash across the entire grid to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 8,
+          "strategy_text_count": 8,
+          "unique_normalized_strategy_count": 7,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7342525366790074,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 8,
+          "consecutive_null_outcomes": 8
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change to begin the sequence",
+          "test if the none action triggers a default movement or state change to verify the current guidance s baseline",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 9,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a rapid diagonal dash across the entire grid to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 8,
+          "strategy_text_count": 8,
+          "unique_normalized_strategy_count": 7,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7342525366790074,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 8,
+          "consecutive_null_outcomes": 8
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change to begin the sequence",
+          "test if the none action triggers a default movement or state change to verify the current guidance s baseline",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 9,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a rapid diagonal dash across the entire grid to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 8,
+          "strategy_text_count": 8,
+          "unique_normalized_strategy_count": 7,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7342525366790074,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 8,
+          "consecutive_null_outcomes": 8
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change to begin the sequence",
+          "test if the none action triggers a default movement or state change to verify the current guidance s baseline",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 9,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if the \"None\" action triggers a default movement or state change to verify the current guidance.",
+        "Test if performing no action results in a state change or if it is required to observe the environment.",
+        "Test if the \"None\" action provides any feedback or triggers a default state change."
+      ],
+      "votes_by_index": {
+        "0": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "Execute a rapid diagonal dash across the entire grid to the (0, 0) coordinate.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": true,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "repeated_action_proposals",
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 8,
+          "strategy_text_count": 8,
+          "unique_normalized_strategy_count": 7,
+          "max_normalized_strategy_repeat": 2,
+          "mean_pairwise_strategy_distance": 0.7342525366790074,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 8,
+          "consecutive_null_outcomes": 8
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "move to the extreme opposite corner to test boundary behavior",
+          "observe the initial state and any automatic transitions to identify the game s starting conditions",
+          "observe the initial state to see if any automatic events occur without player input",
+          "test if moving to a specific coordinate triggers a state change as suggested by the reflection",
+          "test if the none action triggers a default movement or state change to begin the sequence",
+          "test if the none action triggers a default movement or state change to verify the current guidance s baseline",
+          "test if the none action triggers a default movement or state change towards the target"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    }
+  ]
+}

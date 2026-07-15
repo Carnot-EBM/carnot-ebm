@@ -5380,6 +5380,71 @@ confirmed via attempt counts (not an early termination), rules out "insufficient
 explanation and narrows the remaining hypothesis space to the other deliberately-disabled
 components of the configuration, not to the exploration strategy or the time allotted
 
+### REQ-ARC-FCP-5699-8: Re-Enabling Induction -- Blocked By A Different Gate, Not The Harness Disable
+
+REQ-ARC-FCP-5699-6/5699-7 narrowed the remaining hypothesis to "one of the other deliberately-
+disabled production features (induction, frame-change scorer, goal-bias, go-explore archive) is
+what's actually load-bearing." `run_game()` SHALL accept `induction_enabled: bool = False`;
+`True` constructs a real `LocalGGUFProposer` (the SAME defaults `E3AgentPolicy._proposer()`
+would lazily build in production -- `Qwen3.5-9B-MTP`, MTP, q8 KV, `/no_think`) on a dedicated
+port (8930, distinct from the SGE router's own `gemma-4-12B-it` server on 8929) instead of
+`_NoOpInductionProposer`. `main()` SHALL expose `--induction`. Because
+`CARNOT_ARC_DISABLE_INDUCTION=1` is set at module scope BEFORE argv parsing normally happens (a
+production-safe escape hatch read at call time inside `E3AgentPolicy`, per its own docstring
+comment), the `--induction` check SHALL happen via a plain `sys.argv` membership test before that
+env-var line, not deferred into `main()`.
+
+**RESOLUTION (2026-07-15, operator: "re-enable induction and run it").** Ran `--induction`
+(SGE router, default `budget=46`) against all 3 games --
+`results/outer_loop_sge_smoke_test_{g50t,sk48,cd82,suite}_induction.json`. **Still
+`real_max_level_observed=0` on all 3 games** -- but `induction_attempts_not_skipped=0` on all 3
+too, and direct inspection of each artifact's `induction_attempts` list (E3AgentPolicy's own
+real-time induction log, not inferred) shows the LLM induction call was skipped every single time
+with `"skipped": "hidden_state_trust_below_threshold"`. This is a DIFFERENT skip reason than the
+one this whole investigation had been avoiding (`"disabled_by_env"`, the harness's own escape
+hatch) -- confirming `--induction` genuinely bypassed that hatch, and inducton hit a real,
+separate, pre-existing production gate instead.
+
+**The gate, traced to source (`arc_competition_agent.py:3601-3617`):** all 3 games (`g50t`,
+`sk48`, `cd82`) are members of `HIDDEN_STATE_GAME_IDS`
+(`arc_world_model_trust_energy.py:22-32`) -- coincidentally, not by deliberate selection; g50t
+was exp5534's original scope and sk48/cd82 were added purely for candidate-space diversity
+(REQ-ARC-FCP-5699 extension). For a hidden-state game, `select_trusted_world_model` fits a CNN
+dynamics prior from observed transitions and computes a `TrustScore` BEFORE any LLM call is
+attempted; `trust_pass` requires `heldout_change_consistency >= threshold` (in addition to a
+non-degeneracy check) per `arc_world_model_trust_energy.py:388`. All 3 games' real
+`induction_attempts[0]` entries show `heldout_change_consistency` at or near zero (g50t: 0.0,
+sk48: 0.0, cd82: 0.0165) after only 25 observed transitions from a cold `budget=46` start --
+`trust_pass` fails on the consistency term regardless of the OTHER reported sub-metrics (sk48
+even shows `binary_gate_pass: true` yet is still skipped, since `trust_pass` is the stricter,
+compound condition the code actually branches on, not `binary_gate_pass` alone).
+
+**This narrows the open hypothesis further, rather than closing it.** "Re-enabling induction"
+alone does not change the headline result on THESE 3 games in THIS harness -- but not because
+induction was tried and failed to help; because a pre-existing, unrelated production safety gate
+(designed to avoid inducing from an untrustworthy dynamics prior) never lets the LLM call happen
+at all with only ~25 cold-start transitions. Two distinct, not-yet-tested follow-ups this
+surfaces: (1) whether a larger budget specifically increases `transition_count` enough for
+`heldout_change_consistency` to clear the threshold naturally (REQ-ARC-FCP-5699-7 already showed
+budget alone doesn't change the LEVEL outcome, but that run had induction disabled throughout --
+this is a genuinely different question: does budget change whether induction EVER FIRES); (2)
+testing on a NON-hidden-state game, where this gate does not apply at all and a real LLM
+induction call would actually be attempted from the very first stall.
+
+#### SCENARIO-ARC-FCP-5699-8-INDUCTION-RE-ENABLED-STILL-GATED-BY-TRUST-CHECK
+
+Given a game classified in `HIDDEN_STATE_GAME_IDS` and a harness that re-enables the LLM
+induction proposer (bypassing the harness's own disable flag)
+When the CNN-fitted dynamics prior's held-out change-consistency has not yet cleared
+`trust_pass`'s threshold (typically true very early in a cold-start run with few observed
+transitions)
+Then the LLM induction call is skipped with an honest, distinct reason
+(`hidden_state_trust_below_threshold`) rather than silently defaulting to
+`disabled_by_env` -- a harness genuinely re-enabling induction must distinguish "induction never
+had a chance to run" (env-disabled) from "induction was allowed to run but a real production
+safety gate declined to invoke the LLM this time" (trust-gated), since conflating the two would
+misattribute a null result to the wrong cause
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
