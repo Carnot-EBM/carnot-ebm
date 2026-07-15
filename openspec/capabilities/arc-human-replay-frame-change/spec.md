@@ -5845,3 +5845,79 @@ Then it is computed ONCE per frame and threaded through to every consultation, n
 independently inside each per-candidate scoring call -- a redundant per-candidate recomputation
 of a per-frame quantity turns an O(grid_cells) cost into an O(candidates x grid_cells) one, which
 at realistic candidate counts on a large grid is indistinguishable from a hang
+
+### REQ-CAPSTONE-4556-2: CrossGameDiscriminativeCandidateRouter Per-Frame Feature Caching
+
+Second incident of the same submission-prep pre-flight session (2026-07-15, immediately
+following `REQ-ARC-FCP-5591-3`). After fixing and disabling `ColorBlobSaliencePrior`, a re-run
+of `scripts/kaggle/arc_local_submission_gate.py --check` improved (1/8 solved, up from 0/8,
+`vc33` recovered) but still lost `lp85`/`m0r0`/`sp80` to the verified baseline.
+
+**Root cause, again found via a live `faulthandler` stack trace on a real slow `lp85` run (not
+guesswork):** the stack bottomed out in `arc_value_learner.py:_component_stats_from_grid`, via
+`arc_discriminative_router.py:score()`/`rank()` -- the SAME anti-pattern as
+`REQ-ARC-FCP-5591-3`, in a different module.
+`CrossGameDiscriminativeCandidateRouter.rank()` (the live `discriminative_candidate_router`,
+`SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] = True`, unchanged since
+before 6/30) calls `score()` once per candidate action, and `score()` calls
+`cross_game_features_v3(frame, previous_frame, action_id, goal_frame)` fresh every time. Of
+that function's four feature groups (`cross_game_features_v2`, `_object_relational_features`,
+`_frame_delta_features`, `_predicate_distance_features`, plus `_action_features`), only the
+last (`_action_features(action_id)`, a cheap 7-element one-hot) actually depends on the
+per-candidate `action_id` -- the other four depend ONLY on `(frame, previous_frame,
+goal_frame)`, identical across every candidate in a single `rank()` call, yet were being fully
+recomputed per candidate. `_object_relational_features` in particular runs an O(components^2)
+greedy frame-matching loop -- a cost this project's own 2026-06-30 investigation
+(`arc_value_learner.py`'s docstring, commit `3c721292d`) had already identified as "the real
+per-node cost" without recognizing it was being paid redundantly per CANDIDATE on top of per
+NODE.
+
+**Why the 6/30 baseline didn't trip this (best available explanation, not fully certain):** the
+flag has been `True` since before 6/30 and the code path is structurally unchanged in this
+window per `git log`, so this is not a NEW regression in the sense of new code -- it is a
+pre-existing O(candidates x components^2) cost that the 6/30 baseline measurement happened to
+clear within its time budget, and that today's heavier system load and/or slightly different
+candidate counts pushed over the local gate's 115s cap. Unlike `REQ-ARC-FCP-5591-3` (a
+genuinely NEW flag flip since 6/30), this fix is a legitimate general performance improvement
+to a long-standing code path, not a revert of a recent regression.
+
+**Fix.** `arc_value_learner.py` gains `CrossGameFrameContextV3` (a `NamedTuple` of the four
+frame-only feature groups) and `cross_game_frame_context_v3(frame, previous_frame, goal_frame)`
+(computes it once). `cross_game_features_v3()` gains an optional keyword-only `frame_context`
+parameter -- when given, skips recomputing the four frame-only groups and splices in the fresh
+per-candidate `_action_features(action_id)`; when omitted, behaves exactly as before (every
+other existing caller -- `arc_world_model_trust_energy.py`, `arc_controllable_novelty.py`, two
+`experiment_47xx_structural_energy_*` scripts -- is unaffected).
+`CrossGameDiscriminativeCandidateRouter.rank()` now computes the `frame_context` once and
+passes it to every `score()` call within that `rank()` invocation.
+
+**Verified.** A real `lp85` run (budget=8000, `CARNOT_ARC_DISABLE_INDUCTION=1`, no induction)
+that was previously timing out at the gate's 115s cap now completes in 54s with
+`actions=7792` -- an EXACT match to `arc_local_submission_gate.py`'s own
+`CANONICAL_BASELINE_ACTIONS_BY_GAME["lp85"]` constant -- and `eff=2.0069`, again matching the
+documented baseline floor. `m0r0`/`sp80`/`vc33` (the other three CORE games) all completed
+individually within budget too (29s/49s/24s), with `vc33` reaching `actions=7777`, close to its
+own `CANONICAL_BASELINE_ACTIONS_BY_GAME` entry (7731). A subsequent FULL 8-game gate run (all
+games in parallel via `ThreadPoolExecutor(max_workers=8)`) still failed to complete cleanly --
+but system load at that exact moment was 61.40 on a 24-core box (vs 5.97 five minutes earlier),
+consistent with resource contention from running 8 CPU-heavy game-evals simultaneously
+alongside the continuously-running research conductor, not a remaining code defect. The
+per-game ISOLATED measurements (each run alone, no self-contention) are the cleaner signal and
+all support the fix. Existing coverage (60 tests across
+`test_experiment_4556_verifier_router_generic_transfer.py`,
+`test_arc_verifier_variant_augmentation.py`, `test_arc_submitted_agent_parity.py`, and the
+`structural_energy_s0/s0prime/s1` + `value_routing_cost_fix_live` + `live_integration_scored_agent`
+suites) all still pass unchanged.
+
+Required field principles: not applicable (this is a performance-only fix; the output feature
+vector is byte-identical between the cached and uncached paths, verified directly).
+
+#### SCENARIO-CAPSTONE-4556-2-PER-FRAME-CONTEXT-NOT-PER-CANDIDATE
+
+Given `cross_game_features_v3`'s output decomposes into a frame-only part (independent of the
+per-candidate action_id) and a cheap action-only part
+When a router scores N candidate actions against the SAME frame in a single ranking call
+Then the frame-only part is computed ONCE and reused across all N candidates -- computing it
+fresh per candidate turns an O(components^2) per-frame cost into an O(candidates x
+components^2) per-call one, which at realistic candidate counts is a severe, hang-adjacent
+slowdown even though the underlying flag/code path predates the incident that surfaced it

@@ -20,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Callable, Mapping, NamedTuple, Sequence
 
 import numpy as np
 
@@ -436,26 +436,66 @@ def _predicate_distance_features(g: np.ndarray, goal_frame: Any | None) -> list[
     ]
 
 
+class CrossGameFrameContextV3(NamedTuple):
+    """The (frame, previous_frame, goal_frame)-only pieces of `cross_game_features_v3` -- every
+    piece except `_action_features(action_id)`. Callers that score MULTIPLE candidate actions
+    against the SAME frame (e.g. `CrossGameDiscriminativeCandidateRouter.rank()`) compute this
+    ONCE via `cross_game_frame_context_v3()` and pass it to `cross_game_features_v3(...,
+    frame_context=...)` for every candidate, instead of paying `_object_relational_features`'s
+    O(components^2) greedy frame-matching loop (see this module's 2026-06-30 docstring note: the
+    real per-node cost here, not the scipy-vs-fallback labeling step) once per candidate. Found
+    2026-07-15 during ARC-AGI-3 submission-prep: this per-candidate recomputation was the
+    dominant remaining cause of a local-submission-gate regression (lp85/m0r0/sp80 losing to the
+    verified baseline) even after fixing the structurally-identical bug in
+    arc_color_blob_salience.py."""
+
+    v2: list[float]
+    object_relational: list[float]
+    frame_delta: list[float]
+    predicate_distance: list[float]
+
+
+def cross_game_frame_context_v3(
+    frame: Any, previous_frame: Any | None, goal_frame: Any | None
+) -> CrossGameFrameContextV3:
+    g = _grid2d(frame)
+    return CrossGameFrameContextV3(
+        v2=cross_game_features_v2(frame),
+        object_relational=_object_relational_features(g, previous_frame),
+        frame_delta=_frame_delta_features(g, frame, previous_frame),
+        predicate_distance=_predicate_distance_features(g, goal_frame),
+    )
+
+
 def cross_game_features_v3(
     frame: Any,
     previous_frame: Any | None = None,
     action_id: Any | None = None,
     goal_frame: Any | None = None,
+    *,
+    frame_context: CrossGameFrameContextV3 | None = None,
 ) -> list[float]:
     """REQ-LEARN-4476: v2 plus relational, delta, action, and predicate-distance context.
 
     The optional context is used by the offline trainer. With only `frame`, the
     function still emits a stable vector so existing live loaders degrade to a
     frame-only v3 view instead of breaking.
+
+    `frame_context`: an optional pre-computed `cross_game_frame_context_v3(frame,
+    previous_frame, goal_frame)` result -- everything in the output EXCEPT the
+    `_action_features(action_id)` slice is independent of `action_id`, so a caller scoring many
+    candidates against the same frame can compute it once (see `CrossGameFrameContextV3`'s
+    docstring for the O(components^2)-per-candidate incident this fixes). When omitted, computed
+    fresh exactly as before (unchanged behavior/output for every other existing caller).
     """
-    g = _grid2d(frame)
-    v2 = cross_game_features_v2(frame)
+    if frame_context is None:
+        frame_context = cross_game_frame_context_v3(frame, previous_frame, goal_frame)
     return [
-        *v2,
-        *_object_relational_features(g, previous_frame),
-        *_frame_delta_features(g, frame, previous_frame),
+        *frame_context.v2,
+        *frame_context.object_relational,
+        *frame_context.frame_delta,
         *_action_features(action_id),
-        *_predicate_distance_features(g, goal_frame),
+        *frame_context.predicate_distance,
     ]
 
 
