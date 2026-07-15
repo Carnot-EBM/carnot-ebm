@@ -29835,6 +29835,143 @@ SHALL keep the appropriate gate field false and emit a terminal `complete:` or
 |---|---|---|
 | REQ-VERIFY-5556 | Implemented (`python/carnot/experiment_5556_asp_fsm_sparse_repair_scale.py`, `results/experiment_5556_asp_fsm_sparse_repair_scale.json`) | Implemented (`tests/python/test_experiment_5556_asp_fsm_sparse_repair_scale.py`) |
 
+### REQ-VERIFY-5708: Raw-Response SOTA Exact Constraint Canary
+
+The repository SHALL provide Exp 5708 at
+`python/carnot/experiment_5708_sota_exact_constraint_canary.py` and write
+`results/experiment_5708_sota_exact_constraint_canary.json` plus a lossless
+JSONL row manifest. Exp 5708 SHALL be a data/runtime readiness canary for
+FR-11 downstream learner access: it SHALL run one mandated local GGUF model,
+`unsloth/gemma-4-26B-A4B-it-GGUF`, through `llama-cpp-python` raw response
+generation with CUDA offload evidence, SHALL avoid native JSON grammar and
+external scorers, and SHALL label rows only with independent exact validators
+after generation. It SHALL use the repository local GGUF cache resolver pattern
+(`resolve_cached_gguf()` / `cached_sota_pair()` style helpers) and SHALL NOT use
+`transformers` tokenization for the GGUF.
+
+Before model loading, Exp 5708 SHALL resolve and hash the GGUF, identify the
+observed quantization and file size, import CUDA-capable `llama-cpp-python`,
+record `llama_cpp_version` and `llama_cpp_build_info`, confirm NVIDIA device
+receipts, record RAM/VRAM reservation checks, request GPU layers, and preserve
+before/during/after GPU memory telemetry. CPU-only execution, missing
+offloaded-layer evidence, or zero GPU memory movement SHALL block the headline
+gate and SHALL emit `cuda_offload_authenticated_score=0.0`.
+
+The canary panel SHALL freeze at least 48 preregistered rows before generation,
+balanced across exact finite-state, arithmetic/finite-domain, hard-soft
+preference, format-stress, and TrapQA-style salient-shortcut families. The
+panel SHALL include answer rows, abstention rows, shifted evidence rows, and
+contradiction rows. Row order, row IDs, family labels, prompts, timestamps, and
+pre-outcome row hashes SHALL be committed before learner access by
+`shadow_prefix_hash`, `sealed_suffix_hash`, and `stream_root_commitment`, and
+the split SHALL NOT be tuned from outcomes.
+
+For each row, Exp 5708 SHALL generate exactly one raw response using fixed
+parameters and seeds without JSON grammar. The row manifest SHALL preserve the
+prompt, raw text, finish reason, token counts, timing, telemetry, model hashes,
+raw response hashes, parser disposition, and exact-validator labels. Missing,
+truncated, or unparsable rows are failures. Exact finite-state,
+arithmetic/finite-domain, and MaxSAT-style validators SHALL be deterministic
+and SHALL be authority for labels. A stratified sample SHALL be double-checked
+by a second implementation or enumeration, and any validator disagreement
+SHALL block the canary.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `MODEL_SPECS`, `resolved_model_path`, `model_repo_id`,
+`gguf_filename`, `model_hash`, `quantization`, `llama_cpp_version`,
+`llama_cpp_build_info`, `cuda_device_receipt`, `n_gpu_layers_requested`,
+`n_gpu_layers_offloaded`, `gpu_memory_before_mb`, `gpu_memory_peak_mb`,
+`gpu_memory_after_mb`, `cuda_offload_authenticated`,
+`cuda_offload_authenticated_score`, `generation_config`, `random_seeds`,
+`preregistered_panel`, `family_counts`, `row_manifest_path`,
+`raw_response_hashes`, `missing_row_count`, `parse_failure_count`,
+`exact_validator_versions`, `validator_disagreement_count`,
+`shadow_prefix_hash`, `sealed_suffix_hash`, `stream_root_commitment`,
+`headline_model_count`, `sota_canary_ready_score`, `legacy_smoke_only`,
+`native_json_grammar_used`, `external_scorer_used`, `inference_substrate`,
+`reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`local_llama_cpp_python_cuda_gguf`. `legacy_smoke_only` SHALL be true to keep
+legacy paths labeled as smoke-only, while `native_json_grammar_used` and
+`external_scorer_used` SHALL be false.
+
+`sota_canary_ready_score` SHALL equal exactly `1.0` only when the mandated
+model ran with authenticated CUDA offload, all five family denominators exist,
+every raw response is losslessly present, `missing_row_count=0`,
+`parse_failure_count=0`, `validator_disagreement_count=0`, commitments verify,
+and no retired runtime, native JSON grammar, legacy headline model, or external
+scorer path ran. Otherwise it SHALL equal `0.0` and `honest_verdict` SHALL
+begin with `blocked:`.
+
+Field principles:
+
+- `field_principles`: Every gate field names the evidence boundary it protects.
+- `MODEL_SPECS`: The single headline model identity is explicit and cannot
+  drift to another GGUF or legacy model.
+- `resolved_model_path`: The local GGUF path is auditable without downloading.
+- `model_repo_id`: The mandated Hugging Face repository is explicit.
+- `gguf_filename`: The exact local weight filename is visible.
+- `model_hash`: Weight bytes are bound to the artifact.
+- `quantization`: The observed GGUF quantization is not inferred loosely.
+- `llama_cpp_version`: The Python runtime can be reconstructed.
+- `llama_cpp_build_info`: CUDA build evidence is inspectable.
+- `cuda_device_receipt`: NVIDIA device and reservation evidence is preserved.
+- `n_gpu_layers_requested`: Offload intent is explicit.
+- `n_gpu_layers_offloaded`: Positive offload evidence is separate from intent.
+- `gpu_memory_before_mb`: CPU-only fallback cannot hide as a baseline.
+- `gpu_memory_peak_mb`: During-run GPU allocation is visible.
+- `gpu_memory_after_mb`: Cleanup evidence is visible.
+- `cuda_offload_authenticated`: The bare CUDA gate is explicit.
+- `cuda_offload_authenticated_score`: The CUDA gate scalar is mechanical.
+- `generation_config`: Raw-response decoding can be replayed.
+- `random_seeds`: Sampling replay is stable.
+- `preregistered_panel`: Row coverage is frozen before outcomes.
+- `family_counts`: Coverage denominators are visible.
+- `row_manifest_path`: Raw row evidence is lossless and replayable.
+- `raw_response_hashes`: Each model answer is byte-bound.
+- `missing_row_count`: Missing generations fail visibly.
+- `parse_failure_count`: Unusable generations fail visibly.
+- `exact_validator_versions`: Label authority is versioned.
+- `validator_disagreement_count`: Independent validator failures block.
+- `shadow_prefix_hash`: Learner-visible prefix is sealed.
+- `sealed_suffix_hash`: Unopened suffix is sealed.
+- `stream_root_commitment`: Chronology is immutable.
+- `headline_model_count`: The model denominator is honest.
+- `sota_canary_ready_score`: Readiness is a strict mechanical gate.
+- `legacy_smoke_only`: Legacy paths stay non-headline.
+- `native_json_grammar_used`: The retired grammar path stays closed.
+- `external_scorer_used`: No external judge or scorer can decide labels.
+- `inference_substrate`: Execution provenance is declared.
+- `reproducibility_checksum`: The artifact can be replayed.
+- `honest_verdict`: Terminal state starts complete: or blocked:.
+
+### SCENARIO-VERIFY-5708: CUDA Raw Stream Seals Or Blocks
+
+Given the mandated Gemma 26B GGUF is cached, `llama-cpp-python` imports with a
+CUDA backend, NVIDIA devices are visible, GPU layers are requested, and positive
+offloaded-layer plus memory telemetry is recorded, when Exp 5708 runs, then it
+freezes the balanced exact-constraint panel, commits the chronological split,
+generates one raw response per row without JSON grammar, writes the manifest,
+parses and labels every row with exact validators, double-checks a stratified
+sample with a second implementation, writes
+`results/experiment_5708_sota_exact_constraint_canary.json`, and sets both
+`cuda_offload_authenticated_score=1.0` and `sota_canary_ready_score=1.0` only
+if every gate passes.
+
+If the GGUF is missing, CUDA/offload is unauthenticated, GPU memory telemetry is
+absent, any row is missing/truncated/unparsable, any family denominator is
+missing, any raw response hash or commitment fails replay, any validator
+disagrees, native JSON grammar runs, an external scorer runs, or a legacy model
+contributes headline evidence, then Exp 5708 SHALL still write the terminal
+artifact with preserved diagnostics, `sota_canary_ready_score=0.0`, and an
+`honest_verdict` beginning with `blocked:`.
+
+## Implementation Status (REQ-VERIFY-5708)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5708 | Implemented (`python/carnot/experiment_5708_sota_exact_constraint_canary.py`, `results/experiment_5708_sota_exact_constraint_canary.json`) | Implemented (`tests/python/test_experiment_5708_sota_exact_constraint_canary.py`) |
+
 ### REQ-VERIFY-5615: Native llama.cpp CUDA Runtime Certificate
 
 The repository SHALL provide Exp 5615 at
