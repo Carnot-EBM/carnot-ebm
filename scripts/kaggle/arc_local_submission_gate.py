@@ -814,8 +814,19 @@ def main() -> int:
     cur = measure(a.policy, a.budget, a.cap)
 
     if a.update_baseline:
+        # 2026-07-15 fix: `cur["solved_games"]` is EVERY game that solved this measurement,
+        # including bonus solves outside CANONICAL_CORE_GAMES (the --check path already handles
+        # this correctly -- bonus solves are reported separately, never netted against core; see
+        # _verdict()'s `bonus = sorted(cur_solved - core)`). But naively persisting the full
+        # solved_games as the NEW baseline's identity broke validate_canonical_baseline's
+        # cherry-pick guard the first time a measurement had bonus solves (7/8 solved: 4 core +
+        # cd82/ft09/su15 bonus) -- the guard requires the baseline's core to be EXACTLY
+        # CANONICAL_CORE_GAMES, and 7 games != 4. The baseline's job is to anchor "core" to the
+        # canonical 4 regardless of how many bonus games a given measurement happened to solve;
+        # only core solves belong in solved_games's role as the core-identity field.
         candidate = {
             **cur,
+            "solved_games": sorted(set(cur.get("solved_games") or []) & set(CANONICAL_CORE_GAMES)),
             "note": "verified baseline (update only after a real improvement + successful submit)",
         }
         guard = validate_canonical_baseline(candidate)
