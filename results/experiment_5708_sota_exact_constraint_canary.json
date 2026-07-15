@@ -1,0 +1,937 @@
+{
+  "MODEL_SPECS": [
+    {
+      "active_params_b": 4.0,
+      "gguf_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "headline": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_repo_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "resolved_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "moe",
+      "total_params_b": 26.0
+    }
+  ],
+  "blocked_reasons": [
+    "parse_failures"
+  ],
+  "commitments_verified": true,
+  "cuda_device_receipt": {
+    "devices": [
+      {
+        "driver_version": "610.43.03",
+        "index": 0,
+        "memory_free_mb": 24120,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_free_mb": 24120,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "devices_after": [
+      {
+        "driver_version": "610.43.03",
+        "index": 0,
+        "memory_free_mb": 24120,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_free_mb": 24120,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "ram_reservation_mb": 96084,
+    "vram_reservation_mb": 16162,
+    "worker_error": "",
+    "worker_returncode": 0
+  },
+  "cuda_offload_authenticated": true,
+  "cuda_offload_authenticated_score": 1.0,
+  "exact_validator_versions": {
+    "primary": "exp5708_primary_exact_validators_v1",
+    "secondary": "exp5708_secondary_enumeration_validators_v1",
+    "secondary_double_check_rows": 50
+  },
+  "experiment": 5708,
+  "experiment_id": "experiment_5708_sota_exact_constraint_canary",
+  "external_scorer_used": false,
+  "family_counts": {
+    "arithmetic_finite_domain": 10,
+    "exact_finite_state": 10,
+    "format_stress": 10,
+    "hard_soft_preference": 10,
+    "trapqa_shortcut": 10
+  },
+  "field_principles": {
+    "MODEL_SPECS": "The single headline model identity is explicit and cannot drift to another GGUF or legacy model.",
+    "cuda_device_receipt": "NVIDIA device and reservation evidence is preserved.",
+    "cuda_offload_authenticated": "The bare CUDA gate is explicit.",
+    "cuda_offload_authenticated_score": "The CUDA gate scalar is mechanical.",
+    "exact_validator_versions": "Label authority is versioned.",
+    "external_scorer_used": "No external judge or scorer can decide labels.",
+    "family_counts": "Coverage denominators are visible.",
+    "field_principles": "Every gate field names the evidence boundary it protects.",
+    "generation_config": "Raw-response decoding can be replayed.",
+    "gguf_filename": "The exact local weight filename is visible.",
+    "gpu_memory_after_mb": "Cleanup evidence is visible.",
+    "gpu_memory_before_mb": "CPU-only fallback cannot hide as a baseline.",
+    "gpu_memory_peak_mb": "During-run GPU allocation is visible.",
+    "headline_model_count": "The model denominator is honest.",
+    "honest_verdict": "Terminal state starts complete: or blocked:.",
+    "inference_substrate": "Execution provenance is declared.",
+    "legacy_smoke_only": "Legacy paths stay non-headline.",
+    "llama_cpp_build_info": "CUDA build evidence is inspectable.",
+    "llama_cpp_version": "The Python runtime can be reconstructed.",
+    "missing_row_count": "Missing generations fail visibly.",
+    "model_hash": "Weight bytes are bound to the artifact.",
+    "model_repo_id": "The mandated Hugging Face repository is explicit.",
+    "n_gpu_layers_offloaded": "Positive offload evidence is separate from intent.",
+    "n_gpu_layers_requested": "Offload intent is explicit.",
+    "native_json_grammar_used": "The retired grammar path stays closed.",
+    "parse_failure_count": "Unusable generations fail visibly.",
+    "preregistered_panel": "Row coverage is frozen before outcomes.",
+    "quantization": "The observed GGUF quantization is not inferred loosely.",
+    "random_seeds": "Sampling replay is stable.",
+    "raw_response_hashes": "Each model answer is byte-bound.",
+    "reproducibility_checksum": "The artifact can be replayed.",
+    "resolved_model_path": "The local GGUF path is auditable without downloading.",
+    "row_manifest_path": "Raw row evidence is lossless and replayable.",
+    "sealed_suffix_hash": "Unopened suffix is sealed.",
+    "shadow_prefix_hash": "Learner-visible prefix is sealed.",
+    "sota_canary_ready_score": "Readiness is a strict mechanical gate.",
+    "stream_root_commitment": "Chronology is immutable.",
+    "validator_disagreement_count": "Independent validator failures block."
+  },
+  "generation_config": {
+    "max_tokens": 32,
+    "n_batch": 256,
+    "n_ctx": 2048,
+    "n_gpu_layers": -1,
+    "native_json_grammar_used": false,
+    "stop": [
+      "\n"
+    ],
+    "temperature": 0.0,
+    "top_p": 1.0
+  },
+  "gguf_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "gpu_memory_after_mb": 8,
+  "gpu_memory_before_mb": 8,
+  "gpu_memory_peak_mb": 17708,
+  "headline_model_count": 1,
+  "honest_verdict": "blocked: parse_failures",
+  "inference_substrate": "local_llama_cpp_python_cuda_gguf",
+  "legacy_smoke_only": true,
+  "llama_cpp_build_info": {
+    "cuda_backend": true,
+    "module": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+    "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | "
+  },
+  "llama_cpp_version": "0.3.33",
+  "manifest_row_count": 50,
+  "milestone": "2026.07.510",
+  "missing_row_count": 0,
+  "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+  "model_repo_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "n_gpu_layers_offloaded": 31,
+  "n_gpu_layers_requested": -1,
+  "native_json_grammar_used": false,
+  "offload_log_excerpt": "0 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nCUDA Graph id 359 reused\nCUDA Graph id 360 reused\nllama_perf_context_print:        load time =     493.51 ms\nllama_perf_context_print: prompt eval time =      27.96 ms /    36 tokens (    0.78 ms per token,  1287.37 tokens per second)\nllama_perf_context_print:        eval time =     239.49 ms /    31 runs   (    7.73 ms per token,   129.44 tokens per second)\nllama_perf_context_print:       total time =     273.67 ms /    67 tokens\nllama_perf_context_print:    graphs reused =         30\n~llama_context:      CUDA0 compute buffer size is 118.5820 MiB, matches expectation of 118.5820 MiB\n~llama_context:      CUDA1 compute buffer size is 325.3359 MiB, matches expectation of 325.3359 MiB\n~llama_context:  CUDA_Host compute buffer size is  53.5273 MiB, matches expectation of  53.5273 MiB\n",
+  "parse_failure_count": 47,
+  "preregistered_panel": [
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:40fb28e9f3dc33766b6c89dd1992faedb4f0fad541377ef0e98dd833a20c7faf",
+      "prompt_hash": "sha256:0d3f21861edc2b4e1e6ea06bd6278fd9666249823472640de57a0b41d85abb10",
+      "row_id": "efs-00",
+      "sequence_index": 0,
+      "timestamp_utc": "2026-07-15T00:00:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:ca4e6bceebcba227db9022322d3f3546df5f8d4dd5541315d7fb9344373bb8fa",
+      "prompt_hash": "sha256:ed2e4f0ec8c577a3a4974abf19938c0febe54f81ef5f1783b508036817febc40",
+      "row_id": "afd-00",
+      "sequence_index": 1,
+      "timestamp_utc": "2026-07-15T00:00:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:773c02ad86ccb89379b705d1f971096fd49ae0d4a3ce2d58f4e3ea5e00c442c7",
+      "prompt_hash": "sha256:e1fdf883fddcaf3e00acfeac5a5cef04875dddc864636a64e3a7a4f933ff647b",
+      "row_id": "hsp-00",
+      "sequence_index": 2,
+      "timestamp_utc": "2026-07-15T00:00:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:9b4fc2e3e5be7f0048a6f65e4bd2ec254535b188b9f2c9b10cc0d3aab8846c0c",
+      "prompt_hash": "sha256:ab5314fd7a422b4f5c4c7922d566a798a81e6e4834ea8bcffaca646a66ed00e6",
+      "row_id": "fmt-00",
+      "sequence_index": 3,
+      "timestamp_utc": "2026-07-15T00:00:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:4fb4768e7ac2bb8b34ce3da1518796638ed0db408dd3a2d258ee072835db8469",
+      "prompt_hash": "sha256:ed7627a8937c1db22e5671a6f7227c608e3321e06fa6b4fc298996b721b9880c",
+      "row_id": "trap-00",
+      "sequence_index": 4,
+      "timestamp_utc": "2026-07-15T00:00:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:75ab6e356757a2bb55cd709259eff506b93360443bac5b5d39ab0c97acfffc00",
+      "prompt_hash": "sha256:9c94e43576dbe131fcb89755615a1222363bf74407c20d24b5f6967fdbc7a99a",
+      "row_id": "efs-01",
+      "sequence_index": 5,
+      "timestamp_utc": "2026-07-15T00:01:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:2e27c27b8592be5a955e995fde8dee77043d38828a8799be49e1b01d5967a36b",
+      "prompt_hash": "sha256:40cc9d56c3af8b14b584b4b8c5b9f10588051fe0be5e7ecbb22475d39d620d48",
+      "row_id": "afd-01",
+      "sequence_index": 6,
+      "timestamp_utc": "2026-07-15T00:01:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:e69931907aeaf5df39b3bb085309c2b5ba9b1a723d6d56e4a207cb296f7b420b",
+      "prompt_hash": "sha256:3c07b15b60974cd4428ad9ea488b4883810bcc13888c84463680e2c090ccaf2c",
+      "row_id": "hsp-01",
+      "sequence_index": 7,
+      "timestamp_utc": "2026-07-15T00:01:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:dbc050692a586c53429337393ba943ca247597bd1b55a0ef2dd286dbf2bd988e",
+      "prompt_hash": "sha256:b39b27885854c322487c5f1c41f9aead52fdaa35a9264d031b080800db2da8fc",
+      "row_id": "fmt-01",
+      "sequence_index": 8,
+      "timestamp_utc": "2026-07-15T00:01:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:2ae2f11ef8c259e01d7e1743ceed1613c2cabede5b61ce1e4e13cb8df7d26ee2",
+      "prompt_hash": "sha256:1fe3c71dbd3159e8775886aac247fb21f5d17820e1bb9623f2b083bfc62edc98",
+      "row_id": "trap-01",
+      "sequence_index": 9,
+      "timestamp_utc": "2026-07-15T00:01:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:a6bd99dd5da585ea6b51c3c3f9728bd23ab8467ff827eeb04879559f6d2e4bc8",
+      "prompt_hash": "sha256:354e76e37dcb6b725b2b9741ce97ad8d6a312856c0a193ccf864d748f95152cc",
+      "row_id": "efs-02",
+      "sequence_index": 10,
+      "timestamp_utc": "2026-07-15T00:02:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:3af8f8911cdfb2a97104dcb22d4560da097f86a048113dcdfa451cc7dcea8680",
+      "prompt_hash": "sha256:86f97470e58163333d9b69bb05af72fad242e204ba18319f4c9f028e93d52b07",
+      "row_id": "afd-02",
+      "sequence_index": 11,
+      "timestamp_utc": "2026-07-15T00:02:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:c7cc6acc70b753dc5c14910c4e61a6528d36371ba5fcede92b5cdefad4a4499c",
+      "prompt_hash": "sha256:516f4c717684a13400a1c6ccd36d98e476d0db1e33c30bf07e8596c8d3e777e1",
+      "row_id": "hsp-02",
+      "sequence_index": 12,
+      "timestamp_utc": "2026-07-15T00:02:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:8306a23662bc0d2cedbf688fa2f44ce02944a5508f7ba0b5b76407392adb5b30",
+      "prompt_hash": "sha256:b1adb35889e98578721add24690c62893574ceb9b7ba3fcb1596669573fe4a62",
+      "row_id": "fmt-02",
+      "sequence_index": 13,
+      "timestamp_utc": "2026-07-15T00:02:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:341e778b0eb65160fdfaf27a0b821fe801176154b071e39115f898c331699f79",
+      "prompt_hash": "sha256:9617a0af621349ce55d2c014ae1b148f78f22788ec7b373e82261f3682906807",
+      "row_id": "trap-02",
+      "sequence_index": 14,
+      "timestamp_utc": "2026-07-15T00:02:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:e1bacb6080945fd898cf5acf042a6b9339e5a065a39b656f24a4dd028c964536",
+      "prompt_hash": "sha256:1bf208bc15df9952274a4b54f2882f2a3d5bd1baf17fd70430483905b5b4efff",
+      "row_id": "efs-03",
+      "sequence_index": 15,
+      "timestamp_utc": "2026-07-15T00:03:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:d0ecd39e73e25ccb4aa15f8a45970419c186bb2b575ac319d55fbc5b01088b69",
+      "prompt_hash": "sha256:2bf9657e06c9cb9665761290d55316fb763d0722c01788608e55a98e21833a0e",
+      "row_id": "afd-03",
+      "sequence_index": 16,
+      "timestamp_utc": "2026-07-15T00:03:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:aebba79147701fcee2c6761fc96f55c1175589a4733df4f688fa9008459df9b3",
+      "prompt_hash": "sha256:110334fe4c6f7d0e9e78937e31ef61df6ed8123948b12cf3f331ec5e84c83061",
+      "row_id": "hsp-03",
+      "sequence_index": 17,
+      "timestamp_utc": "2026-07-15T00:03:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:b14a8277906729b40e706000bacb62e4f918be0a309a1dd567ae440a5add5aba",
+      "prompt_hash": "sha256:9860e94f41d2f9594928c5b605a853ce8c43654df56d32611274b6c28ffaf76f",
+      "row_id": "fmt-03",
+      "sequence_index": 18,
+      "timestamp_utc": "2026-07-15T00:03:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:5a95612f089a2e8ca21321d4d9a334f52766a7ed611255572f593e4a7f3ada21",
+      "prompt_hash": "sha256:af795936423c3c4d2a6d448fd105d20c58a9a8110a2f0d7068007986ff47ec0a",
+      "row_id": "trap-03",
+      "sequence_index": 19,
+      "timestamp_utc": "2026-07-15T00:03:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:b4306c8826badd11289986822b2948b744a73b4fd17e1a90dd51e24213a69f6c",
+      "prompt_hash": "sha256:fb3ef6179b76dd36bbfd8180464b007caf221e5ea70018fdfcc486e831f7777d",
+      "row_id": "efs-04",
+      "sequence_index": 20,
+      "timestamp_utc": "2026-07-15T00:04:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:2c3ee24da5a145743b048bc3ea2fbaaafcaf798ab9047f8384f773314fbdb69f",
+      "prompt_hash": "sha256:0ebe0b3082da48539f54608a8359c5f2c48a348e07b0ba7dfeb76d99d1ce9ffb",
+      "row_id": "afd-04",
+      "sequence_index": 21,
+      "timestamp_utc": "2026-07-15T00:04:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:99529ecba27c47064757a35fa92abb64a0ea8e09744420792c56a141e48a2cf1",
+      "prompt_hash": "sha256:a70b098a987d27877ba456f9c6ddf890aebac4081f96f9834144b1bd454d074c",
+      "row_id": "hsp-04",
+      "sequence_index": 22,
+      "timestamp_utc": "2026-07-15T00:04:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:8275e2e9e97575164a8115b4a3ef8effdd6fcb9c21957088cf93f541f28ebc52",
+      "prompt_hash": "sha256:4332c41266ae4129000825af375af73180cd7885a48f165277a67e7c374670b5",
+      "row_id": "fmt-04",
+      "sequence_index": 23,
+      "timestamp_utc": "2026-07-15T00:04:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:044c34a18acf04aef729c182384e874da98ac6936c8998e12f4a0b43fa8ab175",
+      "prompt_hash": "sha256:845bbcee45721d22ef10c1641cec275b7508ebcd28643d1b79655f3af6e165b0",
+      "row_id": "trap-04",
+      "sequence_index": 24,
+      "timestamp_utc": "2026-07-15T00:04:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:ae7279054ad96e51e8a0014e6a7c4cd57c0ea0de8d74f9d95e427c78824c6efa",
+      "prompt_hash": "sha256:4c202390eb996cc5444b0d8a5762b5cec0ecf1b3c7eea58c0c424e232b4da777",
+      "row_id": "efs-05",
+      "sequence_index": 25,
+      "timestamp_utc": "2026-07-15T00:05:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:95ec1a78e34443813e683b7e4c355c90e39a772885120d22e827e8310a8f7ea1",
+      "prompt_hash": "sha256:456749a0147de5165daad70116b001825e6b714e8fb91eeac53f968561a5f03d",
+      "row_id": "afd-05",
+      "sequence_index": 26,
+      "timestamp_utc": "2026-07-15T00:05:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:199df4fcd2b3fdaab6da4781e3b56f779f9a166b79ed7283a8d6f5d21825c34c",
+      "prompt_hash": "sha256:1f5aa5d79743303fea14c08eeb1b0870c8a4eb4d20c0547471cc163f2c70fc1f",
+      "row_id": "hsp-05",
+      "sequence_index": 27,
+      "timestamp_utc": "2026-07-15T00:05:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:0e8dfaa81f7eb9c435d0ffc13b00a867fa4cc36e4bfb2d22dd854a36df0800f2",
+      "prompt_hash": "sha256:5ce133e05e2da0093d33a1ff1680b94a852de8f038dec22b22c44a1c900f01ef",
+      "row_id": "fmt-05",
+      "sequence_index": 28,
+      "timestamp_utc": "2026-07-15T00:05:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:3bd62295b02bc4ee8796c50cb209bb70eadf5fb48e5ba7574f3aeed3f31f0a1f",
+      "prompt_hash": "sha256:ed7627a8937c1db22e5671a6f7227c608e3321e06fa6b4fc298996b721b9880c",
+      "row_id": "trap-05",
+      "sequence_index": 29,
+      "timestamp_utc": "2026-07-15T00:05:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:766c76f16b9615a65964c4346d127480764e481d3978ba751f36c2e447150664",
+      "prompt_hash": "sha256:206b9b1186a8d248bc999575f7abbed066f094374079dd5f024f63248646cc91",
+      "row_id": "efs-06",
+      "sequence_index": 30,
+      "timestamp_utc": "2026-07-15T00:06:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:1b5dbbe76ccef9ce03c43c998278a68b744b14ef67e2d5a40a40fa624a19e923",
+      "prompt_hash": "sha256:07107afc4178fb795e871f9f690aafde188ab1e06254b2264cc7ee4e0353b328",
+      "row_id": "afd-06",
+      "sequence_index": 31,
+      "timestamp_utc": "2026-07-15T00:06:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:2303c90d3b8548047e7846ca2958ace3cb0a99f887a506ddef13c129aefb6080",
+      "prompt_hash": "sha256:4c95bb8bb234ab08418f6423f77da002c8e80f898caba5c545b6069ef7f2030e",
+      "row_id": "hsp-06",
+      "sequence_index": 32,
+      "timestamp_utc": "2026-07-15T00:06:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:a0cb8b10f4cf3f19598c4972e2b80e022786b80f68f94c176e81b46305564e53",
+      "prompt_hash": "sha256:56f4cec6cd80463b1a4130e4489ce6005d5490275f21f832b922fa65f79954f6",
+      "row_id": "fmt-06",
+      "sequence_index": 33,
+      "timestamp_utc": "2026-07-15T00:06:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:96163f3a68ce0e62ce0720d4d4f45a0058e7c3cc27a39349be1960218cba15cb",
+      "prompt_hash": "sha256:1fe3c71dbd3159e8775886aac247fb21f5d17820e1bb9623f2b083bfc62edc98",
+      "row_id": "trap-06",
+      "sequence_index": 34,
+      "timestamp_utc": "2026-07-15T00:06:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:27107e2bc9c4ba3936cea47fd7d31d399a4726a647303cca1dd5783cd79e8951",
+      "prompt_hash": "sha256:d1f7c79a28b22b031516f821078132c52c7408ce432b2bfea2d6f5eb4513166d",
+      "row_id": "efs-07",
+      "sequence_index": 35,
+      "timestamp_utc": "2026-07-15T00:07:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:0fcd5a3ae333cb7c489031d854be908f2a4a64adf717b2e5535909377312d4f2",
+      "prompt_hash": "sha256:1714183e56a009bb4d8a945a493e3f6d3da6106be0ce473a1fa5f67925ddf02e",
+      "row_id": "afd-07",
+      "sequence_index": 36,
+      "timestamp_utc": "2026-07-15T00:07:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": true
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:a9f612cdea8330e2d0f9d7f061ff1333442295eabe72dae14fb129a0e7e3df72",
+      "prompt_hash": "sha256:b30840bed392cbc3a9b5ed3e1ab0f3a089ed280deb188745119b7945416f504f",
+      "row_id": "hsp-07",
+      "sequence_index": 37,
+      "timestamp_utc": "2026-07-15T00:07:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:a892ff7bf4bf516cf858f073d309c8fa9f5ca2683ecfb4ebe15921473fb4ab1f",
+      "prompt_hash": "sha256:6269846fdd05a8d93b276b61140bec67701fe58571504bc18de6be155aeb1952",
+      "row_id": "fmt-07",
+      "sequence_index": 38,
+      "timestamp_utc": "2026-07-15T00:07:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:2e8db6e184efccef185c754f211aa39dbd1e0cad88ddf7438ba207d124147065",
+      "prompt_hash": "sha256:9617a0af621349ce55d2c014ae1b148f78f22788ec7b373e82261f3682906807",
+      "row_id": "trap-07",
+      "sequence_index": 39,
+      "timestamp_utc": "2026-07-15T00:07:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:7461815ac3779252b279c9af4f04bea91f41753506b6550111a409f0664aa039",
+      "prompt_hash": "sha256:6e65558ae2911a701237476e018f2ce97e601a1d791f7549a41aecfeda725095",
+      "row_id": "efs-08",
+      "sequence_index": 40,
+      "timestamp_utc": "2026-07-15T00:08:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:95f5ef52af8bbcafe43185f22ec065d33acd9cc99c766c64a9ac5aeff1eaefc8",
+      "prompt_hash": "sha256:cffe66749e2bed15058b6bf88f3c371c804725e2dd1e8e71de34c6c649225801",
+      "row_id": "afd-08",
+      "sequence_index": 41,
+      "timestamp_utc": "2026-07-15T00:08:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:66551213ad167cb6570595831375fe9d145634b71d4ba65f6ed6347cf08023d2",
+      "prompt_hash": "sha256:6af8b9a6d495fa335b6dd26092ea63c369621ea1783ef482cea68a82ddb3d788",
+      "row_id": "hsp-08",
+      "sequence_index": 42,
+      "timestamp_utc": "2026-07-15T00:08:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:44f0183c2adf0c80d31b1137ba5ffc4c8b98dbee4919426a1573a4b14cad6f25",
+      "prompt_hash": "sha256:a99f1d2e6e50125e15140378b6bad08dbb9fc580437f27326688b59c5b29a663",
+      "row_id": "fmt-08",
+      "sequence_index": 43,
+      "timestamp_utc": "2026-07-15T00:08:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:a69cb4e28eeb3f873a4bd9259381a90ffe34f49f7219db94fcc4f72d20420e97",
+      "prompt_hash": "sha256:af795936423c3c4d2a6d448fd105d20c58a9a8110a2f0d7068007986ff47ec0a",
+      "row_id": "trap-08",
+      "sequence_index": 44,
+      "timestamp_utc": "2026-07-15T00:08:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "exact_finite_state",
+      "pre_outcome_hash": "sha256:6caeca76b2658442916b1861add3aac22e017d56fd407406b6eadd5e0d51e0ee",
+      "prompt_hash": "sha256:1c4481da29657cfd0b694a11dd72e13502fe36cd2eb708cd42b21cadf9a48033",
+      "row_id": "efs-09",
+      "sequence_index": 45,
+      "timestamp_utc": "2026-07-15T00:09:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "arithmetic_finite_domain",
+      "pre_outcome_hash": "sha256:7589939fe27098445791e9ca041e6a0f14495604b0b7d0c6e6a4f78578ec19df",
+      "prompt_hash": "sha256:0b03cde7af837699cd9ef1822a7fef339faa5f83fa3fb6828a614fecf08bcb37",
+      "row_id": "afd-09",
+      "sequence_index": 46,
+      "timestamp_utc": "2026-07-15T00:09:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "hard_soft_preference",
+      "pre_outcome_hash": "sha256:e75f08e0d902b14c58e4acb0cd642d99c20c1dbe5572a77f132d145b136e1963",
+      "prompt_hash": "sha256:976e7f5105ad008241bf6b98d4dc3d54c2905bced5fdacdf5bc33adaa894a731",
+      "row_id": "hsp-09",
+      "sequence_index": 47,
+      "timestamp_utc": "2026-07-15T00:09:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": false,
+        "answer": true,
+        "contradiction": false,
+        "shift": false
+      },
+      "family": "format_stress",
+      "pre_outcome_hash": "sha256:1cc7a5711d9042d586ff5b7aa25b1111a4f2901929e8caea2639b7e68ad73e81",
+      "prompt_hash": "sha256:57b322bfa29d35d8d3faae013748907f77b501f981427dd7a2eea284fec99261",
+      "row_id": "fmt-09",
+      "sequence_index": 48,
+      "timestamp_utc": "2026-07-15T00:09:00Z"
+    },
+    {
+      "control_tags": {
+        "abstention": true,
+        "answer": false,
+        "contradiction": true,
+        "shift": false
+      },
+      "family": "trapqa_shortcut",
+      "pre_outcome_hash": "sha256:f2afc6d6b5de04c1cb4e722d1559c5c090e947b077d6b32a818f36151d01d5bf",
+      "prompt_hash": "sha256:845bbcee45721d22ef10c1641cec275b7508ebcd28643d1b79655f3af6e165b0",
+      "row_id": "trap-09",
+      "sequence_index": 49,
+      "timestamp_utc": "2026-07-15T00:09:00Z"
+    }
+  ],
+  "quantization": "UD-Q4_K_M",
+  "random_seeds": {
+    "base_seed": 5708,
+    "panel_seed": 5708001,
+    "runner_seed": 5708002
+  },
+  "raw_response_hashes": {
+    "afd-00": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "afd-01": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "afd-02": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "afd-03": "sha256:7eb344a7aa0816230ff2e44687717965bb60b6aba79b3bd000bf99fd1c575392",
+    "afd-04": "sha256:e34541f71d8b8bef223b7e675db5868cd900c952732903a4b100ff29b2c001a6",
+    "afd-05": "sha256:2aea6044d5aab6ff0dcd0ca74784f46ded19dda73ac775269745bd98834716a3",
+    "afd-06": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "afd-07": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "afd-08": "sha256:43d1a6e6a12a10504f851e6df2954693398cbdeaaea0725633370e9270340e83",
+    "afd-09": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "efs-00": "sha256:54a442ceea438021397cfbb48f1e3f1a37697c47055d8f933f03b9b5d1f5fb4b",
+    "efs-01": "sha256:27e9ed8cbc840bcb7abd485f23c4b53f3fe11074c9107c17c06174854df18ede",
+    "efs-02": "sha256:0f0d423c435f4568e9bab906014e829b7ffdf2d39e073d49189cff7c7e420955",
+    "efs-03": "sha256:756e85535701b6d0cc744e5bf0b0bdb063032b85632bb4acc16c21399affd36e",
+    "efs-04": "sha256:2b69d1c14ed68dd274c0f7b38f46b7f95e8c62f43410de0c7830e2fb61fd1ac1",
+    "efs-05": "sha256:36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068",
+    "efs-06": "sha256:8fe21d791f8512cea1cafacbbe524fdae70ed8fd34fa146bd544f088145d773e",
+    "efs-07": "sha256:9d68b8addae400ca89d2423ee03859085fed24b374fa8085eb00f48e26aaff25",
+    "efs-08": "sha256:40f9fb24bcce14ad124c84b3651990e3ecdd34afba9e992a210d962c3d893f6a",
+    "efs-09": "sha256:e20756064cfeecd85918ee2d98dcaf87d41edfb73041255e29700a152f9177d4",
+    "fmt-00": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fmt-01": "sha256:51ff22915b2c8803e14e82e7f91415aaabb1a8a85b5c22b90980729ac406ba27",
+    "fmt-02": "sha256:13585e467b8c3b749dc0027727cc0c73fba4e59aa36992339c8449ccfba9b8b2",
+    "fmt-03": "sha256:414e58f51398ad0c53f18e3ee8a95e034403fd9557635a864923612d0fefef0c",
+    "fmt-04": "sha256:01a3697759d40e7474368d533695fb0ed3da7d4ff6dc8e4820af1fadf55dd6ca",
+    "fmt-05": "sha256:0839d55c715af5ff788b0bd7ac5eb436afd193a14ed753c87a6ec6b305f73b17",
+    "fmt-06": "sha256:38776ea77e4d6f79e22dbfba65735b1d3047736d6cefe55aa901647a93564e93",
+    "fmt-07": "sha256:a83d63f1fde597a249eba813138494000f4ef2c8227dc77d7616174aa3777da5",
+    "fmt-08": "sha256:48ffde3fe614591441b7949693efdab2552b01d2e15328e707a785e731896935",
+    "fmt-09": "sha256:d2a11a5ad53841c7afa970bf2e945aea50aa25755d5e81afa4c52aaaddbde56b",
+    "hsp-00": "sha256:567d3d85d54da8ded534d7c03079328b5cc25d32f8e3ae429d2a7a1156b6d2a9",
+    "hsp-01": "sha256:688f26ccbbc5d8af38923b3a933312946705fc9077b19077d9836b425208afa7",
+    "hsp-02": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hsp-03": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hsp-04": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hsp-05": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hsp-06": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hsp-07": "sha256:3dedbf829f32484a8d51b099bf3e6707b910a72d53f5eab221d684760a2f9470",
+    "hsp-08": "sha256:b2de35afe3b1d31cedec96fd2865eba4c275a68446f197a22b95a6eae4ff1b59",
+    "hsp-09": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "trap-00": "sha256:37badd83e3532ddaceb4a26a3d4d51d1dd0d119c8d003b1daa3a16c715f7d98c",
+    "trap-01": "sha256:3a775844d5af93b1e95517137aaffdc27ded104223e842ecaa2be1f2b9085e46",
+    "trap-02": "sha256:1c26704bb6df4a9528a67d0f1d8ed73dd3a7c6929fb8c91fbe4fab5e03bad1f5",
+    "trap-03": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "trap-04": "sha256:adc243a28ec7c364aa39e4846d3e191bec4a8ab7d47dbe47f073dce1a000345f",
+    "trap-05": "sha256:37badd83e3532ddaceb4a26a3d4d51d1dd0d119c8d003b1daa3a16c715f7d98c",
+    "trap-06": "sha256:3a775844d5af93b1e95517137aaffdc27ded104223e842ecaa2be1f2b9085e46",
+    "trap-07": "sha256:1c26704bb6df4a9528a67d0f1d8ed73dd3a7c6929fb8c91fbe4fab5e03bad1f5",
+    "trap-08": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "trap-09": "sha256:adc243a28ec7c364aa39e4846d3e191bec4a8ab7d47dbe47f073dce1a000345f"
+  },
+  "reproducibility_checksum": "sha256:1df9bf9254baa7e89200b2f8f68350b96821e9face7ea8524a555dab57dc9b2d",
+  "resolved_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "result_path": "results/experiment_5708_sota_exact_constraint_canary.json",
+  "retired_runtime_used": false,
+  "row_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5708_sota_exact_constraint_canary.rows.jsonl",
+  "run_date": "20260715",
+  "schema": "carnot.experiment_5708.sota_exact_constraint_canary.v1",
+  "sealed_suffix_hash": "sha256:b327110240838c0ea03f9fdc85e2a556ec70c2cc1ffd02ef6cc29957e3bffaab",
+  "shadow_prefix_hash": "sha256:7e8c39b35f92dd3fb723d186cad05c9ff5340d62c51de82fa773355a0ff6623c",
+  "sota_canary_ready_score": 0.0,
+  "spec_refs": [
+    "REQ-VERIFY-5708",
+    "SCENARIO-VERIFY-5708"
+  ],
+  "stream_root_commitment": "sha256:2a94026a2d4627b3cd752667828ea4536fc3dfb13f5c7f55cf28c50eef18485f",
+  "tests_added_or_reused": [],
+  "validator_disagreement_count": 0
+}
