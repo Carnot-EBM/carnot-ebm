@@ -14,9 +14,11 @@ The relaxation is NOT accepted unless all four assert.
 CORE (the games the verified baseline solves) = {lp85, m0r0, sp80, vc33}, baseline actions
 lp85=7792, m0r0=7789, sp80=7724, vc33=7731 (median 7760).
 """
+
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -70,7 +72,8 @@ def test_a2_imitation_prior_fails_core_traded_for_fringe():
 def test_positive_core_faster_passes_improved():
     """All CORE solves preserved AND median actions cut -> PASS (IMPROVED)."""
     ok, msg = gate._verdict(
-        _cur({"lp85": 4000, "m0r0": 4100, "sp80": 3900, "vc33": 3950}), _baseline())
+        _cur({"lp85": 4000, "m0r0": 4100, "sp80": 3900, "vc33": 3950}), _baseline()
+    )
     assert ok is True
     assert "IMPROVED" in msg
 
@@ -78,7 +81,8 @@ def test_positive_core_faster_passes_improved():
 def test_neutral_core_same_passes_non_inferior():
     """CORE preserved, actions unchanged -> PASS (non-inferior); the deterministic-rerun control."""
     ok, msg = gate._verdict(
-        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}), _baseline())
+        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}), _baseline()
+    )
     assert ok is True
     assert "non-inferior" in msg
 
@@ -86,18 +90,24 @@ def test_neutral_core_same_passes_non_inferior():
 def test_bonus_solve_reported_but_core_required():
     """A new fringe solve is a reported BONUS on top of a preserved CORE -> PASS with BONUS noted."""
     ok, msg = gate._verdict(
-        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731, "ft09": 7600}), _baseline())
+        _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731, "ft09": 7600}), _baseline()
+    )
     assert ok is True
     assert "BONUS" in msg and "ft09" in msg
 
 
 def test_legacy_baseline_without_core_keys_falls_back_to_count():
     """An old baseline JSON (no solved_games/actions_by_game) -> legacy count check, still works."""
-    legacy_base = {"solved_count": 4, "median_actions_on_solved": 7760.0,
-                   "per_game": [{"game": "lp85", "solved": True, "actions": 7792},
-                                {"game": "m0r0", "solved": True, "actions": 7789},
-                                {"game": "sp80", "solved": True, "actions": 7724},
-                                {"game": "vc33", "solved": True, "actions": 7731}]}
+    legacy_base = {
+        "solved_count": 4,
+        "median_actions_on_solved": 7760.0,
+        "per_game": [
+            {"game": "lp85", "solved": True, "actions": 7792},
+            {"game": "m0r0", "solved": True, "actions": 7789},
+            {"game": "sp80", "solved": True, "actions": 7724},
+            {"game": "vc33", "solved": True, "actions": 7731},
+        ],
+    }
     # per_game present -> CORE reconstructed -> losing m0r0 still FAILs.
     ok, msg = gate._verdict(_cur({"lp85": 7905, "sp80": 7766, "vc33": 7726}), legacy_base)
     assert ok is False and "m0r0" in msg
@@ -289,7 +299,12 @@ def test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate(monkeypatch,
     candidate["efficiency_by_game"] = dict(candidate["efficiency_by_game"])
     candidate["efficiency_by_game"]["lp85"] = 1.0
     candidate["per_game"] = [
-        {"game": game, "solved": True, "actions": actions, "efficiency": candidate["efficiency_by_game"][game]}
+        {
+            "game": game,
+            "solved": True,
+            "actions": actions,
+            "efficiency": candidate["efficiency_by_game"][game],
+        }
         for game, actions in candidate["actions_by_game"].items()
     ]
     target = tmp_path / "arc-submission-baseline.json"
@@ -304,3 +319,40 @@ def test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate(monkeypatch,
     assert rc == 1
     assert not target.exists()
     assert "canonical baseline guard failed" in captured.out
+
+
+def test_req_arc_fcp_4527_update_baseline_accepts_bonus_solves_outside_core(
+    monkeypatch, tmp_path, capsys
+):
+    """2026-07-15 incident: a real measurement that solves the 4 CORE games PLUS bonus games
+    outside CANONICAL_CORE_GAMES (e.g. cd82/ft09/su15) must NOT be refused by the cherry-pick
+    guard. Before the fix, `--update-baseline` persisted the FULL solved_games (core + bonus) as
+    the new baseline's core-identity field, and validate_canonical_baseline correctly rejected
+    that (7 games != the canonical 4) -- but this then blocked a genuinely improved measurement
+    from ever becoming the new baseline. The fix scopes the persisted solved_games to the
+    intersection with CANONICAL_CORE_GAMES, so bonus solves are recorded elsewhere but never
+    block the update."""
+
+    candidate = _efficiency_baseline()
+    candidate["solved_games"] = sorted({*gate.CANONICAL_CORE_GAMES, "cd82", "ft09", "su15"})
+    candidate["solved_count"] = len(candidate["solved_games"])
+    candidate["actions_by_game"] = {
+        **candidate["actions_by_game"],
+        "cd82": 7800,
+        "ft09": 7801,
+        "su15": 7802,
+    }
+    target = tmp_path / "arc-submission-baseline.json"
+
+    monkeypatch.setattr(gate, "BASELINE", target)
+    monkeypatch.setattr(gate, "measure", lambda _policy, _budget, _cap: candidate)
+    monkeypatch.setattr(sys, "argv", ["arc_local_submission_gate.py", "--update-baseline"])
+
+    rc = gate.main()
+    captured = capsys.readouterr()
+
+    assert rc == 0, captured.out
+    assert target.exists()
+    persisted = json.loads(target.read_text())
+    assert sorted(persisted["solved_games"]) == sorted(gate.CANONICAL_CORE_GAMES)
+    assert "baseline UPDATED" in captured.out
