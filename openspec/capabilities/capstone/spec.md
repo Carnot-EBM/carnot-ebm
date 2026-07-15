@@ -2513,3 +2513,103 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5706 | Planned (`python/carnot/experiment_5706_transition_v510.py`, `results/experiment_5706_transition_v510.json`) | Planned (`tests/python/test_experiment_5706_transition_v510.py`) |
+
+- REQ-CAPSTONE-5716: The `.510` capstone reconciliation workflow
+  `exp5716-v510-capstone` in
+  `python/carnot/experiment_5716_v510_capstone_reconciliation.py` SHALL read
+  `results/experiment_5647_v509_capstone_reconciliation.json` and every
+  expected `.510` upstream artifact from Exp5706 through Exp5715, including
+  `results/experiment_5706_transition_v510.json`,
+  `results/experiment_5707_v510_source_delta_ingestion.json`,
+  `results/experiment_5708_sota_exact_constraint_canary.json`,
+  `results/experiment_5709_fr11_prospective_shadow_stream.json`,
+  `results/experiment_5710_fr11_isolated_act_on_advice_canary.json`,
+  `results/experiment_5711_arc_relational_goal_energy_live_qualification.json`,
+  `results/experiment_5712_arc_relational_goal_energy_live_ab.json`,
+  `results/experiment_5713_arc_live_self_discovery_levelup_v510.json`,
+  `results/experiment_5714_one_axis_tempering_rust_parity.json`, and
+  `results/experiment_5715_one_axis_tempering_rust_quality_restart.json`,
+  including gate-skip or missing artifacts, then write
+  `results/experiment_5716_v510_capstone_reconciliation.json` without modifying
+  `research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL declare
+  `inference_substrate=aggregation_from_upstream_artifacts` and SHALL reconcile
+  only observed local evidence; task titles, skipped runs, blocked runs, missing
+  artifacts, flagged evidence, unauthenticated offload, unaudited proxy evidence,
+  and development-proxy solve evidence SHALL NOT promote.
+- SCENARIO-CAPSTONE-5716: The artifact
+  `results/experiment_5716_v510_capstone_reconciliation.json` must emit
+  top-level fields `field_principles`, `upstream_artifacts`,
+  `upstream_gate_statuses`, `adversarial_verification_summary`,
+  `v509_fr11_promotion_preserved`, `sota_canary_status`,
+  `cuda_offload_status`, `prospective_shadow_status`,
+  `isolated_canary_status`, `production_default_enabled`,
+  `model_weight_mutation`, `arc_relational_qualification_status`,
+  `arc_relational_live_ab_status`, `arc_registry_count_before`,
+  `arc_registry_count_after`, `arc_registry_delta`, `arc_solve_provenance`,
+  `one_axis_python_promotion_preserved`, `one_axis_rust_parity_status`,
+  `one_axis_rust_quality_restart_status`, `two_axis_retirement_preserved`,
+  `timing_claimed`, `hardware_speedup_claimed`, `retirements_applied`,
+  `spec_reconciliation`, `ops_reconciliation`, `known_issue_reconciliation`,
+  `test_commands`, `test_exit_codes`, `e2e_check_receipts`,
+  `forbidden_files_unchanged`, `inference_substrate`,
+  `reproducibility_checksum`, and `honest_verdict`. The default `.510`
+  reconciliation must preserve the `.509` FR-11 promotion, treat Exp5708 as a
+  blocked stream receipt even when CUDA offload is authenticated, refuse Exp5709
+  prospective promotion when its gate-check failed, refuse Exp5710 isolated
+  canary promotion when the artifact is absent or gate-skipped, keep production
+  default enablement and model-weight mutation false, qualify Exp5711 only as
+  no-solve route evidence, refuse Exp5712 route promotion on a null matched A/B,
+  keep ARC registry count `177` with `arc_registry_delta=0`, credit no ARC solve
+  without independent reproduction and registry delta, preserve the promoted
+  one-axis Python sampler, promote one-axis Rust parity only from Exp5714 exact
+  parity plus broken-control evidence, promote one-axis hard-instance/restart
+  portability only from Exp5715 zero-regression evidence with both restart
+  directions, preserve the two-axis retirement, and make no timing, hardware
+  speedup, board, SNN, TSU, or Kona claim.
+- SCENARIO-CAPSTONE-5716-MISSING-MALFORMED: If an expected upstream artifact is
+  missing or malformed, the workflow must still write the capstone artifact,
+  list the affected path, keep every dependent promotion false, and start
+  `honest_verdict` with `blocked:` while preserving unrelated completed
+  evidence. A missing Exp5710 artifact must be recorded as isolated canary
+  evidence absent rather than silently promoted or recreated.
+- SCENARIO-CAPSTONE-5716-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required capstone field.",
+  `upstream_artifacts` = "fixed evidence denominator; every import traces to a hashed artifact or explicit missing path.",
+  `upstream_gate_statuses` = "complete, blocked, gate-skipped, missing, malformed, and flagged evidence stay distinct.",
+  `adversarial_verification_summary` = "live re-check outcomes and stamped flags block promotion before aggregation.",
+  `v509_fr11_promotion_preserved` = "prior independently audited FR-11 science remains true even when .510 canaries block.",
+  `sota_canary_status` = "Exp5708 is bounded to data/runtime stream receipt unless all exact stream gates pass.",
+  `cuda_offload_status` = "authenticated offload is provenance only and cannot override parse or validator gates.",
+  `prospective_shadow_status` = "Exp5709 chronology/prequential gates are separate from prior replay promotion.",
+  `isolated_canary_status` = "Exp5710 cannot mutate production or model weights and cannot promote when absent or skipped.",
+  `production_default_enabled` = "bare false keeps canary evidence out of production defaults.",
+  `model_weight_mutation` = "bare false proves controller-state canaries did not alter LLM weights.",
+  `arc_relational_qualification_status` = "Exp5711 route qualification is no-solve development evidence.",
+  `arc_relational_live_ab_status` = "Exp5712 promotion requires matched benefit, zero regression, and zero unsafe route accepts.",
+  `arc_registry_count_before` = "authoritative registry baseline before the Exp5713 live attempt.",
+  `arc_registry_count_after` = "authoritative registry count after the Exp5713 live attempt.",
+  `arc_registry_delta` = "solve credit requires a positive reproduced-level registry delta.",
+  `arc_solve_provenance` = "only live self-discovery plus generic reproduction and registry update can credit an ARC solve.",
+  `one_axis_python_promotion_preserved` = "the promoted Python one-axis sampler stays live after two-axis retirement.",
+  `one_axis_rust_parity_status` = "Rust exact parity is a portability gate separate from speed or hardware.",
+  `one_axis_rust_quality_restart_status` = "hard-instance portability requires zero material regression and both restart directions.",
+  `two_axis_retirement_preserved` = "the Exp5645 two-axis failure remains closed without over-retiring one-axis or generic exchange.",
+  `timing_claimed` = "bare false prevents runtime-speed inflation.",
+  `hardware_speedup_claimed` = "bare false prevents board or accelerator-speed inflation.",
+  `retirements_applied` = "prior and repeated same-verdict scopes are bounded without over-retiring parent capabilities.",
+  `spec_reconciliation` = "REQ-* anchors and tests backing the capstone are explicit.",
+  `ops_reconciliation` = "ops ledgers and delegated stop-rule files are recorded without laundering them as edited.",
+  `known_issue_reconciliation` = "known prior failures and exclusions remain visible.",
+  `test_commands` = "verification commands are replayable.",
+  `test_exit_codes` = "observed command exits are recorded without inferring success.",
+  `e2e_check_receipts` = "applicable E2E checks are named and nonapplicable checks are justified.",
+  `forbidden_files_unchanged` = "roadmap and conductor invariants are explicitly checked.",
+  `inference_substrate` = "must equal aggregation_from_upstream_artifacts.",
+  `reproducibility_checksum` = "content-addressed capstone output is stable.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5716)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5716 | Implemented (`python/carnot/experiment_5716_v510_capstone_reconciliation.py`, `results/experiment_5716_v510_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5716_v510_capstone_reconciliation.py`) |

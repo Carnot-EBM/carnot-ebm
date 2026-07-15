@@ -11785,3 +11785,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-15 01:55 UTC | Unconditional registry-rotated ARC live-agent self | OK | 113 passed, 1 warning in 13.08s |
 | 2026-07-15 02:38 UTC | Port the promoted one-axis replica-exchange sample | OK | 91 passed, 1 warning in 15.86s |
 | 2026-07-15 03:00 UTC | Gated on Exp5714 exact parity: Rust one-axis hard- | OK | 88 passed, 1 warning in 13.20s |
+| 2026-07-15 04:23 UTC | Reconcile .510 prospective FR-11, ARC, Rust sample | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: _outcomes - .. |
