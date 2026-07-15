@@ -5096,6 +5096,64 @@ unconsumed alternatives; once the pool is genuinely exhausted, the category stil
 filled (re-selecting a recently-forced signature) rather than being left empty, and this
 is reported via `rotation_exhausted_categories`
 
+### REQ-ARC-FCP-5699-3: Reflect()-Prompt Anti-Stagnation Nudge -- Softer Signal, Inside the LLM Call
+
+REQ-ARC-FCP-5699/5699-2 (above) built a HARD deterministic escape: once
+`AntiStagnationDiversityController.assess()` detects collapse (>= 3 of 4 signals across an
+8-step window, including `consecutive_null_outcomes >= 4`), `SGECandidateRouter.rank()`
+bypasses the LLM entirely and forces a hand-coded diverse portfolio. This closes the failure
+mode, but only AFTER a fairly strict multi-signal threshold fires. The mechanism's own
+2026-07-10 outer-loop investigation documented a softer, earlier version of the same
+problem: a full-budget live g50t run showed the LLM's own `reflect()` calls -- which DO run
+before collapse is detected, on the plain `_REFLECT_INSTRUCTIONS` prompt ("state ONE short
+sentence on what to try differently") -- converged on a repetitive "wait for the system to
+process the pending interaction" strategy across MULTIPLE reflection cycles, never
+escalating to more assertive probing (`ops/known-issues.md` task 6, "NEXT STEP" note). The
+generic reflection framing was not enough to break the pattern on its own; nothing INSIDE
+the prompt the model actually reads named the repetition explicitly.
+
+`LLMStrategyProposer.reflect()` SHALL accept an optional keyword-only `taboo_strategies:
+Sequence[str] = ()` and SHALL compute `_consecutive_null_outcomes(history)` internally
+(reusing the existing REQ-ARC-FCP-5699 helper, not a new detector). When EITHER
+`taboo_strategies` is non-empty OR the null-outcome streak reaches `_REFLECT_NUDGE_NULL_STREAK`
+(= 2, deliberately lower than the hard gate's `consecutive_null_outcomes = 4`, so the
+prompt-level nudge fires earlier and more gently than the deterministic override), an
+`ANTI-STAGNATION WARNING` sentence SHALL be spliced into the prompt BEFORE the history
+section, naming the taboo strategies verbatim when given (so the model sees exactly what
+NOT to repeat) and explicitly demanding a genuinely different action category (a different
+action type, a different grid area, or an active/committal action instead of a
+passive/waiting one) rather than another minor variation. `reflect()`'s return dict SHALL
+report `nudge_fired: bool` and `consecutive_null_outcomes: int` for auditability (matching
+this module's existing convention of recording every anti-stagnation decision -- `taboo_set`,
+`taboo_policy`, `rotation_exhausted_categories`, etc. -- rather than making it silent).
+`SGECandidateRouter.rank()` SHALL feed `anti_stagnation_controller.taboo_set(reflect_window)`
+into every scheduled `reflect()` call (when a controller is configured; `()` otherwise, which
+preserves the exact pre-existing plain-prompt behavior for any caller/test that constructs
+`LLMStrategyProposer` directly) and SHALL record `reflection_nudge_fired` in
+`last_diagnostics`, complementing (not replacing) the harder deterministic override this
+requirement's own gate still handles once collapse is fully detected.
+
+**Empty-history and completer-failure paths are unaffected.** `reflect()`'s existing
+empty-history short-circuit (`if not history: return {...}`, 3 keys, unchanged) fires before
+any nudge computation -- there is no history to detect a streak in. The completer-failure
+path now also reports `nudge_fired`/`consecutive_null_outcomes` (computed before the
+completer call, since the prompt was already built with or without the nudge by the time the
+completer is invoked), matching `propose_one()`'s existing convention of reporting
+`temperature`/`completer_ok` on every return path including failures.
+
+#### SCENARIO-ARC-FCP-5699-3-REFLECT-PROMPT-NAMES-THE-STAGNATION
+
+Given `reflect()` is called with a history window containing at least one strategy that led
+to a null outcome (or the caller supplies `taboo_strategies` derived from
+`AntiStagnationDiversityController.taboo_set`)
+When the null-outcome streak reaches `_REFLECT_NUDGE_NULL_STREAK` OR `taboo_strategies` is
+non-empty
+Then the prompt sent to the completer contains an explicit `ANTI-STAGNATION WARNING` naming
+the specific repeated strategy text (when known) and demanding a genuinely different action
+category, rather than relying solely on the model to infer from raw (strategy, outcome) pairs
+that its recent choices have not been working -- the documented g50t failure showed that
+inference does not reliably happen on its own across multiple reflection cycles
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

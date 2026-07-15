@@ -71,6 +71,19 @@ _REFLECT_INSTRUCTIONS = (
     "REVISED_STRATEGY: <one short sentence>\n\n"
 )
 
+# The reflect() prompt-level anti-stagnation nudge fires on a SOFTER signal than
+# AntiStagnationDiversityController's hard collapse gate (StrategyCollapseThresholds.
+# consecutive_null_outcomes == 4, which bypasses the LLM entirely via
+# rank_forced_portfolio). This is deliberately an earlier, gentler intervention INSIDE
+# the LLM reflection call itself: the documented g50t failure (2026-07-10 outer-loop,
+# ops/known-issues.md task 6) showed the model reflecting multiple times on a plain
+# "what would you try differently" prompt and still converging on a passive "wait for
+# the system to process the pending interaction" strategy -- the generic framing wasn't
+# enough to break the pattern before the harder gate ever triggered. Naming the detected
+# repetition explicitly, INSIDE the prompt the model actually reads, is the fix this
+# constant enables; it complements (does not replace) the deterministic override.
+_REFLECT_NUDGE_NULL_STREAK = 2
+
 
 @dataclass(frozen=True)
 class StrategyCollapseThresholds:
@@ -291,15 +304,53 @@ class LLMStrategyProposer:
     ) -> list[dict[str, Any]]:
         return [self.propose_one(context, candidate_lines, temperature=t) for t in temperatures]
 
-    def reflect(self, context: str, history: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    def reflect(
+        self,
+        context: str,
+        history: Sequence[Mapping[str, Any]],
+        *,
+        taboo_strategies: Sequence[str] = (),
+    ) -> dict[str, Any]:
+        """Ask the model to revise its strategy from recent (strategy, outcome) history.
+
+        `taboo_strategies` (normalized text of recent strategies that led to a NULL
+        outcome, per `AntiStagnationDiversityController.taboo_set`) is optional -- callers
+        without a controller (or unit tests exercising the bare prompt contract) simply
+        omit it and get the plain reflection prompt, unchanged from before this parameter
+        existed. When either `taboo_strategies` is non-empty OR `history` itself shows a
+        run of consecutive null outcomes (`_REFLECT_NUDGE_NULL_STREAK`), an explicit
+        ANTI-STAGNATION WARNING is spliced into the prompt naming what NOT to repeat --
+        see `_REFLECT_NUDGE_NULL_STREAK`'s docstring-comment for why a prompt-level nudge
+        is needed in addition to the harder deterministic collapse override.
+        """
         if not history:
             return {"parse_ok": False, "revised_strategy": "", "raw": ""}
         history_lines = [
             f'- strategy: "{row.get("strategy_text", "")}" -> outcome: {row.get("outcome", "unknown")}'
             for row in history
         ]
+        null_streak = _consecutive_null_outcomes(history)
+        nudge_fired = null_streak >= _REFLECT_NUDGE_NULL_STREAK or bool(taboo_strategies)
+        nudge = ""
+        if nudge_fired:
+            if taboo_strategies:
+                avoid_clause = (
+                    'repeating strategies like "'
+                    + "; ".join(list(taboo_strategies)[:3])
+                    + '" without escalating'
+                )
+            else:
+                avoid_clause = "repeating without escalating to a meaningfully different approach"
+            nudge = (
+                f"\nANTI-STAGNATION WARNING: the last {null_streak} attempt(s) in this window "
+                f"produced no visible change, {avoid_clause}. Your revised strategy must NOT be "
+                "another minor variation of these -- name a genuinely different category of action "
+                "(a different action type, a different area of the grid, or an active/committal "
+                "action instead of a passive/waiting one).\n"
+            )
         prompt = (
             _REFLECT_INSTRUCTIONS
+            + nudge
             + context
             + "\n\nRecent attempts:\n"
             + "\n".join(history_lines)
@@ -309,13 +360,22 @@ class LLMStrategyProposer:
             prompt, max_tokens=self.max_tokens, temperature=0.2, stop=["\n\n"]
         )
         if not ok:
-            return {"parse_ok": False, "revised_strategy": "", "raw": text, "completer_ok": False}
+            return {
+                "parse_ok": False,
+                "revised_strategy": "",
+                "raw": text,
+                "completer_ok": False,
+                "nudge_fired": nudge_fired,
+                "consecutive_null_outcomes": null_streak,
+            }
         revised = parse_reflect_reply(text)
         return {
             "parse_ok": bool(revised),
             "revised_strategy": revised,
             "raw": text,
             "completer_ok": True,
+            "nudge_fired": nudge_fired,
+            "consecutive_null_outcomes": null_streak,
         }
 
 
@@ -911,10 +971,19 @@ class SGECandidateRouter:
         )
 
         reflected = False
+        reflection_result: dict[str, Any] = {}
         if llm_used and self.reflect_every > 0 and self._step % self.reflect_every == 0:
-            reflection = self.proposer.reflect(self._context(), self.history[-self.reflect_every :])
-            if reflection.get("parse_ok"):
-                self._reflection_note = reflection["revised_strategy"]
+            reflect_window = self.history[-self.reflect_every :]
+            reflect_taboo = (
+                self.anti_stagnation_controller.taboo_set(reflect_window)
+                if self.anti_stagnation_controller is not None
+                else ()
+            )
+            reflection_result = self.proposer.reflect(
+                self._context(), reflect_window, taboo_strategies=reflect_taboo
+            )
+            if reflection_result.get("parse_ok"):
+                self._reflection_note = reflection_result["revised_strategy"]
             reflected = True
 
         self.last_diagnostics = {
@@ -925,6 +994,7 @@ class SGECandidateRouter:
             "completer_failure_count": sum(1 for p in proposals if not p.get("completer_ok")),
             "reflection_note": self._reflection_note,
             "reflected_this_call": reflected,
+            "reflection_nudge_fired": reflection_result.get("nudge_fired", False),
             "suppressed_coordinate_count": suppressed,
             "step": self._step,
             "anti_stagnation": {

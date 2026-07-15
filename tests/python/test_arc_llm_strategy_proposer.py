@@ -175,7 +175,70 @@ def test_reflect_handles_completer_failure():
         "revised_strategy": "",
         "raw": "GPU down",
         "completer_ok": False,
+        "nudge_fired": False,
+        "consecutive_null_outcomes": 0,
     }
+
+
+# ---------------------------------------------------------------------------
+# reflect() anti-stagnation prompt nudge (REQ-ARC-FCP-5699-3)
+# ---------------------------------------------------------------------------
+
+
+def test_reflect_no_nudge_on_healthy_history():
+    """A single non-null outcome and no taboo strategies -> plain prompt, no nudge."""
+    completer = FakeCompleter([(True, "REVISED_STRATEGY: keep probing\n")])
+    proposer = LLMStrategyProposer(completer=completer)
+    history = [{"strategy_text": "probe corners", "outcome": "level_up"}]
+    result = proposer.reflect("Game: g1", history)
+    assert result["nudge_fired"] is False
+    assert result["consecutive_null_outcomes"] == 0
+    assert "ANTI-STAGNATION" not in completer.calls[0]["prompt"]
+
+
+def test_reflect_nudge_fires_on_consecutive_null_outcomes():
+    """_REFLECT_NUDGE_NULL_STREAK consecutive null outcomes -> nudge spliced into the
+    prompt, even with no explicit taboo_strategies passed in."""
+    completer = FakeCompleter([(True, "REVISED_STRATEGY: try a different action type\n")])
+    proposer = LLMStrategyProposer(completer=completer)
+    history = [
+        {"strategy_text": "wait and observe", "outcome": "no_change"},
+        {"strategy_text": "wait and observe again", "outcome": "no_change"},
+    ]
+    result = proposer.reflect("Game: g1", history)
+    assert result["nudge_fired"] is True
+    assert result["consecutive_null_outcomes"] == 2
+    prompt = completer.calls[0]["prompt"]
+    assert "ANTI-STAGNATION WARNING" in prompt
+    assert "the last 2 attempt(s)" in prompt
+    assert "must NOT be another minor variation" in prompt
+
+
+def test_reflect_nudge_names_taboo_strategies_when_given():
+    """Explicit taboo_strategies (from AntiStagnationDiversityController.taboo_set) are
+    named verbatim in the nudge, so the model sees exactly what NOT to repeat."""
+    completer = FakeCompleter([(True, "REVISED_STRATEGY: click the unexplored panel\n")])
+    proposer = LLMStrategyProposer(completer=completer)
+    history = [{"strategy_text": "wait and observe", "outcome": "unchanged"}]
+    result = proposer.reflect(
+        "Game: g1", history, taboo_strategies=["wait and observe", "check the corner"]
+    )
+    assert result["nudge_fired"] is True
+    prompt = completer.calls[0]["prompt"]
+    assert "wait and observe; check the corner" in prompt
+
+
+def test_reflect_nudge_does_not_fire_below_streak_threshold():
+    """A single null outcome (below _REFLECT_NUDGE_NULL_STREAK=2) and no taboo strategies
+    -> no nudge yet; the softer signal must accumulate before the prompt-level warning
+    kicks in, matching the harder deterministic gate's own graduated-signal design."""
+    completer = FakeCompleter([(True, "REVISED_STRATEGY: try again\n")])
+    proposer = LLMStrategyProposer(completer=completer)
+    history = [{"strategy_text": "probe corners", "outcome": "no_change"}]
+    result = proposer.reflect("Game: g1", history)
+    assert result["nudge_fired"] is False
+    assert result["consecutive_null_outcomes"] == 1
+    assert "ANTI-STAGNATION" not in completer.calls[0]["prompt"]
 
 
 # ---------------------------------------------------------------------------
@@ -305,6 +368,62 @@ def test_rank_triggers_reflection_on_schedule():
     assert router.last_diagnostics["reflected_this_call"] is True
     assert router._reflection_note == "focus elsewhere"
     assert "focus elsewhere" in router._context()
+
+
+def test_rank_reflection_nudge_fires_after_null_outcome():
+    """SGECandidateRouter.rank() feeds AntiStagnationDiversityController.taboo_set() (recent
+    null-outcome strategies) into the reflect() call, so the LLM's reflection prompt names
+    exactly what NOT to repeat -- not just a generic 'what would you try differently'."""
+    completer = FakeCompleter(
+        [
+            (True, "STRATEGY: wait quietly\nCHOICE: 0\n"),  # step 1 propose
+            (True, "STRATEGY: wait quietly again\nCHOICE: 0\n"),  # step 2 propose
+            (True, "REVISED_STRATEGY: try clicking instead\n"),  # step 2 reflect
+        ]
+    )
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+        reflect_every=2,
+    )
+    candidates = [_candidate(6, 0, 0), _candidate(6, 1, 1)]
+    router.rank(frame=None, candidates=candidates)
+    router.record_outcome("no_change")  # step 1's chosen strategy led nowhere
+    router.rank(frame=None, candidates=[_candidate(6, 2, 2), _candidate(6, 3, 3)])
+    assert router.last_diagnostics["reflected_this_call"] is True
+    assert router.last_diagnostics["reflection_nudge_fired"] is True
+    reflect_prompt = completer.calls[-1]["prompt"]
+    assert "ANTI-STAGNATION WARNING" in reflect_prompt
+    assert "wait quietly" in reflect_prompt
+
+
+def test_rank_no_reflection_nudge_without_anti_stagnation_controller():
+    """A router configured with anti_stagnation_controller=None still reflects on schedule
+    (backward-compatible), just never nudges -- matching reflect()'s own default of an
+    empty taboo_strategies tuple when no controller-derived signal is available."""
+    completer = FakeCompleter(
+        [
+            (True, "STRATEGY: wait quietly\nCHOICE: 0\n"),
+            (True, "STRATEGY: wait quietly again\nCHOICE: 0\n"),
+            (True, "REVISED_STRATEGY: keep going\n"),
+        ]
+    )
+    router = SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=completer),
+        game_id="g1",
+        k=1,
+        temperatures=(0.5,),
+        reflect_every=2,
+        anti_stagnation_controller=None,
+    )
+    router.rank(frame=None, candidates=[_candidate(6, 0, 0), _candidate(6, 1, 1)])
+    router.record_outcome("no_change")
+    router.rank(frame=None, candidates=[_candidate(6, 2, 2), _candidate(6, 3, 3)])
+    assert router.last_diagnostics["reflected_this_call"] is True
+    assert router.last_diagnostics["reflection_nudge_fired"] is False
+    assert "ANTI-STAGNATION" not in completer.calls[-1]["prompt"]
 
 
 def test_record_outcome_updates_last_history_row():
@@ -737,5 +856,19 @@ def test_req_arc_fcp_5699_2_spec_declares_rotation_fix() -> None:
         "SCENARIO-ARC-FCP-5699-2-FORCED-PORTFOLIO-ROTATES",
         "_recently_forced_signatures",
         "rotation_exhausted_categories",
+    ):
+        assert marker in section
+
+
+def test_req_arc_fcp_5699_3_spec_declares_reflect_prompt_nudge() -> None:
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-3") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-3",
+        "SCENARIO-ARC-FCP-5699-3-REFLECT-PROMPT-NAMES-THE-STAGNATION",
+        "_REFLECT_NUDGE_NULL_STREAK",
+        "taboo_strategies",
+        "nudge_fired",
     ):
         assert marker in section
