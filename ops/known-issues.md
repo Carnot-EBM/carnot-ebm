@@ -544,6 +544,35 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    `policy.explorer.explored_out`/`policy.induction_attempts` from a real production run (extend
    `scripts/arc_sge_live_path_ab.py` or a sibling script) rather than assuming the smoke-test's
    mechanism transfers unmodified.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-14, closes the 5699-13 gap above):**
+   `arc_sge_live_path_ab.py` extended to record `policy.explorer.explored_out` and
+   `policy.induction_attempts` right after `run_game()` returns, re-run on sp80 `budget=250`
+   (identical config to 5699-12; `results/arc_sge_live_path_ab_sp80.json` overwritten,
+   `duration_s` 63.18s/251.65s -- consistent with 5699-12's original timings, so the
+   instrumentation itself is not the confound). **Finding 1, gap closed:**
+   `explorer_explored_out=False` for BOTH arms -- the real ~48-candidate generator does NOT hit
+   the smoke-test's exhaustion wall. 5699-7/8/9/10's exhaustion framing is now confirmed to be a
+   harness artifact, not a real-stack property. **Finding 2, new lead:** exactly one induction
+   attempt fired per arm (`reason="stall"` at `transition_count=25`, same trigger as always
+   documented). Reading the handler in `arc_competition_agent.py` (~line 3443-3709) shows it
+   threads through two tiers, both declining to plan for DIFFERENT reasons: tier 1
+   (`gated_engine_from_transitions`, the CNN-dynamics-prior warm-start) PASSES its own held-out
+   cell-recall trust gate (`heldout_cell_recall` 0.98-1.0 >> 0.5 threshold) -- per that function's
+   own return contract a `"PASS"` always yields a non-None engine, so `e3.plan_in_model` genuinely
+   ran against a TRUSTED engine and still found no plan; tier 2 (the DSL/LLM engine, gated by
+   `e3.WorldModelVerifier` since sp80 isn't in `HIDDEN_STATE_GAME_IDS`) fails its gate on BOTH
+   metrics it records (`verify_accuracy=0.0`, `verify_cell_recall` 0.0012/0.0 -- so the
+   `CARNOT_ARC_TRUST_METRIC=cell_recall` escape hatch, built for exactly this kind of rescue, would
+   NOT have helped here). **Net:** the wall is not "induction never triggers" (it does) and not
+   "the trust gate always rejects" (tier 1 passes) -- it's that a dynamics model can pass its own
+   trust gate and `plan_in_model` can still fail to find an executable plan against it, a
+   planner-level gap none of 5699-7 through -13 had characterized. **Scope limit: n=1 game, n=1
+   attempt per arm** -- a genuine lead, not a generalized capability claim (Sample-Size Rigor).
+   Concrete next step if picked up again: instrument `_call_plan_in_model`/`plan_in_model` to
+   record WHY it returns empty against a gate-passed engine (search exhausted vs. goal predicate
+   never satisfied vs. other), and/or repeat on 1-2 more unsolved games from
+   `ops/arc_solve_registry.yaml` to see if the pattern recurs.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

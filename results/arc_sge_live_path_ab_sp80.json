@@ -66,8 +66,36 @@
         "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
       },
       "candidate_router_type": "CrossGameDiscriminativeCandidateRouter",
-      "duration_s": 42.87943506240845,
-      "arm": "baseline_discriminative"
+      "duration_s": 63.18052291870117,
+      "arm": "baseline_discriminative",
+      "explorer_explored_out": false,
+      "induction_attempts": [
+        {
+          "reason": "stall",
+          "goal_level": 1,
+          "transition_count": 25,
+          "dsl_transition_count": 25,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "skipped": "world_model_accuracy_below_threshold",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "n_transitions": 25,
+            "warm_start": false,
+            "prior_transition_count": 0,
+            "prior_loaded": true,
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 1.0,
+            "trust_threshold": 0.5,
+            "trust_metric": "cell_recall",
+            "gate": "PASS"
+          },
+          "verify_accuracy": 0.0,
+          "verify_cell_recall": 0.0012,
+          "trust_metric": "exact"
+        }
+      ],
+      "induction_attempts_not_skipped": 0
     },
     "sge": {
       "game": "sp80",
@@ -130,9 +158,37 @@
         "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
       },
       "candidate_router_type": "SGECandidateRouter",
-      "duration_s": 165.4424021244049,
-      "arm": "sge"
+      "duration_s": 251.65460681915283,
+      "arm": "sge",
+      "explorer_explored_out": false,
+      "induction_attempts": [
+        {
+          "reason": "stall",
+          "goal_level": 1,
+          "transition_count": 25,
+          "dsl_transition_count": 25,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "skipped": "world_model_accuracy_below_threshold",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "n_transitions": 25,
+            "warm_start": false,
+            "prior_transition_count": 0,
+            "prior_loaded": true,
+            "heldout_accuracy": 0.1667,
+            "heldout_cell_recall": 0.9794,
+            "trust_threshold": 0.5,
+            "trust_metric": "cell_recall",
+            "gate": "PASS"
+          },
+          "verify_accuracy": 0.0,
+          "verify_cell_recall": 0.0,
+          "trust_metric": "exact"
+        }
+      ],
+      "induction_attempts_not_skipped": 0
     }
   },
-  "run_date": "2026-07-15T19:07:43Z"
+  "run_date": "2026-07-15T22:48:41Z"
 }
