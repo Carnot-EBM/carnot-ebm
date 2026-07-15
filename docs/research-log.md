@@ -5931,3 +5931,9 @@ The critical path for milestone .250:
 - theme: operational execution led by transition mapping and cross-area evidence reconciliation
 - key result: honest operational result -- the visible compute-bound slow paths are identified, but task-conditioned GPU idle, causal phase timing, and a concurrent multi-model runner miss are not established
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.510
+- exp_range: no data available this milestone
+- theme: synthesis-heavy execution led by reconciliation and Rust parity work
+- key result: honest operational result -- the compute-bound slowest entries were the 33.3-minute registry-rotated ARC live-agent attempt and the 18.72-minute sealed GGUF CUDA canary; task-conditioned GPU idle is false, while causal phase timing and concurrent-model runner evidence are unavailable
+- acceptance: no data available this milestone
