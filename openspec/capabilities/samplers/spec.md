@@ -933,6 +933,136 @@ any timing/hardware claim appears
 |---|---|---|
 | REQ-SAMPLE-5714 | Planned (`crates/carnot-samplers/src/one_axis_tempering.rs`, `crates/carnot-python/src/one_axis_tempering.rs`, `python/carnot/experiment_5714_one_axis_tempering_rust_parity.py`, `results/experiment_5714_one_axis_tempering_rust_parity.json`) | Planned (`tests/python/test_experiment_5714_one_axis_tempering_rust_parity.py`) |
 
+### REQ-SAMPLE-5715: One-Axis Rust/Python Hard-Instance Quality And Restart Parity
+
+Carnot MUST provide Exp 5715 at
+`python/carnot/experiment_5715_one_axis_tempering_rust_quality_restart.py` and
+write `results/experiment_5715_one_axis_tempering_rust_quality_restart.json`
+without modifying `scripts/research_conductor.py`. Exp 5715 SHALL compare the
+promoted one-axis corrected-cDLS temperature-label exchange algorithm across
+the Python reference and Rust/PyO3 boundary on the Exp 5634 hard-instance
+families and configuration without tuning. The experiment SHALL use Exp 5634
+eligibility as a source-quality gate and Exp 5714 exact Rust/Python parity as
+the implementation gate.
+
+The protocol SHALL freeze instances, instance hashes, seeds, burn-in, sample
+sweeps, corrected-transition budget, beta ladder, swap schedule, checkpoint
+midpoints, tolerances, margins, and paired-interval analysis before any arm
+quality result is interpreted. Python and Rust arms SHALL receive identical
+corrected proposals, ladder, seeds, transitions, swaps, and cold-target
+collection. Setup and swap work SHALL be accounted for, but wall time SHALL not
+be compared: `timing_claimed=false` and `hardware_speedup_claimed=false`.
+No two-axis arm or penalty-axis exchange code SHALL be used in any arm, and
+`two_axis_arm_count` SHALL equal `0`.
+
+The quality report SHALL include uninterrupted Python and Rust arms,
+Python-to-Rust and Rust-to-Python midpoint restarts, corrupt checkpoint, wrong
+ladder, stale label, and independent-cDLS diagnostic controls. Checkpoints
+SHALL carry a schema version, instance identity, ladder hash, implementation
+label, state payload, and payload checksum. Corrupt, truncated, wrong-version,
+wrong-endianness, wrong-ladder, and stale-label checkpoints SHALL fail closed
+without producing a resumed sample. At fixed midpoints, deterministic suffixes
+SHALL match exactly where the shared seeded state permits; independent restart
+seed suffixes SHALL be compared distributionally otherwise.
+
+Exp 5715 SHALL report exact validity, best and mean energy, feasible hits
+where applicable, effective sample size, integrated autocorrelation, barrier
+crossings, temperature round trips, solve probability, target distributions,
+paired intervals, failures, and denominators for each quality and restart arm.
+`one_axis_rust_quality_ready_score` SHALL equal exactly `1.0` only when Rust
+has no material validity, energy, ESS, autocorrelation, barrier, or solve
+regression against Python; all frozen paired intervals stay within margins;
+both cross-language restarts pass; corrupt/unsafe state fails closed; no
+two-axis arm is used; and no timing or hardware-speedup claim is present.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `upstream_gate_receipts`, `source_quality_receipt`,
+`preregistered_protocol`, `instance_manifest`, `instance_hashes`,
+`implementation_hashes`, `sampler_configs`, `transition_budget_parity`,
+`swap_schedule_parity`, `successful_seed_count`, `failed_seed_reasons`,
+`exact_validity_by_arm`, `energy_by_arm`, `feasible_hit_rate_by_arm`,
+`ess_by_arm`, `autocorrelation_by_arm`, `barrier_crossings_by_arm`,
+`temperature_round_trips_by_arm`, `solve_probability_by_arm`,
+`target_distributions_by_arm`, `paired_intervals`,
+`material_regression_count`, `checkpoint_matrix`,
+`checkpoint_schema_version`, `python_to_rust_restart_pass`,
+`rust_to_python_restart_pass`, `restart_suffix_metrics`,
+`corrupted_checkpoint_controls`, `two_axis_arm_count`, `timing_claimed`,
+`hardware_speedup_claimed`, `one_axis_rust_quality_ready_score`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`matched_rust_python_one_axis_sampler_cpu`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every required hard-instance quality and restart field exists before promotion."
+- `upstream_gate_receipts`: principle "Pins Exp5634 quality eligibility and Exp5714 Rust/Python exact parity before Exp5715 is interpreted."
+- `source_quality_receipt`: principle "Binds hard-instance eligibility to Exp5634 instead of selecting a new tuned quality panel."
+- `preregistered_protocol`: principle "Freezes instances, seeds, schedule, budget, margins, checkpoints, and analysis before results."
+- `instance_manifest`: principle "Lists the exact Exp5634 hard instances and families used by every arm."
+- `instance_hashes`: principle "Content-addresses each hard instance so tuning or silent panel drift is detectable."
+- `implementation_hashes`: principle "Hashes the Python reference, Rust core, PyO3 binding, tests, and upstream artifacts needed to reconstruct arms."
+- `sampler_configs`: principle "Makes Python, Rust, restart, and diagnostic arms reconstructable without reading prose."
+- `transition_budget_parity`: principle "Proves corrected proposals and cold-target collections are matched across languages and restarts."
+- `swap_schedule_parity`: principle "Proves label-only adjacent swaps and exchange attempts are matched."
+- `successful_seed_count`: principle "Reports the denominator that actually produced paired quality evidence."
+- `failed_seed_reasons`: principle "Preserves failed-seed blockers instead of silently shrinking denominators."
+- `exact_validity_by_arm`: principle "Prevents invalid states from appearing as quality wins."
+- `energy_by_arm`: principle "Reports best and mean cold-target energy quality."
+- `feasible_hit_rate_by_arm`: principle "Reports feasible hits where exact verifier or CSP utility applies."
+- `ess_by_arm`: principle "Reports usable sample count under serial dependence."
+- `autocorrelation_by_arm`: principle "Reports integrated autocorrelation so mixing regressions are visible."
+- `barrier_crossings_by_arm`: principle "Measures metastable basin transitions directly."
+- `temperature_round_trips_by_arm`: principle "Measures whether the one-axis temperature labels traverse the ladder."
+- `solve_probability_by_arm`: principle "Reports exact-solve utility by arm."
+- `target_distributions_by_arm`: principle "Records cold-target energy and validity distributions for distributional parity."
+- `paired_intervals`: principle "Bounds Python-vs-Rust and restart deltas using frozen paired intervals and margins."
+- `material_regression_count`: principle "Counts only frozen-margin failures that would block promotion."
+- `checkpoint_matrix`: principle "Shows uninterrupted and cross-language midpoint restart arms per instance and seed."
+- `checkpoint_schema_version`: principle "Pins the portable checkpoint schema version."
+- `python_to_rust_restart_pass`: principle "Gates Python checkpoint resumed by Rust."
+- `rust_to_python_restart_pass`: principle "Gates Rust checkpoint resumed by Python."
+- `restart_suffix_metrics`: principle "Compares deterministic and independent-seed suffixes after restart."
+- `corrupted_checkpoint_controls`: principle "Proves corrupt, truncated, wrong-version, wrong-endianness, wrong-ladder, and stale-label states fail closed."
+- `two_axis_arm_count`: principle "Bare zero keeps retired two-axis scope closed."
+- `timing_claimed`: principle "Bare false prevents quality parity from becoming a wall-time benchmark."
+- `hardware_speedup_claimed`: principle "Bare false prevents CPU portability evidence from becoming a board or hardware claim."
+- `one_axis_rust_quality_ready_score`: principle "Equals 1.0 only when all quality, interval, restart, corruption, and no-speed gates pass."
+- `inference_substrate`: principle "Declares matched Rust/Python one-axis CPU sampling with no LLM or board involvement."
+- `random_seeds`: principle "Records replay seeds for every paired row and restart suffix."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether hard-instance Rust quality and restart parity is final."
+
+### SCENARIO-SAMPLE-5715: Exp5715 Emits Hard-Instance Rust Quality And Restart Evidence
+
+**Given** Exp 5634 quality eligibility and Exp 5714 exact Rust/Python parity
+are hash-pinned
+**When** Exp 5715 runs the frozen Exp5634 one-axis hard-instance panel with
+matched Python, Rust, Python-to-Rust restart, Rust-to-Python restart, and
+diagnostic control arms
+**Then** it writes
+`results/experiment_5715_one_axis_tempering_rust_quality_restart.json` with all
+required schema fields, matched transition and swap budgets, honest
+successful/failed seed denominators, per-arm validity/energy/ESS/autorrelation/
+barrier/round-trip/solve/target-distribution metrics, paired intervals, and
+restart suffix metrics
+**And** `one_axis_rust_quality_ready_score=1.0`, `two_axis_arm_count=0`,
+`timing_claimed=false`, and `hardware_speedup_claimed=false` only when no
+material Rust or restart regression appears and corrupt state fails closed.
+
+**If** Exp5634 or Exp5714 provenance is stale, budgets differ, any material
+quality interval fails, either cross-language restart fails, corrupt state does
+not fail closed, a two-axis arm appears, or any speed/hardware claim appears
+**Then** the artifact SHALL still emit terminal evidence with
+`one_axis_rust_quality_ready_score=0.0` and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5715)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5715 | Planned (`python/carnot/experiment_5715_one_axis_tempering_rust_quality_restart.py`, `results/experiment_5715_one_axis_tempering_rust_quality_restart.json`) | Planned (`tests/python/test_experiment_5715_one_axis_tempering_rust_quality_restart.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
