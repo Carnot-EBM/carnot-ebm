@@ -862,6 +862,26 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
     > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5599-2. Tests:
     > `tests/python/test_experiment_5705_full_precision_27b_vs_4bit_quant_ab.py` (7 tests) +
     > `tests/python/test_local_gguf_proposer_extra_server_args.py` (4 tests).
+    >
+    > **V2 FOLLOW-UP, SAME DAY — timeout-margin investigation.** Operator pushed back on the v1
+    > conclusion: "did we give it enough kv-cache for context and wait long enough?" Investigated
+    > directly rather than defended. Context ruled out cleanly (real Gemma-tokenizer measurement:
+    > the induce prompt is 11207 tokens, comfortably under `n_ctx=22000`). Timeout margin WAS
+    > genuinely tight: a real `n_predict=1` call isolated prefill at 55.19 tok/s (203s for the
+    > 11207-token prompt — fast, not the bottleneck), but combined with the ~2.4 tok/s decode rate,
+    > a full 2560-token generation could take up to ~1067s, for a worst-case total of ~1270s —
+    > exceeding the v1 `timeout=1200`. **Retry with `timeout=3600` (3x margin), wrapped in a 7200s
+    > (2hr) outer budget: killed by the outer wrapper with ZERO output.** Not a hang — `rocm-smi`
+    > showed the iGPU pinned at 100% and the llama-server held `R` state with climbing CPU-time/RSS
+    > across every check during the full 2-hour window. It never produced one complete reinduction
+    > attempt despite genuinely, continuously computing. **This closes the question and strengthens
+    > the v1 finding rather than reversing it**: the "just needed more time" hypothesis is
+    > falsified — 3x per-call margin and 6x more wall-clock still yielded nothing. The v1 artifact
+    > remains the checked-in measurement (not overwritten — the retry produced nothing to overwrite
+    > it with). Per standing discipline, no third retry was launched without checking with the
+    > operator. Decisive finding: on this iGPU at Q8_0, `google/gemma-4-31B-it` cannot complete the
+    > live reinduction task in a bounded, practically-usable window, independent of timeout value
+    > chosen. Spec + tests updated same-day (8 tests now, was 7).
 
 **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
 human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
