@@ -11773,3 +11773,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 23:55 UTC | Transition terminal .509 evidence, retire failed e | OK | Deliverable already exists in repo |
 | 2026-07-14 23:57 UTC | Transition terminal .509 evidence, retire failed e | OK | 87 passed, 1 warning in 21.74s |
 | 2026-07-15 00:13 UTC | Ingest post-planning 2025-2026 source deltas with  | OK | 86 passed, 1 warning in 21.54s |
+| 2026-07-15 00:32 UTC | Build a sealed exact-constraint canary with authen | OK | 96 passed, 1 warning in 13.40s |

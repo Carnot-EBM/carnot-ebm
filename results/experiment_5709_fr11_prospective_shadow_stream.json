@@ -1,0 +1,42 @@
+{
+  "experiment": 5709,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-15",
+  "started_at": "2026-07-15T00:34:23.363035+00:00",
+  "finished_at": "2026-07-15T00:34:23.363035+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5708 exact canary: prospective prequential FR-11 shadow stream",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 3 gate(s) failed; first failure: exp5708-sota-exact-constraint-canary.sota_canary_ready_score (actual=0.0 >= expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5708-sota-exact-constraint-canary",
+      "artifact_field": "sota_canary_ready_score",
+      "op": ">=",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 >= expected=1.0"
+    },
+    {
+      "upstream": "exp5708-sota-exact-constraint-canary",
+      "artifact_field": "validator_disagreement_count",
+      "op": "==",
+      "expected": 0,
+      "actual": 0,
+      "passed": true,
+      "reason": "actual=0 == expected=0"
+    },
+    {
+      "upstream": "exp5708-sota-exact-constraint-canary",
+      "artifact_field": "cuda_offload_authenticated_score",
+      "op": ">=",
+      "expected": 1.0,
+      "actual": 1.0,
+      "passed": true,
+      "reason": "actual=1.0 >= expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
