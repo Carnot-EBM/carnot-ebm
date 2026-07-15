@@ -18,6 +18,7 @@ CLI:  --check (default)            run the gate, print verdict, set exit code
       --policy e3|explorer         which policy to measure (default e3 = the submitted default)
       --budget N (8000)  --cap S (115)  --json
 """
+
 import argparse
 import json
 import re
@@ -55,9 +56,13 @@ _LINE = re.compile(
     r"(?:\s*eff=([\d.]+))?"
     r"(?:\s*nav_reset=(\d+)\s*nav_fwhr=([\d.]+))?"
 )
-EFFICIENCY_SLACK = 1.10  # allow 10% worse median actions before calling it a regression (FALLBACK metric)
-EFFICIENCY_DROP_SLACK = 0.97  # PRIMARY: fail if CORE per-level efficiency drops below 97% of baseline
-BIG_ACTIONS = 10 ** 9
+EFFICIENCY_SLACK = (
+    1.10  # allow 10% worse median actions before calling it a regression (FALLBACK metric)
+)
+EFFICIENCY_DROP_SLACK = (
+    0.97  # PRIMARY: fail if CORE per-level efficiency drops below 97% of baseline
+)
+BIG_ACTIONS = 10**9
 
 
 def _gate_policy_class(policy: str) -> str:
@@ -110,9 +115,7 @@ def offline_gate_proposer_config(
         "proposer_source": "E3AgentPolicy._proposer" if induction_enabled else "none",
         "disable_induction_env": "1" if disable_induction else "unset",
         "lower_bound_note": (
-            "offline_core_efficiency_is_lower_bound_when_mismatch_true"
-            if disable_induction
-            else ""
+            "offline_core_efficiency_is_lower_bound_when_mismatch_true" if disable_induction else ""
         ),
     }
 
@@ -208,8 +211,18 @@ def _measure_game(
 ) -> dict:
     import os
 
-    cmd = [str(REPO / ".venv" / "bin" / "python"), str(EVAL), "--policy", policy,
-           "--games", "oracle", "--only", game, "--budget", str(budget)]
+    cmd = [
+        str(REPO / ".venv" / "bin" / "python"),
+        str(EVAL),
+        "--policy",
+        policy,
+        "--games",
+        "oracle",
+        "--only",
+        game,
+        "--budget",
+        str(budget),
+    ]
     # Measure the SEARCH/efficiency of the tier-1 explorer cleanly: disable the LLM induction tier so the
     # gate doesn't pay the local llama-server spawn (irrelevant to a search regression; a one-time cost
     # under the real 12h eval). Production submission does NOT set this -> induction runs normally there.
@@ -218,6 +231,27 @@ def _measure_game(
         env[INDUCTION_DISABLE_ENV] = "1"
     else:
         env.pop(INDUCTION_DISABLE_ENV, None)
+    # 2026-07-15 fix: this function runs GATE_GAMES.__len__() (currently 8) of these SIMULTANEOUSLY
+    # via measure()'s ThreadPoolExecutor(max_workers=8). Each subprocess independently imports
+    # numpy/scipy/torch, which default to spawning one OpenMP/OpenBLAS thread PER CORE when no
+    # thread-count env var is set (confirmed directly: a single arc_leaderboard_eval.py process
+    # spawns exactly 24 threads on this 24-core box). 8 unconstrained subprocesses -> up to 192
+    # threads contending for 24 cores -- severe, fully self-inflicted oversubscription that made
+    # the gate time out 3 consecutive runs (identical 1/8-solved, 7-timed-out results each time,
+    # independent of the concurrent research conductor's own load) even after two real underlying
+    # performance bugs were fixed and individually verified fast (REQ-ARC-FCP-5591-3,
+    # REQ-CAPSTONE-4556-2). Each game-eval subprocess does small-grid, Python-level search work --
+    # it does not benefit from multi-threaded BLAS at this scale -- so pinning every math library
+    # to 1 thread per subprocess lets all 8 run truly in parallel within the 24-core budget instead
+    # of starving each other.
+    for _threads_env in (
+        "OMP_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+        "VECLIB_MAXIMUM_THREADS",
+    ):
+        env[_threads_env] = "1"
     try:
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=cap, cwd=str(REPO), env=env)
         m = None
@@ -315,16 +349,20 @@ def measure(
         for r in rows
     }
     measurement = {
-        "policy": policy, "games": GATE_GAMES, "per_game": rows,
+        "policy": policy,
+        "games": GATE_GAMES,
+        "per_game": rows,
         "action_metric": dict(CANONICAL_ACTION_METRIC),
         "solved_count": len(solved),
         "median_actions_on_solved": (median(acts) if acts else None),
-        "median_actions_on_core": median([
-            _actions_by_game({"per_game": rows, "action_metric": CANONICAL_ACTION_METRIC}).get(
-                game, BIG_ACTIONS
-            )
-            for game in CANONICAL_CORE_GAMES
-        ]),
+        "median_actions_on_core": median(
+            [
+                _actions_by_game({"per_game": rows, "action_metric": CANONICAL_ACTION_METRIC}).get(
+                    game, BIG_ACTIONS
+                )
+                for game in CANONICAL_CORE_GAMES
+            ]
+        ),
         "total_actions_on_solved": (sum(acts) if acts else None),
         "timed_out_count": sum(1 for r in rows if r["timed_out"]),
         # CORE set-containment keys (2026-06-20): the verdict compares the SAME games across
@@ -338,13 +376,22 @@ def measure(
         # PER-LEVEL efficiency (2026-06-20): the REAL leaderboard score is per-level
         # sum(min(human/agent_per_level,1)^2), NOT total actions. The eval now emits it (eff=); this is the
         # PRIMARY metric the verdict judges (median actions is demoted to a wall-clock/compute-budget proxy).
-        "efficiency_by_game": {r["game"]: r["efficiency"] for r in solved if r.get("efficiency") is not None},
+        "efficiency_by_game": {
+            r["game"]: r["efficiency"] for r in solved if r.get("efficiency") is not None
+        },
         "per_level_efficiency_by_game": per_level_efficiency_by_game,
-        "deepest_level_by_game": {r["game"]: int(r.get("deepest_level_reached") or 0) for r in rows},
+        "deepest_level_by_game": {
+            r["game"]: int(r.get("deepest_level_reached") or 0) for r in rows
+        },
         "navigation_by_game": navigation_by_game,
-        "core_efficiency": round(sum(
-            r["efficiency"] for r in rows
-            if r["game"] in CANONICAL_CORE_GAMES and r.get("efficiency") is not None), 4),
+        "core_efficiency": round(
+            sum(
+                r["efficiency"]
+                for r in rows
+                if r["game"] in CANONICAL_CORE_GAMES and r.get("efficiency") is not None
+            ),
+            4,
+        ),
     }
     return attach_proposer_config_parity(
         measurement,
@@ -474,7 +521,9 @@ def validate_canonical_baseline(base: dict) -> dict:
         # LEGACY total-actions baseline (no efficiency, e.g. unit fixtures): keep the 7760 cherry-pick guard.
         if _action_metric_field(base) != CANONICAL_ACTION_FIELD:
             errors.append("baseline action metric must use total actions")
-        if {game: base_acts.get(game) for game in CANONICAL_CORE_GAMES} != CANONICAL_BASELINE_ACTIONS_BY_GAME:
+        if {
+            game: base_acts.get(game) for game in CANONICAL_CORE_GAMES
+        } != CANONICAL_BASELINE_ACTIONS_BY_GAME:
             errors.append("baseline CORE action map moved from the verified 7760 control")
         if float(computed_median) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
             errors.append("computed baseline CORE median must remain 7760")
@@ -517,8 +566,10 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
     if not core:
         # No baseline solves recorded at all -> fall back to the legacy count check.
         bs, cs = base.get("solved_count", 0), cur["solved_count"]
-        return (cs >= bs and cs > 0,
-                f"legacy count check: solved {cs} vs baseline {bs} (run --update-baseline for CORE)")
+        return (
+            cs >= bs and cs > 0,
+            f"legacy count check: solved {cs} vs baseline {bs} (run --update-baseline for CORE)",
+        )
     cur_solved = set(cur.get("solved_games") or [])
     lost = sorted(core - cur_solved)
     if lost:
@@ -536,24 +587,33 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
         # The baseline uses the real per-level metric but the treatment emitted no efficiency (broken
         # eval / missing eff=). Refuse -- do NOT silently fall back to the retired total-actions metric,
         # which could PASS a real efficiency regression (adversarial review SF-2, 2026-06-20).
-        return False, ("REGRESSION: could not measure per-level efficiency for the current config "
-                       "(baseline has it, treatment does not); refusing to judge on the retired "
-                       "total-actions fallback")
+        return False, (
+            "REGRESSION: could not measure per-level efficiency for the current config "
+            "(baseline has it, treatment does not); refusing to judge on the retired "
+            "total-actions fallback"
+        )
     if base_eff and cur_eff:
         bce = round(sum(base_eff.get(g, 0.0) for g in core), 4)
         cce = round(sum(cur_eff.get(g, 0.0) for g in core), 4)
         # PER-GAME non-inferiority (SF-3, adversarial review): the CORE efficiency sum is lopsided (one
         # game ~ 100% of it), so a sum-only check lets a regression on the dominant game hide behind a
         # tiny gain elsewhere. Guard each CORE game whose baseline efficiency is non-trivial (>0.01).
-        regressed = [g for g in core
-                     if base_eff.get(g, 0.0) > 0.01
-                     and cur_eff.get(g, 0.0) < base_eff.get(g, 0.0) * EFFICIENCY_DROP_SLACK]
+        regressed = [
+            g
+            for g in core
+            if base_eff.get(g, 0.0) > 0.01
+            and cur_eff.get(g, 0.0) < base_eff.get(g, 0.0) * EFFICIENCY_DROP_SLACK
+        ]
         if regressed:
-            return False, (f"REGRESSION: CORE games lost per-level efficiency {regressed} "
-                           f"(per-game non-inferiority; the REAL leaderboard metric)")
+            return False, (
+                f"REGRESSION: CORE games lost per-level efficiency {regressed} "
+                f"(per-game non-inferiority; the REAL leaderboard metric)"
+            )
         if bce > 0 and cce < bce * EFFICIENCY_DROP_SLACK:
-            return False, (f"REGRESSION: CORE per-level efficiency sum {cce} < baseline {bce} "
-                           f"(the REAL leaderboard metric: min((human/agent)^2*100,115), index-weighted)")
+            return False, (
+                f"REGRESSION: CORE per-level efficiency sum {cce} < baseline {bce} "
+                f"(the REAL leaderboard metric: min((human/agent)^2*100,115), index-weighted)"
+            )
         tag = "IMPROVED" if (cce > bce or bonus) else "non-inferior"
         msg = f"PASS ({tag}): CORE per-level efficiency {cce} vs baseline {bce}"
         if bonus:
@@ -567,8 +627,10 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
     cm = median([cur_acts.get(g, BIG_ACTIONS) for g in core])
     bm = median([base_acts.get(g, BIG_ACTIONS) for g in core])
     if cm > bm * EFFICIENCY_SLACK:
-        return False, (f"REGRESSION: CORE median actions {cm} > baseline {bm} x{EFFICIENCY_SLACK} "
-                       f"(wall-clock fallback; re-run --update-baseline to use per-level efficiency)")
+        return False, (
+            f"REGRESSION: CORE median actions {cm} > baseline {bm} x{EFFICIENCY_SLACK} "
+            f"(wall-clock fallback; re-run --update-baseline to use per-level efficiency)"
+        )
     tag = "IMPROVED" if (cm < bm or bonus) else "non-inferior"
     msg = f"PASS ({tag}): CORE {sorted(core)} median actions {cm} vs baseline {bm}"
     if bonus:
@@ -638,7 +700,10 @@ def positive_control(base: dict) -> dict:
         cur["core_efficiency"] = round(sum(improved_eff.values()), 4)
     row = dashboard_row(cur, base, lever="positive_control")
     return {
-        "passed": bool(row["verdict_pass"] and row["median_actions_on_core"] < row["baseline_median_actions_on_core"]),
+        "passed": bool(
+            row["verdict_pass"]
+            and row["median_actions_on_core"] < row["baseline_median_actions_on_core"]
+        ),
         "dashboard_row": row,
     }
 
@@ -670,10 +735,14 @@ def _solved_set(measurement: dict) -> set[str]:
     solved = measurement.get("solved_games")
     if solved is not None:
         return {str(game) for game in solved}
-    return {str(row["game"]) for row in measurement.get("per_game", []) if row.get("solved") is True}
+    return {
+        str(row["game"]) for row in measurement.get("per_game", []) if row.get("solved") is True
+    }
 
 
-def select_headroom_budget(by_budget: dict[int, dict], *, candidates=HEADROOM_BUDGET_CANDIDATES) -> tuple[int, list[dict]]:
+def select_headroom_budget(
+    by_budget: dict[int, dict], *, candidates=HEADROOM_BUDGET_CANDIDATES
+) -> tuple[int, list[dict]]:
     rows = []
     selected = None
     for budget in candidates:
@@ -681,19 +750,23 @@ def select_headroom_budget(by_budget: dict[int, dict], *, candidates=HEADROOM_BU
         solved = sorted(_solved_set(by_budget.get(int(budget), {})))
         comparison_solved = sorted(_solved_set(by_budget.get(comparison_budget, {})))
         stable = bool(solved and solved == comparison_solved)
-        rows.append({
-            "budget": int(budget),
-            "comparison_budget": comparison_budget,
-            "solved_games": solved,
-            "comparison_solved_games": comparison_solved,
-            "stable_vs_1_5x": stable,
-        })
+        rows.append(
+            {
+                "budget": int(budget),
+                "comparison_budget": comparison_budget,
+                "solved_games": solved,
+                "comparison_solved_games": comparison_solved,
+                "stable_vs_1_5x": stable,
+            }
+        )
         if selected is None and stable:
             selected = int(budget)
     return (selected or DEFAULT_BUDGET), rows
 
 
-def measure_headroom_budget(policy: str, cap: int, *, candidates=HEADROOM_BUDGET_CANDIDATES) -> dict:
+def measure_headroom_budget(
+    policy: str, cap: int, *, candidates=HEADROOM_BUDGET_CANDIDATES
+) -> dict:
     measurements: dict[int, dict] = {}
     rows: list[dict] = []
     selected = DEFAULT_BUDGET
@@ -733,8 +806,11 @@ def _build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     a = _build_parser().parse_args()
 
-    print(f"[gate] measuring current submitted config (policy={a.policy}) on {len(GATE_GAMES)} games "
-          f"(budget {a.budget}, {a.cap}s cap each)...", flush=True)
+    print(
+        f"[gate] measuring current submitted config (policy={a.policy}) on {len(GATE_GAMES)} games "
+        f"(budget {a.budget}, {a.cap}s cap each)...",
+        flush=True,
+    )
     cur = measure(a.policy, a.budget, a.cap)
 
     if a.update_baseline:
@@ -744,25 +820,36 @@ def main() -> int:
         }
         guard = validate_canonical_baseline(candidate)
         if not guard["ok"]:
-            print(f"[gate] REFUSED baseline update: canonical baseline guard failed {guard['errors']}")
+            print(
+                f"[gate] REFUSED baseline update: canonical baseline guard failed {guard['errors']}"
+            )
             if a.json:
-                print(json.dumps({
-                    "pass": False,
-                    "verdict": f"REGRESSION: canonical baseline guard failed {guard['errors']}",
-                    "baseline_guard": guard,
-                    "proposer_config_mismatch": cur.get("proposer_config_mismatch"),
-                    "proposer_config_divergence": cur.get("proposer_config_divergence"),
-                    "proposer_config_parity": cur.get("proposer_config_parity"),
-                    "current": cur,
-                }, indent=2))
+                print(
+                    json.dumps(
+                        {
+                            "pass": False,
+                            "verdict": f"REGRESSION: canonical baseline guard failed {guard['errors']}",
+                            "baseline_guard": guard,
+                            "proposer_config_mismatch": cur.get("proposer_config_mismatch"),
+                            "proposer_config_divergence": cur.get("proposer_config_divergence"),
+                            "proposer_config_parity": cur.get("proposer_config_parity"),
+                            "current": cur,
+                        },
+                        indent=2,
+                    )
+                )
             return 1
         BASELINE.write_text(json.dumps(candidate, indent=2))
-        print(f"[gate] baseline UPDATED: solved {cur['solved_count']}, "
-              f"median actions/solve {cur['median_actions_on_solved']}")
+        print(
+            f"[gate] baseline UPDATED: solved {cur['solved_count']}, "
+            f"median actions/solve {cur['median_actions_on_solved']}"
+        )
         return 0
 
     if not BASELINE.exists():
-        print(f"[gate] NO baseline at {BASELINE} -- run --update-baseline once on a trusted config first.")
+        print(
+            f"[gate] NO baseline at {BASELINE} -- run --update-baseline once on a trusted config first."
+        )
         return 2
     base = json.loads(BASELINE.read_text())
     guard = validate_canonical_baseline(base)
@@ -775,33 +862,45 @@ def main() -> int:
         ok, msg = _verdict(cur, base)
         row = dashboard_row(cur, base, lever=a.lever)
     if a.json:
-        print(json.dumps({
-            "pass": ok,
-            "verdict": msg,
-            "lever_dashboard_row": row,
-            "baseline_guard": guard,
-            "proposer_config_mismatch": cur.get("proposer_config_mismatch"),
-            "proposer_config_divergence": cur.get("proposer_config_divergence"),
-            "proposer_config_parity": cur.get("proposer_config_parity"),
-            "current": cur,
-            "baseline": {
-                k: base.get(k)
-                for k in ("solved_count", "median_actions_on_solved", "total_actions_on_solved")
-            },
-        }, indent=2))
-    else:
-        print(f"[gate] current : solved {cur['solved_count']}, median actions/solve "
-              f"{cur['median_actions_on_solved']}, timed_out {cur['timed_out_count']}")
-        print(f"[gate] baseline: solved {base.get('solved_count')}, median actions/solve "
-              f"{base.get('median_actions_on_solved')}")
-        print(f"[gate] {'PASS' if ok else 'FAIL'}: {msg}")
-        print(f"[gate] lever {a.lever}: median_actions_on_core={row['median_actions_on_core']}, "
-              f"core_solves_preserved={row['core_solves_preserved']}, bonus={row['bonus_solves']}")
-        if cur.get("proposer_config_mismatch"):
-            print(
-                "[gate] proposer_config_mismatch=true: "
-                f"{cur.get('proposer_config_divergence')}"
+        print(
+            json.dumps(
+                {
+                    "pass": ok,
+                    "verdict": msg,
+                    "lever_dashboard_row": row,
+                    "baseline_guard": guard,
+                    "proposer_config_mismatch": cur.get("proposer_config_mismatch"),
+                    "proposer_config_divergence": cur.get("proposer_config_divergence"),
+                    "proposer_config_parity": cur.get("proposer_config_parity"),
+                    "current": cur,
+                    "baseline": {
+                        k: base.get(k)
+                        for k in (
+                            "solved_count",
+                            "median_actions_on_solved",
+                            "total_actions_on_solved",
+                        )
+                    },
+                },
+                indent=2,
             )
+        )
+    else:
+        print(
+            f"[gate] current : solved {cur['solved_count']}, median actions/solve "
+            f"{cur['median_actions_on_solved']}, timed_out {cur['timed_out_count']}"
+        )
+        print(
+            f"[gate] baseline: solved {base.get('solved_count')}, median actions/solve "
+            f"{base.get('median_actions_on_solved')}"
+        )
+        print(f"[gate] {'PASS' if ok else 'FAIL'}: {msg}")
+        print(
+            f"[gate] lever {a.lever}: median_actions_on_core={row['median_actions_on_core']}, "
+            f"core_solves_preserved={row['core_solves_preserved']}, bonus={row['bonus_solves']}"
+        )
+        if cur.get("proposer_config_mismatch"):
+            print(f"[gate] proposer_config_mismatch=true: {cur.get('proposer_config_divergence')}")
     return 0 if ok else 1
 
 
