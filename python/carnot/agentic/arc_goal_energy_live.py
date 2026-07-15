@@ -18,6 +18,14 @@ from carnot.agentic.arc_goal_predicate_separation import compile_goal_predicate
 
 DEFAULT_EXP4020_ARTIFACT = Path("results/experiment_4020_goal_induction_separation.json")
 GOAL_ENERGY_SOURCE = "exp4020_graded_goal_satisfaction_energy"
+RELATIONAL_GOAL_ENERGY_SOURCE = "arc_visible_state_relational_energy_no_llm"
+RELATIONAL_GOAL_VARIANCE_FLOOR = 1e-12
+SUPPORTED_RELATIONAL_ROUTE_CLASSES = (
+    "region_pair_equality",
+    "translated_within_frame_target_match",
+    "ordered_run_relation",
+    "centroid_alignment",
+)
 
 
 def _as_float(value: Any, default: float = 0.0) -> float:
@@ -129,6 +137,81 @@ def _score_variance(scores: Sequence[float]) -> float:
         return 0.0
     mean = sum(float(score) for score in scores) / float(len(scores))
     return sum((float(score) - mean) ** 2 for score in scores) / float(len(scores))
+
+
+def _grid_from_value(value: Any) -> Any | None:
+    try:
+        import numpy as np
+
+        raw = None
+        if isinstance(value, Mapping):
+            for key in ("frame", "grid", "candidate_state", "next_state", "state"):
+                if key in value:
+                    raw = value.get(key)
+                    break
+        if raw is None:
+            for attr in ("frame", "grid"):
+                if hasattr(value, attr):
+                    raw = getattr(value, attr)
+                    break
+        if raw is None:
+            return None
+        arr = np.asarray(raw)
+        return arr if arr.ndim == 2 else None
+    except Exception:
+        return None
+
+
+def _relational_receipt_from_value(value: Any) -> Mapping[str, Any] | None:
+    for key in ("relational_goal_receipt", "relational_goal", "agent_goal_receipt"):
+        if isinstance(value, Mapping):
+            receipt = value.get(key)
+        else:
+            receipt = getattr(value, key, None)
+        if isinstance(receipt, Mapping):
+            return receipt
+    return None
+
+
+def _bool_mask(value: Any, shape: tuple[int, int]) -> Any | None:
+    try:
+        import numpy as np
+
+        arr = np.asarray(value, dtype=bool)
+        return arr if arr.shape == shape else None
+    except Exception:
+        return None
+
+
+def _mask_coords(mask: Any) -> list[tuple[int, int]]:
+    try:
+        import numpy as np
+
+        return [(int(y), int(x)) for y, x in np.argwhere(mask)]
+    except Exception:
+        return []
+
+
+def _dominant_background(arr: Any) -> Any:
+    import numpy as np
+
+    vals, counts = np.unique(arr, return_counts=True)
+    return vals[int(counts.argmax())]
+
+
+def _local_centroid(arr: Any, mask: Any) -> tuple[float, float] | None:
+    import numpy as np
+
+    coords = np.argwhere(mask)
+    if coords.size == 0:
+        return None
+    bg = _dominant_background(arr)
+    active = np.argwhere(mask & (arr != bg))
+    if active.size == 0:
+        return None
+    origin = coords.min(axis=0)
+    local = active - origin
+    return (float(local[:, 0].mean()), float(local[:, 1].mean()))
 
 
 @dataclass
@@ -353,6 +436,187 @@ class GoalSatisfactionEnergy:
         return max(0.0, min(1.0, unsatisfied / total))
 
 
+@dataclass
+class RelationalGoalEnergy:
+    """REQ-ARC-WMTE-5711: route relational placement/spatial receipts into live energy.
+
+    The class deliberately reads only the state it is handed: a 2-D visible grid
+    plus an optional agent-owned `relational_goal_receipt`. When that receipt is
+    absent or corrupt, it returns a constant no-bias score unless a legacy
+    `GoalSatisfactionEnergy` fallback can score the older target-fraction state.
+    """
+
+    fallback_goal_energy: Any | None = None
+    variance_floor: float = RELATIONAL_GOAL_VARIANCE_FLOOR
+    source: str = RELATIONAL_GOAL_ENERGY_SOURCE
+    _call_count: int = field(default=0, init=False, repr=False)
+    _routed_call_count: int = field(default=0, init=False, repr=False)
+    _fallback_count: int = field(default=0, init=False, repr=False)
+    _fallback_reasons: dict[str, int] = field(default_factory=dict, init=False, repr=False)
+    _route_counts: dict[str, int] = field(default_factory=dict, init=False, repr=False)
+    _last_diagnostics: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
+
+    def _record_fallback(self, reason: str, value: Any) -> float:
+        self._fallback_count += 1
+        self._fallback_reasons[reason] = self._fallback_reasons.get(reason, 0) + 1
+        used_legacy = False
+        score = 0.0
+        if self.fallback_goal_energy is not None:
+            try:
+                score = float(self.fallback_goal_energy(value))
+                used_legacy = True
+            except Exception:
+                score = 0.0
+        self._last_diagnostics = {
+            "enabled": True,
+            "source": self.source,
+            "variance_floor": float(self.variance_floor),
+            "call_count": int(self._call_count),
+            "routed_call_count": int(self._routed_call_count),
+            "fallback_count": int(self._fallback_count),
+            "fallback_reasons": dict(self._fallback_reasons),
+            "route_counts": dict(self._route_counts),
+            "last_routed": False,
+            "last_route_class": None,
+            "last_fallback_reason": (
+                "legacy_goal_satisfaction" if used_legacy and _state_from_visible(value) is not None else reason
+            ),
+            "last_score": float(score),
+        }
+        return float(score)
+
+    def _score_region_pair(self, arr: Any, receipt: Mapping[str, Any]) -> tuple[bool, float, str]:
+        src = _bool_mask(receipt.get("source_mask"), tuple(arr.shape))
+        tgt = _bool_mask(receipt.get("target_mask"), tuple(arr.shape))
+        if src is None or tgt is None:
+            return False, 0.0, "corrupt_receipt"
+        if int(src.sum()) <= 0 or int(tgt.sum()) <= 0 or int(src.sum()) != int(tgt.sum()):
+            return False, 0.0, "missing_target"
+        left = arr[src]
+        right = arr[tgt]
+        return True, float((left != right).sum()), ""
+
+    def _score_translated(self, arr: Any, receipt: Mapping[str, Any]) -> tuple[bool, float, str]:
+        try:
+            dy, dx = receipt.get("offset", (None, None))
+            dy, dx = int(dy), int(dx)
+        except Exception:
+            return False, 0.0, "corrupt_receipt"
+        src = _bool_mask(receipt.get("source_mask", receipt.get("mask")), tuple(arr.shape))
+        if src is None or int(src.sum()) <= 0:
+            return False, 0.0, "corrupt_receipt"
+        mismatches = 0
+        compared = 0
+        h, w = arr.shape
+        for y, x in _mask_coords(src):
+            ty, tx = y + dy, x + dx
+            if ty < 0 or ty >= h or tx < 0 or tx >= w:
+                continue
+            compared += 1
+            if arr[y, x] != arr[ty, tx]:
+                mismatches += 1
+        if compared == 0:
+            return False, 0.0, "missing_target"
+        return True, float(mismatches), ""
+
+    def _score_ordered_run(self, arr: Any, receipt: Mapping[str, Any]) -> tuple[bool, float, str]:
+        mask = _bool_mask(receipt.get("run_mask"), tuple(arr.shape))
+        if mask is None or int(mask.sum()) < 2:
+            return False, 0.0, "corrupt_receipt"
+        coords = _mask_coords(mask)
+        values = [arr[y, x] for y, x in coords]
+        order = str(receipt.get("order", "ascending"))
+        violations = 0
+        for left, right in zip(values, values[1:]):
+            if order == "descending":
+                violations += int(left < right)
+            else:
+                violations += int(left > right)
+        return True, float(violations), ""
+
+    def _score_centroid(self, arr: Any, receipt: Mapping[str, Any]) -> tuple[bool, float, str]:
+        src = _bool_mask(receipt.get("source_mask"), tuple(arr.shape))
+        tgt = _bool_mask(receipt.get("target_mask"), tuple(arr.shape))
+        if src is None or tgt is None:
+            return False, 0.0, "corrupt_receipt"
+        src_c = _local_centroid(arr, src)
+        tgt_c = _local_centroid(arr, tgt)
+        if src_c is None or tgt_c is None:
+            return False, 0.0, "missing_target"
+        dy = float(src_c[0] - tgt_c[0])
+        dx = float(src_c[1] - tgt_c[1])
+        return True, float((dy * dy + dx * dx) ** 0.5), ""
+
+    def _score_relational(self, value: Any) -> tuple[bool, float, str, str | None]:
+        arr = _grid_from_value(value)
+        receipt = _relational_receipt_from_value(value)
+        if receipt is None:
+            return False, 0.0, "missing_relational_receipt", None
+        if arr is None:
+            return False, 0.0, "missing_visible_grid", None
+        route_class = str(receipt.get("route_class") or receipt.get("mechanic_class") or "")
+        if route_class not in SUPPORTED_RELATIONAL_ROUTE_CLASSES:
+            return False, 0.0, "unsupported_route_class", route_class or None
+        if route_class == "region_pair_equality":
+            ok, score, reason = self._score_region_pair(arr, receipt)
+        elif route_class == "translated_within_frame_target_match":
+            ok, score, reason = self._score_translated(arr, receipt)
+        elif route_class == "ordered_run_relation":
+            ok, score, reason = self._score_ordered_run(arr, receipt)
+        else:
+            ok, score, reason = self._score_centroid(arr, receipt)
+        return ok, float(score), reason, route_class
+
+    def __call__(self, value: Any) -> float:
+        self._call_count += 1
+        ok, score, reason, route_class = self._score_relational(value)
+        if not ok:
+            return self._record_fallback(reason, value)
+        self._routed_call_count += 1
+        assert route_class is not None
+        self._route_counts[route_class] = self._route_counts.get(route_class, 0) + 1
+        self._last_diagnostics = {
+            "enabled": True,
+            "source": self.source,
+            "variance_floor": float(self.variance_floor),
+            "call_count": int(self._call_count),
+            "routed_call_count": int(self._routed_call_count),
+            "fallback_count": int(self._fallback_count),
+            "fallback_reasons": dict(self._fallback_reasons),
+            "route_counts": dict(self._route_counts),
+            "last_routed": True,
+            "last_route_class": route_class,
+            "last_fallback_reason": None,
+            "last_score": float(score),
+        }
+        return float(score)
+
+    def predicate_fires(self, value: Any) -> bool:
+        ok, score, _reason, _route_class = self._score_relational(value)
+        if ok:
+            return float(score) == 0.0
+        predicate = getattr(self.fallback_goal_energy, "predicate_fires", None)
+        return bool(callable(predicate) and predicate(value))
+
+    def diagnostics(self) -> dict[str, Any]:
+        if self._last_diagnostics:
+            return dict(self._last_diagnostics)
+        return {
+            "enabled": True,
+            "source": self.source,
+            "variance_floor": float(self.variance_floor),
+            "call_count": int(self._call_count),
+            "routed_call_count": int(self._routed_call_count),
+            "fallback_count": int(self._fallback_count),
+            "fallback_reasons": dict(self._fallback_reasons),
+            "route_counts": dict(self._route_counts),
+            "last_routed": False,
+            "last_route_class": None,
+            "last_fallback_reason": None,
+            "last_score": None,
+        }
+
+
 @dataclass(frozen=True)
 class UniformGoalEnergy:
     """Deterministic uniform/random energy used only as the ablation control."""
@@ -435,3 +699,11 @@ def load_exp4020_goal_energy(root: Path | str | None = None) -> GoalSatisfaction
         return GoalSatisfactionEnergy.from_artifact_path(path)
     except Exception:
         return None
+
+
+def load_relational_goal_energy(
+    root: Path | str | None = None,
+) -> RelationalGoalEnergy | None:
+    """REQ-ARC-WMTE-5711: submitted live loader for relational-plus-legacy goal energy."""
+
+    return RelationalGoalEnergy(fallback_goal_energy=load_exp4020_goal_energy(root))
