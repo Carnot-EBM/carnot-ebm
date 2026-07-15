@@ -35,6 +35,29 @@ def test_req_arc_wmte_5599_2_spec_declares_the_disclosed_pivots() -> None:
         assert marker in section
 
 
+def test_req_arc_wmte_5599_2_spec_declares_the_v2_timeout_margin_followup() -> None:
+    """REQ-ARC-WMTE-5599-2 v2: the operator's timeout-margin skepticism was investigated (not
+    defended against), and the retry's genuine no-result-within-2-hours outcome is disclosed
+    as strengthening -- not reversing -- the v1 conclusion. The checked-in artifact was NOT
+    silently overwritten with a fabricated or padded v2 result."""
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-WMTE-5599-2") :]
+
+    for marker in (
+        "did we give it enough",
+        "wait long enough",
+        "Context was ruled out cleanly",
+        "worst-case total of ~1270s",
+        "killed by the outer wrapper with ZERO output",
+        "This was NOT a",
+        "closes the timeout-margin question, and strengthens rather than reverses",
+        "a third retry",
+        "without checking with the operator first",
+    ):
+        assert marker in section
+
+
 def test_first_precondition_miss_reports_failing_key() -> None:
     assert mod._first_precondition_miss({"ok": False, "a": True, "b": False}) == "b"
     assert mod._first_precondition_miss({"ok": True}) is None

@@ -5541,6 +5541,43 @@ it is consistent with, not contradictory to, the prior Q4 finding, strengthening
 reversing REQ-ARC-WMTE-5599's original cost/benefit conclusion (do NOT switch the frozen
 live-submission generator).
 
+**Follow-up (2026-07-14, same day) -- timeout-margin investigation, v2.** The operator pushed
+back on the v1 conclusion with a specific, well-founded question: "did we give it enough
+kv-cache for context and wait long enough?" This was investigated directly rather than
+defended against:
+
+- **Context was ruled out cleanly.** `REINDUCTION_N_CTX=22000` vs the real Gemma-tokenizer-
+  measured induce prompt of 11207 tokens (via `llama_cpp.Llama(vocab_only=True).tokenize()`,
+  not a char-based estimate) -- comfortably sufficient, not the bottleneck.
+- **Timeout margin was genuinely tight.** A real `/completion` call with `n_predict=1` isolated
+  prefill cost: 203.16s for the 11207-token prompt (55.19 tok/s -- fast; an earlier 6-token
+  smoke test's 6.669 tok/s figure was a fixed-overhead artifact, not representative). Combined
+  with the ~2.4 tok/s decode rate observed in v1, a full `max_tokens=2560` generation could take
+  up to ~1067s, for a worst-case total of ~1270s -- which DOES exceed the v1 `timeout=1200`
+  used both as the load-wait budget and the per-HTTP-call timeout in
+  `LocalGGUFProposer.generate()`. The v1 `proposer_failed` result was plausibly a timeout
+  artifact, not a genuine model-quality failure.
+- **Retry with `timeout=3600` (3x the estimated worst case), wrapped in a 7200s (2-hour) outer
+  budget: killed by the outer wrapper with ZERO output.** The result file after the retry is
+  byte-identical to the pre-retry backup; the run's own log never advanced past initial game/
+  scorecard setup (7 lines, nothing appended across the full 2-hour window). This was NOT a
+  hang: `rocm-smi` showed the iGPU pinned at 100% utilization and the llama-server process held
+  `R` (running) state with steadily climbing CPU-time and RSS across every check performed
+  during the run. It was genuinely, continuously computing -- and still did not produce one
+  complete reinduction attempt inside a 3x-generous per-call timeout AND a 2-hour outer budget.
+
+**This closes the timeout-margin question, and strengthens rather than reverses the v1
+conclusion.** The hypothesis that v1 failed merely because 1200s was a tight-but-plausible
+margin is falsified: giving the same candidate 3x more time per call and 6x more wall-clock
+budget overall still produced no result. The v1 artifact (`proposer_failed`,
+`reinduce_duration_s=2408.163`) remains the checked-in measurement -- it was not overwritten,
+since the retry produced nothing to overwrite it with. Per standing discipline, a third retry
+was not launched without checking with the operator first. The decisive, hardware-grounded
+finding is now: on this iGPU, at Q8_0 precision, `google/gemma-4-31B-it` cannot complete the
+live reinduction task within a bounded, practically-usable window -- independent of whatever
+timeout value is chosen, and independent of any hypothetical quality advantage the larger model
+might have in principle.
+
 Required field principles:
 
 - `weight_precision`: principle "honestly discloses that the WEIGHTS served are Q8_0 (near-lossless 8-bit), NOT the originally-planned full/lossless BF16 -- full precision was tried and abandoned for two different models on this hardware; reporting this run as 'full precision' would misrepresent what was actually measured."
