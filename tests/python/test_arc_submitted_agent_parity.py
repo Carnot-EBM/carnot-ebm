@@ -23,6 +23,8 @@ from carnot.agentic.arc_competition_agent import (
     StepwiseExplorer,
     make_carnot_agent,
 )
+from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+from carnot.agentic.arc_llm_strategy_proposer import SGECandidateRouter
 
 REPO = Path(__file__).resolve().parents[2]
 SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
@@ -200,6 +202,70 @@ def test_wired_flags_reflect_actual_imports():
     assert SUBMITTED_AGENT_CONFIG["goal_energy_wired"] == _imports("arc_goal_energy_live", src), (
         "goal_energy_wired flag disagrees with whether arc_goal_energy_live is imported"
     )
+    # REQ-ARC-FCP-5699-11: SGE is genuinely live-path-reachable (a local import inside
+    # _load_sge_candidate_router still matches _imports()'s ^\s*(from|import) regex, same
+    # convention as arc_executable_world_model's own local imports throughout this file) --
+    # confirmed independently via scripts/arc_orphan_solver_lint.py passing clean.
+    assert SUBMITTED_AGENT_CONFIG["sge_candidate_router_wired"] == _imports(
+        "arc_llm_strategy_proposer", src
+    ), (
+        "sge_candidate_router_wired flag disagrees with whether arc_llm_strategy_proposer is imported"
+    )
+
+
+def test_req_arc_fcp_5699_11_sge_candidate_router_disabled_by_default():
+    """REQ-ARC-FCP-5699-11: SGE is wired but NOT the active default -- constructing a policy
+    normally still yields the discriminative router (or None), never SGECandidateRouter,
+    matching the SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED precedent (built + reachable, gated
+    off pending a real matched-budget win on the live path)."""
+    assert m.SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED is False
+    assert SUBMITTED_AGENT_CONFIG["sge_candidate_router_enabled"] is False
+    pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
+    assert not isinstance(pol.explorer.candidate_router, SGECandidateRouter)
+
+
+def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_config():
+    """_load_sge_candidate_router() must build a LocalGGUFProposer configured IDENTICALLY
+    to _proposer()'s own lazy default (same repo_substr/mtp/kv_quant/no_think_prefix) so it
+    shares the SAME warm llama-server via port-based reuse -- never a second model load
+    that would blow the Kaggle 16GB VRAM budget."""
+    router = m._load_sge_candidate_router("g50t")
+    assert isinstance(router, SGECandidateRouter)
+    assert router.game_id == "g50t"
+    assert router.k == 3
+    completer = router.proposer.completer
+    assert isinstance(completer, LocalGGUFProposer)
+    assert completer.repo_substr == "Qwen3.5-9B-MTP"
+    assert completer.mtp is True
+    assert completer.kv_quant == "q8_0"
+    assert completer.no_think_prefix == "/no_think\n"
+    assert completer.max_tokens == 2560
+    assert completer.port == 8919  # the DEFAULT port, same as _proposer()'s own default
+
+
+def test_req_arc_fcp_5699_11_load_submitted_candidate_router_uses_sge_when_enabled(monkeypatch):
+    """When the flag is on, _load_submitted_candidate_router() returns the SGE router,
+    correctly threaded with the CURRENT game's id (not a placeholder)."""
+    monkeypatch.setattr(m, "SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED", True)
+    router = m._load_submitted_candidate_router(game_id="sk48")
+    assert isinstance(router, SGECandidateRouter)
+    assert router.game_id == "sk48"
+
+
+def test_req_arc_fcp_5699_11_load_submitted_candidate_router_falls_back_on_sge_failure(
+    monkeypatch,
+):
+    """SGE construction failing for any reason must NEVER take down the live path --
+    _load_submitted_candidate_router() falls through to the discriminative router, exactly
+    like the pre-existing bare except Exception: return None pattern for that router."""
+    monkeypatch.setattr(m, "SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED", True)
+
+    def _boom(_game_id):
+        raise RuntimeError("simulated SGE construction failure")
+
+    monkeypatch.setattr(m, "_load_sge_candidate_router", _boom)
+    router = m._load_submitted_candidate_router(game_id="cd82")
+    assert not isinstance(router, SGECandidateRouter)
 
 
 def test_e3_policy_builds_strategy_route_and_world_model_dsl():
@@ -329,3 +395,18 @@ def test_scenario_arc_wmte_4551_artifact_records_fixture_results(tmp_path: Path)
 
     written = json.loads((tmp_path / exp4551.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
     assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
+
+
+def test_req_arc_fcp_5699_11_spec_declares_sge_live_path_wiring() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-11") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-11",
+        "SCENARIO-ARC-FCP-5699-11-SGE-REACHABLE-BUT-NOT-DEFAULT",
+        "SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED",
+        "_load_sge_candidate_router",
+        "sge_candidate_router_wired",
+    ):
+        assert marker in section

@@ -118,6 +118,18 @@ SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
 SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = False  # 2026-07-14: disabled -- see below
 SUBMITTED_COLOR_BLOB_SALIENCE_MODE = "single_color_connected_component_tiers"
+# REQ-ARC-FCP-5699-11 (operator: "wire SGE into the live path", 2026-07-15): the LLM
+# Strategy-Guided Exploration router (arXiv:2603.02045, arc_llm_strategy_proposer.py) is
+# now genuinely REACHABLE from this live entrypoint via _load_submitted_candidate_router(),
+# reusing the frozen live-submission generator (Qwen3.5-9B-MTP) through LocalGGUFProposer's
+# existing port-based server-reuse -- no second model load, no extra Kaggle VRAM. Default
+# False: the offline REQ-ARC-FCP-5699-3..10 investigation found SGE's anti-stagnation
+# mechanism works correctly (nudge fires, taboo filtering works) but never demonstrated a
+# capability WIN over the deterministic discriminative router in its own diagnostic harness
+# -- this flag makes it a genuine, testable, opt-in alternative (matching the
+# SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED pattern), not the active default. Re-enable only
+# after a real matched-budget A/B on the ACTUAL live path shows a win.
+SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED = False
 # Disabled pending re-validation (2026-07-14, submission-prep pre-flight): this flag caused a
 # severe near-hang on the local submission gate (7/8 canonical games timed out at 115s/game,
 # 0 solved vs baseline's 4) -- root cause was O(candidates x grid_cells) per-frame recomputation
@@ -494,9 +506,53 @@ def _early_play_rows(
     return rows
 
 
-def _load_submitted_candidate_router() -> Any | None:
-    """Load the Exp4545 v3 discriminative router as a safe candidate-order tie-breaker."""
+def _load_sge_candidate_router(game_id: str) -> Any | None:
+    """REQ-ARC-FCP-5699-11: build the LLM Strategy-Guided Exploration router, reusing the
+    frozen live-submission generator (Qwen3.5-9B-MTP) via a LocalGGUFProposer configured
+    IDENTICALLY to _proposer()'s own lazy default (same repo_substr/mtp/kv_quant/
+    no_think_prefix/model_path env/n_gpu_layers env) -- LocalGGUFProposer._ensure_server()
+    reuses ANY already-healthy server on the configured port regardless of which call built
+    it first, so this and the induction proposer share ONE warm server, never a second
+    model load. Returns None on any failure (caller falls back to the discriminative
+    router) -- this must never break the live path just because SGE construction failed."""
+    import os as _os
 
+    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+    from carnot.agentic.arc_llm_strategy_proposer import LLMStrategyProposer, SGECandidateRouter
+
+    gguf = LocalGGUFProposer(
+        repo_substr="Qwen3.5-9B-MTP",
+        model_path=_os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
+        mtp=(_os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        kv_quant="q8_0",
+        no_think_prefix="/no_think\n",
+        max_tokens=2560,
+        n_gpu_layers=int(_os.environ.get("CARNOT_ARC_NGL", "999")),
+    )
+    return SGECandidateRouter(
+        proposer=LLMStrategyProposer(completer=gguf, max_tokens=64),
+        game_id=game_id,
+        k=3,
+        temperatures=(0.3, 0.6, 0.9),
+        max_candidates=8,
+        reflect_every=6,
+    )
+
+
+def _load_submitted_candidate_router(game_id: str = "unknown_game") -> Any | None:
+    """Load the live candidate router. Default: the Exp4545 v3 discriminative router (a
+    safe candidate-order tie-breaker). REQ-ARC-FCP-5699-11: when
+    SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED, tries the SGE router first, falling through to
+    the discriminative router (never None-ing out the live path) if SGE construction fails
+    for any reason -- default False, so behavior is unchanged unless explicitly opted in."""
+
+    if SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED:
+        try:
+            sge_router = _load_sge_candidate_router(game_id)
+            if sge_router is not None:
+                return sge_router
+        except Exception:
+            pass
     try:
         return arc_discriminative_router.load_cross_game_discriminative_router(root=REPO)
     except Exception:
@@ -2610,7 +2666,7 @@ class E3AgentPolicy:
         )
         initial_program_filter = coerce_program_synthesis_filter(program_synthesis_filter)
         if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
-            candidate_router = _load_submitted_candidate_router()
+            candidate_router = _load_submitted_candidate_router(game_id=self.short)
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
             frame_change_scorer = _load_submitted_frame_change_scorer()
         if action_prior is None and SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED:
@@ -3779,6 +3835,8 @@ SUBMITTED_AGENT_CONFIG = {
     "discriminative_router_wired": True,
     "discriminative_candidate_router_enabled": True,
     "candidate_router": "cross_game_discriminative_v3_tiebreaker",
+    "sge_candidate_router_wired": True,
+    "sge_candidate_router_enabled": SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED,
     "verifier_is_oracle": False,
     "value_head_feature_subset": SUBMITTED_VALUE_HEAD_FEATURE_SUBSET,
     "value_head_checkpoint": DAGGER_VALUE_HEAD_RELATIVE_PATH,

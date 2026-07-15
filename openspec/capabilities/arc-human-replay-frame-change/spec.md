@@ -5566,6 +5566,74 @@ SAME transition count regardless of budget, so "give it more budget" cannot be a
 specific failure mode; only reducing the explorer's own exhaustion point (a richer domain-aware
 exploration strategy) or accepting the ceiling can change the outcome
 
+### REQ-ARC-FCP-5699-11: Wire SGE Into The Live Path -- Reachable and Selectable, Not the Default
+
+REQ-ARC-FCP-5699-3 through REQ-ARC-FCP-5699-10 built and thoroughly diagnosed the LLM
+Strategy-Guided Exploration mechanism entirely inside `scripts/outer_loop_sge_smoke_test.py`, an
+OFFLINE diagnostic harness. `arc_llm_strategy_proposer.py` (`SGECandidateRouter`,
+`LLMStrategyProposer`) was imported ONLY by that harness and its own experiment/test files --
+never by `arc_competition_agent.py`, the live scored-agent entrypoint. Per this project's ARC
+Live-Path Reachability Discipline, a solver mechanism the live agent cannot reach produces no
+live capability by construction, regardless of how thoroughly its offline behavior is understood.
+The live agent's actual `candidate_router` (`_load_submitted_candidate_router()` ->
+`CrossGameDiscriminativeCandidateRouter`, `SUBMITTED_AGENT_CONFIG["candidate_router"] ==
+"cross_game_discriminative_v3_tiebreaker"`) is a DIFFERENT module entirely.
+
+`_load_submitted_candidate_router(game_id: str = "unknown_game")` SHALL gain a
+`SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED` flag (default `False`, matching the
+`SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` precedent -- built, reachable, gated off pending a real
+win). When `True`, a new `_load_sge_candidate_router(game_id)` helper SHALL construct
+`SGECandidateRouter` wired to a `LocalGGUFProposer` configured IDENTICALLY to `_proposer()`'s own
+lazy default (`repo_substr="Qwen3.5-9B-MTP"`, `mtp`, `kv_quant="q8_0"`,
+`no_think_prefix="/no_think\n"`, the SAME `CARNOT_ARC_GGUF_PATH`/`CARNOT_ARC_MTP`/`CARNOT_ARC_NGL`
+env vars, and no explicit `port=` override -- the class default, `8919`, is the SAME port
+`_proposer()`'s own `LocalGGUFProposer` uses). `LocalGGUFProposer._ensure_server()`'s existing
+port-based server-reuse (documented elsewhere in this codebase: "reuses ANY already-healthy
+server on the configured port regardless of which build backs it") means this and the induction
+proposer share ONE warm llama-server automatically, whichever call constructs it first -- NEVER a
+second model load, which would risk the Kaggle 16GB VRAM budget the frozen-generator config is
+built around. If SGE construction raises for any reason,
+`_load_submitted_candidate_router()` SHALL fall through to the existing discriminative-router
+path (never propagate the exception, never return `None` just because SGE failed) -- matching
+the pre-existing `except Exception: return None` safety pattern for the discriminative router
+itself. `game_id` SHALL be threaded from the constructing `E3AgentPolicy`'s `self.short` (the
+actual current game), not a placeholder, so SGE's `_context()` prompt names the real game.
+`SUBMITTED_AGENT_CONFIG` SHALL gain `"sge_candidate_router_wired": True` and
+`"sge_candidate_router_enabled": SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED` for the same
+audit/parity-test pattern every other wired-but-optional feature already follows.
+
+**RESOLUTION (2026-07-15, operator: "wire SGE into the live path").** Implemented exactly as
+above. Verified: (1) `scripts/arc_orphan_solver_lint.py` now passes clean ("52 modules in the
+live closure", up from 51 -- `arc_llm_strategy_proposer.py` is no longer orphaned). (2) All 20
+pre-existing + 5 new tests in `tests/python/test_arc_submitted_agent_parity.py` pass, including
+the pre-existing `test_shipped_explorer_config_matches_single_source_of_truth` and
+`test_req_capstone_4605_live_stack_integrates_only_non_regression_levers` (proving the DEFAULT
+live-path behavior is byte-for-byte unchanged -- flag stays `False`, `E3AgentPolicy` constructed
+with no override still yields the discriminative router, never `SGECandidateRouter`). (3) The 5
+new tests directly verify: SGE disabled by default; `_load_sge_candidate_router()` builds a
+correctly-configured `LocalGGUFProposer` (frozen-generator fields, default port 8919); the flag
+being flipped on genuinely returns an `SGECandidateRouter` with the right `game_id`; and a
+simulated SGE construction failure falls through to the discriminative router rather than
+breaking the live path. **This is integration, not validation** -- the flag stays `False`.
+Whether SGE actually helps on the real, non-stripped live path (with induction, the frame-change
+scorer, and goal-bias all live together, unlike the deliberately-isolated
+`outer_loop_sge_smoke_test.py` harness) is a SEPARATE, not-yet-run experiment: a real matched-
+budget A/B on the local submission gate or the live scored path, per the flag's own docstring
+("Re-enable only after a real matched-budget A/B on the ACTUAL live path shows a win").
+
+#### SCENARIO-ARC-FCP-5699-11-SGE-REACHABLE-BUT-NOT-DEFAULT
+
+Given a candidate-router mechanism was built and thoroughly diagnosed entirely inside an offline
+diagnostic harness, never imported by the live agent's actual entrypoint
+When the mechanism is wired into the live entrypoint's candidate-router loader behind a
+default-`False` flag, reusing the already-loaded frozen generator rather than requiring a second
+model
+Then the live agent's DEFAULT behavior (flag unset) is provably unchanged (verified by the
+pre-existing parity-test suite passing without modification), the mechanism becomes genuinely
+reachable (satisfying the live-path-reachability lint), AND it remains gated off until a real
+matched-budget comparison on the actual live path -- not the offline diagnostic harness that
+built it -- demonstrates a capability win, so integration and validation are never conflated
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
