@@ -90,7 +90,13 @@ class _ScriptedFakePolicy:
 
 
 def _run_with_fakes(
-    mod, *, level_sequence: list[int], num_actions: int, prior_levels: int, target_level: int
+    mod,
+    *,
+    level_sequence: list[int],
+    num_actions: int,
+    prior_levels: int,
+    target_level: int,
+    router_mode: str = "sge",
 ):
     fake_env = _ScriptedFakeEnv(level_sequence)
     fake_arcade = MagicMock()
@@ -120,7 +126,14 @@ def _run_with_fakes(
 
     mod.SGECandidateRouter = _make_router  # type: ignore[assignment]
     try:
-        return mod.run_game("fake_game", prior_levels, target_level, budget=50, gguf=fake_gguf)
+        return mod.run_game(
+            "fake_game",
+            prior_levels,
+            target_level,
+            budget=50,
+            gguf=fake_gguf,
+            router_mode=router_mode,
+        )
     finally:
         mod.SGECandidateRouter = real_router_cls
 
@@ -175,6 +188,29 @@ def test_methodology_note_present_and_labels_prior_levels_as_informational():
     assert "does NOT seed" in result["methodology_note"]
 
 
+def test_baseline_router_mode_uses_deterministic_router_and_still_tracks_honestly():
+    """REQ-ARC-FCP-5699-6: router_mode="baseline" swaps in the REAL (not mocked)
+    BoundedStrategyCandidateRouter -- no LLM call at all -- and honest level tracking
+    behaves identically regardless of which router drove the actions."""
+    mod = _load_smoke_test_module()
+    result = _run_with_fakes(
+        mod,
+        level_sequence=[0, 0, 0, 1, 1, 1],
+        num_actions=5,
+        prior_levels=1,
+        target_level=2,
+        router_mode="baseline",
+    )
+    assert result["router_mode"] == "baseline"
+    assert result["real_initial_level"] == 0
+    assert result["real_max_level_observed"] == 1
+    assert result["leveled_up"] is True
+    assert result["llm_strategy_proposer_used_any_step"] is False
+    assert (
+        result["inference_substrate"] == "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+    )
+
+
 def test_req_arc_fcp_5699_5_spec_declares_honest_level_tracking() -> None:
     spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
     spec = spec_path.read_text(encoding="utf-8")
@@ -186,5 +222,20 @@ def test_req_arc_fcp_5699_5_spec_declares_honest_level_tracking() -> None:
         "real_initial_level",
         "real_max_level_observed",
         "methodology_note",
+    ):
+        assert marker in section
+
+
+def test_req_arc_fcp_5699_6_spec_declares_baseline_control() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-6") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-6",
+        "SCENARIO-ARC-FCP-5699-6-CONTROL-ISOLATES-THE-ROUTER-UNDER-TEST",
+        "BoundedStrategyCandidateRouter",
+        "router_mode",
+        "--baseline",
     ):
         assert marker in section
