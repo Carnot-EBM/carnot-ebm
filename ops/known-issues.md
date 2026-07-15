@@ -325,6 +325,33 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    escaped level 0 at all" -- a starker, more informative null than what was reported, and a
    reminder to verify a headline metric against its own raw per-step data before trusting it, even
    (especially) when the number seems to move in a plausible-looking way run to run.
+
+   **CONTROL RUN 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-6, operator: "run it"): the deterministic
+   baseline ALSO never leaves level 0 -- this was never evidence against SGE specifically.** The
+   corrigendum above left one question open: was "0/3 leveled up" evidence that SGE fails to help,
+   or evidence the stripped-down harness (every OTHER exploration feature deliberately disabled --
+   induction, frame-change scorer, goal-bias, go-explore archive) simply can't reach level 1 on these
+   3 games regardless of router? `scripts/outer_loop_sge_smoke_test.py --baseline` now swaps in
+   exp5534's own `BoundedStrategyCandidateRouter` (deterministic, zero LLM calls) under the IDENTICAL
+   config, budget, and games. Result:
+   `results/outer_loop_sge_smoke_test_baseline_{g50t,sk48,cd82,suite}.json` -- **all 3 games again show
+   `real_initial_level=0, real_max_level_observed=0, leveled_up=false`**, confirmed against each raw
+   `action_log` (44-45 attempts per game, matching SGE's budget exhaustion, but completing in ~2s each
+   instead of 20-50s since no LLM is invoked). A completely different candidate-ranking mechanism, zero
+   shared code path beyond the `rank()` interface, lands on the exact same result. **This answers the
+   open question: it was never SGE specifically.** The stripped-down harness itself is what caps every
+   run in this investigation at level 0 -- the other disabled production systems appear load-bearing
+   for even a first level-up on g50t/sk48/cd82 within ~45 actions, independent of which router selects
+   among whatever candidates those degraded systems still manage to generate. Every "0/3 leveled up"
+   finding in the REQ-ARC-FCP-5699-3/5699-4 entries above should be read as "this specific
+   stripped-config/46-budget/3-game harness cannot reach level 1 with any router tried so far," NOT as
+   "SGE adds no value over a simpler router" -- that comparison genuinely cannot be made from this data.
+   The router-internal findings (nudge firing, parse-rate improvements, cd82's advice language shifting
+   correctly) remain true and independent of this control. **Open follow-up, not done here:** a much
+   longer budget (200-500+ actions) on either router, or re-enabling the other disabled production
+   features to see whether THAT is what's actually required to reach level 1 here at all -- in which
+   case this specific harness configuration may not be a useful SGE-vs-baseline comparison ground
+   regardless of budget, and a different game selection or a less-stripped-down config would be needed.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

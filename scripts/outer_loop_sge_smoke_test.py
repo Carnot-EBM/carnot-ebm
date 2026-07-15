@@ -36,8 +36,21 @@ achievement. Fixed: `real_initial_level`/`real_max_level_observed`/`leveled_up` 
 returned dict are computed honestly from the actual observed level trajectory,
 independent of the prior_levels/target_level labels.
 
-Usage: .venv/bin/python scripts/outer_loop_sge_smoke_test.py [game ...]
-  No args -> runs the full GAMES suite below. One or more game ids -> runs just those.
+2026-07-15 CONTROL added (REQ-ARC-FCP-5699-6, operator: "run it", after the corrected
+finding above showed real_max_level_observed=0 on all 3 games in every SGE run):
+`--baseline` swaps SGECandidateRouter for exp5534's deterministic, non-LLM
+BoundedStrategyCandidateRouter under the IDENTICAL stripped-down policy config (same
+budget, same disabled induction/world-model/scorer). Every run in this investigation so
+far used SGE with no control -- this establishes whether ANY exploration method escapes
+level 0 in this harness, or whether the harness itself (not SGE specifically) is what
+caps progress.
+
+Usage: .venv/bin/python scripts/outer_loop_sge_smoke_test.py [--baseline] [game ...]
+  No args -> runs the full GAMES suite below with the real SGE router.
+  One or more game ids -> runs just those (still SGE unless --baseline is also given).
+  --baseline -> runs the same games with the deterministic control router instead;
+    writes to outer_loop_sge_smoke_test_baseline_<game>.json (never collides with the
+    SGE-mode output paths, including g50t's unsuffixed backward-compat path).
 """
 
 from __future__ import annotations
@@ -54,6 +67,9 @@ os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
 sys.path.insert(0, str(REPO / "python"))
 
 from carnot.agentic import arc_solver_kit as kit  # noqa: E402
+from carnot.agentic.arc_bounded_strategy_router import (  # noqa: E402
+    BoundedStrategyCandidateRouter,
+)
 from carnot.agentic.arc_competition_agent import E3AgentPolicy, _level_of  # noqa: E402
 from carnot.agentic.arc_executable_world_model import LocalGGUFProposer  # noqa: E402
 from carnot.agentic.arc_llm_strategy_proposer import (  # noqa: E402
@@ -90,16 +106,28 @@ class _NoOpInductionProposer:
         return []
 
 
-def run_game(game: str, prior_levels: int, target_level: int, budget: int, gguf) -> dict:
-    proposer = LLMStrategyProposer(completer=gguf, max_tokens=64)
-    router = SGECandidateRouter(
-        proposer=proposer,
-        game_id=game,
-        k=3,
-        temperatures=(0.3, 0.6, 0.9),
-        max_candidates=8,
-        reflect_every=6,
-    )
+def run_game(
+    game: str, prior_levels: int, target_level: int, budget: int, gguf, *, router_mode: str = "sge"
+) -> dict:
+    """router_mode="sge" (default): the real LLM Strategy-Guided Exploration router under
+    test. router_mode="baseline": the CONTROL -- exp5534's deterministic, non-LLM
+    BoundedStrategyCandidateRouter, under the exact same stripped-down policy config
+    (same budget, same disabled induction/world-model/scorer). Added 2026-07-15 (operator:
+    "run it", following the observation that every run in this investigation used SGE --
+    there was no control showing whether ANY exploration method escapes level 0 in this
+    harness, or whether the harness itself (not SGE specifically) is what caps progress."""
+    if router_mode == "baseline":
+        router = BoundedStrategyCandidateRouter(max_candidates=8)
+    else:
+        proposer = LLMStrategyProposer(completer=gguf, max_tokens=64)
+        router = SGECandidateRouter(
+            proposer=proposer,
+            game_id=game,
+            k=3,
+            temperatures=(0.3, 0.6, 0.9),
+            max_candidates=8,
+            reflect_every=6,
+        )
     generator = ActionDiverseLiveGenerator(max_candidates=8)
 
     arc = kit.offline_arcade()
@@ -161,7 +189,10 @@ def run_game(game: str, prior_levels: int, target_level: int, budget: int, gguf)
             latest = env.step(getattr(GameAction, f"ACTION{int(kind)}"), data=data)
             after_level = int(_level_of(latest))
             real_max_level = max(real_max_level, after_level)
-            router.record_outcome("level_advanced" if after_level != before_level else "no_change")
+            if hasattr(router, "record_outcome"):  # BoundedStrategyCandidateRouter has no history
+                router.record_outcome(
+                    "level_advanced" if after_level != before_level else "no_change"
+                )
             action_log.append(
                 {
                     "step": step,
@@ -185,6 +216,7 @@ def run_game(game: str, prior_levels: int, target_level: int, budget: int, gguf)
     return {
         "smoke_test": "outer_loop_sge_smoke_test",
         "game": game,
+        "router_mode": router_mode,
         "prior_levels_reproduced": prior_levels,
         "target_level": target_level,
         "methodology_note": (
@@ -211,30 +243,47 @@ def run_game(game: str, prior_levels: int, target_level: int, budget: int, gguf)
     }
 
 
+class _NoLLMModelStandin:
+    """model_specs stand-in for router_mode="baseline" -- no GPU/LLM is invoked at all,
+    so there is nothing real to name here; this makes that explicit rather than reusing
+    a GGUF proposer's repo string for a run that never touched it."""
+
+    repo_substr = "none_deterministic_baseline_router_no_llm"
+
+
 def main() -> int:
-    requested = sys.argv[1:]
+    argv = sys.argv[1:]
+    baseline = "--baseline" in argv
+    requested = [a for a in argv if a != "--baseline"]
     rows = [row for row in GAMES if row[0] in requested] if requested else list(GAMES)
     if not rows:
         print(f"no matching games in {requested!r}; known games: {[g[0] for g in GAMES]}")
         return 1
+    router_mode = "baseline" if baseline else "sge"
 
-    # port=8929 (not the default 8919): the default port already has a long-running HIP
-    # (AMD iGPU) server on it from an unrelated process, and _ensure_server() reuses ANY
-    # healthy server on the configured port regardless of which build backs it -- using a
-    # fresh port forces a genuinely fresh CUDA-pinned server instead of silently inheriting
-    # the slow iGPU one. GPU 1 is the outer loop's dedicated card per CLAUDE.md. One server
-    # is reused SEQUENTIALLY across every game in the suite (a live healthy CUDA server on
-    # a fixed port is safe and fast to reuse call-to-call within one process).
-    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
-    gguf = LocalGGUFProposer(port=8929)  # gemma-4-12B-it, GPU-enforced, fails loud
+    if baseline:
+        # CONTROL run (REQ-ARC-FCP-5699-6, operator: "run it"): BoundedStrategyCandidateRouter
+        # is deterministic and invokes no LLM at all, so no GPU server is needed here.
+        gguf = _NoLLMModelStandin()
+    else:
+        # port=8929 (not the default 8919): the default port already has a long-running HIP
+        # (AMD iGPU) server on it from an unrelated process, and _ensure_server() reuses ANY
+        # healthy server on the configured port regardless of which build backs it -- using a
+        # fresh port forces a genuinely fresh CUDA-pinned server instead of silently inheriting
+        # the slow iGPU one. GPU 1 is the outer loop's dedicated card per CLAUDE.md. One server
+        # is reused SEQUENTIALLY across every game in the suite (a live healthy CUDA server on
+        # a fixed port is safe and fast to reuse call-to-call within one process).
+        os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
+        gguf = LocalGGUFProposer(port=8929)  # gemma-4-12B-it, GPU-enforced, fails loud
 
     results = []
     for game, prior_levels, target_level, budget in rows:
         print(
-            f"== {game}: prior=L{prior_levels} target=L{target_level} budget={budget} ==",
+            f"== [{router_mode}] {game}: prior=L{prior_levels} target=L{target_level} "
+            f"budget={budget} ==",
             flush=True,
         )
-        result = run_game(game, prior_levels, target_level, budget, gguf)
+        result = run_game(game, prior_levels, target_level, budget, gguf, router_mode=router_mode)
         print(
             f"   duration_s={result['duration_s']:.2f} "
             f"real_level={result['real_initial_level']}->{result['real_max_level_observed']} "
@@ -243,13 +292,15 @@ def main() -> int:
             f"nudge_fired={result['reflection_nudge_fired_any_step']}",
             flush=True,
         )
-        # per-game file, backward-compatible with the pre-2026-07-15 single-game path for
-        # g50t specifically (prior REQ-ARC-FCP-5699-3 baselines reference this exact path).
-        out_name = (
-            "outer_loop_sge_smoke_test.json"
-            if game == "g50t"
-            else f"outer_loop_sge_smoke_test_{game}.json"
-        )
+        # per-game file. g50t (SGE mode only) keeps the unsuffixed pre-2026-07-15 path for
+        # backward compat with the existing REQ-ARC-FCP-5699-3/5699-4 baselines; every other
+        # combination gets an explicit, non-colliding name.
+        if game == "g50t" and not baseline:
+            out_name = "outer_loop_sge_smoke_test.json"
+        elif baseline:
+            out_name = f"outer_loop_sge_smoke_test_baseline_{game}.json"
+        else:
+            out_name = f"outer_loop_sge_smoke_test_{game}.json"
         out_path = REPO / "results" / out_name
         out_path.write_text(json.dumps(result, indent=2, default=str))
         print(f"   wrote {out_path.relative_to(REPO)}", flush=True)
@@ -257,6 +308,7 @@ def main() -> int:
 
     summary = {
         "smoke_test_suite": "outer_loop_sge_smoke_test_suite",
+        "router_mode": router_mode,
         "games": [
             {
                 "game": r["game"],
@@ -274,7 +326,12 @@ def main() -> int:
         ],
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
-    summary_path = REPO / "results" / "outer_loop_sge_smoke_test_suite.json"
+    summary_name = (
+        "outer_loop_sge_smoke_test_baseline_suite.json"
+        if baseline
+        else "outer_loop_sge_smoke_test_suite.json"
+    )
+    summary_path = REPO / "results" / summary_name
     summary_path.write_text(json.dumps(summary, indent=2, default=str))
     print(f"wrote {summary_path.relative_to(REPO)}")
     return 0

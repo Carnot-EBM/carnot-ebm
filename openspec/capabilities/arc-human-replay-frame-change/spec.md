@@ -5271,6 +5271,73 @@ blended with that informational label -- it is computed strictly from the real o
 `level_before`/`level_after` trajectory of THIS run, so a `leveled_up` claim always reflects a
 genuine measured transition and never an unverified assumption carried through a `max()` call
 
+### REQ-ARC-FCP-5699-6: Deterministic-Router Control -- Was It Ever SGE Specifically?
+
+REQ-ARC-FCP-5699-5's corrigendum established that `real_max_level_observed=0` on all 3 games in
+every run of this investigation (7 real-GPU runs, `SGECandidateRouter` every time). No run in the
+whole REQ-ARC-FCP-5699 through 5699-5 chain ever used a DIFFERENT candidate router under the same
+stripped-down `E3AgentPolicy` config (`proposer=_NoOpInductionProposer()`,
+`frame_change_scorer=None`, `action_effect_expansion_prior=False`, `goal_bias=None`,
+`goal_candidate_guidance=False`, `active_probe_controller=False`, `go_explore_archive=False` --
+every OTHER production exploration feature deliberately disabled to isolate the candidate router
+under test). Without that comparison, "0/3 leveled up with SGE" carries no information about
+whether SGE specifically is the bottleneck, versus the stripped-down harness itself being
+incapable of a first level-up on these 3 games regardless of exploration strategy.
+
+`run_game()` SHALL accept a `router_mode: str = "sge"` parameter. `router_mode="baseline"` SHALL
+construct `BoundedStrategyCandidateRouter` (exp5534's deterministic, non-LLM router --
+`arc_bounded_strategy_router.py`, the SAME class the REQ-ARC-FCP-5699 docstring's very first
+sentence contrasts SGE against) in place of `SGECandidateRouter`, under the IDENTICAL policy
+config, budget, and game set. `main()` SHALL expose this via a `--baseline` CLI flag, writing to
+non-colliding output paths (`outer_loop_sge_smoke_test_baseline_<game>.json` /
+`outer_loop_sge_smoke_test_baseline_suite.json`) so the SGE-mode artifacts (including g50t's
+backward-compat unsuffixed path) are never overwritten by a control run.
+
+**RESOLUTION (2026-07-15, operator: "run it").** Ran `--baseline` against all 3 games
+(`results/outer_loop_sge_smoke_test_baseline_{g50t,sk48,cd82,suite}.json`). **The control ALSO
+never leaves level 0 on any of the 3 games** (`real_initial_level=0, real_max_level_observed=0,
+leveled_up=false`, confirmed directly against each artifact's raw `action_log`, not just the
+summary field, per this project's own Reading-Results Discipline) -- attempts=44-45 per game,
+matching the SGE runs' budget exhaustion, but completing in ~2s per game (vs 20-50s for SGE,
+since the deterministic router invokes no LLM at all).
+
+**This resolves the open question REQ-ARC-FCP-5699-5 left unanswered: the stripped-down harness
+itself -- not SGE specifically -- is what caps every run in this investigation at level 0.** A
+completely different candidate-ranking strategy (deterministic template scoring vs. LLM-sampled
+natural-language strategies), with zero shared code path other than the `rank()` interface, lands
+on the exact same result. The other disabled production features (`_NoOpInductionProposer`,
+no frame-change scorer, no goal-bias, no go-explore archive) are apparently load-bearing for even
+a FIRST level-up on g50t/sk48/cd82 within a ~45-action budget -- independent of which router
+selects among the candidates those disabled/degraded systems still manage to generate. **Every
+REQ-ARC-FCP-5699-3/5699-4 "0/3 leveled up" finding should be read in this light: it was never
+evidence that SGE fails to add value over a simpler router on these games; it was evidence that
+THIS stripped-down test configuration cannot reach level 1 on these 3 games at all, with any
+router tried so far.** The router-internal findings (nudge firing correctly, parse-rate
+improvements, cd82's strategy-text language shifting toward the advised action type) remain true
+and are unaffected by this control -- they describe SGE's own behavior, not its comparative
+value against a baseline, which this control now shows cannot yet be assessed on these 3 games
+in this harness.
+
+**Open follow-up, not done here:** whether a MUCH longer budget (200-500+ actions) lets either
+router eventually escape level 0 on any of these games, and whether re-enabling the other
+disabled production features (induction, frame-change scoring, goal-bias) is what's actually
+required to reach level 1 here at all -- in which case this specific 3-game/46-budget/stripped-
+config harness may not be a useful SGE-vs-baseline comparison ground regardless of budget, and a
+different game selection or a less-stripped-down config would be needed to isolate the router's
+marginal contribution.
+
+#### SCENARIO-ARC-FCP-5699-6-CONTROL-ISOLATES-THE-ROUTER-UNDER-TEST
+
+Given a smoke-test harness deliberately strips every OTHER exploration feature to isolate ONE
+candidate router's contribution
+When the harness is run with the router under test AND with a structurally-different control
+router, under the otherwise-identical config, budget, and game set
+Then a null result (no level-up) with the router under test is NOT attributed to that router
+specifically unless the control router also fails to reproduce the null result under the same
+control -- if the control ALSO nulls, the null is evidence about the stripped-down harness
+configuration itself, not about the router under test, and must be reported as such rather than
+as a finding against the router
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
