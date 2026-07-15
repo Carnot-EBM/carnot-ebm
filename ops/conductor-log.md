@@ -11783,3 +11783,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-15 01:22 UTC | Gated on Exp5711 exact route: matched known-level  | OK | 95 passed, 1 warning in 11.95s |
 | 2026-07-15 01:24 UTC | Gated on Exp5709 prospective promotion: isolated F | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5709-fr11-prospective-shadow-stream, exp5 |
 | 2026-07-15 01:55 UTC | Unconditional registry-rotated ARC live-agent self | OK | 113 passed, 1 warning in 13.08s |
+| 2026-07-15 02:38 UTC | Port the promoted one-axis replica-exchange sample | OK | 91 passed, 1 warning in 15.86s |
