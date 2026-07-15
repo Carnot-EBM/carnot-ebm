@@ -803,6 +803,136 @@ interval-improvement gates fail
 |---|---|---|
 | REQ-SAMPLE-5645 | Implemented (`python/carnot/experiment_5645_two_axis_tempering_hard_constraint_quality.py`, `results/experiment_5645_two_axis_tempering_hard_constraint_quality.json`) | Implemented (`tests/python/test_experiment_5645_two_axis_tempering_hard_constraint_quality.py`) |
 
+### REQ-SAMPLE-5714: One-Axis Corrected-cDLS Rust/Python Replica-Exchange Parity
+
+Carnot MUST provide the smallest Rust/PyO3 energy core for the promoted
+one-axis corrected-cDLS temperature-label replica-exchange method and write
+`results/experiment_5714_one_axis_tempering_rust_parity.json` without
+modifying `scripts/research_conductor.py`. The port SHALL be derived only from
+Exp 5633's exact temperature-label exchange audit and Exp 5634's paired
+mixing promotion, with Exp 5645/5646 treated as retired two-axis scope. The
+implementation SHALL claim semantic portability only: `timing_claimed=false`,
+`hardware_speedup_claimed=false`, and `two_axis_code_added=false`.
+
+The Rust core SHALL implement the exact Ising energy
+`E(x) = -0.5 x^T J x - h^T x`, Exp 5622's corrected
+`corrected_cdls_projection_mh` proposal probability and Metropolis-Hastings
+decision, Exp 5633's fixed beta-label ladder, label-only adjacent swap
+log-ratio and decision, fixed scheduler, cold-target extraction, and a
+serializable seeded state/checkpoint. The PyO3 surface SHALL expose only the
+minimal config, state, one-step/checkpoint, and diagnostic methods required to
+compare deterministic behavior and restart behavior. Existing pure-Python use SHALL continue unchanged when the Rust extension is absent.
+
+The parity audit SHALL freeze fixtures and tolerances before comparison. It
+SHALL compare Python and Rust deterministic energies, violations where present,
+proposal log probabilities, corrected decisions, swap log-ratios, label
+updates, scheduler traces, cold-target states, malformed inputs, checkpoint
+round-trips, and cross-language restarts. On exactly enumerable small Ising
+systems it SHALL compare both implementations with the exact Boltzmann product
+target using transition normalization, detailed-balance residuals, total
+variation, target marginals, and fixed-seed replay. Broken controls for
+stale-label exchange, wrong-sign swap, uncorrected-kernel proposals,
+collapsed ladders, and corrupt state SHALL be preregistered and rejected.
+Penalty-axis exchange SHALL NOT be implemented.
+
+`one_axis_rust_parity_ready_score` SHALL equal exactly `1.0` only when
+deterministic decisions match, parity errors are within frozen tolerances,
+Python and Rust pass exact-target bounds, every broken control is rejected,
+checkpoints and restarts reproduce, malformed ABI input fails safely,
+fallback equivalence is proven, and no timing or hardware speedup claim is
+present. `broken_control_rejected_score` SHALL equal exactly `1.0` only when
+every preregistered broken port is rejected; otherwise it SHALL equal `0.0`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `source_promotion_receipts`, `source_artifact_hashes`,
+`source_algorithm_hash`, `openspec_requirement_ids`, `rust_source_paths`,
+`python_binding_paths`, `python_reference_paths`, `compiler_and_toolchain`,
+`pyo3_version`, `build_features`, `abi_receipt`, `fixture_manifest`,
+`frozen_tolerances`, `energy_error_max`, `proposal_probability_error_max`,
+`swap_log_ratio_error_max`, `deterministic_decision_parity`,
+`scheduler_parity`, `exact_target_tv_python`, `exact_target_tv_rust`,
+`target_marginal_delta`, `detailed_balance_error_by_impl`,
+`checkpoint_roundtrip_pass`, `cross_language_restart_pass`,
+`malformed_input_controls`, `broken_control_results`,
+`broken_control_rejected`, `broken_control_rejected_score`,
+`python_fallback_equivalence`, `two_axis_code_added`, `timing_claimed`,
+`hardware_speedup_claimed`, `one_axis_rust_parity_ready_score`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`rust_python_exact_one_axis_sampler_parity`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every required parity field exists before the artifact can promote a Rust port."
+- `source_promotion_receipts`: principle "Pins Exp5633 exactness, Exp5634 quality promotion, and Exp5645/5646 retirement scope before port identity is trusted."
+- `source_artifact_hashes`: principle "Content-addresses upstream evidence so the port cannot silently drift from promoted one-axis provenance."
+- `source_algorithm_hash`: principle "Hashes the frozen one-axis algorithm recipe independently of implementation language."
+- `openspec_requirement_ids`: principle "Keeps implementation, tests, and artifact anchored to REQ-SAMPLE-5714 and SCENARIO-SAMPLE-5714."
+- `rust_source_paths`: principle "Lists the Rust files that implement the portable one-axis core."
+- `python_binding_paths`: principle "Lists the PyO3/fallback files that expose the Rust core to Python."
+- `python_reference_paths`: principle "Lists the Python reference and test files used for exact parity."
+- `compiler_and_toolchain`: principle "Records the local Rust, Python, Cargo, and platform versions needed to reconstruct the build."
+- `pyo3_version`: principle "Records the binding ABI dependency version explicitly."
+- `build_features`: principle "Shows that the build used the ordinary one-axis Rust/PyO3 feature surface."
+- `abi_receipt`: principle "Proves malformed inputs fail safely at the Python/Rust boundary."
+- `fixture_manifest`: principle "Freezes the exact enumerable Ising workloads, ladders, schedules, and seeds."
+- `frozen_tolerances`: principle "Predeclares numerical and exact-target tolerances before parity is interpreted."
+- `energy_error_max`: principle "Quantifies deterministic energy parity between Python and Rust."
+- `proposal_probability_error_max`: principle "Quantifies corrected cDLS proposal-probability parity."
+- `swap_log_ratio_error_max`: principle "Quantifies temperature-label swap-ratio parity."
+- `deterministic_decision_parity`: principle "Proves seeded within-replica and swap decisions match exactly."
+- `scheduler_parity`: principle "Proves both implementations apply the same fixed within-replica and exchange schedule."
+- `exact_target_tv_python`: principle "Measures Python exact-target stationarity against the enumerable Boltzmann product target."
+- `exact_target_tv_rust`: principle "Measures Rust exact-target stationarity against the same enumerable Boltzmann product target."
+- `target_marginal_delta`: principle "Measures cold-target marginal agreement across implementations and exact target."
+- `detailed_balance_error_by_impl`: principle "Reports within-kernel and swap detailed-balance residuals by implementation."
+- `checkpoint_roundtrip_pass`: principle "Proves Rust state serialization preserves labels, states, seed, and sweep."
+- `cross_language_restart_pass`: principle "Proves a Python checkpoint can resume through Rust and reproduce the trace."
+- `malformed_input_controls`: principle "Documents invalid ABI inputs and confirms they fail closed."
+- `broken_control_results`: principle "Documents stale-label, wrong-sign, uncorrected-kernel, collapsed-ladder, and corrupt-state controls."
+- `broken_control_rejected`: principle "Provides the boolean gate that every broken control was rejected."
+- `broken_control_rejected_score`: principle "Provides the scalar gate that is 1.0 only when all broken controls reject."
+- `python_fallback_equivalence`: principle "Proves the pure-Python path remains available when Rust is absent."
+- `two_axis_code_added`: principle "Bare false closes the retired penalty-axis scope."
+- `timing_claimed`: principle "Bare false prevents semantic parity from becoming a speed claim."
+- `hardware_speedup_claimed`: principle "Bare false prevents portability evidence from becoming board or hardware evidence."
+- `one_axis_rust_parity_ready_score`: principle "Provides a scalar downstream gate that is 1.0 only under the full parity contract."
+- `inference_substrate`: principle "Declares Rust/Python exact one-axis sampler parity with no LLM or board participation."
+- `random_seeds`: principle "Records replay seeds for deterministic decisions and restart."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether parity is final."
+
+### SCENARIO-SAMPLE-5714: One-Axis Rust Port Emits Exact Parity Evidence
+
+**Given** Exp 5633 exact one-axis temperature-label exchange evidence and
+Exp 5634 paired one-axis quality promotion are hash-pinned
+**When** the Rust/PyO3 one-axis core and Python reference are compared on
+frozen enumerable Ising fixtures
+**Then** deterministic energies, corrected proposal probabilities,
+within-replica accept decisions, swap log-ratios, label schedules,
+cold-target states, checkpoints, cross-language restarts, exact-target
+stationarity, detailed balance, total variation, and marginals match within
+frozen tolerances
+**And** `results/experiment_5714_one_axis_tempering_rust_parity.json` is
+written with `one_axis_rust_parity_ready_score=1.0`,
+`broken_control_rejected_score=1.0`, `two_axis_code_added=false`,
+`timing_claimed=false`, and `hardware_speedup_claimed=false`.
+
+**If** source provenance cannot reconstruct the promoted one-axis algorithm,
+Rust/Python parity fails, exact-target bounds fail, malformed input does not
+fail safely, fallback equivalence is lost, any broken control is accepted, or
+any timing/hardware claim appears
+**Then** the artifact SHALL still emit terminal evidence with
+`one_axis_rust_parity_ready_score=0.0`,
+`broken_control_rejected_score=0.0` when applicable, and an
+`honest_verdict` starting with `blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5714)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5714 | Planned (`crates/carnot-samplers/src/one_axis_tempering.rs`, `crates/carnot-python/src/one_axis_tempering.rs`, `python/carnot/experiment_5714_one_axis_tempering_rust_parity.py`, `results/experiment_5714_one_axis_tempering_rust_parity.json`) | Planned (`tests/python/test_experiment_5714_one_axis_tempering_rust_parity.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`

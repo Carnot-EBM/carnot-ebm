@@ -1,0 +1,370 @@
+{
+  "abi_receipt": {
+    "malformed_input_failures": 5,
+    "malformed_input_ids": [
+      "nonsquare_couplings",
+      "collapsed_ladder",
+      "invalid_spin",
+      "duplicate_labels",
+      "corrupt_checkpoint"
+    ],
+    "rust_extension_importable": true
+  },
+  "broken_control_rejected": true,
+  "broken_control_rejected_score": 1.0,
+  "broken_control_results": [
+    {
+      "control_id": "stale_label_exchange",
+      "metric": 0.15300000000000008,
+      "reason": "stale labels change the label-position energy pair",
+      "rejected": true
+    },
+    {
+      "control_id": "wrong_sign_swap",
+      "metric": 0.05400000000000004,
+      "reason": "sign-reversed swap log-ratio mismatches Exp5633 rule",
+      "rejected": true
+    },
+    {
+      "control_id": "uncorrected_kernel",
+      "metric": 0.0755280122001426,
+      "reason": "projected cDLS without MH correction fails exact product target",
+      "rejected": true
+    },
+    {
+      "control_id": "collapsed_ladder",
+      "metric": 1.0,
+      "reason": "strict beta ladder validation rejects duplicate labels",
+      "rejected": true
+    },
+    {
+      "control_id": "corrupt_state",
+      "metric": 1.0,
+      "reason": "checkpoint validation rejects missing labels, seed, and sweep",
+      "rejected": true
+    }
+  ],
+  "build_features": {
+    "one_axis_tempering": true,
+    "penalty_axis_exchange": false,
+    "pyo3_extension_module": true,
+    "semantic_portability_only": true
+  },
+  "checkpoint_roundtrip_pass": true,
+  "compiler_and_toolchain": {
+    "cargo": {
+      "available": true,
+      "returncode": 0,
+      "version": "cargo 1.97.0 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.0-1.1)"
+    },
+    "cargo_available": true,
+    "maturin": {
+      "available": false,
+      "error": "[Errno 2] No such file or directory: 'maturin'",
+      "version": null
+    },
+    "platform": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43",
+    "python": "3.12.13",
+    "rustc": {
+      "available": true,
+      "returncode": 0,
+      "version": "rustc 1.97.0 (2d8144b78 2026-07-07) (Arch Linux rust 1:1.97.0-1.1)"
+    }
+  },
+  "cross_language_restart_pass": true,
+  "detailed_balance_error_by_impl": {
+    "python": {
+      "swap": 4.336808689942018e-19,
+      "within": 5.204170427930421e-18
+    },
+    "rust": {
+      "swap": 4.336808689942018e-19,
+      "within": 3.469446951953614e-18
+    }
+  },
+  "deterministic_decision_parity": true,
+  "energy_error_max": 4.440892098500626e-16,
+  "exact_target_tv_python": 8.833463084942763e-17,
+  "exact_target_tv_rust": 8.90470914371869e-17,
+  "experiment": 5714,
+  "experiment_id": "exp5714-one-axis-tempering-rust-parity",
+  "field_principles": {
+    "abi_receipt": "Proves malformed inputs fail safely at the Python/Rust boundary.",
+    "broken_control_rejected": "Provides the boolean gate that every broken control was rejected.",
+    "broken_control_rejected_score": "Provides the scalar gate that is 1.0 only when all broken controls reject.",
+    "broken_control_results": "Documents stale-label, wrong-sign, uncorrected-kernel, collapsed-ladder, and corrupt-state controls.",
+    "build_features": "Shows that the build used the ordinary one-axis Rust/PyO3 feature surface.",
+    "checkpoint_roundtrip_pass": "Proves Rust state serialization preserves labels, states, seed, and sweep.",
+    "compiler_and_toolchain": "Records the local Rust, Python, Cargo, and platform versions needed to reconstruct the build.",
+    "cross_language_restart_pass": "Proves a Python checkpoint can resume through Rust and reproduce the trace.",
+    "detailed_balance_error_by_impl": "Reports within-kernel and swap detailed-balance residuals by implementation.",
+    "deterministic_decision_parity": "Proves seeded within-replica and swap decisions match exactly.",
+    "energy_error_max": "Quantifies deterministic energy parity between Python and Rust.",
+    "exact_target_tv_python": "Measures Python exact-target stationarity against the enumerable Boltzmann product target.",
+    "exact_target_tv_rust": "Measures Rust exact-target stationarity against the same enumerable Boltzmann product target.",
+    "field_principles": "Explains why every required parity field exists before the artifact can promote a Rust port.",
+    "fixture_manifest": "Freezes the exact enumerable Ising workloads, ladders, schedules, and seeds.",
+    "frozen_tolerances": "Predeclares numerical and exact-target tolerances before parity is interpreted.",
+    "hardware_speedup_claimed": "Bare false prevents portability evidence from becoming board or hardware evidence.",
+    "honest_verdict": "Starts complete: or blocked: and states whether parity is final.",
+    "inference_substrate": "Declares Rust/Python exact one-axis sampler parity with no LLM or board participation.",
+    "malformed_input_controls": "Documents invalid ABI inputs and confirms they fail closed.",
+    "one_axis_rust_parity_ready_score": "Provides a scalar downstream gate that is 1.0 only under the full parity contract.",
+    "openspec_requirement_ids": "Keeps implementation, tests, and artifact anchored to REQ-SAMPLE-5714 and SCENARIO-SAMPLE-5714.",
+    "proposal_probability_error_max": "Quantifies corrected cDLS proposal-probability parity.",
+    "pyo3_version": "Records the binding ABI dependency version explicitly.",
+    "python_binding_paths": "Lists the PyO3/fallback files that expose the Rust core to Python.",
+    "python_fallback_equivalence": "Proves the pure-Python path remains available when Rust is absent.",
+    "python_reference_paths": "Lists the Python reference and test files used for exact parity.",
+    "random_seeds": "Records replay seeds for deterministic decisions and restart.",
+    "reproducibility_checksum": "Content-addresses the complete artifact after blanking the self-checksum field.",
+    "rust_source_paths": "Lists the Rust files that implement the portable one-axis core.",
+    "scheduler_parity": "Proves both implementations apply the same fixed within-replica and exchange schedule.",
+    "source_algorithm_hash": "Hashes the frozen one-axis algorithm recipe independently of implementation language.",
+    "source_artifact_hashes": "Content-addresses upstream evidence so the port cannot silently drift from promoted one-axis provenance.",
+    "source_promotion_receipts": "Pins Exp5633 exactness, Exp5634 quality promotion, and Exp5645/5646 retirement scope before port identity is trusted.",
+    "swap_log_ratio_error_max": "Quantifies temperature-label swap-ratio parity.",
+    "target_marginal_delta": "Measures cold-target marginal agreement across implementations and exact target.",
+    "timing_claimed": "Bare false prevents semantic parity from becoming a speed claim.",
+    "two_axis_code_added": "Bare false closes the retired penalty-axis scope."
+  },
+  "fixture_manifest": {
+    "beta_ladder": [
+      0.45,
+      0.8,
+      1.25
+    ],
+    "drift_scale": 0.17,
+    "exchange_schedule": [
+      {
+        "adjacent_beta_label_pair": [
+          0,
+          1
+        ],
+        "phase": "temperature_label_exchange",
+        "proposal": "swap_temperature_labels",
+        "state_copy_allowed": false,
+        "transition_count": 1
+      },
+      {
+        "adjacent_beta_label_pair": [
+          1,
+          2
+        ],
+        "phase": "temperature_label_exchange",
+        "proposal": "swap_temperature_labels",
+        "state_copy_allowed": false,
+        "transition_count": 1
+      }
+    ],
+    "fixtures": [
+      {
+        "couplings": [
+          [
+            0.0,
+            0.58,
+            -0.47
+          ],
+          [
+            0.58,
+            0.0,
+            0.52
+          ],
+          [
+            -0.47,
+            0.52,
+            0.0
+          ]
+        ],
+        "fields": [
+          0.12,
+          -0.18,
+          0.09
+        ],
+        "n_spins": 3,
+        "system_id": "ising_n3_frustrated_triangle",
+        "topology": "frustrated_triangle_mixed_sign_cycle"
+      },
+      {
+        "couplings": [
+          [
+            0.0,
+            -0.61,
+            0.56
+          ],
+          [
+            -0.61,
+            0.0,
+            0.49
+          ],
+          [
+            0.56,
+            0.49,
+            0.0
+          ]
+        ],
+        "fields": [
+          -0.07,
+          0.16,
+          -0.11
+        ],
+        "n_spins": 3,
+        "system_id": "ising_n3_frustrated_triangle_field_shift",
+        "topology": "frustrated_triangle_field_shift"
+      }
+    ],
+    "proposal_std": 0.72,
+    "random_seeds": [
+      5714,
+      5715,
+      5716
+    ],
+    "within_replica_schedule": [
+      {
+        "kernel": "corrected_cdls_projection_mh",
+        "phase": "within_replica",
+        "physical_replica_index": 0,
+        "temperature_source": "current_label_beta",
+        "transition_count": 1
+      },
+      {
+        "kernel": "corrected_cdls_projection_mh",
+        "phase": "within_replica",
+        "physical_replica_index": 1,
+        "temperature_source": "current_label_beta",
+        "transition_count": 1
+      },
+      {
+        "kernel": "corrected_cdls_projection_mh",
+        "phase": "within_replica",
+        "physical_replica_index": 2,
+        "temperature_source": "current_label_beta",
+        "transition_count": 1
+      }
+    ]
+  },
+  "frozen_tolerances": {
+    "detailed_balance": 1e-09,
+    "energy": 1e-12,
+    "exact_target_tv": 1e-09,
+    "proposal_log_probability": 1e-12,
+    "swap_log_ratio": 1e-12,
+    "target_marginal": 1e-09
+  },
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete: one-axis corrected-cDLS Rust/Python parity is exact within frozen tolerances; portability only, no speed claim",
+  "inference_substrate": "rust_python_exact_one_axis_sampler_parity",
+  "malformed_input_controls": [
+    {
+      "control_id": "nonsquare_couplings",
+      "error_type": "ValueError",
+      "failed_safely": true
+    },
+    {
+      "control_id": "collapsed_ladder",
+      "error_type": "ValueError",
+      "failed_safely": true
+    },
+    {
+      "control_id": "invalid_spin",
+      "error_type": "ValueError",
+      "failed_safely": true
+    },
+    {
+      "control_id": "duplicate_labels",
+      "error_type": "ValueError",
+      "failed_safely": true
+    },
+    {
+      "control_id": "corrupt_checkpoint",
+      "error_type": "ValueError",
+      "failed_safely": true
+    }
+  ],
+  "milestone": "2026.07.514",
+  "one_axis_rust_parity_ready_score": 1.0,
+  "openspec_requirement_ids": [
+    "REQ-SAMPLE-5714",
+    "SCENARIO-SAMPLE-5714"
+  ],
+  "proposal_probability_error_max": 1.7763568394002505e-15,
+  "pyo3_version": "0.24",
+  "python_binding_paths": [
+    "crates/carnot-python/src/one_axis_tempering.rs",
+    "crates/carnot-python/src/lib.rs",
+    "crates/carnot-python/Cargo.toml",
+    "python/carnot/_rust_compat.py"
+  ],
+  "python_fallback_equivalence": true,
+  "python_reference_paths": [
+    "python/carnot/experiment_5714_one_axis_tempering_rust_parity.py",
+    "python/carnot/experiment_5622_cdls_exact_kernel_audit.py",
+    "python/carnot/experiment_5633_temperature_exchange_cdls_exact_audit.py",
+    "python/carnot/experiment_5634_temperature_exchange_cdls_quality.py",
+    "tests/python/test_experiment_5714_one_axis_tempering_rust_parity.py"
+  ],
+  "random_seeds": [
+    5714,
+    5715,
+    5716
+  ],
+  "reproducibility_checksum": "a6c0449997e93d3a8ea0ed4dfc8c72c7bbaab599ad1cbad4fd592befe7a0d978",
+  "run_date": "2026-07-15",
+  "rust_source_paths": [
+    "crates/carnot-samplers/src/one_axis_tempering.rs",
+    "crates/carnot-samplers/src/lib.rs",
+    "crates/carnot-samplers/Cargo.toml"
+  ],
+  "scheduler_parity": true,
+  "schema": "carnot.experiment_5714.one_axis_tempering_rust_parity.v1",
+  "source_algorithm_hash": "921a0c316c9bbd2cd94c9e3979d7b21272b2c02aa5506617da14673c7f4803e6",
+  "source_artifact_hashes": {
+    "experiment_5622": "26d2b4a2f0de19ee73e215908a5dfa0e2f1f81e4ec93064fe9187fb86d71e2ab",
+    "experiment_5633": "31795bc97b43593c4dd4a4cd4bdedbfe07b59c69cc4f214acf7ac1afbc862bbf",
+    "experiment_5634": "0a6a48b4ee88120ca0c84467b868f95076aba09effbd9175a97bdff27c404bf4",
+    "experiment_5645": "f18a715239d0931bcd909c059e3646cbf615bfe44ce922e17ef30f0a613ca9fe",
+    "experiment_5646": "742bd69acf78d2b3d3307884215cb2550d522ad4569c2d3da61e9a6fca8cfc45",
+    "source_5622": "2f614b9498bf6bd258e4ae17bda3998e86ec9cb7ef2e0b9f564af26df2beeba1",
+    "source_5633": "77dc6c1faa4c8a2685839cc600403d2596e3a06c0899441ae87c794a375d7c94",
+    "source_5634": "b851aae07a16db16ba799b27ec8a979390e974989ca327c3e903082d6ce9e5b9"
+  },
+  "source_promotion_receipts": {
+    "exp5622": {
+      "kernel_audit_ready_score": 1.0,
+      "path": "results/experiment_5622_cdls_exact_kernel_audit.json",
+      "ready": true,
+      "sha256": "26d2b4a2f0de19ee73e215908a5dfa0e2f1f81e4ec93064fe9187fb86d71e2ab"
+    },
+    "exp5633": {
+      "path": "results/experiment_5633_temperature_exchange_cdls_exact_audit.json",
+      "ready": true,
+      "replica_exchange_kernel_ready_score": 1.0,
+      "sha256": "31795bc97b43593c4dd4a4cd4bdedbfe07b59c69cc4f214acf7ac1afbc862bbf"
+    },
+    "exp5634": {
+      "path": "results/experiment_5634_temperature_exchange_cdls_quality.json",
+      "quality_mixing_ready": true,
+      "ready": true,
+      "sha256": "0a6a48b4ee88120ca0c84467b868f95076aba09effbd9175a97bdff27c404bf4"
+    },
+    "exp5645_two_axis_retired": {
+      "path": "results/experiment_5645_two_axis_tempering_hard_constraint_quality.json",
+      "ready": false,
+      "retired_scope": true,
+      "sha256": "f18a715239d0931bcd909c059e3646cbf615bfe44ce922e17ef30f0a613ca9fe",
+      "two_axis_quality_ready_score": 0.0
+    },
+    "exp5646_two_axis_rust_path_blocked": {
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_5646_two_axis_tempering_rust_parity.json",
+      "ready": false,
+      "retired_scope": true,
+      "sha256": "742bd69acf78d2b3d3307884215cb2550d522ad4569c2d3da61e9a6fca8cfc45"
+    }
+  },
+  "swap_log_ratio_error_max": 2.220446049250313e-16,
+  "target_marginal_delta": 1.942890293094024e-16,
+  "tests_added_or_reused": [],
+  "timing_claimed": false,
+  "two_axis_code_added": false
+}
