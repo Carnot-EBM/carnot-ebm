@@ -41608,3 +41608,118 @@ prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5637 | Planned (`python/carnot/experiment_5637_v509_source_delta_ingestion.py`, `results/experiment_5637_v509_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5637_v509_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5707: Ingest V510 Execution-Time Source Delta Without Scope Expansion
+
+The Exp5707 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`research-program.md`, `research-references.md`, `research-complete.yaml`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, and `ops/known-issues.md`. If
+`research-roadmap-next.yaml` is absent because the conductor has already
+activated the staged roadmap, the workflow SHALL read `research-roadmap.yaml`
+instead and SHALL NOT recreate `research-roadmap-next.yaml`. It SHALL NOT
+modify `scripts/research_conductor.py`, `research-roadmap-next.yaml`,
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`.
+
+The workflow SHALL begin from the
+`V510 Planner Refresh - 20260714` marker in `research-references.md` and SHALL
+record that execution-time source checks covered arXiv records for EBM
+verification and reasoning, neural CSPs, Ising ML, hallucination mitigation,
+KANs, constrained generation, sampling hardware, and continual constraint
+learning; OpenReview public pages; Extropic public writing; direct Semantic
+Scholar citation routes for EBT `2507.02092` and ARM-EBM `2512.15605`;
+Hugging Face Papers; GitHub discovery and trending routes; Logical
+Intelligence public updates; Carnot's complete reference history;
+`research-complete.yaml`; previous roadmap proposals; the exclusion manifest;
+and known-issues scope notes.
+
+The workflow SHALL append at most one `V510 Execution Refresh - 20260714` block
+only when a candidate is both non-duplicate and executable for planned `.510`
+experiments `exp5708` through `exp5715` through an exact, local, non-retired
+Carnot hook without changing the dependency graph. An honest no-op is valid
+and SHALL leave `research-references.md` unchanged. The workflow SHALL NOT
+remap already-planned sources merely to create work and SHALL NOT reopen
+retired native three-model or JSON-grammar runtime, external generated-text
+scoring, token steering, broad RL or fine-tuning, retired ARC mechanisms,
+two-axis tempering, non-local TSU or Kona execution, or unsupported speedup
+scopes. It SHALL record proprietary, unavailable, externally hosted,
+domain-mismatched, scope-expanding, or non-local systems as duplicate,
+watch-only, or excluded rather than as executable claims. It SHALL declare
+`inference_substrate="web_and_bibliographic_search_only"` and SHALL write
+`results/experiment_5707_v510_source_delta_ingestion.json`.
+
+The artifact SHALL include required fields `field_principles`,
+`search_timestamp_utc`, `planner_marker`, `sources_checked`, `queries`,
+`accepted_findings`, `duplicate_findings`, `watch_only_findings`,
+`excluded_findings`, `semantic_scholar_status`, `extropic_status`,
+`logical_intelligence_status`, `target_experiment_map`,
+`roadmap_change_required`, `references_updated`, `inference_substrate`,
+`reproducibility_checksum`, and `honest_verdict`. It SHOULD also record
+`planner_marker_found`, `source_link_checks`, `dedupe_corpus_checked`,
+`marker_checks`, `duplicate_checks`, `closed_scope_review`, `duration_s`,
+`random_seed`, and `spec_refs` so the sweep remains auditable without rerunning
+public searches.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `search_timestamp_utc`: principle "freshness is exact"
+- `planner_marker`: principle "the search window is anchored"
+- `sources_checked`: principle "coverage reconstructs"
+- `queries`: principle "coverage reconstructs"
+- `accepted_findings`: principle "accepted work has a local exact home"
+- `duplicate_findings`: principle "dispositions are explicit"
+- `watch_only_findings`: principle "unavailable systems support no claim"
+- `excluded_findings`: principle "closed scopes remain closed"
+- `semantic_scholar_status`: principle "citation-route access is honest"
+- `extropic_status`: principle "hardware access is honest"
+- `logical_intelligence_status`: principle "Kona access is honest"
+- `target_experiment_map`: principle "accepted work has a home"
+- `roadmap_change_required`: principle "scope expansion blocks instead of mutating gates"
+- `references_updated`: principle "mutations are declared"
+- `inference_substrate`: principle "no benchmark inference occurred"
+- `reproducibility_checksum`: principle "the report is stable"
+- `honest_verdict`: principle "zero findings can be complete"
+
+#### SCENARIO-REPORT-5707-NOOP: Duplicate Or Non-Executable Sources Leave References Unchanged
+
+**Given** `research-references.md` contains the
+`V510 Planner Refresh - 20260714` marker
+**And** every checked source candidate is already indexed, watch-only,
+excluded, proprietary, unavailable, externally hosted, scope-expanding,
+domain-mismatched, non-local, or non-executable for planned `.510` work
+**When** the Exp5707 workflow runs
+**Then** it does not append a new execution refresh block, records suppressed
+or rejected sources in `duplicate_findings`, `watch_only_findings`, or
+`excluded_findings`, sets `references_updated=false`, keeps
+`roadmap_change_required=false`, declares
+`inference_substrate=web_and_bibliographic_search_only`, and emits a terminal
+no-op artifact.
+
+#### SCENARIO-REPORT-5707-BLOCKED-MARKER: Missing Planner Marker Blocks Mutation
+
+**Given** `research-references.md` lacks the
+`V510 Planner Refresh - 20260714` marker
+**When** the Exp5707 workflow runs
+**Then** it leaves `research-references.md` unchanged, sets
+`planner_marker_found=false`, keeps `accepted_findings=[]`, keeps
+`roadmap_change_required=false`, and writes a terminal blocked artifact rather
+than appending an unanchored source block.
+
+#### SCENARIO-REPORT-5707-FIELD-PRINCIPLES: Source Delta Fields Stay Annotated
+
+**Given** the Exp5707 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `roadmap_change_required` is false,
+`inference_substrate` is `web_and_bibliographic_search_only`,
+`planner_marker` is `V510 Planner Refresh - 20260714`,
+`search_timestamp_utc` is populated, `reproducibility_checksum` is populated,
+and `honest_verdict` has a terminal prefix.
+
+## Implementation Status (REQ-REPORT-5707)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5707 | Planned (`python/carnot/experiment_5707_v510_source_delta_ingestion.py`, `results/experiment_5707_v510_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5707_v510_source_delta_ingestion.py`) |
