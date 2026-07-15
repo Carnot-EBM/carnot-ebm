@@ -35,6 +35,7 @@
 
 pub mod casal;
 pub mod ebft;
+pub mod one_axis_tempering;
 
 use carnot_core::{EnergyFunction, Float};
 use ndarray::Array1;

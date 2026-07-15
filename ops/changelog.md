@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-07-15 (Exp5714 one-axis parity repair -- codex)
+
+- Fixed the failing Exp5714 Rust/Python one-axis parity tests without modifying
+  `scripts/research_conductor.py`.
+- Aligned Rust one-axis energy arithmetic with the Python reference
+  dot-product order so swap diagnostics match exactly.
+- Corrected the scheduler checkpoint test fixture to start Python and Rust from
+  the same seed, and expanded fail-closed validation/provenance/replay branch
+  coverage to 100% for
+  `python/carnot/experiment_5714_one_axis_tempering_rust_parity.py`.
+- Verified focused Exp5714 pytest (`10 passed`), focused module coverage
+  (`100%`), conductor smart subset (`128 passed, 1 warning`), PyO3 smoke tests
+  (`3 passed`), and `cargo test -p carnot-samplers`.
+- Repo-wide reconciliation remains blocked by stale architecture docs and
+  pre-existing global spec-traceability gaps; clippy remains blocked by a
+  pre-existing `crates/carnot-samplers/src/casal.rs` type-complexity lint.
+
 ## 2026-07-15 (Exp5713 test-failure fix -- codex)
 
 - Fixed the failing Exp5713 spec-alignment test by adding the missing

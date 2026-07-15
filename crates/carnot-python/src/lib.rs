@@ -11,6 +11,7 @@ use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyDict};
 
 mod kv260;
+mod one_axis_tempering;
 mod pipeline;
 mod s2kan;
 mod verification_learning;
@@ -451,6 +452,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // KV260 Potts hardware sampler
     kv260::register_kv260_module(m)?;
+
+    // One-axis corrected-cDLS replica exchange
+    one_axis_tempering::register_one_axis_tempering_module(m)?;
 
     Ok(())
 }
