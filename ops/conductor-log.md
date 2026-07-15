@@ -11774,3 +11774,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-14 23:57 UTC | Transition terminal .509 evidence, retire failed e | OK | 87 passed, 1 warning in 21.74s |
 | 2026-07-15 00:13 UTC | Ingest post-planning 2025-2026 source deltas with  | OK | 86 passed, 1 warning in 21.54s |
 | 2026-07-15 00:32 UTC | Build a sealed exact-constraint canary with authen | OK | 96 passed, 1 warning in 13.40s |
+| 2026-07-15 00:34 UTC | Gated on Exp5708 exact canary: prospective prequen | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5708-sota-exact-constraint-canary.sota_ |
