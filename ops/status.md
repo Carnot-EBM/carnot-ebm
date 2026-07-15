@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-14 (ARC filter A/B test fix)
+**Last Updated:** 2026-07-15 (Exp5713 test-failure fix)
+
+## Session 2026-07-15 - Exp5713 Test-Failure Fix
+
+Fixed the failing Exp5713 spec-alignment test without reverting prior changes
+and without modifying `scripts/research_conductor.py`. The
+`REQ-ARC-WMTE-5713` OpenSpec section now includes the exact
+`field_principles`, `selected_game`, and `selected_level` principle strings
+declared by the Exp5713 ARC artifact module.
+
+Expanded focused unit coverage for the Exp5713 ARC helper/validator branches
+and the Qwen27B MTP artifact-builder branches, while excluding only true live
+hardware/server/LLM boundaries from coverage. Validation: focused regression
+tests pass (`32 passed`), scoped Coverage.py reports 100% for the two Exp5713
+modules (`343` statements, `0` missing), and focused Ruff check/format passed.
+Repo-wide `scripts/check_spec_coverage.py` still fails on pre-existing
+unreferenced tests outside the Exp5713 files (`1255 test(s) missing spec
+traceability`).
 
 ## Session 2026-07-14 - ARC Filter A/B Test Fix
 

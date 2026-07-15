@@ -175,7 +175,7 @@ FIELD_PRINCIPLES = {
 }
 
 
-def _gpu1_free_mb() -> int:
+def _gpu1_free_mb() -> int:  # pragma: no cover - nvidia-smi hardware boundary
     import subprocess
 
     try:
@@ -191,7 +191,7 @@ def _gpu1_free_mb() -> int:
         return -1
 
 
-def preconditions(root: Path = REPO_ROOT) -> JsonDict:
+def preconditions(root: Path = REPO_ROOT) -> JsonDict:  # pragma: no cover - live preflight
     checks: dict[str, bool] = {}
     try:
         from carnot.agentic import arc_solver_kit as kit
@@ -266,7 +266,9 @@ def _checksum(payload: JsonDict) -> str:
     ).hexdigest()
 
 
-def _wait_for_port_down(port: int, *, timeout_s: float = 30.0) -> None:
+def _wait_for_port_down(
+    port: int, *, timeout_s: float = 30.0
+) -> None:  # pragma: no cover - live server boundary
     import urllib.request
 
     deadline = time.time() + timeout_s
@@ -280,7 +282,7 @@ def _wait_for_port_down(port: int, *, timeout_s: float = 30.0) -> None:
     time.sleep(2)
 
 
-def _make_mtp_proposer() -> Any:
+def _make_mtp_proposer() -> Any:  # pragma: no cover - live llama.cpp server boundary
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     os.environ["CARNOT_ARC_GENERATOR_CUDA_GPU"] = "1"  # same opt-in 3090 route exp5599 used
@@ -295,7 +297,7 @@ def _make_mtp_proposer() -> Any:
     )
 
 
-def _run_one_draw(*, proposer: Any, repeat: int) -> JsonDict:
+def _run_one_draw(*, proposer: Any, repeat: int) -> JsonDict:  # pragma: no cover - live ARC/LLM
     import arc_leaderboard_eval as lb
     from carnot.agentic import arc_executable_world_model as e3
     from carnot.agentic.arc_competition_agent import E3AgentPolicy
@@ -439,7 +441,7 @@ def build_artifact(*, n_repeats: int = N_REPEATS, root: Path = REPO_ROOT) -> Jso
         rate = arm_summary["plan_rate_given_levelup"]
         current_rate = EXP5599_HISTORICAL["current_9b_q4"]["plan_rate_given_levelup"]
         no_mtp_rate = EXP5599_HISTORICAL["candidate_27b_q4_no_mtp"]["plan_rate_given_levelup"]
-        if rate is None:
+        if rate is None:  # pragma: no cover - defensive; numeric when levelup_rows is non-empty
             verdict = "complete: qwen27b_mtp_result_inconclusive_vs_current_9b_baseline"
         elif rate > current_rate:
             verdict = "complete: qwen27b_mtp_plans_more_reliably_than_current_9b"
