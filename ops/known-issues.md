@@ -484,6 +484,34 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    scorer/goal-bias all live together, unlike the deliberately-stripped smoke-test harness) is a
    separate, not-yet-run experiment: a real matched-budget A/B on the local submission gate or the
    live scored path.
+
+   **REAL LIVE-PATH A/B RUN 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-12, operator: "run the
+   A/B"): no capability win, real cost -- flag confirmed staying `False`.** Added
+   `CARNOT_ARC_SGE_CANDIDATE_ROUTER=1` env-var escape hatch (`_sge_candidate_router_requested()`,
+   mirroring `CARNOT_ARC_DISABLE_INDUCTION`'s pattern) since a subprocess-based measurement can't
+   monkeypatch the in-process module flag. New `scripts/arc_sge_live_path_ab.py`: both arms are
+   genuinely full-production `E3AgentPolicy(game, proposer=None)` (real induction, frame-change
+   scorer, goal-bias -- the actual `SUBMITTED_AGENT_CONFIG` defaults, NOT the stripped smoke-test
+   harness), differing ONLY in `candidate_router`; scored via `arc_leaderboard_eval.py`'s own
+   `run_game()` (the real leaderboard scorer). Ran on sp80, `budget=250` --
+   `results/arc_sge_live_path_ab_sp80.json`. **Both arms: `levels=0, reached=L0, actions=241,
+   efficiency=0.0` -- byte-identical outcome, identical gap signature
+   (`no_level_up_within_budget`). SGE took 165.4s vs the discriminative router's 42.9s: ~3.9x
+   slower for zero measured difference.** Notably, even the SHIPPED DEFAULT (discriminative
+   router, full production stack, real induction included) never leaves level 0 on sp80 at this
+   budget -- confirming REQ-ARC-FCP-5699-6's router-independence finding on the REAL production
+   path, not just the offline diagnostic harness. Combined with REQ-ARC-FCP-5699-7's exploration-
+   exhaustion finding and REQ-ARC-FCP-5699-8/9/10's trust-gate findings, the full picture: sp80's
+   L0 wall is not attributable to router choice, budget, or induction enablement, on EITHER the
+   stripped harness or the real production stack. Per `SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED`'s
+   own docstring ("Re-enable only after a real matched-budget A/B... shows a win"), this result
+   does not meet that bar -- the flag stays `False`. **This closes the REQ-ARC-FCP-5699 chain's
+   central open question (does SGE add live capability) with an honest, real-path-verified no, on
+   the one game tested** -- a broader claim across more games would need more A/B runs, not
+   assumed from this single result, and is the natural next step if this specific thread is picked
+   up again (though at this point the marginal value of yet another confirmatory null on a
+   different game is genuinely low; a different lever entirely -- one of the other still-disabled
+   production features, or a different game family -- is more likely to be informative).
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

@@ -1,0 +1,138 @@
+{
+  "experiment": "arc_sge_live_path_ab",
+  "req": "REQ-ARC-FCP-5699-12",
+  "game": "sp80",
+  "budget": 250,
+  "methodology_note": "Both arms use genuinely full-production E3AgentPolicy(game, proposer=None) -- the SAME induction/frame-change-scorer/goal-bias/action-effect-expansion-prior defaults SUBMITTED_AGENT_CONFIG ships, NOT the stripped-down outer_loop_sge_smoke_test.py harness. The only difference between arms is candidate_router. Scored via arc_leaderboard_eval.run_game() -- the real leaderboard scorer.",
+  "results": {
+    "baseline_discriminative": {
+      "game": "sp80",
+      "levels": 0,
+      "reached": 0,
+      "actions": 241,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 241,
+          "human_actions": 39,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 25,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 148,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 152,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 6,
+        "forward_walk_hit_rate": 0.5294117647058824
+      },
+      "reset_replay_steps": 6,
+      "forward_walk_hit_rate": 0.5294117647058824,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sp80",
+        "stuck_at_level": 0,
+        "actions_spent": 241,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "candidate_router_type": "CrossGameDiscriminativeCandidateRouter",
+      "duration_s": 42.87943506240845,
+      "arm": "baseline_discriminative"
+    },
+    "sge": {
+      "game": "sp80",
+      "levels": 0,
+      "reached": 0,
+      "actions": 241,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 241,
+          "human_actions": 39,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 58,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 25,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 148,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 152,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 6,
+        "forward_walk_hit_rate": 0.5555555555555556
+      },
+      "reset_replay_steps": 6,
+      "forward_walk_hit_rate": 0.5555555555555556,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sp80",
+        "stuck_at_level": 0,
+        "actions_spent": 241,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "candidate_router_type": "SGECandidateRouter",
+      "duration_s": 165.4424021244049,
+      "arm": "sge"
+    }
+  },
+  "run_date": "2026-07-15T19:07:43Z"
+}

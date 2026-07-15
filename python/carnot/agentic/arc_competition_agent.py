@@ -539,14 +539,31 @@ def _load_sge_candidate_router(game_id: str) -> Any | None:
     )
 
 
+def _sge_candidate_router_requested() -> bool:
+    """REQ-ARC-FCP-5699-12: env-var escape hatch for A/B measurement, mirroring
+    CARNOT_ARC_DISABLE_INDUCTION's pattern -- the module-level SUBMITTED_SGE_CANDIDATE_
+    ROUTER_ENABLED flag stays the single source of truth for what SHIPS, but a subprocess-
+    based measurement (scripts/kaggle/arc_local_submission_gate.py spawns one fresh
+    Python process per game) cannot monkeypatch an in-process module attribute -- an env
+    var is the only way to flip this for a single measurement run without touching the
+    committed default."""
+    import os as _os
+
+    return (
+        bool(SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED)
+        or _os.environ.get("CARNOT_ARC_SGE_CANDIDATE_ROUTER") == "1"
+    )
+
+
 def _load_submitted_candidate_router(game_id: str = "unknown_game") -> Any | None:
     """Load the live candidate router. Default: the Exp4545 v3 discriminative router (a
     safe candidate-order tie-breaker). REQ-ARC-FCP-5699-11: when
-    SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED, tries the SGE router first, falling through to
-    the discriminative router (never None-ing out the live path) if SGE construction fails
-    for any reason -- default False, so behavior is unchanged unless explicitly opted in."""
+    SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED (or CARNOT_ARC_SGE_CANDIDATE_ROUTER=1, for
+    measurement runs), tries the SGE router first, falling through to the discriminative
+    router (never None-ing out the live path) if SGE construction fails for any reason --
+    default False, so behavior is unchanged unless explicitly opted in."""
 
-    if SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED:
+    if _sge_candidate_router_requested():
         try:
             sge_router = _load_sge_candidate_router(game_id)
             if sge_router is not None:

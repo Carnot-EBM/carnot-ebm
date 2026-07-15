@@ -5634,6 +5634,61 @@ reachable (satisfying the live-path-reachability lint), AND it remains gated off
 matched-budget comparison on the actual live path -- not the offline diagnostic harness that
 built it -- demonstrates a capability win, so integration and validation are never conflated
 
+### REQ-ARC-FCP-5699-12: Real Live-Path A/B -- No Capability Win, Real Cost
+
+REQ-ARC-FCP-5699-11 wired SGE in but left the actual matched-budget A/B on the real (non-stripped)
+live path unrun. `_load_submitted_candidate_router()` gains an env-var escape hatch
+(`_sge_candidate_router_requested()`: `SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED or
+CARNOT_ARC_SGE_CANDIDATE_ROUTER == "1"`) so a subprocess-based measurement can opt into SGE for a
+single run without touching the committed module default (subprocess isolation means an in-
+process monkeypatch of the module attribute can't reach a spawned measurement process -- the same
+reason `CARNOT_ARC_DISABLE_INDUCTION` exists as an env var rather than a code edit).
+
+A new script, `scripts/arc_sge_live_path_ab.py`, runs the actual comparison: both arms construct
+genuinely full-production `E3AgentPolicy(game, proposer=None)` -- the SAME `_proposer()`
+lazy-induction default and every other constructor default (`frame_change_scorer`, `goal_bias`,
+`action_effect_expansion_prior`, etc.) `make_carnot_agent` ships, NOT
+`outer_loop_sge_smoke_test.py`'s deliberately-stripped config. The ONLY difference between arms is
+`candidate_router` (default discriminative router vs. a hand-built `SGECandidateRouter` pinned to
+a port distinct from 8919, the conductor's own concurrent induction proposer at the time this
+ran, avoiding request-queuing/contention with that legitimate concurrent process). Scored via
+`arc_leaderboard_eval.py`'s own `run_game()` -- the real leaderboard scorer
+(`arc_agi.scorecard.EnvironmentScoreCalculator`), zero reimplementation.
+
+**RESOLUTION (2026-07-15, operator: "run the A/B").** Ran on `sp80`, `budget=250` --
+`results/arc_sge_live_path_ab_sp80.json`. **Both arms: `levels=0, reached=L0, actions=241,
+efficiency=0.0`, byte-identical outcome.** The gap log is identical too:
+`{"stuck_at_level": 0, "signature": "no_level_up_within_budget"}` for both. The only measured
+difference is cost: `duration_s` 42.9 (discriminative router) vs 165.4 (SGE) -- **SGE is ~3.9x
+slower for zero capability difference on this game/budget, on the real production stack.**
+
+**This is a clean, decisive null, consistent with (not contradicted by) every offline finding in
+this investigation.** Notably, even the SHIPPED DEFAULT (discriminative router, full production
+config, real induction included) never leaves level 0 on sp80 at `budget=250` -- matching
+REQ-ARC-FCP-5699-6's offline finding that this specific game's wall is router-independent, now
+confirmed on the real live path with the real scorer, not just the stripped diagnostic harness.
+Combined with REQ-ARC-FCP-5699-7's exploration-exhaustion finding (the graph-explorer's frontier
+exhausts at ~25 transitions regardless of budget) and REQ-ARC-FCP-5699-8/9/10's trust-gate
+findings (induction never actually fires on this game either, gated by the same exhaustion), the
+full picture is now: sp80's L0 wall is not attributable to router choice, budget, or induction
+enablement, on EITHER the stripped offline harness or the real production stack. **Per
+`SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED`'s own docstring ("Re-enable only after a real matched-
+budget A/B on the ACTUAL live path shows a win"), this result does NOT meet that bar -- the flag
+stays `False`.** This closes the REQ-ARC-FCP-5699 chain's central open question (does SGE add
+live capability) with an honest, real-path-verified no, on the one game tested; a broader claim
+across more games would need more A/B runs, not assumed from this single result.
+
+#### SCENARIO-ARC-FCP-5699-12-REAL-LIVE-PATH-AB-CONFIRMS-NO-WIN-AT-REAL-COST
+
+Given a candidate-router alternative was integrated (REQ-ARC-FCP-5699-11) but never compared
+against the shipped default under genuinely full-production policy defaults
+When both arms are run matched-budget on the real scorer, differing ONLY in candidate_router
+Then an identical outcome (same levels, same reached level, same gap signature) across both arms,
+combined with a real wall-clock cost delta, is sufficient grounds to keep the alternative's
+enable flag at its default-off value -- integration alone, however clean, never substitutes for
+this comparison, and a null result here is exactly as actionable as a positive one (it closes the
+question rather than leaving it open)
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
