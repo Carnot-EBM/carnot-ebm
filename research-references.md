@@ -29902,3 +29902,122 @@ deltas or explicit dispositions; repeated discovery is not presented as novelty.
   checkpoint, and hard-instance quality parity before making any performance claim.
 
 <!-- V510-PLANNER-REFRESH-20260714-END -->
+
+## V511 Planner Refresh - 20260715
+
+Planning-time sweep for milestone `.511` after the terminal `.510` conductor run. The
+search covered 2025-2026 arXiv work on energy-based verification and reasoning, neural
+constraint satisfaction, Ising sampling, hallucination mitigation, KANs, constrained
+generation, hardware-accelerated sampling, and continual/online constraint learning. It
+also checked OpenReview, Hugging Face Papers, GitHub discovery, Extropic writing,
+Logical Intelligence's public Kona material, and live Semantic Scholar citation routes
+for EBT `2507.02092` and ARM-EBM `2512.15605`. The July 14 arXiv feed postdates the
+`.510` sweep; the entries below record only non-duplicate deltas or explicit
+dispositions.
+
+### New actionable deltas
+
+- **Evidence-Grounded Verified Agentic Reasoning (EG-VAR)** - arXiv:2607.12650,
+  https://arxiv.org/abs/2607.12650. EG-VAR makes a Lean kernel the only authority that
+  can mint a verified claim, requires structural descent from an attested tool call, and
+  turns unsupported cases into replayable abstentions. Carnot hook: the local-SOTA exact
+  stream should separate generation from authority. A model response may propose a
+  bounded answer, but only an exact-validator receipt with source/prompt/model hashes may
+  enter the learning stream. This motivates an attested answer-envelope ledger after the
+  `.510` parse failure; it does not justify a general Lean integration or an LLM-judge
+  fallback.
+- **MemOps: Benchmarking Lifecycle Memory Operations in Long-Horizon Conversations** -
+  arXiv:2607.12893, https://arxiv.org/abs/2607.12893. MemOps evaluates remembering,
+  forgetting, updating, reflecting, and composed memory operations through explicit
+  trigger, target, scope, transition, and evidence traces rather than final-answer
+  accuracy alone. Carnot hook: the mandatory FR-11 experiment should audit each accepted,
+  rejected, rolled-back, superseded, and forgotten constraint update as an operation on
+  a chronological exact-label stream, with pre/post state hashes and held-out retention.
+- **The Compliance Trap: Diagnosing How AI Agents Consume Conflicting Memory** -
+  arXiv:2607.10608, https://arxiv.org/abs/2607.10608. Its Entry-Propagation-Recovery
+  framework shows why retrieval accuracy and final success hide early adoption of stale
+  or conflicting memory. Carnot hook: measure the first decision changed by a stored
+  constraint, whether the change propagates, and whether exact rollback recovers the
+  prior safe policy. This is a negative-transfer and rollback audit, not permission to
+  mutate GGUF weights.
+- **Track, Rank, Crack: Epistemic Working Memory Scales Multi-Hop Reasoning in Language
+  Agents** - arXiv:2607.12267, https://arxiv.org/abs/2607.12267. SLEUTH externalizes
+  confirmed facts, ranked hypotheses, and open questions, then uses a bounded commitment
+  trigger once evidence is sufficient. Carnot hook: the next ARC live-path prototype can
+  maintain a generic, agent-owned epistemic ledger over its own observations and actions,
+  route unresolved questions into the existing action proposal path, and test the same
+  mechanism on a matched live A/B before an unconditional registry-rotated level-up
+  attempt. It may not read game source or use a per-game adapter.
+- **MaxSAT-Based Feedback for Guiding Vision-Language Models in Sudoku** -
+  arXiv:2607.12711, https://arxiv.org/abs/2607.12711. The method treats model-proposed
+  assignments as soft clauses while keeping puzzle rules hard, and returns a largest
+  mutually consistent subset as repair feedback. Carnot hook: use exact validators to
+  return bounded conflict sets for malformed or inconsistent SOTA answer envelopes; keep
+  the exact solver authoritative and do not report a general VLM or Sudoku result.
+
+### Important boundary-setting deltas
+
+- **Can a Language Model Learn Facts Continually in Its Weights?** - arXiv:2607.11020,
+  https://arxiv.org/abs/2607.11020. Sequential weight writes retain broad-study facts
+  better than bare statements, but earlier facts become difficult to retrieve and context
+  remains the reliable recovery channel. Carnot implication: `.511` keeps the mandated
+  GGUF models immutable and treats external, exact, rollback-capable constraint state as
+  the credited continuous-learning substrate.
+- **Energy-guided Recursive Model** - arXiv:2607.10128,
+  https://arxiv.org/abs/2607.10128. Explicit Hopfield energies rank recursive candidate
+  trajectories and can be combined with parallel tempering. The result is relevant to the
+  long-term EBM reasoning thesis, but Carnot's dedicated PTRM-generator slot is retired and
+  `.510` already validated the promoted one-axis sampler. Keep ERM watch-only unless a
+  future proposal supplies a genuinely new, live-agent-reachable scope and complete
+  prior-failure metadata.
+- **Calibrated e-CUSUM Decoding for Quantized Reasoning Models** - arXiv:2607.11317,
+  https://arxiv.org/abs/2607.11317. Centered token log-probability is a poor decoder-health
+  observable and can miss confident repetition. Carnot implication: diagnose the `.510`
+  GGUF failure from finish reason, truncation, repetition, chat-template, and answer-envelope
+  receipts; do not revive output/logit energy as an exact authority.
+
+### Citation-trail and secondary-source status
+
+- **Semantic Scholar:** the EBT citation route again exposed arXiv:2607.11555 plus the
+  already-indexed fixed-point, LoopUS, causal-energy, NRGPT, and EBT-Policy lines. The
+  ARM-EBM route exposed the already-indexed path-measure, distributional-EBM, LoopUS,
+  ontology, graph-energy, false-first-step, and safe-distillation lines. No new citation
+  supplied a stronger local `.511` experiment, and no citation-count claim is made.
+- **OpenReview:** XSkill (ICML 2026, https://openreview.net/forum?id=AjP1yvCyoG)
+  supports experience/skill dual-stream learning; Self-Distillation Enables Continual
+  Learning (https://openreview.net/forum?id=HlWA3V6iKF) supports on-policy retention; and
+  Training as Computation (https://openreview.net/forum?id=uKrcWZ2V0F) formalizes a
+  bounded generator-executor-verifier-buffer loop. Carnot can exercise their lifecycle
+  and bounded-verifier principles in an immutable-GGUF sidecar, but full model
+  fine-tuning is outside `.511`'s local evidence budget.
+- **Hugging Face Papers:** LLM-as-a-Verifier and deterministic policy-gate pages reinforce
+  verifier scaling and pre-execution checks but do not replace Carnot's exact validators.
+  No newly surfaced page provides a parse-safe local GGUF runtime by itself.
+- **GitHub:** the current trending/discovery pass found no reproducible EBM, CSP, KAN, or
+  sampler repository that supersedes Carnot's exact validators, active-spline controller,
+  or promoted one-axis Rust kernel.
+- **Extropic:** the public writing index still ends with the October 2025 X0/XTR-0/TSU
+  material. There is no authenticated Carnot-accessible TSU route, so `.511` makes no TSU
+  execution, power, or speedup claim.
+- **Logical Intelligence:** the public Kona 1.0 page still describes a proprietary
+  constraint-enforcement layer beneath language models, without local weights or a
+  reproducible execution path. It remains architecture context rather than a comparator.
+
+### V511 planning impact
+
+- Repair the `.510` failure at the answer-channel boundary first: preserve raw text and
+  provenance, diagnose chat-template/truncation/repetition causes, and qualify a bounded
+  attested envelope before spending a second full SOTA panel. Any carry-forward stream is
+  gated on zero missing rows, zero parse failures, and zero validator disagreements.
+- Make FR-11 a lifecycle-audited chronological exact stream with explicit update,
+  supersession, rollback, forgetting, negative-transfer, and recovery receipts. GGUF
+  weights remain immutable and exact validators remain the release authority.
+- Give ARC one genuinely new live-path mechanism: an agent-owned epistemic ledger over
+  confirmed observations, hypotheses, and open questions. Test it in a matched live A/B,
+  then run the standing registry-prechecked self-discovery attempt regardless of A/B
+  promotion.
+- Move the one-axis Rust sampler from isolated parity evidence into the production
+  `SamplerBackend` contract and measure a matched quality/throughput crossover before any
+  performance claim. Do not reopen two-axis exchange or claim FPGA/TSU acceleration.
+
+<!-- V511-PLANNER-REFRESH-20260715-END -->
