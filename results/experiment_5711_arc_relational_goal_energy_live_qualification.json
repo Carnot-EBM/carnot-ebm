@@ -1,0 +1,280 @@
+{
+  "call_graph_receipt": {
+    "both_hooks_exercised": true,
+    "candidate_guidance_call_count": 1,
+    "candidate_order_change_count": 1,
+    "candidate_path": "E3AgentPolicy.explorer.goal_candidate_guidance.rank_candidates -> RelationalGoalEnergy.__call__",
+    "frontier_goal_bias_call_count": 1,
+    "frontier_path": "E3AgentPolicy.explorer._goal_bias_score -> RelationalGoalEnergy.__call__",
+    "goal_candidate_guidance_diagnostics": {
+      "arms_non_degenerate": true,
+      "candidate_count": 2,
+      "candidate_pool_differs_from_baseline": true,
+      "candidate_states_scored": 2,
+      "candidate_states_scored_total": 2,
+      "cpu_scoring_ms_per_candidate": 0.03776050289161503,
+      "enabled": true,
+      "goal_energy_score_variance": 0.25,
+      "prediction_errors": 0,
+      "prediction_errors_total": 0,
+      "real_candidate_state_evidence": true,
+      "score_max": 1.0,
+      "score_min": 0.0,
+      "scoring_errors": 0,
+      "scoring_errors_total": 0,
+      "source": "goal_energy_candidate_generation_guidance",
+      "verifier_is_oracle": false
+    }
+  },
+  "candidate_guidance_call_count": 1,
+  "candidate_order_change_count": 1,
+  "corrupted_control_results": [
+    {
+      "fallback_reason": "corrupt_receipt",
+      "name": "wrong_shape_mask",
+      "routed": false,
+      "score": 0.0,
+      "unsafe_route_accepted": false
+    },
+    {
+      "fallback_reason": "missing_target",
+      "name": "unequal_region_masks",
+      "routed": false,
+      "score": 0.0,
+      "unsafe_route_accepted": false
+    }
+  ],
+  "experiment": "experiment_5711_arc_relational_goal_energy_live_qualification",
+  "fallback_order_equivalence": true,
+  "field_principles": {
+    "game_source_read_count": {
+      "principle": "must remain 0; current-frame/agent-receipt routing cannot inspect game source."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed complete:/blocked: summary; no novel level or solve claim is allowed."
+    },
+    "live_path_reachable_score": {
+      "principle": "1.0 only when both submitted-policy call paths are proven reachable; otherwise 0.0."
+    },
+    "outer_loop_bfs_used": {
+      "principle": "must remain false; qualification uses fixed controls, not offline BFS or hand-solution discovery."
+    },
+    "relational_goal_energy_ready_score": {
+      "principle": "1.0 only when exact positive controls are nondegenerate, both hooks are exercised, zero-variance fallback preserves order, negatives do not route unsafely, leave-one-game-out passes, and leakage scans are clean."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy only -- Exp5711 is a representation qualification and claims no solve."
+    }
+  },
+  "frontier_goal_bias_call_count": 1,
+  "game_adapter_count": 0,
+  "game_source_read_count": 0,
+  "generic_mechanic_classifier": {
+    "receipt_keys": [
+      "route_class",
+      "source_mask",
+      "target_mask",
+      "offset",
+      "run_mask",
+      "order"
+    ],
+    "supported_classes": [
+      "region_pair_equality",
+      "translated_within_frame_target_match",
+      "ordered_run_relation",
+      "centroid_alignment"
+    ],
+    "target_source_policy": "current_visible_frame_or_agent_owned_receipt_only",
+    "variance_floor": 1e-12
+  },
+  "honest_verdict": "complete: relational_goal_energy_live_route_qualified_no_solve_claim",
+  "inference_substrate": "arc_visible_state_relational_energy_no_llm",
+  "leave_one_game_out_protocol": {
+    "fold_count": 4,
+    "folds": [
+      {
+        "held_out_fixture": "cd82",
+        "passed": true,
+        "train_source": "synthetic_generic_classes_plus_other_reproduced_receipts"
+      },
+      {
+        "held_out_fixture": "sk48",
+        "passed": true,
+        "train_source": "synthetic_generic_classes_plus_other_reproduced_receipts"
+      },
+      {
+        "held_out_fixture": "sp80",
+        "passed": true,
+        "train_source": "synthetic_generic_classes_plus_other_reproduced_receipts"
+      },
+      {
+        "held_out_fixture": "cn04",
+        "passed": true,
+        "train_source": "synthetic_generic_classes_plus_other_reproduced_receipts"
+      }
+    ],
+    "frozen_before_scoring": true,
+    "passed": true,
+    "thresholds": {
+      "variance_floor": 1e-12
+    }
+  },
+  "live_path_reachable": true,
+  "live_path_reachable_score": 1.0,
+  "negative_control_results": [
+    {
+      "fallback_reason": "missing_relational_receipt",
+      "name": "absent_target_frame",
+      "routed": false,
+      "score": 0.0,
+      "unsafe_route_accepted": false
+    },
+    {
+      "fallback_reason": "legacy_goal_satisfaction",
+      "name": "count_goal_negative_preserves_legacy",
+      "routed": false,
+      "score": 0.5,
+      "unsafe_route_accepted": false
+    },
+    {
+      "fallback_reason": "unsupported_route_class",
+      "name": "unsupported_route_class",
+      "routed": false,
+      "score": 0.0,
+      "unsafe_route_accepted": false
+    }
+  ],
+  "new_levels_claimed": 0,
+  "openspec_requirement_ids": [
+    "REQ-ARC-WMTE-5711",
+    "SCENARIO-ARC-WMTE-5711-LIVE-HOOK-REACHABILITY",
+    "SCENARIO-ARC-WMTE-5711-SAFE-FALLBACK-AND-LEAKAGE"
+  ],
+  "outer_loop_bfs_used": false,
+  "per_game_constant_scan": {
+    "detected_tokens": [],
+    "per_game_constants_detected": false,
+    "scanned_paths": [
+      "python/carnot/agentic/arc_goal_energy_live.py",
+      "python/carnot/experiment_5711_arc_relational_goal_energy_live_qualification.py"
+    ]
+  },
+  "per_game_leakage_detected": false,
+  "random_seeds": [
+    5711,
+    20260715
+  ],
+  "registry_precheck": {
+    "duplicate_count": 0,
+    "duplicates_excluded": true,
+    "fixture_count": 4,
+    "new_level_claim_allowed": false,
+    "solve_provenance": "development_proxy",
+    "source": "ops/arc_solve_registry.yaml + exp5175 reproduced receipt"
+  },
+  "relational_goal_energy_ready_score": 1.0,
+  "reproduced_level_fixture_manifest": [
+    {
+      "already_reproduced": true,
+      "game": "cd82",
+      "level": 1,
+      "receipt_path": "results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json",
+      "source": "agent_owned_reproduced_receipt"
+    },
+    {
+      "already_reproduced": true,
+      "game": "sk48",
+      "level": 1,
+      "receipt_path": "results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json",
+      "source": "agent_owned_reproduced_receipt"
+    },
+    {
+      "already_reproduced": true,
+      "game": "sp80",
+      "level": 1,
+      "receipt_path": "results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json",
+      "source": "agent_owned_reproduced_receipt"
+    },
+    {
+      "already_reproduced": true,
+      "game": "cn04",
+      "level": 1,
+      "receipt_path": "results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json",
+      "source": "agent_owned_reproduced_receipt"
+    }
+  ],
+  "reproducibility_checksum": "sha256:b7ceab8b71f8b9c097990769d778af2a151301661f911680ef0abf17a7747de4",
+  "result_path": "results/experiment_5711_arc_relational_goal_energy_live_qualification.json",
+  "route_confusion_matrix": {
+    "by_class": {
+      "centroid_alignment": {
+        "fn": 0,
+        "fp": 0,
+        "tp": 1
+      },
+      "ordered_run_relation": {
+        "fn": 0,
+        "fp": 0,
+        "tp": 1
+      },
+      "region_pair_equality": {
+        "fn": 0,
+        "fp": 0,
+        "tp": 1
+      },
+      "translated_within_frame_target_match": {
+        "fn": 0,
+        "fp": 0,
+        "tp": 1
+      }
+    },
+    "macro_precision": 1.0,
+    "macro_recall": 1.0
+  },
+  "schema": "carnot.exp5711.arc_relational_goal_energy_live_qualification.v1",
+  "score_variance_by_fixture": {
+    "positive_centroid_alignment": 1.0,
+    "positive_ordered_run_relation": 0.25,
+    "positive_region_pair_equality": 0.25,
+    "positive_translated_within_frame_target_match": 0.25
+  },
+  "solve_provenance": "development_proxy",
+  "source_paths": [
+    "python/carnot/agentic/arc_goal_energy_live.py",
+    "python/carnot/agentic/arc_competition_agent.py",
+    "python/carnot/experiment_5711_arc_relational_goal_energy_live_qualification.py"
+  ],
+  "strict_separation_by_fixture": {
+    "positive_centroid_alignment": true,
+    "positive_ordered_run_relation": true,
+    "positive_region_pair_equality": true,
+    "positive_translated_within_frame_target_match": true
+  },
+  "synthetic_fixture_manifest": [
+    {
+      "control_type": "exact_positive_win_vs_near_win",
+      "fixture": "positive_region_pair_equality",
+      "route_class": "region_pair_equality",
+      "target_source": "current_frame_or_agent_owned_receipt"
+    },
+    {
+      "control_type": "exact_positive_win_vs_near_win",
+      "fixture": "positive_translated_within_frame_target_match",
+      "route_class": "translated_within_frame_target_match",
+      "target_source": "current_frame_or_agent_owned_receipt"
+    },
+    {
+      "control_type": "exact_positive_win_vs_near_win",
+      "fixture": "positive_ordered_run_relation",
+      "route_class": "ordered_run_relation",
+      "target_source": "current_frame_or_agent_owned_receipt"
+    },
+    {
+      "control_type": "exact_positive_win_vs_near_win",
+      "fixture": "positive_centroid_alignment",
+      "route_class": "centroid_alignment",
+      "target_source": "current_frame_or_agent_owned_receipt"
+    }
+  ],
+  "zero_variance_fallback_count": 1
+}

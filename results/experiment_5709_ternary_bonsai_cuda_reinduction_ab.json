@@ -1,0 +1,122 @@
+{
+  "experiment": "experiment_5709_ternary_bonsai_cuda_reinduction_ab",
+  "schema": "carnot.exp5709.ternary_bonsai_cuda_reinduction_ab.v1",
+  "result_path": "results/experiment_5709_ternary_bonsai_cuda_reinduction_ab.json",
+  "honest_verdict": "complete: ternary_bonsai_plans_less_reliably_than_current_9b",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Ternary-Bonsai-27B-Q2_0",
+      "hf_id": "prism-ml/Ternary-Bonsai-27B-gguf",
+      "role": "ternary (~1.71 bits/weight) quantization of Qwen3.6-27B, served via a third-party llama.cpp fork (github.com/PrismML-Eng/llama.cpp) on a real NVIDIA RTX 3090 (GPU 1, CUDA) -- the operator's direct follow-up after exp5705's Q8_0 iGPU result, testing whether a fundamentally different (much more aggressive) quantization scheme on genuinely fast hardware changes the outcome"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; the PRIMARY verdict compares Ternary Bonsai against the current 9B baseline (same task/methodology) -- model family, quantization scheme, AND serving stack all differ from both prior comparators, so this is a real but non-isolated measurement, not a controlled precision-only comparison"
+    },
+    "weight_precision": {
+      "principle": "honestly names the actual quantization scheme served (~1.71 bits/weight ternary GGUF Q2_0_g128), the most aggressive of the three candidates measured across exp5599 (Q4_K_M), exp5705 (Q8_0), and this experiment"
+    },
+    "serving_hardware": {
+      "principle": "discloses this runs on a real discrete GPU (RTX 3090, GPU 1) unlike exp5705's iGPU fallback -- removes the hardware confound exp5705 disclosed, but introduces a NEW one (serving_stack_provenance) instead"
+    },
+    "serving_stack_provenance": {
+      "principle": "discloses that this run uses a third-party fork's llama-server binary, NOT this project's own HIP/CUDA build -- a genuine confound this project's own build cannot remove (standard llama.cpp cannot load the Q2_0_g128 tensor type at all), disclosed rather than silently treated as equivalent to every other experiment's serving stack"
+    },
+    "exp5599_historical_reference": {
+      "principle": "names the prior Q4 measurement this compares against and discloses it is cross-session, not re-measured fresh in this same run"
+    },
+    "exp5705_historical_reference": {
+      "principle": "names the prior Q8_0 measurement (same day, same operator directive thread) this compares against, disclosed as cross-session context"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "game": "lp85",
+  "n_repeats": 1,
+  "reinduction_n_ctx": 22000,
+  "weight_precision": "ternary_q2_0_g128",
+  "kv_cache_precision": "f16_default_unquantized",
+  "serving_hardware": "nvidia_rtx_3090_gpu1_cuda",
+  "serving_stack_provenance": "third_party_fork_prismml_eng_llama_cpp_branch_prism",
+  "per_draw_results": [
+    {
+      "arm": "ternary_bonsai_27b_q2_0",
+      "repeat": 0,
+      "transition_count": 37,
+      "levelup_reached": true,
+      "actions_to_levelup": 7,
+      "induce_transition_count": 8,
+      "reinduce_duration_s": 212.948,
+      "planned": false,
+      "skipped": "proposer_failed",
+      "plan_length": 0,
+      "heldout_accuracy": 0.0,
+      "refinement_rounds_used": 2,
+      "rounds": [
+        {
+          "round": 1,
+          "action": "induce",
+          "proposer_ok": true,
+          "message": "local gguf (GPU server) wrote world_model.py",
+          "skipped": "degenerate_goal_predicate"
+        },
+        {
+          "round": 2,
+          "action": "refactor",
+          "proposer_ok": false,
+          "message": "local model code unusable after 3 tries (missing ('engine', 'is_level_complete') in output)",
+          "skipped": "proposer_failed"
+        }
+      ]
+    }
+  ],
+  "arm_summary": {
+    "n_attempted": 1,
+    "n_levelup_reached": 1,
+    "n_planned": 0,
+    "plan_rate_given_levelup": 0.0,
+    "mean_reinduce_duration_s": 212.948,
+    "mean_heldout_accuracy": 0.0
+  },
+  "exp5599_historical_reference": {
+    "current_9b_q4": {
+      "experiment_id": 5599,
+      "model": "Qwen3.5-9B-MTP-GGUF (Q4_K_M, MTP, GPU 1 CUDA)",
+      "plan_rate_given_levelup": 0.3333333333333333,
+      "mean_reinduce_duration_s": 55.0
+    },
+    "candidate_27b_q4": {
+      "experiment_id": 5599,
+      "model": "Qwen3.6-27B-MTP-GGUF (Q4_K_M, non-MTP fallback, GPU 1 CUDA)",
+      "plan_rate_given_levelup": 0.0,
+      "mean_reinduce_duration_s": 401.0
+    }
+  },
+  "exp5705_historical_reference": {
+    "gemma_31b_q8_0": {
+      "experiment_id": 5705,
+      "model": "Gemma-4-31B-it-GGUF (Q8_0, AMD iGPU HIP)",
+      "plan_rate_given_levelup": 0.0,
+      "mean_reinduce_duration_s": 2408.163
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 5709,
+  "duration_s": 226.989,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "offline_arcade_makes_env": true,
+    "reinduction_import": true,
+    "ternary_bonsai_gguf_present": true,
+    "prismml_server_binary_present": true,
+    "ternary_bonsai_server_already_healthy": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "f1c714fbe360893bcc719fdcc296185afe5248fa9f88455b6adf5731aad452c5"
+}

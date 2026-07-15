@@ -7123,6 +7123,84 @@ CPU scoring cost, parity and live-path gates, and either a success from
 `delta>=+0.05` or L2 reproduction, or an honest no-lift residual with
 `null_delta_methodology_note` and `positive_control_passed`.
 
+### REQ-ARC-WMTE-5711: Zero-Variance-Safe Relational Goal-Energy Live Qualification
+
+Experiment 5711 SHALL qualify a generic relational placement/spatial
+goal-energy route that is reachable from the submitted `E3AgentPolicy` through
+both live goal hooks: frontier `goal_bias` and immediate
+`goal_candidate_guidance`. The route SHALL use only current visible frame data
+or agent-owned runtime receipts and SHALL NOT read game source, use
+`GameAdapter`s, run offline BFS, use hand solutions, or contain per-game
+constants. It SHALL route only generic relational classes supported by the
+agent-visible data: region-pair equality, translated within-frame target match,
+ordered-run relation, or centroid alignment. Existing count/fraction
+`GoalSatisfactionEnergy` behavior SHALL be preserved for frames that expose
+the older visible target-fraction state.
+
+Live frontier scoring SHALL include a frozen nondegeneracy audit with
+`variance_floor=1e-12`. If the relational route is unsupported, missing its
+target, corrupt, constant, or below the variance floor, it SHALL fall back to
+the existing no-goal-bias ordering and record the fallback reason. Candidate
+guidance SHALL keep the existing fail-closed behavior: no candidate reordering
+unless real candidate states are scored, score variance is above the frozen
+floor, and the ranked order differs from the baseline pool.
+
+Experiment 5711 SHALL run only synthetic exact controls and already reproduced
+development-proxy levels selected after a registry precheck that excludes
+duplicates. It SHALL freeze route thresholds and the leave-one-game-out
+protocol before scoring. The controls SHALL include exact synthetic wins,
+near-wins, distractor translations, absent-target frames, count-goal negatives,
+corrupted masks, and agent-owned reproduced receipts. Positive controls must
+show nondegenerate exact separation; negatives and corrupted controls must not
+route unsafely; zero-variance cases must preserve the no-goal-bias ordering.
+
+The terminal artifact
+`results/experiment_5711_arc_relational_goal_energy_live_qualification.json`
+SHALL include principle-annotated top-level fields for `field_principles`,
+`registry_precheck`, `solve_provenance`, `openspec_requirement_ids`,
+`source_paths`, `call_graph_receipt`, `live_path_reachable`,
+`live_path_reachable_score`, `generic_mechanic_classifier`,
+`leave_one_game_out_protocol`, `synthetic_fixture_manifest`,
+`reproduced_level_fixture_manifest`, `score_variance_by_fixture`,
+`strict_separation_by_fixture`, `frontier_goal_bias_call_count`,
+`candidate_guidance_call_count`, `candidate_order_change_count`,
+`zero_variance_fallback_count`, `fallback_order_equivalence`,
+`route_confusion_matrix`, `negative_control_results`,
+`corrupted_control_results`, `per_game_constant_scan`,
+`game_source_read_count`, `game_adapter_count`, `outer_loop_bfs_used`,
+`per_game_leakage_detected`, `relational_goal_energy_ready_score`,
+`new_levels_claimed`, `inference_substrate`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL include:
+
+- `live_path_reachable_score`: principle "1.0 only when both submitted-policy call paths are proven reachable; otherwise 0.0."
+- `relational_goal_energy_ready_score`: principle "1.0 only when exact positive controls are nondegenerate, both hooks are exercised, zero-variance fallback preserves order, negatives do not route unsafely, leave-one-game-out passes, and leakage scans are clean."
+- `solve_provenance`: principle "development_proxy only -- Exp5711 is a representation qualification and claims no solve."
+- `game_source_read_count`: principle "must remain 0; current-frame/agent-receipt routing cannot inspect game source."
+- `outer_loop_bfs_used`: principle "must remain false; qualification uses fixed controls, not offline BFS or hand-solution discovery."
+- `honest_verdict`: principle "terminal-prefixed complete:/blocked: summary; no novel level or solve claim is allowed."
+
+#### SCENARIO-ARC-WMTE-5711-LIVE-HOOK-REACHABILITY
+
+Given a route-aware relational goal-energy source and a submitted
+`E3AgentPolicy`
+When frontier nodes and immediate candidates expose generic relational
+receipts or visible target-fraction state
+Then the frontier `goal_bias` and `goal_candidate_guidance` hooks both invoke
+the route, record call counts, non-zero score variance on positive controls,
+and candidate-order changes only when the nondegeneracy gate passes.
+
+#### SCENARIO-ARC-WMTE-5711-SAFE-FALLBACK-AND-LEAKAGE
+
+Given absent-target, unsupported, zero-variance, corrupted-mask,
+count-goal-negative, and distractor controls
+When Exp5711 scores the fixtures and scans the implementation sources
+Then unsafe controls do not route, zero-variance fallback preserves the
+no-goal-bias order, game-source reads and `GameAdapter` usage are absent,
+`outer_loop_bfs_used=false`, `per_game_leakage_detected=false`, and
+`relational_goal_energy_ready_score` is emitted as the scalar gate.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD

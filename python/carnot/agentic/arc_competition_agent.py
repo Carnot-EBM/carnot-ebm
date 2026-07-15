@@ -509,11 +509,11 @@ def _load_submitted_frame_change_scorer() -> Any | None:
 
 
 def _load_submitted_goal_energy_bias() -> Any | None:
-    """REQ-ARC-WMTE-4640: load Exp4020's graded visible-state goal energy."""
+    """REQ-ARC-WMTE-4640/5711: load submitted visible-state goal energy."""
 
     if not SUBMITTED_GOAL_ENERGY_ENABLED:
         return None
-    return arc_goal_energy_live.load_exp4020_goal_energy(root=REPO)
+    return arc_goal_energy_live.load_relational_goal_energy(root=REPO)
 
 
 class StepwiseExplorer:
