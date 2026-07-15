@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-07-15 (Exp5713 test-failure fix -- codex)
+
+- Fixed the failing Exp5713 spec-alignment test by adding the missing
+  `field_principles`, `selected_game`, and `selected_level` principle strings
+  to `REQ-ARC-WMTE-5713`.
+- Expanded focused tests for the Exp5713 ARC helper/validator paths and the
+  Qwen27B MTP artifact-builder branches, keeping only live hardware/server/LLM
+  boundaries out of coverage.
+- Verified focused regression tests (`32 passed`), scoped 100% Coverage.py for
+  the two Exp5713 modules (`343` statements, `0` missing), and focused Ruff
+  check/format.
+- Did not modify `scripts/research_conductor.py`.
+
 ## 2026-07-14 (ARC filter A/B test fix -- codex)
 
 - Fixed the Exp5609 ARC filter A/B test failure by regenerating

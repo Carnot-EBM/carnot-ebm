@@ -7268,6 +7268,131 @@ Then intended supported controls exercise candidate ordering, unsupported
 controls fall back safely, negatives are preserved, and
 `unsafe_route_accept_count` remains zero.
 
+### REQ-ARC-WMTE-5713: Registry-Prechecked Live Self-Discovery Level-Up Attempt
+
+Experiment 5713 SHALL run one bounded ARC live-agent self-discovery level-up
+attempt from the standard live `E3AgentPolicy` entrypoint. Immediately before
+selection, it SHALL read `ops/arc_solve_registry.yaml`, compute
+`registry_hash_before`, exclude all reproduced/known solves, `lf52` L7/L8,
+`bp35` L9, `sk48` L8, recent failed targets, and levels already reached by the
+current live mechanism, then rank remaining candidates by authenticated
+agent-visible headroom. It SHALL freeze exactly one selected game, selected
+level, budget, random seeds, mechanism configuration, and target snapshot before
+the first environment interaction.
+
+Exp5712 SHALL remain advisory. Experiment 5713 SHALL enable the Exp5712
+relational route only when Exp5712 reports `relational_live_ab_ready_score >= 1`,
+zero level regressions or unsafe route accepts, and the selected target
+hypothesis is induced from this run's visible observations. Otherwise the
+unchanged no-LLM baseline SHALL run. If any LLM would be required, the
+experiment SHALL block rather than call a legacy model; successful no-LLM runs
+SHALL emit `model_specs=[]` and `llm_used=false`.
+
+The runtime trajectory SHALL preserve visible observations, actions, rewards
+when exposed, level transitions, candidate/energy receipts, route activations,
+environment actions, wall time, termination reason, and the frozen target
+snapshot. A solve claim SHALL require the candidate level-up trajectory to be
+reproduced independently through a generic live mechanism from clean state with
+no hidden source, per-game adapter, outer-loop BFS, hand solution, or off-path
+solver. Solve acceptance SHALL require `reproduced_levels >= 1`,
+`offline_reproduced=true`, `independent_reproduction_pass=true`, non-empty
+`reproduction_receipts`, and a new registry key. If this gate is not met, the
+artifact SHALL emit a complete null with `reproduced_levels=0`,
+`offline_reproduced=false`, `registry_delta=0`, and `registry_updated=false`.
+
+The terminal artifact
+`results/experiment_5713_arc_live_self_discovery_levelup_v510.json` SHALL
+include principle-annotated top-level fields for `field_principles`,
+`registry_precheck`, `registry_hash_before`, `target_selection_candidates`,
+`target_exclusions`, `selected_game`, `selected_level`,
+`target_frozen_before_interaction`, `solve_provenance`, `agent_entrypoint`,
+`live_path_receipt`, `mechanism_selection`, `exp5712_advisory_receipt`,
+`model_specs`, `llm_used`, `environment_action_budget`,
+`environment_actions_used`, `wall_time_seconds`, `termination_reason`,
+`trajectory_path`, `trajectory_hash`, `agent_visible_observation_count`,
+`action_count`, `level_transition_events`, `new_level_candidate`,
+`reproduced_levels`, `offline_reproduced`, `independent_reproduction_pass`,
+`reproduction_receipts`, `reproduction_seed_count`, `registry_count_before`,
+`registry_count_after`, `registry_delta`, `registry_updated`,
+`game_source_read_count`, `game_adapter_count`, `outer_loop_bfs_used`,
+`hand_solution_used`, `critical_flags`, `inference_substrate`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL include:
+
+- `field_principles`: principle "principle annotations are carried in the artifact so every required 5713 field is auditable."
+- `registry_precheck`: principle "selection binds to live registry state immediately before interaction."
+- `registry_hash_before`: principle "the selected target is tied to the exact registry bytes read before the run."
+- `target_selection_candidates`: principle "eligible and excluded rotations are auditable."
+- `target_exclusions`: principle "duplicate, known-solve, recent-failure, and current-live-reach exclusions are explicit."
+- `selected_game`: principle "the selected game is frozen before interaction."
+- `selected_level`: principle "the selected level is frozen before interaction."
+- `target_frozen_before_interaction`: principle "target, budget, seeds, and mechanism are frozen before any environment step."
+- `solve_provenance`: principle "live_agent_self_discovery -- credited path is the agent's own runtime attempt."
+- `agent_entrypoint`: principle "standard live entrypoint is named so reachability is explicit."
+- `live_path_receipt`: principle "runtime counters prove the selected mechanism emitted environment actions."
+- `mechanism_selection`: principle "Exp5712 is advisory and cannot silently replace the baseline."
+- `exp5712_advisory_receipt`: principle "prototype use is honest and blocked unless ready, safe, and target-local."
+- `model_specs`: principle "empty list is required when no LLM is used."
+- `llm_used`: principle "false means no legacy model participated."
+- `environment_action_budget`: principle "duration is bounded before execution."
+- `environment_actions_used`: principle "actual environment action count is reported."
+- `wall_time_seconds`: principle "wall duration is complete and not inferred."
+- `termination_reason`: principle "the stopping condition is explicit."
+- `trajectory_path`: principle "lossless trajectory evidence is durable."
+- `trajectory_hash`: principle "trajectory content is replay-bound."
+- `agent_visible_observation_count`: principle "visible evidence volume is explicit."
+- `action_count`: principle "agent-emitted actions are explicit."
+- `level_transition_events`: principle "level changes are auditable separately from solve credit."
+- `new_level_candidate`: principle "candidate level-up evidence is not accepted as banked credit without reproduction."
+- `reproduced_levels`: principle "bankable progress requires generic reproduction."
+- `offline_reproduced`: principle "true only after independent clean-state generic reproduction."
+- `independent_reproduction_pass`: principle "solve credit requires independent reproduction, not the original runtime trace alone."
+- `reproduction_receipts`: principle "reproduction evidence is auditable or empty on a null."
+- `reproduction_seed_count`: principle "deterministic or preregistered multi-seed reproduction is explicit."
+- `registry_count_before`: principle "registry delta starts from the prechecked count."
+- `registry_count_after`: principle "registry count changes only after accepted reproduction."
+- `registry_delta`: principle "exact banked delta is auditable."
+- `registry_updated`: principle "false on nulls; true only after generic reproduction."
+- `game_source_read_count`: principle "zero excludes hidden source inspection."
+- `game_adapter_count`: principle "zero excludes per-game adapters."
+- `outer_loop_bfs_used`: principle "false excludes off-path exhaustive solving."
+- `hand_solution_used`: principle "false excludes manual solve injection."
+- `critical_flags`: principle "methodology blockers prevent solve credit."
+- `inference_substrate`: principle "arc_live_agent_own_attempts_no_llm declares the credited substrate."
+- `random_seeds`: principle "run replay seeds are explicit."
+- `reproducibility_checksum`: principle "target, trajectory, budget, and banking decision are content-addressed."
+- `honest_verdict`: principle "terminal complete: or blocked: verdict accepts null outcomes."
+
+#### SCENARIO-ARC-WMTE-5713-PRECHECK-AND-ADVISORY
+
+Given the registry, public-game headroom, current live-reach depths, recent
+failed levels, and Exp5712's advisory artifact
+When Experiment 5713 selects a target
+Then it freezes one eligible candidate before interaction, excludes `lf52`
+L7/L8, `bp35` L9, `sk48` L8 and duplicate levels, records the registry hash and
+candidate roster, and runs the unchanged baseline unless the Exp5712 advisory
+passes every promotion condition.
+
+#### SCENARIO-ARC-WMTE-5713-TRAJECTORY-COMPLETE-NULL
+
+Given the selected baseline attempt does not reach and independently reproduce
+the target level
+When Experiment 5713 builds the artifact
+Then the trajectory path/hash, observation count, action count, transition
+events, wall time, termination reason, no-source/no-adapter/no-BFS flags,
+registry delta, and complete null verdict are all emitted without updating the
+registry.
+
+#### SCENARIO-ARC-WMTE-5713-REPRODUCTION-GATE
+
+Given a live trajectory reaches a target candidate level
+When the generic clean-state reproduction gate evaluates it
+Then level credit and registry updates occur only if independent reproduction
+passes with at least one reproduced level and non-empty reproduction receipts;
+otherwise the candidate remains a null even if the original runtime observed a
+level transition.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD

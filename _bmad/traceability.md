@@ -1,6 +1,17 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-07-11
+**Last Updated:** 2026-07-15
+
+**Operational Note:** 2026-07-15 Exp5713 test-failure fix reconciled
+`REQ-ARC-WMTE-5713` by adding the missing `field_principles`,
+`selected_game`, and `selected_level` field-principle strings to OpenSpec and
+expanding focused coverage for the Exp5713 ARC helper/validator paths plus the
+Qwen27B MTP artifact builder. Validation: focused regression tests pass (`32
+passed`), scoped Coverage.py reports 100% for the two Exp5713 modules (`343`
+statements, `0` missing), and focused Ruff check/format passed. Repo-wide
+`scripts/check_spec_coverage.py` remains blocked by pre-existing unreferenced
+tests outside the Exp5713 files (`1255 test(s) missing spec traceability`). No
+changes were made to `scripts/research_conductor.py`.
 
 **Operational Note:** 2026-07-14 ARC filter A/B and SGE anti-stagnation test
 fix regenerated the Exp5609 decision-grade no-LLM filter artifact under
