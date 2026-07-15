@@ -5921,3 +5921,72 @@ Then the frame-only part is computed ONCE and reused across all N candidates -- 
 fresh per candidate turns an O(components^2) per-frame cost into an O(candidates x
 components^2) per-call one, which at realistic candidate counts is a severe, hang-adjacent
 slowdown even though the underlying flag/code path predates the incident that surfaced it
+
+### REQ-ARC-LIVESUBMIT-4679-2: sc25 WARMUP_GAMES Step Missing From Live-Submit Replay
+
+Discovered 2026-07-15 while chasing down a `sc25 claimed L5 -> LIVE L-1 MISMATCH` result that
+occurred IDENTICALLY in both a VALIDATE-mode and a subsequent `--submit`-mode run of
+`scripts/arc3_live_submit.py` (same failure point both times -- reproducible, not a fluke). This
+was NOT a new regression from the 2026-07-14/15 submission-prep session's other fixes above; it
+is a pre-existing gap between two sibling replay functions that has been present since sc25's
+102-action/L5 banked trajectory was first wired into the live driver.
+
+**Root cause, found via direct log inspection (not guesswork).** The submit-run log
+(`/tmp/arc3_live_submit_submit.log`) showed:
+```
+ERROR | Failed to perform action ACTION4 for game sc25-635fd71a: 400 Client Error: Bad Request
+    for url: https://three.arcprize.org/api/cmd/ACTION4
+    sc25  claimed L5 -> LIVE L-1  MISMATCH  [13s]
+```
+i.e. the LIVE ARC Prize API rejected `ACTION4` mid-replay (the 22nd action in the 102-action
+banked trajectory, `results/arc3_live_banked_trajectories/sc25.json`, sourced from
+`results/experiment_4468_bank_sc25_provisional_levels.json`), which made `env.step()` raise and
+`replay_live()`'s loop break early with the `-1` sentinel.
+
+Three independent places in this codebase already know sc25 needs special first-step handling:
+`python/carnot/agentic/arc_solver_kit.py`'s module docstring ("4. The FIRST `env.step` after
+`env.reset()` is CONSUMED (no-op) in at least sc25.") and its `reproduce()` function (THE
+REPRODUCTION GATE that offline-certified sc25's L5 claim, per the current submission package's
+`env_match_basis: "offline_reproduction_gated_package_refresh_4679"`), which accepts a
+`warmup_label` parameter for exactly this; and
+`scripts/arc3_replay_scorecard_metaharness.py`, which defines `WARMUP_GAMES = {"sc25"}` and its
+`replay_game()` function explicitly prepends a throwaway warmup `env.step()` (repeating
+`actions[0]`) before replaying the real sequence from index 0. `scripts/arc3_live_submit.py`'s
+`replay_live()` -- the function that actually drives BOTH the VALIDATE and the `--submit` live
+replay -- had no such handling; it iterated `actions` directly with no warmup step. Because
+sc25's win condition involves state-dependent tank-controls (per `arc_solver_kit.py`'s docstring:
+"6. Some games have STATE-DEPENDENT controls (sc25 tank-controls) ..."), the resulting one-step
+phase drift compounds across the trajectory until a specific action becomes illegal for the
+live game's actual (drifted) state -- consistent with the observed 400 landing at action 22, not
+action 1.
+
+**Fix.** `replay_live()` now checks `short in mh.WARMUP_GAMES` immediately after `env.reset()`
+and, if the frame is live and there is at least one action, applies one throwaway
+`env.step(ACTION<actions[0].action>, data=actions[0].data, reasoning={"policy": "warmup"})`
+before entering the main replay loop -- an exact mirror of `replay_game()`'s existing
+WARMUP_GAMES handling. Every other (non-`WARMUP_GAMES`) game's replay is untouched.
+
+**Verified.** Unit-level: `tests/python/test_arc3_live_submit_warmup_games.py` (3 tests, fake
+env/arcade/metaharness) proves (a) a `WARMUP_GAMES` game gets exactly one extra `env.step` call
+repeating `actions[0]` with `reasoning={"policy": "warmup"}` before the real replay loop begins,
+(b) a non-`WARMUP_GAMES` game's replay is byte-for-byte unchanged (no extra step), and (c) an
+empty action list or a `None` reset never crashes the new warmup-step guard. Live re-validation
+of the fix itself (a fresh non-destructive VALIDATE run confirming sc25 now env-matches) is the
+natural follow-up before any future `--submit`, per the project's established validate-before-
+submit discipline (Operator-Only External Publication) -- the already-closed 2026-07-15 submit
+scorecard is unaffected by this fix (submission is irreversible; this fix only benefits future
+runs).
+
+Required field principles: not applicable (this is a live-replay correctness fix; no new
+artifact fields).
+
+#### SCENARIO-ARC-LIVESUBMIT-4679-2-WARMUP-STEP-BEFORE-REAL-REPLAY
+
+Given a game is listed in `WARMUP_GAMES` because its live/offline env silently consumes the
+first `env.step()` after `env.reset()` as a no-op
+When the live-submit driver replays that game's banked trajectory
+Then it must first apply one throwaway warmup step (consuming the no-op slot) before starting
+the real action sequence from index 0 -- omitting this step shifts every subsequent action one
+position out of phase against the actual game state, which for a state-dependent-controls game
+compounds into an eventually-illegal action and a live API rejection, masquerading as an
+"env-mismatch" even though the underlying banked solution was legitimately offline-reproduced

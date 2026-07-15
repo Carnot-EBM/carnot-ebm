@@ -28,6 +28,7 @@ Usage:
   .venv/bin/python scripts/arc3_live_submit.py            # VALIDATE live (no submission)
   .venv/bin/python scripts/arc3_live_submit.py --submit   # SUBMIT (close scorecard) — operator-gated
 """
+
 from __future__ import annotations
 
 import importlib.util
@@ -44,8 +45,19 @@ from arcengine import GameAction
 
 # the 11 reproduced games + their claimed level as of the FIRST live submission (2026-06-17,
 # 13 levels). Preserved as the fallback used only when no validated package is found.
-CLAIMED_FALLBACK = {"r11l": 1, "lp85": 3, "ls20": 1, "wa30": 1, "cd82": 1, "sp80": 1,
-                    "su15": 1, "tu93": 1, "cn04": 1, "m0r0": 1, "sk48": 1}
+CLAIMED_FALLBACK = {
+    "r11l": 1,
+    "lp85": 3,
+    "ls20": 1,
+    "wa30": 1,
+    "cd82": 1,
+    "sp80": 1,
+    "su15": 1,
+    "tu93": 1,
+    "cn04": 1,
+    "m0r0": 1,
+    "sk48": 1,
+}
 
 
 def _latest_package() -> dict | None:
@@ -55,7 +67,9 @@ def _latest_package() -> dict | None:
     driver auto-tracks conductor refreshes (exp4460 -> exp4473 -> ...) without a code edit."""
     cands = sorted(
         (REPO / "results").glob("experiment_*submission_package*.json"),
-        key=lambda p: p.stat().st_mtime, reverse=True)
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
     for p in cands:
         try:
             d = json.loads(p.read_text())
@@ -82,8 +96,11 @@ def _offline_reached() -> dict:
         d = json.loads(p.read_text())
     except Exception:
         return {}
-    return {g.get("game"): int(g.get("levels_completed", 0) or 0)
-            for g in (d.get("per_game") or []) if g.get("game")}
+    return {
+        g.get("game"): int(g.get("levels_completed", 0) or 0)
+        for g in (d.get("per_game") or [])
+        if g.get("game")
+    }
 
 
 def _build_claimed(mh) -> tuple[dict, dict]:
@@ -107,7 +124,11 @@ def _build_claimed(mh) -> tuple[dict, dict]:
         game = row.get("game")
         if not game or not row.get("env_matched"):
             continue
-        src = row.get("trajectory_path") or row.get("source") or mh.RESOLVED_ARTIFACTS.get(game, mh.GAME_ARTIFACTS.get(game))
+        src = (
+            row.get("trajectory_path")
+            or row.get("source")
+            or mh.RESOLVED_ARTIFACTS.get(game, mh.GAME_ARTIFACTS.get(game))
+        )
         actions = []
         if src:
             try:
@@ -132,32 +153,48 @@ def _build_claimed(mh) -> tuple[dict, dict]:
             adaptive_solvers[game] = str(row.get("adaptive_solver"))
     if not claimed:
         return dict(CLAIMED_FALLBACK), {"source": "hardcoded_fallback_2026_06_17", "capped": []}
-    info = {"source": f"package:{pkg['path']}", "capped": capped,
-            "uncapped_package_total": uncapped_total, "capped_total": sum(claimed.values()),
-            "trajectory_sources": trajectory_sources, "adaptive_solvers": adaptive_solvers}
+    info = {
+        "source": f"package:{pkg['path']}",
+        "capped": capped,
+        "uncapped_package_total": uncapped_total,
+        "capped_total": sum(claimed.values()),
+        "trajectory_sources": trajectory_sources,
+        "adaptive_solvers": adaptive_solvers,
+    }
     return claimed, info
 
 
 def _load_metaharness():
     spec = importlib.util.spec_from_file_location(
-        "mh", str(REPO / "scripts" / "arc3_replay_scorecard_metaharness.py"))
+        "mh", str(REPO / "scripts" / "arc3_replay_scorecard_metaharness.py")
+    )
     mh = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mh)  # type: ignore
     return mh
 
 
 def _arc_api_key() -> str:
-    out = subprocess.run(["sops", "-d", str(REPO / "secrets" / "arc_api.enc.yaml")],
-                         capture_output=True, text=True, check=True).stdout
+    out = subprocess.run(
+        ["sops", "-d", str(REPO / "secrets" / "arc_api.enc.yaml")],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
     import yaml
+
     return str(yaml.safe_load(out)["ARC_API_KEY"])
 
 
 def online_arcade():
     from arc_agi import Arcade
     from arc_agi.base import OperationMode
-    return Arcade(arc_api_key=_arc_api_key(), operation_mode=OperationMode.ONLINE,
-                  environments_dir="", recordings_dir=str(REPO / "recordings" / "arc_live_submit"))
+
+    return Arcade(
+        arc_api_key=_arc_api_key(),
+        operation_mode=OperationMode.ONLINE,
+        environments_dir="",
+        recordings_dir=str(REPO / "recordings" / "arc_live_submit"),
+    )
 
 
 def resolve_game_id(arcade, short: str) -> str:
@@ -168,18 +205,36 @@ def resolve_game_id(arcade, short: str) -> str:
     return short
 
 
-def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh, corpus=None) -> tuple[int, str]:
+def replay_live(
+    arcade, short: str, scorecard_id: str, actions: list[dict], mh, corpus=None
+) -> tuple[int, str]:
     gid = resolve_game_id(arcade, short)
     env = arcade.make(gid, scorecard_id=scorecard_id)
     frame = env.reset()
     from carnot.agentic.arc_agi3_live_adapter import _levels_completed
     from carnot.agentic.arc_agi3_world_model import grid_of
+
     # capture the per-game session guid -> the browser replay URL is
     # https://arcprize.org/replay/<guid> (verified 2026-06-30). Recorded so the
     # artifact carries a directly-viewable link per game.
     guid = str(getattr(frame, "guid", "") or "") if frame is not None else ""
     prev_grid = grid_of(frame) if frame is not None else None
     prev_lvl = _levels_completed(frame) if frame is not None else 0
+    # WARMUP_GAMES: some games' FIRST env.step after reset is silently consumed as a
+    # no-op (arc_solver_kit.py gotcha #4; arc3_replay_scorecard_metaharness.py's own
+    # replay_game() already prepends a throwaway warmup step for these -- see
+    # WARMUP_GAMES = {"sc25"}). This function omitted that step, so every action in a
+    # WARMUP_GAMES trajectory landed one position out of phase against the live game's
+    # actual state. For a state-dependent-controls game (sc25's tank-controls), that
+    # drift compounds and eventually turns a legal action into an illegal one -- this
+    # is the confirmed root cause of the 2026-07-15 sc25 "claimed L5 -> LIVE L-1
+    # MISMATCH" (a live 400 on ACTION4, the 22nd action). Mirror replay_game()'s fix.
+    if short in getattr(mh, "WARMUP_GAMES", set()) and actions and frame is not None:
+        aid0, data0 = mh.normalize(actions[0])
+        if aid0 is not None:
+            frame = env.step(
+                getattr(GameAction, f"ACTION{aid0}"), data=data0, reasoning={"policy": "warmup"}
+            )
     for a in actions:
         aid, data = mh.normalize(a)
         if aid is None:
@@ -206,15 +261,24 @@ def main(argv) -> int:
     mh = _load_metaharness()
     claimed_set, claimed_info = _build_claimed(mh)
     claimed_source = claimed_info["source"]
-    mode = "SUBMIT (will CLOSE scorecard — leaderboard record)" if submit else "VALIDATE (no close, no submission)"
+    mode = (
+        "SUBMIT (will CLOSE scorecard — leaderboard record)"
+        if submit
+        else "VALIDATE (no close, no submission)"
+    )
     print(f"== LIVE ARC-AGI-3 multi-game replay — mode: {mode} ==", flush=True)
     print(f"  replay set source: {claimed_source}", flush=True)
-    print(f"  games: {len(claimed_set)}  claimed levels: {sum(claimed_set.values())} "
-          f"(flat-replay-capped; package nominal {claimed_info.get('uncapped_package_total', '?')})", flush=True)
+    print(
+        f"  games: {len(claimed_set)}  claimed levels: {sum(claimed_set.values())} "
+        f"(flat-replay-capped; package nominal {claimed_info.get('uncapped_package_total', '?')})",
+        flush=True,
+    )
     for c in claimed_info.get("capped", []):
-        print(f"    note: {c['game']} reproduced to L{c['package_levels']} but flat-banked only to "
-              f"L{c['offline_reached']} — claiming L{c['offline_reached']} (deeper levels not yet flat-banked)",
-              flush=True)
+        print(
+            f"    note: {c['game']} reproduced to L{c['package_levels']} but flat-banked only to "
+            f"L{c['offline_reached']} — claiming L{c['offline_reached']} (deeper levels not yet flat-banked)",
+            flush=True,
+        )
 
     arcade = online_arcade()
     scorecard_id = arcade.open_scorecard()
@@ -224,66 +288,110 @@ def main(argv) -> int:
     # records frames to recordings_dir. This is the live-play half of the transition-capture sink.
     try:
         from carnot.agentic.arc_transition_capture import TransitionCorpus
+
         corpus = TransitionCorpus()
     except Exception:
         corpus = None
 
     rows, total, matched = [], 0, 0
     for short, claimed in claimed_set.items():
-        src = claimed_info.get("trajectory_sources", {}).get(short) or mh.RESOLVED_ARTIFACTS.get(short, mh.GAME_ARTIFACTS.get(short))
+        src = claimed_info.get("trajectory_sources", {}).get(short) or mh.RESOLVED_ARTIFACTS.get(
+            short, mh.GAME_ARTIFACTS.get(short)
+        )
         actions = mh.load_actions(src) if src else []
         if not actions:
-            rows.append({"game": short, "claimed": claimed, "live_level": None, "error": "no banked actions"})
+            rows.append(
+                {
+                    "game": short,
+                    "claimed": claimed,
+                    "live_level": None,
+                    "error": "no banked actions",
+                }
+            )
             print(f"    {short:5} claimed L{claimed} -> NO banked actions (skip)", flush=True)
             continue
         t0 = time.time()
         try:
             lvl, guid = replay_live(arcade, short, scorecard_id, actions, mh, corpus=corpus)
         except Exception as e:
-            rows.append({"game": short, "claimed": claimed, "live_level": None, "error": repr(e)[:140]})
+            rows.append(
+                {"game": short, "claimed": claimed, "live_level": None, "error": repr(e)[:140]}
+            )
             print(f"    {short:5} claimed L{claimed} -> ERROR {repr(e)[:70]}", flush=True)
             continue
         ok = lvl >= claimed
         matched += int(ok)
         total += max(0, lvl)
-        rows.append({"game": short, "claimed": claimed, "live_level": lvl, "env_match": ok,
-                     "guid": guid, "replay_url": f"https://arcprize.org/replay/{guid}" if guid else None})
-        print(f"    {short:5} claimed L{claimed} -> LIVE L{lvl}  {'MATCH' if ok else 'MISMATCH'}  "
-              f"[{time.time()-t0:.0f}s]  {('https://arcprize.org/replay/' + guid) if guid else ''}", flush=True)
+        rows.append(
+            {
+                "game": short,
+                "claimed": claimed,
+                "live_level": lvl,
+                "env_match": ok,
+                "guid": guid,
+                "replay_url": f"https://arcprize.org/replay/{guid}" if guid else None,
+            }
+        )
+        print(
+            f"    {short:5} claimed L{claimed} -> LIVE L{lvl}  {'MATCH' if ok else 'MISMATCH'}  "
+            f"[{time.time() - t0:.0f}s]  {('https://arcprize.org/replay/' + guid) if guid else ''}",
+            flush=True,
+        )
 
     if corpus is not None:
         try:
             captured = corpus.flush()
-            print(f"  captured live transitions -> corpus: {sum(captured.values()) if captured else 0} new",
-                  flush=True)
+            print(
+                f"  captured live transitions -> corpus: {sum(captured.values()) if captured else 0} new",
+                flush=True,
+            )
         except Exception:
             pass
 
-    print(f"\n  LIVE TOTAL: {total} levels; {matched}/{len(claimed_set)} games env-matched", flush=True)
+    print(
+        f"\n  LIVE TOTAL: {total} levels; {matched}/{len(claimed_set)} games env-matched",
+        flush=True,
+    )
 
     submitted = False
     if submit:
         card = arcade.close_scorecard(scorecard_id)
         submitted = card is not None
-        print(f"  SUBMITTED: scorecard CLOSED -> leaderboard record ({type(card).__name__ if card else 'None'})", flush=True)
+        print(
+            f"  SUBMITTED: scorecard CLOSED -> leaderboard record ({type(card).__name__ if card else 'None'})",
+            flush=True,
+        )
     else:
-        print("  NOT submitted (scorecard left open; no leaderboard record). Re-run with --submit to record.", flush=True)
+        print(
+            "  NOT submitted (scorecard left open; no leaderboard record). Re-run with --submit to record.",
+            flush=True,
+        )
 
     out = REPO / "results" / "arc3_live_submit.json"
-    out.write_text(json.dumps({
-        "experiment": "arc3_live_submit", "mode": "submit" if submit else "validate",
-        "scorecard_id": scorecard_id, "replay_base": "https://arcprize.org/replay/",
-        "live_total_levels": total,
-        "games_env_matched": matched, "games": len(claimed_set),
-        "claimed_total_levels": sum(claimed_set.values()), "per_game": rows,
-        "replay_set_source": claimed_source, "claimed_caps": claimed_info.get("capped", []),
-        "uncapped_package_total": claimed_info.get("uncapped_package_total"),
-        "leaderboard_submitted": submitted,
-        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "trajectory_sources": claimed_info.get("trajectory_sources", {}),
-        "adaptive_solvers": claimed_info.get("adaptive_solvers", {}),
-        "inference_substrate": "live_arc_agi3_env_multi_game_replay",
-    }, indent=2))
+    out.write_text(
+        json.dumps(
+            {
+                "experiment": "arc3_live_submit",
+                "mode": "submit" if submit else "validate",
+                "scorecard_id": scorecard_id,
+                "replay_base": "https://arcprize.org/replay/",
+                "live_total_levels": total,
+                "games_env_matched": matched,
+                "games": len(claimed_set),
+                "claimed_total_levels": sum(claimed_set.values()),
+                "per_game": rows,
+                "replay_set_source": claimed_source,
+                "claimed_caps": claimed_info.get("capped", []),
+                "uncapped_package_total": claimed_info.get("uncapped_package_total"),
+                "leaderboard_submitted": submitted,
+                "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "trajectory_sources": claimed_info.get("trajectory_sources", {}),
+                "adaptive_solvers": claimed_info.get("adaptive_solvers", {}),
+                "inference_substrate": "live_arc_agi3_env_multi_game_replay",
+            },
+            indent=2,
+        )
+    )
     print(f"  wrote {out.relative_to(REPO)}", flush=True)
     return 0
 
