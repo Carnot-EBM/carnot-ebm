@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.510",
+  "generated_at": "2026-07-15T05:00:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 275.1,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile .510 prospective FR-11, ARC, Rust sampler, specification, and operatio",
+      "duration_minutes": 114.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Port the promoted one-axis replica-exchange sampler to Rust with exact Python pa",
+      "duration_minutes": 42.63,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Unconditional registry-rotated ARC live-agent self-discovery level-up attempt",
+      "duration_minutes": 33.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5714 exact parity: Rust one-axis hard-instance quality and restart p",
+      "duration_minutes": 21.88,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Build a sealed exact-constraint canary with authenticated local SOTA GGUF CUDA i",
+      "duration_minutes": 18.72,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone execution completed 10 experiments in 275.1 minutes; 2 were compute-bound. In the bounded slowest list, the compute-bound entries took 33.3 and 18.72 minutes, but causal phase timing was unavailable. The locked task-conditioned idle indicator is false, and no concurrent multi-model task is identified, so neither utilization inefficiency nor a DualGPURunner miss is established.",
+  "bottlenecks_identified": [
+    "The synthesis-only reconciliation task was the largest recorded slow path at 114.9 minutes, making reconciliation throughput the clearest operational bottleneck.",
+    "The synthesis-only Rust parity port was the next-longest task at 42.63 minutes, but the supplied data has no phase breakdown showing where that time accumulated.",
+    "The compute-bound entries took 33.3 and 18.72 minutes; the supplied data identifies their workloads but does not provide causal phase telemetry for either duration."
+  ],
+  "improvements_suggested": [
+    "Create a schema-validated reconciliation scaffold that is updated throughout the milestone to reduce end-loaded closeout assembly.",
+    "Add phase-level timers and dependency-wait receipts to every experiment, with explicit stages for reconciliation and parity workflows.",
+    "Record task-scoped GPU utilization, declared model concurrency, and runner selection for every compute-bound task; select DualGPURunner only for concurrent multi-model work.",
+    "Dispatch dependency-independent synthesis work concurrently when the milestone graph permits it."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Continuously assemble and schema-check reconciliation evidence before closeout.",
+    "Emit phase-level timing and dependency-wait receipts for every experiment.",
+    "Capture task-scoped GPU, model-concurrency, and runner-selection telemetry for compute-bound work."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "The savings estimate is conditional: halving the 114.9-minute reconciliation workload would save 57.45 minutes, or 20.9% of 275.1, rounded down to 20%. The evidence does not establish that instrumentation or scaffolding alone will achieve that reduction."
+}
