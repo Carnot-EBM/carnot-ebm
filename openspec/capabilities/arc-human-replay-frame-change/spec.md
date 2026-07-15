@@ -5663,6 +5663,39 @@ Required field principles: see `FIELD_PRINCIPLES` in
 historical-reference fields, each principle-annotated per CLAUDE.md's Principle-Annotated
 Artifact Fields discipline).
 
+**Follow-up (2026-07-14, same day) -- sample-size fairness, n=1 upgraded to n=3.** The operator
+asked a sharp, correct methodological question: "If the final was 0/1 plan rate vs the 9B's 1/3,
+does that mean that the 9B was allowed 3 plans? Should we allow this model the same?" The n=1
+result above was real but statistically uninformative on its own: with a single draw, observing
+0/1 is unsurprising (67% likely) even if Ternary Bonsai's TRUE underlying success rate matched
+the 9B's exactly (1/3 ~= 0.33) -- a single data point cannot distinguish "worse than the 9B" from
+"as good as the 9B, unlucky draw." The "0/1 vs 1/3" framing invited an implicit rate comparison
+the sample size did not support.
+
+Since Ternary Bonsai runs fast on the real 3090 (~213s/attempt, unlike exp5705's ~40min/attempt
+on the iGPU, where a full n=3 genuinely risked losing all data to a timeout), re-running at
+`n_repeats=3` to match exp5599's 9B baseline sample size exactly was cheap and the honest fix --
+not a caveat, an actual re-measurement. **Real n=3 result:** all three independent draws reached
+a real level-up (`actions_to_levelup=7` on every draw -- the exploration path is evidently stable
+for this game/policy), and all three replicated the SAME failure shape seen in the n=1 run: round
+1 (`induce`) produced valid, parseable code every time (`proposer_ok=true`), rejected as
+`degenerate_goal_predicate` every time; round 2 (`refactor`) then failed after 3 retries every
+time. `mean_reinduce_duration_s=168.805` (156.4s / 165.9s / 184.2s per draw -- consistent, not
+one outlier). **`arm_summary.plan_rate_given_levelup = 0/3 = 0.0`.**
+
+**This is now the real, apples-to-apples comparison the operator asked for: Ternary Bonsai 0/3
+vs the frozen 9B's 1/3 -- same sample size, same task, same methodology.** The n=3 result also
+sharpens the finding beyond what n=1 could show: the failure is not a one-off unlucky draw but a
+REPRODUCIBLE failure mode -- the SAME induced world model bug (a goal predicate that does not
+discriminate win states) recurs identically across three independent exploration-and-induction
+attempts. That determinism is itself informative: it points at a systematic gap in this
+candidate's ability to produce a semantically correct goal condition for this game, not
+stochastic noise that a larger n might average away. Honest verdict unchanged in direction
+(`ternary_bonsai_plans_less_reliably_than_current_9b`), now backed by a fair-sample-size
+comparison rather than a single provisional draw. The n=1 result remains in this spec as
+disclosed provisional context (per "never remove existing content"), superseded by this n=3
+measurement as the citable comparison.
+
 #### SCENARIO-ARC-WMTE-5599-3-THIRD-PARTY-TERNARY-ON-REAL-GPU
 
 Given a third-party llama.cpp fork is required to load a novel ternary quantization format, and
