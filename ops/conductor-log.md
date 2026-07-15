@@ -11780,3 +11780,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-15 00:40 UTC | Gated on Exp5709 prospective promotion: isolated F | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5709-fr11-prospective-shadow-stream, exp5 |
 | 2026-07-15 00:57 UTC | Qualify zero-variance-safe relational placement go | OK | 112 passed, 1 warning in 14.32s |
 | 2026-07-15 00:59 UTC | Gated on Exp5709 prospective promotion: isolated F | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5709-fr11-prospective-shadow-stream, exp5 |
+| 2026-07-15 01:22 UTC | Gated on Exp5711 exact route: matched known-level  | OK | 95 passed, 1 warning in 11.95s |
+| 2026-07-15 01:24 UTC | Gated on Exp5709 prospective promotion: isolated F | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5709-fr11-prospective-shadow-stream, exp5 |
