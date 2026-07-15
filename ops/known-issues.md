@@ -197,6 +197,31 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    test. Full live-submission wiring (this used the offline dev sim per the ARC Live-Path Reachability
    Discipline) is a separate, later step, not done here.
 
+   **NEXT STEP implemented + real-GPU re-tested 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-3):**
+   `LLMStrategyProposer.reflect()` now splices an explicit `ANTI-STAGNATION WARNING` into its prompt
+   (naming the specific taboo strategies, demanding a genuinely different action category) whenever a
+   softer signal fires -- 2 consecutive null outcomes OR a non-empty taboo set -- deliberately earlier
+   than `AntiStagnationDiversityController`'s hard collapse gate (4 consecutive null outcomes). Re-ran
+   the EXACT same script (`scripts/outer_loop_sge_smoke_test.py`, g50t, budget=46, real
+   `gemma-4-12B-it` GGUF on the CUDA-pinned port) that produced the original null, prior run's output
+   preserved unmodified at `results/outer_loop_sge_smoke_test_pre_5699_3_nudge_baseline.json` for an
+   honest before/after. **Result: still an honest null, `max_level_reached=2`, same as baseline** --
+   the nudge did NOT unstick this run. One layer deeper, a genuine new finding: the router's own
+   `rank()` was only called 11 times within the 46-action budget (most `next_move()` calls in this
+   policy configuration don't reach the SGE candidate router at all), so the nudge only got ONE chance
+   to fire (the `reflect_every=6` boundary at router-step 6) -- and that single reflect() completion
+   FAILED TO PARSE (`revised_strategy` stayed empty), so the nudge's advice never actually propagated
+   into `_reflection_note` / subsequent proposals this run. The propose-side taboo filter (pre-existing,
+   not part of this fix) DID fire correctly at the same step (`tabooed_proposal_count=1`), confirming
+   the anti-stagnation machinery is live and reachable end-to-end with a real model -- the gap is
+   specifically the reflect-call's reply format breaking down when the nudge is present, not the
+   wiring. **Not yet investigated:** whether the added nudge text pushes the model past what it can
+   reliably format-comply with with only `max_tokens=64` of output budget, or whether this is a
+   pre-existing reflect-parse fragility the nudge merely had bad luck exposing on its one opportunity
+   this run (n=1 reflect call is not enough to tell). A real next step, if picked up again: either
+   raise `reflect()`'s output token budget specifically on the nudge-fired path, or run a LONGER budget
+   so `reflect_every` boundaries fire more than once and n>1 reflect-parse outcomes can be compared.
+
    **GPU-offload gotcha found + fixed 2026-07-10 (outer-loop, durable lesson for future GPU-backed outer-
    loop work):** `LocalGGUFProposer`'s default resolution (`_generator_server_and_env()` in
    `arc_executable_world_model.py`) intentionally defaults to the AMD iGPU HIP build unless
