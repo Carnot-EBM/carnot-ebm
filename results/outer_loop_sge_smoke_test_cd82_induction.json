@@ -1,0 +1,3480 @@
+{
+  "smoke_test": "outer_loop_sge_smoke_test",
+  "game": "cd82",
+  "router_mode": "sge",
+  "induction_enabled": true,
+  "induction_attempts": [
+    {
+      "reason": "stall",
+      "goal_level": 1,
+      "transition_count": 25,
+      "dsl_transition_count": 25,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "planned": false,
+      "skipped": "hidden_state_trust_below_threshold",
+      "ttt_prior_engine": {
+        "backend": "cnn",
+        "n_transitions": 25,
+        "warm_start": false,
+        "prior_transition_count": 0,
+        "prior_loaded": true,
+        "heldout_accuracy": 0.3333,
+        "heldout_cell_recall": 0.414,
+        "trust_threshold": 0.5,
+        "trust_metric": "cell_recall",
+        "gate": "FAIL"
+      },
+      "trust_energy": 126.330354,
+      "heldout_change_consistency": 0.016529,
+      "heldout_accuracy": 0.125,
+      "correct_changed_cells": 10,
+      "binary_gate_pass": false
+    }
+  ],
+  "induction_attempts_not_skipped": 0,
+  "prior_levels_reproduced": 1,
+  "target_level": 2,
+  "methodology_note": "prior_levels_reproduced/target_level are INFORMATIONAL labels from ops/arc_solve_registry.yaml (what OTHER solve methods reached for this game) -- this harness does NOT seed the env at that level; it always explores from a true cold env.reset(). real_initial_level/real_max_level_observed are the actual measured trajectory and are what leveled_up is computed from.",
+  "real_initial_level": 0,
+  "real_max_level_observed": 0,
+  "leveled_up": false,
+  "max_level_reached": 0,
+  "attempts": 44,
+  "duration_s": 36.84025764465332,
+  "llm_strategy_proposer_used_any_step": true,
+  "reflection_nudge_fired_any_step": true,
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    "gemma-4-12B-it"
+  ],
+  "action_log": [
+    {
+      "step": 2,
+      "action": 6,
+      "data": {
+        "x": 12,
+        "y": 12
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 3,
+      "action": 6,
+      "data": {
+        "x": 43,
+        "y": 4
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 4,
+      "action": 6,
+      "data": {
+        "x": 12,
+        "y": 12
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 5,
+      "action": 6,
+      "data": {
+        "x": 31,
+        "y": 26
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 6,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 7,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 8,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 9,
+      "action": 6,
+      "data": {
+        "x": 7,
+        "y": 10
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 10,
+      "action": 6,
+      "data": {
+        "x": 31,
+        "y": 38
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 11,
+      "action": 6,
+      "data": {
+        "x": 7,
+        "y": 10
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 12,
+      "action": 6,
+      "data": {
+        "x": 31,
+        "y": 28
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 13,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 14,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 15,
+      "action": 6,
+      "data": {
+        "x": 37,
+        "y": 4
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 16,
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 27
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 17,
+      "action": 6,
+      "data": {
+        "x": 19,
+        "y": 38
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 18,
+      "action": 6,
+      "data": {
+        "x": 21,
+        "y": 38
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 19,
+      "action": 6,
+      "data": {
+        "x": 19,
+        "y": 38
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 20,
+      "action": 6,
+      "data": {
+        "x": 7,
+        "y": 5
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 21,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      }
+    },
+    {
+      "step": 22,
+      "action": 6,
+      "data": {
+        "x": 32,
+        "y": 32
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 23,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 24,
+      "action": 6,
+      "data": {
+        "x": 32,
+        "y": 32
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 25,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 26,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 27,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 28,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 29,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 30,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 31,
+      "action": 4,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 32,
+      "action": 5,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 34,
+      "action": 4,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {}
+    },
+    {
+      "step": 35,
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 49
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 36,
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 47
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 37,
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 49
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 38,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 39,
+      "action": 2,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      }
+    },
+    {
+      "step": 40,
+      "action": 6,
+      "data": {
+        "x": 42,
+        "y": 27
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      }
+    },
+    {
+      "step": 41,
+      "action": 6,
+      "data": {
+        "x": 40,
+        "y": 29
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      }
+    },
+    {
+      "step": 42,
+      "action": 6,
+      "data": {
+        "x": 42,
+        "y": 27
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      }
+    },
+    {
+      "step": 43,
+      "action": 1,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      }
+    },
+    {
+      "step": 44,
+      "action": 3,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      }
+    },
+    {
+      "step": 45,
+      "action": 5,
+      "data": null,
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      }
+    },
+    {
+      "step": 46,
+      "action": 6,
+      "data": {
+        "x": 43,
+        "y": 38
+      },
+      "level_before": 0,
+      "level_after": 0,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing an action at a specific coordinate produces a visible change or feedback.",
+        "Test if performing an action at a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2
+      }
+    }
+  ],
+  "diagnostics_log": [
+    {
+      "step": 1
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 1,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a change in the game state or environment.",
+        "Test if providing specific coordinates triggers a change in the game state.",
+        "Test if providing coordinates triggers a change in the game state or environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 0,
+          "strategy_text_count": 0,
+          "unique_normalized_strategy_count": 0,
+          "max_normalized_strategy_repeat": 0,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 0,
+          "max_action_signature_repeat": 0,
+          "consecutive_null_outcomes": 0
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 2,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if movement to a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 1,
+          "strategy_text_count": 1,
+          "unique_normalized_strategy_count": 1,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 1.0,
+          "unique_action_signature_count": 1,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 1
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 3,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 2,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47058823529411764,
+          "unique_action_signature_count": 2,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 2
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47058823529411764,
+          "unique_action_signature_count": 3,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47058823529411764,
+          "unique_action_signature_count": 3,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47058823529411764,
+          "unique_action_signature_count": 3,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47058823529411764,
+          "unique_action_signature_count": 3,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47058823529411764,
+          "unique_action_signature_count": 3,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 4,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if moving to a specific coordinate triggers a change in the game state.",
+        "Test if specific coordinates trigger a change in the game state or environment.",
+        "Test if providing specific coordinates triggers an interaction or movement in the game environment."
+      ],
+      "votes_by_index": {
+        "5": 3
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": false
+        },
+        "triggered_signals": [],
+        "metrics": {
+          "history_window_size": 3,
+          "strategy_text_count": 2,
+          "unique_normalized_strategy_count": 2,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47058823529411764,
+          "unique_action_signature_count": 3,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 3
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 5,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 4,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 1,
+          "consecutive_null_outcomes": 4
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 6,
+      "llm_strategy_proposer_used": false,
+      "strategy_texts": [],
+      "votes_by_index": {},
+      "parse_failure_count": 3,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": false,
+      "reflection_trigger": null,
+      "reflection_nudge_fired": false,
+      "suppressed_coordinate_count": 1,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 5,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 2,
+          "consecutive_null_outcomes": 5
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 7,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing a movement action results in a change of state or position."
+      ],
+      "votes_by_index": {
+        "5": 1
+      },
+      "parse_failure_count": 2,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 6,
+          "strategy_text_count": 3,
+          "unique_normalized_strategy_count": 3,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.3613445378151261,
+          "unique_action_signature_count": 4,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 6
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.5078652513637033,
+          "unique_action_signature_count": 5,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if performing a movement action results in a change of state or position",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.5078652513637033,
+          "unique_action_signature_count": 5,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if performing a movement action results in a change of state or position",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.5078652513637033,
+          "unique_action_signature_count": 5,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if performing a movement action results in a change of state or position",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.5078652513637033,
+          "unique_action_signature_count": 5,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if performing a movement action results in a change of state or position",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.5078652513637033,
+          "unique_action_signature_count": 5,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if performing a movement action results in a change of state or position",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 8,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if providing coordinates triggers a response or change in the game state.",
+        "I will perform a neutral action to see if the game state changes or provides initial feedback.",
+        "I will test if providing coordinates triggers a response or change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2,
+        "0": 1
+      },
+      "parse_failure_count": 0,
+      "completer_failure_count": 0,
+      "reflection_note": "",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 7,
+          "strategy_text_count": 4,
+          "unique_normalized_strategy_count": 4,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.5078652513637033,
+          "unique_action_signature_count": 5,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 7
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if performing a movement action results in a change of state or position",
+          "test if providing coordinates triggers a change in the game state or environment"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    },
+    {
+      "step": 9,
+      "llm_strategy_proposer_used": true,
+      "strategy_texts": [
+        "Test if performing an action at a specific coordinate produces a visible change or feedback.",
+        "Test if performing an action at a specific coordinate triggers a change in the game state."
+      ],
+      "votes_by_index": {
+        "5": 2
+      },
+      "parse_failure_count": 1,
+      "completer_failure_count": 0,
+      "reflection_note": "Perform a high-intensity, multi-action sequence at a central grid coordinate to see if a threshold of actions is required.",
+      "reflected_this_call": true,
+      "reflection_trigger": "early_stagnation_signal",
+      "reflection_nudge_fired": true,
+      "suppressed_coordinate_count": 0,
+      "anti_stagnation": {
+        "collapse_detected": false,
+        "signals": {
+          "repeated_normalized_strategy_text": false,
+          "low_pairwise_strategy_distance": false,
+          "repeated_action_proposals": false,
+          "consecutive_null_outcomes": true
+        },
+        "triggered_signals": [
+          "consecutive_null_outcomes"
+        ],
+        "metrics": {
+          "history_window_size": 8,
+          "strategy_text_count": 5,
+          "unique_normalized_strategy_count": 5,
+          "max_normalized_strategy_repeat": 1,
+          "mean_pairwise_strategy_distance": 0.47628040689960194,
+          "unique_action_signature_count": 6,
+          "max_action_signature_repeat": 3,
+          "consecutive_null_outcomes": 8
+        },
+        "collapse_definition": {
+          "signals": [
+            "repeated_normalized_strategy_text",
+            "low_pairwise_strategy_distance",
+            "repeated_action_proposals",
+            "consecutive_null_outcomes"
+          ],
+          "thresholds": {
+            "window_size": 8,
+            "repeated_normalized_strategy_count": 3,
+            "max_mean_pairwise_strategy_distance": 0.35,
+            "repeated_action_proposal_count": 4,
+            "consecutive_null_outcomes": 4,
+            "min_triggered_signals": 3
+          }
+        },
+        "taboo_set": [
+          "test if movement to a specific coordinate triggers a change in the game state",
+          "test if moving to a specific coordinate triggers a change in the game state",
+          "test if performing a movement action results in a change of state or position",
+          "test if providing coordinates triggers a change in the game state or environment",
+          "test if providing coordinates triggers a response or change in the game state"
+        ],
+        "tabooed_proposal_count": 0,
+        "taboo_policy": "normalize recently failed strategy text from null outcomes; ignore matching LLM proposals before vote aggregation"
+      },
+      "win_check_used_for_ranking": false
+    }
+  ]
+}
