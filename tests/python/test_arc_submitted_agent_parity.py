@@ -224,6 +224,19 @@ def test_req_arc_fcp_5699_11_sge_candidate_router_disabled_by_default():
     assert not isinstance(pol.explorer.candidate_router, SGECandidateRouter)
 
 
+def test_req_arc_fcp_5699_12_env_var_enables_sge_without_touching_module_flag(monkeypatch):
+    """REQ-ARC-FCP-5699-12: CARNOT_ARC_SGE_CANDIDATE_ROUTER=1 lets a subprocess-based
+    measurement (the local submission gate) opt into SGE for a single run WITHOUT
+    flipping the committed SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED default."""
+    assert m._sge_candidate_router_requested() is False
+    monkeypatch.setenv("CARNOT_ARC_SGE_CANDIDATE_ROUTER", "1")
+    assert m._sge_candidate_router_requested() is True
+    assert m.SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED is False  # module default untouched
+    router = m._load_submitted_candidate_router(game_id="sp80")
+    assert isinstance(router, SGECandidateRouter)
+    assert router.game_id == "sp80"
+
+
 def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_config():
     """_load_sge_candidate_router() must build a LocalGGUFProposer configured IDENTICALLY
     to _proposer()'s own lazy default (same repo_substr/mtp/kv_quant/no_think_prefix) so it
@@ -408,5 +421,20 @@ def test_req_arc_fcp_5699_11_spec_declares_sge_live_path_wiring() -> None:
         "SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED",
         "_load_sge_candidate_router",
         "sge_candidate_router_wired",
+    ):
+        assert marker in section
+
+
+def test_req_arc_fcp_5699_12_spec_declares_real_live_path_ab() -> None:
+    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
+    spec = spec_path.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-ARC-FCP-5699-12") : spec.index("### REQ-ARC-WMTE-5596")]
+
+    for marker in (
+        "REQ-ARC-FCP-5699-12",
+        "SCENARIO-ARC-FCP-5699-12-REAL-LIVE-PATH-AB-CONFIRMS-NO-WIN-AT-REAL-COST",
+        "arc_sge_live_path_ab.py",
+        "levels=0, reached=L0",
+        "3.9x",
     ):
         assert marker in section
