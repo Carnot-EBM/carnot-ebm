@@ -806,6 +806,30 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    (c) check whether the codebase's existing refactor/repair-loop path (feeds mismatches back
    for a second pass) is exercised for tier 2's first-contact stall-triggered induction, since a
    self-correcting second pass could catch undefined-variable bugs that raising k alone invites.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-24, answers (c) directly -- no new run
+   needed, pure code reading):** the refactor loop (`execute_bounded_llm_reinduction`,
+   `arc_llm_reinduction.py:654`, up to 3 rounds of induce-then-refactor with real counterexample
+   feedback) has exactly ONE call site (`arc_competition_agent.py:3610`), entirely inside the
+   `level_up_reinduction`/`next_level_episode` branch that stall-triggered (first-contact)
+   attempts NEVER take. **First-contact induction gets exactly one shot, zero refinement rounds,
+   ever.** A SECOND, sharper finding: `_repair_degenerate_goal` (`arc_llm_reinduction.py:606`) --
+   a mechanism the codebase ALREADY built specifically to rescue "a constant `return False`"
+   predicate (cd82's exact pathology, per its own docstring, written 2026-06-25, a month before
+   this REQ chain independently found the same failure) -- is ALSO gated by
+   `if previous_level_complete_grid is None: return None`, its very first line. **Net: tier 1's
+   goal-energy gap (5699-18), tier 2's goal-predicate starvation (5699-22), and the codebase's own
+   repair infrastructure (this REQ) are three surfacings of the SAME single structural gap** (no
+   positive win example exists before the first win, by definition), not three independent
+   problems. The one exception: the DYNAMICS-side refactor rounds operate on transition
+   mismatches (which DO exist pre-first-win), so remain a genuinely untested, plausible lever for
+   the dynamics-half failures specifically -- just never wired into the path that needs it.
+   Concrete next step if picked up again: wire a DEV-ONLY opt-in path routing stall-triggered
+   induction through `execute_bounded_llm_reinduction` (with `previous_level_complete_grid=None`,
+   `structural_goal_provider=None` -- both confirmed handled gracefully by the function without
+   crashing) instead of the current single-shot path, tested in ISOLATION from the `k` fix (at
+   k=8 default) to avoid confounding two variables, then live A/B on g50t for direct
+   comparability against the 5699-23 baseline.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
