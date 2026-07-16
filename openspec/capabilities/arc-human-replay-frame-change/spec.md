@@ -7019,6 +7019,85 @@ reversing the premature stale-read conclusion -- while the sge arm fails via a s
 `TimeoutError` that bypasses the detection code entirely, establishing that `max_tokens` and
 `timeout` are two distinct axes that both need raising together, not either one alone
 
+### REQ-ARC-FCP-5699-29: Raising Both Levers Does Not Fix It Either -- The Bottleneck Is Not Resource Budget
+
+REQ-ARC-FCP-5699-28's own next step: raise both `max_tokens` and `timeout` together and re-measure.
+
+**Implementation.** `_proposer()`'s lazy default (`arc_competition_agent.py` ~line 3318-3340, the
+construction site used by BOTH production and every A/B script in this REQ chain via
+`proposer=None`) gained two DEV-ONLY env overrides: `CARNOT_ARC_INDUCE_MAX_TOKENS` (unset -> 2560,
+byte-identical) and `CARNOT_ARC_INDUCE_TIMEOUT` (unset -> 300, byte-identical -- previously
+implicit via the `LocalGGUFProposer` class default, now explicit). 2 new tests verify the
+unset-default and the override both work correctly.
+
+**Live re-run, g50t, `budget=250`, `CARNOT_ARC_STALL_REFACTOR_LOOP=1`, k=8 default,
+`CARNOT_ARC_INDUCE_MAX_TOKENS=4096` (the `LocalGGUFProposer` class default used elsewhere in this
+codebase, 1.6x the prior 2560), `CARNOT_ARC_INDUCE_TIMEOUT=600` (2x the prior 300s).** Read only
+after confirmed-genuine completion this time (`ps aux` showed the process had exited AND the
+task's own log showed the `"wrote results/..."` line, per the discipline the REQ-ARC-FCP-5699-28
+stale-read mistake established as mandatory going forward):
+
+```
+baseline round 2 (refactor): FAILS -- "local model code unusable after 3 tries (missing ('engine', 'is_level_complete') in output)" -- NO n_predict/truncated marker
+sge round 2 (refactor):      FAILS -- IDENTICAL message -- NO n_predict/truncated marker, NO TimeoutError this time
+```
+
+**Decisive: raising both levers does NOT fix it, and this time NEITHER failure mode from the prior
+two runs recurred.** No `[HIT n_predict=...]` marker on either arm (the model completed within its
+now-4096-token budget) and no `TimeoutError` (the sge arm's prior 300s timeout, now raised to 600s,
+was not hit either). Both arms simply produced output that, once again, does not contain the
+required `def engine`/`def is_level_complete` after 3 tries -- the SAME generic failure as every
+prior measurement in this REQ chain, just now with confirmed non-truncated, non-timed-out
+generations. **This closes the resource-budget hypothesis definitively**: REQ-ARC-FCP-5699-28's
+`n_predict` hit was real (confirmed on that specific measurement) but was NOT the dominant or sole
+cause -- with ample room and time, the model still fails to produce parseable required code when
+responding to the counterexample-heavy refactor prompt. Duration also confirms more room was
+genuinely used: baseline round-1 took long enough that the FULL script run reached 983.56s (vs
+648-770s at the smaller budget), consistent with longer generations actually happening, not the
+override silently failing to apply.
+
+**What this narrows -- the complete picture across REQ-ARC-FCP-5699-23 through -29.** Every
+"cheap, well-evidenced" lever this chain identified has now been tried and correctly ruled out on
+g50t's specific refactor-loop failure: more per-action training examples (5699-23, high-variance,
+not reliable), the refactor loop's own repair mechanism (5699-25, fires correctly but the repair
+round itself fails), a genuine JSON-encoding bug in the counterexample payload (5699-26, fixed but
+insufficient alone), and now output-token/wall-clock budget (this REQ, ruled out definitively).
+None of these were wasted effort -- each is either a real, kept bug fix (5699-26), real
+infrastructure (5699-27's detection, 5699-28/29's budget levers, now correctly justified as NOT
+needed further here), or a real negative result narrowing the hypothesis space. What remains
+untested is qualitatively different: actually reading the model's RAW completion text on a failed
+try (not just whether it parsed) to see what it's actually producing -- the one diagnostic
+REQ-ARC-FCP-5699-25 named at the start of this sub-thread and never yet executed.
+
+**Honest scope limit.** n=1 game (g50t), n=1 measurement per configuration across this whole
+sub-thread. None of REQ-ARC-FCP-5699-23 through -29's fixes have been tested on sp80 or cd82 --
+whether any of them (individually or combined) would behave differently on a game with a different
+induced-model/counterexample profile is completely open.
+
+**Concrete next step if this thread continues, per the operator's own instruction to name this
+choice explicitly rather than default to another sub-fix.** Two genuinely different directions,
+not more of the same: (a) DEPTH -- capture and read the actual raw completion text from a failed
+refactor try (the one diagnostic never yet run in this whole sub-thread) to see WHY the model
+doesn't emit the required functions, which could reveal something structurally different from
+every resource-budget hypothesis tried so far; (b) BREADTH -- test whether ANY of REQ-ARC-FCP-
+5699-23 through -29's fixes (the JSON bug fix alone, at minimum, since it's a real, kept,
+unconditional improvement) change the picture on sp80/cd82, since all 7 REQs in this sub-thread
+have measured ONLY g50t.
+
+#### SCENARIO-ARC-FCP-5699-29-RAISED-BUDGETS-DO-NOT-FIX-IT-RESOURCE-HYPOTHESIS-CLOSED
+
+Given REQ-ARC-FCP-5699-28 confirmed `max_tokens` truncation was real on one specific measurement
+and named raising both `max_tokens` and `timeout` together as the direct next test
+When g50t is re-measured with `CARNOT_ARC_INDUCE_MAX_TOKENS=4096` and `CARNOT_ARC_INDUCE_
+TIMEOUT=600`, both arms, read only after confirmed-genuine completion (learning directly from the
+prior stale-read mistake)
+Then NEITHER arm shows an n_predict-limit marker NOR a TimeoutError this time -- both generations
+completed within their (larger) budget and time allowance -- yet round 2 still fails with the
+same generic "missing required functions" message on both arms, closing the resource-budget
+hypothesis definitively: the bottleneck is not token count or wall-clock time, and the remaining
+untested diagnostic is reading the model's actual raw output directly rather than trying another
+budget-shaped fix
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

@@ -3328,13 +3328,20 @@ class E3AgentPolicy:
             # keeps that many of the top weight layers in system RAM (mmap'd, prefilled in page cache) instead
             # of VRAM, freeing GPU memory for the q8 KV-cache + the live CNN dynamics fit that coexists with
             # the LLM on the shared 16GB eval GPU. Acceptable because the ARC eval has no internal time limit.
+            # DEV-ONLY overrides (REQ-ARC-FCP-5699-28, unset -> 2560/300, byte-identical to
+            # before): live evidence (a g50t refactor-loop round genuinely hit "[HIT
+            # n_predict=2560 OUTPUT LIMIT before completing]") confirmed max_tokens is a real
+            # bottleneck for the induce/refactor calls this proposer serves; the sge arm's
+            # separate 300s TimeoutError showed the existing timeout is already sometimes
+            # insufficient at the CURRENT budget. Both need to move together, not just one.
             self.proposer = LocalGGUFProposer(
                 repo_substr="Qwen3.5-9B-MTP",
                 model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
                 mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
                 kv_quant="q8_0",
                 no_think_prefix="/no_think\n",
-                max_tokens=2560,
+                max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "2560")),
+                timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "300")),
                 n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             )
         return self.proposer
