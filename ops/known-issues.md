@@ -601,6 +601,29 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    (tunable-parameter fix) vs. still exhausts (points at rollout divergence, which the 1-step
    held-out cell-recall gate can't detect); (b) repeat on 1-2 more unsolved games to see if
    `max_nodes_reached` is the dominant termination reason generally.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-16, answers 5699-15's cheapest
+   distinguishing test):** added a DEV-ONLY `CARNOT_ARC_PLAN_MAX_NODES` env override to
+   `_call_plan_in_model` (unset in production, byte-identical default; guarded by a
+   `_planner_accepts_max_nodes` signature check same as the `goal_energy`/`diagnostics` kwargs),
+   re-ran sp80 `budget=250` with `CARNOT_ARC_PLAN_MAX_NODES=100000` (5x the default). **Result:
+   still `termination_reason="max_nodes_reached"` at `nodes_expanded` ~100000 for BOTH arms
+   independently (100015/100001), `planned=false`.** 5x more search budget did NOT find a plan --
+   this rules out the tunable-parameter-fix hypothesis. Combined with 5699-15 (the goal predicate
+   IS real, `is_level_complete_was_none=false`), the sharper remaining explanation is that the
+   induced CNN-prior model's multi-step rollout does not represent a discoverable path to its own
+   goal predicate within a budget this large -- either the model is locally accurate but not
+   globally coherent over many compounded steps, or the induced goal predicate doesn't correspond
+   to any state the model's own transition function can actually reach from `root_grid` (a
+   dynamics/goal self-consistency gap, not a search problem). **Distinguishing between those two
+   would require inspecting the model's own predicted rollout directly -- a materially deeper,
+   more instrumentation-heavy investigation than the last three REQs, and a natural checkpoint to
+   confirm direction with the operator before continuing** rather than open-endedly deepening
+   further on one n=1 game. Concrete next step if picked up again: (a) sample the tier-1 engine's
+   own greedy rollout from `root_grid` for a bounded number of steps and check for structural
+   implausibility vs. observed real transitions (distinguishes "coherent but wrong" from "diverges
+   to noise fast"); or (b) the cheaper breadth check -- repeat this diagnostic on 1-2 more
+   unsolved games to see if `max_nodes_reached` recurs there too (systemic vs. sp80-specific).
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
