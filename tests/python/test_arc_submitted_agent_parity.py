@@ -252,31 +252,34 @@ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_c
     assert completer.mtp is True
     assert completer.kv_quant == "q8_0"
     assert completer.no_think_prefix == "/no_think\n"
-    assert completer.max_tokens == 2560
+    assert completer.max_tokens == 4096  # REQ-ARC-FCP-5699-35: graduated default, was 2560
+    assert (
+        completer.timeout == 600
+    )  # REQ-ARC-FCP-5699-35: graduated default, was the 300 field default
     assert completer.port == 8919  # the DEFAULT port, same as _proposer()'s own default
 
 
-def test_req_arc_fcp_5699_28_proposer_default_max_tokens_and_timeout_unchanged():
-    """Neither env var set (production default) -- _proposer()'s lazy default must construct
-    byte-identical to before REQ-ARC-FCP-5699-28: max_tokens=2560, timeout=300."""
+def test_req_arc_fcp_5699_35_proposer_default_max_tokens_and_timeout_graduated():
+    """Neither env var set (production default) -- _proposer()'s lazy default now constructs
+    with the REQ-ARC-FCP-5699-32-validated budget (max_tokens=4096, timeout=600), graduated
+    from the REQ-ARC-FCP-5699-28 dev-only override (was 2560/300, the pre-32 default)."""
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
     proposer = pol._proposer()
     assert isinstance(proposer, LocalGGUFProposer)
-    assert proposer.max_tokens == 2560
-    assert proposer.timeout == 300
+    assert proposer.max_tokens == 4096
+    assert proposer.timeout == 600
 
 
 def test_req_arc_fcp_5699_28_proposer_max_tokens_and_timeout_env_override(monkeypatch):
-    """CARNOT_ARC_INDUCE_MAX_TOKENS/CARNOT_ARC_INDUCE_TIMEOUT let a diagnostic run raise both
-    values -- REQ-ARC-FCP-5699-28's own live evidence (a real "[HIT n_predict=2560 OUTPUT LIMIT
-    before completing]" truncation, plus a separate 300s TimeoutError) confirmed both are real
-    bottlenecks that need to move together."""
-    monkeypatch.setenv("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")
-    monkeypatch.setenv("CARNOT_ARC_INDUCE_TIMEOUT", "600")
+    """CARNOT_ARC_INDUCE_MAX_TOKENS/CARNOT_ARC_INDUCE_TIMEOUT still let a diagnostic run
+    override the (now-graduated) default to different values -- the override mechanism REQ-28
+    introduced survives REQ-35's default-value graduation unchanged."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_MAX_TOKENS", "8192")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TIMEOUT", "900")
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
     proposer = pol._proposer()
-    assert proposer.max_tokens == 4096
-    assert proposer.timeout == 600
+    assert proposer.max_tokens == 8192
+    assert proposer.timeout == 900
 
 
 def test_req_arc_fcp_5699_11_load_submitted_candidate_router_uses_sge_when_enabled(monkeypatch):

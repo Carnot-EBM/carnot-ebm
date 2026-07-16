@@ -526,7 +526,13 @@ def _load_sge_candidate_router(game_id: str) -> Any | None:
         mtp=(_os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
-        max_tokens=2560,
+        # REQ-ARC-FCP-5699-35: read the SAME env-var-overridable defaults as _proposer()'s own
+        # lazy default (4096/600, was a hardcoded max_tokens=2560 literal with no timeout
+        # override at all -- caught by test_req_arc_fcp_5699_11_load_sge_candidate_router_
+        # reuses_frozen_generator_config's own "configured IDENTICALLY" contract when the
+        # _proposer() default graduated and this one silently didn't move with it).
+        max_tokens=int(_os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
+        timeout=int(_os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
         n_gpu_layers=int(_os.environ.get("CARNOT_ARC_NGL", "999")),
     )
     return SGECandidateRouter(
@@ -3328,20 +3334,23 @@ class E3AgentPolicy:
             # keeps that many of the top weight layers in system RAM (mmap'd, prefilled in page cache) instead
             # of VRAM, freeing GPU memory for the q8 KV-cache + the live CNN dynamics fit that coexists with
             # the LLM on the shared 16GB eval GPU. Acceptable because the ARC eval has no internal time limit.
-            # DEV-ONLY overrides (REQ-ARC-FCP-5699-28, unset -> 2560/300, byte-identical to
-            # before): live evidence (a g50t refactor-loop round genuinely hit "[HIT
-            # n_predict=2560 OUTPUT LIMIT before completing]") confirmed max_tokens is a real
-            # bottleneck for the induce/refactor calls this proposer serves; the sge arm's
-            # separate 300s TimeoutError showed the existing timeout is already sometimes
-            # insufficient at the CURRENT budget. Both need to move together, not just one.
+            # Graduated to default 4096/600 (REQ-ARC-FCP-5699-35, was 2560/300 dev-only override
+            # per REQ-ARC-FCP-5699-28): live evidence (a g50t refactor-loop round genuinely hit
+            # "[HIT n_predict=2560 OUTPUT LIMIT before completing]") confirmed max_tokens was a
+            # real bottleneck for the induce/refactor calls this proposer serves; the sge arm's
+            # separate 300s TimeoutError showed the old timeout was already sometimes
+            # insufficient at the old budget. REQ-ARC-FCP-5699-32 validated 4096/600 reaches
+            # proposer_ok=True on 6/6 rounds of a real full-budget live run for THIS (9B) model --
+            # the 8192 requirement found in REQ-ARC-FCP-5699-34 was specific to a 3x larger,
+            # non-live candidate model, not this one. Both env vars remain overridable.
             self.proposer = LocalGGUFProposer(
                 repo_substr="Qwen3.5-9B-MTP",
                 model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
                 mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
                 kv_quant="q8_0",
                 no_think_prefix="/no_think\n",
-                max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "2560")),
-                timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "300")),
+                max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
+                timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
                 n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             )
         return self.proposer
@@ -3668,61 +3677,93 @@ class E3AgentPolicy:
                     self.plan = list(outcome.plan)
                 return
             self._fit_dsl_model()
-            # DEV-ONLY (REQ-ARC-FCP-5699-24, unset in production -- falls through to the
-            # unchanged plain single-shot path below): the refactor/refinement loop
-            # (execute_bounded_llm_reinduction) was previously reachable ONLY from the
-            # level_up_reinduction branch above, so stall-triggered first-contact induction got
-            # exactly one shot with zero counterexample-driven refinement. This routes the SAME
-            # bounded-refinement mechanism through the stall path, with
-            # previous_level_complete_grid=None and structural_goal_provider=None (both
-            # confirmed handled gracefully by execute_bounded_llm_reinduction without crashing --
-            # the goal-repair half still can't help without an exemplar, per REQ-ARC-FCP-5699-24,
-            # but the DYNAMICS-side refactor rounds operate on transition mismatches, which DO
-            # exist pre-first-win).
-            if os.environ.get("CARNOT_ARC_STALL_REFACTOR_LOOP") == "1":
-                stall_outcome = execute_bounded_llm_reinduction(
-                    game=self.short,
-                    transitions=active_transitions,
-                    cell=self.cell,
-                    root_grid=self.root_grid,
-                    proposer=self._proposer(),
-                    candidate_provider=self._world_model_candidates,
-                    load_engine=e3.load_engine,
-                    plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
-                    max_rounds=MAX_REFINEMENT_ROUNDS,
-                    min_heldout_accuracy=1.0,
-                    min_goal_predicate_consistency=1.0,
-                    previous_level_complete_grid=self._previous_level_complete_grid,
-                    enable_subgoal_search=self.subgoal_search,
-                    subgoal_budget=self.subgoal_budget,
-                    value_head=self.value_head,
-                    enable_factored_planner=self.factored_planner,
-                    factored_trust_threshold=self.factored_trust_threshold,
-                    structural_goal_provider=None,
-                )
-                attempt.update(
-                    {
-                        "model_specs": stall_outcome.model_specs,
-                        "planned": bool(stall_outcome.planned),
-                        "skipped": stall_outcome.skipped,
-                        "plan_length": len(stall_outcome.plan),
-                        "selected_candidate_name": stall_outcome.selected_candidate_name,
-                        "refinement_rounds_used": int(stall_outcome.refinement_rounds_used),
-                        "refinement_rounds": list(stall_outcome.rounds),
-                        "counterexamples": list(stall_outcome.counterexamples),
-                        "verifier_is_oracle": bool(stall_outcome.verifier_is_oracle),
-                        "goal_predicate_satisfiable": bool(
-                            stall_outcome.goal_predicate_satisfiable
-                        ),
-                        "goal_satisfiability": dict(stall_outcome.goal_satisfiability),
-                        "stall_refactor_loop_used": True,
-                    }
-                )
-                if stall_outcome.goal_predicate is not None:
-                    self._install_goal_bias(stall_outcome.goal_predicate)
-                if stall_outcome.planned:
-                    self.plan = list(stall_outcome.plan)
-                return
+            # Graduated to default-on (REQ-ARC-FCP-5699-35, was DEV-ONLY per REQ-ARC-FCP-5699-24
+            # / -25): the refactor/refinement loop (execute_bounded_llm_reinduction) was
+            # previously reachable ONLY from the level_up_reinduction branch above, so
+            # stall-triggered first-contact induction got exactly one shot with zero
+            # counterexample-driven refinement. This routes the SAME bounded-refinement
+            # mechanism through the stall path, with previous_level_complete_grid=None and
+            # structural_goal_provider=None (both confirmed handled gracefully by
+            # execute_bounded_llm_reinduction without crashing -- the goal-repair half still
+            # can't help without an exemplar, per REQ-ARC-FCP-5699-24, but the DYNAMICS-side
+            # refactor rounds operate on transition mismatches, which DO exist pre-first-win).
+            # CARNOT_ARC_STALL_REFACTOR_LOOP=0 remains an explicit opt-out, matching the
+            # CARNOT_ARC_MTP=0 pattern in _proposer() above.
+            #
+            # IMPORTANT graduation fix (REQ-ARC-FCP-5699-35): the dev-only version below
+            # unconditionally `return`ed after this block regardless of whether stall_outcome
+            # actually reached a plan. That was fine while opt-in (an operator explicitly chose
+            # to trade the active_probe/plain-path fallback away), but silently discarding a
+            # working fallback for every non-planned outcome would be a real regression once this
+            # is the production default -- REQ-ARC-FCP-5699-32's own measurement showed the
+            # min_heldout_accuracy=1.0 gate is rarely met (0/6 rounds across a full real run on
+            # g50t). So this now falls through to the unchanged active_probe_controller / plain
+            # single-shot path below whenever the refinement loop does NOT reach a planned
+            # outcome, instead of returning unconditionally -- strictly additive, never removes
+            # the pre-graduation fallback capability.
+            if os.environ.get("CARNOT_ARC_STALL_REFACTOR_LOOP", "1") != "0":
+                # Local try/except (REQ-ARC-FCP-5699-35 hardening, found via a real regression
+                # while graduating: test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate
+                # broke because execute_bounded_llm_reinduction's round-2 refactor() call can
+                # raise (e.g. a proposer/model that can't complete a refactor round) BEFORE ever
+                # returning a result -- an exception here previously propagated straight to this
+                # method's OUTERMOST except block, aborting the ENTIRE induce-and-plan attempt
+                # and silently skipping the plain single-shot / trust-energy-selector path below,
+                # not just the planned=True short-circuit my fallthrough already handles. Any
+                # exception during the bounded-refinement attempt now falls through exactly like
+                # a clean planned=False outcome -- strictly additive, never removes the
+                # pre-graduation fallback capability, matching the surrounding
+                # program_synthesis_filter_error / ttt_prior_engine_error non-fatal pattern.
+                try:
+                    stall_outcome = execute_bounded_llm_reinduction(
+                        game=self.short,
+                        transitions=active_transitions,
+                        cell=self.cell,
+                        root_grid=self.root_grid,
+                        proposer=self._proposer(),
+                        candidate_provider=self._world_model_candidates,
+                        load_engine=e3.load_engine,
+                        plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
+                        max_rounds=MAX_REFINEMENT_ROUNDS,
+                        min_heldout_accuracy=1.0,
+                        min_goal_predicate_consistency=1.0,
+                        previous_level_complete_grid=self._previous_level_complete_grid,
+                        enable_subgoal_search=self.subgoal_search,
+                        subgoal_budget=self.subgoal_budget,
+                        value_head=self.value_head,
+                        enable_factored_planner=self.factored_planner,
+                        factored_trust_threshold=self.factored_trust_threshold,
+                        structural_goal_provider=None,
+                    )
+                except Exception as stall_exc:
+                    attempt["stall_refactor_loop_used"] = False
+                    attempt["stall_refactor_loop_error"] = repr(stall_exc)[:160]
+                    stall_outcome = None
+                if stall_outcome is not None:
+                    attempt.update(
+                        {
+                            "model_specs": stall_outcome.model_specs,
+                            "planned": bool(stall_outcome.planned),
+                            "skipped": stall_outcome.skipped,
+                            "plan_length": len(stall_outcome.plan),
+                            "selected_candidate_name": stall_outcome.selected_candidate_name,
+                            "refinement_rounds_used": int(stall_outcome.refinement_rounds_used),
+                            "refinement_rounds": list(stall_outcome.rounds),
+                            "counterexamples": list(stall_outcome.counterexamples),
+                            "verifier_is_oracle": bool(stall_outcome.verifier_is_oracle),
+                            "goal_predicate_satisfiable": bool(
+                                stall_outcome.goal_predicate_satisfiable
+                            ),
+                            "goal_satisfiability": dict(stall_outcome.goal_satisfiability),
+                            "stall_refactor_loop_used": True,
+                        }
+                    )
+                    if stall_outcome.goal_predicate is not None:
+                        self._install_goal_bias(stall_outcome.goal_predicate)
+                    if stall_outcome.planned:
+                        self.plan = list(stall_outcome.plan)
+                        return
+                # else: fall through to active_probe_controller / plain single-shot path below
             if self.active_probe_controller_enabled and self.root_grid is not None:
                 try:
                     from carnot.agentic.arc_active_probe import (
