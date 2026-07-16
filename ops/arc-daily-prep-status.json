@@ -5,5 +5,11 @@
   "parquet_ok": true,
   "ready_for_operator_submit": true,
   "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 9",
-  "note": "the automated prep script's own 24x15s poll exited with save_run='?' before the kernel genuinely finished; manually polled to KernelWorkerStatus.COMPLETE and confirmed submission.parquet present via `kaggle kernels output` before correcting this file to reflect ground truth. Kernel v9 bundles REQ-ARC-FCP-5699-35's graduated fixes (default-on stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder) via the re-versioned iancblenke/carnot-agent-code dataset."
+  "note": "the automated prep script's own 24x15s poll exited with save_run='?' before the kernel genuinely finished; manually polled to KernelWorkerStatus.COMPLETE and confirmed submission.parquet present via `kaggle kernels output` before correcting this file to reflect ground truth. Kernel v9 bundles REQ-ARC-FCP-5699-35's graduated fixes (default-on stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder) via the re-versioned iancblenke/carnot-agent-code dataset.",
+  "submitted": true,
+  "submitted_at": "2026-07-16T19:37:35Z",
+  "submission_ref": 54768046,
+  "submission_status_at_check": "SubmissionStatus.PENDING",
+  "local_gate_result_at_submit": "PASS (IMPROVED): core per-level efficiency 2.412 vs baseline 2.412 (7/8 core games solved, matching baseline); bonus solves on cd82/ft09/su15 not counted in the strict core comparison",
+  "prior_submission_scores": {"2026-07-15": 0.12, "2026-06-30": 0.08}
 }
