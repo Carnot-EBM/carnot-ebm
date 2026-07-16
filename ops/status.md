@@ -1,6 +1,68 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-15 (Exp5714 one-axis parity repair)
+**Last Updated:** 2026-07-16 (REQ-ARC-FCP-5699-14 through -23: first-contact induction diagnostic chain)
+
+## Session 2026-07-15/16 - ARC-AGI-3 First-Contact Induction Diagnostic Chain (REQ-ARC-FCP-5699-14 through -23)
+
+Outer-loop session investigating why the live E3AgentPolicy never levels up sp80/cd82/g50t
+(games it has never completed level 0 on) within a bounded action budget. Ten REQ entries in
+`openspec/capabilities/arc-human-replay-frame-change/spec.md`, all dev-only diagnostics and
+opt-in-via-unset-env-var fixes — **nothing here changed production defaults or the live
+Kaggle submission; the leaderboard score is unchanged at 0.12 (rank 1312/1757, last real
+submission 2026-07-15 07:15:13, tied with hundreds of teams and the "Random Agent" baseline).**
+
+Chain summary, each step falsified or built on the last:
+
+1. **Exploration exhaustion ruled out** (5699-14): the real ~48-candidate live generator never
+   hits `explorer.explored_out=True`; the earlier "explorer exhausts at 25 transitions" finding
+   was an artifact of a diagnostic harness's artificially-narrow 8-candidate generator, not a
+   real-stack property.
+2. **Tier-1 plan-finding gap found** (5699-15): the CNN-dynamics-prior warm-start engine PASSES
+   its own held-out trust gate but `plan_in_model` still finds no plan against it — added
+   `diagnostics` instrumentation to `plan_in_model` (backward-compatible, `diagnostics=None`
+   unchanged) to see WHY searches return empty.
+3. **Search budget ruled out, alone (5699-16) and combined with real gradient (5699-20)**: 5x
+   more search nodes (20k->100k) doesn't help under either binary or novelty energy; the
+   achievable minimum energy plateaus early regardless of budget.
+4. **Breadth-confirmed systemic** (5699-17): the tier-1 wall recurs identically on cd82 and g50t,
+   including a structurally different `HIDDEN_STATE_GAME_IDS` code path.
+5. **Root cause found** (5699-18): `_goal_energy_for_plan`'s graded-distance branch requires
+   `_previous_level_complete_grid`, which is `None` until a level has completed once — so
+   first-contact levels get a flat, zero-gradient binary energy by construction, regardless of
+   any env var. This is architecturally significant: first contact with a never-seen game is
+   close to the MODAL case the scored hidden-game agent faces, not a corner case.
+6. **Novelty energy fallback built and validated** (5699-19, plus a self-caught bug: `Transition`
+   is a `@dataclass` not a namedtuple, so an initial index-access implementation silently
+   collected zero observed grids — caught by validating against a real live run, not by unit
+   tests using unrealistic plain-tuple fixtures; both the implementation and the test fixtures
+   were fixed). Result: real, measurable gradient (`min_goal_energy_observed` dropped
+   meaningfully below the flat 1.0) but still no plan found — a genuine partial win.
+7. **Tier 2 (the DSL/LLM induction path) found to fail completely, not marginally** (5699-21):
+   `correct_changed_cells=0` in every hidden-state measurement, `verify_cell_recall=0.0` on sp80
+   — synthesized from artifacts already on disk, no new run needed.
+8. **Read the actual generated code** (5699-22, at direct operator request): refuted the leading
+   "execution bug" hypothesis — the code is syntactically valid, non-crashing Python in every
+   case. Two precise, source-verified root causes instead: (a) `_transitions_block`'s
+   uncapped-default `k=8` shows the LLM only ~6 of the 25 collected transitions, ~1 per action
+   type, producing observed hardcoded-literal-coordinate memorization (g50t); (b) the win-state
+   block needs either a level-up transition (impossible on first contact) or
+   `_previous_level_complete_grid` (same `None`-until-first-win gap as #5) — so tier 2's
+   goal-predicate induction is ALSO starved of any positive example on first contact, explaining
+   cd82's degenerate `is_level_complete: return False`.
+9. **Tested the cheap fix — mixed, not a clean win** (5699-23): raised the transitions-shown cap
+   to 20 (DEV-ONLY `CARNOT_ARC_INDUCE_TRANSITIONS_K` env var, unset in production). One arm's
+   independent LLM generation genuinely improved (`correct_changed_cells` 0->33); the other arm's
+   generation introduced a NEW bug (an undefined-variable `NameError` from writing longer, more
+   complex code). Real, high-variance effect — not a reliable fix by itself.
+
+**Net effect on the live submission: none yet.** Every fix in this chain is gated behind an
+unset-by-default env var (`CARNOT_ARC_PLAN_MAX_NODES`, `CARNOT_ARC_NOVELTY_GOAL_BIAS`,
+`CARNOT_ARC_INDUCE_TRANSITIONS_K`) per this project's established "prove it with a real A/B
+before flipping a default" discipline. The concrete, queued follow-ups (see `ops/known-issues.md`
+task 6) are: multi-seed variance characterization of the `k` fix, per-arm code-snapshot capture,
+checking whether the existing refactor/repair-loop path could self-correct the bug class 5699-23
+found, and designing a first-contact-applicable positive goal signal for tier 2 (analogous to
+5699-19's novelty energy for tier 1).
 
 ## Session 2026-07-15 - Exp5714 One-Axis Parity Repair
 
