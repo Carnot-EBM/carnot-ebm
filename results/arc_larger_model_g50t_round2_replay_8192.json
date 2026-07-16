@@ -1,0 +1,21 @@
+{
+  "experiment": "arc_larger_model_g50t_round2_replay_max_tokens_8192",
+  "req": "REQ-ARC-FCP-5699-34",
+  "game": "g50t",
+  "methodology_note": "Targeted single-call replay of REQ-ARC-FCP-5699-33's round 2 (refactor()), reusing the SAME real round-1 counterexample saved in results/arc_larger_model_g50t_ab.json (real_n=25, real_n_correct=5, real_accuracy=0.2, 8 capped mismatches), with max_tokens raised 4096->8192 for the Qwen3.6-27B-MTP proposer. CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1 explicitly set (REQ-31's fix) -- an earlier attempt in this same session omitted this env var and the model reverted to inventing its own function name instead of the required engine/is_level_complete, a self-caught confound now corrected. This is NOT a full execute_bounded_llm_reinduction round -- no heldout_accuracy is computed here (would require the real 25-transition corpus, not just the capped mismatch summary); this measures ONLY whether the proposer call completes structurally valid code.",
+  "model_specs": [
+    "unsloth/Qwen3.6-27B-MTP-GGUF (Q4_K_M, mtp=False)"
+  ],
+  "inference_substrate": "live_llm_inference",
+  "random_seed": 5699,
+  "reproducibility_checksum": "7495d39a1ecef980",
+  "duration_s": 195.9462480545044,
+  "proposer_ok": true,
+  "last_stop_type": "eos",
+  "last_prompt_truncated": false,
+  "message": "",
+  "induced_code_present": true,
+  "induced_code_defines_required_functions": true,
+  "overfit_risk_note": "Manual read of the raw completion (both attempts) shows the induced engine() function hardcodes literal row/col ranges (e.g. range(8,10), range(14,19)) copied directly from the 8 shown counterexample mismatches, rather than deriving a general spatial/color rule. This is consistent with memorizing the shown examples rather than inferring g50t's actual dynamics, and would plausibly still score near the previously-measured 0.125 heldout_accuracy ceiling on the full 25-transition set -- NOT directly measured here, flagged as an informed expectation, not a result.",
+  "honest_verdict": "complete: raising max_tokens to 8192 (with the structural reminder correctly applied) fixes round 2's structural failure -- proposer_ok=True, natural eos completion, both required functions present -- but the induced code shows overfitting to the shown examples rather than general rule inference; heldout_accuracy was not independently re-measured in this targeted replay"
+}

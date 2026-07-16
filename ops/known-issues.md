@@ -1051,6 +1051,31 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    from round 1's 0.125; (b) accept g50t specifically as a capability boundary independent of
    model scale and redirect to games where scale demonstrably helps; (c) step back from
    per-game induction-accuracy chasing entirely.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-34, direct operator follow-up --
+   option (a) above, picked up):** targeted single-call replay of round 2 (not a full fresh
+   episode) reusing the REAL round-1 counterexample already saved from REQ-33's run, with
+   `max_tokens` raised 4096->8192. **First attempt was a self-caught confound, not a finding**:
+   the replay script forgot to set `CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1` (REQ-31's fix,
+   read fresh at call-time, not baked into any persisted state) -- without it, the model
+   completed naturally within 8192 tokens (`last_stop_type='eos'`, proving budget alone WAS
+   enough room) but invented its own function (`def solve(...)`) instead of the required
+   `engine`/`is_level_complete` -- proving the reminder, not budget, was what round 2 actually
+   needed. Caught and corrected before drawing any conclusion. **Corrected, clean, timed re-run
+   (`results/arc_larger_model_g50t_round2_replay_8192.json`, `duration_s=195.95`, genuine
+   completion confirmed): with BOTH fixes applied, round 2 succeeds structurally** --
+   `proposer_ok=True`, natural `eos` completion, both required functions present. **But the
+   induced code hardcodes literal row/col ranges lifted directly from the 8 shown mismatch
+   examples** (e.g. `for r in range(8, 10): for c in range(14, 19): if grid[r, c] == 9:
+   grid[r, c] = 5`) rather than deriving a rule that would generalize to unseen cells -- read as
+   memorizing the shown failures, not inferring g50t's actual dynamics. `heldout_accuracy` was
+   NOT independently re-measured (would need the real 25-transition corpus, not just the capped
+   mismatch summary this replay reused) -- the overfitting read is an informed expectation from
+   the code's structure, explicitly labelled as such in the artifact, not presented as a
+   measured result. **Settles:** raising max_tokens to 8192 fixes round 2's structural failure,
+   but ONLY together with the reminder -- neither alone was sufficient (both orderings tested).
+   **Does NOT settle:** whether this now-completing candidate would raise heldout_accuracy above
+   the 0.125 ceiling -- the hardcoded-coordinate structure makes that implausible but unmeasured.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

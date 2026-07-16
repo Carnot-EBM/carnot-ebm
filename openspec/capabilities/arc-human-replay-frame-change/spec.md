@@ -7456,6 +7456,73 @@ truncation the 9B model does not hit at the same token budget, and no level-up o
 accuracy ceiling on g50t is therefore evidenced as game-specific rather than resolved by model
 scale, in contrast to `REQ-ARC-WMTE-5596`'s positive scale-up finding on two other games
 
+### REQ-ARC-FCP-5699-34: Raising max_tokens To 8192 For The Larger Model -- A Self-Caught Confound, Then A Clean Structural Fix
+
+Direct operator follow-up to REQ-ARC-FCP-5699-33: raise `max_tokens` to 8192 specifically for the
+27B model and re-run round 2 (the refactor call that hit `[HIT n_predict=4096 OUTPUT LIMIT before
+completing]`). Rather than a full fresh episode (which would also draw a new, different round-1
+counterexample), this replayed ONLY round 2 -- a targeted single `refactor()` call reusing the
+REAL round-1 counterexample already saved in `results/arc_larger_model_g50t_ab.json` (`real_n=25`,
+`real_n_correct=5`, `real_accuracy=0.2`, 8 capped mismatches), matching the
+REQ-ARC-FCP-5699-30 `read_raw_refactor_output.py` replay pattern.
+
+**First attempt: a self-caught confound, not a finding about token budget alone.** The first
+replay script raised `max_tokens` to 8192 but forgot to set
+`CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1` -- REQ-ARC-FCP-5699-31's fix, which is read fresh at
+call-time inside `refactor_prompt()` via `os.environ.get(...)`, not baked into any object state.
+Without it, the model reverted to inventing its own function (`def solve(grid, action,
+data=None)`) instead of the required `engine`/`is_level_complete` -- exactly the pathology the
+reminder exists to prevent. `last_stop_type='eos'` (natural completion, NOT truncated) proved 8192
+tokens was enough room, but `ok=False` (missing required functions) proved the reminder is what
+was actually load-bearing at round 2, not budget alone. This was caught and corrected before
+drawing any conclusion from it -- flagged here explicitly as a self-introduced test defect, not
+buried.
+
+**Corrected, clean, timed re-run (`results/arc_larger_model_g50t_round2_replay_8192.json`,
+`duration_s=195.95`, read only after confirmed genuine completion):** with BOTH fixes applied
+(`max_tokens=8192` AND `CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1`), round 2 succeeds structurally:
+`proposer_ok=True`, `last_stop_type='eos'`, `last_prompt_truncated=False`, both required functions
+present.
+
+**But: the induced code is a hardcoded fit to the shown examples, not a general rule.** Manual
+read of the raw completion shows `engine()` hardcodes literal row/col ranges lifted directly from
+the 8 shown counterexample mismatches (e.g. `for r in range(8, 10): for c in range(14, 19): if
+grid[r, c] == 9: grid[r, c] = 5`) rather than deriving a spatial/color rule that would generalize
+to unseen cells. This is consistent with memorizing the shown failing examples rather than
+inferring g50t's actual dynamics. `heldout_accuracy` was NOT independently re-measured in this
+targeted replay (would require the real 25-transition corpus, not just the capped mismatch
+summary this replay reused) -- this overfitting read is an informed expectation based on the
+code's structure, not a re-measured result, and is labelled as such in the artifact rather than
+presented as a finding.
+
+**What this settles and doesn't.** Settles: raising `max_tokens` to 8192 for the 27B model DOES
+fix round 2's structural completion failure, but ONLY together with the structural reminder --
+neither fix alone was sufficient (this session tested both orderings). Does NOT settle: whether
+the now-completing round 2 candidate would actually raise `heldout_accuracy` above the 0.125
+ceiling REQ-ARC-FCP-5699-33's round 1 measured -- the code's hardcoded-coordinate structure makes
+a further increase implausible, but this is a read of the code, not a measurement.
+
+Required field principles:
+
+- `overfit_risk_note`: principle "distinguishes an informed expectation (a code read) from a
+  measured result (a scored heldout run); conflating the two would overclaim a finding this
+  replay did not actually measure."
+- `duration_s`: principle "a genuinely time-measured artifact, not a wall-clock estimate from
+  task-notification timing -- this was written specifically because the two exploratory replay
+  runs that preceded it were not separately artifact-backed."
+
+#### SCENARIO-ARC-FCP-5699-34-BUDGET-ALONE-INSUFFICIENT-REMINDER-ALSO-REQUIRED
+
+Given round 2's real counterexample from REQ-ARC-FCP-5699-33, replayed with `max_tokens` raised to
+8192
+When the structural reminder env var is OMITTED, the model completes naturally (not truncated) but
+invents its own function name instead of the required interface
+And when the SAME replay is re-run with the structural reminder correctly set
+Then round 2 completes both naturally AND structurally correctly -- proving raising the token
+budget and applying the structural reminder are BOTH independently necessary for this larger
+model, neither sufficient alone, and the resulting code's hardcoded example-coordinate structure
+means this structural fix should not be read as having also closed the accuracy gap
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
