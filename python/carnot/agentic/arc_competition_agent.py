@@ -3105,8 +3105,53 @@ class E3AgentPolicy:
         label = f"L{self._current_goal_level or '?'}_induced_goal_predicate"
         self.explorer.set_goal_bias(_bias, label=label)
 
+    def _novelty_observed_stack(self):
+        """REQ-ARC-FCP-5699-19: stack of every real (before, after) grid observed this episode,
+        for the novelty goal-energy fallback used on first-contact levels -- games that have never
+        completed a level yet have no ``_previous_level_complete_grid`` exemplar (REQ-ARC-FCP-
+        5699-18: that makes ``_goal_energy_for_plan``'s graded branch structurally inapplicable,
+        collapsing the search's guidance to a flat, zero-gradient constant). Grids with a shape
+        different from the first grid's are dropped (defensive; real episodes should be
+        shape-consistent). Returns None if no grids are available."""
+        import numpy as np
+
+        try:
+            active = self._active_transitions()
+        except Exception:
+            return None
+        grids = []
+        for t in active:
+            try:
+                grids.append(np.asarray(t.grid))
+                grids.append(np.asarray(t.next_grid))
+            except Exception:
+                continue
+        if not grids:
+            return None
+        shape0 = grids[0].shape
+        grids = [g for g in grids if g.shape == shape0]
+        if not grids:
+            return None
+        return np.stack(grids, axis=0)
+
     def _goal_energy_for_plan(self, is_done):
-        """SCENARIO-ARC-WMTE-4821-LIVE-PLAN-WIRING: lambda-gated model planner energy."""
+        """SCENARIO-ARC-WMTE-4821-LIVE-PLAN-WIRING: lambda-gated model planner energy.
+
+        REQ-ARC-FCP-5699-19 adds a NOVELTY fallback (DEV-ONLY, opt-in via
+        ``CARNOT_ARC_NOVELTY_GOAL_BIAS=1``, unset in production) for the exemplar-free case
+        REQ-ARC-FCP-5699-18 root-caused: when no ``_previous_level_complete_grid`` exists yet
+        (a first-contact, never-completed level), the graded-exemplar branch cannot apply, and the
+        function used to fall back to a flat constant that provides the best-first search with
+        ZERO gradient. The novelty fallback instead scores each candidate grid by its distance to
+        the NEAREST grid already concretely observed in the real episode (execution-grounded, no
+        exemplar needed): states far from anything already seen get LOW energy (attractive to the
+        min-heap search), states identical to something already seen get the same flat energy as
+        before (no worse than the pre-existing binary fallback). This is a go-explore-flavored
+        proxy for "unexplored territory is more likely to contain progress" -- it does not target
+        the actual (unknown) goal directly, unlike the graded-exemplar branch, so it is a weaker
+        signal in principle; it is opt-in pending empirical A/B validation, not a default flip.
+        The returned closure's ``energy_source`` attribute records which branch fired
+        (``"graded_exemplar"`` / ``"novelty"`` / ``"binary"``) for diagnostics."""
 
         if self.goal_guidance_lambda <= 0.0 or not callable(is_done):
             return None
@@ -3120,6 +3165,10 @@ class E3AgentPolicy:
         exemplar_arr = np.asarray(exemplar) if use_graded else None
         scale = float(self.goal_guidance_lambda)
 
+        observed_stack = None
+        if not use_graded and os.environ.get("CARNOT_ARC_NOVELTY_GOAL_BIAS") == "1":
+            observed_stack = self._novelty_observed_stack()
+
         def _energy(grid: Any) -> float:
             try:
                 if is_done(grid):
@@ -3131,8 +3180,22 @@ class E3AgentPolicy:
                 if g.shape != exemplar_arr.shape:
                     return scale
                 return scale * float(np.mean(g != exemplar_arr))
+            if observed_stack is not None:
+                g = np.asarray(grid)
+                if g.shape != observed_stack.shape[1:]:
+                    return scale
+                diffs = np.mean(observed_stack != g[np.newaxis, ...], axis=(1, 2))
+                min_diff_to_observed = float(diffs.min())
+                return scale * (1.0 - min_diff_to_observed)
             return scale
 
+        _energy.energy_source = (
+            "graded_exemplar"
+            if exemplar_arr is not None
+            else "novelty"
+            if observed_stack is not None
+            else "binary"
+        )
         return _energy
 
     @staticmethod
@@ -3184,6 +3247,8 @@ class E3AgentPolicy:
         kwargs: dict = {}
         if goal_energy is not None and self._planner_accepts_goal_energy(plan_in_model):
             kwargs["goal_energy"] = goal_energy
+        if diagnostics is not None:
+            diagnostics["goal_energy_source"] = getattr(goal_energy, "energy_source", None)
         if diagnostics is not None and self._planner_accepts_diagnostics(plan_in_model):
             kwargs["diagnostics"] = diagnostics
         # DEV-ONLY diagnostic override (REQ-ARC-FCP-5699-15 follow-up): unset in production, so

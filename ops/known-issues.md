@@ -674,6 +674,44 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    side signals (frame-change magnitude, score/HUD deltas if the env exposes any) as a proxy
    energy; (c) confirming whether fixing the 2026-06-25 multi-level graded-bias bug (getting SOME
    level completed once) lets SUBSEQUENT levels benefit even though level 1 itself cannot.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-19, implements + tests candidate (a)
+   above):** two parts, both worth recording plainly.
+
+   Part 1 -- novelty energy: `E3AgentPolicy` gained `_novelty_observed_stack()` +
+   a third branch in `_goal_energy_for_plan` (opt-in `CARNOT_ARC_NOVELTY_GOAL_BIAS=1`, unset in
+   production): for first-contact levels, score a candidate grid by distance to the NEAREST
+   already-observed real grid (states identical to something seen get the same flat energy as
+   before; states far from everything seen get low/attractive energy). Live A/B re-run on sp80,
+   `budget=250`: `goal_energy_source=novelty` confirmed on both arms, `min_goal_energy_observed`
+   dropped to 0.8875 (baseline) / 0.6765 (sge) -- MEANINGFULLY below the binary case's flat
+   1.0/1.0 (REQ-ARC-FCP-5699-18) -- real gradient now exists. **But `planned` stayed `False` and
+   `termination_reason` stayed `max_nodes_reached` for both arms** -- gradient alone did not, on
+   this trial, find a plan or level-up, and wall-clock roughly TRIPLED-TO-QUADRUPLED (429.5s/
+   400.1s vs the binary case's 63-168s/101-251s) from the per-candidate numpy distance cost. A
+   genuine partial validation, not a full one.
+
+   Part 2 -- self-caught bug (a real test-fixture-realism finding, recorded honestly, not
+   glossed over): the FIRST live-validation attempt found `goal_energy_source` stuck at
+   `"binary"` despite the env var being set. Root cause: `_novelty_observed_stack()` used index
+   access (`t[0]`/`t[3]`) against real `Transition` objects, but `Transition` is a `@dataclass`,
+   NOT a namedtuple -- index access silently raised `TypeError`, caught by a broad except, so
+   every real transition was silently dropped. The 8 unit tests written alongside the
+   implementation all passed anyway because their fixtures used PLAIN TUPLES (which support index
+   access) instead of real `Transition` objects -- an unrealistic fixture masking a real
+   production bug from the entire test suite. Fixed both the implementation (`.grid`/
+   `.next_grid`, the real field names) and the test fixtures (a `_transition()` helper building
+   real `Transition` objects everywhere), then VERIFIED the corrected tests actually detect this
+   bug class: temporarily reverted the fix, confirmed
+   `test_req_arc_fcp_5699_19_novelty_fires_when_enabled_and_no_exemplar` fails
+   (`assert 'binary' == 'novelty'`), re-applied the fix, reconfirmed all 32 tests pass. Same
+   discipline as QA-Layer Authenticity (CLAUDE.md) applied proactively to a brand-new check.
+
+   Concrete next step if picked up again: (a) combine novelty energy with the already-implemented
+   `CARNOT_ARC_PLAN_MAX_NODES` override on the same sp80 trace -- real gradient + more budget is
+   untested together; (b) vectorize/cache the novelty computation to address the 3-4x wall-clock
+   cost before considering wider use; (c) repeat on cd82/g50t to see if partial-gradient-no-plan
+   recurs.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
