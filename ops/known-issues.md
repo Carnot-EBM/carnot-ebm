@@ -998,6 +998,33 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    flag on (not launched automatically here, left as an explicit operator choice given 9 REQs
    already spent on this one game) to see whether this structural win reaches `planned=True`
    end-to-end.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-32, the full live A/B -- CLOSES THE
+   ENTIRE 5699-23 THROUGH -32 SUB-THREAD):** every validated fix combined
+   (`CARNOT_ARC_STALL_REFACTOR_LOOP=1`, `CARNOT_ARC_INDUCE_MAX_TOKENS=4096`/
+   `CARNOT_ARC_INDUCE_TIMEOUT=600`, `CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1`), full-budget
+   live A/B on g50t, read only after confirmed genuine completion (`ps aux` exit + task log's
+   `"wrote results/..."` line). **The structural fix generalizes COMPLETELY, not just the n=1
+   sample**: all 6 generation attempts across this run (3 refinement rounds x 2 arms) return
+   `proposer_ok=True` -- every single one produces syntactically valid code with both required
+   functions. `skipped` changed from `proposer_failed` (couldn't generate valid code at all,
+   every prior measurement) to `no_reachable_plan_after_refinement` (valid code every round,
+   genuinely ran the full 3-round budget, never accurate enough to accept). **But: NO LEVEL-UP.**
+   `heldout_accuracy` never exceeds 0.125 across any of the 6 rounds; `planned=False` for both
+   arms; `levels=0`/`reached=0`. Per CLAUDE.md's ARC Solve Reproducibility discipline, this is
+   explicitly NOT a level-up -- nothing to bank in the registry, nothing to headline. **This is
+   the definitive end-to-end answer for the whole 10-REQ sub-thread**: the resource-budget
+   hypotheses (data, repair rounds, JSON validity, token/time budget) were all real diagnoses but
+   not the actual blocker; the interface/structure problem WAS real and IS now fixed reliably at
+   zero cost; what remains is a genuine model-CAPABILITY gap -- correctly inferring g50t's actual
+   dynamics from 25 real transitions -- that no prompt-format fix can address, because the
+   problem is in what the model understands, not how it's asked to phrase the answer. Concrete
+   next step if picked up again: (a) accept this 9B local model has a real capability ceiling on
+   first-contact game-dynamics induction and treat it as a boundary condition, not a bug to keep
+   chasing; (b) test whether a LARGER model (Qwen3.6-27B-MTP/gemma-4-31B-it, already queued for
+   other purposes) closes the accuracy gap on the SAME counterexample data, isolating whether
+   this is a model-scale problem; (c) step back from this sub-thread entirely -- ten REQs on one
+   game's tier-2 induction is a natural stopping point regardless of (a)/(b).
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
