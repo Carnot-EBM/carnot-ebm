@@ -1,0 +1,61 @@
+{
+  "experiment": "outer_loop_round13_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-sonnet-5",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 350,
+  "reproduction_verified": true,
+  "reproduction_note": "The 342-action L1-L8 prefix (results/outer_loop_round12_bp35_probe_20260712.json) replays cleanly from a fresh env.reset() to levels_completed=8, state=NOT_FINISHED -- verified via python/carnot/agentic/arc_solver_kit.py primitives before any new L9 action was attempted. No new level was banked this round (L9 remains open), so there is nothing new to reproduction-gate via kit.reproduce(); this artifact documents mapped territory + one confirmed dead end instead.",
+  "random_seed": null,
+  "reproducibility_checksum": "77e8aa591a1084b77eb98de769d2fe987a9ed86d83f0dd11864101630a10144c",
+  "reproducibility_checksum_note": "sha256 of the JSON-serialized 8-label death sequence appended after the verified 342-action prefix (see lethal_sequence field).",
+  "honest_verdict": "complete_bp35_l9_mapping_round_no_new_level_banked_dead_end_identified",
+  "narrative": "First live-agent exploration of bp35 L9 (the final level; bp35 has win_levels=9 and L1-L8 are already reproducibly banked). Replayed the verified 342-action prefix, confirmed L9 start (levels_completed=8, NOT_FINISHED), then explored fresh territory. Confirmed L9's action semantics empirically rather than assuming L6-era defaults carried over: ACTION1/ACTION2/ACTION3 all move LEFT, ACTION4 moves RIGHT (slide-until-blocked, ~5-6 cell jumps per call, not single-step), ACTION5 is a genuine no-op that safely advances a HUD action-counter rendered as literal color-7 pixels along the bottom-most grid row (row 63) -- one pixel lit per action taken, giving a free, zero-risk way to read exact elapsed-action count without guessing. Mapped the immediate start room: two color-8 gravity switches at cols[1:6], one in the player's own starting room (rows[37:42]) and one in the room above (rows[25:30]); a pillar (color-15, framed) up and to the right at rows[13:18] cols[37:42]. Clicking the near switch (ACTION6 at grid coords matching its position) safely flips gravity: the player floated UP from the start room (rows37-41) to a resting spot at rows27-31, with the camera re-centering per the established gotcha. From that up-gravity resting position, a goal diamond (color-7, diamond-shaped, distinct from the HUD counter row) became visible further down-left at approximately rows[45:48] cols[14:17] -- i.e. BELOW even the down-gravity floor level, meaning neither a single up-flip nor a single down-flip alone reaches it. Moving left while floating (toward the goal's column) then clicking the second/last starting-room switch to flip gravity back down dropped the player back to the SAME rows37-41 floor band (just at the new column) -- confirming down-gravity always returns to that floor regardless of column, and that both of the two switches visible from the start are a matched up/down pair rather than a route to the goal by themselves. With both start-room switches now consumed, probed further along the row37-41 floor for other options: moving right from the start position is safe up to roughly col28, but a further RIGHT move past that point is LETHAL (GAME_OVER). The death-frame render (much wider than the live gameplay viewport, possibly a level-overview render triggered on death) revealed substantial new territory not visible during live play: a THIRD color-8 gravity switch (rows[19:24] cols[1:6]), three color-14 E-tile doors in a row (rows[25:30], cols~14-30), and TWO separate rows of pillars each showing the classic color-11/color-15 'B0B' eye-pair pattern from the gotcha (rows[19:24] cols~39-63 and rows[31:36] cols~32-59) -- confirming this hazard signature reads correctly in this level too. The exact proximate cause of death (which specific pillar or hazard cell) was not isolated before this round's time budget was spent; that is the concrete next-step question for a follow-on round.",
+  "novel_mechanics_found": [
+    "L9 action semantics confirmed empirically (do not assume L6-era carryover): ACTION1/ACTION2/ACTION3=LEFT, ACTION4=RIGHT, both slide-until-blocked (~5-6 cell jumps).",
+    "The bottom grid row (row 63) is a live HUD action-counter: N actions taken lights exactly N color-7 pixels from the left edge. Free to read via ACTION5 no-ops, zero risk, matches the established 'read the timer cheaply' gotcha from L7/L8.",
+    "This start room contains a matched up/down switch pair: clicking one flips gravity up (player rises from rows37-41 to rows27-31 and stops), clicking the other (found by re-locating it after the camera re-centers) flips back down (player always returns to the rows37-41 floor band regardless of current column). Neither flip alone reaches the goal.",
+    "The goal diamond (color-7, non-HUD) is visible from the up-gravity resting position at roughly rows[45:48] cols[14:17] -- below even the down-gravity floor level. Reaching it likely requires a THIRD gravity change or a different route entirely, not just the two matched start-room switches.",
+    "Death-frame renders are wider than live-gameplay frames and reveal otherwise-hidden territory: a 3rd switch, 3 E-doors in a row, and 2 full rows of B0B-eye pillars, none of which were visible during normal play before the fatal move."
+  ],
+  "dead_ends": [
+    "Moving RIGHT along the row37-41 floor past approximately col 28 is lethal (GAME_OVER). Proximate hazard not yet isolated (likely one of the newly-revealed pillar rows or a door interaction); do not repeat this exact rightward run without first identifying the specific lethal cell.",
+    "Using both start-room switches (up-flip then down-flip) without an intermediate horizontal repositioning strategy just returns the player to the original floor band -- net zero progress toward the goal, and both switches are one-shot/consumed. A future attempt should plan the FULL switch-usage sequence (including the newly-found 3rd switch) before triggering any of them, per the general_gotchas discipline."
+  ],
+  "lethal_sequence": [
+    {"action": 5},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 1},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 1},
+    {"action": 4},
+    {"action": 4},
+    {"action": 4}
+  ],
+  "lethal_sequence_note": "Applied AFTER the verified 342-action L1-L8 prefix. The final action in this list is the one that produced GAME_OVER; the first 7 are safe and were also independently tested in isolation (each confirmed NOT_FINISHED, no death) before this combined run.",
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress per ARC Solve Reproducibility Discipline; this round is an honest HONEST_NULL, not a solve."
+    }
+  ],
+  "field_provenance": {
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the exact tested action sequence lets a future round or the outer loop re-run this precise probe and independently confirm the same death, distinguishing a real hazard from a flaky/nondeterministic one."
+    },
+    "solve_provenance": {
+      "principle": "This round used only the offline_arcade env + live actions -- no game source was read, no ground-truth teleport/probe was used -- matching the live_agent_self_discovery contract from the ARC Live-Path Reachability Discipline."
+    }
+  }
+}

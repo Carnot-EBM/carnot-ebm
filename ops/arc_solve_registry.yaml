@@ -5539,6 +5539,41 @@ games:
     levels_reproduced>=8), all 5 confirmed level=8,
     state=GameState.NOT_FINISHED, levels_completed=8, win_levels=9,
     frame well-formed (not degenerate).'
+  - 'L9 mapping round 13, still HONEST NULL (2026-07-16, claude-sonnet-5,
+    results/outer_loop_round13_bp35_probe_l9_20260716.json): first attempt at
+    fresh L9 territory (the final level -- bp35 win_levels=9). Confirmed L9
+    action semantics empirically rather than assuming carryover from L6:
+    ACTION1/ACTION2/ACTION3 all move LEFT, ACTION4 moves RIGHT, both as a
+    slide-until-blocked of ~5-6 cells per call (not a single step). The
+    bottom-most grid row (row 63) is a live HUD action-counter -- N actions
+    taken lights exactly N color-7 pixels from the left edge -- confirming
+    and refining the established "read the timer cheaply via ACTION5" gotcha
+    with an exact readout mechanism, zero risk. Start room contains a
+    matched pair of one-shot color-8 gravity switches (both at cols[1:6],
+    one in the player''s own start room rows[37:42], one in the room above
+    rows[25:30]): clicking one flips gravity up and the player floats from
+    rows37-41 to a new resting spot at rows27-31 (camera re-centers per the
+    established gotcha); clicking the other flips back down and the player
+    always returns to the SAME rows37-41 floor band regardless of current
+    column. A goal diamond (color-7, non-HUD, diamond-shaped) is visible
+    from the up-gravity resting spot at roughly rows[45:48] cols[14:17] --
+    below even the down-gravity floor, so neither single flip alone reaches
+    it and the two matched start-room switches are NOT by themselves the
+    route to the goal. DEAD END: moving RIGHT along the row37-41 floor past
+    approximately col 28 is lethal (GAME_OVER); the death-frame render
+    (wider than the live viewport, likely a level-overview render) revealed
+    a previously-hidden 3rd color-8 switch (rows[19:24] cols[1:6]), three
+    color-14 E-tile doors in a row (rows[25:30] cols~14-30), and TWO full
+    rows of pillars each showing the classic color-11/color-15 "B0B" eye-pair
+    signature from the L3-L4 gotcha (rows[19:24] cols~39-63 and rows[31:36]
+    cols~32-59) -- confirming the pillar-eye signature reads correctly on
+    this level too, though the exact lethal cell was not isolated this
+    round. No new level banked; frontier stays at level 8. STRONGEST LEAD
+    for next attempt: the newly-revealed 3rd switch + 3-door row sits
+    roughly BELOW-LEFT of the goal''s apparent position -- plan a route that
+    reaches the 3rd switch (do not spend it blind) and probes the E-doors
+    from beside them (per the general_gotchas door-opening caution) rather
+    than repeating the col-28+ rightward walk that died this round.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
