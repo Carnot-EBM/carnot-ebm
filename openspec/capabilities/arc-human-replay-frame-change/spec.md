@@ -7523,6 +7523,116 @@ budget and applying the structural reminder are BOTH independently necessary for
 model, neither sufficient alone, and the resulting code's hardcoded example-coordinate structure
 means this structural fix should not be read as having also closed the accuracy gap
 
+### REQ-ARC-FCP-5699-35: Graduate REQ-25/29/31 To The Live Agent Default -- With A Real Robustness Fix Found Along The Way
+
+The 25-game public roster is near-saturated for further per-game deepening (REQ-ARC-FCP-5699-33's
+own registry audit: only lf52/sk48/bp35 aren't `full_game_clear`, and all three already have a
+recent, dedicated deepening attempt on record that found nothing -- re-attempting without a new
+angle would be a doomed rerun). Operator-directed pivot: instead of chasing one more banked level,
+graduate the three validated, zero-regression fixes from this sub-thread out of dev-only env-var
+gating and into the actual production default -- improving the SCORED hidden-game agent's
+induction robustness across ALL games, not one.
+
+**The three graduations (all keep an explicit opt-out, matching the existing `CARNOT_ARC_MTP=0`
+pattern used elsewhere in the same files):**
+
+1. `_proposer()`'s `max_tokens`/`timeout` defaults (`arc_competition_agent.py`): `2560`/`300` ->
+   `4096`/`600`. REQ-ARC-FCP-5699-32 measured 4096/600 reaches `proposer_ok=True` on 6/6 rounds of
+   a real full-budget live run for THIS (9B) model -- the 8192 requirement REQ-ARC-FCP-5699-34
+   found was specific to a 3x larger, non-live candidate, not this one. Both env vars remain
+   overridable.
+2. `refactor_prompt`'s structural reminder (`arc_executable_world_model.py`): default-on
+   (`CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER` now `!= "0"` instead of `== "1"`). REQ-31/32 found
+   zero regressions across a full real run.
+3. The stall-triggered bounded-refinement loop (`arc_competition_agent.py`): default-on
+   (`CARNOT_ARC_STALL_REFACTOR_LOOP` now `!= "0"` instead of `== "1"`) -- routes first-contact
+   induction through `execute_bounded_llm_reinduction`'s counterexample-driven refinement instead
+   of one single-shot attempt.
+
+**A real, self-caught bug found DURING graduation, not before it.** The dev-only version of (3)
+unconditionally `return`ed after the refinement-loop block regardless of whether it actually
+reached a plan. That was safe while opt-in (an operator explicitly traded the pre-existing
+`active_probe_controller`/plain single-shot fallback path away for the duration of a diagnostic
+run) but would have been a REAL regression once graduated to the always-on default: REQ-32's own
+measurement showed the strict `min_heldout_accuracy=1.0` gate this loop uses is rarely met (0/6
+rounds across a full g50t run), so EVERY non-planned stall would have silently discarded a
+separate, valuable, pre-existing mechanism -- a trust-energy-based world-model selector that does
+NOT require a perfect candidate, does NOT require `.refactor()` to exist, and was reachable for
+every prior stall event. Fixed by changing the unconditional `return` to a conditional one: return
+only when `stall_outcome.planned` is `True`; otherwise fall through to the unchanged
+`active_probe_controller` / plain single-shot path below, exactly as before this REQ.
+
+**A second, deeper bug found via the test suite, not by inspection.** Even with the fallthrough
+fix, a REAL regression surfaced in `tests/python/test_arc_world_model_trust_energy.py::
+test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate`: `execute_bounded_llm_reinduction`
+CAN raise mid-call (e.g. its round-2 `proposer.refactor(...)` call, if the round-1 candidate
+doesn't clear the strict gate) -- and an exception raised INSIDE the call propagates straight past
+my conditional-return fix (which only handles the CLEAN `planned=False` return case) to this
+method's OUTERMOST exception handler, aborting the entire `_induce_and_plan()` attempt and
+skipping the fallback path just the same, just via a different mechanism (an exception instead of
+a clean return). Root-caused via a temporary debug `traceback.print_exc()` in the outer handler
+(added, used, then reverted -- never left in the committed diff): `AttributeError: '_FakeProposer'
+object has no attribute 'refactor'` in the test's case, but any real exception during refinement
+(model timeout, malformed response, etc.) would trigger the identical failure mode in production.
+Fixed with a SECOND, LOCAL `try/except` around just the `execute_bounded_llm_reinduction` call
+itself: any exception now falls through to the plain path exactly like a clean `planned=False`
+outcome, recording `stall_refactor_loop_error` on the attempt (matching the existing non-fatal
+`program_synthesis_filter_error`/`ttt_prior_engine_error` pattern already used elsewhere in this
+same method). This is a genuine production robustness improvement, not merely a test fix -- the
+bug would have fired on ANY refinement-round exception in the live agent, not just this test's
+specific stub gap.
+
+**A third, independent drift bug found by the test suite's own "configured IDENTICALLY" contract.**
+`_load_sge_candidate_router()` builds its OWN separate `LocalGGUFProposer` and its own test
+(`test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_config`) asserts this
+must match `_proposer()`'s config "IDENTICALLY" (so both share one warm llama-server, never a
+second model load). It turned out to hardcode `max_tokens=2560` as a bare literal and never set
+`timeout` at all -- so when `_proposer()`'s default moved to 4096/600, this function silently
+drifted out of sync, exactly the failure mode its own docstring warns against. Fixed to read the
+SAME env-var-overridable defaults `_proposer()` now does.
+
+**Verification (thorough, given this touches the scored hidden-game agent):**
+
+1. The 5 original test files (78 tests): 5 pre-existing tests needed updating because their own
+   premise ("unset == old/disabled behavior") is now intentionally false -- each was rewritten as
+   a graduated-default test plus a companion explicit-opt-out test preserving the old behavior
+   byte-for-byte, rather than deleted. All 78 pass.
+2. A repo-wide ARC/submission-package sweep (`tests/python/ -k "arc_ or arc3 or submission_package
+   or 4544 or 4744"`, ~3880 tests) found 38 failures before the local try/except fix; the fix
+   resolved 9 of them (all sharing the same root cause -- the propagating-exception bug above) with
+   ZERO new failures introduced. The remaining 29 were cross-checked against a clean `git worktree`
+   at the pre-graduation commit: 27 fail identically on the unmodified baseline (confirmed
+   pre-existing, unrelated drift -- e.g. a stale committed artifact's schema, a growing
+   generic-operator registry's selection ordering) and the other 2
+   (`test_off_arc_execution_verifier_transfer_accumulate.py`) pass cleanly in isolation on BOTH the
+   clean baseline and the modified code, confirming they were parallel-batch test-pollution
+   artifacts, not a real regression.
+3. A direct memory-growth probe (4 repeated calls to `_induce_and_plan()` through the graduated
+   path) found the pytest memory-watchdog's one CI-relevant hit
+   (`test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate`'s teardown, +582MB) is a
+   ONE-TIME import-warming cost (heavy candidate-scoring/DSL-fitting modules imported for the first
+   time), not a real per-call leak: RSS grew +810MB on the first call, then +43MB, +2MB, +0MB on
+   calls 2-4 -- completely flat. Not a production risk for a long-running Kaggle session; the cost
+   is paid once, not accumulated.
+
+Required field principles:
+
+- `stall_refactor_loop_error`: principle "records WHY the bounded-refinement attempt was abandoned
+  when it fails via exception rather than a clean planned=False, so a reviewer can distinguish
+  'the model tried and failed the strict gate' from 'the mechanism itself broke' without needing to
+  reproduce the failure."
+
+#### SCENARIO-ARC-FCP-5699-35-GRADUATION-PRESERVES-THE-PRE-EXISTING-FALLBACK
+
+Given the three REQ-25/29/31 fixes graduated from dev-only opt-in to the production default
+When a stall-triggered induction attempt's bounded-refinement loop either (a) completes cleanly
+without reaching a plan, or (b) raises an exception mid-round (e.g. a proposer that cannot complete
+a refactor round)
+Then in BOTH cases execution falls through to the pre-existing `active_probe_controller` / plain
+single-shot trust-energy-selector path exactly as it did before this REQ -- the graduation is
+strictly additive, never silently discarding a working fallback mechanism, verified by both a
+targeted regression test and a clean-worktree-diffed repo-wide sweep showing zero new failures
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

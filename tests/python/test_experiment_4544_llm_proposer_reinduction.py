@@ -391,19 +391,63 @@ def test_scenario_arc_wmte_4544_e3_policy_records_llm_refinement(monkeypatch) ->
     assert attempt["verifier_is_oracle"] is False
 
 
-def test_req_arc_fcp_5699_24_stall_refactor_loop_disabled_by_default(monkeypatch) -> None:
-    """REQ-ARC-FCP-5699-24: CARNOT_ARC_STALL_REFACTOR_LOOP unset (production default) -- a
-    stall-triggered (first-contact) induction attempt must NOT call
-    execute_bounded_llm_reinduction; it falls through to the pre-existing plain single-shot path,
-    byte-identical to before this REQ."""
+def test_req_arc_fcp_5699_35_stall_refactor_loop_enabled_by_default(monkeypatch) -> None:
+    """REQ-ARC-FCP-5699-35 graduated this to default-on: CARNOT_ARC_STALL_REFACTOR_LOOP unset
+    (production default) now DOES route a stall-triggered (first-contact) induction attempt
+    through execute_bounded_llm_reinduction, superseding the REQ-ARC-FCP-5699-24 dev-only
+    "unset == disabled" contract."""
 
     from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
 
     monkeypatch.delenv("CARNOT_ARC_STALL_REFACTOR_LOOP", raising=False)
 
+    called = {"n": 0}
+
+    def _capture(**_kwargs):
+        called["n"] += 1
+        return LlmReinductionResult(
+            planned=False,
+            plan=[],
+            goal_predicate=None,
+            engine=None,
+            skipped="proposer_failed",
+        )
+
+    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _capture, raising=False)
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(
+            model_specs="stub", induce=lambda *_a, **_k: (False, "test_stub_declines")
+        ),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    policy._induce_and_plan()
+
+    assert called["n"] == 1
+    attempt = policy.induction_attempts[-1]
+    assert attempt["reason"] == "stall"
+    assert attempt["stall_refactor_loop_used"] is True
+
+
+def test_req_arc_fcp_5699_35_stall_refactor_loop_explicit_opt_out(monkeypatch) -> None:
+    """The explicit opt-out (CARNOT_ARC_STALL_REFACTOR_LOOP=0) still reproduces the exact
+    pre-REQ-ARC-FCP-5699-24 behavior: execute_bounded_llm_reinduction is never called on a
+    stall, and the attempt falls through to the pre-existing plain single-shot path -- the
+    escape hatch this graduation preserves."""
+
+    from carnot.agentic import arc_competition_agent as agent
+
+    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "0")
+
     def _fail_if_called(**_kwargs):
         raise AssertionError(
-            "execute_bounded_llm_reinduction must not fire when the env var is unset"
+            "execute_bounded_llm_reinduction must not fire when explicitly disabled"
         )
 
     monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fail_if_called, raising=False)
@@ -431,7 +475,10 @@ def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(mo
     """REQ-ARC-FCP-5699-24: CARNOT_ARC_STALL_REFACTOR_LOOP=1 routes a stall-triggered
     (first-contact) induction attempt through execute_bounded_llm_reinduction, with
     previous_level_complete_grid=None (no exemplar exists yet) and structural_goal_provider=None,
-    and records the outcome onto the attempt exactly as the level_up_reinduction branch does."""
+    and records the outcome onto the attempt exactly as the level_up_reinduction branch does.
+    Since the mocked outcome is planned=False, this also exercises REQ-ARC-FCP-5699-35's
+    fallthrough to the plain single-shot path (the proposer stub below needs a real .induce()
+    so that fallthrough completes instead of raising AttributeError on the minimal stub)."""
 
     from carnot.agentic import arc_competition_agent as agent
     from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
@@ -464,7 +511,10 @@ def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(mo
 
     policy = agent.E3AgentPolicy(
         "paritytest",
-        proposer=SimpleNamespace(model_specs=result.model_specs),
+        proposer=SimpleNamespace(
+            model_specs=result.model_specs,
+            induce=lambda *_a, **_k: (False, "test_stub_declines"),
+        ),
         value_head=lambda _frame: 0.0,
     )
     policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
@@ -477,10 +527,61 @@ def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(mo
     assert captured_kwargs["structural_goal_provider"] is None
 
     attempt = policy.induction_attempts[-1]
+    # the stall loop's own fields survive the fallthrough (they're not touched again below)
     assert attempt["stall_refactor_loop_used"] is True
     assert attempt["refinement_rounds_used"] == 3
-    assert attempt["skipped"] == "no_reachable_plan_after_refinement"
+    # REQ-ARC-FCP-5699-35's fallthrough then tries the plain single-shot path (since
+    # planned=False), whose own outcome legitimately supersedes "skipped"/"planned" as the
+    # attempt's FINAL overall result -- both sub-outcomes are honestly represented: the stall
+    # loop genuinely ran 3 rounds (recorded above), AND neither mechanism produced a plan.
+    assert attempt["skipped"] == "proposer_failed_or_missing_root"
     assert attempt["planned"] is False
+
+
+def test_req_arc_fcp_5699_35_stall_refactor_loop_planned_true_does_not_fall_through(
+    monkeypatch,
+) -> None:
+    """When execute_bounded_llm_reinduction DOES reach a plan (planned=True), the stall path
+    returns immediately with that plan installed -- it must NOT fall through to the plain
+    single-shot path and overwrite the already-successful outcome."""
+
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
+
+    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "1")
+
+    plan = [{"action": 1}]
+    result = LlmReinductionResult(
+        planned=True,
+        plan=plan,
+        goal_predicate=None,
+        engine=None,
+        refinement_rounds_used=1,
+        model_specs="stub",
+        skipped="",
+    )
+
+    monkeypatch.setattr(
+        agent, "execute_bounded_llm_reinduction", lambda **_k: result, raising=False
+    )
+
+    def _fail_if_called(*_a, **_k):
+        raise AssertionError("plain single-shot path must not fire when already planned=True")
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(model_specs="stub", induce=_fail_if_called),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    policy._induce_and_plan()  # must not raise the AssertionError above
+
+    attempt = policy.induction_attempts[-1]
+    assert attempt["planned"] is True
+    assert policy.plan == plan
 
 
 def test_req_arc_wmte_4544_helper_defensive_branches() -> None:

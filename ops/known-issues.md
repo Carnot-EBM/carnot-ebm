@@ -1076,6 +1076,39 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    but ONLY together with the reminder -- neither alone was sufficient (both orderings tested).
    **Does NOT settle:** whether this now-completing candidate would raise heldout_accuracy above
    the 0.125 ceiling -- the hardcoded-coordinate structure makes that implausible but unmeasured.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-35, operator-directed pivot: the 25-game
+   public roster is near-saturated for further deepening (only lf52/sk48/bp35 aren't
+   full_game_clear, all three already dead-ended on a recent attempt) -- graduate the three
+   validated, zero-regression sub-thread fixes to the PRODUCTION default instead, benefiting the
+   scored agent across ALL games rather than chasing one more banked level):** graduated
+   `_proposer()`'s max_tokens/timeout 2560/300->4096/600 (REQ-32-validated for the live 9B model),
+   `refactor_prompt`'s structural reminder to default-on, and the stall-triggered bounded-refinement
+   loop to default-on -- all three keep an explicit `=0` opt-out. **Two real bugs found and fixed
+   DURING graduation, not before it:** (1) the dev-only refinement-loop code unconditionally
+   `return`ed regardless of outcome, which would have silently discarded a separate, valuable,
+   pre-existing trust-energy-based world-model selector (no perfect-candidate requirement, no
+   `.refactor()` dependency) on every non-planned stall once made default -- fixed to only return
+   on `planned=True`, falling through otherwise; (2) the test suite caught a DEEPER version of the
+   same problem: `execute_bounded_llm_reinduction` can RAISE mid-round (not just cleanly return
+   `planned=False`), and an exception propagates straight past the fallthrough fix to the method's
+   outermost handler, aborting the whole attempt -- fixed with a second, local try/except around
+   just that call, falling through on ANY exception, matching the existing
+   `program_synthesis_filter_error`/`ttt_prior_engine_error` non-fatal pattern already in the same
+   method. **A third, independent drift bug**: `_load_sge_candidate_router()` builds its own
+   separate proposer and its OWN test asserts it must match `_proposer()`'s config "IDENTICALLY" --
+   it had hardcoded `max_tokens=2560` with no `timeout` override at all, silently drifting once
+   `_proposer()`'s default moved; fixed to read the same env-var-overridable defaults. **Verification
+   (thorough, given the scored hidden-game agent is affected):** the 5-file/78-test original scope
+   passes (5 tests rewritten as graduated-default + explicit-opt-out pairs, none deleted); a
+   ~3880-test repo-wide ARC/submission-package sweep found 38 failures before the local-exception
+   fix, 9 resolved by it with zero new failures, and the remaining 29 cross-checked against a clean
+   `git worktree` at the pre-graduation commit: 27 fail identically on the unmodified baseline
+   (pre-existing, unrelated drift) and 2 pass cleanly in isolation on both clean and modified code
+   (parallel-batch test pollution, not a regression). A direct memory-growth probe (4 repeated
+   `_induce_and_plan()` calls) found the one CI memory-watchdog hit (+582MB) is a ONE-TIME
+   import-warming cost (+810MB call 1, then +43MB/+2MB/+0MB calls 2-4, completely flat) -- not a
+   production leak risk for a long-running Kaggle session.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

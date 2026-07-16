@@ -224,13 +224,16 @@ def test_req_arc_fcp_5699_26_bounded_mismatches_leaves_small_lists_untouched():
     assert "your_prediction_was_wrong_at_omitted_count" not in bounded[0]
 
 
-def test_req_arc_fcp_5699_26_refactor_prompt_produces_valid_json_at_realistic_scale():
+def test_req_arc_fcp_5699_26_refactor_prompt_produces_valid_json_at_realistic_scale(monkeypatch):
     """Regression test for the exact bug: 5 mismatches this large previously serialized past
     4000 chars and got hard-truncated into invalid JSON. Confirms the fix's MISMATCHES block
-    parses as JSON regardless."""
+    parses as JSON regardless. Structure reminder explicitly disabled: REQ-ARC-FCP-5699-35
+    graduated it to default-on, and its trailing text after the MISMATCHES block is unrelated
+    to what THIS test checks (the mismatches JSON serialization itself)."""
     import json as _json
     from types import SimpleNamespace
 
+    monkeypatch.setenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", "0")
     mismatches = [_mismatch(i, n_cells=30) for i in range(5)]
     # sanity-check the regression premise: the OLD approach really would have produced
     # invalid JSON at this scale.
@@ -276,10 +279,25 @@ def _refactor_vr():
     )
 
 
-def test_req_arc_fcp_5699_31_refactor_prompt_default_unset_is_byte_identical(monkeypatch):
-    """Regression-safety anchor: CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER unset (production
-    default) -- the prompt must be byte-identical to the pre-5699-31 template."""
+def test_req_arc_fcp_5699_35_refactor_prompt_default_unset_now_includes_reminder(monkeypatch):
+    """REQ-ARC-FCP-5699-35 graduated the reminder to default-on: CARNOT_ARC_REFACTOR_STRUCTURE_
+    REMINDER unset (production default) now behaves identically to the explicit "1" case,
+    superseding the REQ-ARC-FCP-5699-31 dev-only "unset == byte-identical to pre-31" contract."""
     monkeypatch.delenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", raising=False)
+    vr = _refactor_vr()
+    prompt = e3.refactor_prompt("g50t", vr)
+    assert "REQUIRED OUTPUT STRUCTURE" in prompt
+    assert "def engine(grid, action, data):" in prompt
+    assert "def is_level_complete(grid):" in prompt
+
+
+def test_req_arc_fcp_5699_35_refactor_prompt_explicit_opt_out_is_byte_identical_to_pre_31(
+    monkeypatch,
+):
+    """The explicit opt-out (CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=0) still reproduces the
+    exact pre-REQ-ARC-FCP-5699-31 template byte-for-byte -- the escape hatch this graduation
+    preserves, matching the CARNOT_ARC_MTP=0 pattern used elsewhere for this same purpose."""
+    monkeypatch.setenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", "0")
     vr = _refactor_vr()
     prompt = e3.refactor_prompt("g50t", vr)
     assert "REQUIRED OUTPUT STRUCTURE" not in prompt

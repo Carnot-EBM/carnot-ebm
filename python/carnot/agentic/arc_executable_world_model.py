@@ -1250,7 +1250,11 @@ def refactor_prompt(game: str, vr: VerifyResult) -> str:
     mism = json.dumps(_bounded_mismatches(vr.mismatches), indent=1)
     before = ""
     after = ""
-    if os.environ.get("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER") == "1":
+    # Graduated to default-on (REQ-ARC-FCP-5699-35): REQ-31/32 validated this reminder fixes a
+    # real class-wrapping/missing-function pathology with zero observed regressions (6/6 success
+    # across a full-budget live run). CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=0 remains an
+    # explicit opt-out escape hatch, matching the CARNOT_ARC_MTP=0 pattern elsewhere in this file.
+    if os.environ.get("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", "1") != "0":
         before = _REFACTOR_STRUCTURE_REMINDER_BEFORE
         after = _REFACTOR_STRUCTURE_REMINDER_AFTER
     return f"""The executable world model at results/arc_e3/{game}/world_model.py reproduces
