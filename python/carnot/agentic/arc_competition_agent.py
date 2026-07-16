@@ -3163,13 +3163,35 @@ class E3AgentPolicy:
             param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
         )
 
+    @staticmethod
+    def _planner_accepts_max_nodes(plan_in_model) -> bool:
+        import inspect
+
+        try:
+            signature = inspect.signature(plan_in_model)
+        except (TypeError, ValueError):
+            return True
+        if "max_nodes" in signature.parameters:
+            return True
+        return any(
+            param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
+        )
+
     def _call_plan_in_model(self, plan_in_model, engine, is_done, start_grid, *, diagnostics=None):
+        import os
+
         goal_energy = self._goal_energy_for_plan(is_done)
         kwargs: dict = {}
         if goal_energy is not None and self._planner_accepts_goal_energy(plan_in_model):
             kwargs["goal_energy"] = goal_energy
         if diagnostics is not None and self._planner_accepts_diagnostics(plan_in_model):
             kwargs["diagnostics"] = diagnostics
+        # DEV-ONLY diagnostic override (REQ-ARC-FCP-5699-15 follow-up): unset in production, so
+        # this changes nothing by default. Lets an A/B/diagnostic script raise plan_in_model's
+        # search budget past its 20000-node default without editing production call sites.
+        _max_nodes_override = os.environ.get("CARNOT_ARC_PLAN_MAX_NODES")
+        if _max_nodes_override and self._planner_accepts_max_nodes(plan_in_model):
+            kwargs["max_nodes"] = int(_max_nodes_override)
         return plan_in_model(engine, is_done, start_grid, **kwargs)
 
     def _guided_plan_in_model(self, plan_in_model):
