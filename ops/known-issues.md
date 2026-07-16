@@ -573,6 +573,34 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    record WHY it returns empty against a gate-passed engine (search exhausted vs. goal predicate
    never satisfied vs. other), and/or repeat on 1-2 more unsolved games from
    `ops/arc_solve_registry.yaml` to see if the pattern recurs.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-15, root-causes the 5699-14 lead):**
+   `plan_in_model()` (`arc_executable_world_model.py`) gained an optional `diagnostics: dict`
+   kwarg (purely additive, `diagnostics=None` byte-identical to before) recording
+   `is_level_complete_was_none`/`nodes_expanded`/`termination_reason` on every return path;
+   threaded through `_call_plan_in_model`'s two production tier call sites in
+   `arc_competition_agent.py` (mirrors the existing `_planner_accepts_goal_energy` pattern via a
+   new `_planner_accepts_diagnostics` check) so both flow into `attempt["ttt_prior_engine_plan_
+   diagnostics"]`/`attempt["plan_diagnostics"]`, already captured by `arc_sge_live_path_ab.py`
+   since 5699-14 -- no script changes needed. Re-ran sp80, `budget=250`, same config as
+   5699-12/14. **Answer:** `is_level_complete_was_none=false` and `termination_reason=
+   "max_nodes_reached"` at `nodes_expanded` ~20000 for BOTH arms independently (baseline: 20008,
+   sge: 20002 -- the near-identical count from two separately-induced CNN priors is a
+   reproducibility signal, not noise). This rules out BOTH hypotheses 5699-14 raised: it's not a
+   missing/broken goal predicate, and it's not a fully-enumerated-empty search space
+   (`"queue_exhausted"` would mean that) -- the search genuinely runs out of its `max_nodes=20000`
+   budget with frontier still remaining, never reaching the induced goal predicate. **What this
+   means:** the tier-1 engine's one-step dynamics are locally accurate enough to pass its
+   held-out trust gate, but `plan_in_model`'s multi-step forward composition of that model either
+   needs more budget than 20000 nodes, or the model's rollout diverges from reality before
+   reaching the goal region -- a genuinely different failure class than exploration exhaustion
+   (5699-13, ruled out) or router choice (5699-12, ruled out). **Scope limit: still n=1
+   game/attempt** -- a precisely root-caused lead on one trace, not a generalized planner-capacity
+   claim. Concrete next step if picked up again: (a) cheapest -- re-run with `max_nodes` raised
+   well past 20000 (e.g. 100000) on the same sp80 trace to see if more budget alone finds a plan
+   (tunable-parameter fix) vs. still exhausts (points at rollout divergence, which the 1-step
+   held-out cell-recall gate can't detect); (b) repeat on 1-2 more unsolved games to see if
+   `max_nodes_reached` is the dominant termination reason generally.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

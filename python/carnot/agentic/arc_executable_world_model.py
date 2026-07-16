@@ -1758,6 +1758,7 @@ def plan_in_model(
     max_nodes: int = 20000,
     max_depth: int = 40,
     goal_energy=None,
+    diagnostics: Optional[dict] = None,
 ) -> Optional[list]:
     """BFS a path to an is_level_complete state ENTIRELY INSIDE the induced model
     (engine is pure: grid,action,data -> grid; no environment). Returns the action
@@ -1772,8 +1773,20 @@ def plan_in_model(
     nodes (the action-efficiency win). ``goal_energy`` is induced per-game from the agent's OWN observed
     win/non-win states (``arc_agi3_goal_induction.induce_goal_energy``), NOT a frozen transfer. Backward-
     compatible: ``goal_energy=None`` keeps the exact original FIFO BFS. The terminal check stays
-    ``is_level_complete`` (the energy only orders the frontier); an ablation control is mandatory."""
+    ``is_level_complete`` (the energy only orders the frontier); an ablation control is mandatory.
+
+    DIAGNOSTICS (REQ-ARC-FCP-5699-15, closes the "trust gate passes but no plan found" question
+    REQ-ARC-FCP-5699-14 left open): when ``diagnostics`` (a caller-owned dict) is supplied, this
+    populates it with ``is_level_complete_was_none`` (bool), ``nodes_expanded`` (int), and
+    ``termination_reason`` (one of ``"is_level_complete_none"`` / ``"plan_found"`` /
+    ``"max_nodes_reached"`` / ``"queue_exhausted"``) before returning -- so a caller can tell WHY an
+    empty return happened without re-deriving the search. Backward-compatible: ``diagnostics=None``
+    (the default) changes nothing about the search or the return value."""
     if is_level_complete is None:
+        if diagnostics is not None:
+            diagnostics["is_level_complete_was_none"] = True
+            diagnostics["nodes_expanded"] = 0
+            diagnostics["termination_reason"] = "is_level_complete_none"
         return None
     start = np.asarray(start_grid)
     seen = {to_ascii(start)}
@@ -1811,10 +1824,20 @@ def plan_in_model(
                 npath = path + [c]
                 try:
                     if bool(is_level_complete(ng)):
+                        if diagnostics is not None:
+                            diagnostics["is_level_complete_was_none"] = False
+                            diagnostics["nodes_expanded"] = nodes
+                            diagnostics["termination_reason"] = "plan_found"
                         return npath
                 except Exception:
                     pass
                 heapq.heappush(heap, (_h(ng), next(counter), ng, npath))
+        if diagnostics is not None:
+            diagnostics["is_level_complete_was_none"] = False
+            diagnostics["nodes_expanded"] = nodes
+            diagnostics["termination_reason"] = (
+                "max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"
+            )
         return None
 
     # ---- original blind FIFO BFS (goal_energy=None; unchanged) ----
@@ -1840,10 +1863,20 @@ def plan_in_model(
             npath = path + [c]
             try:
                 if bool(is_level_complete(ng)):
+                    if diagnostics is not None:
+                        diagnostics["is_level_complete_was_none"] = False
+                        diagnostics["nodes_expanded"] = nodes
+                        diagnostics["termination_reason"] = "plan_found"
                     return npath
             except Exception:
                 pass
             q.append((ng, npath))
+    if diagnostics is not None:
+        diagnostics["is_level_complete_was_none"] = False
+        diagnostics["nodes_expanded"] = nodes
+        diagnostics["termination_reason"] = (
+            "max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"
+        )
     return None
 
 
