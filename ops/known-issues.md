@@ -756,6 +756,33 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    capture and read the actual synthesized code for one attempt to determine whether it's
    plausible-but-wrong (needs better/more transitions) or structurally broken (a proposer bug) --
    qualitatively different follow-ups depending on which.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-22, reads the actual generated code as
+   requested -- HYPOTHESIS CORRECTED):** the leading hypothesis going in was "this looks like an
+   execution/plumbing bug" (the uniform zero-everywhere pattern was suspicious). **Reading the
+   real code refutes that.** `results/arc_e3/{sp80,cd82,g50t}/world_model.py` (real LLM output
+   from this session's own runs) is syntactically valid, non-crashing Python in every case --
+   sp80's engine is a full plausible-but-wrong hypothesis (cardinal movement + click-to-clear,
+   win=all-empty); cd82's `is_level_complete` is a literal, unconditional `return False`; g50t's
+   `engine()` hardcodes ABSOLUTE observed coordinates per action (`grid[63, 62] = 1`) instead of a
+   general rule, despite the prompt explicitly instructing "prefer simple general rules." **Two
+   precise, source-verified root causes, not inferred from symptoms:** (1) `_transitions_block`'s
+   uncapped-default `k=8` (`arc_executable_world_model.py` ~line 1054) shows the LLM at most 6
+   grid-changing transitions of the 25 collected -- roughly ONE per action type, exactly the
+   data-starvation signature that would produce g50t's memorize-the-literal-coordinate pattern
+   (one example per action can't distinguish "relative rule" from "absolute fact"). (2) the
+   win-state block requires either a level-up transition (impossible on a first-contact level by
+   construction) or `_previous_level_complete_grid` (REQ-ARC-FCP-5699-18: `None` until a level
+   completes once) -- **so first-contact levels supply the LLM ZERO positive win-state
+   information, the SAME upstream gap 5699-18 found for tier 1, now shown to independently starve
+   tier 2's goal-predicate induction too.** cd82's `return False` is close to the epistemically
+   honest answer given literally no positive evidence. Scope: n=3 games' code read directly (real
+   evidence); the `k=8` fix is source-verified-plausible but not yet empirically tested. Concrete
+   next step if picked up again: (a) cheapest -- raise `k` in the induce-prompt call and re-measure
+   whether the dynamics half stops memorizing coordinates; (b) harder but more fundamental -- give
+   tier 2 SOME positive goal signal for first-contact levels (e.g. prompt for a candidate goal
+   predicate from structural regularities) since "no positive win example" is structurally
+   unfixable by showing more pre-win transitions alone.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

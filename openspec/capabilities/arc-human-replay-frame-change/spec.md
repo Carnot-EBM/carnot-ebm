@@ -6426,6 +6426,108 @@ cells in every single measurement -- a complete failure, not a marginal near-mis
 that tier 2's problem is upstream code-synthesis correctness, a qualitatively different failure
 class from tier 1's search-mechanics wall this REQ chain spent 5699-14 through -20 characterizing
 
+### REQ-ARC-FCP-5699-22: Reading The Actual Generated Code -- Not An Execution Bug; Two Precise, Verified Root Causes, One Of Them Shared With Tier 1
+
+REQ-ARC-FCP-5699-21's own next step, and the operator's direct request, was to read the actual
+LLM-generated code rather than reason from aggregate trust metrics alone. Going in, the leading
+hypothesis (stated at the top of this REQ, based on the SUSPICIOUSLY uniform zero-everywhere
+failure pattern) was that this looked more like an execution/plumbing bug than genuine LLM
+incapability. **Reading the real generated code overturns that hypothesis.**
+
+**The generated code is real, syntactically valid, and (mostly) non-crashing.** The induced
+`world_model.py` for each game (`results/arc_e3/{sp80,cd82,g50t}/world_model.py`, all written by
+real LLM calls during this session's own runs) was read directly:
+
+- **sp80**: a full, plausible-LOOKING hypothesis -- cardinal + one diagonal movement action, a
+  click-to-clear action, win = "all cells empty." Syntactically correct, would execute cleanly on
+  any grid. Simply wrong against held-out transitions (hence `verify_cell_recall=0.0`).
+- **cd82**: `def is_level_complete(grid): return False` -- an UNCONDITIONAL, literal `False`. This
+  predicate can never be satisfied by construction, regardless of the grid.
+- **g50t**: `engine()` hardcodes LITERAL, ABSOLUTE observed coordinates per action (e.g. `if
+  action == 1: grid[63, 62] = 1`) instead of inferring a relative/general movement rule -- clear
+  memorization of specific instances, not generalization, despite the prompt's own explicit
+  instruction ("Prefer SIMPLE GENERAL rules over per-frame special cases").
+
+None of these are crashes or plumbing failures. All three are genuine (if bad) reasoning
+artifacts. **Reading `induce_prompt`/`_transitions_block` (`arc_executable_world_model.py`
+~line 1054-1169) explains BOTH pathologies precisely, with root causes verified from the source,
+not inferred from symptoms:**
+
+1. **The dynamics half is starved by a hard `k=8` transition cap.** `induce_prompt` calls
+   `_transitions_block(trans, previous_level_complete_grid=...)` with NO `k` override, so the
+   DEFAULT `k=8` applies -- `sample = changed[:k-2] + noop[:2]` shows the LLM at most **6
+   grid-changing transitions**, out of the full 25 collected before the stall trigger. Spread
+   across ARC-AGI-3's typical 6-8 distinct action types, that is roughly ONE example per action
+   type on average -- genuinely insufficient to distinguish "this action moves the player by a
+   RELATIVE offset" from "this action sets THIS SPECIFIC ABSOLUTE cell," which requires observing
+   the SAME action fire from at least two DIFFERENT starting positions. g50t's hardcoded-coordinate
+   engine is exactly the signature this data-starvation would produce: with one example per
+   action, memorizing the literal observed cell IS the maximum-likelihood hypothesis a reasoner
+   could produce, general-rule instruction notwithstanding.
+
+2. **The goal-predicate half is starved of ANY positive example on first-contact levels -- the
+   SAME structural gap REQ-ARC-FCP-5699-18 found for tier 1, now shown to independently cripple
+   tier 2 too.** `_transitions_block` only includes a WIN STATE block via one of two paths: `win =
+   next((t for t in trans if t.level_after > t.level_before), None)` (a transition that actually
+   leveled up -- impossible by construction for a first-contact level, since no level-up has ever
+   happened yet) OR `previous_level_complete_grid` (REQ-ARC-FCP-5699-18: unconditionally `None`
+   until a level has completed at least once). **For sp80/cd82/g50t, BOTH are always `None` --
+   the LLM's prompt contains ZERO positive win-state information.** Given zero positive examples,
+   `is_level_complete: return False` (cd82's actual output) is close to the epistemically-honest
+   answer: with no evidence of what winning looks like, a reasoner with no positive signal cannot
+   construct a non-trivial predicate that isn't itself a guess. This is the SAME `_previous_level_
+   complete_grid is None` root cause REQ-ARC-FCP-5699-18 diagnosed for tier 1's flat goal-energy --
+   confirmed here to independently starve a SECOND, structurally different component (tier 2's
+   goal-predicate induction, not tier 1's search heuristic) via the same upstream first-contact
+   data gap.
+
+**What this narrows.** The original hypothesis going into this REQ (execution/plumbing bug) is
+REFUTED by direct evidence -- explicitly correcting course rather than defending the prior
+framing. The real picture is sharper and more useful: first-contact levels structurally lack ANY
+win-state example, and this single upstream gap independently cripples TWO different downstream
+mechanisms across BOTH induction tiers (tier 1's goal-energy gradient, REQ-ARC-FCP-5699-18; tier
+2's goal-predicate induction, this REQ). Tier 2's dynamics (engine) failure is a SEPARATE, milder
+problem (data thinness from the `k=8` cap, not a first-contact-specific structural gap -- more
+transitions would exist even for a first-contact level, they're just not all shown).
+
+**Honest scope limit.** n=3 games' generated code read directly (real, verified evidence, not
+inferred). The dynamics-half root cause (the `k=8` cap) is verified from source and matches g50t's
+symptom precisely; it has NOT been empirically tested (would raising `k` actually produce more
+general rules, or does the underlying game genuinely need more real transitions collected before
+attempting induction at all -- a budget/exploration question, not a prompt one). The goal-predicate
+starvation explanation for cd82's `return False` is strongly evidenced (the prompt path is proven
+to supply zero win information) but not proven to be the SOLE cause (an LLM could in principle
+produce a degenerate predicate even with a positive example).
+
+**Concrete next step if this thread continues.** (a) Cheapest: raise `_transitions_block`'s `k`
+for the induce-prompt call (currently uncapped-default 8) and re-measure whether the dynamics half
+stops memorizing literal coordinates -- directly testable, matches the identified root cause. (b)
+Harder, and likely the more fundamental fix: give tier 2 SOME positive goal signal for
+first-contact levels analogous to what REQ-ARC-FCP-5699-19's novelty energy did for tier 1 --
+e.g., prompt the LLM to propose a CANDIDATE goal predicate from structural/visual regularities
+(a common color/shape becoming absent, a counter reaching zero) rather than leaving it with
+literally nothing, since "no positive example" is unfixable by more transitions alone (transitions
+before the first win are, by definition, all non-win states).
+
+#### SCENARIO-ARC-FCP-5699-22-GENERATED-CODE-IS-REAL-NOT-A-CRASH-BUT-TWO-VERIFIED-DATA-STARVATION-ROOT-CAUSES
+
+Given the operator asked to read the actual LLM-generated dynamics code (rather than continue
+reasoning from aggregate trust metrics) to distinguish a genuine reasoning failure from a
+structural/execution bug
+When `results/arc_e3/{sp80,cd82,g50t}/world_model.py` (real code from this session's own live
+induction attempts) is read directly, alongside `induce_prompt`/`_transitions_block`'s source
+Then the code is syntactically valid and non-crashing in every case (refuting the leading
+execution-bug hypothesis), and two precise, source-verified root causes explain the observed
+failures: (1) `_transitions_block`'s uncapped-default `k=8` shows the LLM at most 6 grid-changing
+transitions of the 25 collected, roughly one per action type -- explaining g50t's hardcoded-
+literal-coordinate memorization directly; (2) the win-state block in the prompt requires either a
+level-up transition (impossible on a first-contact level by construction) or `previous_level_
+complete_grid` (REQ-ARC-FCP-5699-18: unconditionally `None` until a level completes once) --
+so first-contact levels supply ZERO positive win-state information, explaining cd82's `return
+False` predicate as close to the epistemically honest answer given no evidence -- the SAME
+upstream first-contact data gap REQ-ARC-FCP-5699-18 found for tier 1, now shown to independently
+cripple tier 2's goal-predicate induction too
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
