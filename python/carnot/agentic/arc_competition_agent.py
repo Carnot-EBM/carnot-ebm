@@ -3149,11 +3149,28 @@ class E3AgentPolicy:
             param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
         )
 
-    def _call_plan_in_model(self, plan_in_model, engine, is_done, start_grid):
+    @staticmethod
+    def _planner_accepts_diagnostics(plan_in_model) -> bool:
+        import inspect
+
+        try:
+            signature = inspect.signature(plan_in_model)
+        except (TypeError, ValueError):
+            return True
+        if "diagnostics" in signature.parameters:
+            return True
+        return any(
+            param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
+        )
+
+    def _call_plan_in_model(self, plan_in_model, engine, is_done, start_grid, *, diagnostics=None):
         goal_energy = self._goal_energy_for_plan(is_done)
-        if goal_energy is None or not self._planner_accepts_goal_energy(plan_in_model):
-            return plan_in_model(engine, is_done, start_grid)
-        return plan_in_model(engine, is_done, start_grid, goal_energy=goal_energy)
+        kwargs: dict = {}
+        if goal_energy is not None and self._planner_accepts_goal_energy(plan_in_model):
+            kwargs["goal_energy"] = goal_energy
+        if diagnostics is not None and self._planner_accepts_diagnostics(plan_in_model):
+            kwargs["diagnostics"] = diagnostics
+        return plan_in_model(engine, is_done, start_grid, **kwargs)
 
     def _guided_plan_in_model(self, plan_in_model):
         def _wrapped(engine, is_done, start_grid):
@@ -3452,12 +3469,15 @@ class E3AgentPolicy:
                 attempt["ttt_prior_engine"] = _diag
                 if _eng is not None and self.root_grid is not None:
                     self._install_goal_bias(_isdone)
+                    _plan_diag: dict = {}
                     _plan = self._call_plan_in_model(
                         e3.plan_in_model,
                         _eng,
                         _isdone,
                         self.root_grid,
+                        diagnostics=_plan_diag,
                     )
+                    attempt["ttt_prior_engine_plan_diagnostics"] = _plan_diag
                     if _plan:
                         self.plan = _plan
                         attempt["planned"] = True
@@ -3710,7 +3730,11 @@ class E3AgentPolicy:
             self._install_goal_bias(is_done)
             # plan ENTIRELY in the model (zero real actions); execute phase RESETs then
             # replays this plan in the real env, halting on divergence.
-            plan = self._call_plan_in_model(e3.plan_in_model, engine, is_done, self.root_grid)
+            _plan_diag2: dict = {}
+            plan = self._call_plan_in_model(
+                e3.plan_in_model, engine, is_done, self.root_grid, diagnostics=_plan_diag2
+            )
+            attempt["plan_diagnostics"] = _plan_diag2
             if plan:
                 self.plan = plan
                 attempt["planned"] = True

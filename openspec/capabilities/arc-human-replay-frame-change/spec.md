@@ -5846,6 +5846,90 @@ execution falls through to the second (DSL/LLM) tier rather than using the passe
 a planner-level gap distinct from any trust-gating explanation the prior REQ-ARC-FCP-5699-N chain
 considered, and not yet root-caused
 
+### REQ-ARC-FCP-5699-15: Root-Causes The 5699-14 Lead -- The Trusted Engine's Search Runs Out Of Node Budget, Not A Missing Goal Predicate
+
+REQ-ARC-FCP-5699-14 left one question genuinely open: WHY does `e3.plan_in_model` return no plan
+against a tier-1 (CNN-dynamics-prior warm-start) engine whose own held-out trust gate just passed?
+Its own concrete next step named the fix directly: instrument `plan_in_model` to record why an
+empty return happened, rather than guessing.
+
+**Instrumentation added (purely additive, zero behavior change by default).** `plan_in_model()`
+(`arc_executable_world_model.py`) gained an optional `diagnostics: Optional[dict] = None` kwarg;
+when a caller passes a dict, both the best-first (`goal_energy`-guided) and blind-BFS code paths
+populate it with `is_level_complete_was_none` (bool), `nodes_expanded` (int), and
+`termination_reason` (`"is_level_complete_none"` / `"plan_found"` / `"max_nodes_reached"` /
+`"queue_exhausted"`) immediately before returning. `_call_plan_in_model` in
+`arc_competition_agent.py` mirrors the existing `_planner_accepts_goal_energy` pattern with a new
+`_planner_accepts_diagnostics` signature check, so passing `diagnostics=None` (every pre-existing
+call site) is byte-identical to before. The two production induction tiers (tier 1's
+`gated_engine_from_transitions` warm-start at ~line 3455, tier 2's `WorldModelVerifier`-gated
+DSL/LLM engine at ~line 3713) now thread a fresh `{}` through and record the result onto
+`attempt["ttt_prior_engine_plan_diagnostics"]` / `attempt["plan_diagnostics"]` respectively, so the
+diagnostics flow all the way into `policy.induction_attempts` -- already captured by
+`arc_sge_live_path_ab.py` since REQ-ARC-FCP-5699-14, so no script changes were needed to observe
+this session's answer.
+
+**Re-ran sp80, `budget=250`, identical config to 5699-12/5699-14.** Both arms' single
+stall-triggered induction attempt now report, for the tier-1 engine:
+
+```
+baseline_discriminative: is_level_complete_was_none=false, nodes_expanded=20008, termination_reason=max_nodes_reached
+sge:                     is_level_complete_was_none=false, nodes_expanded=20002, termination_reason=max_nodes_reached
+```
+
+**This directly rules out both hypotheses REQ-ARC-FCP-5699-14 raised and answers the question
+precisely.** It is NOT `is_level_complete is None` (the goal predicate the CNN-prior tier derived
+IS a real, callable function -- `is_level_complete_was_none=false` on both arms). It is also NOT
+`"queue_exhausted"` (the search space was not fully enumerated and found empty of goals) -- it is
+`"max_nodes_reached"`: the BFS/best-first search consumed its entire `max_nodes=20000` budget
+(overshooting slightly to 20002/20008, expected since the `nodes < max_nodes` check is evaluated
+once per outer-loop iteration, not per node) with a non-empty frontier still remaining, and never
+reached a state satisfying the induced goal predicate within that budget. Both arms landing on
+essentially the same node count independently (20008 vs 20002, both from separately-induced CNN
+priors with slightly different `heldout_cell_recall`, 1.0 vs 0.9794) is a reproducibility signal,
+not noise -- this is a real, budget-bound search-space limit, not a one-off fluke.
+
+**What this narrows.** The tier-1 engine passing its trust gate means the induced one-step
+dynamics ARE locally accurate (high held-out changed-cell recall). But `plan_in_model`'s search
+operates by repeatedly composing that one-step model forward -- and a model that is locally
+accurate per-transition does not guarantee its multi-step rollout stays close enough to reality
+(or dense enough near the goal) for a 20,000-node budget to discover a path to the induced goal
+predicate. This is a genuinely different failure class than anything the REQ-ARC-FCP-5699-N chain
+had characterized before: not exploration exhaustion (5699-13, ruled out), not router choice
+(5699-12, ruled out), not a missing/broken goal predicate (5699-15, ruled out this session), but a
+search-budget-vs-compounding-model-error limit in the planner itself.
+
+**Honest scope limit.** n=1 game (sp80), n=1 induction attempt per arm, and this session did not
+test whether raising `max_nodes` past 20000 would find a plan (that budget could be genuinely too
+small, or the induced model's rollout could diverge from reality regardless of budget -- these are
+distinguishable but untested hypotheses). Per Sample-Size Rigor discipline, this is a precisely
+root-caused lead on one trace, not a generalized claim about the planner's capability ceiling.
+
+**Concrete next step if this thread continues.** Two distinguishable follow-ups, cheapest first:
+(a) re-run with `max_nodes` raised well past 20000 (e.g. 100000) on the SAME sp80 trace/tier-1
+engine to see if a plan is found given more budget -- if yes, this is a tunable-parameter fix, not
+an architecture problem; if the search still exhausts without finding a goal, that points toward
+the induced model's multi-step rollout genuinely diverging from reality near the goal region,
+which the cheap held-out cell-recall gate (a 1-step metric) cannot detect. (b) repeat this same
+diagnostic on 1-2 more unsolved games to see whether `max_nodes_reached` is the dominant
+termination reason generally, or specific to sp80's induced dynamics.
+
+#### SCENARIO-ARC-FCP-5699-15-TRUSTED-ENGINE-SEARCH-EXHAUSTS-NODE-BUDGET-NOT-MISSING-GOAL
+
+Given `plan_in_model` gains an optional `diagnostics` dict that records
+`is_level_complete_was_none`/`nodes_expanded`/`termination_reason` on every return path, threaded
+through `_call_plan_in_model`'s two production induction-tier call sites without changing default
+behavior (`diagnostics=None` preserves byte-identical prior calls)
+When the real production stack's tier-1 CNN-dynamics-prior engine (already confirmed to pass its
+own held-out trust gate) is re-measured on sp80 with this instrumentation, for both the baseline
+discriminative-router arm and the SGE arm
+Then `is_level_complete_was_none` is `false` (the goal predicate is real and callable) and
+`termination_reason` is `"max_nodes_reached"` at `nodes_expanded` ~20000 (baseline: 20008, sge:
+20002) for both arms independently -- ruling out a missing/broken goal predicate and ruling out a
+fully-enumerated-empty search space, and identifying the actual mechanism as the planner's
+node-budget being insufficient (or the induced model's multi-step rollout diverging from reality
+before the budget is exhausted) to reach the goal predicate from within the induced model
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
