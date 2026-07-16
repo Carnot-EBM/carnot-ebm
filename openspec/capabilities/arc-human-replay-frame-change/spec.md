@@ -6813,6 +6813,142 @@ is null in this measurement, though round 1's induced code is independently the 
 generation observed in this REQ chain, attributable to sampling variance rather than the refactor
 wiring itself
 
+### REQ-ARC-FCP-5699-26: Fix The Real Bug -- `refactor_prompt`'s Mismatch Payload Was Invalid JSON, Not A Reasoning-Task Limitation
+
+The operator's recommended cheapest fix for REQ-ARC-FCP-5699-25's round-2-generation-failure was
+to apply an `_L2_CODEONLY_DIRECTIVE`-style forcing prefix to `refactor_prompt()`'s call, mirroring
+the fix that already solves the same class of failure for the induce path. Reading
+`_gen_to_file`'s own code comments (`arc_executable_world_model.py` ~line 1458-1464) BEFORE
+implementing that found it is explicitly, deliberately CONTRAINDICATED: `codeonly_eligible` is
+scoped to induce-only "because [refactor] is a REASONING task (debug BEFORE/PREDICTED/OBSERVED
+mismatches) that must NOT be told to 'skip all reasoning'" -- a documented 2026-06-25 design
+decision, not an oversight. Applying the recommended fix as originally framed would have silently
+reverted a considered architectural choice without engaging with why it was made.
+
+**Investigating further (rather than blindly executing the operator's literal instruction) found
+the REAL bug.** `refactor_prompt()`'s mismatch encoding was `json.dumps(vr.mismatches[:5],
+indent=1)[:4000]` -- a raw CHARACTER-COUNT slice applied AFTER JSON-encoding. Verified directly
+against a real g50t counterexample from REQ-ARC-FCP-5699-25's own run: 5 real mismatches serialize
+to **12,212 characters**, and `[:4000]` cuts the string at `'...   "true_chang'` -- literally
+mid-field-name, producing **genuinely invalid JSON** that was being shown directly to the LLM as
+the failing-cases evidence it's asked to debug from. The model was never given a reasoning-capacity
+problem to solve; it was given a malformed, truncated data blob and asked to fix code based on it.
+This fully explains round 2's "code unusable after 3 tries" failure without needing to suppress
+the model's reasoning at all.
+
+**The fix respects the deliberate reasoning-task design.** `_bounded_mismatches()` caps each
+mismatch's `true_change`/`your_prediction_was_wrong_at` cell-diff lists to a fixed count (8) BEFORE
+JSON-encoding, adding a companion `_omitted_count` field when cells are cut -- every mismatch
+entry stays structurally COMPLETE and the overall JSON stays VALID regardless of how large the
+underlying diffs are, while still showing a representative sample of cells per mismatch (up to 5
+mismatches, matching the prior cap). The blind post-encoding character slice is removed entirely
+now that the input is bounded at the source. This is an unconditional bug fix, not an opt-in
+env-var-gated hypothesis -- invalid JSON has no legitimate defense, and `refactor_prompt` is shared
+by BOTH the pre-existing, already-shipped `level_up_reinduction` path AND REQ-ARC-FCP-5699-25's new
+stall path, so this fix improves PRODUCTION behavior, not just the dev diagnostic being built here.
+3 new unit tests verify: large cell lists get capped with an honest omitted-count, small lists pass
+through untouched, and -- the direct regression test -- a payload sized like the real g50t
+counterexample (which is FIRST verified to reproduce the old truncation-into-invalid-JSON bug, so
+the test would have failed before this fix) now parses as valid JSON.
+
+**Live re-run, g50t, `budget=250`, `CARNOT_ARC_STALL_REFACTOR_LOOP=1`, k=8 default, WITH the JSON
+fix -- same isolated config as REQ-ARC-FCP-5699-25 for direct comparability.**
+
+```
+baseline round 2 (refactor): proposer_ok=False, "local model code unusable after 3 tries (missing ('engine', 'is_level_complete') in output)" -- SAME message as before the fix
+sge round 2 (refactor):      proposer_ok=False, "local gguf (GPU server) failed: TimeoutError('timed out')" -- a NEW, different failure mode
+```
+
+**Honest result: the JSON fix did NOT resolve round 2's failure.** The baseline arm produces the
+EXACT SAME "code unusable after 3 tries" message as the pre-fix run, even though its input is now
+verifiably valid JSON -- this directly refutes the hypothesis that malformed JSON was the (sole,
+or even primary) cause of round 2's generation failure. The sge arm failed differently this time --
+an outright `TimeoutError` on the underlying HTTP request to the GPU server (the class default
+`timeout=300` seconds was exceeded) -- a genuinely different failure class, not a code-quality
+issue at all. **The JSON fix is still correct and worth keeping** (it's a real, independently
+verifiable bug -- invalid JSON has no legitimate defense regardless of whether it explains THIS
+specific symptom), but it is not sufficient by itself to unblock the refactor loop.
+
+**What this narrows, and sets up REQ-ARC-FCP-5699-27.** Two live, real data points now point AWAY
+from "the input was malformed" and TOWARD "the refactor call's generation is taking too
+long/producing too much text" -- the sge arm's direct 300s timeout is unambiguous evidence of
+this, independent of any new instrumentation. This run predates REQ-ARC-FCP-5699-27's truncation-
+detection mechanism, so it's not yet known whether the baseline arm's 3 failed tries were hitting
+`stop_type == "limit"` (the model ran out of its 2560-token generation budget before finishing) --
+that is the concrete next measurement, now with the tooling in place to answer it directly rather
+than inferring from symptoms.
+
+#### SCENARIO-ARC-FCP-5699-26-JSON-FIX-ALONE-DOES-NOT-UNBLOCK-ROUND-2
+
+Given `refactor_prompt`'s mismatch payload is fixed to always produce valid JSON (REQ-ARC-FCP-
+5699-26's `_bounded_mismatches`)
+When g50t is re-measured at the k=8 default with `CARNOT_ARC_STALL_REFACTOR_LOOP=1`, both arms
+Then the baseline arm's round 2 fails with the IDENTICAL "code unusable after 3 tries" message as
+the pre-fix run (refuting invalid JSON as the sole cause), and the sge arm's round 2 fails with a
+direct `TimeoutError` on the underlying HTTP request -- establishing that the bottleneck is more
+likely generation TIME/LENGTH than input validity, and motivating REQ-ARC-FCP-5699-27's
+truncation-detection instrumentation as the next concrete diagnostic step
+
+### REQ-ARC-FCP-5699-27: MANDATORY Truncation Detection -- Every Completion Call Must Surface Why Generation Stopped
+
+Operator directive, prompted directly by REQ-ARC-FCP-5699-25/26's investigation: "should we
+increase max context? we must always detect reaching max context truncation." Before this REQ, the
+answer to "should we raise `max_tokens`" was UNANSWERABLE from the codebase's own signals --
+`generate()`/`complete_text()` (`arc_executable_world_model.py`, `LocalGGUFProposer`) read ONLY
+`response.get("content", "")` from llama.cpp's `/completion` endpoint, silently discarding two
+fields the server already provides: `stop_type` (`"limit"` means generation was cut off by hitting
+`n_predict` -- `self.max_tokens` -- before finishing naturally; confirmed directly via a live probe
+against the warm port-8930 server) and `truncated` (whether the INPUT PROMPT itself exceeded the
+server's context window, `n_ctx` -- a different, upstream failure mode from an output-length cap).
+Every generation failure collapsed into the same generic "missing (...) in output" message,
+indistinguishable from "the model finished and produced garbage."
+
+**Implementation.** `LocalGGUFProposer` gained two new dataclass fields, `last_stop_type: str = ""`
+and `last_prompt_truncated: bool = False`, plus a `_record_completion_diagnostics(response: dict)`
+helper that sets both from any completion response. Wired into BOTH completion paths: `generate()`
+(the code-extraction path used by induce/refactor/gap-fillers) and `complete_text()` (the raw-text
+path used more broadly -- SGE's `LLMStrategyProposer`, the cell selector, and several standalone
+experiment scripts). Neither method's RETURN CONTRACT changes (`generate()` still returns `(bool,
+str)`; `complete_text()` still always returns `(True, str)` per its documented contract) -- the
+diagnostics are ALWAYS recorded as instance attributes regardless of success/failure, so any caller
+that cares can check `proposer.last_stop_type`/`proposer.last_prompt_truncated` after a call without
+every caller needing a signature change. `generate()`'s own failure-path message additionally names
+the cause explicitly when detected (`"[HIT n_predict=N OUTPUT LIMIT before completing]"` /
+`"[PROMPT TRUNCATED -- exceeded server context window]"`), so the diagnosis flows into
+`refinement_rounds[i]['message']` -- a field every caller in this REQ chain already captures --
+with zero schema changes needed elsewhere. 5 new unit tests (`test_codeonly_induce_scoping.py`,
+mocking the `/completion` response) verify: diagnostics are recorded on the happy path too (not
+just failures), the two failure messages name their specific cause, and `complete_text()` records
+diagnostics despite always returning success.
+
+**Answering "should we increase max context" -- not yet fully resolved, but now answerable.** This
+REQ ships the INSTRUMENTATION; REQ-ARC-FCP-5699-26's live run (which predates this code) already
+supplies one direct, instrumentation-independent data point supporting the "generation is taking
+too long" theory (the sge arm's raw 300-second `TimeoutError`), but does not yet show whether the
+baseline arm's failures were `stop_type == "limit"` (an output-token-budget problem, where raising
+`max_tokens` is the right lever) versus a `n_ctx`-related `truncated` prompt overflow (unlikely
+given the bounded ~3-4K-character prompts REQ-ARC-FCP-5699-23/26 already produce) versus something
+else the model itself is doing. **Concrete next step, already queued:** re-run the SAME isolated
+g50t configuration WITH this detection code active, and read `refinement_rounds[i]['message']`
+directly for the `stop_type`/`truncated` markers -- that measurement will answer the question with
+real evidence instead of inference, and if `stop_type == "limit"` is confirmed, raising
+`max_tokens` for the refactor call specifically (not necessarily `n_ctx`, which appears
+under-pressured given current prompt sizes) becomes a directly-justified next fix.
+
+#### SCENARIO-ARC-FCP-5699-27-STOP-TYPE-AND-TRUNCATED-ARE-NO-LONGER-SILENTLY-DISCARDED
+
+Given `generate()`/`complete_text()` previously read only `response.get("content", "")` from every
+llama.cpp completion response, discarding `stop_type`/`truncated`
+When a completion response reports `stop_type="limit"` (the model was cut off by its output-token
+budget) or `truncated=True` (the prompt itself overflowed the context window)
+Then `LocalGGUFProposer.last_stop_type`/`.last_prompt_truncated` are set from the REAL response on
+every call (success or failure), and `generate()`'s own failure message names the specific cause
+when either condition is detected -- verified live against the warm production llama-server (a
+direct probe with `n_predict=5` returns `stop_type: "limit"`, confirming the field genuinely
+exists and behaves as documented, not just in mocked tests) -- so a future measurement can
+distinguish "ran out of output budget" from "prompt too long for context" from "the model produced
+complete-but-wrong output," three previously-indistinguishable failure modes
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

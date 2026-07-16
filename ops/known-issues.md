@@ -857,6 +857,43 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    counterexample payload shown to `.refactor()`; (c) given demonstrated high variance sometimes
    producing a strong first-try result, consider best-of-N induce sampling as an alternative to
    iterative refinement.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-26, tests fix (b), CORRECTED
+   HYPOTHESIS):** before implementing operator-suggested fix (a) (the codeonly directive),
+   checked `_gen_to_file`'s own code comments FIRST -- found that exclusion is DELIBERATE
+   (refactor is a documented REASONING task, "must NOT be told to skip all reasoning",
+   2026-06-25), not an oversight. Applying it as suggested would have silently reverted a
+   considered design choice. Investigated further instead and found the REAL bug:
+   `refactor_prompt`'s mismatch encoding was `json.dumps(vr.mismatches[:5], indent=1)[:4000]` --
+   a raw character-count slice AFTER JSON-encoding. Verified directly: 5 real g50t mismatches
+   serialize to 12,212 chars, and `[:4000]` cuts mid-field-name, producing genuinely INVALID
+   JSON shown to the LLM. Fixed via `_bounded_mismatches()` (caps each mismatch's cell-diff
+   lists to 8 BEFORE encoding, with an honest `_omitted_count` companion field) -- unconditional
+   bug fix (not opt-in), also improves the already-shipped `level_up_reinduction` path since
+   `refactor_prompt` is shared. 3 new tests. **Live re-run WITH the fix: round 2 STILL fails --
+   baseline gets the IDENTICAL "code unusable after 3 tries" message as before the fix (refuting
+   invalid JSON as the sole cause); sge gets a NEW failure, a direct 300s `TimeoutError` on the
+   HTTP request.** The fix is correct and worth keeping, but not sufficient alone. Both data
+   points now point toward generation TIME/LENGTH as the real bottleneck, not input validity --
+   motivating the detection follow-on below.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-27, operator directive: "should we
+   increase max context? we must always detect reaching max context truncation"):**
+   `generate()`/`complete_text()` (`LocalGGUFProposer`) previously read ONLY
+   `response.get("content", "")` from llama.cpp's `/completion` response, silently discarding
+   `stop_type` (`"limit"` = cut off by `n_predict` before finishing -- confirmed live via a
+   direct probe against the warm port-8930 server) and `truncated` (prompt itself overflowed
+   `n_ctx`, a different failure mode). Added `last_stop_type`/`last_prompt_truncated` instance
+   attributes + a `_record_completion_diagnostics()` helper, wired into BOTH completion paths
+   (return contracts unchanged); `generate()`'s failure message now names the specific cause
+   when detected. 5 new tests. **This ships the instrumentation; it does not yet answer the
+   question** -- REQ-ARC-FCP-5699-26's live run predates this code, so it's not yet confirmed
+   whether the baseline arm's failures were `stop_type=="limit"` (raising `max_tokens` would be
+   directly justified) or something else. `n_ctx` itself looks under-pressured given the now-
+   bounded ~3-4K-char prompts; `max_tokens` (currently 2560 for the refactor call) is the more
+   plausible lever if truncation is confirmed. Concrete next step (already queued): re-run the
+   same isolated g50t config WITH this detection code active and read the real
+   `stop_type`/`truncated` values before deciding whether to raise anything.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

@@ -164,3 +164,87 @@ def test_refactor_method_does_not_request_codeonly(monkeypatch: pytest.MonkeyPat
     assert ok is True
     assert not cap["body"]["prompt"].startswith(awm._L2_CODEONLY_DIRECTIVE)
     assert "stop" not in cap["body"]
+
+
+# --------------------------------------------------------------------------- #
+# REQ-ARC-FCP-5699-27: MANDATORY truncation detection (operator directive) --
+# every completion request must surface WHY generation stopped (stop_type ==
+# "limit" means it hit n_predict before finishing naturally) and whether the
+# PROMPT itself overflowed the server's context window (truncated), rather than
+# silently discarding both signals and collapsing every failure into one
+# generic "missing X in output" message.
+# --------------------------------------------------------------------------- #
+
+
+def _fake_urlopen_with(monkeypatch: pytest.MonkeyPatch, response: dict):
+    def fake_urlopen(req, timeout=None):  # noqa: ANN001
+        return _FakeResp(json.dumps(response).encode())
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+
+def test_req_arc_fcp_5699_27_generate_records_stop_type_and_truncated(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A successful, complete response (stop_type='eos', truncated=False) is recorded even on
+    the happy path -- the attributes are ALWAYS set, not just on failure."""
+    _fake_urlopen_with(
+        monkeypatch, {"content": _VALID_CODE, "stop_type": "eos", "truncated": False}
+    )
+    p = _proposer(monkeypatch)
+    ok, _code = p.generate("BASE", ("engine", "is_level_complete"), codeonly_eligible=True)
+    assert ok is True
+    assert p.last_stop_type == "eos"
+    assert p.last_prompt_truncated is False
+
+
+def test_req_arc_fcp_5699_27_generate_failure_message_names_n_predict_limit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When the model is cut off by n_predict before finishing (stop_type='limit') and never
+    emits the required functions, the failure message MUST name that specific cause -- not just
+    a generic 'missing (...) in output' that's indistinguishable from bad-but-complete output."""
+    _fake_urlopen_with(
+        monkeypatch,
+        {
+            "content": "def engine(g, a, d):\n    # still reasoning about",
+            "stop_type": "limit",
+            "truncated": False,
+        },
+    )
+    p = _proposer(monkeypatch)
+    ok, message = p.generate("BASE", ("engine", "is_level_complete"), codeonly_eligible=False)
+    assert ok is False
+    assert "n_predict" in message
+    assert "OUTPUT LIMIT" in message
+    assert p.last_stop_type == "limit"
+
+
+def test_req_arc_fcp_5699_27_generate_failure_message_names_prompt_truncation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When the server reports the PROMPT itself was truncated (context window overflow), that
+    must ALSO be named distinctly -- a different, upstream failure from an output-length limit."""
+    _fake_urlopen_with(monkeypatch, {"content": "", "stop_type": "eos", "truncated": True})
+    p = _proposer(monkeypatch)
+    ok, message = p.generate("BASE", ("engine", "is_level_complete"), codeonly_eligible=False)
+    assert ok is False
+    assert "PROMPT TRUNCATED" in message
+    assert "context window" in message
+    assert p.last_prompt_truncated is True
+
+
+def test_req_arc_fcp_5699_27_complete_text_also_records_diagnostics(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """complete_text() (the raw-text path used by SGE's strategy proposer, the cell selector,
+    etc.) ALWAYS returns (True, text) by contract -- but it must still record stop_type/truncated
+    on self so any caller that cares can check after the call, satisfying 'always detect' even
+    though this method's own return value doesn't treat truncation as failure."""
+    _fake_urlopen_with(monkeypatch, {"content": "42", "stop_type": "limit", "truncated": False})
+    p = _proposer(monkeypatch)
+    ok, text = p.complete_text("reply with one integer", max_tokens=4)
+    assert ok is True
+    assert text == "42"
+    assert p.last_stop_type == "limit"
+    assert p.last_prompt_truncated is False
