@@ -55,6 +55,7 @@ from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
     MAX_REFINEMENT_ROUNDS,
+    _goal_satisfiability_check,
     execute_bounded_llm_reinduction,
     plan_hierarchical_subgoals,
     propose_hierarchical_subgoals,
@@ -3692,7 +3693,17 @@ class E3AgentPolicy:
                         "expert_trust_weights": list(outcome.expert_trust_weights),
                     }
                 )
-                if outcome.goal_predicate is not None:
+                # REQ-ARC-FCP-5699-38 fix: only install a goal bias the refinement loop's OWN
+                # diagnostic considers satisfiable. Found via a real post-submission regression
+                # investigation: an induced-but-UNSATISFIABLE goal_predicate (goal_predicate_
+                # satisfiable=False, i.e. the predicate is never true for any observed state) was
+                # still being installed unconditionally, biasing ALL subsequent exploration toward
+                # a goal the agent's own diagnostics say is unachievable -- actively worse than no
+                # bias at all. Applies here too (not just the stall-path call site below) since the
+                # same nonsensical-if-unsatisfiable risk exists regardless of which branch reaches
+                # this code; there is no principled reason an unsatisfiable predicate is safe to
+                # install after a level-up but not on first contact.
+                if outcome.goal_predicate is not None and outcome.goal_predicate_satisfiable:
                     self._install_goal_bias(outcome.goal_predicate)
                 if outcome.planned:
                     self.plan = list(outcome.plan)
@@ -3779,7 +3790,17 @@ class E3AgentPolicy:
                             "stall_refactor_loop_used": True,
                         }
                     )
-                    if stall_outcome.goal_predicate is not None:
+                    # REQ-ARC-FCP-5699-38 fix (see the twin fix + full rationale at the
+                    # level_up_reinduction call site above): only install a goal bias the
+                    # refinement loop's own diagnostic considers satisfiable. This is the call
+                    # site a REAL post-submission investigation found live-firing on genuine
+                    # first-contact stalls: goal_predicate_satisfiable=False, planned=False,
+                    # skipped="hidden_state_trust_below_threshold", yet a goal bias was still
+                    # being installed and persisting into the rest of the episode's exploration.
+                    if (
+                        stall_outcome.goal_predicate is not None
+                        and stall_outcome.goal_predicate_satisfiable
+                    ):
                         self._install_goal_bias(stall_outcome.goal_predicate)
                     if stall_outcome.planned:
                         self.plan = list(stall_outcome.plan)
@@ -3937,6 +3958,37 @@ class E3AgentPolicy:
                 attempt["trust_metric"] = _metric
                 if _gate_value < 0.5:  # too weak to trust for execution-grounded planning
                     attempt["skipped"] = "world_model_accuracy_below_threshold"
+                    return
+            # REQ-ARC-FCP-5699-38 (plain single-shot path): found via the same post-submission
+            # regression investigation that fixed the two stall-refactor-loop call sites above --
+            # this pre-existing (not introduced by REQ-35) code path installs a goal bias whenever
+            # DYNAMICS trust passes (world-model prediction accuracy above threshold), with NO
+            # check that the GOAL predicate itself is satisfiable -- a well-predicted world model
+            # can still be paired with a goal that is never true for any reachable state.
+            #
+            # DEV-ONLY, opt-in (unset -> byte-identical to before this REQ): a real test run
+            # (test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate) found this bounded-
+            # BFS check, reused unmodified from execute_bounded_llm_reinduction, produces a real
+            # false negative against a deliberately-simplified engine -- correctly-per-its-own-
+            # logic determining a goal unreachable within the search bound, when the goal WAS
+            # trivially reachable in that test's simplified world. This means an IMPERFECT (but
+            # still useful) induced engine could analogously fail to prove a genuinely-achievable
+            # goal reachable within max_nodes/max_depth, rejecting a good goal, not just a bad one
+            # -- a real design tension the two already-graduated fixes above do not share (those
+            # gate on a value execute_bounded_llm_reinduction ALREADY computes and had already
+            # gone through the same REQ-25->32->35 dev-gated validation cycle; this is brand-new
+            # computation on a path that never paid this cost before). Needs a real matched-budget
+            # validation pass before graduating to default-on, per this project's own standing
+            # discipline for exactly this class of change -- not shipped as an unconditional
+            # default on the strength of one investigation session.
+            if os.environ.get("CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK") == "1":
+                goal_check = _goal_satisfiability_check(
+                    engine=engine, goal=is_done, start_grid=self.root_grid
+                )
+                attempt["goal_predicate_satisfiable"] = bool(goal_check.get("satisfiable"))
+                attempt["goal_satisfiability"] = dict(goal_check)
+                if not goal_check.get("satisfiable"):
+                    attempt["skipped"] = "degenerate_goal_predicate"
                     return
             self._install_goal_bias(is_done)
             # plan ENTIRELY in the model (zero real actions); execute phase RESETs then

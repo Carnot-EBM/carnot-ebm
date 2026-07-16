@@ -1,0 +1,152 @@
+{
+  "experiment": "arc_stall_refactor_loop_cost_ab",
+  "req": "REQ-ARC-FCP-5699-38",
+  "game": "sc25",
+  "budget": 250,
+  "methodology_note": "Post-submission investigation of whether REQ-ARC-FCP-5699-35's graduated stall-refactor-loop (default-on since kernel v9, submitted 2026-07-16, scored 0.08 vs the prior day's 0.12) consumes meaningful wall-clock on genuine first-contact induction. Both arms use E3AgentPolicy(game, proposer=None) -- the real production lazy-default proposer -- matching what actually ships; the ONLY difference is CARNOT_ARC_STALL_REFACTOR_LOOP. The scored live agent never uses per-game GameAdapters (offline-dev-twin-only mechanism per the ARC Live-Path Reachability Discipline), so this public game is a representative simulation of genuine first-contact induction on a hidden game.",
+  "model_specs": [
+    "unsloth/Qwen3.5-9B-MTP-GGUF (Q4_K_M) -- the frozen live generator"
+  ],
+  "inference_substrate": "live_llm_inference",
+  "random_seed": 5699,
+  "reproducibility_checksum": "7e9c6c3b7b00d77e",
+  "results": {
+    "stall_loop_off_pre_5699_35": {
+      "game": "sc25",
+      "levels": 0,
+      "reached": 0,
+      "actions": 245,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 245,
+          "human_actions": 36,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 6,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 32,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 83,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 143,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 50,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sc25",
+        "stuck_at_level": 0,
+        "actions_spent": 245,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "duration_s": 1181.0763432979584,
+      "arm": "stall_loop_off_pre_5699_35",
+      "stall_refactor_loop_flag": "0",
+      "induction_attempts_count": 1,
+      "stall_attempts_count": 1,
+      "stall_refactor_loop_used_count": 0,
+      "stall_refactor_loop_total_rounds": 0
+    },
+    "stall_loop_on_current_default": {
+      "game": "sc25",
+      "levels": 0,
+      "reached": 0,
+      "actions": 245,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 245,
+          "human_actions": 36,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 6,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 32,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 83,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 143,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 50,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 0,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 0,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "sc25",
+        "stuck_at_level": 0,
+        "actions_spent": 245,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "duration_s": 636.3220176696777,
+      "arm": "stall_loop_on_current_default",
+      "stall_refactor_loop_flag": "1",
+      "induction_attempts_count": 1,
+      "stall_attempts_count": 1,
+      "stall_refactor_loop_used_count": 1,
+      "stall_refactor_loop_total_rounds": 3
+    }
+  },
+  "duration_delta_s_on_minus_off": -544.7543256282806
+}

@@ -7709,6 +7709,93 @@ now for a newly-visible, different reason: `REGRESSION: lost CORE solves ['m0r0'
 disabled, and the follow-up work required is a behavioral investigation of the m0r0 regression,
 not further optimization
 
+### REQ-ARC-FCP-5699-38: Post-Submission Regression Investigation -- One Confirmed, Unit-Tested Bug Fixed; The Original Hypothesis Refuted
+
+Kernel v9 (REQ-35's graduated fixes) scored **0.08**, down from the prior day's **0.12** -- a real
+regression, investigated directly rather than assumed. The local submission gate that passed before
+submitting could not have caught this: it sets `CARNOT_ARC_DISABLE_INDUCTION=1`, never exercising
+the induction/LLM path REQ-35 changed at all.
+
+**Hypothesis 1 (wall-clock cost of the graduated stall-refactor-loop): REFUTED by direct
+measurement.** A real A/B (`E3AgentPolicy(game, proposer=None)` -- the actual production
+lazy-default, matching what ships -- `CARNOT_ARC_STALL_REFACTOR_LOOP=1` current default vs `=0` the
+pre-REQ-35 behavior, same game `sc25`, budget=250) found the CURRENT default was **544.75s FASTER**
+(636.32s vs 1181.08s), not slower, with identical outcomes (`levels=0`, `actions=245` both arms).
+The scored live agent never uses per-game `GameAdapter`s (offline-dev-twin-only mechanism per the
+ARC Live-Path Reachability Discipline), so a public game under `proposer=None` is a representative
+simulation of genuine first-contact induction on a hidden game -- this measurement directly bears on
+the hypothesis and refutes it. `results/arc_stall_refactor_loop_cost_ab_sc25.json`.
+
+**Hypothesis 2 (the stall-refactor-loop installs a goal bias from an untrustworthy induced
+predicate): a REAL bug, found, unit-tested, and fixed -- but not what fired in the live repro.**
+`_induce_and_plan()`'s stall-refactor-loop and `level_up_reinduction` call sites both installed
+`stall_outcome.goal_predicate` / `outcome.goal_predicate` as a frontier bias whenever it was not
+`None`, completely independent of `goal_predicate_satisfiable` (already computed by
+`execute_bounded_llm_reinduction`) or `planned`. A real live repro on `sc25` confirmed this firing:
+`goal_predicate_satisfiable=False`, `planned=False`, `skipped="hidden_state_trust_below_threshold"`,
+yet the bias was replaced. Fixed at BOTH call sites (`outcome.goal_predicate is not None and
+outcome.goal_predicate_satisfiable` / the stall-path twin) -- there is no principled reason an
+unsatisfiable predicate is safe to install after a level-up but not on first contact. Proven via a
+targeted unit test that FAILS on pre-fix code (confirmed directly: temporarily reverted, the test
+fails with the exact bias-replacement assertion, restored, passes) and a corrected live re-repro
+using object-IDENTITY comparison, not a None-check -- `E3AgentPolicy` always installs a DEFAULT
+`RelationalGoalEnergy` bias at construction (`SUBMITTED_AGENT_CONFIG["goal_energy_enabled"]=True`),
+so `goal_bias is not None` is ALWAYS true and was a flawed initial test signal, corrected before
+trusting it.
+
+**But the corrected live re-repro revealed the SAME `sc25` scenario's bias replacement came from a
+THIRD, different, pre-existing call site** (`_install_goal_bias(is_done)` in the plain single-shot
+path, gated only on world-model DYNAMICS-accuracy trust via `select_trusted_world_model`/
+`WorldModelVerifier` -- never on GOAL satisfiability at all) -- NOT from the two now-fixed call
+sites. This path predates REQ-35 entirely and would behave identically whether or not the
+stall-refactor-loop ever ran, so it cannot by itself explain a REQ-35-correlated regression, though
+it is the same class of defect and worth fixing regardless.
+
+**A fix for the third call site was attempted, found to have a real design flaw via the test suite
+itself, and shipped dev-only rather than unconditionally.** Reusing `_goal_satisfiability_check`
+(the same bounded-BFS the LLM-induction paths already use) at the plain-path call site broke
+`test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate`: not via an exception, but because
+the bounded BFS, run against that test's deliberately-simplified mock engine, correctly-per-its-own-
+logic determined the goal unreachable within the search bound -- when the goal WAS trivially
+reachable in the test's simplified world. This exposes a genuine risk the first two fixes do not
+share: an imperfect-but-still-useful REAL induced engine could analogously fail to prove a
+genuinely-achievable goal reachable within `max_nodes`/`max_depth`, rejecting a good goal, not just
+a bad one -- a false-negative risk requiring real matched-budget validation before it is safe as an
+unconditional default, per this project's own standing REQ-25->32->35 dev-gate->validate->graduate
+discipline. Shipped behind `CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK` (default unset,
+byte-identical to before), not graduated.
+
+**Honest bottom line.** One real, confirmed, unit-tested bug is fixed and shipped as an
+unconditional default (the two `goal_predicate_satisfiable`-gated fixes -- pure hardening, zero
+behavioral risk since they only ADD a condition on an already-computed, already-validated signal).
+The original wall-clock hypothesis for the score regression is refuted. The regression's actual
+cause remains genuinely unexplained after this investigation -- this is reported honestly rather
+than retrofitting either finding into a confident causal story the evidence does not support.
+
+Required field principles:
+
+- `goal_predicate_satisfiable`-gated bias install: principle "an induced goal predicate that is
+  diagnosably unsatisfiable must never bias exploration toward it -- pursuing a provably-unreachable
+  goal is strictly worse than no bias at all, regardless of which code path induced the predicate."
+- `CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK`: principle "the plain path's version of the same
+  defect is real but its naive fix has a demonstrated false-negative risk against imperfect engines;
+  dev-only gating prevents shipping an unvalidated behavior change on the strength of one
+  investigation session, per this project's standing dev-gate->validate->graduate discipline."
+
+#### SCENARIO-ARC-FCP-5699-38-WALL-CLOCK-REFUTED-GOAL-BIAS-BUG-CONFIRMED-THIRD-PATH-NEEDS-VALIDATION
+
+Given kernel v9's score regression (0.12 -> 0.08) and the local gate's blind spot (induction
+disabled, never exercising what REQ-35 changed)
+When a real production-config A/B measures stall-refactor-loop wall-clock cost, and a corrected
+(identity-based) live repro checks whether an unsatisfiable induced goal predicate gets installed as
+a bias
+Then the wall-clock hypothesis is refuted (current default is FASTER, not slower) and a real,
+unit-proven bug is found and fixed at the two call sites reachable from the LLM-induction paths, but
+the exact scenario that exposed it turns out to route through an unrelated, pre-existing THIRD call
+site whose naive fix has its own demonstrated false-negative risk against imperfect engines -- ship
+the proven fix as default, gate the risky one dev-only, and report the regression's cause as still
+genuinely unexplained rather than overclaiming either finding as the answer
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
