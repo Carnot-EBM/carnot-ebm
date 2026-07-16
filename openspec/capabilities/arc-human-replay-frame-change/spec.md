@@ -6167,6 +6167,122 @@ completed at least once, so for any first-contact level the function structurall
 binary 0.0-at-goal/1.0-elsewhere energy that provides the best-first search with zero gradient,
 regardless of the `CARNOT_ARC_GRADED_GOAL_BIAS` env var
 
+### REQ-ARC-FCP-5699-19: Novelty Goal-Energy Fallback For First-Contact Levels -- Real Gradient, Still No Plan; Plus A Self-Caught Test-Fixture-Realism Bug
+
+REQ-ARC-FCP-5699-18 named a genuinely open design question: first-contact levels have no
+completion exemplar, so a graded goal-energy is structurally inapplicable there -- what, if
+anything, could give the search SOME gradient without one? This REQ implements and empirically
+tests candidate (a) from that REQ's next-step list: a self-supervised novelty/coverage energy.
+
+**Design.** `E3AgentPolicy` gained `_novelty_observed_stack()`: a stack of every real (before,
+after) grid observed so far this episode (`self._active_transitions()`), shape-filtered for
+consistency. `_goal_energy_for_plan` gained a THIRD branch, tried only when the graded-exemplar
+branch is inapplicable (`use_graded` False): if `CARNOT_ARC_NOVELTY_GOAL_BIAS=1` is set (DEV-ONLY,
+unset in production -- opt-in pending empirical validation, matching this REQ chain's established
+discipline for every prior env-var-gated addition) and observed grids exist, the energy for a
+candidate grid becomes `scale * (1.0 - min_diff_to_observed)`, where `min_diff_to_observed` is the
+normalized Hamming distance to the NEAREST already-observed real grid. States identical to
+something already concretely seen get the SAME flat energy as the pre-existing binary fallback
+(never worse); states far from everything seen get low energy (attractive to the min-heap search)
+-- a go-explore-flavored, execution-grounded proxy for "unexplored territory is more likely to
+contain progress," not a claim about the actual unknown goal. The returned closure's
+`energy_source` attribute (`"graded_exemplar"` / `"novelty"` / `"binary"`) is threaded into
+`_call_plan_in_model`'s `diagnostics["goal_energy_source"]` so any A/B run can confirm which
+branch actually fired.
+
+**Self-caught bug (a genuine test-fixture-realism finding, not glossed over).** The first live
+validation attempt found `goal_energy_source` stayed `"binary"` even with
+`CARNOT_ARC_NOVELTY_GOAL_BIAS=1` set. Root cause: `_novelty_observed_stack()` used index access
+(`t[0]`, `t[3]`) against real `Transition` objects, but `Transition`
+(`arc_executable_world_model.py`) is a `@dataclass`, NOT a namedtuple -- index access silently
+raises `TypeError`, caught by a broad `except Exception: continue`, leaving `grids=[]` on every
+real transition. The 8 unit tests written alongside the implementation all passed despite this,
+because they constructed `pol.transitions` from plain tuples (`(before, action, data, after)`)
+rather than real `Transition` objects -- an unrealistic fixture that happened to support index
+access where the real dataclass doesn't, masking the bug from the test suite entirely. **Fixed
+both the implementation** (`.grid`/`.next_grid`, the real dataclass field names, confirmed against
+existing usage at `arc_competition_agent.py:3296-3298`) **and the test fixtures** (a `_transition()`
+helper builds real `Transition` objects everywhere). Verified the corrected test suite actually
+detects the class of bug it's meant to catch: temporarily reverted the implementation fix, ran
+`test_req_arc_fcp_5699_19_novelty_fires_when_enabled_and_no_exemplar`, confirmed it fails with
+`AssertionError: assert 'binary' == 'novelty'`, then re-applied the fix and reconfirmed all 32
+tests pass. This is the exact QA-Layer-Authenticity-Discipline pattern (CLAUDE.md) applied to a
+NEW check rather than an existing one: don't trust a green suite without confirming it would have
+gone red on the bug it claims to guard against.
+
+**Live A/B re-run, sp80, `budget=250`, `CARNOT_ARC_NOVELTY_GOAL_BIAS=1`, WITH the fix applied:**
+
+```
+baseline: goal_energy_source=novelty, initial_goal_energy=1.0, min_goal_energy_observed=0.8875, nodes_expanded=20016, termination_reason=max_nodes_reached, planned=False, duration_s=429.5
+sge:      goal_energy_source=novelty, initial_goal_energy=1.0, min_goal_energy_observed=0.6765, nodes_expanded=20016, termination_reason=max_nodes_reached, planned=False, duration_s=400.1
+```
+
+**Honest read -- a genuine partial validation, not a full one.** `goal_energy_source=novelty`
+confirms the fix works on the real live path (the first live-run's confirmation that unit tests
+alone were insufficient). `min_goal_energy_observed` is now MEANINGFULLY BELOW `initial_goal_energy`
+for both arms (0.8875 and 0.6765, vs the binary case's exactly-flat 1.0/1.0 measured in
+REQ-ARC-FCP-5699-18 on the same game) -- the search genuinely found real gradient this time, states
+it considered closer to a novel/unexplored region than the start. **This does not translate into a
+plan or a level-up**: `planned=False` and `termination_reason=max_nodes_reached` are unchanged from
+the binary case, `levels=0`/`reached=0` for both arms. Even the MOST novel state found among
+20000+ visited states (min_diff ~0.68-0.89 from `1.0`, i.e. energy 0.68-0.89, not close to `0.0`)
+did not happen to satisfy `is_level_complete`. **Real, measurable cost**: wall-clock roughly
+tripled to quadrupled versus the binary baseline's prior timings on this same game (429.5s/400.1s
+here vs 63-168s/101-251s previously) -- the per-candidate numpy distance computation against the
+observed-grid stack is real overhead, not free.
+
+**What this narrows.** Novelty energy closes the "zero gradient" gap REQ-ARC-FCP-5699-18
+identified -- the search is no longer flying blind by its own heuristic's measure. It does NOT
+close the "no plan found" gap: providing SOME gradient is a necessary-feeling but empirically
+NOT sufficient condition for this search to find an executable path to an unknown goal within a
+20000-node budget, at least on this one game/trial. The baseline and sge arms' differing
+min-energy values (0.8875 vs 0.6765) likely reflect their independently-collected observed-grid
+sets (different candidate routers, different real transitions before the stall trigger) rather
+than a meaningful router effect -- n=1 per arm, not a claim about router quality.
+
+**Honest scope limit.** n=1 game (sp80), n=1 induction attempt per arm, opt-in DEV-ONLY flag
+(production unaffected by default). Whether novelty energy helps on OTHER games, whether a
+cheaper/vectorized implementation would change the cost/benefit tradeoff, and whether COMBINING
+novelty energy with a larger `max_nodes` budget (REQ-ARC-FCP-5699-16 already showed 5x budget
+alone doesn't help under binary energy) would together find a plan, are all untested.
+
+**Concrete next step if this thread continues.** (a) Cheapest: combine novelty energy with a
+raised `max_nodes` (via `CARNOT_ARC_PLAN_MAX_NODES`, already implemented) on the same sp80 trace --
+now that real gradient exists, more budget might behave differently than it did against a flat
+heuristic. (b) Vectorize/cache the novelty computation (e.g. precompute once per unique candidate
+rather than per heap-pop) to address the 3-4x wall-clock cost before considering wider use. (c) The
+breadth check named in 5699-17's pattern -- repeat on cd82/g50t to see if the partial-gradient,
+no-plan result recurs.
+
+#### SCENARIO-ARC-FCP-5699-19-NOVELTY-ENERGY-PROVIDES-REAL-GRADIENT-BUT-NOT-A-PLAN
+
+Given REQ-ARC-FCP-5699-18 found goal-energy is unconditionally flat (zero gradient) for any
+first-contact level, and named a self-supervised novelty energy as a candidate fallback
+When `_goal_energy_for_plan` gains a novelty branch (opt-in via `CARNOT_ARC_NOVELTY_GOAL_BIAS=1`,
+scoring candidates by distance to the nearest already-observed real grid) and sp80 is re-measured
+with it enabled, for both arms
+Then `goal_energy_source=novelty` confirms the branch fired, and `min_goal_energy_observed` is
+meaningfully below `initial_goal_energy` (0.8875 and 0.6765 vs the flat 1.0/1.0 the binary
+fallback produced on the same game) -- real gradient now exists -- but `planned` stays `False` and
+`termination_reason` stays `max_nodes_reached` for both arms: providing gradient did not, on this
+trial, translate into finding an executable plan, and wall-clock cost roughly tripled to
+quadrupled versus the binary baseline
+
+#### SCENARIO-ARC-FCP-5699-19-UNREALISTIC-TEST-FIXTURES-MASKED-A-REAL-DATACLASS-INDEXING-BUG
+
+Given `_novelty_observed_stack()` was implemented using index access (`t[0]`/`t[3]`) against
+`self._active_transitions()`'s elements, and 8 unit tests were written using plain-tuple fixtures
+that happen to support index access
+When the implementation is exercised on the REAL live path, where `_active_transitions()` returns
+real `Transition` `@dataclass` objects (which do NOT support index access -- only attribute
+access)
+Then every transition's index access silently raises `TypeError`, caught by a broad
+`except Exception: continue`, leaving zero observed grids and silently falling back to the binary
+energy despite `CARNOT_ARC_NOVELTY_GOAL_BIAS=1` being set -- a bug the unit tests could not have
+caught because their fixtures did not match production's actual data shape, only caught by
+validating against the real live path per this REQ chain's established discipline of never
+trusting a diagnosis without a live confirmation run
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
