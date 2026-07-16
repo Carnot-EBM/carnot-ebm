@@ -7796,6 +7796,63 @@ site whose naive fix has its own demonstrated false-negative risk against imperf
 the proven fix as default, gate the risky one dev-only, and report the regression's cause as still
 genuinely unexplained rather than overclaiming either finding as the answer
 
+### REQ-ARC-FCP-5699-39: A Fourth Call Site Found -- The Actual Smoking Gun For The `sc25` Repro
+
+Checking the raw `sc25` artifact's own `ttt_prior_engine`/`ttt_prior_engine_plan_diagnostics` fields
+(already on disk from REQ-38, no re-run needed) found the REAL source of that repro's bias
+replacement: `gated_engine_from_transitions` (tier-1, the CNN-warm-started prior, 2026-06-21, runs
+FIRST on every `_induce_and_plan()` call, untouched by REQ-35) reported `gate: "PASS"` (dynamics
+cell_recall=1.0), meaning `_install_goal_bias(_isdone)` fired unconditionally at that call site --
+but the SAME attempt's `plan_in_model` diagnostics show `nodes_expanded=20009`,
+`termination_reason="max_nodes_reached"`, `initial_goal_energy=1.0`,
+`min_goal_energy_observed=1.0` -- the goal energy never improved once across a genuine 20,009-node
+search. A degenerate goal predicate, installed as a bias, from the FIRST-tried, most-frequently-
+reached call site in the whole method.
+
+**Fixed cheaply, without the plain-path fix's false-negative risk.** Rather than a SEPARATE bounded-
+BFS satisfiability probe (the plain-path fix's approach, which the test suite caught rejecting a
+genuinely-reachable goal on an imperfect mock engine), this fix reuses evidence `plan_in_model`
+ALREADY computes: move `_install_goal_bias` to AFTER the `_call_plan_in_model` call, and only skip
+installing when the diagnostics show `used_goal_energy_search=True` AND the energy never improved
+(`min_goal_energy_observed >= initial_goal_energy`). Missing/absent diagnostic fields (a planner that
+doesn't support goal-energy search) default to installing, preserving old behavior when the signal
+isn't available -- only positive evidence of a flat search suppresses the install. Shipped as an
+unconditional default (unlike the plain-path fix): it doesn't run a second, independently-bounded
+search that could disagree with the real planning attempt, so it doesn't share that fix's
+demonstrated false-negative mechanism.
+
+**Verification.** The target 87-test scope passes cleanly. A broad ~3900-test sweep initially showed
+8 "new" failures against the last snapshot; every one was confirmed, via direct inspection AND a
+clean-HEAD (fix fully reverted) re-run producing the IDENTICAL 8 failures, to be unrelated conductor
+drift accumulated during the ~1+ hour between snapshots (a growing generic-operator registry
+reordering an unrelated selection test; a `disable_induction` kwarg added to
+`arc_local_submission_gate.py` -- a file untouched by this session -- desyncing an old test mock)
+-- not caused by this fix.
+
+**Honest bottom line, unchanged from REQ-38.** This is now the FOURTH confirmed instance of the same
+bug class (install a goal bias without checking whether the goal is achievable), and the one most
+directly implicated by the `sc25` repro specifically. But like the plain path, this tier-1 mechanism
+predates REQ-35 by weeks and is untouched by it -- it would have degraded exploration identically
+yesterday, when the score was 0.12. It remains a real, worthwhile fix regardless; it still does not,
+by itself, explain the REQ-35-correlated regression.
+
+Required field principles:
+
+- `ttt_prior_goal_bias_installed`: principle "records whether the tier-1 warm-started engine's bias
+  install fired or was suppressed by the energy-improvement gate, so a reviewer can distinguish a
+  genuinely degenerate tier-1 goal from one this fix correctly still trusts."
+
+#### SCENARIO-ARC-FCP-5699-39-CHEAP-REUSE-OF-EXISTING-SEARCH-EVIDENCE-NO-SECOND-BOUNDED-SEARCH
+
+Given `plan_in_model`'s own diagnostics already report whether a real bounded search's goal energy
+ever improved
+When the tier-1 warm-started-engine call site's goal-bias install is moved AFTER planning and gated
+on that existing evidence instead of a new, separately-bounded satisfiability probe
+Then a degenerate goal predicate (energy flat across a genuine 20,009-node search) is correctly
+never installed, missing/unavailable diagnostics default to the old always-install behavior, and the
+fix ships as an unconditional default because it reuses real planning evidence rather than
+introducing the plain-path fix's own demonstrated false-negative mechanism
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
