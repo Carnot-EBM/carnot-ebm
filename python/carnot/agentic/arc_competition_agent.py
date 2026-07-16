@@ -3661,6 +3661,61 @@ class E3AgentPolicy:
                     self.plan = list(outcome.plan)
                 return
             self._fit_dsl_model()
+            # DEV-ONLY (REQ-ARC-FCP-5699-24, unset in production -- falls through to the
+            # unchanged plain single-shot path below): the refactor/refinement loop
+            # (execute_bounded_llm_reinduction) was previously reachable ONLY from the
+            # level_up_reinduction branch above, so stall-triggered first-contact induction got
+            # exactly one shot with zero counterexample-driven refinement. This routes the SAME
+            # bounded-refinement mechanism through the stall path, with
+            # previous_level_complete_grid=None and structural_goal_provider=None (both
+            # confirmed handled gracefully by execute_bounded_llm_reinduction without crashing --
+            # the goal-repair half still can't help without an exemplar, per REQ-ARC-FCP-5699-24,
+            # but the DYNAMICS-side refactor rounds operate on transition mismatches, which DO
+            # exist pre-first-win).
+            if os.environ.get("CARNOT_ARC_STALL_REFACTOR_LOOP") == "1":
+                stall_outcome = execute_bounded_llm_reinduction(
+                    game=self.short,
+                    transitions=active_transitions,
+                    cell=self.cell,
+                    root_grid=self.root_grid,
+                    proposer=self._proposer(),
+                    candidate_provider=self._world_model_candidates,
+                    load_engine=e3.load_engine,
+                    plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
+                    max_rounds=MAX_REFINEMENT_ROUNDS,
+                    min_heldout_accuracy=1.0,
+                    min_goal_predicate_consistency=1.0,
+                    previous_level_complete_grid=self._previous_level_complete_grid,
+                    enable_subgoal_search=self.subgoal_search,
+                    subgoal_budget=self.subgoal_budget,
+                    value_head=self.value_head,
+                    enable_factored_planner=self.factored_planner,
+                    factored_trust_threshold=self.factored_trust_threshold,
+                    structural_goal_provider=None,
+                )
+                attempt.update(
+                    {
+                        "model_specs": stall_outcome.model_specs,
+                        "planned": bool(stall_outcome.planned),
+                        "skipped": stall_outcome.skipped,
+                        "plan_length": len(stall_outcome.plan),
+                        "selected_candidate_name": stall_outcome.selected_candidate_name,
+                        "refinement_rounds_used": int(stall_outcome.refinement_rounds_used),
+                        "refinement_rounds": list(stall_outcome.rounds),
+                        "counterexamples": list(stall_outcome.counterexamples),
+                        "verifier_is_oracle": bool(stall_outcome.verifier_is_oracle),
+                        "goal_predicate_satisfiable": bool(
+                            stall_outcome.goal_predicate_satisfiable
+                        ),
+                        "goal_satisfiability": dict(stall_outcome.goal_satisfiability),
+                        "stall_refactor_loop_used": True,
+                    }
+                )
+                if stall_outcome.goal_predicate is not None:
+                    self._install_goal_bias(stall_outcome.goal_predicate)
+                if stall_outcome.planned:
+                    self.plan = list(stall_outcome.plan)
+                return
             if self.active_probe_controller_enabled and self.root_grid is not None:
                 try:
                     from carnot.agentic.arc_active_probe import (

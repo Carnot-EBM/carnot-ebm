@@ -391,6 +391,98 @@ def test_scenario_arc_wmte_4544_e3_policy_records_llm_refinement(monkeypatch) ->
     assert attempt["verifier_is_oracle"] is False
 
 
+def test_req_arc_fcp_5699_24_stall_refactor_loop_disabled_by_default(monkeypatch) -> None:
+    """REQ-ARC-FCP-5699-24: CARNOT_ARC_STALL_REFACTOR_LOOP unset (production default) -- a
+    stall-triggered (first-contact) induction attempt must NOT call
+    execute_bounded_llm_reinduction; it falls through to the pre-existing plain single-shot path,
+    byte-identical to before this REQ."""
+
+    from carnot.agentic import arc_competition_agent as agent
+
+    monkeypatch.delenv("CARNOT_ARC_STALL_REFACTOR_LOOP", raising=False)
+
+    def _fail_if_called(**_kwargs):
+        raise AssertionError(
+            "execute_bounded_llm_reinduction must not fire when the env var is unset"
+        )
+
+    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fail_if_called, raising=False)
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(
+            model_specs="stub", induce=lambda *_a, **_k: (False, "test_stub_declines")
+        ),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    policy._induce_and_plan()  # must not raise the AssertionError above
+
+    attempt = policy.induction_attempts[-1]
+    assert attempt["reason"] == "stall"
+    assert "stall_refactor_loop_used" not in attempt
+    assert attempt["skipped"] == "proposer_failed_or_missing_root"  # the plain path's own outcome
+
+
+def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(monkeypatch) -> None:
+    """REQ-ARC-FCP-5699-24: CARNOT_ARC_STALL_REFACTOR_LOOP=1 routes a stall-triggered
+    (first-contact) induction attempt through execute_bounded_llm_reinduction, with
+    previous_level_complete_grid=None (no exemplar exists yet) and structural_goal_provider=None,
+    and records the outcome onto the attempt exactly as the level_up_reinduction branch does."""
+
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
+
+    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "1")
+
+    result = LlmReinductionResult(
+        planned=False,
+        plan=[],
+        goal_predicate=None,
+        engine=None,
+        selected_candidate_name="candidate-b",
+        goal_candidate_names=["goal-b"],
+        dynamics_candidate_names=["dynamics-b"],
+        refinement_rounds_used=3,
+        verifier_is_oracle=False,
+        model_specs="Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)",
+        rounds=[{"round": 1}, {"round": 2}, {"round": 3}],
+        counterexamples=[{"kind": "heldout_transition_verification_failed"}],
+        skipped="no_reachable_plan_after_refinement",
+    )
+
+    captured_kwargs: dict = {}
+
+    def _capture(**kwargs):
+        captured_kwargs.update(kwargs)
+        return result
+
+    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _capture, raising=False)
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(model_specs=result.model_specs),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    policy._induce_and_plan()
+
+    assert captured_kwargs["previous_level_complete_grid"] is None  # no exemplar exists yet
+    assert captured_kwargs["structural_goal_provider"] is None
+
+    attempt = policy.induction_attempts[-1]
+    assert attempt["stall_refactor_loop_used"] is True
+    assert attempt["refinement_rounds_used"] == 3
+    assert attempt["skipped"] == "no_reachable_plan_after_refinement"
+    assert attempt["planned"] is False
+
+
 def test_req_arc_wmte_4544_helper_defensive_branches() -> None:
     """REQ-ARC-WMTE-4544: helper branches emit compact counterexamples."""
 

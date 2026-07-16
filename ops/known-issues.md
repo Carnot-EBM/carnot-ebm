@@ -830,6 +830,33 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    crashing) instead of the current single-shot path, tested in ISOLATION from the `k` fix (at
    k=8 default) to avoid confounding two variables, then live A/B on g50t for direct
    comparability against the 5699-23 baseline.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-25, wires + tests the fix -- mechanism
+   fires correctly, but net effect is NULL because the repair round itself fails to generate):**
+   `_induce_and_plan()` gained a DEV-ONLY `CARNOT_ARC_STALL_REFACTOR_LOOP=1` branch routing
+   stall-triggered induction through `execute_bounded_llm_reinduction` (unset in production,
+   byte-identical default, verified by a test that fails if the function is called when unset).
+   Live re-run g50t `budget=250` at k=8 default (isolated from the k fix): both arms show
+   `stall_refactor_loop_used=True`, `refinement_rounds_used=2` -- the mechanism IS reached and
+   fires. Round 1 (`.induce()`) gets partial real signal (`real_n_correct` 5/25 baseline, 0/25
+   sge) but is correctly rejected by the strict `min_heldout_accuracy=1.0` gate. **Round 2
+   (`.refactor()`) FAILS to produce parseable code for BOTH arms** -- "local model code unusable
+   after 3 tries (missing ('engine','is_level_complete') in output)" -- a NEW bottleneck: the
+   counterexample-feedback prompt (dense per-mismatch cell-level diffs) is apparently too
+   long/complex for this local model to reliably close out valid code, similar in spirit to the
+   documented L2 rambling-truncation issue `_L2_CODEONLY_DIRECTIVE` was built to fix -- but that
+   directive is NOT applied to `refactor_prompt()`. Net: `planned=False` both arms, no
+   improvement over the k=8 no-refactor baseline. **Notable side-observation:** round 1's induced
+   code (preserved on disk since round 2 never overwrote it) is qualitatively the BEST-REASONED
+   generation this whole REQ chain has seen -- dynamic player-finding by color, a general
+   relative-offset movement rule, a non-degenerate win predicate -- but this is attributable to
+   LLM sampling variance on the plain `.induce()` call, NOT to the refactor loop (which never
+   successfully executed its repair round). Strengthens, rather than refutes, 5699-23's
+   high-variance finding. Concrete next step if picked up again: (a) apply an
+   `_L2_CODEONLY_DIRECTIVE`-style fix to `refactor_prompt()`'s call; (b) truncate/summarize the
+   counterexample payload shown to `.refactor()`; (c) given demonstrated high variance sometimes
+   producing a strong first-try result, consider best-of-N induce sampling as an alternative to
+   iterative refinement.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
