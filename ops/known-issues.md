@@ -712,6 +712,28 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    untested together; (b) vectorize/cache the novelty computation to address the 3-4x wall-clock
    cost before considering wider use; (c) repeat on cd82/g50t to see if partial-gradient-no-plan
    recurs.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-20, answers combination test (a) above):**
+   no new code needed -- both env vars already compose independently. Re-ran sp80 `budget=250`
+   with `CARNOT_ARC_NOVELTY_GOAL_BIAS=1` AND `CARNOT_ARC_PLAN_MAX_NODES=100000` together.
+   **Decisive negative: 5x more budget barely moved the minimum energy found at all** --
+   `min_goal_energy_observed` went from 0.8875->0.8867 (baseline) and 0.6765->0.6711 (sge),
+   changes smaller than noise, despite `nodes_expanded` correctly scaling 5x (~20000->~100000).
+   `termination_reason` stayed `max_nodes_reached` (not `queue_exhausted` -- frontier remained),
+   `planned` stayed `False`, `levels`/`reached` stayed `0` for both arms. **The search's
+   achievable minimum appears to have effectively PLATEAUED in the first ~20000 nodes** -- more
+   search found almost nothing meaningfully more novel. Combined with REQ-ARC-FCP-5699-16's
+   earlier independent finding (5x budget alone, under the BINARY energy, also didn't help), this
+   is now a consistent picture: more search budget is not the lever that unlocks a plan on this
+   trace, under either energy function tested. Incidental (not chased further): wall-clock was
+   actually LOWER for this 100000-node combined run (124.0s/218.6s) than the 20000-node
+   novelty-only run (429.5s/400.1s) -- almost certainly GPU/system load variance from concurrent
+   conductor activity, not a real effect of the budget increase. Scope limit unchanged: n=1
+   game/attempt. Concrete next step if picked up again: the two cheap levers (budget, gradient)
+   are now both exhausted alone and combined without success -- remaining avenues are more
+   invasive: inspect the tier-1 model's own predicted rollout for structural plausibility, or
+   question whether the CNN-dynamics-prior-warm-start tier is well-suited to first-contact levels
+   at all versus falling through faster to a different induction tier.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
