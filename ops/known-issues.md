@@ -734,6 +734,28 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    invasive: inspect the tier-1 model's own predicted rollout for structural plausibility, or
    question whether the CNN-dynamics-prior-warm-start tier is well-suited to first-contact levels
    at all versus falling through faster to a different induction tier.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-21, answers "does tier 2 ever succeed" --
+   no new run needed, synthesized from artifacts already collected this session):** tier 2 (the
+   DSL/LLM induction path) is NOT skipped when tier 1 fails -- reading the code
+   (`arc_competition_agent.py` ~line 3660-3712) shows every attempt makes a REAL LLM call
+   (`self._proposer().induce(...)`, the same live Qwen3.5-9B-MTP proposer) to synthesize dynamics
+   code before the trust gate scores it. Pulling every measurement's trust metrics across all 3
+   games (sp80 x4 runs, cd82 x2, g50t x2): **`correct_changed_cells=0` in ALL FOUR hidden-state
+   measurements (cd82/g50t both arms) and `verify_cell_recall=0.0` in BOTH sp80 measurements --
+   tier 2's synthesized dynamics model has NEVER correctly predicted a single changed cell, in any
+   measurement this session has taken.** Not a marginal near-miss -- a complete failure every
+   time. (The one non-zero number, `heldout_accuracy=0.125` on cd82/g50t's SGE arm, is very likely
+   a coincidental NO-OP-transition match from a degenerate always-predict-no-change function --
+   `correct_changed_cells` stays 0 there too.) **This is a DIFFERENT, more fundamental failure
+   class than everything 5699-14 through -20 characterized** -- not a search-budget problem, not
+   a gradient problem, but an upstream code-synthesis correctness problem: the LLM isn't producing
+   dynamics code that predicts these games' mechanics at all, on first contact. Scope limit: n=3
+   games; this REQ characterizes the FAILURE MAGNITUDE from recorded metrics, not yet WHY (the
+   actual LLM prompt/generated code was not inspected). Concrete next step if picked up again:
+   capture and read the actual synthesized code for one attempt to determine whether it's
+   plausible-but-wrong (needs better/more transitions) or structurally broken (a proposer bug) --
+   qualitatively different follow-ups depending on which.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
