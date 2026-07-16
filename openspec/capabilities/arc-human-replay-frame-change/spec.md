@@ -6633,6 +6633,83 @@ outside the branch that defines them) that crashes at call time (`trust_energy=i
 hypothesis -- establishing that raising k has a real but HIGH-VARIANCE effect, not a reliable fix,
 and neither arm reaches `binary_gate_pass=True`
 
+### REQ-ARC-FCP-5699-24: The Codebase's Entire Repair Infrastructure Is ALSO Gated By The Same First-Contact Exemplar Requirement
+
+REQ-ARC-FCP-5699-23's own next step named checking whether the codebase's existing repair-loop
+(`proposer.refactor`, feeding mismatches back for a second pass) is exercised for tier 2's
+stall-triggered first-contact induction. Reading the code (no new run needed) answers this
+precisely, and surfaces a second, even more complete finding beyond the original question.
+
+**The repair loop exists, is real, tested, working code -- and is structurally unreachable for
+first-contact induction.** `execute_bounded_llm_reinduction`
+(`arc_llm_reinduction.py:654`, up to `MAX_REFINEMENT_ROUNDS=3` rounds: round 0 = `.induce()`,
+rounds 1+ = `.refactor(game, counterexample_result)`, feeding back real per-transition mismatch
+evidence) has exactly ONE call site in the whole agent
+(`arc_competition_agent.py:3610`), and that call site is entirely INSIDE the `if attempt["reason"]
+== "level_up_reinduction" or next_level_episode:` branch -- the branch every sp80/cd82/g50t attempt
+this REQ chain has measured NEVER takes (`reason` is always `"stall"`, and `next_level_episode`
+requires `_previous_level_complete_grid is not None`, per REQ-ARC-FCP-5699-18, always `None` for
+these games). **First-contact induction gets exactly ONE shot with the plain, single-round
+`self._proposer().induce(...)` + `e3.load_engine(...)` path (`arc_competition_agent.py:3715-3719`)
+-- zero refinement rounds, no counterexample feedback, ever.**
+
+**A second, even sharper finding: the codebase ALREADY BUILT a specific rescue for cd82's exact
+pathology, and it is ALSO neutralized by the same gap.** `_repair_degenerate_goal`
+(`arc_llm_reinduction.py:606-646`, 2026-06-25 operator directive) exists precisely to rescue "a
+constant `return False`, or an exact-match against a hardcoded win grid the induced engine can
+never reach" -- REQ-ARC-FCP-5699-22's cd82 finding, verbatim, in the function's own docstring,
+written a month before this REQ chain independently rediscovered the same failure mode. Its
+mechanism: substitute an exemplar-derived `_nonzero_count_predicate` fallback ("complete once the
+grid has at least as many filled cells as the L1-completion exemplar") and re-check
+satisfiability. But: `if previous_level_complete_grid is None: return None` -- line 636, the very
+first line of the function body. **The goal-repair mechanism requires the exact same exemplar that
+REQ-ARC-FCP-5699-18 established cannot exist for a first-contact level.** So even if the refactor
+loop WERE wired into the stall path, its goal-repair fallback would still do nothing for
+first-contact levels -- only the DYNAMICS-side refactor rounds (which operate on transition
+mismatches, not the goal predicate, and genuinely don't need an exemplar) could plausibly help.
+
+**What this narrows -- the complete picture across REQ-ARC-FCP-5699-18, -22, and this REQ.** Every
+mechanism this codebase has for handling a bad first-contact induction shares one root dependency:
+`_previous_level_complete_grid` (or an equivalent win exemplar). Tier 1's goal-energy gradient
+(5699-18), tier 2's goal-predicate induction (5699-22), AND the codebase's own goal-repair rescue
+(this REQ) are ALL gated by the same `is None` check. This is not three unrelated bugs in three
+components -- it is ONE structural gap (no positive win example exists before the first win, by
+definition) surfacing identically in every place the architecture assumed one would be available.
+The DYNAMICS-side refactor loop is the one exception: it operates on transition mismatches (which
+DO exist pre-first-win) rather than the goal predicate, so it remains a genuinely untested,
+plausible lever for tier 2's dynamics-half failures (REQ-ARC-FCP-5699-21's `correct_changed_cells`
+metric) specifically -- just never wired into the path that would need it.
+
+**Honest scope limit.** This REQ is a code-reading finding (real, verified from source, no new run
+executed) -- it establishes that the mechanism is UNREACHABLE and WHY the existing goal-repair
+half wouldn't help even if reached, but does NOT yet establish whether wiring the DYNAMICS-side
+refactor rounds into the stall path would actually improve `correct_changed_cells` in a live
+measurement. That is the natural next empirical test.
+
+**Concrete next step if this thread continues.** Wire a DEV-ONLY opt-in path that routes
+stall-triggered first-contact induction through `execute_bounded_llm_reinduction` (with
+`previous_level_complete_grid=None`, `structural_goal_provider=None` -- both already handled
+gracefully by the function without crashing, verified from source) instead of the current
+single-shot `induce()`+`load_engine()` call, gated behind a new env var so production is
+unaffected by default. Test in ISOLATION from REQ-ARC-FCP-5699-23's `k` change (i.e. at the k=8
+default) to avoid confounding two simultaneous variables, then live A/B on the same g50t trace for
+direct comparability.
+
+#### SCENARIO-ARC-FCP-5699-24-REPAIR-INFRASTRUCTURE-SHARES-THE-SAME-FIRST-CONTACT-GAP
+
+Given REQ-ARC-FCP-5699-23 named checking whether the codebase's existing refactor/repair-loop path
+is exercised for tier 2's first-contact induction
+When `execute_bounded_llm_reinduction`'s only call site and `_repair_degenerate_goal`'s guard
+clause are read directly from source
+Then the refactor loop is confirmed structurally unreachable for stall-triggered (first-contact)
+induction attempts (its only call site requires `reason == "level_up_reinduction"` or
+`next_level_episode`, both requiring a prior level completion), AND the goal-repair fallback built
+specifically to rescue constant-false predicates like cd82's is ALSO gated by
+`previous_level_complete_grid is None` -- establishing that tier 1's goal-energy gap
+(REQ-ARC-FCP-5699-18), tier 2's goal-predicate starvation (REQ-ARC-FCP-5699-22), and the
+codebase's own repair infrastructure (this REQ) are three surfacings of the SAME single structural
+gap, not three independent problems
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
