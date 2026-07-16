@@ -1130,6 +1130,40 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    `_induce_and_plan()` calls) found the one CI memory-watchdog hit (+582MB) is a ONE-TIME
    import-warming cost (+810MB call 1, then +43MB/+2MB/+0MB calls 2-4, completely flat) -- not a
    production leak risk for a long-running Kaggle session.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-38, post-submission regression
+   investigation):** kernel v9 (bundling the REQ-35 graduation above) scored **0.08**, down from
+   the prior day's **0.12**. Investigated directly rather than assumed. **Wall-clock hypothesis
+   REFUTED**: a real production-config A/B (`E3AgentPolicy(game, proposer=None)`, `sc25`,
+   budget=250) found `CARNOT_ARC_STALL_REFACTOR_LOOP=1` (current default) 544.75s FASTER than
+   `=0` (636.32s vs 1181.08s), not slower, identical outcomes both arms. **Goal-bias hypothesis:
+   a real bug found and fixed, unit-tested (confirmed to fail on pre-fix code, pass after), but
+   NOT what fired in the live repro that motivated it.** `_induce_and_plan()`'s stall-refactor-
+   loop and `level_up_reinduction` call sites both installed an induced goal predicate as a
+   frontier bias whenever non-None, ignoring `goal_predicate_satisfiable` (already computed) and
+   `planned` -- fixed at both (now gated on `goal_predicate_satisfiable`). But the corrected live
+   re-repro (object-IDENTITY check on `goal_bias`, since `E3AgentPolicy` always installs a
+   DEFAULT bias at construction -- a None-check is a flawed signal, caught and corrected) showed
+   the SAME `sc25` scenario's bias replacement actually came from a THIRD, pre-existing call site
+   (the plain single-shot path, gated only on world-model DYNAMICS trust, never on GOAL
+   satisfiability) -- predates REQ-35, can't explain a REQ-35-correlated regression by itself.
+   **A fix for the third site was attempted and found to have a real design flaw via the test
+   suite itself**: reusing the same bounded-BFS satisfiability check broke
+   `test_req_arc_wmte_4494_live_policy_uses_trust_energy_candidate` -- not via a crash, but by
+   correctly-per-its-own-logic rejecting a goal that WAS trivially reachable in that test's
+   simplified mock engine, exposing a real false-negative risk against imperfect-but-useful real
+   induced engines too. Shipped dev-only (`CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK`,
+   default unset) rather than graduated, per this project's own dev-gate->validate->graduate
+   discipline -- not shipped as an unconditional default on one investigation session's strength.
+   **Honest bottom line: one real bug fixed and shipped (pure hardening, zero behavioral risk);
+   the wall-clock hypothesis refuted; the regression's actual cause remains genuinely
+   unexplained** -- reported honestly rather than retrofitting a confident causal story. Concrete
+   next steps if picked up again: (a) properly validate the dev-gated plain-path fix (matched-
+   budget A/B, per REQ-25->32->35's own precedent) before considering graduation; (b) treat the
+   0.08 score as possibly within normal submission-to-submission noise absent a confirmed cause,
+   and watch the NEXT submission's score for a trend before concluding anything further; (c) if
+   the regression recurs, the two proven bugs found here (goal-bias-on-unsatisfiable-predicate,
+   both variants) are now off the table as candidate explanations, narrowing the search.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

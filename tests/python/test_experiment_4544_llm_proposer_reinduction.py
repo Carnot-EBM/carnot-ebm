@@ -584,6 +584,110 @@ def test_req_arc_fcp_5699_35_stall_refactor_loop_planned_true_does_not_fall_thro
     assert policy.plan == plan
 
 
+def test_req_arc_fcp_5699_38_unsatisfiable_goal_predicate_not_installed(monkeypatch) -> None:
+    """REQ-ARC-FCP-5699-38: a real post-submission regression investigation found the stall
+    path installing a goal bias from an induced-but-UNSATISFIABLE goal_predicate
+    (goal_predicate_satisfiable=False) even though the refinement never reached a plan
+    (planned=False) -- persisting into the rest of the episode's exploration and biasing it
+    toward a goal the agent's own diagnostics say is unachievable. A goal_predicate that is
+    not satisfiable must never be installed, regardless of whether the loop reached a plan."""
+
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
+
+    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "1")
+
+    def _unsatisfiable_predicate(_grid):
+        return False
+
+    result = LlmReinductionResult(
+        planned=False,
+        plan=[],
+        goal_predicate=_unsatisfiable_predicate,
+        goal_predicate_satisfiable=False,
+        engine=None,
+        refinement_rounds_used=3,
+        model_specs="stub",
+        skipped="hidden_state_trust_below_threshold",
+    )
+
+    monkeypatch.setattr(
+        agent, "execute_bounded_llm_reinduction", lambda **_k: result, raising=False
+    )
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(
+            model_specs="stub", induce=lambda *_a, **_k: (False, "test_stub_declines")
+        ),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    # E3AgentPolicy always installs a DEFAULT goal_bias at construction time
+    # (SUBMITTED_AGENT_CONFIG's goal_energy_enabled=True) -- goal_bias is never None, so the
+    # correct check is object identity (did _install_goal_bias REPLACE it?), not a None-check.
+    goal_bias_before = policy.explorer.goal_bias
+    assert goal_bias_before is not None  # sanity: confirms the default-bias premise holds
+
+    policy._induce_and_plan()
+
+    attempt = policy.induction_attempts[-1]
+    assert attempt["goal_predicate_satisfiable"] is False
+    assert attempt["planned"] is False
+    assert policy.explorer.goal_bias is goal_bias_before  # unchanged: NOT replaced/installed
+
+
+def test_req_arc_fcp_5699_38_satisfiable_goal_predicate_still_installed(monkeypatch) -> None:
+    """The fix is a gate, not a blanket removal: a genuinely satisfiable induced goal_predicate
+    (goal_predicate_satisfiable=True) still installs a goal bias exactly as before."""
+
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
+
+    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "1")
+
+    def _satisfiable_predicate(_grid):
+        return False
+
+    result = LlmReinductionResult(
+        planned=False,
+        plan=[],
+        goal_predicate=_satisfiable_predicate,
+        goal_predicate_satisfiable=True,
+        engine=None,
+        refinement_rounds_used=3,
+        model_specs="stub",
+        skipped="no_reachable_plan_after_refinement",
+    )
+
+    monkeypatch.setattr(
+        agent, "execute_bounded_llm_reinduction", lambda **_k: result, raising=False
+    )
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(
+            model_specs="stub", induce=lambda *_a, **_k: (False, "test_stub_declines")
+        ),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    goal_bias_before = policy.explorer.goal_bias
+    assert goal_bias_before is not None  # the default bias, per E3AgentPolicy construction
+
+    policy._induce_and_plan()
+
+    attempt = policy.induction_attempts[-1]
+    assert attempt["goal_predicate_satisfiable"] is True
+    assert policy.explorer.goal_bias is not goal_bias_before  # replaced by the induced predicate
+
+
 def test_req_arc_wmte_4544_helper_defensive_branches() -> None:
     """REQ-ARC-WMTE-4544: helper branches emit compact counterexamples."""
 
