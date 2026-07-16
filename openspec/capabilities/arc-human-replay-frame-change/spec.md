@@ -7281,6 +7281,87 @@ block (harmless here, but previously unobserved) and leaving the code's CONTENT 
 invented grid representation inconsistent with g50t's real format) as a separate, still-open
 question that only a full live A/B could answer
 
+### REQ-ARC-FCP-5699-32: The Full Live A/B -- Structural Fix Generalizes Completely; No Level-Up, Content Accuracy Is The Real Remaining Wall
+
+The natural validation REQ-ARC-FCP-5699-31 named but didn't launch automatically, given nine REQs
+already spent on one game: a full live A/B on g50t, `budget=250`, combining every fix this
+sub-thread validated -- `CARNOT_ARC_STALL_REFACTOR_LOOP=1` (5699-25), `CARNOT_ARC_INDUCE_
+MAX_TOKENS=4096`/`CARNOT_ARC_INDUCE_TIMEOUT=600` (5699-29), and `CARNOT_ARC_REFACTOR_
+STRUCTURE_REMINDER=1` (5699-31).
+
+**Result, read only after confirmed genuine completion (`ps aux` showed the process had exited
+AND the task log showed `"wrote results/..."`, per the discipline established after this
+session's own earlier stale-read mistake):**
+
+```
+baseline: refinement_rounds_used=3, skipped=no_reachable_plan_after_refinement, planned=False
+  round 1 (induce):   ok=True, heldout_accuracy=0.125, accepted=False
+  round 2 (refactor): ok=True, heldout_accuracy=0.0,   accepted=False
+  round 3 (refactor): ok=True, heldout_accuracy=0.0,   accepted=False
+sge: refinement_rounds_used=3, skipped=no_reachable_plan_after_refinement, planned=False
+  round 1 (induce):   ok=True, heldout_accuracy=0.0, accepted=False
+  round 2 (refactor): ok=True, heldout_accuracy=0.0, accepted=False
+  round 3 (refactor): ok=True, heldout_accuracy=0.0, accepted=False
+```
+
+**The structural fix generalizes completely -- this is not n=1 luck.** All 6 generation attempts
+across this full run (3 rounds x 2 arms) return `proposer_ok=True` -- every single one produces
+syntactically valid code containing both required functions. This is a total reversal from every
+prior measurement in this REQ chain: `skipped` is now `"no_reachable_plan_after_refinement"` (the
+loop genuinely ran all 3 rounds and never accepted a candidate) rather than `"proposer_failed"`
+(the loop couldn't even get valid code out of the model). The class-wrapping/missing-function
+pathology REQ-ARC-FCP-5699-30 found is gone, consistently, across every round of a real
+full-budget run -- not just the single sample REQ-ARC-FCP-5699-31 checked.
+
+**Honest bottom line: NO LEVEL-UP.** `levels=0`/`reached=0` for both arms, `planned=False`
+throughout. `heldout_accuracy` never rises above 0.125 across all 6 rounds -- the induced dynamics
+are syntactically valid but functionally WRONG, and three rounds of genuine counterexample-driven
+refinement (which now actually execute, unlike before) do not converge toward the real g50t
+mechanics. **This confirms REQ-ARC-FCP-5699-31's own caveat exactly**: fixing the interface
+problem (structure) does not fix the harder, still-unsolved problem (content) -- the model can now
+reliably WRITE code in the right shape, but still cannot correctly INFER g50t's actual game rules
+from 25 real transitions within 3 refinement rounds. Per CLAUDE.md's ARC Solve Reproducibility
+discipline, this is explicitly NOT a level-up to bank in `ops/arc_solve_registry.yaml` or headline
+in `ops/status.md` -- there is no level-up to report.
+
+**What this closes out.** This is the definitive end-to-end answer for the entire REQ-ARC-FCP-
+5699-23 through -32 sub-thread (10 REQs on one game): the resource-budget hypotheses (data
+amount, repair rounds, JSON validity, token/time budget) were all real diagnoses but not the
+actual blocker; the interface/structure problem (REQ-ARC-FCP-5699-30) WAS a real blocker and IS
+now fixed, reliably, at zero cost to structural correctness; and what remains is squarely a model-
+capability problem -- correctly inferring a novel game's dynamics from a small transition sample
+-- that no amount of prompt engineering around output FORMAT can address, because the problem is
+in what the model UNDERSTANDS, not how it's asked to phrase the answer.
+
+**Honest scope limit.** n=1 game (g50t), n=1 full-budget run at this exact combined
+configuration. The structural fix's reliability is now well-evidenced (6/6 in this run, plus the
+1/1 prior sample); the content/accuracy ceiling has only been measured on this one game's specific
+mechanics and this one real transition sample.
+
+**Concrete next step if this thread continues.** The structural fix (REQ-ARC-FCP-5699-31) is worth
+keeping and could reasonably graduate toward becoming a default, given its now-repeated success --
+but the underlying capability gap (content accuracy) is a fundamentally different, harder problem
+than anything a prompt tweak can solve. Plausible directions: (a) accept this 9B local model has a
+real capability ceiling on first-contact game-dynamics induction and treat that as a boundary
+condition rather than a bug to keep chasing; (b) test whether a LARGER model (this project has
+`Qwen3.6-27B-MTP`/`gemma-4-31B-it` queued for other purposes) closes the accuracy gap on the SAME
+counterexample data, isolating whether this is a scale-of-model problem; (c) step back from this
+specific sub-thread entirely -- ten REQs deep on one game's tier-2 induction is a natural
+stopping point regardless of which of (a)/(b) is chosen next.
+
+#### SCENARIO-ARC-FCP-5699-32-STRUCTURAL-FIX-GENERALIZES-CONTENT-ACCURACY-REMAINS-THE-WALL
+
+Given every validated fix from this sub-thread (stall-refactor-loop wiring, raised max_tokens/
+timeout, the structural reminder) is combined in a single full-budget live A/B on g50t
+When the run is read only after confirmed genuine completion, both arms
+Then all 6 generation attempts (3 rounds x 2 arms) return `proposer_ok=True` -- the structural
+fix generalizes completely, not just the single prior sample -- `skipped` changes from
+`proposer_failed` (couldn't generate valid code) to `no_reachable_plan_after_refinement` (valid
+code every round, never accurate enough to accept) -- yet `heldout_accuracy` never exceeds 0.125
+across any round and `planned` stays `False` for both arms: NO level-up, confirming the remaining
+blocker is a genuine model-capability gap in inferring correct game dynamics from a small
+transition sample, not anything a prompt-format fix can address
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
