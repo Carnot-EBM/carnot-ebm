@@ -6283,6 +6283,74 @@ caught because their fixtures did not match production's actual data shape, only
 validating against the real live path per this REQ chain's established discipline of never
 trusting a diagnosis without a live confirmation run
 
+### REQ-ARC-FCP-5699-20: Combining Novelty Energy With 5x Budget Does Not Help Further -- The Search Plateaus
+
+REQ-ARC-FCP-5699-19's own next-step list named the cheapest remaining combination test: now that
+novelty energy gives the search real gradient (unlike the flat binary case), does adding
+REQ-ARC-FCP-5699-16's already-implemented `CARNOT_ARC_PLAN_MAX_NODES` override on top change the
+outcome? Neither env var needed new code -- both were already independently wired through
+`_call_plan_in_model`.
+
+**Re-ran sp80, `budget=250`, `CARNOT_ARC_NOVELTY_GOAL_BIAS=1` AND `CARNOT_ARC_PLAN_MAX_NODES=100000`
+together:**
+
+```
+baseline: goal_energy_source=novelty, min_goal_energy_observed=0.88671875, nodes_expanded=100035, termination_reason=max_nodes_reached, planned=False, duration_s=124.0
+sge:      goal_energy_source=novelty, min_goal_energy_observed=0.671142578125, nodes_expanded=100014, termination_reason=max_nodes_reached, planned=False, duration_s=218.6
+```
+
+**Decisive negative result: 5x more search budget barely moved the minimum energy found at all.**
+Compared to the novelty-only, 20000-node run on the same game (REQ-ARC-FCP-5699-19:
+`min_goal_energy_observed` 0.8875 baseline / 0.6765 sge), the 100000-node run found
+0.88671875 / 0.671142578125 -- a change of -0.0008 and -0.0054 respectively, both far smaller
+than noise-worthy. `nodes_expanded` scaled correctly to the new budget (~100000 vs ~20000),
+confirming the override took effect; `termination_reason` stayed `max_nodes_reached` (not
+`queue_exhausted` -- the heap still had unexplored frontier when the budget ran out), `planned`
+stayed `False`, `levels`/`reached` stayed `0` for both arms.
+
+**What this means.** The search's achievable minimum novelty-energy under this induced model
+appears to have effectively PLATEAUED somewhere in the first ~20000 nodes -- the additional 80000
+nodes of search found almost nothing meaningfully more novel than what the first 20000 already
+found. This rules out "just needed more search to find a genuinely novel/winning region" as an
+explanation: the ceiling is not a budget problem, it looks like a property of the reachable state
+space under THIS specific induced dynamics model and novelty scoring, at least on this trace. This
+combines with REQ-ARC-FCP-5699-16's earlier, independent finding (5x budget alone, under the
+BINARY energy, also didn't help) into a consistent picture: more search budget is not the lever
+that unlocks a plan here, under either energy function tested so far.
+
+**Incidental observation (reported honestly, not chased further).** Wall-clock for this combined
+run (124.0s/218.6s) was LOWER than the novelty-only 20000-node run (429.5s/400.1s,
+REQ-ARC-FCP-5699-19) despite visiting 5x more nodes. This is very likely GPU/system load variance
+between runs (concurrent conductor activity on the shared GPU throughout this session), not a
+property of the node-budget increase itself -- noted for completeness, not investigated further,
+since it doesn't bear on the plan-finding question this REQ set out to answer.
+
+**Honest scope limit.** Still n=1 game (sp80), n=1 induction attempt per arm. The plateau
+observation is specific to this trace's induced dynamics model and its particular set of
+already-observed real grids; it does not establish that budget is universally unhelpful across
+all games or all induced models.
+
+**Concrete next step if this thread continues.** The two cheap levers named across
+REQ-ARC-FCP-5699-15 through -20 (raise budget, add gradient) have now both been tried alone and
+combined, without finding a plan on sp80. The remaining avenues from REQ-ARC-FCP-5699-16's
+original list are the more invasive ones: inspect the tier-1 model's own predicted rollout for
+structural plausibility against real transitions (does the induced dynamics model diverge from
+anything resembling reality as it's followed forward?), or step back and question whether tier 1's
+CNN-dynamics-prior-warm-start mechanism itself is well-suited to first-contact levels at all,
+versus falling through faster to a different induction tier.
+
+#### SCENARIO-ARC-FCP-5699-20-BUDGET-PLUS-GRADIENT-COMBINED-STILL-PLATEAUS
+
+Given REQ-ARC-FCP-5699-19 found novelty energy gives the search real gradient (`min_goal_energy_
+observed` below `initial_goal_energy`) but no plan at the default 20000-node budget, and
+REQ-ARC-FCP-5699-16 separately found 5x budget alone (under binary energy) didn't help either
+When both levers are combined -- `CARNOT_ARC_NOVELTY_GOAL_BIAS=1` AND
+`CARNOT_ARC_PLAN_MAX_NODES=100000` -- and sp80 is re-measured, both arms
+Then `min_goal_energy_observed` changes by less than 0.006 from the 20000-node novelty-only value
+despite `nodes_expanded` scaling 5x (to ~100000) -- the search's achievable minimum has
+effectively plateaued -- and `planned` stays `False` for both arms, establishing that neither lever
+alone nor combined finds a plan on this trace
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
