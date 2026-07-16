@@ -783,6 +783,29 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    tier 2 SOME positive goal signal for first-contact levels (e.g. prompt for a candidate goal
    predicate from structural regularities) since "no positive win example" is structurally
    unfixable by showing more pre-win transitions alone.
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-23, tests the cheap fix -- MIXED
+   result, not a clean win):** `induce_prompt` gained an optional `k` kwarg (byte-identical
+   default when unset, verified by a regression test) + a DEV-ONLY `CARNOT_ARC_INDUCE_
+   TRANSITIONS_K` env override threaded into both real proposer classes; 4 new unit tests. Live
+   re-run on g50t, `budget=250`, `k=20` (vs the prior k=8 baseline where `correct_changed_
+   cells=0` for both arms): **baseline arm genuinely improved** -- `correct_changed_cells`
+   0->33, `heldout_change_consistency` 0.0->0.114 -- real, positive evidence for the diagnosed
+   root cause. **sge arm's independent generation got WORSE, and for a NEW reason**: reading the
+   actual code left on disk (the sge arm's, since it runs second and overwrites the baseline
+   arm's file -- a real methodology gap, the improved baseline code was NOT preserved for
+   inspection) shows a genuine `NameError`-class bug -- `px`/`py` referenced in the action-1-5
+   branch but only ever assigned inside the action==6 branch, which already returned.
+   `trust_energy=inf`/`correct_changed_cells=0` is consistent with the engine crashing at call
+   time. Neither arm reached `binary_gate_pass=True`. **Conclusion: raising k has a REAL but
+   HIGH-VARIANCE effect** -- it can unlock a better hypothesis (baseline) or invite a longer,
+   buggier generation (sge) in the SAME session on the SAME game -- not a reliable fix by
+   itself. Concrete next step if picked up again: (a) fix the methodology gap -- capture
+   `world_model.py` after EACH arm, not just the final state; (b) repeat with multiple seeds at
+   fixed k to characterize whether the 33-correct-cells result is typical or a lucky outlier;
+   (c) check whether the codebase's existing refactor/repair-loop path (feeds mismatches back
+   for a second pass) is exercised for tier 2's first-contact stall-triggered induction, since a
+   self-correcting second pass could catch undefined-variable bugs that raising k alone invites.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
