@@ -116,7 +116,7 @@ SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
 SUBMITTED_CONTROLLABLE_NOVELTY_MODE = "episodic_knn_plus_rnd_action_effect_embedding"
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
-SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = False  # 2026-07-14: disabled -- see below
+SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = False  # 2026-07-16: re-validated -- see below
 SUBMITTED_COLOR_BLOB_SALIENCE_MODE = "single_color_connected_component_tiers"
 # REQ-ARC-FCP-5699-11 (operator: "wire SGE into the live path", 2026-07-15): the LLM
 # Strategy-Guided Exploration router (arXiv:2603.02045, arc_llm_strategy_proposer.py) is
@@ -139,6 +139,27 @@ SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED = False
 # roughly 9x slower per action) for ZERO measured benefit (three follow-on live-path level-up
 # attempts using it, this same day, all returned honest_null). Re-enable only after a fresh
 # matched-budget A/B shows a real win that justifies the residual per-step cost.
+#
+# RE-VALIDATED 2026-07-16 (REQ-ARC-FCP-5699 item 2) -- performance is FIXED, stays disabled
+# for a DIFFERENT, more precise reason. Profiling found a second, separate O(candidates x
+# grid_cells) recomputation the 2026-07-14 fix missed: arc_frame_change_predictor.rank_arc_
+# actions -> _prior_value calls ColorBlobSaliencePrior.score(frame, candidate) via the generic
+# two-arg protocol (no blobs/color_counts cache args), which alone accounted for 8176 calls to
+# connected_color_blobs() on a single 500-action lp85 episode (23.1s of a 43.3s total run).
+# Fixed with two changes in arc_color_blob_salience.py: (1) connected_color_blobs() vectorized
+# via scipy.ndimage.label (200+300 randomized-grid equivalence tests confirm exact field-for-
+# field agreement with the original pure-Python flood-fill), and (2) a bounded module-level
+# per-frame cache so the generic two-arg score() callers stop recomputing per-candidate. Net:
+# lp85 budget=500 went 68s -> 8.4s (baseline is 6.1s) -- the wall-clock/timeout problem is
+# genuinely solved (the full local submission gate now runs all 8 games with ZERO timeouts,
+# where it previously timed out on 7/8). BUT the gate's real verdict flipped from
+# "TIMED OUT" to a clean "FAIL: REGRESSION: lost CORE solves ['m0r0']" -- with the confounding
+# timeout removed, a genuine BEHAVIORAL regression is now visible for the first time: the
+# salience-reordered exploration causes the agent to lose a game it otherwise reliably solves.
+# This stays disabled because of THAT regression, not because it is too slow -- the speed fix
+# is real and kept (it makes any future re-validation of this feature cheap to re-run), but
+# re-enabling now requires investigating/fixing the m0r0 regression specifically, not another
+# performance pass.
 # Task 10 follow-on (2026-07-13): ObjectHistorySaliencePrior wraps action_prior with a
 # per-object_hash change-history bonus (REQ-ARC-FCP-5591-2) but OFF by default, matching every
 # other freshly-wired-but-unvalidated component in this file. Flipping this for the SCORED agent
