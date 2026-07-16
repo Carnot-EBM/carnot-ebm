@@ -1164,6 +1164,29 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    and watch the NEXT submission's score for a trend before concluding anything further; (c) if
    the regression recurs, the two proven bugs found here (goal-bias-on-unsatisfiable-predicate,
    both variants) are now off the table as candidate explanations, narrowing the search.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-39, the actual smoking gun for the
+   `sc25` repro):** checking the already-on-disk `sc25` artifact's `ttt_prior_engine`/
+   `ttt_prior_engine_plan_diagnostics` fields (no re-run needed) found the REAL source of that
+   repro's bias replacement: a FOURTH call site, `gated_engine_from_transitions` (tier-1, the
+   CNN-warm-started prior, 2026-06-21, runs FIRST on every `_induce_and_plan()` call, untouched
+   by REQ-35) -- `gate: "PASS"` fired the install, but `nodes_expanded=20009`,
+   `termination_reason="max_nodes_reached"`, `initial_goal_energy=1.0`,
+   `min_goal_energy_observed=1.0`: the goal energy never improved once across a genuine
+   20,009-node search. A degenerate goal predicate installed as a bias, from the single
+   most-frequently-reached call site in the whole method. **Fixed cheaply, unlike the
+   plain-path fix**: moved `_install_goal_bias` to AFTER `_call_plan_in_model` and gated on
+   evidence `plan_in_model` ALREADY computes (energy improved, or missing diagnostics default
+   to old behavior) instead of a second, separately-bounded satisfiability probe -- avoids the
+   plain-path fix's demonstrated false-negative mechanism, so this one ships as an
+   unconditional default. Verification: 87/87 target tests pass; a broad sweep's apparent "8
+   new failures" were confirmed via a clean-HEAD (fix fully reverted) re-run to be identical
+   either way -- unrelated conductor drift accumulated over the ~1hr between snapshots (a
+   growing operator registry, an unrelated script's kwarg drift), not caused by this fix. This
+   is now the FOURTH confirmed instance of the same bug class, and the one most directly
+   implicated by the `sc25` repro -- but like the plain path, it predates REQ-35 and would have
+   fired identically yesterday, so it still doesn't explain the REQ-35-correlated regression by
+   itself. The honest bottom line from REQ-38 stands unchanged.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

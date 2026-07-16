@@ -640,6 +640,119 @@ def test_req_arc_fcp_5699_38_unsatisfiable_goal_predicate_not_installed(monkeypa
     assert policy.explorer.goal_bias is goal_bias_before  # unchanged: NOT replaced/installed
 
 
+def test_req_arc_fcp_5699_39_tier1_degenerate_goal_energy_not_installed(monkeypatch) -> None:
+    """REQ-ARC-FCP-5699-39: a real sc25 repro found the tier-1 warm-started-engine call site
+    (gated_engine_from_transitions) installing a goal bias whose energy NEVER improved across a
+    genuine 20009-node search (initial_goal_energy == min_goal_energy_observed == 1.0). The fix
+    moves the install AFTER plan_in_model and gates it on that search's own diagnostics -- a flat
+    (non-improving) energy must not install a bias."""
+
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic import arc_live_ttt
+
+    def _degenerate_predicate(_grid):
+        return False
+
+    def _fake_gated_engine(_game, _transitions):
+        return (lambda grid, action, data: grid, _degenerate_predicate, {"gate": "PASS"})
+
+    monkeypatch.setattr(
+        arc_live_ttt, "gated_engine_from_transitions", _fake_gated_engine, raising=False
+    )
+
+    def _fake_plan_in_model(engine, is_done, start_grid, *, diagnostics=None, **_k):
+        if diagnostics is not None:
+            diagnostics.update(
+                {
+                    "used_goal_energy_search": True,
+                    "initial_goal_energy": 1.0,
+                    "min_goal_energy_observed": 1.0,
+                    "nodes_expanded": 20009,
+                    "termination_reason": "max_nodes_reached",
+                }
+            )
+        return []  # no plan found
+
+    import carnot.agentic.arc_executable_world_model as e3
+
+    monkeypatch.setattr(e3, "plan_in_model", _fake_plan_in_model, raising=False)
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(
+            model_specs="stub", induce=lambda *_a, **_k: (False, "test_stub_declines")
+        ),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    goal_bias_before = policy.explorer.goal_bias
+    assert goal_bias_before is not None  # the default bias, per E3AgentPolicy construction
+
+    policy._induce_and_plan()
+
+    attempt = policy.induction_attempts[-1]
+    assert attempt.get("ttt_prior_goal_bias_installed") is False
+    assert policy.explorer.goal_bias is goal_bias_before  # unchanged: NOT replaced/installed
+
+
+def test_req_arc_fcp_5699_39_tier1_improving_goal_energy_still_installed(monkeypatch) -> None:
+    """The fix is a gate, not a blanket removal: when plan_in_model's own search shows the goal
+    energy genuinely improved (even without finding a full plan), the bias is still installed."""
+
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic import arc_live_ttt
+
+    def _promising_predicate(_grid):
+        return False
+
+    def _fake_gated_engine(_game, _transitions):
+        return (lambda grid, action, data: grid, _promising_predicate, {"gate": "PASS"})
+
+    monkeypatch.setattr(
+        arc_live_ttt, "gated_engine_from_transitions", _fake_gated_engine, raising=False
+    )
+
+    def _fake_plan_in_model(engine, is_done, start_grid, *, diagnostics=None, **_k):
+        if diagnostics is not None:
+            diagnostics.update(
+                {
+                    "used_goal_energy_search": True,
+                    "initial_goal_energy": 1.0,
+                    "min_goal_energy_observed": 0.2,  # real progress toward the goal
+                    "nodes_expanded": 500,
+                    "termination_reason": "max_nodes_reached",
+                }
+            )
+        return []
+
+    import carnot.agentic.arc_executable_world_model as e3
+
+    monkeypatch.setattr(e3, "plan_in_model", _fake_plan_in_model, raising=False)
+
+    policy = agent.E3AgentPolicy(
+        "paritytest",
+        proposer=SimpleNamespace(
+            model_specs="stub", induce=lambda *_a, **_k: (False, "test_stub_declines")
+        ),
+        value_head=lambda _frame: 0.0,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "stall"
+
+    goal_bias_before = policy.explorer.goal_bias
+    assert goal_bias_before is not None
+
+    policy._induce_and_plan()
+
+    attempt = policy.induction_attempts[-1]
+    assert attempt.get("ttt_prior_goal_bias_installed") is True
+    assert policy.explorer.goal_bias is not goal_bias_before  # replaced by the induced predicate
+
+
 def test_req_arc_fcp_5699_38_satisfiable_goal_predicate_still_installed(monkeypatch) -> None:
     """The fix is a gate, not a blanket removal: a genuinely satisfiable induced goal_predicate
     (goal_predicate_satisfiable=True) still installs a goal bias exactly as before."""

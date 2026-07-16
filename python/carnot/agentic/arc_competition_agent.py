@@ -3593,7 +3593,6 @@ class E3AgentPolicy:
                 _eng, _isdone, _diag = gated_engine_from_transitions(self.short, active_transitions)
                 attempt["ttt_prior_engine"] = _diag
                 if _eng is not None and self.root_grid is not None:
-                    self._install_goal_bias(_isdone)
                     _plan_diag: dict = {}
                     _plan = self._call_plan_in_model(
                         e3.plan_in_model,
@@ -3603,6 +3602,35 @@ class E3AgentPolicy:
                         diagnostics=_plan_diag,
                     )
                     attempt["ttt_prior_engine_plan_diagnostics"] = _plan_diag
+                    # REQ-ARC-FCP-5699-38 fix, found via a real post-submission regression
+                    # investigation: this call used to install _isdone as a goal bias
+                    # UNCONDITIONALLY, before planning even ran. A real repro (sc25) found this
+                    # installing a bias whose energy NEVER improved across a genuine 20009-node
+                    # search (initial_goal_energy=1.0, min_goal_energy_observed=1.0,
+                    # termination_reason="max_nodes_reached") -- a degenerate goal predicate.
+                    # Moved AFTER plan_in_model and gated on ITS OWN real search outcome (planned,
+                    # or the goal energy improved at least once) instead of a SEPARATE bounded-BFS
+                    # satisfiability probe -- cheaper (no extra search) and lower false-negative
+                    # risk than the plain-path fix above (which the test suite caught rejecting a
+                    # genuinely-reachable goal on an imperfect engine), since it reuses evidence
+                    # plan_in_model ALREADY computed rather than a second, differently-bounded
+                    # search that could disagree with it. Missing/absent diagnostic fields (a
+                    # planner that doesn't support goal-energy search) default to installing,
+                    # preserving old behavior when this signal isn't available -- only POSITIVE
+                    # evidence of a flat/non-improving search suppresses the install.
+                    install_bias = True
+                    if _plan_diag.get("used_goal_energy_search"):
+                        initial_energy = _plan_diag.get("initial_goal_energy")
+                        min_energy = _plan_diag.get("min_goal_energy_observed")
+                        if (
+                            initial_energy is not None
+                            and min_energy is not None
+                            and float(min_energy) >= float(initial_energy)
+                        ):
+                            install_bias = False
+                    attempt["ttt_prior_goal_bias_installed"] = bool(_plan or install_bias)
+                    if _plan or install_bias:
+                        self._install_goal_bias(_isdone)
                     if _plan:
                         self.plan = _plan
                         attempt["planned"] = True
