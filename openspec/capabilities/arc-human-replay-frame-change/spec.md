@@ -6710,6 +6710,109 @@ specifically to rescue constant-false predicates like cd82's is ALSO gated by
 codebase's own repair infrastructure (this REQ) are three surfacings of the SAME single structural
 gap, not three independent problems
 
+### REQ-ARC-FCP-5699-25: Wiring The Dynamics-Side Refactor Loop Into The Stall Path
+
+REQ-ARC-FCP-5699-24's concrete next step: wire a DEV-ONLY opt-in path routing stall-triggered
+first-contact induction through `execute_bounded_llm_reinduction` instead of the current
+single-shot `induce()`+`load_engine()` call, tested in isolation from REQ-ARC-FCP-5699-23's `k`
+change.
+
+**Implementation.** `_induce_and_plan()` (`arc_competition_agent.py`) gained a new branch, checked
+right after `self._fit_dsl_model()` and before the (pre-existing, unrelated) active-probe block:
+when `CARNOT_ARC_STALL_REFACTOR_LOOP=1` is set, calls `execute_bounded_llm_reinduction` with the
+SAME parameters the pre-existing `level_up_reinduction` branch uses (`max_rounds=
+MAX_REFINEMENT_ROUNDS=3`, `min_heldout_accuracy=1.0`, `min_goal_predicate_consistency=1.0`), except
+`previous_level_complete_grid=self._previous_level_complete_grid` (which will be `None` for
+first-contact levels -- REQ-ARC-FCP-5699-24 confirmed this is handled gracefully, not a crash) and
+`structural_goal_provider=None` (also confirmed graceful). The outcome is recorded onto `attempt`
+via the same field-mapping pattern as the level_up_reinduction branch, plus a new
+`stall_refactor_loop_used: True` marker so artifacts self-document which path produced them. When
+the env var is unset (production default), execution falls through UNCHANGED to the pre-existing
+plain single-shot path -- verified by a dedicated test that monkeypatches
+`execute_bounded_llm_reinduction` to raise if called, confirming it is never invoked by default.
+A second test confirms the enabled path threads `previous_level_complete_grid=None` and
+`structural_goal_provider=None` through correctly and records the outcome fields.
+
+**Live re-run, g50t, `budget=250`, `CARNOT_ARC_STALL_REFACTOR_LOOP=1`, at the k=8 DEFAULT
+(isolated from REQ-ARC-FCP-5699-23's `k=20` change -- one variable at a time).** Both arms:
+`stall_refactor_loop_used=True` (confirms the wiring fires), `refinement_rounds_used=2`,
+`planned=False`.
+
+```
+baseline round 1 (induce):  heldout_accuracy=0.125, real_n_correct=5/25, accepted_by_heldout_verifier=False (0.125 < 1.0 threshold)
+baseline round 2 (refactor): proposer_ok=False, "local model code unusable after 3 tries (missing ('engine','is_level_complete') in output)", skipped=proposer_failed
+sge round 1 (induce):       heldout_accuracy=0.0,   real_n_correct=0/25, accepted_by_heldout_verifier=False
+sge round 2 (refactor):     proposer_ok=False, same "unusable after 3 tries" message, skipped=proposer_failed
+```
+
+**The mechanism is wired and fires correctly -- but its core value-add (repair via counterexample
+feedback) never actually executes: round 2's `.refactor()` call fails to produce parseable code,
+for BOTH arms, every time measured.** The refactor-loop machinery correctly detects round 1's
+failure (`0.125`/`0.0` well below the strict `min_heldout_accuracy=1.0` bar) and correctly attempts
+a `.refactor()` call with real counterexample evidence -- but the LOCAL LLM (Qwen3.5-9B-MTP) cannot
+reliably close out valid `engine`/`is_level_complete` code when given the counterexample-feedback
+prompt (which embeds substantial per-mismatch cell-level diff data -- the `real_mismatches` payload
+above is representative: dozens of individual cell changes per mismatch, several mismatches per
+counterexample). This is a NEW, previously-unmeasured bottleneck in this REQ chain: the repair
+mechanism's prompt is apparently long/complex enough to push this local model past reliable
+structured-code generation, similar in spirit to the documented L2 rambling-truncation issue the
+existing `_L2_CODEONLY_DIRECTIVE` was built to fix (2026-06-25) -- but that directive is NOT applied
+to the plain `refactor_prompt()` path.
+
+**A genuinely interesting side-observation: round 1's induced code (`results/arc_e3/g50t/
+world_model.py`, preserved from the baseline arm's induce call since round 2 never overwrote it)
+is qualitatively the BEST-REASONED generation this whole REQ chain has observed** -- it finds the
+player DYNAMICALLY by color (`np.argwhere(new_grid == 5)`, not a hardcoded coordinate), applies a
+genuinely GENERAL relative-offset movement rule (`dr, dc` per action, applied to the found
+position), and writes a non-degenerate, testable win predicate ("player reaches (0,0)") instead of
+a constant `False`. This is a materially different, better-reasoned hypothesis than either the k=8
+baseline (hardcoded per-action coordinates) or the k=20 test's two outcomes (a genuine improvement
+and a crashing bug). **This improvement is attributable to LLM sampling variance on the SAME
+single-shot `induce()` call the plain path already makes -- NOT to anything the refactor loop
+itself contributed, since round 2 (the actual repair round) failed outright.** It still didn't
+reach a passing score (`real_n_correct=5/25`), so it's not a full win either -- but it strengthens,
+rather than refutes, REQ-ARC-FCP-5699-23's high-variance finding: the underlying model IS capable
+of well-reasoned, general hypotheses on this game, at least sometimes; NEITHER raising `k` NOR
+adding a refactor loop reliably elicits that capability on demand.
+
+**What this narrows.** In this specific measurement, wiring the refactor loop into the stall path
+produced NO net benefit -- neither arm improved on the k=8 no-refactor baseline's
+`correct_changed_cells=0`, because the loop's repair round never successfully executed. The
+mechanism is real, correctly gated, and confirmed non-crashing (matching REQ-ARC-FCP-5699-24's
+prediction that `previous_level_complete_grid=None`/`structural_goal_provider=None` would be
+handled gracefully) -- but its practical value on this local model is currently bottlenecked by
+generation reliability on the counterexample-feedback prompt specifically, a distinct failure mode
+from anything diagnosed so far.
+
+**Honest scope limit.** n=1 game (g50t), n=1 pair of measurements. Whether the refactor prompt's
+length/complexity is really the cause of round 2's failure (versus some other generation issue) is
+inferred from the error message and the L2-rambling precedent, not directly instrumented here.
+
+**Concrete next step if this thread continues.** (a) Apply an analogous code-only/token-budget
+directive to `refactor_prompt()`'s call (mirroring `_L2_CODEONLY_DIRECTIVE`'s fix for the same
+rambling-truncation failure mode in the goal-induction path) and re-measure whether round 2 then
+succeeds. (b) Truncate/summarize the counterexample payload shown to `.refactor()` (fewer
+mismatches, or only the changed-cell COUNT rather than every coordinate) to reduce prompt length
+directly. (c) Given the demonstrated high sampling variance (this REQ's round 1, REQ-ARC-FCP-
+5699-23's k=20 baseline arm), consider a best-of-N sampling strategy (run `.induce()` N times,
+keep the highest-`heldout_accuracy` candidate) as an alternative to iterative refinement, since
+variance has now been observed to sometimes produce a genuinely strong result on the FIRST try.
+
+#### SCENARIO-ARC-FCP-5699-25-REFACTOR-LOOP-FIRES-BUT-REPAIR-ROUND-FAILS-TO-GENERATE
+
+Given `CARNOT_ARC_STALL_REFACTOR_LOOP=1` routes stall-triggered induction through
+`execute_bounded_llm_reinduction` (previously reachable only from the level_up_reinduction branch)
+When g50t is re-measured at the k=8 default, both arms
+Then `stall_refactor_loop_used=True` and `refinement_rounds_used=2` confirm the mechanism fires
+correctly, round 1's `.induce()` call succeeds with partial signal (`real_n_correct` 5/25 and
+0/25) but is correctly rejected by the strict `min_heldout_accuracy=1.0` gate, and round 2's
+`.refactor()` call FAILS to produce parseable code for both arms
+("local model code unusable after 3 tries") -- so the mechanism's core repair value-add never
+executes, `planned` stays `False` for both arms, and the net effect of wiring in the refactor loop
+is null in this measurement, though round 1's induced code is independently the best-reasoned
+generation observed in this REQ chain, attributable to sampling variance rather than the refactor
+wiring itself
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
