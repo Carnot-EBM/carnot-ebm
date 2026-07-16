@@ -256,6 +256,29 @@ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_c
     assert completer.port == 8919  # the DEFAULT port, same as _proposer()'s own default
 
 
+def test_req_arc_fcp_5699_28_proposer_default_max_tokens_and_timeout_unchanged():
+    """Neither env var set (production default) -- _proposer()'s lazy default must construct
+    byte-identical to before REQ-ARC-FCP-5699-28: max_tokens=2560, timeout=300."""
+    pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
+    proposer = pol._proposer()
+    assert isinstance(proposer, LocalGGUFProposer)
+    assert proposer.max_tokens == 2560
+    assert proposer.timeout == 300
+
+
+def test_req_arc_fcp_5699_28_proposer_max_tokens_and_timeout_env_override(monkeypatch):
+    """CARNOT_ARC_INDUCE_MAX_TOKENS/CARNOT_ARC_INDUCE_TIMEOUT let a diagnostic run raise both
+    values -- REQ-ARC-FCP-5699-28's own live evidence (a real "[HIT n_predict=2560 OUTPUT LIMIT
+    before completing]" truncation, plus a separate 300s TimeoutError) confirmed both are real
+    bottlenecks that need to move together."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TIMEOUT", "600")
+    pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
+    proposer = pol._proposer()
+    assert proposer.max_tokens == 4096
+    assert proposer.timeout == 600
+
+
 def test_req_arc_fcp_5699_11_load_submitted_candidate_router_uses_sge_when_enabled(monkeypatch):
     """When the flag is on, _load_submitted_candidate_router() returns the SGE router,
     correctly threaded with the CURRENT game's id (not a placeholder)."""

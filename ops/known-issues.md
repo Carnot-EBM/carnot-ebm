@@ -920,6 +920,30 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    plus a proportionally larger `timeout`) and re-measure on the same isolated g50t config to
    see if round 2 actually succeeds; if it still fails, capture the RAW completion text on a
    failed try (not just whether it parsed) to see what the model actually produces.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-29, executes that next step -- RESOURCE
+   BUDGET HYPOTHESIS DEFINITIVELY CLOSED):** `_proposer()`'s lazy default gained
+   `CARNOT_ARC_INDUCE_MAX_TOKENS`/`CARNOT_ARC_INDUCE_TIMEOUT` DEV-ONLY overrides (unset ->
+   2560/300, byte-identical). Live re-run g50t `budget=250` with `max_tokens=4096`
+   (`LocalGGUFProposer`'s own class default) / `timeout=600` -- read ONLY after confirming via
+   `ps aux` + the task log's `"wrote results/..."` line that the run had genuinely finished (the
+   discipline the prior REQ-5699-28 stale-read mistake established as mandatory). **Result:
+   round 2 STILL fails for both arms, with the SAME generic message -- but this time NEITHER
+   arm shows an n_predict-limit marker NOR a TimeoutError.** Both generations completed within
+   their (now larger) budget and time allowance and still failed to produce the required
+   `engine`/`is_level_complete` functions. This closes the resource-budget hypothesis
+   definitively: the earlier `n_predict` hit (5699-28) was real on that specific measurement but
+   was NOT the dominant cause. Duration confirms the override genuinely applied (983.56s vs
+   648-770s at the smaller budget -- longer generations really happened). **Every "cheap,
+   well-evidenced" lever this sub-thread (5699-23 through -29) identified has now been tried and
+   ruled out** on g50t specifically: more training examples (high-variance, unreliable), the
+   refactor loop itself (fires correctly, repair round fails), the JSON encoding bug (real,
+   fixed, kept -- but insufficient alone), and now token/time budget (ruled out). What's left
+   untested is qualitatively different: reading the model's actual RAW completion text on a
+   failed try (never yet done in this whole sub-thread), or testing whether ANY of these fixes
+   generalize to sp80/cd82 (all 7 REQs so far measured ONLY g50t). Per operator instruction, this
+   choice is named explicitly rather than defaulted into another sub-fix -- see the outer-loop's
+   summary to the operator for the live recommendation.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
