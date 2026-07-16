@@ -974,6 +974,30 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    or across cd82/sp80) to see if this pathology recurs; (c) after 8 REQs on one game without a
    level-up, weigh continuing prompt-engineering iteration here against testing generalization
    elsewhere or stepping back to a different priority entirely.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-31, executes the operator's pick (a) --
+   REAL, POSITIVE result):** `refactor_prompt` gained a DEV-ONLY
+   `CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1` override (unset -> byte-identical, verified) that
+   explicitly forbids the three specific things 5699-30's raw sample did wrong (class-wrapping,
+   `self`, inventing a new grid representation) rather than the `codeonly` "skip all reasoning"
+   directive (deliberately excluded from refactor per 5699-26). Replayed the SAME real g50t
+   counterexample data with the reminder on: **`ok=True` -- the response now starts DIRECTLY
+   with a valid top-level `engine`/`is_level_complete` pair (no class, no `self`), and
+   `generate()` successfully wrote it to disk.** This directly reverses 5699-30's specific
+   failure. Two honest caveats: (1) `stop_type='limit'` this time -- after the first valid block
+   completes, the response spirals into a REPETITIVE SELF-CORRECTION LOOP ("wait, let me rewrite
+   this" repeated near-verbatim 5-6 times) until truncated -- harmless here since extraction only
+   needs the first block, but a new, previously-unobserved behavior; (2) the code's CONTENT is
+   still an invented `[row, col, entity_id, state]` per-cell representation that doesn't match
+   g50t's real simple 2D grid, so structural validity (passes `generate()`'s check) is confirmed
+   but whether it would pass the strict downstream `min_heldout_accuracy=1.0` verification gate
+   remains untested. Scope: n=1 reminder-on sample vs n=1 reminder-off sample, both single draws
+   from a demonstrably high-variance process (5699-23's k=20 test already showed one generation
+   succeed and an independent one crash on the identical config) -- a real, positive signal, not
+   proof of reliability. Concrete next step if picked up again: a full live A/B on g50t with the
+   flag on (not launched automatically here, left as an explicit operator choice given 9 REQs
+   already spent on this one game) to see whether this structural win reaches `planned=True`
+   end-to-end.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
