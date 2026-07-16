@@ -894,6 +894,32 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    plausible lever if truncation is confirmed. Concrete next step (already queued): re-run the
    same isolated g50t config WITH this detection code active and read the real
    `stop_type`/`truncated` values before deciding whether to raise anything.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-28, the definitive answer -- plus a
+   self-caught stale-read mistake, recorded honestly):** a MID-RUN read of the results file
+   (before the sge arm had finished) was mistakenly reported as this run's final result,
+   incorrectly answering "no" to the operator's "should we increase max context" question --
+   `arc_sge_live_path_ab.py` writes its results file exactly ONCE, at the very end, so that
+   read returned the PREVIOUS run's leftover state, not this run's real data. This is exactly
+   the pitfall this project's Reading-Results Discipline exists to prevent, and it recurred
+   here despite being flagged multiple times earlier in this same session. Caught and corrected
+   once the sge arm genuinely completed. **The corrected, definitive, real-data answer: YES,
+   `max_tokens` IS a confirmed real bottleneck.** The baseline arm's round-2 failure message now
+   reads `"... [HIT n_predict=2560 OUTPUT LIMIT before completing]"` -- the model was genuinely
+   cut off at its 2560-token budget before finishing valid code, direct evidence-backed
+   justification for raising `max_tokens`. **The sge arm fails differently -- a 300s HTTP
+   `TimeoutError`** (bypasses the detection code entirely, a bare network exception caught
+   before `stop_type`/`truncated` are read) -- a SEPARATE, wall-clock-timeout bottleneck, not a
+   token-count one. **`n_ctx` (context window) shows no evidence of being a bottleneck anywhere
+   in this REQ chain** -- `truncated` was never observed `True`. **Final answer: raise
+   `max_tokens` (confirmed-justified) AND `timeout` in proportion (since a larger `max_tokens`
+   permits longer generations, and the CURRENT 300s timeout is already sometimes insufficient
+   even at the current budget)** -- neither alone is the complete fix; they need to move
+   together. Concrete next step if picked up again: raise both (e.g. `max_tokens=4096`,
+   matching `LocalGGUFProposer`'s own class default already used elsewhere in this codebase,
+   plus a proportionally larger `timeout`) and re-measure on the same isolated g50t config to
+   see if round 2 actually succeeds; if it still fails, capture the RAW completion text on a
+   failed try (not just whether it parsed) to see what the model actually produces.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
