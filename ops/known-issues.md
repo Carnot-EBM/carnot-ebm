@@ -944,6 +944,36 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    generalize to sp80/cd82 (all 7 REQs so far measured ONLY g50t). Per operator instruction, this
    choice is named explicitly rather than defaulted into another sub-fix -- see the outer-loop's
    summary to the operator for the live recommendation.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-30, the operator's own pick -- reads the
+   raw output, finds the ACTUAL root cause, closing the 8-REQ sub-thread's real question):**
+   `LocalGGUFProposer` gained `last_raw_completion` (captured in the existing
+   `_record_completion_diagnostics()` helper, no new wiring needed). Rather than another 15-30
+   min live A/B, a standalone script replayed the EXACT failing `refactor()` call using the REAL
+   8-mismatch counterexample data already sitting in the prior run's artifact, at the same
+   confirmed-non-truncating `max_tokens=4096`/`timeout=600`. **The raw text reveals the model
+   abandons the required interface entirely**: instead of the required top-level
+   `engine(grid, action, data)`/`is_level_complete(grid)` functions, it wrote a self-contained
+   `class WorldModel` with `self`-bound methods and a completely FICTIONAL 25x25x5 one-hot grid
+   representation (matching nothing about g50t's real 2D color-indexed grid, which every prior
+   successful generation this REQ chain read used correctly) -- `is_level_complete` never appears
+   anywhere in the 1761-character response, there's an internal bug even on its own terms (a
+   duplicated `elif action == 0:` making the "move left" branch permanently unreachable), and it
+   simply stops mid-statement (`self.grid[12, `). `stop_type='eos'` (natural completion) confirms
+   this is NOT a truncation issue -- the model had room and time and just drifted into a generic,
+   memorized gridworld template instead of engaging with the specific counterexamples shown.
+   **This closes the real question the whole 5699-23 through -29 sub-thread was searching for**:
+   the bottleneck was never resource-shaped (data, budget, timeout) -- it's an
+   instruction-adherence/task-drift failure on this specific 9B local model under a complex
+   debugging prompt, something no amount of parameter-tuning could have found without reading the
+   model's own words. Scope limit: n=1 raw sample -- doesn't establish this is the ONLY failure
+   mode across every prior round-2 failure in this chain, just a real, informative one. Concrete
+   next step if picked up again: (a) cheapest -- strengthen `refactor_prompt` with an explicit,
+   repeated reminder of the exact required top-level signature right by the mismatches block,
+   directly targeting the observed class-wrapping drift; (b) capture more raw samples (repeat 3-5x
+   or across cd82/sp80) to see if this pathology recurs; (c) after 8 REQs on one game without a
+   level-up, weigh continuing prompt-engineering iteration here against testing generalization
+   elsewhere or stepping back to a different priority entirely.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

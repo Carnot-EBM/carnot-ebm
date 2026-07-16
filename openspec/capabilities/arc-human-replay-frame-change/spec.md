@@ -7098,6 +7098,111 @@ hypothesis definitively: the bottleneck is not token count or wall-clock time, a
 untested diagnostic is reading the model's actual raw output directly rather than trying another
 budget-shaped fix
 
+### REQ-ARC-FCP-5699-30: Reading The Actual Raw Output -- The Model Abandons The Required Interface, Not A Resource Problem At All
+
+REQ-ARC-FCP-5699-29's own remaining untested diagnostic, and the operator's direct request: capture
+and read the model's raw completion text on a failed refactor try -- the one thing this entire
+7-REQ sub-thread (5699-23 through -29) had diagnosed everything AROUND but never actually looked at
+directly.
+
+**Implementation.** `LocalGGUFProposer` gained `last_raw_completion: str = ""`, set inside the
+existing `_record_completion_diagnostics()` helper (REQ-ARC-FCP-5699-27) alongside
+`last_stop_type`/`last_prompt_truncated` -- no new wiring needed in `generate()`/`complete_text()`
+since both already call that helper on every response. 1 new unit test verifies the raw text is
+captured even when `generate()` returns `ok=False` (the short failure message alone never showed
+what was actually produced).
+
+**Diagnostic method: replay the EXACT failing call with REAL data, not a fresh live run.** Rather
+than spend another ~15-30 minute full A/B run, a standalone script
+(`read_raw_refactor_output.py`) loaded the REAL 8-mismatch counterexample data already sitting in
+`results/arc_sge_live_path_ab_g50t.json` (from REQ-ARC-FCP-5699-29's own run) and called
+`LocalGGUFProposer.refactor("g50t", vr)` directly against the warm production server, at the SAME
+`max_tokens=4096`/`timeout=600` REQ-ARC-FCP-5699-29 confirmed the model completes within (no
+truncation) -- reproducing the exact failing conditions, once, cheaply.
+
+**The raw output, read directly, reveals the actual root cause.** `last_stop_type='eos'`
+(confirms REQ-ARC-FCP-5699-29 again: natural completion, not a token-budget cutoff) and
+`last_raw_completion` (1761 characters, well under the 4096-token ceiling) contains:
+
+```python
+class WorldModel:
+    def __init__(self):
+        self.grid_size = 25
+        self.grid = np.zeros((25, 25, 5), dtype=int)
+        self.grid[12, 12, 0] = 1  # Start position
+        self.grid[12, 12, 1] = 1  # Goal position
+    ...
+    def engine(self, state, action, data):
+        ...
+        elif action == 0:   # duplicate of the FIRST action==0 branch above -- unreachable
+            # Move left
+        ...
+    ...
+    def reset(self):
+        self.grid_size = 25
+        self.grid = np.zeros((25, 25, 5), dtype=int)
+        self.grid[12, 12, 0] = 1  # Start position
+        self.grid[12,           # <- cuts off mid-statement, no closing, no is_level_complete anywhere
+```
+
+**This is NOT a resource, truncation, or timeout problem -- it is the model abandoning the
+required task interface entirely.** Instead of patching the top-level `def engine(grid, action,
+data)` / `def is_level_complete(grid)` functions the prompt requires, the model invented a
+self-contained `class WorldModel` with `self`-bound methods, a completely fictional 25x25x5
+one-hot internal grid representation that matches NOTHING about g50t's real state (every prior
+generation this REQ chain has read used the real 2D color-indexed grid), and NEVER writes
+anything resembling a win-condition check -- `is_level_complete` does not appear anywhere in the
+1761 characters. The response also contains an internal bug even on its own fictional terms
+(`elif action == 0:` duplicated, making the intended "move left" branch permanently unreachable
+behind the first `action == 0` check), and simply stops mid-statement without the model appearing
+to notice anything is wrong. This looks like the model drifting into a generic, memorized
+gridworld/RL-environment template under a complex debugging prompt, rather than genuinely
+engaging with the specific counterexamples it was shown.
+
+**What this narrows -- the complete answer across the whole 5699-23 through -30 sub-thread.**
+Every resource-shaped hypothesis (thin training data, no repair loop, invalid JSON, token budget,
+wall-clock timeout) has now been tried, and each was either a real, worthwhile, KEPT fix (the JSON
+bug, the detection instrumentation) or a clean negative result. None of them touched the actual
+cause, because the actual cause isn't resource-shaped at all: it's an instruction-adherence
+failure under a complex, counterexample-heavy reasoning prompt, on this specific 9B local model.
+This is a genuinely different problem class from anything this REQ chain could have found by
+tuning parameters -- it required reading the model's own words.
+
+**Honest scope limit.** n=1 game (g50t), n=1 raw-output sample. One failed generation showing
+this specific pathology (class-wrapped, fictional-representation drift) does not establish this
+is the ONLY or even the DOMINANT failure mode across all of round 2's failed tries in this REQ
+chain -- REQ-ARC-FCP-5699-25's original failure and REQ-ARC-FCP-5699-28's `n_predict`-truncated
+failure could plausibly be different manifestations (or the same one, cut off at different
+points). A single sample is a real, informative data point, not a complete characterization.
+
+**Concrete next step if this thread continues.** (a) Cheapest: strengthen `refactor_prompt`'s
+own instructions with an explicit, repeated reminder of the EXACT required top-level signature
+immediately before/after the mismatches block (e.g. "Your response MUST define exactly these two
+TOP-LEVEL functions: `def engine(grid, action, data):` and `def is_level_complete(grid):` -- do
+NOT wrap them in a class, do NOT rename the parameters"), directly targeting the observed
+class-wrapping drift. (b) Capture MORE raw-output samples (repeat this diagnostic 3-5 times, or
+across cd82/sp80 too) to see whether this specific pathology (class-wrapping, fictional grid
+representation) recurs, or whether other failed tries show different symptoms entirely. (c) Given
+how far this sub-thread has gone (8 REQs now) without a level-up, this is also a natural point to
+weigh continuing to iterate on prompt-engineering fixes for this ONE model's reliability against
+testing generalization elsewhere or stepping back to a different priority.
+
+#### SCENARIO-ARC-FCP-5699-30-RAW-OUTPUT-REVEALS-INTERFACE-ABANDONMENT-NOT-A-RESOURCE-PROBLEM
+
+Given `LocalGGUFProposer` gains a `last_raw_completion` capture (alongside the existing
+`last_stop_type`/`last_prompt_truncated` from REQ-ARC-FCP-5699-27), and the exact failing
+`refactor()` call from REQ-ARC-FCP-5699-29's own run is replayed with the same real
+counterexample data and the same confirmed-non-truncating `max_tokens=4096`/`timeout=600`
+When the raw completion text is read directly rather than only checking whether it parsed
+Then `last_stop_type='eos'` (natural completion, not truncated) and the 1761-character response
+shows the model wrote a `class WorldModel` with `self`-bound methods and a fictional 25x25x5
+one-hot grid representation instead of the required top-level `engine`/`is_level_complete`
+functions, never mentions `is_level_complete` at all, contains an internal bug (a duplicated,
+unreachable `elif action == 0:` branch), and stops mid-statement -- establishing that round 2's
+failure across this entire REQ chain is an instruction-adherence/task-drift problem, not a
+resource, truncation, or timeout problem, and that no further budget-shaped fix could have found
+this without reading the model's actual output
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

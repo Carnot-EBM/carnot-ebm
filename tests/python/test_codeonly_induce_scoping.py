@@ -198,6 +198,26 @@ def test_req_arc_fcp_5699_27_generate_records_stop_type_and_truncated(
     assert p.last_prompt_truncated is False
 
 
+def test_req_arc_fcp_5699_30_generate_records_raw_completion_even_on_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-ARC-FCP-5699-30: the raw completion text must be captured even when generate()
+    decides the required functions are missing and returns ok=False -- generate()'s own return
+    value only carries a short diagnostic message, but the FULL text the model produced (was it
+    reasoning-only? malformed code? empty?) is what actually answers 'why did this fail'."""
+    _reasoning_only_text = (
+        "Looking at the mismatches, I think the issue is with action 3 handling..."
+    )
+    _fake_urlopen_with(
+        monkeypatch, {"content": _reasoning_only_text, "stop_type": "eos", "truncated": False}
+    )
+    p = _proposer(monkeypatch)
+    ok, message = p.generate("BASE", ("engine", "is_level_complete"), codeonly_eligible=False)
+    assert ok is False
+    assert "missing" in message  # the short message alone doesn't show WHAT was produced
+    assert p.last_raw_completion == _reasoning_only_text  # but this does
+
+
 def test_req_arc_fcp_5699_27_generate_failure_message_names_n_predict_limit(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

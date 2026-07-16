@@ -1411,6 +1411,13 @@ class LocalGGUFProposer:
     # "content" field was read from the response).
     last_stop_type: str = ""
     last_prompt_truncated: bool = False
+    # REQ-ARC-FCP-5699-30: the raw completion text, captured on EVERY call regardless of
+    # success/failure -- generate()'s failure path previously discarded `text` entirely once it
+    # decided the required functions were missing, so there was no way to see WHAT the model
+    # actually produced (reasoning-only? malformed code? nothing?) on a failed try, only THAT it
+    # failed. Closes the diagnostic gap REQ-ARC-FCP-5699-23 through -29 all ran into without ever
+    # inspecting.
+    last_raw_completion: str = ""
 
     def _url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
@@ -1418,6 +1425,7 @@ class LocalGGUFProposer:
     def _record_completion_diagnostics(self, response: dict) -> None:
         self.last_stop_type = str(response.get("stop_type") or "")
         self.last_prompt_truncated = bool(response.get("truncated"))
+        self.last_raw_completion = str(response.get("content") or "")
 
     def _healthy(self) -> bool:
         import urllib.request
