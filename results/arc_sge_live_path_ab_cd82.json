@@ -1,0 +1,208 @@
+{
+  "experiment": "arc_sge_live_path_ab",
+  "req": "REQ-ARC-FCP-5699-12",
+  "game": "cd82",
+  "budget": 250,
+  "methodology_note": "Both arms use genuinely full-production E3AgentPolicy(game, proposer=None) -- the SAME induction/frame-change-scorer/goal-bias/action-effect-expansion-prior defaults SUBMITTED_AGENT_CONFIG ships, NOT the stripped-down outer_loop_sge_smoke_test.py harness. The only difference between arms is candidate_router. Scored via arc_leaderboard_eval.run_game() -- the real leaderboard scorer.",
+  "results": {
+    "baseline_discriminative": {
+      "game": "cd82",
+      "levels": 0,
+      "reached": 0,
+      "actions": 247,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 247,
+          "human_actions": 55,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 8,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 21,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 2,
+        "forward_walk_hit_rate": 0.0
+      },
+      "reset_replay_steps": 2,
+      "forward_walk_hit_rate": 0.0,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "cd82",
+        "stuck_at_level": 0,
+        "actions_spent": 247,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "candidate_router_type": "CrossGameDiscriminativeCandidateRouter",
+      "duration_s": 38.85494637489319,
+      "arm": "baseline_discriminative",
+      "explorer_explored_out": false,
+      "induction_attempts": [
+        {
+          "reason": "stall",
+          "goal_level": 1,
+          "transition_count": 25,
+          "dsl_transition_count": 25,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "skipped": "hidden_state_trust_below_threshold",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "n_transitions": 25,
+            "warm_start": false,
+            "prior_transition_count": 0,
+            "prior_loaded": true,
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.6,
+            "trust_threshold": 0.5,
+            "trust_metric": "cell_recall",
+            "gate": "PASS"
+          },
+          "ttt_prior_engine_plan_diagnostics": {
+            "is_level_complete_was_none": false,
+            "nodes_expanded": 20014,
+            "termination_reason": "max_nodes_reached"
+          },
+          "trust_energy": 124.04694,
+          "heldout_change_consistency": 0.0,
+          "heldout_accuracy": 0.0,
+          "correct_changed_cells": 0,
+          "binary_gate_pass": false
+        }
+      ],
+      "induction_attempts_not_skipped": 0
+    },
+    "sge": {
+      "game": "cd82",
+      "levels": 0,
+      "reached": 0,
+      "actions": 238,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 238,
+          "human_actions": 55,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 8,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 41,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 21,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 23,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 20,
+        "forward_walk_hit_rate": 0.26666666666666666
+      },
+      "reset_replay_steps": 20,
+      "forward_walk_hit_rate": 0.26666666666666666,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "cd82",
+        "stuck_at_level": 0,
+        "actions_spent": 238,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "candidate_router_type": "SGECandidateRouter",
+      "duration_s": 101.28186821937561,
+      "arm": "sge",
+      "explorer_explored_out": false,
+      "induction_attempts": [
+        {
+          "reason": "stall",
+          "goal_level": 1,
+          "transition_count": 25,
+          "dsl_transition_count": 25,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "skipped": "hidden_state_trust_below_threshold",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "n_transitions": 25,
+            "warm_start": false,
+            "prior_transition_count": 0,
+            "prior_loaded": true,
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.7858,
+            "trust_threshold": 0.5,
+            "trust_metric": "cell_recall",
+            "gate": "PASS"
+          },
+          "ttt_prior_engine_plan_diagnostics": {
+            "is_level_complete_was_none": false,
+            "nodes_expanded": 20012,
+            "termination_reason": "max_nodes_reached"
+          },
+          "trust_energy": 435.266815,
+          "heldout_change_consistency": 0.0,
+          "heldout_accuracy": 0.125,
+          "correct_changed_cells": 0,
+          "binary_gate_pass": false
+        }
+      ],
+      "induction_attempts_not_skipped": 0
+    }
+  },
+  "run_date": "2026-07-16T00:24:30Z"
+}

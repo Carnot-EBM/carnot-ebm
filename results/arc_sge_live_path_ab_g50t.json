@@ -1,0 +1,220 @@
+{
+  "experiment": "arc_sge_live_path_ab",
+  "req": "REQ-ARC-FCP-5699-12",
+  "game": "g50t",
+  "budget": 250,
+  "methodology_note": "Both arms use genuinely full-production E3AgentPolicy(game, proposer=None) -- the SAME induction/frame-change-scorer/goal-bias/action-effect-expansion-prior defaults SUBMITTED_AGENT_CONFIG ships, NOT the stripped-down outer_loop_sge_smoke_test.py harness. The only difference between arms is candidate_router. Scored via arc_leaderboard_eval.run_game() -- the real leaderboard scorer.",
+  "results": {
+    "baseline_discriminative": {
+      "game": "g50t",
+      "levels": 0,
+      "reached": 0,
+      "actions": 248,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 248,
+          "human_actions": 78,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 175,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 179,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 230,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 67,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 2,
+        "forward_walk_hit_rate": 0.9696969696969697
+      },
+      "reset_replay_steps": 2,
+      "forward_walk_hit_rate": 0.9696969696969697,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "g50t",
+        "stuck_at_level": 0,
+        "actions_spent": 248,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "candidate_router_type": "CrossGameDiscriminativeCandidateRouter",
+      "duration_s": 62.99194884300232,
+      "arm": "baseline_discriminative",
+      "explorer_explored_out": false,
+      "induction_attempts": [
+        {
+          "reason": "stall",
+          "goal_level": 1,
+          "transition_count": 25,
+          "dsl_transition_count": 25,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "skipped": "hidden_state_trust_below_threshold",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "n_transitions": 25,
+            "warm_start": false,
+            "prior_transition_count": 0,
+            "prior_loaded": true,
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.7216,
+            "trust_threshold": 0.5,
+            "trust_metric": "cell_recall",
+            "gate": "PASS"
+          },
+          "ttt_prior_engine_plan_diagnostics": {
+            "is_level_complete_was_none": false,
+            "nodes_expanded": 20005,
+            "termination_reason": "max_nodes_reached"
+          },
+          "trust_energy": 143.477921,
+          "heldout_change_consistency": 0.0,
+          "heldout_accuracy": 0.0,
+          "correct_changed_cells": 0,
+          "binary_gate_pass": false
+        }
+      ],
+      "induction_attempts_not_skipped": 0
+    },
+    "sge": {
+      "game": "g50t",
+      "levels": 0,
+      "reached": 0,
+      "actions": 248,
+      "efficiency": 0.0,
+      "per_level_efficiency": 0.0,
+      "per_level": [
+        {
+          "level": 0,
+          "agent_actions": 248,
+          "human_actions": 78,
+          "completed": false
+        },
+        {
+          "level": 1,
+          "agent_actions": 0,
+          "human_actions": 175,
+          "completed": false
+        },
+        {
+          "level": 2,
+          "agent_actions": 0,
+          "human_actions": 179,
+          "completed": false
+        },
+        {
+          "level": 3,
+          "agent_actions": 0,
+          "human_actions": 230,
+          "completed": false
+        },
+        {
+          "level": 4,
+          "agent_actions": 0,
+          "human_actions": 96,
+          "completed": false
+        },
+        {
+          "level": 5,
+          "agent_actions": 0,
+          "human_actions": 54,
+          "completed": false
+        },
+        {
+          "level": 6,
+          "agent_actions": 0,
+          "human_actions": 67,
+          "completed": false
+        }
+      ],
+      "deepest_level_reached": 0,
+      "navigation_diagnostics": {
+        "reset_replay_steps": 3,
+        "forward_walk_hit_rate": 0.96
+      },
+      "reset_replay_steps": 3,
+      "forward_walk_hit_rate": 0.96,
+      "actions_to_first_levelup": null,
+      "gap": {
+        "game": "g50t",
+        "stuck_at_level": 0,
+        "actions_spent": 248,
+        "signature": "no_level_up_within_budget",
+        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
+      },
+      "candidate_router_type": "SGECandidateRouter",
+      "duration_s": 288.6740050315857,
+      "arm": "sge",
+      "explorer_explored_out": false,
+      "induction_attempts": [
+        {
+          "reason": "stall",
+          "goal_level": 1,
+          "transition_count": 25,
+          "dsl_transition_count": 25,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "skipped": "hidden_state_trust_below_threshold",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "n_transitions": 25,
+            "warm_start": false,
+            "prior_transition_count": 0,
+            "prior_loaded": true,
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.6225,
+            "trust_threshold": 0.5,
+            "trust_metric": "cell_recall",
+            "gate": "PASS"
+          },
+          "ttt_prior_engine_plan_diagnostics": {
+            "is_level_complete_was_none": false,
+            "nodes_expanded": 20034,
+            "termination_reason": "max_nodes_reached"
+          },
+          "trust_energy": 497.944779,
+          "heldout_change_consistency": 0.0,
+          "heldout_accuracy": 0.125,
+          "correct_changed_cells": 0,
+          "binary_gate_pass": false
+        }
+      ],
+      "induction_attempts_not_skipped": 0
+    }
+  },
+  "run_date": "2026-07-16T00:30:48Z"
+}

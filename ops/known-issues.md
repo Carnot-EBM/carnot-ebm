@@ -624,6 +624,26 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    implausibility vs. observed real transitions (distinguishes "coherent but wrong" from "diverges
    to noise fast"); or (b) the cheaper breadth check -- repeat this diagnostic on 1-2 more
    unsolved games to see if `max_nodes_reached` recurs there too (systemic vs. sp80-specific).
+
+   **FOLLOW-ON 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-17, executes the cheap breadth check):**
+   ran the identical diagnostic (no code changes needed) on `cd82` and `g50t` (both from this
+   chain's original 4-game sample, both `HIDDEN_STATE_GAME_IDS` members -- a structurally
+   different second-tier gate than sp80's). **Result: the pattern recurs IDENTICALLY on all 4 new
+   arm-measurements** -- `explored_out=False`, `is_level_complete_was_none=False`,
+   `termination_reason=max_nodes_reached` at `nodes_expanded` 20005-20034, `planned=False`
+   (cd82: 20014/20012; g50t: 20005/20034). Combined with sp80's prior 4 measurements (20000 and
+   100000 budgets), that's 6/6 arm-measurements across 3 games all landing on the same tier-1
+   exhaustion signature. **This confirms the `max_nodes_reached` wall is SYSTEMIC, not
+   sp80-specific** -- it recurs on a second AND third game including a structurally different
+   hidden-state-gated code path. What does NOT generalize: WHICH second-tier gate fires after tier
+   1 fails is game-class-dependent (`hidden_state_trust_below_threshold` for cd82/g50t vs.
+   sp80's `world_model_accuracy_below_threshold`) -- only tier 1's exhaustion is uniform. **Scope
+   limit: n=3 games out of the 25-game registry**, all drawn from the same prior sample -- "likely
+   dominant across the corpus" is now reasonable, "confirmed for all 25 games" is not. Concrete
+   next step if picked up again: the breadth-check avenue is now well-exercised (3/3); the
+   higher-value remaining avenue is inspecting the tier-1 model's own predicted rollout directly
+   to distinguish "coherent but wrong" from "diverges to noise fast" -- the deeper investigation
+   REQ-ARC-FCP-5699-16 flagged as a natural checkpoint before continuing further.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on

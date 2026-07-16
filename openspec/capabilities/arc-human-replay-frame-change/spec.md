@@ -6003,6 +6003,78 @@ the remaining explanation toward the induced model's multi-step rollout not repr
 discoverable path to its own goal predicate, a materially different and deeper question than any
 prior REQ-ARC-FCP-5699-N step addressed
 
+### REQ-ARC-FCP-5699-17: Breadth Check -- The Tier-1 max_nodes_reached Wall Recurs Identically On Two More Games
+
+REQ-ARC-FCP-5699-15/16 named the cheaper of two remaining follow-ups: repeat the diagnostics-
+instrumented measurement on 1-2 more games to see whether `max_nodes_reached` is a systemic
+property of the tier-1 CNN-prior-warm-start path, or specific to sp80. No code changes were
+needed -- the diagnostics wiring from 5699-15/16 already flows into `policy.induction_attempts`
+for any game `arc_sge_live_path_ab.py` is pointed at.
+
+**Ran the identical diagnostic (default `max_nodes=20000`, `budget=250`) on `cd82` and `g50t`** --
+both drawn from this REQ chain's original 4-game sample (REQ-ARC-FCP-5699-6 through -10), for
+direct comparability. Both are in `HIDDEN_STATE_GAME_IDS`, unlike sp80, so their single induction
+attempt routes through the OTHER second-tier gate (`hidden_state_trust_below_threshold` at
+~line 3689, not sp80's `world_model_accuracy_below_threshold` at ~line 3708) -- but tier 1's
+`gated_engine_from_transitions` warm-start attempt runs FIRST regardless of hidden-state routing
+(the check happens earlier, ~line 3448-3468, before the `HIDDEN_STATE_GAME_IDS` branch), so the
+same tier-1 diagnostics apply uniformly across both game classes.
+
+```
+cd82 baseline: explored_out=False, is_level_complete_was_none=False, nodes_expanded=20014, termination_reason=max_nodes_reached, planned=False
+cd82 sge:      explored_out=False, is_level_complete_was_none=False, nodes_expanded=20012, termination_reason=max_nodes_reached, planned=False
+g50t baseline: explored_out=False, is_level_complete_was_none=False, nodes_expanded=20005, termination_reason=max_nodes_reached, planned=False
+g50t sge:      explored_out=False, is_level_complete_was_none=False, nodes_expanded=20034, termination_reason=max_nodes_reached, planned=False
+```
+
+**The pattern recurs identically, on all six arm-measurements across three games now (sp80's two
+arms at both the 20000 and 100000 budgets, cd82's two arms, g50t's two arms).** Every single one:
+`explorer_explored_out=False` (the real ~48-candidate generator never exhausts -- 5699-13/14
+confirmed, still holding), exactly one induction attempt (`reason="stall"` at
+`transition_count=25`, the same trigger every time), tier 1's goal predicate genuinely real
+(`is_level_complete_was_none=False`), and tier 1's search always ends in `"max_nodes_reached"`
+with `planned=False` -- never `"queue_exhausted"`, never a successful plan. The node counts
+cluster tightly around the `max_nodes` setting in effect for that run (20005-20034 at the default,
+100001-100015 at 5x), consistent with independently-induced-but-similarly-behaved CNN priors
+across different games, not a fluke specific to one game's induced dynamics.
+
+**What this narrows.** The tier-1 `max_nodes_reached` wall is now confirmed SYSTEMIC across the
+n=3 games tested, not an sp80 idiosyncrasy -- it recurs identically on a second AND third game,
+including one structurally different code path (`HIDDEN_STATE_GAME_IDS` routing). This strengthens
+REQ-ARC-FCP-5699-15/16's standing hypothesis (the induced model's multi-step rollout does not
+represent a discoverable path to its own goal predicate within any tested budget) from a single
+n=1 lead to a reproduced, multi-game pattern. What does NOT generalize from this measurement:
+WHICH second-tier gate fires after tier 1 fails (game-class-dependent, per `HIDDEN_STATE_GAME_IDS`
+membership) -- only tier 1's own exhaustion behavior is shown to be uniform.
+
+**Honest scope limit.** n=3 games out of the 25-game registry, all three drawn from the SAME prior
+sample this REQ chain already used (5699-6 through -10) -- not a random or exhaustive sample of
+the registry. It is now reasonable to treat `max_nodes_reached` as the LIKELY dominant tier-1
+termination reason across the broader corpus, but "likely" is not "confirmed for all 25 games" --
+per Sample-Size Rigor discipline, a claim about the full registry would need a wider sample.
+
+**Concrete next step if this thread continues.** The cheap breadth-check avenue is now
+well-exercised (3/3 recur); the higher-value remaining avenue is REQ-ARC-FCP-5699-16's other named
+follow-up -- inspect the tier-1 model's own predicted rollout directly (greedily follow the
+induced `engine`'s transitions from `root_grid` for a bounded number of steps and check for
+structural implausibility against real observed transitions) to distinguish "the model predicts a
+coherent-but-wrong world that a search can't reach the goal in" from "the model's predictions
+diverge into structural noise quickly" -- the deeper, more instrumentation-heavy investigation
+5699-16 flagged as a natural checkpoint before continuing.
+
+#### SCENARIO-ARC-FCP-5699-17-TIER-1-WALL-RECURS-ON-TWO-MORE-GAMES
+
+Given REQ-ARC-FCP-5699-15/16 established the tier-1 `max_nodes_reached` wall on sp80 alone (n=1),
+and named repeating the diagnostic on more games as the cheap way to check whether it generalizes
+When the same diagnostics-instrumented measurement (default `max_nodes=20000`, `budget=250`) is
+run on `cd82` and `g50t` -- both `HIDDEN_STATE_GAME_IDS` members, a structurally different
+second-tier gate path than sp80
+Then all four new arm-measurements (cd82 baseline/sge, g50t baseline/sge) show the identical
+tier-1 signature -- `is_level_complete_was_none=False`, `termination_reason="max_nodes_reached"`
+at `nodes_expanded` clustered near 20000, `planned=False` -- confirming the wall is systemic
+across n=3 games tested (not sp80-specific), while which SECOND-tier gate fires afterward remains
+game-class-dependent
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
