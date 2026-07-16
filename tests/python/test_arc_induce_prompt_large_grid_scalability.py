@@ -247,3 +247,65 @@ def test_req_arc_fcp_5699_26_refactor_prompt_produces_valid_json_at_realistic_sc
     mism_block = prompt[prompt.index("MISMATCHES:\n") + len("MISMATCHES:\n") :]
     parsed = _json.loads(mism_block)  # must not raise
     assert len(parsed) == 5
+
+
+# ---------------------------------------------------------------------------
+# REQ-ARC-FCP-5699-31: DEV-ONLY structural reminder in refactor_prompt, targeting the exact
+# pathology REQ-ARC-FCP-5699-30 found by reading a real raw completion: the model wrapped its
+# fix in a class with self-bound methods, invented a fictional grid representation, and never
+# emitted is_level_complete at all.
+# ---------------------------------------------------------------------------
+
+
+def _refactor_vr():
+    from types import SimpleNamespace
+
+    return SimpleNamespace(
+        n=25,
+        n_correct=5,
+        accuracy=0.2,
+        mismatches=[
+            {
+                "i": 0,
+                "action": 1,
+                "data": None,
+                "true_change": [],
+                "your_prediction_was_wrong_at": [],
+            }
+        ],
+    )
+
+
+def test_req_arc_fcp_5699_31_refactor_prompt_default_unset_is_byte_identical(monkeypatch):
+    """Regression-safety anchor: CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER unset (production
+    default) -- the prompt must be byte-identical to the pre-5699-31 template."""
+    monkeypatch.delenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", raising=False)
+    vr = _refactor_vr()
+    prompt = e3.refactor_prompt("g50t", vr)
+    assert "REQUIRED OUTPUT STRUCTURE" not in prompt
+    assert "class WorldModel" not in prompt  # sanity: nothing about classes is injected
+    tail = (
+        "MISMATCHES:\n"
+        + __import__("json").dumps(e3._bounded_mismatches(vr.mismatches), indent=1)
+        + "\n"
+    )
+    assert prompt.endswith(tail)
+
+
+def test_req_arc_fcp_5699_31_refactor_prompt_reminder_targets_the_observed_pathology(monkeypatch):
+    """When enabled, the reminder must explicitly forbid the exact structure REQ-ARC-FCP-5699-30
+    observed the model produce: a class, self-bound methods, and an invented grid shape."""
+    monkeypatch.setenv("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER", "1")
+    vr = _refactor_vr()
+    prompt = e3.refactor_prompt("g50t", vr)
+    assert "REQUIRED OUTPUT STRUCTURE" in prompt
+    assert "def engine(grid, action, data):" in prompt
+    assert "def is_level_complete(grid):" in prompt
+    assert "Do NOT wrap them in a class" in prompt
+    assert "Do NOT use `self`" in prompt
+    assert "Do NOT invent a new internal grid" in prompt
+    # the reminder appears both before (primacy) and after (recency, right before generation)
+    # the mismatches block
+    mismatches_idx = prompt.index("MISMATCHES:")
+    assert prompt.index("REQUIRED OUTPUT STRUCTURE") < mismatches_idx
+    assert prompt.rindex("Reminder:") > mismatches_idx

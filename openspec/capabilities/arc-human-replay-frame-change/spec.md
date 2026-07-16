@@ -7203,6 +7203,84 @@ failure across this entire REQ chain is an instruction-adherence/task-drift prob
 resource, truncation, or timeout problem, and that no further budget-shaped fix could have found
 this without reading the model's actual output
 
+### REQ-ARC-FCP-5699-31: The Targeted Prompt Fix -- Structural Reminder Directly Countering The Observed Pathology
+
+REQ-ARC-FCP-5699-30's cheapest named next step, and the operator's direct pick: strengthen
+`refactor_prompt` with an explicit reminder of the exact required signature, directly targeting
+the class-wrapping/invented-representation drift the raw output revealed.
+
+**Implementation.** `refactor_prompt` gained a DEV-ONLY `CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1`
+env override (unset -> exact pre-existing prompt, verified byte-identical by a dedicated test).
+When enabled, two blocks are spliced in: `_REFACTOR_STRUCTURE_REMINDER_BEFORE` (primacy position,
+right after the task description, before the mismatches) states the exact required top-level
+signature and explicitly forbids the THREE specific things REQ-ARC-FCP-5699-30's raw sample did
+wrong -- wrapping in a class, using `self`, and inventing a new grid representation instead of
+reusing the real one -- and `_REFACTOR_STRUCTURE_REMINDER_AFTER` (recency position, immediately
+before the model starts generating) restates the required-functions-only constraint briefly. This
+is a CONTENT/structure reminder, not the `codeonly` "skip all reasoning" directive REQ-ARC-FCP-
+5699-26 confirmed is deliberately excluded from refactor() -- the model is still told to reason
+about the mismatches, just reminded what shape the final answer must take. 2 new tests verify the
+unset-default is byte-identical and the enabled reminder names the specific forbidden structures.
+
+**Live test: replay the SAME real g50t counterexample data used in REQ-ARC-FCP-5699-30's
+diagnostic, with the reminder enabled, at the same confirmed-non-truncating
+`max_tokens=4096`/`timeout=600` -- same cheap single-call method, not a full A/B, for a direct,
+apples-to-apples comparison against 5699-30's exact sample.**
+
+**Result: `ok=True` -- the structural pathology is fixed.** The response starts DIRECTLY (no
+preamble) with a proper top-level `def engine(grid, action, data):` / `def is_level_complete
+(grid):` pair -- no class, no `self` -- and `_extract_python` (which takes everything up to the
+first bare closing ` ``` `) grabbed exactly that first, complete, syntactically valid block and
+wrote it to `results/arc_e3/g50t/world_model.py`. This directly reverses REQ-ARC-FCP-5699-30's
+sample: `is_level_complete` is present this time (checks whether all entities are cleared from
+the grid), and there is no class/`self` wrapping anywhere. `refactor()` returned `(True, "local
+gguf (GPU server) wrote world_model.py")` -- the SAME success path a genuinely useful refactor
+round takes.
+
+**Two honest caveats, not glossed over.** (1) `last_stop_type='limit'` this time (unlike 5699-30's
+`'eos'`) -- the model DOES hit the 4096-token cap, but only AFTER the first valid block was
+already complete: past that point, the response spirals into a REPETITIVE SELF-CORRECTION LOOP
+("Wait, I need to check the logic again... Let me rewrite the code" repeated near-verbatim 5-6
+times, revising the same `_move_entities` helper with only cosmetic differences each pass) until
+truncated mid-loop. This did not hurt THIS specific outcome (`_extract_python` only cares about
+the first fenced/pre-fence block), but is a new, previously-unobserved behavior -- a different
+sample could plausibly have the rambling start BEFORE the first valid block completes. (2)
+Structural correctness is fixed, but CONTENT correctness is still unverified: the code invents a
+`[row, col, entity_id, state]` per-cell list-of-lists representation, which does not match g50t's
+real simple 2D color-indexed grid (every prior successful induction this REQ chain read used the
+real format) -- so while this response would be ACCEPTED as syntactically valid code by
+`generate()`'s check, it is not established whether it would pass the strict
+`min_heldout_accuracy=1.0` downstream verification gate against the real transitions.
+
+**What this narrows.** The targeted reminder is a real, measurable, single-sample improvement on
+the EXACT failure REQ-ARC-FCP-5699-30 found (class-wrapping, missing `is_level_complete`) -- this
+is not a null result. Whether it reliably produces a plan-worthy (not just syntactically-valid)
+engine, and whether the new repetitive-looping behavior is a stable side-effect or a one-off, are
+both genuinely open after n=1.
+
+**Honest scope limit.** n=1 sample, same as REQ-ARC-FCP-5699-30's baseline -- this compares one
+reminder-enabled generation against one non-reminder generation, both real but both single draws
+from a demonstrably high-variance process (REQ-ARC-FCP-5699-23's k=20 test already showed one
+generation succeed and an independent one crash on the identical config). A full live A/B (both
+arms, multiple induction attempts across a real budget=250 run) is the natural validation this
+single-sample result invites, but was NOT launched automatically here given how much of this
+sub-thread's time budget (now 9 REQs on one game) has already gone to g50t specifically -- left as
+an explicit choice for the operator rather than defaulted into.
+
+#### SCENARIO-ARC-FCP-5699-31-TARGETED-REMINDER-FIXES-THE-STRUCTURAL-PATHOLOGY-CONTENT-STILL-OPEN
+
+Given the SAME real g50t counterexample data REQ-ARC-FCP-5699-30 used (which produced a
+class-wrapped, `is_level_complete`-free, syntactically-incomplete response) is replayed with
+`CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1` enabled
+When the raw completion is read directly, as before
+Then the response begins with a valid top-level `engine`/`is_level_complete` pair (no class, no
+`self`), `generate()` returns `ok=True`, and the code is successfully written to disk -- directly
+reversing the specific structural failure the reminder targeted -- while ALSO revealing a new
+repetitive self-correction loop that consumes the remaining token budget after the first valid
+block (harmless here, but previously unobserved) and leaving the code's CONTENT correctness (an
+invented grid representation inconsistent with g50t's real format) as a separate, still-open
+question that only a full live A/B could answer
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

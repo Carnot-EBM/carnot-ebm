@@ -1215,18 +1215,54 @@ def _bounded_mismatches(mismatches: list, *, limit: int = 5) -> list:
     return bounded
 
 
+# REQ-ARC-FCP-5699-31: DEV-ONLY structural reminder (unset -> exact pre-existing prompt,
+# byte-identical), directly targeting the pathology REQ-ARC-FCP-5699-30 found by reading a real
+# raw completion: given the SAME real g50t counterexample data, the model abandoned the required
+# interface entirely -- it wrote a self-contained `class WorldModel` with `self`-bound methods
+# and a fabricated grid representation instead of patching the required TOP-LEVEL engine()/
+# is_level_complete() functions, never emitted is_level_complete at all, and stopped mid-
+# statement. This is a content/structure reminder, NOT the codeonly "skip all reasoning"
+# directive REQ-ARC-FCP-5699-26 confirmed is deliberately excluded from refactor() (refactor
+# stays a genuine reasoning task) -- it reminds the model WHAT shape its answer must take without
+# telling it not to think.
+_REFACTOR_STRUCTURE_REMINDER_BEFORE = """
+REQUIRED OUTPUT STRUCTURE -- do not deviate from this: your fixed code must define EXACTLY two
+TOP-LEVEL functions, in the SAME format as the file you are correcting:
+
+    def engine(grid, action, data):
+        ...
+    def is_level_complete(grid):
+        ...
+
+Do NOT wrap them in a class. Do NOT use `self`. Do NOT invent a new internal grid
+representation or shape -- `grid` is the SAME real grid shape/format already used by the
+code above; reuse it exactly, do not redesign it.
+"""
+_REFACTOR_STRUCTURE_REMINDER_AFTER = """
+Reminder: return ONLY the corrected `engine(grid, action, data)` and `is_level_complete(grid)`
+top-level functions -- no classes, no `self`, no invented state, no renamed parameters.
+"""
+
+
 def refactor_prompt(game: str, vr: VerifyResult) -> str:
+    import os
+
     mism = json.dumps(_bounded_mismatches(vr.mismatches), indent=1)
+    before = ""
+    after = ""
+    if os.environ.get("CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER") == "1":
+        before = _REFACTOR_STRUCTURE_REMINDER_BEFORE
+        after = _REFACTOR_STRUCTURE_REMINDER_AFTER
     return f"""The executable world model at results/arc_e3/{game}/world_model.py reproduces
 only {vr.n_correct}/{vr.n} ({vr.accuracy:.0%}) of the observed transitions. Below are
 failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engine() so it
 reproduces these too, and REFACTOR toward simpler, more general rules (replace special
 cases with shared rules) while keeping the cases it already gets right. Edit only that
 file.
-
+{before}
 MISMATCHES:
 {mism}
-"""
+{after}"""
 
 
 @dataclass
