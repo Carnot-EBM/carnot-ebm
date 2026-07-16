@@ -7362,6 +7362,100 @@ across any round and `planned` stays `False` for both arms: NO level-up, confirm
 blocker is a genuine model-capability gap in inferring correct game dynamics from a small
 transition sample, not anything a prompt-format fix can address
 
+### REQ-ARC-FCP-5699-33: Does A Larger Model Close g50t's Accuracy Ceiling? -- Parity On Round 1, A New Truncation Failure On Round 2
+
+REQ-ARC-FCP-5699-32's own concrete next-step option (b): test whether a LARGER model closes the
+content/accuracy gap on g50t specifically, isolating whether the wall is model-scale or something
+deeper. Reused the real production path (`E3AgentPolicy(game, proposer=<explicit override>)` --
+the frozen `_proposer()` default in `arc_competition_agent.py` is completely untouched, since an
+explicit `proposer=` argument bypasses the lazy default entirely) with the SAME combined-fix
+config as REQ-ARC-FCP-5699-32 (`CARNOT_ARC_STALL_REFACTOR_LOOP=1`, raised max_tokens/timeout,
+`CARNOT_ARC_REFACTOR_STRUCTURE_REMINDER=1`), swapping only the proposer's model to
+`Qwen3.6-27B-MTP-GGUF` (~3x the frozen live generator's parameter count).
+
+**Honest scope departure from "the same counterexample data."** Unlike REQ-ARC-FCP-5699-30/31's
+`read_raw_refactor_output.py` precedent (which replayed a saved counterexample byte-for-byte),
+this ran a FRESH live episode end-to-end (same game, same combined-fix config, a NEW explorer run
+collecting its own real transitions) rather than literally reloading REQ-ARC-FCP-5699-32's saved
+counterexample dict. This is a defensible design choice (a fresh full-loop run is more realistic
+than a synthetic single-call replay) but is NOT literally "the same counterexample data" and is
+recorded here as an honest scope note, not glossed over.
+
+**A real, independently-rediscovered VRAM bug (already known, not novel).** The first launch
+attempt used `mtp=True` (matching the live generator's config) and OOM'd:
+`ggml_backend_cuda_buffer_type_alloc_buffer: allocating 15621.78 MiB on device 0: cudaMalloc
+failed: out of memory` -- MTP's self-draft mechanism loads the GGUF file TWICE (main + draft), so
+a 16GB Q4_K_M file needs ~32GB, exceeding a single 24GB RTX 3090. This is the EXACT bug
+`REQ-ARC-WMTE-5596` (below) already found and fixed in its own experiment script
+(`python/carnot/experiment_5596_generator_size_ab_gemma31b_vs_current.py`,
+`_candidate_mtp_self_draft_fits_vram`) one milestone earlier -- this session's diagnostic script
+was built standalone and hit the same wall independently before this cross-reference was found.
+Fixed the same way: `mtp=False` for this model (costs decode throughput, not capability).
+
+**Result, read only after confirmed genuine completion (`ps aux` showed no matching process AND
+the task log showed `"wrote results/..."`):**
+
+```
+larger_model_qwen3.6_27b_mtp: refinement_rounds_used=2, skipped=proposer_failed, planned=False
+  round 1 (induce):   ok=True,  heldout_accuracy=0.125, accepted=False
+  round 2 (refactor): ok=False, heldout_accuracy=None,  skipped=proposer_failed
+    message: "local model code unusable after 3 tries (missing ('engine', 'is_level_complete')
+              in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+levels=0, reached=L0, actions=248, duration_s=388.9
+```
+
+**Round 1: parity, not improvement.** The 27B model's induce-round `heldout_accuracy=0.125` is
+IDENTICAL to the ceiling every round of REQ-ARC-FCP-5699-32's fully-fixed 9B config also hit (0.0
+to 0.125 across all 6 of that run's rounds) -- no accuracy gain on this game, in contrast to
+`REQ-ARC-WMTE-5596`'s own finding that this same 27B candidate showed MATERIALLY HIGHER
+`heldout_accuracy` than the 9B generator on two OTHER games (m0r0: 0.0->0.5; sk48: 0.2->1.0).
+g50t's content-accuracy wall does not respond to model scale the way m0r0/sk48's did.
+
+**Round 2: a NEW failure mode, not previously seen at this budget.** The 27B model's refactor call
+hit the SAME truncation pathology REQ-ARC-FCP-5699-27/28/30 spent three REQs diagnosing and fixing
+for the 9B model -- but REQ-ARC-FCP-5699-32 confirmed the 9B model's refactor calls complete
+cleanly within 4096 tokens (all 6/6 rounds `proposer_ok=True`) once the structural reminder was
+added. The 27B model's refactored code apparently needs MORE than 4096 tokens to complete --
+plausibly because a larger model produces more verbose/detailed code, or reasons longer before
+writing it, even with the same `/no_think` prefix and structural reminder. This budget was tuned
+(REQ-ARC-FCP-5699-29) against the 9B model only; it was never re-validated against a 3x larger
+model, and this result shows that assumption does not carry over silently.
+
+**No level-up.** `levels=0`, consistent with every other measurement in this sub-thread. Per
+CLAUDE.md's ARC Solve Reproducibility discipline, nothing here is a countable/reproducible
+registry level -- there is no level-up to report in `ops/arc_solve_registry.yaml` or
+`ops/status.md`.
+
+**Honest scope limit (Sample-Size Rigor).** n=1 run, n=1 game, n=1 model swap -- this alone does
+NOT prove model scale is irrelevant to g50t's wall, only that it did not help on this one sample,
+while the SAME model scale-up DID help on two other games in a separate, earlier experiment. The
+two findings are not in conflict -- they show the accuracy ceiling is evidently game-dependent,
+not a uniform model-capability floor. Concrete next steps if this is worth pursuing further: (a)
+re-run with `CARNOT_ARC_INDUCE_MAX_TOKENS` raised specifically for the 27B model (e.g. 8192) to
+see whether round 2 completes and produces a materially different accuracy than round 1's 0.125;
+(b) accept g50t specifically as a capability boundary (independent of model scale) and redirect
+effort to games more like m0r0/sk48 where scale demonstrably helps; (c) step back from per-game
+induction-accuracy chasing entirely, per REQ-ARC-FCP-5699-32's option (c).
+
+Required field principles:
+
+- `inference_substrate: live_llm_inference`: principle "a real GGUF model genuinely loaded and
+  generated on a live llama-server -- distinguishes this from an aggregation/replay artifact."
+- `model_specs`: principle "names the exact GGUF and its mtp setting (False, and why) so a reader
+  does not assume this used the same decoding mechanism as the frozen live generator."
+
+#### SCENARIO-ARC-FCP-5699-33-LARGER-MODEL-PARITY-NOT-IMPROVEMENT-ON-G50T
+
+Given the same combined-fix config validated in REQ-ARC-FCP-5699-32, with only the proposer's
+model swapped to a ~3x larger candidate (`Qwen3.6-27B-MTP-GGUF`, `mtp=False` after an OOM
+confirmed self-draft does not fit alongside the base weights on a single 24GB GPU)
+When a fresh live episode runs on g50t and reaches the stall-refactor-loop
+Then round 1 (induce) succeeds with `heldout_accuracy=0.125` -- parity with, not improvement over,
+the 9B model's own ceiling on this game -- while round 2 (refactor) fails on prompt-budget
+truncation the 9B model does not hit at the same token budget, and no level-up occurs; the
+accuracy ceiling on g50t is therefore evidenced as game-specific rather than resolved by model
+scale, in contrast to `REQ-ARC-WMTE-5596`'s positive scale-up finding on two other games
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

@@ -1025,6 +1025,32 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    other purposes) closes the accuracy gap on the SAME counterexample data, isolating whether
    this is a model-scale problem; (c) step back from this sub-thread entirely -- ten REQs on one
    game's tier-2 induction is a natural stopping point regardless of (a)/(b).
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-33, larger-model test -- option (b)
+   above, picked up):** same combined-fix config, proposer swapped to `Qwen3.6-27B-MTP-GGUF`
+   (~3x the frozen 9B generator), via an explicit `proposer=` override to `E3AgentPolicy` (the
+   frozen `_proposer()` production default is untouched). Note: ran a FRESH live episode (own
+   explorer, own real transitions), not a literal replay of REQ-32's saved counterexample bytes
+   -- an honest scope departure from "the same counterexample data," recorded rather than
+   glossed over. First launch attempt (`mtp=True`) OOM'd (`cudaMalloc failed: out of memory` --
+   self-draft loads the GGUF twice, ~32GB needed for a 16GB file, exceeds the 24GB 3090) --
+   independently rediscovered the SAME bug `REQ-ARC-WMTE-5596` (below) already found and fixed
+   in its own script one milestone earlier; fixed here the same way (`mtp=False`). **Result:
+   round 1 (induce) `heldout_accuracy=0.125` -- PARITY with, not improvement over, the 9B
+   ceiling on this game, in contrast to REQ-ARC-WMTE-5596's own finding that this same 27B
+   candidate showed materially HIGHER accuracy than the 9B generator on two OTHER games (m0r0
+   0.0->0.5, sk48 0.2->1.0).** Round 2 (refactor) then hit a NEW failure: `proposer_ok=False`,
+   `[HIT n_predict=4096 OUTPUT LIMIT before completing]` -- the same truncation class REQ-27/28/
+   30 fixed for the 9B model, but the 4096 budget (tuned against the 9B model only) was never
+   re-validated for a 3x larger model, and this result shows that assumption doesn't carry over
+   silently. `levels=0` -- no level-up, nothing banked. n=1 run/game/model-swap: does NOT prove
+   model scale is irrelevant to g50t generally (it demonstrably helped on m0r0/sk48), only that
+   it didn't help HERE -- the accuracy ceiling looks game-dependent, not a uniform capability
+   floor. Concrete next steps if picked up again: (a) re-run with max_tokens raised specifically
+   for the 27B model (e.g. 8192) to see if round 2 completes and whether its accuracy differs
+   from round 1's 0.125; (b) accept g50t specifically as a capability boundary independent of
+   model scale and redirect to games where scale demonstrably helps; (c) step back from
+   per-game induction-accuracy chasing entirely.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
