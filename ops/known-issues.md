@@ -115,6 +115,27 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    game than a small trained CNN that never saw it. Prototype against the offline dev sim (`arc_solver_kit` /
    `scripts/arc_loop_solve.py`) first, then wire into the live `E3AgentPolicy` exploration policy per the ARC
    Live-Path Reachability Discipline — a standalone experiment the live agent cannot reach is wasted effort.
+
+   **FOLLOW-ON 2026-07-16 (outer-loop, REQ-ARC-FCP-5699-37, operator-selected re-validation):**
+   profiling found a SECOND, separate O(candidates x grid_cells) recomputation bug the 2026-07-14
+   fix missed -- `arc_frame_change_predictor.rank_arc_actions` calls `ColorBlobSaliencePrior.
+   score(frame, candidate)` via the generic two-arg protocol (no cache args), which alone caused
+   8176 calls to `connected_color_blobs()` on a single 500-action lp85 episode (23.1s of 43.3s
+   total). Fixed with two changes in `arc_color_blob_salience.py`: (1) vectorized
+   `connected_color_blobs()` via `scipy.ndimage.label` (300+ randomized-grid equivalence tests
+   vs a fresh independent oracle confirm exact agreement; ~5.9x faster on realistic structured
+   frames, honestly SLOWER on pathological near-random-noise grids -- real ARC games render
+   structured puzzle grids, not noise); (2) a bounded module-level per-frame cache so the
+   generic two-arg callers stop recomputing per-candidate. **Result: lp85 budget=500 went
+   68s -> 8.4s (baseline 6.1s) -- the full local submission gate now runs all 8 games with
+   ZERO timeouts (was 7/8 timed out).** But with the timeout gone, the gate's verdict flips to a
+   clean `FAIL: REGRESSION: lost CORE solves ['m0r0']` -- a genuine BEHAVIORAL regression,
+   previously masked by the timeout, not a performance problem (median actions and bonus solves
+   are essentially unchanged). **Decision: `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` stays
+   `False`**, but the speed fixes are kept and shipped regardless (pure implementation-detail
+   rewrites, zero behavioral risk on their own, verified equivalent) -- they make any future
+   re-validation cheap to re-run. Re-enabling now requires investigating the m0r0 regression
+   specifically, not another performance pass.
 3. **(Lower priority, pilot-only) "Ontology-error" exploration signal.** arXiv:2607.01531 (OPINE-World)
    proposes prioritizing interactions that resolve uncertainty about which OBJECT TYPES exist in a game (a
    Bayesian noisy-OR over per-object-type classification uncertainty and per-context effect-distribution

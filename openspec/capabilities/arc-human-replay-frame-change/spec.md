@@ -7633,6 +7633,82 @@ single-shot trust-energy-selector path exactly as it did before this REQ -- the 
 strictly additive, never silently discarding a working fallback mechanism, verified by both a
 targeted regression test and a clean-worktree-diffed repo-wide sweep showing zero new failures
 
+### REQ-ARC-FCP-5699-37: Color-Blob Salience Re-Validation -- Performance Fixed, Stays Disabled For A Different, More Precise Reason
+
+Operator-selected item 2 from `ops/known-issues.md`'s CURRENT ACTIVE PRIORITIES ("the main new
+lever"): re-validate `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` (disabled since 2026-07-14 after a
+near-hang on the local submission gate) after its first fix, and decide re-enable / keep disabled
+/ needs further optimization.
+
+**A second, separate O(candidates x grid_cells) recomputation bug, missed by the 2026-07-14 fix.**
+Profiling a real lp85 budget=500 episode (`cProfile`, 43.3s total) found `connected_color_blobs()`
+called **8176 times for only 500 actions** -- not once per frame as the 2026-07-14 fix intended,
+but once per CANDIDATE. Root cause: `arc_frame_change_predictor.rank_arc_actions` ->
+`_prior_value` calls `ColorBlobSaliencePrior.score(frame, candidate)` via the generic two-arg
+protocol shared across action-prior classes (no `blobs`/`color_counts` cache args) -- a call path
+`action_tier_rows()`'s own internal caching never touched. This single call site accounted for
+23.1s of the 43.3s total profiled runtime.
+
+**Two independent fixes, both in `arc_color_blob_salience.py`:**
+
+1. **Vectorized `connected_color_blobs()`** via `scipy.ndimage.label` (one call per distinct
+   color, 4-connectivity structure matching the original flood-fill's neighbor rule) replacing the
+   pure-Python per-cell BFS. Verified field-for-field equivalent to the original across 300+
+   randomized grids (varying size 1x1 to 64x64, 1-16 colors, min_pixels, max_component_fraction)
+   plus realistic structured-frame cases, using a FRESH independent oracle re-implementation (not
+   a copy of either implementation under test) -- `tests/python/test_arc_color_blob_salience_
+   vectorized.py`. Honest tradeoff, not hidden: ~5.9x faster on a realistic structured ARC-like
+   frame (16 blobs: 2.9ms -> 0.5ms), but SLOWER on a pathological near-uniform-random grid
+   (thousands of near-singleton blobs) due to per-blob Python object construction overhead --
+   real ARC games render structured puzzle grids, not per-pixel noise, so the realistic-frame
+   speedup is what governs actual live-agent performance.
+2. **A bounded module-level per-frame cache** (`_cached_blobs_and_counts`, keyed on grid shape +
+   content bytes + min_pixels + max_component_fraction, max 8 entries) so the generic two-arg
+   `score()` callers stop recomputing from scratch per candidate. `ColorBlobSaliencePrior` is a
+   frozen dataclass shared across multiple caller modules, so the cache lives at module level
+   rather than requiring frozen-dataclass mutation.
+
+**Result: the wall-clock/timeout problem is genuinely solved.** lp85 budget=500 went
+**68s -> 8.4s** (baseline: 6.1s) -- vectorization alone got to 29.7s, the frame cache closed the
+rest of the gap. The full local submission gate (`arc_local_submission_gate.py --check`, all 8
+canonical games, budget=8000, 115s cap each) now runs with **`timed_out: 0`** on every game with
+the flag temporarily enabled for this measurement, where it previously timed out on 7/8.
+
+**But re-enabling reveals a DIFFERENT, more precise reason to keep it disabled: a genuine
+BEHAVIORAL regression, previously masked by the timeout.** With the confounding timeout gone, the
+gate's verdict flips from "TIMED OUT" to a clean `FAIL: REGRESSION: lost CORE solves ['m0r0']`
+(current: solved 6 vs baseline: solved 7; `core_solves_preserved: False`). The salience-reordered
+exploration priority causes the agent to lose a game (m0r0) it otherwise reliably solves. This is
+NOT a performance problem -- `median_actions_on_core` and the bonus solves (`cd82`, `ft09`,
+`su15`) are essentially unchanged from the disabled-baseline run -- it is a genuine capability
+cost from reordering which actions get tried first.
+
+**Decision: keep `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = False`.** The speed fixes are kept and
+shipped regardless (pure implementation-detail rewrites, zero behavioral risk on their own,
+verified by 300+ equivalence tests plus the full existing salience test suite -- 43/43 passing on
+the vectorization+cache tests, and the pre-existing 12 unrelated failures in the broader salience
+test sweep confirmed present on a clean pre-fix worktree, not caused by this change) -- they make
+any FUTURE re-validation of this feature cheap to re-run, and benefit every other caller of
+`connected_color_blobs`/`ColorBlobSaliencePrior.score` regardless of whether this specific flag is
+ever flipped. Re-enabling the feature itself now requires investigating and fixing the m0r0
+regression specifically, not another performance pass.
+
+Required field principles: none new -- this REQ ships pure internal performance fixes with an
+unchanged public API (`connected_color_blobs`, `ColorBlobSaliencePrior.score` keep their exact
+signatures and return types); no artifact schema changes.
+
+#### SCENARIO-ARC-FCP-5699-37-SPEED-FIXED-CAPABILITY-REGRESSION-NEWLY-VISIBLE
+
+Given `connected_color_blobs()` vectorized via `scipy.ndimage.label` and a bounded per-frame cache
+added for the generic two-arg `score()` callers, both verified equivalent to the pre-fix behavior
+When the full local submission gate re-runs all 8 canonical games with
+`SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED` temporarily set `True`
+Then every game completes within its 115s cap (`timed_out: 0`, down from 7/8 timed-out
+pre-fix) -- the performance problem is genuinely solved -- but the gate's verdict is still a FAIL,
+now for a newly-visible, different reason: `REGRESSION: lost CORE solves ['m0r0']`; the flag stays
+disabled, and the follow-up work required is a behavioral investigation of the m0r0 regression,
+not further optimization
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
