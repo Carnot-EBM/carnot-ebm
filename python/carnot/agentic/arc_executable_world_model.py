@@ -1777,11 +1777,17 @@ def plan_in_model(
 
     DIAGNOSTICS (REQ-ARC-FCP-5699-15, closes the "trust gate passes but no plan found" question
     REQ-ARC-FCP-5699-14 left open): when ``diagnostics`` (a caller-owned dict) is supplied, this
-    populates it with ``is_level_complete_was_none`` (bool), ``nodes_expanded`` (int), and
+    populates it with ``is_level_complete_was_none`` (bool), ``nodes_expanded`` (int),
     ``termination_reason`` (one of ``"is_level_complete_none"`` / ``"plan_found"`` /
-    ``"max_nodes_reached"`` / ``"queue_exhausted"``) before returning -- so a caller can tell WHY an
-    empty return happened without re-deriving the search. Backward-compatible: ``diagnostics=None``
-    (the default) changes nothing about the search or the return value."""
+    ``"max_nodes_reached"`` / ``"queue_exhausted"``), and ``used_goal_energy_search`` (bool) before
+    returning -- so a caller can tell WHY an empty return happened without re-deriving the search.
+    REQ-ARC-FCP-5699-18 adds ``initial_goal_energy``/``min_goal_energy_observed`` (floats, only when
+    ``used_goal_energy_search`` is True): the goal-energy value at ``start_grid`` and the lowest
+    value seen across every state the search visited -- lets a caller tell whether a failed search
+    got structurally CLOSE to the induced goal (min << initial, "coherent but ran out of budget")
+    or never moved toward it at all (min ~= initial, "the model's rollout doesn't structurally
+    connect toward the goal"). Backward-compatible: ``diagnostics=None`` (the default) changes
+    nothing about the search or the return value."""
     if is_level_complete is None:
         if diagnostics is not None:
             diagnostics["is_level_complete_was_none"] = True
@@ -1804,7 +1810,9 @@ def plan_in_model(
                 return 0.0
 
         counter = itertools.count()
-        heap = [(_h(start), next(counter), start, [])]
+        initial_energy = _h(start)
+        min_energy = initial_energy
+        heap = [(initial_energy, next(counter), start, [])]
         while heap and nodes < max_nodes:
             _, _, grid, path = heapq.heappop(heap)
             if len(path) >= max_depth:
@@ -1828,13 +1836,22 @@ def plan_in_model(
                             diagnostics["is_level_complete_was_none"] = False
                             diagnostics["nodes_expanded"] = nodes
                             diagnostics["termination_reason"] = "plan_found"
+                            diagnostics["used_goal_energy_search"] = True
+                            diagnostics["initial_goal_energy"] = initial_energy
+                            diagnostics["min_goal_energy_observed"] = min_energy
                         return npath
                 except Exception:
                     pass
-                heapq.heappush(heap, (_h(ng), next(counter), ng, npath))
+                ng_energy = _h(ng)
+                if ng_energy < min_energy:
+                    min_energy = ng_energy
+                heapq.heappush(heap, (ng_energy, next(counter), ng, npath))
         if diagnostics is not None:
             diagnostics["is_level_complete_was_none"] = False
             diagnostics["nodes_expanded"] = nodes
+            diagnostics["used_goal_energy_search"] = True
+            diagnostics["initial_goal_energy"] = initial_energy
+            diagnostics["min_goal_energy_observed"] = min_energy
             diagnostics["termination_reason"] = (
                 "max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"
             )
@@ -1867,6 +1884,7 @@ def plan_in_model(
                         diagnostics["is_level_complete_was_none"] = False
                         diagnostics["nodes_expanded"] = nodes
                         diagnostics["termination_reason"] = "plan_found"
+                        diagnostics["used_goal_energy_search"] = False
                     return npath
             except Exception:
                 pass
@@ -1874,6 +1892,7 @@ def plan_in_model(
     if diagnostics is not None:
         diagnostics["is_level_complete_was_none"] = False
         diagnostics["nodes_expanded"] = nodes
+        diagnostics["used_goal_energy_search"] = False
         diagnostics["termination_reason"] = (
             "max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"
         )

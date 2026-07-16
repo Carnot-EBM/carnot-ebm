@@ -6075,6 +6075,98 @@ at `nodes_expanded` clustered near 20000, `planned=False` -- confirming the wall
 across n=3 games tested (not sp80-specific), while which SECOND-tier gate fires afterward remains
 game-class-dependent
 
+### REQ-ARC-FCP-5699-18: Root Cause Found -- Goal-Energy Is Unconditionally Binary (Zero Gradient) For Any Never-Yet-Completed Level, By Construction
+
+REQ-ARC-FCP-5699-17 closed the breadth check; the remaining, higher-value avenue it named was
+inspecting the tier-1 model's own predicted rollout directly, to distinguish "coherent but wrong"
+from "diverges to noise fast." This is the operator-requested follow-through on that avenue.
+
+**Instrumentation added.** `plan_in_model`'s best-first (`goal_energy`-guided) branch -- the
+branch that actually fires in production, since `SUBMITTED_GOAL_GUIDANCE_LAMBDA = 1.0` makes
+`goal_energy` non-None by default whenever `is_level_complete` is callable -- already computes
+`_h(g)` (the goal-energy value) on every expanded node as the heap priority. Tracking the running
+minimum across the whole search is nearly free: `plan_in_model` gained
+`initial_goal_energy`/`min_goal_energy_observed` (floats) and `used_goal_energy_search` (bool) in
+its `diagnostics` dict (purely additive, same backward-compatible pattern as 5699-15/16). The
+signal answers directly: did the search's own heuristic ever consider ANY visited state closer to
+the goal than the start?
+
+**Re-ran sp80, `budget=250`, default `max_nodes=20000`.** Both arms:
+
+```
+baseline: initial_goal_energy=1.0, min_goal_energy_observed=1.0, nodes_expanded=20008
+sge:      initial_goal_energy=1.0, min_goal_energy_observed=1.0, nodes_expanded=20002
+```
+
+**`min_goal_energy_observed` exactly equals `initial_goal_energy` -- the search never found a
+single state, across 20000+ expanded nodes each, that its own heuristic considered closer to the
+goal than the starting grid.** This rules out "coherent but ran out of budget" (which would show
+`min_goal_energy_observed` meaningfully below `initial_goal_energy`, even without reaching exactly
+0) and instead points at the heuristic itself providing no usable gradient at all.
+
+**Root cause, confirmed by reading `_goal_energy_for_plan` (`arc_competition_agent.py` ~line
+3108-3136) and its exemplar source, not guessed from the numbers alone.** The function computes a
+GRADED distance (`scale * mean(grid != exemplar)`, a real [0,1] gradient) only when `use_graded =
+os.environ.get("CARNOT_ARC_GRADED_GOAL_BIAS") == "1" and exemplar is not None`, where `exemplar =
+self._previous_level_complete_grid`. Confirmed via `grep`: that attribute is initialized `None` in
+the constructor (~line 2793) and is ONLY ever assigned a real grid at ~line 3020, inside the
+level-up-detection handler that captures the just-COMPLETED level's final grid. **For a game that
+has never completed even its first level -- exactly sp80/cd82/g50t's situation in every run this
+REQ chain has measured -- `_previous_level_complete_grid` is unconditionally `None`, so
+`use_graded` is `False` regardless of the `CARNOT_ARC_GRADED_GOAL_BIAS` env var.** With
+`exemplar_arr is None`, `_energy(grid)` collapses to the binary fallback: `0.0` if `is_done(grid)`
+else `scale` (== `goal_guidance_lambda`, i.e. exactly `1.0`) -- IDENTICAL for every non-goal state.
+This exactly reproduces the empirical observation: every one of the 20000+ visited states ties at
+energy `1.0`, so the heap's priority ordering provides no goal-directed signal at all; `heapq`
+breaks ties by insertion order (the `counter` field), making the "best-first" search functionally
+equivalent to a blind traversal for this regime -- the `SUBMITTED_GOAL_GUIDANCE_LAMBDA = 1.0`
+"guidance" is silently inert exactly where guidance would matter most.
+
+**This is not the same bug as the 2026-06-25 `proto_graded_goal_bias_ab.json` finding** (which
+found the EXPLORER's graded goal bias failed to fire even with the env var set AND an exemplar
+present, for lp85's L1-to-L2 transition -- a live bug in an already-eligible case). This REQ's
+finding is a level PRIOR to that one: for a first-contact, never-completed level, no exemplar can
+possibly exist yet, so graded guidance is structurally inapplicable regardless of whether that
+other bug is ever fixed. The two are complementary, not duplicate, findings.
+
+**Why this matters more than a normal parameter tuning gap.** Per the ARC-AGI-3 IS a Live
+Hidden-Game Discovery Agent framing (CLAUDE.md), the scored agent's job on every hidden game is
+precisely first-contact discovery from a state with zero prior completions -- the exact regime
+where this analysis shows goal-energy guidance provides no signal. This is not a corner case of
+the live agent's operation; it is close to the modal case for a genuinely novel hidden game.
+
+**Honest scope limit.** This root-causes WHY the search doesn't get closer (confirmed via direct
+code reading, not just correlation with the numbers) for the specific `is_done`/tier-1-engine
+combination measured on sp80. It does not by itself prove that a graded first-level energy (were
+one to be designed -- there is no existing per-level exemplar to fall back to, so this is a
+genuinely open design question, not a simple env-var flip) would find a plan; it only establishes
+that the CURRENT mechanism provides zero information in this regime, which is a necessary (not
+sufficient) condition for the search's failure.
+
+**Concrete next step if this thread continues.** Design and test a first-level-applicable goal
+signal that doesn't depend on a completion exemplar -- candidates include: (a) a self-supervised
+novelty/coverage energy (reward states not yet seen, cheap and exemplar-free, though it doesn't
+target the goal specifically); (b) using the LIVE agent's own explorer-side signals (frame-change
+magnitude, score/HUD deltas if any) as a proxy goal-energy inside `plan_in_model`, if such signals
+exist for this env; (c) confirming whether fixing the multi-level graded-bias bug from
+2026-06-25 (getting SOME level completed at least once) would let subsequent levels benefit from
+graded guidance even though level 1 itself cannot.
+
+#### SCENARIO-ARC-FCP-5699-18-GOAL-ENERGY-IS-BINARY-WITH-ZERO-GRADIENT-FOR-FIRST-CONTACT-LEVELS
+
+Given `plan_in_model` gains `initial_goal_energy`/`min_goal_energy_observed`/
+`used_goal_energy_search` diagnostics tracking the goal-energy heuristic's value across every
+visited state in a failed search
+When sp80 (a game that has never completed level 0 in any measurement this REQ chain has run) is
+re-measured with this instrumentation, for both arms
+Then `min_goal_energy_observed` exactly equals `initial_goal_energy` (both `1.0`) -- the search
+never found any state its own heuristic considered closer to the goal than the start -- and
+reading `_goal_energy_for_plan`'s source confirms why: its graded-distance branch requires
+`self._previous_level_complete_grid`, which is unconditionally `None` until a level has been
+completed at least once, so for any first-contact level the function structurally collapses to a
+binary 0.0-at-goal/1.0-elsewhere energy that provides the best-first search with zero gradient,
+regardless of the `CARNOT_ARC_GRADED_GOAL_BIAS` env var
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle

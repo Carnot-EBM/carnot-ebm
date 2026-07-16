@@ -644,6 +644,36 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    higher-value remaining avenue is inspecting the tier-1 model's own predicted rollout directly
    to distinguish "coherent but wrong" from "diverges to noise fast" -- the deeper investigation
    REQ-ARC-FCP-5699-16 flagged as a natural checkpoint before continuing further.
+
+   **ROOT CAUSE FOUND 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-18, answers the checkpoint
+   above):** `plan_in_model` gained `initial_goal_energy`/`min_goal_energy_observed`/
+   `used_goal_energy_search` diagnostics (tracks the goal-energy heuristic's value across every
+   visited state -- nearly free, the value is already computed as the heap priority). Re-ran sp80
+   `budget=250`: **`min_goal_energy_observed` exactly equals `initial_goal_energy` (both `1.0`)
+   for both arms** -- across 20000+ expanded nodes each, the search never found ANY state its own
+   heuristic considered closer to the goal than the start. Reading `_goal_energy_for_plan`'s
+   source (not guessing from the numbers) confirms why: its graded-distance branch requires
+   `self._previous_level_complete_grid` as an exemplar, which is initialized `None` and ONLY ever
+   set after a level has been completed at least once. **sp80/cd82/g50t have never completed
+   level 0 in any measurement this REQ chain has run, so the exemplar is unconditionally `None`
+   -- `use_graded` is `False` regardless of the `CARNOT_ARC_GRADED_GOAL_BIAS` env var, and
+   `_energy()` collapses to a binary 0.0-at-goal/1.0-elsewhere function.** Every non-goal state
+   ties at energy 1.0, so the "best-first" search's heap ordering carries zero goal-directed
+   signal -- `SUBMITTED_GOAL_GUIDANCE_LAMBDA=1.0`'s guidance is silently inert exactly for
+   first-contact levels, which (per the ARC-AGI-3-is-a-live-discovery-agent framing) is close to
+   the MODAL case the scored agent faces on every hidden game, not a corner case. **Distinct from
+   the 2026-06-25 `proto_graded_goal_bias_ab.json` finding** (a live bug where the EXPLORER's
+   graded bias failed to fire even WITH the env var set AND an exemplar present, for lp85's
+   L1->L2 transition) -- this is a level prior: for first-contact levels no exemplar can exist
+   yet regardless of whether that other bug is fixed. Scope limit: root-causes WHY the search
+   doesn't improve (confirmed via source reading), does not by itself prove a first-level-capable
+   energy design would find a plan (no existing per-level exemplar to fall back to -- genuinely
+   open design space). Concrete next step if picked up again: design a first-level-applicable
+   goal signal that doesn't depend on a completion exemplar -- candidates: (a) self-supervised
+   novelty/coverage energy (exemplar-free, doesn't target the goal specifically); (b) explorer-
+   side signals (frame-change magnitude, score/HUD deltas if the env exposes any) as a proxy
+   energy; (c) confirming whether fixing the 2026-06-25 multi-level graded-bias bug (getting SOME
+   level completed once) lets SUBSEQUENT levels benefit even though level 1 itself cannot.
 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
