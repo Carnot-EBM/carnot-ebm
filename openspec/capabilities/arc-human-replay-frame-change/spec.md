@@ -6949,6 +6949,76 @@ exists and behaves as documented, not just in mocked tests) -- so a future measu
 distinguish "ran out of output budget" from "prompt too long for context" from "the model produced
 complete-but-wrong output," three previously-indistinguishable failure modes
 
+### REQ-ARC-FCP-5699-28: The Definitive Answer -- Yes, `max_tokens` Was A Real Bottleneck (Plus A Self-Caught Stale-Read Mistake)
+
+REQ-ARC-FCP-5699-27's own queued next step: re-run g50t with the truncation-detection code active
+and read the real `stop_type`/`truncated` markers.
+
+**A self-caught mistake worth recording plainly, not glossed over.** Mid-run, after the baseline
+arm alone had finished, the results file was read and showed round 2's failure message with NO
+truncation marker -- and that was reported to the operator as the (implied) answer: "no, raising
+max context would not help." **This was wrong, and the error was foreseeable**: `arc_sge_live_
+path_ab.py` writes `results/arc_sge_live_path_ab_g50t.json` exactly ONCE, after BOTH arms
+complete -- so reading it before the sge arm finished returned the PREVIOUS run's leftover file,
+not this run's real baseline result. This is precisely the pitfall this project's own
+Reading-Results Discipline exists to prevent, and it recurred here despite having been flagged
+multiple times earlier in this exact session's transcript. Caught and corrected once the sge arm
+completed and the file was re-read for real.
+
+**The corrected, definitive answer, from the REAL final data:**
+
+```
+baseline round 2 (refactor): FAILS -- "local model code unusable after 3 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=2560 OUTPUT LIMIT before completing])"
+sge round 2 (refactor):      FAILS -- "local gguf (GPU server) failed: TimeoutError('timed out')"
+```
+
+**Yes -- the baseline arm's round-2 failure IS confirmed to be a genuine `n_predict` (max_tokens)
+truncation.** The model was cut off at its 2560-token output budget before completing valid
+`engine`/`is_level_complete` code, on the specific (3rd, final) sub-try whose diagnostics are
+captured in the reported message. This is a DIRECT, real-evidence-backed justification for raising
+`max_tokens` on the refactor call -- not a guess. **The sge arm's failure is a SEPARATE, different
+bottleneck**: an outright 300-second HTTP request `TimeoutError`, which bypasses the new
+diagnostic code entirely (a bare network exception is caught before `stop_type`/`truncated` are
+ever read) -- this is a wall-clock request-timeout problem, not a token-count problem, and is a
+DIFFERENT axis: raising `max_tokens` alone could plausibly make this WORSE (a longer permitted
+generation takes longer wall-clock time), not better, unless `timeout` is raised in tandem.
+
+**Direct answer to "should we increase max context."** `n_ctx` (the context WINDOW) has no
+evidence of being the bottleneck in either arm -- `truncated` was never observed `True` across any
+measurement in this REQ chain, consistent with REQ-ARC-FCP-5699-26's now-bounded ~3-4K-character
+prompts. `max_tokens` (the per-request OUTPUT budget, currently 2560) DOES have direct, confirmed
+evidence of being a real bottleneck for at least one failure. The honest, complete answer is: raise
+`max_tokens` for the refactor call (a directly justified, evidence-backed fix), AND raise `timeout`
+in proportion (since a larger `max_tokens` permits longer generations, and the sge arm's failure
+shows the current 300s timeout is already sometimes insufficient even at the CURRENT budget) --
+neither alone is quite the right isolated fix; they need to move together.
+
+**Honest scope limit.** n=1 game (g50t), n=1 pair of measurements. Only ONE of the 3 sub-tries per
+round is captured in the final message (the LAST one before the loop exhausts `tries`) -- earlier
+sub-tries' diagnostics are not preserved, so it's unknown whether ALL 3 tries hit the same failure
+mode or whether earlier tries failed differently.
+
+**Concrete next step if this thread continues.** Raise both `max_tokens` (e.g. to 4096, the
+`LocalGGUFProposer` class default already used elsewhere in this codebase, vs the 2560 this
+specific live-submission config uses) and `timeout` proportionally for the refactor call
+specifically (or globally, since both completion paths share the same instance), then re-measure
+on the same isolated g50t config to see whether round 2 actually succeeds this time. If it still
+fails, capture the RAW completion text on a failed try (not just whether it parsed) to see what
+the model is actually producing when it exhausts its budget.
+
+#### SCENARIO-ARC-FCP-5699-28-N-PREDICT-LIMIT-CONFIRMED-REAL-AFTER-A-SELF-CAUGHT-STALE-READ
+
+Given a mid-run read of `results/arc_sge_live_path_ab_g50t.json` (before the sge arm had finished,
+so the file was still the PREVIOUS run's leftover state) was mistakenly reported as this run's
+real result, incorrectly answering "no" to whether raising max context would help
+When the file is re-read after BOTH arms genuinely complete (the file is written exactly once, at
+the very end)
+Then the baseline arm's round-2 failure message DOES contain `[HIT n_predict=2560 OUTPUT LIMIT
+before completing]` -- confirming max_tokens truncation IS a real, evidence-backed bottleneck,
+reversing the premature stale-read conclusion -- while the sge arm fails via a separate 300s
+`TimeoutError` that bypasses the detection code entirely, establishing that `max_tokens` and
+`timeout` are two distinct axes that both need raising together, not either one alone
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
