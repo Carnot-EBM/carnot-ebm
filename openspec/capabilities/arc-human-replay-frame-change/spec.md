@@ -6351,6 +6351,81 @@ despite `nodes_expanded` scaling 5x (to ~100000) -- the search's achievable mini
 effectively plateaued -- and `planned` stays `False` for both arms, establishing that neither lever
 alone nor combined finds a plan on this trace
 
+### REQ-ARC-FCP-5699-21: Tier 2's LLM-Synthesized Dynamics Model Has Never Succeeded, Not Marginally -- Complete Failure Every Time Measured
+
+Every prior REQ in this chain (5699-14 through -20) diagnosed tier 1 (the CNN-dynamics-prior
+warm-start). Tier 2 -- the DSL/LLM induction path, gated by `WorldModelVerifier` (non-hidden-state
+games) or `select_trusted_world_model` (`HIDDEN_STATE_GAME_IDS` games) -- was treated as a black
+box that "also fails" without characterizing HOW. Reading the code between the two tiers
+(`arc_competition_agent.py` ~line 3660-3712) clarifies tier 2 is NOT skipped or unreached when
+tier 1 fails: in the SAME induction attempt, `self._proposer().induce(self.short,
+active_transitions, self.cell)` makes a REAL call to the live LLM proposer (the same
+`LocalGGUFProposer`/Qwen3.5-9B-MTP the `arc_sge_live_path_ab.py` A/B script's `proposer=None`
+default lazily constructs) to SYNTHESIZE Python code implementing the game's dynamics + win
+predicate, then `engine, is_done = e3.load_engine(self.short)` loads it, before the trust gate
+scores it. So tier 2 genuinely runs an LLM call and gets genuine synthesized code every attempt --
+the open question is how well that code actually predicts reality, which this REQ answers directly
+from artifacts THIS SESSION ALREADY COLLECTED (no new live run needed).
+
+**Pulled every measurement across the whole REQ chain's artifacts** (`arc_sge_live_path_ab_sp80/
+cd82/g50t.json`, all baseline + SGE arms, all 4 sp80 runs -- binary, novelty-only, novelty+100k
+budget):
+
+```
+sp80  baseline/sge (all 4 sp80 runs): verify_accuracy=0.0, verify_cell_recall=0.0
+cd82  baseline: heldout_change_consistency=0.0, heldout_accuracy=0.0, correct_changed_cells=0, binary_gate_pass=False
+cd82  sge:      heldout_change_consistency=0.0, heldout_accuracy=0.125, correct_changed_cells=0, binary_gate_pass=False
+g50t  baseline: heldout_change_consistency=0.0, heldout_accuracy=0.0, correct_changed_cells=0, binary_gate_pass=False
+g50t  sge:      heldout_change_consistency=0.0, heldout_accuracy=0.125, correct_changed_cells=0, binary_gate_pass=False
+```
+
+**Tier 2's LLM-synthesized dynamics model has never succeeded -- and it is not a marginal, near-
+miss failure. It is a COMPLETE failure by the most direct metric.** `correct_changed_cells=0` in
+ALL FOUR hidden-state measurements (cd82/g50t, both arms) -- the synthesized code predicts ZERO
+correctly-changed cells across every held-out transition tested, not "some but not enough."
+`verify_cell_recall=0.0` in both sp80 measurements -- same complete failure by the graded metric.
+`heldout_change_consistency=0.0` across the board. The one non-zero number, `heldout_accuracy=
+0.125` on the SGE arm for cd82/g50t (1 of 8 held-out transitions scored "correct"), is very likely
+a NO-OP held-out transition (agent action that didn't change the grid) coincidentally matching a
+degenerate always-predict-no-change synthesized function -- consistent with `correct_changed_cells`
+staying `0` even there (a genuinely correct model would get SOME changed cells right if it scored
+above chance on anything).
+
+**What this narrows.** This session's entire diagnostic effort (5699-14 through -20) characterized
+tier 1's search-mechanics failure in detail. Tier 2's failure is a DIFFERENT, more fundamental
+problem: the LLM is not producing dynamics code that predicts these games' mechanics AT ALL, on
+first contact, on any of the 3 games measured. This is not a search-budget problem, not a
+gradient problem, and not (necessarily) a search-mechanism problem at all -- it's a code-synthesis
+correctness problem, upstream of anything this REQ chain has touched so far.
+
+**Honest scope limit.** n=3 games, and this REQ characterizes tier 2's failure MAGNITUDE from
+already-recorded numeric trust metrics -- it does not yet inspect the actual LLM PROMPT or
+GENERATED CODE to diagnose WHY the synthesis fails so completely (bad game understanding from too
+few transitions, a systematic code-generation bug, a prompt/context issue, or the games genuinely
+being hard to infer dynamics for from 25 transitions). That is qualitatively different work
+(reading LLM I/O, not measuring search statistics) from everything else in this REQ chain.
+
+**Concrete next step if this thread continues.** Capture and read the ACTUAL prompt +
+LLM-generated code for one attempt (e.g. add a diagnostics field logging the raw proposer output,
+or intercept `self._proposer().induce(...)`'s return in a dedicated diagnostic script) to see
+whether the synthesized code is plausible-but-wrong (a genuine game-understanding miss) or
+structurally broken (a code bug unrelated to game understanding) -- this determines whether the
+fix is "give the LLM better/more transitions" or "fix a proposer bug," which are very different
+follow-ups.
+
+#### SCENARIO-ARC-FCP-5699-21-TIER-2-LLM-SYNTHESIS-COMPLETELY-FAILS-EVERY-MEASUREMENT
+
+Given tier 2 is exercised (a real LLM call synthesizes dynamics code) in every induction attempt
+this REQ chain has measured across sp80, cd82, and g50t, gated by `WorldModelVerifier` or
+`select_trusted_world_model`
+When every already-collected artifact's trust metrics are read together (not just each game's
+own headline `skipped` reason, which this REQ chain had treated as a single opaque gate failure)
+Then `correct_changed_cells=0` (hidden-state games, all 4 measurements) and `verify_cell_recall=
+0.0` (sp80, both measurements) show the synthesized dynamics model predicts ZERO correctly-changed
+cells in every single measurement -- a complete failure, not a marginal near-miss -- establishing
+that tier 2's problem is upstream code-synthesis correctness, a qualitatively different failure
+class from tier 1's search-mechanics wall this REQ chain spent 5699-14 through -20 characterizing
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
