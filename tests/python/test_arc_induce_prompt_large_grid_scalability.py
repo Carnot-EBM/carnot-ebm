@@ -182,3 +182,68 @@ def test_req_arc_fcp_5699_23_raising_k_shows_more_transitions_to_the_llm():
     assert n_actions_k8 == 6  # k - 2, no no-ops in this synthetic set
     assert n_actions_k20 == 18
     assert n_actions_k20 > n_actions_k8
+
+
+# ---------------------------------------------------------------------------
+# REQ-ARC-FCP-5699-26: refactor_prompt's mismatch payload must be VALID JSON at any size.
+# The pre-existing json.dumps(vr.mismatches[:5], indent=1)[:4000] hard-truncated the encoded
+# string by raw character count, which can (and on a real g50t counterexample, does -- 5 real
+# mismatches serialize to 12,212 chars) slice through the middle of a JSON structure, producing
+# genuinely invalid JSON shown to the LLM as the thing it's meant to debug from.
+# ---------------------------------------------------------------------------
+
+
+def _mismatch(i, n_cells=30):
+    cells = [[r, 0, 1, 2] for r in range(n_cells)]
+    return {
+        "i": i,
+        "action": 1,
+        "data": None,
+        "true_change": list(cells),
+        "your_prediction_was_wrong_at": list(cells),
+    }
+
+
+def test_req_arc_fcp_5699_26_bounded_mismatches_caps_large_cell_lists():
+    bounded = e3._bounded_mismatches([_mismatch(0, n_cells=30)])
+    assert len(bounded) == 1
+    assert len(bounded[0]["true_change"]) == e3._REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH
+    assert (
+        bounded[0]["true_change_omitted_count"] == 30 - e3._REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH
+    )
+    assert (
+        bounded[0]["your_prediction_was_wrong_at_omitted_count"]
+        == 30 - e3._REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH
+    )
+
+
+def test_req_arc_fcp_5699_26_bounded_mismatches_leaves_small_lists_untouched():
+    bounded = e3._bounded_mismatches([_mismatch(0, n_cells=3)])
+    assert bounded[0]["true_change"] == [[r, 0, 1, 2] for r in range(3)]
+    assert "true_change_omitted_count" not in bounded[0]
+    assert "your_prediction_was_wrong_at_omitted_count" not in bounded[0]
+
+
+def test_req_arc_fcp_5699_26_refactor_prompt_produces_valid_json_at_realistic_scale():
+    """Regression test for the exact bug: 5 mismatches this large previously serialized past
+    4000 chars and got hard-truncated into invalid JSON. Confirms the fix's MISMATCHES block
+    parses as JSON regardless."""
+    import json as _json
+    from types import SimpleNamespace
+
+    mismatches = [_mismatch(i, n_cells=30) for i in range(5)]
+    # sanity-check the regression premise: the OLD approach really would have produced
+    # invalid JSON at this scale.
+    old_style = _json.dumps(mismatches[:5], indent=1)[:4000]
+    broke = False
+    try:
+        _json.loads(old_style)
+    except _json.JSONDecodeError:
+        broke = True
+    assert broke, "test fixture must reproduce the truncation bug to be a real regression test"
+
+    vr = SimpleNamespace(n=25, n_correct=5, accuracy=0.2, mismatches=mismatches)
+    prompt = e3.refactor_prompt("paritytest", vr)
+    mism_block = prompt[prompt.index("MISMATCHES:\n") + len("MISMATCHES:\n") :]
+    parsed = _json.loads(mism_block)  # must not raise
+    assert len(parsed) == 5

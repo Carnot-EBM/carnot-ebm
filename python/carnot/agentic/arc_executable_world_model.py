@@ -1187,8 +1187,36 @@ OBSERVED TRANSITIONS:
 """
 
 
+_REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8
+
+
+def _bounded_mismatches(mismatches: list, *, limit: int = 5) -> list:
+    """REQ-ARC-FCP-5699-26: cap each mismatch's cell-diff lists BEFORE JSON-encoding, instead
+    of encoding everything and then hard-slicing the resulting string by raw character count.
+    The raw-slice approach (the pre-existing `json.dumps(...)[:4000]`) produced genuinely
+    INVALID JSON: verified on a real g50t counterexample, 5 real mismatches serialize to
+    12,212 characters, and `[:4000]` cuts the string mid-field-name (`"true_chang` with the
+    closing `e"` sliced off) -- the model was being shown malformed, truncated JSON and asked
+    to debug from it, not a genuine capacity/reasoning limitation. Bounding each mismatch's
+    `true_change`/`your_prediction_was_wrong_at` lists to a fixed cell count keeps every
+    mismatch entry structurally complete and the overall JSON valid regardless of how large the
+    underlying diffs are, while still showing a representative SAMPLE of cells per mismatch (an
+    `_omitted_count` companion field records how many were cut, so the count is honest, not
+    silently dropped)."""
+    bounded = []
+    for m in mismatches[:limit]:
+        m = dict(m)
+        for key in ("true_change", "your_prediction_was_wrong_at"):
+            cells = m.get(key)
+            if isinstance(cells, list) and len(cells) > _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH:
+                m[f"{key}_omitted_count"] = len(cells) - _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH
+                m[key] = cells[:_REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH]
+        bounded.append(m)
+    return bounded
+
+
 def refactor_prompt(game: str, vr: VerifyResult) -> str:
-    mism = json.dumps(vr.mismatches[:5], indent=1)[:4000]
+    mism = json.dumps(_bounded_mismatches(vr.mismatches), indent=1)
     return f"""The executable world model at results/arc_e3/{game}/world_model.py reproduces
 only {vr.n_correct}/{vr.n} ({vr.accuracy:.0%}) of the observed transitions. Below are
 failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engine() so it
@@ -1373,9 +1401,23 @@ class LocalGGUFProposer:
     # linear/full-attention model (Qwen3.6-27B) on this project's HIP/ROCm build -- -fit off has
     # no downside when n_gpu_layers and n_ctx are both already explicit (nothing left to auto-fit).
     _proc: Any = None
+    # MANDATORY truncation detection (operator directive, REQ-ARC-FCP-5699-27): every completion
+    # request (generate() AND complete_text()) sets these from llama.cpp's own response, so ANY
+    # caller can check them after a call regardless of whether that call's own return contract
+    # treats truncation as a failure. last_stop_type == "limit" means the response was cut off by
+    # hitting n_predict (self.max_tokens) before finishing naturally ("eos"); last_prompt_truncated
+    # means the INPUT prompt itself exceeded the server's context window (n_ctx) and was cut --
+    # a different, upstream failure mode. Both were previously silently discarded (only the
+    # "content" field was read from the response).
+    last_stop_type: str = ""
+    last_prompt_truncated: bool = False
 
     def _url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
+
+    def _record_completion_diagnostics(self, response: dict) -> None:
+        self.last_stop_type = str(response.get("stop_type") or "")
+        self.last_prompt_truncated = bool(response.get("truncated"))
 
     def _healthy(self) -> bool:
         import urllib.request
@@ -1490,16 +1532,23 @@ class LocalGGUFProposer:
                     headers={"Content-Type": "application/json"},
                 )
                 with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                    text = _json.load(r).get("content", "")
+                    _response = _json.load(r)
             except Exception as e:
                 return False, f"local gguf (GPU server) failed: {e!r}"[:200]
+            text = _response.get("content", "")
+            self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
             code = _extract_python(text)
             if not code and _codeonly:
                 # the stop-sequence consumed the closing fence and the opener was in the prompt, so
                 # the raw completion IS the code block body.
                 code = text.strip()
             if not code or any(f"def {fn}" not in code for fn in required):
-                last = f"missing {required} in output"
+                _diag = ""
+                if self.last_stop_type == "limit":
+                    _diag += f" [HIT n_predict={self.max_tokens} OUTPUT LIMIT before completing]"
+                if self.last_prompt_truncated:
+                    _diag += " [PROMPT TRUNCATED -- exceeded server context window]"
+                last = f"missing {required} in output{_diag}"
                 continue
             try:
                 ast.parse(code)  # never use code that doesn't parse
@@ -1564,10 +1613,11 @@ class LocalGGUFProposer:
                 headers={"Content-Type": "application/json"},
             )
             with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                text = _json.load(r).get("content", "")
+                _response = _json.load(r)
         except Exception as e:  # pragma: no cover - network boundary
             return False, f"local gguf (GPU server) failed: {e!r}"[:200]
-        return True, str(text)
+        self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
+        return True, str(_response.get("content", ""))
 
     def _gen_to_file(
         self, game: str, prompt: str, *, codeonly_eligible: bool = False
