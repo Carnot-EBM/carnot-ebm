@@ -1118,13 +1118,31 @@ _L2_CODEONLY_DIRECTIVE = (
 )
 
 
+def _induce_transitions_k() -> int:
+    """REQ-ARC-FCP-5699-23: DEV-ONLY override (unset in production -- returns 8, the
+    pre-existing _transitions_block/induce_prompt default, byte-identical behavior). Lets a
+    diagnostic run test whether showing the LLM more per-action-type examples reduces the
+    literal-coordinate-memorization pattern REQ-ARC-FCP-5699-22 found under the default cap."""
+    import os
+
+    override = os.environ.get("CARNOT_ARC_INDUCE_TRANSITIONS_K")
+    return int(override) if override else 8
+
+
 def induce_prompt(
     game: str,
     trans: list[Transition],
     cell: int,
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
+    k: int = 8,
 ) -> str:
+    # REQ-ARC-FCP-5699-23: k defaults to _transitions_block's own default (8, unchanged
+    # production behavior). REQ-ARC-FCP-5699-22 found the default shows the LLM only ~6
+    # grid-changing transitions of the 25 collected -- roughly one per action type, a
+    # data-starvation signature matching observed hardcoded-literal-coordinate memorization
+    # (g50t's engine). Callers may raise k (DEV-ONLY, via CARNOT_ARC_INDUCE_TRANSITIONS_K) to
+    # test whether more per-action examples let the LLM infer general rules instead.
     h, w = trans[0].grid.shape
     colors = sorted(set(int(v) for t in trans for v in t.grid.flatten().tolist()))
     return f"""You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game '{game}'.
@@ -1165,7 +1183,7 @@ Use only numpy + stdlib. Do not read files or network. Make engine() pure and
 deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
-{_transitions_block(trans, previous_level_complete_grid=previous_level_complete_grid)}
+{_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid)}
 """
 
 
@@ -1207,6 +1225,7 @@ class CodexProposer:
                 trans,
                 cell,
                 previous_level_complete_grid=previous_level_complete_grid,
+                k=_induce_transitions_k(),
             ),
             self.timeout,
         )
@@ -1622,7 +1641,11 @@ class LocalGGUFProposer:
         previous_level_complete_grid: Optional[np.ndarray] = None,
     ) -> tuple[bool, str]:
         base = induce_prompt(
-            game, trans, cell, previous_level_complete_grid=previous_level_complete_grid
+            game,
+            trans,
+            cell,
+            previous_level_complete_grid=previous_level_complete_grid,
+            k=_induce_transitions_k(),
         )
         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).

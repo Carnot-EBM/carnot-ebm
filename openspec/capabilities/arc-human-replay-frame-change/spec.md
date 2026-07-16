@@ -6528,6 +6528,111 @@ False` predicate as close to the epistemically honest answer given no evidence -
 upstream first-contact data gap REQ-ARC-FCP-5699-18 found for tier 1, now shown to independently
 cripple tier 2's goal-predicate induction too
 
+### REQ-ARC-FCP-5699-23: Testing The Cheap Fix -- Raise The Transitions-Shown Cap
+
+REQ-ARC-FCP-5699-22's cheapest concrete next step: raise `_transitions_block`'s `k` (the number of
+grid-changing transitions shown to the LLM in the induce prompt, uncapped-default 8 -> ~6 shown of
+25 collected) and re-measure whether the dynamics half stops memorizing literal coordinates.
+
+**Implementation.** `induce_prompt` gained an optional `k: int = 8` kwarg (matching
+`_transitions_block`'s own pre-existing default -- every call site that doesn't pass `k` is
+byte-identical to before, verified by a dedicated regression test asserting
+`induce_prompt(..., k=8) == induce_prompt(...)` with no `k` arg). A new `_induce_transitions_k()`
+helper reads a DEV-ONLY `CARNOT_ARC_INDUCE_TRANSITIONS_K` env var (unset -> returns 8, unchanged
+production default), threaded into both `CodexProposer.induce()` and `LocalGGUFProposer.induce()`
+(the two real proposer call sites; `induce_programmatic_experts`'s own, unrelated
+`_transitions_block` call was left untouched -- out of scope, a different induction path). 4 new
+unit tests (`test_arc_induce_prompt_large_grid_scalability.py`) verify the env-var default/
+override, the byte-identical-when-unset regression guard, and that raising `k` genuinely surfaces
+more transitions in the rendered prompt (synthetic 25-transition pool, `k=8` renders 6 changed
+transitions, `k=20` renders 18 -- confirms the cap is the binding constraint being tested, not an
+artifact of too-small a synthetic pool).
+
+**Live A/B re-run, g50t, `budget=250`, `CARNOT_ARC_INDUCE_TRANSITIONS_K=20` (vs the k=8 baseline
+from REQ-ARC-FCP-5699-21/22's own g50t measurement).** Result is genuinely MIXED, not a clean win:
+
+```
+baseline: heldout_change_consistency=0.114187, heldout_accuracy=0.0, correct_changed_cells=33, trust_energy=13.808703
+sge:      heldout_change_consistency=0.0,      heldout_accuracy=0.0, correct_changed_cells=0,  trust_energy=inf
+```
+
+**The baseline arm improved substantially.** `correct_changed_cells` went from 0 (k=8) to 33
+(k=20) -- a real, non-trivial jump, and `heldout_change_consistency` moved from a flat 0.0 to
+0.114. This is direct, positive evidence FOR the diagnosed root cause: showing more per-action
+examples let this particular LLM generation correctly predict a meaningful number of changed
+cells it previously got zero of. `binary_gate_pass` still reads `False` (0.114 is well below the
+0.5 trust threshold), so tier 2 still does not succeed outright -- but the underlying dynamics
+model genuinely got BETTER, not just differently wrong.
+
+**The SGE arm's independent generation attempt got WORSE, and for a NEW reason: a real code bug,
+not just a still-wrong hypothesis.** Reading the actual generated code left on disk after this run
+(`results/arc_e3/g50t/world_model.py`, the SGE arm's code -- it runs second in the same script
+invocation and overwrites the baseline arm's file, which was NOT separately captured; a real
+limitation of this specific re-run, noted below) shows:
+
+```python
+if action == 6:
+    px, py = data['x'], data['y']
+    grid[py, px] = 1
+    return grid
+if action in [1, 2, 3, 4, 5]:
+    if action == 1:
+        grid = grid.copy()
+        grid[py, px] = 1     # px, py are UNDEFINED here -- only assigned inside the action==6
+        return grid          # branch above, which already returned. This raises NameError.
+    ...  # same undefined-variable bug repeated for actions 2-5
+```
+
+`px`/`py` are referenced in the `action in [1,2,3,4,5]` branch but only ever assigned inside the
+`action == 6` branch, which already `return`s before that code is reached -- a genuine
+`NameError`/`UnboundLocalError` at runtime for every action 1-5 call. This is consistent with
+`trust_energy=inf` (the verifier's scoring path evidently assigns an infinite/maximal-violation
+energy when the engine raises rather than returning a wrong-but-valid grid) and
+`correct_changed_cells=0`. **This is a WORSE failure mode than k=8's hardcoded-but-executing
+coordinates** -- k=8's code was wrong but never crashed; this k=20 generation is syntactically
+valid Python that crashes at call time.
+
+**What this narrows.** Raising `k` is not a strictly-reliable fix -- it can genuinely help (this
+run's baseline arm: real, substantial improvement) or genuinely hurt (this run's sge arm: a novel
+execution-time bug from writing more complex, longer code under the larger prompt) in the SAME
+diagnostic session, on the SAME game. LLM code-synthesis reliability here is evidently
+sensitive to sampling/generation variance, not a deterministic function of how much data is shown
+-- more context can unlock a better hypothesis OR invite a new class of bug (undefined-variable
+control-flow mistakes that a shorter, simpler generation didn't have room to make). Neither arm
+reached `binary_gate_pass=True`; tier 2 still does not succeed on g50t even in the improved case.
+
+**Honest scope limit.** n=1 game (g50t), n=1 pair of measurements (one improved, one regressed).
+The baseline arm's actual improved CODE was not preserved (overwritten by the sge arm's run before
+being read) -- a real gap in this specific re-run's methodology, worth fixing (capture per-arm
+code snapshots, not just the final state) before drawing a stronger conclusion. This result should
+be read as "raising k is a live, real lever with visible effect in both directions," not as either
+a confirmed fix or a refutation.
+
+**Concrete next step if this thread continues.** (a) Fix the methodology gap directly: capture
+`world_model.py` after EACH arm (not just the final overwritten state) so both outcomes are fully
+inspectable. (b) Repeat with multiple seeds/generations at a fixed `k` to characterize the
+variance directly (is a 33-correct-cells result typical or a lucky outlier at k=20?) rather than
+drawing conclusions from n=1 per arm. (c) If variance is confirmed high, consider a repair-loop
+approach instead of (or alongside) raising k: the codebase already has a "refactor" path
+(`CodexProposer.refactor`/`LocalGGUFProposer`'s equivalent) that feeds back mismatches for a
+second pass -- worth checking whether that path is exercised for tier 2's stall-triggered
+first-contact induction, since a self-correcting second pass could catch exactly this class of
+undefined-variable bug that raising k alone cannot prevent.
+
+#### SCENARIO-ARC-FCP-5699-23-RAISING-K-HELPS-ONE-GENERATION-BREAKS-ANOTHER
+
+Given REQ-ARC-FCP-5699-22 diagnosed the `k=8` default as starving the LLM to ~1 example per
+action type, producing hardcoded-literal-coordinate memorization on g50t
+When `CARNOT_ARC_INDUCE_TRANSITIONS_K=20` is set and g50t is re-measured, both arms, against the
+prior k=8 baseline (`correct_changed_cells=0` for both arms)
+Then the baseline arm's `correct_changed_cells` rises to 33 (`heldout_change_consistency`
+0.0->0.114) -- genuine improvement supporting the diagnosed root cause -- while the sge arm's
+independent generation attempt produces code with an undefined-variable bug (`px`/`py` referenced
+outside the branch that defines them) that crashes at call time (`trust_energy=inf`,
+`correct_changed_cells=0`) -- a NEW, worse failure mode than k=8's non-crashing-but-wrong
+hypothesis -- establishing that raising k has a real but HIGH-VARIANCE effect, not a reliable fix,
+and neither arm reaches `binary_gate_pass=True`
+
 ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
 
 `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
