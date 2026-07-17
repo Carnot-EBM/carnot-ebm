@@ -6084,6 +6084,41 @@ games:
     diagnostics replayed byte-identically 3/3 each from fresh envs; artifact
     adversarial-verify clean. FRONTIER UNCHANGED 8/9, best rest -9.5, no rest
     in [-48,-13].'
+  - 'L9 round 25, OFFSCREEN LANDING/CAMERA-FOLLOW CORRECTION + FULL-STATE UNDO,
+    still HONEST NULL on level progress (2026-07-17,
+    gpt-5.6-sol-max-effort,
+    results/outer_loop_round25_bp35_probe_l9_20260717.json): candidate F is
+    decisively resolved by a genuinely unsupported 48-row DOWN flight. From
+    x32/+2.5 under camera -26, RIGHT falls to x32/+50.5 in 47 layers: the
+    flight-start screen-row-63 boundary is world +37, the sprite is absent
+    below-frame for layers 19-29, camera pan begins at layer 25, and the player
+    is reacquired at layer 30 alive under camera +22 -- 13.5 rows beyond the
+    original bottom. MORE IMPORTANT CORRECTION: round 23''s universal
+    "landing must be inside the flight-start viewport" law is FALSE. Reversing
+    from x32/+50.5 rises 48 rows to +2.5 even though that rest is 19.5 rows
+    above the starting top (+22); the sprite is absent for 13 layers, then the
+    camera pans/reacquires it alive. An UNVISITED-destination control from
+    x44/+50.5 rises to x44/+20.5: player center reaches screen row 0 at layer
+    18, camera pan starts at 19, and it settles alive 1.5 rows above the old
+    top. Thus top/bottom viewport crossing is not itself the kill predicate;
+    a real offscreen landing can trigger a same-action camera pan. The known
+    ungrown-gap/door deaths remain real, but WHY those paths die (no real
+    support vs another condition) is reopened -- do not infer the -51 door
+    rest from the old viewport arithmetic. NEW FAST ROUTE: after the high x15
+    DOWN flip, RIGHT x3 reaches the known x32/+50.5 low rest in 3 actions
+    rather than the old 16-action carry/lateral descent (13-action saving).
+    ACTION7 after that flight is an exact two-layer full-state rewind, not a
+    mid-flight abort: three presses restore x26/+2.5 cam -26, x20/-9.5 cam
+    -38, then x15/-9.5 cam -38 with exact normalized frame hashes. ACTION7
+    after a switch also restores both switch blocks, terrain, gravity/camera,
+    player, and the exact initial public hash. The previously untested
+    reachable order -45,+39,-21,+27 consumes all four switches but ends L8
+    NOT_FINISHED at x15/+50.5; an 84-frame census finds no new glyph class or
+    live color-12. Six cases replayed byte-identically 3/3 each (18 fresh
+    environments); adversarial-verify clean. FRONTIER UNCHANGED 8/9, best
+    rest -9.5, no rest in [-48,-13]. NEXT LEAD: search for an ACTUAL safe
+    offscreen landing/support in a door or c55-59 ascent column, using the
+    three-RIGHT descent + ACTION7 as efficient reversible branch primitives.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one

@@ -1,0 +1,302 @@
+{
+  "experiment": "outer_loop_round25_bp35_probe_l9_offscreen_flight_and_undo_correction",
+  "game": "bp35",
+  "model": "gpt-5.6-sol-max-effort",
+  "run_date": "2026-07-17",
+  "schema": "carnot.arc_outer_loop_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "random_seed": 0,
+  "random_seed_note": "The deterministic offline environment exposes no bp35 seed control and no RNG was invoked. Seed 0 is the repository methodology convention; all six retained characterization cases were independently reconstructed three times from brand-new environments.",
+  "duration_s": 2538,
+  "duration_note": "Real wall clock from the successful clean-prefix precondition at 2026-07-17T19:33:37Z through completion of the 18-run fresh-environment verification suite at 2026-07-17T20:15:55Z; no sleep or duration padding.",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "win_levels": 9,
+  "levels_won_this_session": 0,
+  "full_game_clear": false,
+  "offline_reproduced": false,
+  "reproduced_levels": 0,
+  "new_levels_banked": 0,
+  "total_env_steps_used": 0,
+  "total_env_steps_used_note": "Zero scored/live-network environment steps; every action was issued to the local offline arcade through public env.step.",
+  "offline_env_steps_used": 20440,
+  "offline_env_steps_used_note": "Exact accounting for this session: 11,598 actions in 32 retained JSONL fresh-env runs, 2,191 actions in the mandatory precondition/direct and four retained inline public-frame mapping runs, and 6,651 actions in the final six-case-by-three fresh-env verification suite. Every fresh run includes the 342-action L1-L8 prefix.",
+  "reproduction_verified": true,
+  "reproduction_note": "Characterization only, not a level reproduction claim. Six diagnostic tails were each replayed 3x from a completely new arc.make('bp35') plus env.reset() plus the 342-action prefix (18 independent reconstructions). All six cases had byte-identical normalized public-frame endpoints across 3/3 repetitions: 48-row DOWN flight, offscreen UP landing at x32, unvisited offscreen UP landing at x44, three-step flight/move undo, switch full-state undo, and the previously untested reachable switch order -45,+39,-21,+27. No level advanced, so arc_solver_kit.reproduce(claimed_level=9) was correctly not invoked.",
+  "reproducibility_checksum": "e7ad24b8cf53da909b9dfb828a2e3f639221e2086ee11bd1106a14c8d4c158c3",
+  "reproducibility_checksum_note": "sha256 of canonical compact JSON mapping each of the six verification tails to its first normalized public endpoint; the exact tails and their individual hashes are recorded in diagnostic_routes.",
+  "honest_verdict": "complete_bp35_l9_round25_offscreen_flight_camera_follow_and_full_state_undo_discovered_no_new_rest_no_new_level",
+  "narrative": "Round 25 targeted only bp35 L9 and began with the mandatory clean replay: all 342 prefix actions reached levels_completed=8, GameState.NOT_FINISHED, settled sha256 375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0. It did not repeat round 24's six closed candidates. Instead it engineered candidate F's missing long unsupported drop using a new sparse transport route. From the known high DOWN-gravity x15 rest at world -9.5, three RIGHT actions replace the old 16-action carry descent: x15.5/-9.5 -> x20.5/-9.5 -> x26.5/+2.5 -> x32.5/+50.5. The final action is a 47-layer unsupported 48-row fall. Its camera starts at -26, whose screen-row-63 bottom is world +37; the player vanishes below the public frame for layers 19..29, the camera begins panning at layer 25, and the player is reacquired at layer 30, settling alive at +50.5 with camera +22. The landing center is 13.5 rows beyond the original screen-row-63 boundary. This decisively closes round 24 candidate F: DOWN flights are not killed at the starting viewport bottom. The more important surprise is that the prior round-23 'landing must be inside the flight-start view' law is false in both directions. Clicking the +27 switch from the sparse x32/+50.5 landing produces a 44-layer 48-row UP flight to x32/+2.5 even though the destination is 19.5 rows above the flight-start camera top +22. The sprite is absent for layers 16..28; camera pan begins at layer 24 and reacquires it at layer 29, alive at camera -36. An independent unvisited-destination control from x44/+50.5 rises 30 rows to x44/+20.5: the player center reaches screen row 0 at layer 18, camera pan starts at layer 19, and it settles alive even though the rest is 1.5 rows above the starting top and that x44 rest had not appeared earlier in the tail. Therefore crossing/touching screen row 0 is not by itself lethal. The strongest evidence-supported replacement is narrower: a real offscreen landing can trigger a same-action camera pan/reacquisition; the exact reason the known ungrown-gap and open-door ascents still die remains unresolved and must not be mislabeled as a universal viewport rule. This reopens high offscreen landings as a strategy class, although the tested far-right columns only landed at known lower rests and the door column still died. ACTION7 was also characterized against flight rather than just edits: after the 48-row fall, three ACTION7 presses (two layers each) restore exact normalized public frames in reverse order: x26.5/+2.5 camera -26, then x20.5/-9.5 camera -38, then x15.5/-9.5 camera -38. It never leaves the player at an animation-intermediate row. A separate switch probe shows ACTION7 restores the entire pre-flip public state, including both color-8 switches, their associated visible terrain, gravity/camera, player rest, and the exact initial normalized hash. Finally, the only missing top-first reachable switch order (-45,+39,-21,+27) consumed all four switches and ended deterministically at x15.5/+50.5, camera +12, L8 NOT_FINISHED; it did not win. An 84-settled-frame lattice census found the same live color union {0,3,5,7,8,9,10,11,14,15}, eight special 5x5 signatures (door, goal, switch, three pillar forms, two player orientations), and no color-12 or unexplained glyph class. The best surviving rest remains -9.5, no rest in [-48,-13] was reached, and no level was banked.",
+  "novel_mechanics_found": [
+    "A genuinely unsupported DOWN flight can leave the starting viewport and survive: x32.5 world +2.5 -> +50.5 is a 48-row, 47-layer drop from camera -26. The player is absent in layers 19..29; camera pan begins at layer 25 and reacquires it at layer 30, ending camera +22. This is 13.5 rows beyond the flight-start screen-row-63 world boundary (+37).",
+    "Round 23's universal flight-survival law is retracted by two fresh UP controls. x32/+50.5 -> +2.5 lands 19.5 rows above the starting top and is reacquired after 13 blank layers; the unvisited x44/+50.5 -> +20.5 control reaches screen row 0 then pans and survives. A real offscreen landing can be camera-reacquired; viewport contact/crossing alone is not sufficient for death.",
+    "ACTION7 is a full public-state history rewind for flights and moves, not an animation interrupt. After the 48-row fall, three two-layer undos exactly restore the three preceding normalized frames, cameras, and player rests; no intermediate flight row is exposed.",
+    "ACTION7 also fully reverses switch consumption: click(+39 switch) followed by ACTION7 restores both original color-8 components, terrain, player world (20.5,38.5), camera 0, and the exact initial normalized frame hash.",
+    "The sparse descent is a deterministic action-efficiency option: after the high x15 DOWN flip, three RIGHT actions reach the known x32/+50.5 rest, replacing the old 16-action structure carry/lateral descent (13 actions saved, no new level claim)."
+  ],
+  "bounded_negative_results": [
+    "The sparse long-drop/reverse route does not gain a rung: after the offscreen x32 ascent to +2.5, LEFT returns in one 19-layer action to the known x27/-9.5 frontier; the next direct door click still produces the known 47-layer GAME_OVER. Best rest remains -9.5.",
+    "Far-right offscreen-UP probes after the long drop settle only at known lower rests: x32 -> +2.5, x38 -> +26.5, x44 -> +20.5, x50 -> +38.5, x56 -> +38.5. None enters world rows [-48,-13].",
+    "Down-oriented lateral rebuild attempts at the high x15 rest were inert on already-built x21/x27 bodies and converged to the same +2.5 then +50.5 descent; they did not create a direct high-to-low shelf bypass or a new upper rest.",
+    "Flight undo cannot abort at an intermediate animation row. Each ACTION7 jumps to a complete prior settled public state in two layers and reverses subsequent movement/state rather than preserving a remote edit.",
+    "The previously untested reachable top-first switch order -45,+39,-21,+27 consumed all four visible switches but ended L8 NOT_FINISHED at x15.5/+50.5; switch order did not expose a new rest or completion trigger.",
+    "The 84-frame fresh lattice census exposed no new live glyph class and no color-12 row; all special signatures reduce to the already catalogued switch, door, goal, pillar/eye, and player forms.",
+    "No new rest above world -9.5, no level 9, and no full-game clear."
+  ],
+  "next_leads": [
+    "Replace the old viewport-arithmetic seal with a landing-support question. The c55-59 upper channel and any other inferred offscreen platform are strategically live again: if a legal entrance can be built, an offscreen rest need not be inside the starting view to survive.",
+    "Use the sparse three-RIGHT descent plus ACTION7 state rewind as an efficient branch primitive when searching switch/structure orders; it reaches the low x32 rest 13 actions faster and can restore prior settled states exactly without fresh-prefix replay.",
+    "Disambiguate why the open-door and ungrown-gap ascents still die while real offscreen landings pan/reacquire. The next falsifiable probe should create or identify an actual support in a door/ascent column, not merely shift the starting camera by three rows.",
+    "The inferred -51 floor in door columns is no longer supported by the old viewport law. Treat its existence as unverified until a public flight or registered live frame actually lands there; do not infer it from overview geometry.",
+    "If any support yields a rest above -13, immediately use the demonstrated offscreen-camera behavior to enter the upper map, then test the color-12 row and the two upper switches through public clicks."
+  ],
+  "diagnostic_routes": {
+    "l8_prefix_artifact": "results/outer_loop_round12_bp35_probe_20260712.json",
+    "l8_prefix_action_count": 342,
+    "common_high_down_x15_tail": [
+      {"action": 6, "data": {"x": 39, "y": 15}},
+      {"action": 4},
+      {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 21, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 15, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 3, "y": 3}}
+    ],
+    "long_down_48_suffix": [
+      {"action": 4},
+      {"action": 4},
+      {"action": 4}
+    ],
+    "long_down_48_tail_sha256": "4054463a0cddfe719e2c3dac63777f7c05236354807a1c328a761911365c9257",
+    "offscreen_up_x32_suffix_after_common": [
+      {"action": 4},
+      {"action": 4},
+      {"action": 4},
+      {"action": 6, "data": {"x": 3, "y": 5}}
+    ],
+    "offscreen_up_x32_tail_sha256": "3cb7a202ff72a75b006d6565e5522578063fe4c548ee71ad5f4a31e74b53222b",
+    "offscreen_up_unvisited_x44_suffix_after_common": [
+      {"action": 4},
+      {"action": 4},
+      {"action": 4},
+      {"action": 4},
+      {"action": 4},
+      {"action": 6, "data": {"x": 3, "y": 5}}
+    ],
+    "offscreen_up_unvisited_x44_tail_sha256": "23334e0db64cc71fd520d6fbfaf4db9c5b8ab121dcb25550c0a03b5f2eadd8c8",
+    "undo_long_down_suffix_after_common": [
+      {"action": 4},
+      {"action": 4},
+      {"action": 4},
+      {"action": 7},
+      {"action": 7},
+      {"action": 7}
+    ],
+    "undo_long_down_tail_sha256": "6e137d15ab4d68d3133667331cb6d52d46082f67506433847ad8e0cc9121b569",
+    "switch_full_state_undo_tail": [
+      {"action": 6, "data": {"x": 3, "y": 39}},
+      {"action": 7}
+    ],
+    "switch_full_state_undo_tail_sha256": "4e14866015f79ebd687af7b429787fe83b57c4cb3490c2b5d9a21ffe5a85887b",
+    "missing_reachable_switch_order": ["-45", "+39", "-21", "+27"],
+    "missing_reachable_switch_order_derivation": "Use round-21 route_a (39 actions); replace high_loop_extension action 1 click(3,5) with click(3,17); execute high_loop_extension actions 2..42 unchanged; append click(3,5).",
+    "missing_reachable_switch_order_tail_actions": 84,
+    "missing_reachable_switch_order_tail_sha256": "ffddf3bfe251386ae10fcb9b12ebd387534b4c2112b58e1c186ca05f16931b10"
+  },
+  "numeric_evidence": {
+    "precondition": {
+      "prefix_actions": 342,
+      "levels_completed": 8,
+      "state": "GameState.NOT_FINISHED",
+      "animation_layers_last_action": 12,
+      "settled_frame_sha256": "375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0"
+    },
+    "rederived_ladder": [
+      {"rest_world_y": 20.5, "camera_y": -18},
+      {"rest_world_y": 14.5, "camera_y": -24},
+      {"rest_world_y": 8.5, "camera_y": -30},
+      {"rest_world_y": 2.5, "camera_y": -36},
+      {"rest_world_y": -3.5, "camera_y": -42},
+      {"rest_world_y": -9.5, "camera_y": -48}
+    ],
+    "long_down_48": {
+      "start_player_world": [32.5, 2.5],
+      "end_player_world": [32.5, 50.5],
+      "drop_rows": 48,
+      "layers": 47,
+      "flight_start_camera_y": -26,
+      "flight_start_view_bottom_world_row63": 37,
+      "landing_beyond_start_bottom_rows": 13.5,
+      "blank_player_layers": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+      "camera_pan_first_layer": 25,
+      "player_reacquired_layer": 30,
+      "end_camera_y": 22,
+      "state": "GameState.NOT_FINISHED",
+      "endpoint_world_frame_sha256": "305e51bd6f0c9d64f5e2576dec122656c394fdaa14902e2699986379b50913e5"
+    },
+    "offscreen_up_x32": {
+      "start_player_world": [32.5, 50.5],
+      "end_player_world": [32.5, 2.5],
+      "rise_rows": 48,
+      "layers": 44,
+      "flight_start_camera_y": 22,
+      "flight_start_view_top_world": 22,
+      "landing_above_start_top_rows": 19.5,
+      "blank_player_layers": [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+      "camera_pan_first_layer": 24,
+      "player_reacquired_layer": 29,
+      "end_camera_y": -36,
+      "state": "GameState.NOT_FINISHED",
+      "endpoint_world_frame_sha256": "4f840d145cac15b5c0433a4b81383b8d75c843dd4e66c0f523434c922ceafb6a"
+    },
+    "offscreen_up_unvisited_x44": {
+      "start_player_world": [44.5, 50.5],
+      "end_player_world": [44.5, 20.5],
+      "rise_rows": 30,
+      "layers": 39,
+      "flight_start_camera_y": 22,
+      "flight_start_view_top_world": 22,
+      "landing_above_start_top_rows": 1.5,
+      "player_center_touches_screen_row0_layer": 18,
+      "camera_pan_first_layer": 19,
+      "end_camera_y": -18,
+      "state": "GameState.NOT_FINISHED",
+      "landing_was_not_a_prior_settled_rest_in_tail": true,
+      "endpoint_world_frame_sha256": "226ae2cf69430c14f2a78c77c883259075bb63745e3c89523a008c54f97f9d21"
+    },
+    "undo_long_down": {
+      "post_drop_world_frame_sha256": "305e51bd6f0c9d64f5e2576dec122656c394fdaa14902e2699986379b50913e5",
+      "undo1": {"player_world": [26.5, 2.5], "camera_y": -26, "layers": 2, "world_frame_sha256": "8ae09ef1d9e8157da6b2863977206bdbcd3d1a55257c991c5509eef562478070"},
+      "undo2": {"player_world": [20.5, -9.5], "camera_y": -38, "layers": 2, "world_frame_sha256": "215d2a6c27fade64bb817a323394efa19148d2d0b9905ca8ff9fd5b5f674b015"},
+      "undo3": {"player_world": [15.5, -9.5], "camera_y": -38, "layers": 2, "world_frame_sha256": "bcf6aa68fb60d2187d1bc3f326c5d1fe685f6f5c92fb561fecc2dc039c0f7780"}
+    },
+    "switch_full_state_undo": {
+      "initial_world_frame_sha256": "375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0",
+      "post_undo_world_frame_sha256": "375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0",
+      "post_undo_player_world": [20.5, 38.5],
+      "post_undo_camera_y": 0,
+      "restored_color8_component_centers": [[3.0, 27.0], [3.0, 39.0]]
+    },
+    "alternative_up_landings_after_sparse_drop": [
+      {"x": 32.5, "rest_world_y": 2.5, "camera_y": -36},
+      {"x": 38.5, "rest_world_y": 26.5, "camera_y": -12},
+      {"x": 44.5, "rest_world_y": 20.5, "camera_y": -18},
+      {"x": 50.5, "rest_world_y": 38.5, "camera_y": 0},
+      {"x": 56.5, "rest_world_y": 38.5, "camera_y": 0}
+    ],
+    "missing_switch_order": {
+      "order": ["-45", "+39", "-21", "+27"],
+      "visible_color8_components_at_end": 0,
+      "endpoint_player_world": [15.5, 50.5],
+      "endpoint_camera_y": 12,
+      "levels_completed": 8,
+      "state": "GameState.NOT_FINISHED",
+      "endpoint_world_frame_sha256": "c6131cc56b57a43709361c9fced9bf72874e282b473b86185d81bce173b13526"
+    },
+    "glyph_census": {
+      "settled_frames_scanned": 84,
+      "union_colors": [0, 3, 5, 7, 8, 9, 10, 11, 14, 15],
+      "special_5x5_signatures": 8,
+      "signature_classes": {"door_14": 1, "goal_7": 1, "switch_8": 1, "pillar_15": 3, "player_9": 2},
+      "color12_live_frames": 0,
+      "unexplained_special_signature_classes": 0
+    },
+    "fresh_verification": {
+      "cases": 6,
+      "repetitions_each": 3,
+      "fresh_env_runs": 18,
+      "byte_identical_endpoint_cases": 6,
+      "verification_suite_offline_steps": 6651,
+      "verification_suite_duration_s": 19.551227108051535
+    }
+  },
+  "preconditions_checked": [
+    {
+      "resource": "round12_342_action_prefix",
+      "available": true,
+      "result": "passed_342_actions_levels_completed=8_state=NOT_FINISHED"
+    },
+    {
+      "resource": "offline_arcade_bp35_public_interface",
+      "available": true,
+      "result": "env.step_only_observing_frame.frame_frame.state_frame.levels_completed"
+    },
+    {
+      "resource": "round21_round22_round23_round24_primary_evidence",
+      "available": true,
+      "result": "read_before_candidate_selection_and_closed_round24_A_to_F_variants_not_reasserted"
+    },
+    {
+      "resource": "bp35_game_source_or_private_state",
+      "accessed": false,
+      "result": "intentionally_forbidden_and_not_used"
+    },
+    {
+      "resource": "network_or_llm_inside_probe",
+      "available": false,
+      "result": "not_required_and_not_used"
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "The fixed prefix must replay from a fresh environment to completed level 8 and NOT_FINISHED before any L9 probe",
+      "principle": "A failed starting-state replay invalidates all downstream L9 evidence.",
+      "result": "passed_342_actions_level_8_not_finished"
+    },
+    {
+      "condition": "Any camera/world claim must be supported by public animation-layer registration plus stable world landmarks",
+      "principle": "bp35's periodic wall texture aliases whole-frame correlation; per-layer camera increments and color-8 switch landmarks are required to distinguish +24 aliases from the measured +48 pan.",
+      "result": "passed_per_layer_registration_and_switch_landmark_crosscheck"
+    },
+    {
+      "condition": "A claimed correction to the flight law must reproduce in independent directions and at an unvisited destination",
+      "principle": "One reversal could be path-memory; the x44 unvisited rest separates a real offscreen-landing behavior from immediate replay alone.",
+      "result": "passed_48_row_down_48_row_up_and_unvisited_30_row_up_controls"
+    },
+    {
+      "condition": "Primary characterization endpoints must replay 3x from completely fresh environments",
+      "principle": "Mechanism evidence must be deterministic and independent of a reused post-GAME_OVER environment.",
+      "result": "passed_6_cases_times_3_fresh_replays_byte_identical"
+    },
+    {
+      "condition": "Any claimed new level must pass official reproduce plus 3-5 independent fresh full replays",
+      "principle": "Only independently replayable real level progress can be banked.",
+      "result": "no_new_level_gate_not_applicable"
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "ARC-AGI-3 is a live hidden-game discovery process; source-assisted or private-state solutions are invalid.",
+      "satisfied_by": "The probe never opened/read bp35.py, imported it directly, accessed env._game, inspected private state, or used set_level/teleport. Every action used public env.step and every observation used only frame.frame, frame.state, and frame.levels_completed."
+    },
+    "inference_substrate": {
+      "principle": "Compute provenance must distinguish local arcade stepping from model inference.",
+      "satisfied_by": "Deterministic local offline_arcade stepping and NumPy analysis of returned public grids; zero network, GPU, model, or LLM calls inside the probe."
+    },
+    "coordinates": {
+      "principle": "Camera-relative pixels cannot support absolute flight claims without registration, especially on a periodic map.",
+      "satisfied_by": "Camera translation was accumulated between consecutive public animation layers with HUD/player masking, then cross-checked against the absolute world positions of unconsumed color-8 switch components and the settled camera formulas. This corrected the misleading +24 whole-frame alias to the measured +48 long-flight pan."
+    },
+    "flight_law_correction": {
+      "principle": "A standing mechanic may be retracted only by direct contradictory live evidence with controls.",
+      "satisfied_by": "Three independent public traces: a 48-row DOWN landing beyond the bottom, a 48-row UP landing 19.5 rows above the top with blank/reacquired layers, and a 30-row UP flight to an unvisited x44 landing that touches row 0 then pans alive. Each endpoint reproduced 3/3 fresh."
+    },
+    "reproduction_verified": {
+      "principle": "Negative and corrective characterization claims require deterministic endpoints even when no level is won.",
+      "satisfied_by": "18 fresh environments: six exact diagnostic tails repeated three times each, all six endpoint groups byte-identical after HUD normalization."
+    },
+    "offline_env_steps_used": {
+      "principle": "Development effort must not be misreported as scored live quota and must not hide repeated prefix costs.",
+      "satisfied_by": "20,440 offline actions counted across every successful retained probe in this session, including every 342-action prefix; total_env_steps_used remains 0 for scored/live-network usage."
+    }
+  }
+}
