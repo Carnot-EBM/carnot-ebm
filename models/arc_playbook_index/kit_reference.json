@@ -1,0 +1,32 @@
+[
+  {
+    "name": "probe_action_semantics",
+    "signature": "probe_action_semantics(env_factory: Callable[[], Any], apply: Callable[[Any, Any, Any], Any], action_labels: Sequence[Any], *, warmup_label: Optional[Any]=None, prefix: Sequence[Any]=()) -> dict[str, Any]",
+    "doc": "REQ-ARC-WMTE-5716 (playbook 1.1): empirically measure what each candidate"
+  },
+  {
+    "name": "read_absolute_trajectory",
+    "signature": "read_absolute_trajectory(frame: Any, *, color: Optional[int]=None, background: Optional[int]=None) -> dict[str, Any]",
+    "doc": "REQ-ARC-WMTE-5716 (playbook 2.3 / 2.4): recover a sprite's ABSOLUTE motion"
+  },
+  {
+    "name": "find_unexplained_glyphs",
+    "signature": "find_unexplained_glyphs(frame: Any, known_colors: Sequence[int]=(), *, background: Optional[int]=None, min_area: int=1) -> dict[str, Any]",
+    "doc": "REQ-ARC-WMTE-5716 (playbook 2.1): surface on-screen objects whose color is"
+  },
+  {
+    "name": "bounded_reachability_search",
+    "signature": "bounded_reachability_search(start: Any, neighbors: Callable[[Any], Any], is_goal: Callable[[Any], bool], *, state_hash: Optional[Callable[[Any], Hashable]]=None, priority: Optional[Callable[[Any, int], float]]=None, max_nodes: int=10000, max_depth: Optional[int]=None) -> dict[str, Any]",
+    "doc": "REQ-ARC-WMTE-5716 (playbook 3.1 / 3.2): a generic graph search that HONESTLY"
+  },
+  {
+    "name": "bisect_death_prefix",
+    "signature": "bisect_death_prefix(actions: Sequence[Any], is_dead_after: Callable[[int], bool]) -> dict[str, Any]",
+    "doc": "REQ-ARC-WMTE-5716 (playbook 4.5): binary-search the MINIMAL action prefix"
+  },
+  {
+    "name": "settled_grid",
+    "signature": "settled_grid(frame: Any) -> Any",
+    "doc": "The settled 2-D grid = the LAST animation layer (playbook 1.2 / 2.3)."
+  }
+]

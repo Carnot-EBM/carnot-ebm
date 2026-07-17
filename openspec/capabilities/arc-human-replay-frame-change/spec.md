@@ -2268,6 +2268,44 @@ Required field principles:
 - `reproducibility_checksum`: principle "content hash over config + per-arm rows catches silent drift on replay."
 - `verifier_is_oracle`: principle "must be false; reproduction accuracy is an oracle-distinct induction-quality metric, not a win-check."
 
+### REQ-ARC-WMTE-5718: Retrieval-Based (Graph-RAG) Playbook Injection
+
+The repository SHALL provide a RETRIEVAL variant of the stall re-induction injection that
+replaces the fixed exemplar block with the top-K playbook patterns relevant to the CURRENT
+stuck situation. `python/carnot/agentic/arc_playbook_patterns.py` SHALL hold the patterns as
+structured records (game-agnostic `statement`, `mechanic_tags` from a fixed taxonomy,
+`source_games`, `citation`) -- the graph edges pattern -> mechanic-tags -> corpus citations.
+Experiment 5718 SHALL build a static asset under `models/arc_playbook_index/` (index.json +
+embeddings.npy + a compact AST-derived `kit_reference.json` of the Phase-2 primitives),
+embedding each pattern `statement` with the SAME Qwen3.5-9B GGUF the live agent uses so the
+vector space matches; substrate `live_llm_embedding_extraction`, `blocked_*` if the GGUF is
+absent.
+
+`arc_playbook_retrieval.py` SHALL load the static index and, given a query embedding, return
+the top-K patterns by cosine similarity plus a mechanic-tag relevance boost, where an
+on-mechanic pattern (sharing a non-universal query tag) outranks a merely-universal pattern
+(a small baseline) which outranks an off-mechanic pattern (zero). `induce_prompt` and the
+proposers SHALL accept `include_playbook_exemplars` as `bool | str`: False/"" -> byte-identical
+prompt, True -> the static block, a non-empty string -> that retrieved block. `E3AgentPolicy`
+SHALL, on the stall path only, prefer the retrieved block when `SUBMITTED_PLAYBOOK_RETRIEVAL_ENABLED`
+OR `CARNOT_ARC_PLAYBOOK_RETRIEVAL` is set (default OFF), falling back to the static block then to
+nothing; the query embedder failure path SHALL never crash the live path. This SHALL NOT change
+the frozen scored-submission default (both flags ship False) and SHALL NOT modify
+`scripts/kaggle/submission_kernel/`.
+
+Experiment 5719 SHALL run a 3-arm matched-budget A/B (none / static / retrieval), score each
+induced engine's graded cell-recall on the full winning trajectory, and report -- floor-aware
+and leave-one-out variance-aware -- whether retrieval beats static (does the retrieval step earn
+its complexity) and whether either beats none, never fabricating a positive result.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal-prefixed; a floored / no-reliable-signal 3-arm result is a valid terminal outcome."
+- `retrieval_vs_static_delta`: principle "the core question -- does retrieval earn its complexity over a fixed block -- reported honestly even when null."
+- `metric_floored`: principle "true when graded cell-recall is at its floor for all arms, so the offline metric cannot detect any effect."
+- `inference_substrate`: principle "live_llm_inference for inductions plus a bounded live_llm_embedding_extraction step for the retrieval queries."
+- `verifier_is_oracle`: principle "must be false; cell-recall is an oracle-distinct induction-quality metric."
+
 ## Scenarios
 
 ### SCENARIO-ARC-WMTE-5716: Reachability Search Reports Proven Versus Capped
@@ -2286,6 +2324,30 @@ Given a multi-layer animation frame in which a sprite moves while the camera rec
 When `read_absolute_trajectory` reads the layer stack
 Then it reports the sprite's ABSOLUTE per-layer centroids and a net direction that
 the camera-relative settled grid alone would hide.
+
+### SCENARIO-ARC-WMTE-5718: Retrieval Surfaces On-Mechanic Patterns And Stays Off By Default
+
+Given a query embedding for a navigation-mechanic stuck situation with query tags including
+`navigation`
+When `retrieve` ranks the indexed patterns
+Then patterns tagged `navigation` outrank merely-`universal` patterns, which outrank
+off-mechanic patterns, so the injected top-K is specific to the situation rather than a
+fixed set.
+
+Given neither `SUBMITTED_PLAYBOOK_RETRIEVAL_ENABLED` nor `CARNOT_ARC_PLAYBOOK_RETRIEVAL` is set
+When the live agent enters a stall re-induction
+Then `_playbook_retrieval_gate_on()` is False and no retrieved block is injected, and
+`induce_prompt` with `include_playbook_exemplars=""` returns the byte-identical prompt.
+
+Given the retrieval gate is on but the query embedder or index is unavailable
+When the agent tries to build a retrieved block
+Then `_retrieve_playbook_block` returns None and the agent falls back to the static block (if
+its gate is on) or to no injection, never crashing the live path.
+
+Given the 3-arm A/B scores graded cell-recall for none / static / retrieval
+When every arm's mean recall is at the floor
+Then the verdict is `metric_floored` and no arm is declared better, and otherwise pairwise
+directions are reported leave-one-out-variance-aware.
 
 ### SCENARIO-ARC-WMTE-5717: Exemplar Injection Is Off By Default And Stall-Scoped
 
