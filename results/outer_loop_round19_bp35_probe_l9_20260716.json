@@ -1,0 +1,74 @@
+{
+  "experiment": "outer_loop_round19_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-opus-4-8",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 4100,
+  "reproduction_verified": true,
+  "reproduction_note": "Seventh round on L9, continuation of round 18. All load-bearing claims re-verified 3x from fresh env.reset(): door_death -> (L8, GAME_OVER, player row path min=0 max=37, i.e. RISES to the top and dies); survive_variant -> (L8, NOT_FINISHED, player settles at row27); color-12 absent (0 cells) in every live reachable state. All deterministic (offline arcade).",
+  "random_seed": null,
+  "random_seed_note": "Deterministic offline arcade env given the fixed 342-action prefix; no RNG seed consumed.",
+  "reproducibility_checksum": "414e0199bbfdec0d6a8d0d9da8cbcb9ec1aa291bc57f68ee5f1660888a688f66",
+  "reproducibility_checksum_note": "sha256 of survive_variant: breakthrough + leftmost-door open {x:15,y:3} + LEFT + flip-up {x:3,y:27} + LEFT + LEFT -- flipping to up-gravity BEFORE the door-shaft entry avoids the fly-off death (survives, returns to the up-gravity pocket at cols15-16 row27).",
+  "honest_verdict": "complete_bp35_l9_door_shaft_is_an_UP_shaft_not_a_pillar_eye_round18_corrected_goal_still_sealed_no_win",
+  "corrects_prior_round": "round 18 (outer_loop_round18_bp35_probe_l9): round 18 concluded the door-shaft LEFT fall dies on a 'color-11 B0B pillar eye at cols14-16 row20'. That was WRONG -- it was inferred from the static GAME_OVER overview, not the live fall. The 57-layer fall ANIMATION frame (fixed-camera, one step) shows the player slides into the shaft at cols15-16 and RISES from row37 up to row0 (passing the row20 position UNHARMED), then flies off the top of the level and dies. The shaft goes UP, not down, and there is no pillar eye in the player's path. The goal is BELOW, so the door shaft is not a descent toward it.",
+  "narrative": "Seventh round on L9 (final level of bp35), continuation of round 18. No win; frontier stays at level 8. The headline result is a CORRECTION of round 18 plus a new capability. (1) NEW TOOL: the env's f.frame is a multi-LAYER animation array (e.g. 57 layers for the fatal fall) captured with a FIXED camera during a single action, so it reveals the player's ABSOLUTE vertical trajectory (up vs down) directly -- a real advance over the camera-relative single settled-frame reading used in rounds 13-18 (where the camera re-centers on the player every step and hides absolute motion). Built scratchpad tooling (bp35_l9_traj.py) that reads the player's row-path from these layers. (2) CORRECTION OF ROUND 18: using this tool, the door-shaft LEFT death is NOT a pillar eye. Opening the leftmost door (cols13-17, the goal's own columns) and sliding LEFT sends the player into the shaft at cols15-16 and the player RISES (row 37 -> 0 across the animation, passing row20 unharmed), then flies off the OPEN top of the shaft (the door-open also removed the ceiling at cols13-17 rows0) and dies at row0. Verified 3x (player row path min=0, max=37). Round 18's 'pillar eye at cols14-16 row20' was an artifact of reading the static overview; it is retracted. The shaft goes UP, AWAY from the goal (which is below), so it is not the intended descent. (3) Flipping to UP-gravity BEFORE entering the shaft (open door + LEFT + flip {x:3,y:27} + LEFT) SURVIVES the fly-off but merely returns the player to the up-gravity pocket at cols15-16 row27 -- no goal, no descent. (4) NO DESCENT EXISTS from the fall-through landing: trajectory analysis of every move (LEFT/RIGHT) and every click (pillars, switches, doors) shows the player stays at the same absolute level (flat) or rises; none produce a downward trajectory toward the goal. (5) REFINEMENT OF ROUND 18's toggle-block claim: color-12 toggle blocks appear in ZERO cells across EVERY live reachable state tested (start, flip-up, fall-through landing, +1 door, +3 doors, +flip-up, corridor). They ONLY appear in the GAME_OVER overview frame. So they are NOT a live-usable mechanism -- likely an overview-only render, not interactable in play; round 18 overstated their usefulness. NET: the goal remains topologically SEALED (reachable only via the walled-off cols0-5 pocket per round 18's still-valid wall analysis); the two candidate descents (door shaft, pillar gap) both go elsewhere (up, and to the fall-through room respectively); no reachable action descends to the goal. No new level banked; frontier stays at level 8.",
+  "novel_mechanics_found": [
+    "The f.frame animation is multi-layer with a FIXED camera during a single action, exposing the player's absolute vertical trajectory (up/down) -- reusable for reading motion the camera-relative settled frame hides.",
+    "The leftmost-door shaft is an UP-shaft: sliding in sends the player rising from row37 to row0 and off the open top to death (NOT a pillar-eye death; corrects round 18).",
+    "Flipping to up-gravity before entering the door shaft avoids the fly-off death but returns the player to the up-gravity pocket (no goal).",
+    "color-12 toggle blocks are NOT present in any live reachable state (0 cells) -- they appear only in the GAME_OVER overview, so they are not a live-usable mechanism (refines round 18)."
+  ],
+  "dead_ends": [
+    "The leftmost-door shaft goes UP (fly-off death), away from the goal below -- not the intended descent; do not chase the retracted 'row20 pillar eye'.",
+    "Opening the door + flip-up + moving toward the shaft only returns the player to the up-gravity pocket; no descent.",
+    "No move or click from the fall-through landing produces a downward trajectory toward the goal (trajectory-verified).",
+    "color-12 toggle blocks are unreachable/absent in live play; not a usable landing/shield mechanism as round 18 speculated."
+  ],
+  "survive_variant_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 6, "data": {"x": 15, "y": 3}},
+    {"action": 1},
+    {"action": 6, "data": {"x": 3, "y": 27}},
+    {"action": 1}, {"action": 1}
+  ],
+  "survive_variant_sequence_checksum": "414e0199bbfdec0d6a8d0d9da8cbcb9ec1aa291bc57f68ee5f1660888a688f66",
+  "door_shaft_up_death_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 6, "data": {"x": 15, "y": 3}},
+    {"action": 1}, {"action": 1}, {"action": 1}
+  ],
+  "door_shaft_up_death_note": "Fatal LEFT: player row path min=0 max=37 across the 57-layer animation -- rises to the top and dies. Verified 3x.",
+  "next_lead": "Two live descents (door shaft = up, pillar gap = fall-through room) both miss the goal, and the goal pocket is walled off (cols0-5 only). Reconsider whether L9's win is even a 'touch the diamond' navigation -- it may be an activate/collect condition (e.g. open all doors, grow/toggle a set of objects, or a switch sequence) that completes the level without the player reaching the diamond; test that class systematically. Also: use the new animation-frame trajectory tool to build a full ABSOLUTE-coordinate map of the level's vertical connectivity (stitch fixed-camera trajectories across a move chain), to determine definitively whether ANY path links the player's cols>=13 region to the goal pocket -- rounds 13-19 have only ever reasoned in shifting camera-relative frames.",
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress; this round is an honest HONEST_NULL that additionally RETRACTS a wrong round-18 conclusion (the phantom pillar eye), which is worth as much as forward mapping because it stops future rounds chasing a false lead."
+    }
+  ],
+  "field_provenance": {
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the survive_variant lets a future round independently re-derive the door-shaft-survives-in-up-gravity state before extending it."
+    },
+    "solve_provenance": {
+      "principle": "Only the offline_arcade env + live env.step actions and the frames it returns (including the multi-layer animation frame and the GAME_OVER overview the live agent itself sees) were used -- no game source read, no ground-truth teleport/probe -- matching the live_agent_self_discovery contract."
+    }
+  }
+}
