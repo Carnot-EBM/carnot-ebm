@@ -26,6 +26,14 @@ now checks the registry FIRST and passes trivially (with a clear retirement mess
 public game is cleared, regardless of `--min`. See CLAUDE.md "ARC Level-Up Attempt Guarantee" and
 "ARC-AGI-3 November-Submission Standing Floor" for the corresponding rule-level retirement.
 
+**FOLLOW-UP 2026-07-17 (operator answered "redirect to generalization research"):** once retired, this
+lint additionally checks (via `count_generalization_attempts` / `_is_generalization_attempt`) whether the
+roadmap contains a task targeting the new "ARC-AGI-3 Generalization-Testing Floor" (held-out /
+leave-one-game-out live-path measurement, an `arc_solver_kit.py` reusable-primitive hardening, or
+cross-game gotcha mining). This check is WARN-ONLY -- it never returns non-zero -- because the detection
+heuristic is new and unproven; see CLAUDE.md "ARC-AGI-3 Generalization-Testing Floor" for the full rule
+and the rationale for keeping this soft rather than promoting it to a hard gate immediately.
+
 Usage:
   python3 scripts/arc_levelup_guarantee_lint.py [roadmap.yaml] [--min N]
 Exit 0 if >= MIN level-up attempts (or if the public game set is fully cleared, see above); exit 1
@@ -93,8 +101,48 @@ def _is_levelup_attempt(prompt: str) -> bool:
     return any(s in p for s in bank_signals)
 
 
+_GENERALIZATION_SIGNALS = (
+    "held-out",
+    "held out",
+    "leave-one-game-out",
+    "leave one game out",
+    "generalization",
+    "generalisation",  # British spelling, seen in some operator prompts
+    "transfer to",
+    "transfer-test",
+    "unseen game",
+    "never-adaptered",
+    "never adaptered",
+    "arc_solver_kit",  # a reusable-primitive change is task-class 2 of the redirected floor
+    "general_gotchas",  # cross-game gotcha mining is task-class 3
+)
+
+
+def _is_generalization_attempt(prompt: str) -> bool:
+    """True if the task's prompt targets the 2026-07-17 ARC-AGI-3 Generalization-Testing Floor: held-out
+    / leave-one-game-out measurement against the LIVE scored path, a reusable-primitive hardening in
+    arc_solver_kit.py, or cross-game gotcha mining into a shared primitive. See CLAUDE.md 'ARC-AGI-3
+    Generalization-Testing Floor'. Heuristic and UNPROVEN -- kept WARN-only in lint_roadmap, never a hard
+    gate, until real compliant task prompts establish what this detection should actually match."""
+    p = prompt.lower()
+    if not _GAMES.search(p) and "arc" not in p and "arc-agi" not in p:
+        return False  # must be ARC-scoped at all before checking for the generalization signal
+    return any(s in p for s in _GENERALIZATION_SIGNALS)
+
+
+def count_generalization_attempts(path: Path) -> int:
+    """Count tasks in `path` matching the redirected generalization-testing floor. Returns 0 on any
+    read/parse failure (soft check; callers must not hard-fail on this alone)."""
+    try:
+        d = yaml.safe_load(path.read_text())
+        tasks = d.get("tasks", []) or []
+    except Exception:
+        return 0
+    return sum(1 for t in tasks if _is_generalization_attempt(t.get("prompt") or ""))
+
+
 def lint_roadmap(path: Path, minimum: int) -> int:
-    if _all_public_games_cleared():
+    if _all_public_games_cleared(_REGISTRY_PATH):
         print(
             "RETIRED: all 25 public survey games show full_game_clear: true in "
             "ops/arc_solve_registry.yaml (183/183 known levels). The level-up-attempt requirement is "
@@ -102,6 +150,19 @@ def lint_roadmap(path: Path, minimum: int) -> int:
             "directive, roadmaps are no longer required to propose public-game solve tasks. Passing "
             "without checking task content."
         )
+        gen_count = count_generalization_attempts(path)
+        if gen_count < 1:
+            print(
+                "WARN (soft, non-blocking): 0 generalization-testing-floor tasks detected this roadmap. "
+                "Per CLAUDE.md 'ARC-AGI-3 Generalization-Testing Floor' (2026-07-17, operator-redirected "
+                "from the retired public-solving floor), consider reserving >=1 slot for held-out/"
+                "leave-one-game-out live-path measurement, an arc_solver_kit.py primitive hardening, or "
+                "cross-game gotcha mining. This is a heuristic prompt-text match and may under-count a "
+                "genuinely compliant task worded differently -- verify by eye before treating this warning "
+                "as authoritative."
+            )
+        else:
+            print(f"OK (soft): {gen_count} generalization-testing-floor task(s) detected this roadmap.")
         return 0
     d = yaml.safe_load(path.read_text())
     tasks = d.get("tasks", []) or []
