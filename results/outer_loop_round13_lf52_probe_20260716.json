@@ -1,0 +1,63 @@
+{
+  "experiment": "outer_loop_round13_lf52_l7_source_grounded_analysis",
+  "game": "lf52",
+  "round": 13,
+  "model": "claude-opus-4-8",
+  "starting_level": 6,
+  "max_level_reached": 6,
+  "levels_won_this_session": [],
+  "offline_reproduced": false,
+  "reproduced_levels": 6,
+  "new_levels_banked": 0,
+  "reproduction_verified": true,
+  "solve_provenance": "development_proxy",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "random_seed": 0,
+  "reproducibility_checksum": "e7549c0d7340dfc956dd247f92f91e73be72d33caa81c2b7d10296f9cb8c15f7",
+  "duration_s": 5400,
+  "honest_verdict": "complete_lf52_l7_first_move_found_engine_verified_win_structurally_gap_blocked",
+  "headline": "L7 is NOT input-inert: a first move EXISTS and is engine-verified, refuting 12 rounds of 'everything inert'. But the WIN (a plain-over-plain peg removal) appears structurally blocked: the two removable plain pegs live on rail networks separated by a no-rail gap at column 7 that no carrier or torch can bridge. Frontier stays at level 6 (no new bank).",
+  "method": {
+    "approach": "Read the PUBLIC game source environment_files/lf52/271a04aa/lf52.py (permitted public-game offline-dev tool per CLAUDE.md 'source-reading is a public-games dev tool ONLY'), recovered the exact carrier-move (tmhxwcojkh), legal-jump (qikmikecdf/pymqmlkgzs/posalhhmjq), and win (line 5572) rules, then built a source-grounded offline simulator and searched.",
+    "prefix_source": "results/outer_loop_fable5_lf52_probe_l6_20260712.json (615-action verified L1-L6 prefix)",
+    "why_source_reading": "12 prior rounds of blind live-input probing found nothing; the sibling game sk48's stuck level was cracked by the same source-reading switch."
+  },
+  "simulator_validation": {
+    "carrier_move_lockstep_vs_engine": "596 transitions across 380 reachable states to depth 5: 0 mismatches in BOTH state and legal-moves",
+    "legal_move_checker_vs_real_play": "reproduces all 415 real jumps executed across the successful L1-L6 prefix",
+    "jump_execution_vs_engine": "exact (pegs+carriers+torches) match on validated jumps",
+    "random_walk_vs_engine": "480 steps across 6 trials (carrier moves + jumps): 0 mismatches",
+    "verdict": "simulator is faithful to the real engine"
+  },
+  "confirmed_findings": {
+    "board_is_deterministic_grid7": "L7 board is rebuilt fresh in on_set_level from kciatvszkc['grid7'] keyed only on the level index -> REFUTES round-11's 'L6-exit-state precondition' hypothesis; the L7 start is L6-exit-INDEPENDENT and reproduces identically across fresh env.reset()+615-prefix (3/3 trials).",
+    "true_piece_inventory": "Exactly 3 pegs: fozwvlovdui@(0,1), fozwvlovdui@(22,6) [the two removable PLAIN pegs], fozwvlovdui_red@(6,1) [a DISTRACTOR]. Plus 15 torches (dgxfozncuiz) and 6 carriers (hupkpseyuim2). The 12 prior rounds MISIDENTIFIED the 'p'-rendered torches (dgxfozncuiz) as pegs.",
+    "win_condition_source_line_5572": "Win = reduce ndtvadsrqf('fozwvlovdui') count from 3 to 2 via a jump whose crossed cell holds a SAME-NAME peg (line 5392-5397 removal). Only plain-over-plain qualifies: the red peg is unique-named (cannot be removed, cannot remove a plain). pchvqimdvj (ACTION5) does NOT win (arms the keyhole); jhvtnnisdk (reset flag) is DEAD CODE; there is NO engine stuck-detection or auto-reset.",
+    "L7_uniquely_starts_locked": "Every solvable level L1-L6 presents >=1 legal move at its start (L1 step0, L2 step8, L3 step42, L4 step146, L5 step214, L6 step312); L7 is the ONLY level that starts with 0 legal moves."
+  },
+  "breakthrough_first_move_engine_verified": {
+    "claim": "L7 HAS a first move -- refuting the round-11 conclusion that L7 is a keyless structural lock.",
+    "unlock_sequence": [3, 3, 1, 1, 3, 3, 3],
+    "unlock_meaning": "7 carrier moves (left,left,up,up,left,left,left) bring a carrier to grid (0,3); (0,3) then satisfies posalhhmjq as a valid landing (carrier socket), so the WEST peg (0,1) can jump DOWN over the torch at (0,2) and land on (0,3).",
+    "engine_verification": "On the real offline_arcade engine, after [3,3,1,1,3,3,3] legal_moves = [west peg (0,1) DOWN -> (0,3)]; executing the jump moved the peg to (0,3), riding the ferry carrier. Sim and engine agree exactly.",
+    "why_12_rounds_missed_it": "The first move requires a carrier setup at DEPTH 7 (a depth-6 blind BFS is one move too shallow), AND the prior rounds misidentified torches as pegs and never systematically searched the carrier-configuration space."
+  },
+  "win_obstacle_column7_separation": {
+    "west_peg_confined": "From the unlock, an offline BFS over carrier moves + jumps (1.2M states) confines the west plain peg to columns x<=6 (rows 3-8). It cannot progress past column 6.",
+    "east_peg_frozen_and_never_unlockable": "In a joint reachability BFS from the canonical start (1,533,261 states expanded, 2,036,180 seen, 280s), the east plain peg NEVER moved from (22,6); the only reachable plain-peg columns are [0,1,2,3,4,5,6, 22]; win=False. A dedicated carrier-config search for ANY east-side (x>=14) legal move (1,452,511 states, 301s) returned east_unlockable=False: the east peg never becomes movable.",
+    "two_separate_carrier_networks_split_by_column_7": "An (up to 3,217,578-config, time-capped) carrier-reachability BFS shows carriers reach columns [0,1,2,3,4,5,6, 8,9,10,11,12,13,14,16,17,18,19,20,21,22] -- every column EXCEPT 7. A carrier moves only into a cell holding a rail (tmhxwcojkh) and column 7 has no rail in any row, so the WEST carrier network (x<=6) and the EAST carrier network (x>=8) are disjoint; no single carrier crosses column 7.",
+    "column7_is_impassable": "Column 7 holds nothing in rows 0-7 and only a single hupkpseyuim SOCKET at (7,8). No carrier or torch is ever ferried into column 7 (torches reach x0-6 and x11+, never x7-10-adjacent stepping-stones at (6,8)/(7,8)/(8,8)). A gap-crossing jump (6,y)->(8,y) needs a peg/torch AT (7,y) as the over-cell -- impossible -- and landing ON (7,8) needs an over-piece at (6,8)/(8,8) that never exists. So no peg can occupy or jump across column 7.",
+    "conclusion": "The two removable plain pegs are separated by column 7: the west peg is confined to x<=6 and the east peg is frozen at (22,6) (never unlockable). The only win path (a plain-over-SAME-type removal) requires the two PLAIN pegs adjacent, which is unreachable from the canonical start. STRONGLY INDICATED but not fully exhaustive: the confinement (1.2M), east-never-unlockable (1.45M), joint-no-win (1.5M), and carrier-separation (3.2M) searches each hit a state/time cap rather than draining. A fully-exhaustive proof (or discovery of a mechanic outside the carrier/jump/click/undo/keyhole set, none found in source) is the open item."
+  },
+  "novel_mechanics_found": [
+    "L7 first move exists: carrier setup [3,3,1,1,3,3,3] unlocks the west peg -> DOWN -> (0,3) (engine-verified).",
+    "The 'p'-glyph pieces are TORCHES (dgxfozncuiz), not pegs -- corrects a 12-round misidentification. There are only 3 pegs (2 plain + 1 red).",
+    "Win is a single plain-over-plain removal (count 3->2, line 5572); the red peg is a distractor; jhvtnnisdk auto-reset is dead code (no stuck-detection).",
+    "The two plain pegs sit on carrier networks separated by column 7 (carriers reach every column EXCEPT 7): the west peg is confined to x<=6 and the east peg is never unlockable (frozen at (22,6)) -> the win appears unreachable from the canonical start."
+  ],
+  "next_lead": "To upgrade 'strongly indicated' to 'proven', run a FULLY-DRAINED (not time-capped) carrier-reachability + joint reachability with a compact bitpacked state (the current searches hit 300-400s caps at 1.5-3.2M states). If they drain with no win, L7 (version 271a04aa) is provably unwinnable-from-canonical-start via the peg-jump mechanic -- a definitive characterization superseding blind input-probing. If the game is intended-solvable, the discrepancy would point at a mechanic OUTSIDE the carrier/jump/click(ACTION6)/undo(ACTION7)/keyhole(ACTION5) action set -- but the full source was read and no such mechanic exists (available_actions=[1,2,3,4,6] +7; all analyzed).",
+  "frontier_level": 6,
+  "gotchas": [
+    "Do NOT re-run blind live-input probing on L7 -- source analysis shows the input space; the obstacle is structural (the plain-peg networks are gap-disconnected), not input-discovery."
+  ]
+}
