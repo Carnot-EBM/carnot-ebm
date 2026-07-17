@@ -1,0 +1,59 @@
+{
+  "experiment": "outer_loop_round20_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-opus-4-8",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 60000,
+  "reproduction_verified": true,
+  "reproduction_note": "Eighth round on L9. Tested the alternate-win-condition hypothesis (score field, activate-everything, full connectivity search, uncatalogued-glyph scan). All deterministic; the census + activate-everything results reproduce exactly on re-run.",
+  "random_seed": null,
+  "random_seed_note": "Deterministic offline arcade env given the fixed 342-action prefix.",
+  "reproducibility_checksum": "d8f9145e664eeec50820c6862ef98086a1899d31fc33863425ec302a824f8b95",
+  "reproducibility_checksum_note": "sha256 of the deterministic color-census summary (states + union colors + frame_score_present + win_levels); see color_census field.",
+  "honest_verdict": "complete_bp35_l9_alternate_win_condition_tests_all_null_goal_structurally_sealed_no_win",
+  "narrative": "Eighth round on L9 (final level of bp35), testing the team-lead-suggested alternate-win-condition hypothesis (since rounds 13-19 showed navigating the player to the goal diamond appears impossible). No win; frontier stays at level 8. FOUR tests, all null: (1) NO SCORE FIELD -- frame.score is not even an attribute (raises AttributeError); getattr(...,None) is None in every reachable state. This game tracks no incremental/collection counter separate from level completion, so a state-collection win would have to directly flip levels_completed/state. Ruled out as a partial-credit signal. (2) NO UNCATALOGUED LIVE GLYPH -- the color set was censused across 9 distinct reachable states (start, flip-up, fall-through landing, +1 door, +3 doors, up-gravity pocket, goal-sighting, corridor); the union is exactly {0,3,5,7,8,9,10,11,14,15}, all already catalogued (bg / accent / wall / goal-or-HUD / switch / player / air / eye / door / pillar). color-12 (toggle) and 13 never appear in ANY live state, reconfirming round 19's finding that the 'toggle blocks' are GAME_OVER-overview-only, not live-interactable. (3) ACTIVATE-EVERYTHING -- clicking every reachable interactive object (doors, pillars, switches) in one continuous session (no reset between) produced no win and no state change (still L8/NOT_FINISHED); there is no 'collect/activate a full set' win condition triggerable from the reachable region. (4) CONNECTIVITY SEARCH -- a full naive reachability BFS is computationally INTRACTABLE to exhaust because pillar-growth is a cosmetic state change (grid-hash dedup counts every distinct set of grown pillars as a new state, exploding the frontier); a RESTRICTED reachability BFS (player moves + switch/door clicks, which bounds the branching) over the fall-through region did NOT find any win. NET: all four alternate-win-condition avenues are null, and the topological seal established in rounds 18-19 stands as the best-supported explanation -- the player is confined to cols>=13 in every reachable state (solid cols6-12 wall, rows0-40), the goal diamond sits in an open pocket below the main floor whose only vertical opening (cols0-5) is on the far side of that wall, and both live descents (the leftmost-door shaft goes UP; the pillar gap lands in the fall-through room) demonstrably miss the goal. bp35 L9 is a well-characterized structural null: 8 of 9 levels banked, the final goal located and repeatedly sighted but not reachable by any navigation or activation path found across 8 rounds. Recommending pause.",
+  "novel_mechanics_found": [
+    "frame.score does not exist (no scoring/collection counter); the win is purely level-completion state.",
+    "The union of live-reachable colors is exactly {0,3,5,7,8,9,10,11,14,15}; no uncatalogued interactive glyph exists in the reachable region (color-12/13 are overview-only or absent).",
+    "No 'activate/collect a full set' win: clicking every reachable interactive object in one session does not complete the level."
+  ],
+  "dead_ends": [
+    "frame.score as a partial-credit signal (field does not exist).",
+    "activate-everything collection win (no state change).",
+    "full naive reachability BFS (intractable: pillar-growth cosmetics explode the grid-state space).",
+    "restricted reachability BFS over the fall-through region (moves + switch/door clicks) found no win."
+  ],
+  "color_census": {
+    "states_tested": ["start", "start_flipup", "landing", "landing_leftwall", "up_pocket", "goalsight_B2", "1door", "3doors", "corridor"],
+    "union_colors": [0, 3, 5, 7, 8, 9, 10, 11, 14, 15],
+    "frame_score_present": false,
+    "win_levels": 9
+  },
+  "connectivity_bfs": {
+    "full_bfs": "intractable_state_explosion_from_pillar_growth_cosmetics",
+    "restricted_bfs_scope": "from fall-through landing; candidate actions = moves(left,right) + ACTION6 clicks on switch(c8)/door(c14) centroids; pillar-grow clicks excluded to bound branching",
+    "restricted_bfs_result": "explored 118 unique reachable grid-states (100 nodes expanded, frontier 18, max depth 8) via moves + switch/door clicks from the fall-through landing; 0 wins. STOPPED BEFORE EXHAUSTION (not exhaustive) -- the frontier was still non-empty and the reachable space via gravity+doors is larger than 118, but no win surfaced in the region searched, and no state placed the player in the goal pocket. Caveat: this is a partial coverage number, not a proof of unreachability; it corroborates but does not by itself close the question."
+  },
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress; this round is an honest HONEST_NULL that closes the alternate-win-condition hypothesis (no score field, no collection win, no hidden glyph) and leaves the topological seal as the best-supported explanation."
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "Only the offline_arcade env + live env.step actions and returned frames were used -- no game source read, no ground-truth teleport/probe -- matching the live_agent_self_discovery contract. (Reading source would force outer_loop_re provenance, which is CRITICAL-flagged and never banked.)"
+    }
+  }
+}

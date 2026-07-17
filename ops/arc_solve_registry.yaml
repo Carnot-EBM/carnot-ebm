@@ -5860,6 +5860,43 @@ games:
     ABSOLUTE-coordinate map of vertical connectivity, to settle definitively
     whether ANY path links the cols>=13 player region to the goal pocket
     (rounds 13-19 only ever reasoned in shifting camera-relative frames).'
+  - 'L9 mapping round 20, alternate-win-condition hypothesis CLOSED, still
+    HONEST NULL (2026-07-16, claude-opus-4-8,
+    results/outer_loop_round20_bp35_probe_l9_20260716.json): eighth round on L9.
+    Since rounds 13-19 showed navigating the player to the goal diamond appears
+    impossible, this round tested whether L9''s win is NON-SPATIAL (a
+    score/collection/activation condition rather than diamond-touch). FOUR
+    tests, all NULL: (1) NO SCORE FIELD -- frame.score is not even an attribute
+    (raises AttributeError); the game tracks no incremental/collection counter,
+    so a collection-win would have to directly flip levels_completed/state. (2)
+    NO UNCATALOGUED LIVE GLYPH -- censused the color set across 9 distinct
+    reachable states; the union is exactly {0,3,5,7,8,9,10,11,14,15}, all
+    already catalogued; color-12 (toggle) and 13 never appear in ANY live state
+    (reconfirms round 19: toggle blocks are GAME_OVER-overview-only, not
+    live-interactable). (3) ACTIVATE-EVERYTHING -- clicking every reachable
+    interactive object (doors, pillars, switches) in one continuous session (no
+    reset) produced no win and no state change (L8/NOT_FINISHED); no
+    collect-a-full-set win exists in the reachable region. (4) CONNECTIVITY
+    SEARCH -- a full naive reachability BFS is INTRACTABLE to exhaust (pillar-
+    growth is a cosmetic grid change that explodes the grid-hash-deduped state
+    space); a RESTRICTED BFS (moves + switch/door clicks only, from the
+    fall-through landing) explored 118 unique reachable states (100 nodes, max
+    depth 8) with 0 wins before being stopped (partial, NOT exhaustive --
+    corroborates but does not prove unreachability). NET: all four alternate-win
+    avenues are null; the topological seal from rounds 18-19 (player confined to
+    cols>=13 by a solid cols6-12 wall; goal pocket only reachable via the walled-
+    off cols0-5 shaft; both live descents -- door shaft UP, pillar gap to the
+    fall-through room -- miss it) stands as the best-supported explanation. bp35
+    L9 is a well-characterized structural null: 8/9 levels banked, the goal
+    located and repeatedly sighted but not reachable by any navigation or
+    activation path found across 8 rounds. PAUSING bp35 here (operator/team-lead
+    concurrence). Reusable tools left in scratchpad: bp35_l9_traj.py (animation-
+    frame absolute-trajectory reader) and bp35_l9_reach.py (reachability BFS).
+    If revisited, the two open threads are: a fully-deduped connectivity proof
+    (hash on player-position + gravity + consumed-switch/door set, IGNORING
+    pillar-growth cosmetics, to make exhaustion tractable), and confirming
+    whether the goal pocket is truly only cols0-5-accessible via an absolute-
+    coordinate map stitched from the trajectory tool.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
