@@ -8747,3 +8747,178 @@ the real action sequence from index 0 -- omitting this step shifts every subsequ
 position out of phase against the actual game state, which for a state-dependent-controls game
 compounds into an eventually-illegal action and a live API rejection, masquerading as an
 "env-mismatch" even though the underlying banked solution was legitimately offline-reproduced
+
+### REQ-ARC-WMTE-5714: Rescoped `/think` vs `/no_think` Induction-Quality A/B (re-test of REQ-ARC-WMTE-5594)
+
+This re-tests the previously-negative REQ-ARC-WMTE-5594 result under the
+Failed-Experiment Rerun Discipline. The rerun is legitimate ONLY because it
+names the prior failure, the diagnosed root cause, what is genuinely different,
+and a falsifiable acceptance gate -- all below.
+
+**Prior failure (named).** REQ-ARC-WMTE-5594
+(`results/experiment_5594_think_mode_induction_quality_ab.json`), verdict
+`complete: think_mode_ab_equal_success_no_think_higher_accuracy`. On a 2-game
+roster (`m0r0`, `sk48`) both arms induced successfully (4/4) but mean
+`heldout_accuracy` favored `/no_think` (0.75) over `/think` (0.5). The prior
+itself disclosed three limits: (1) N=2 is below this project's sample-size floor
+for any percentage-point claim; (2) `heldout_accuracy` scores world-model
+INDUCTION dynamics only, not a win-recognition / actions-to-first-win metric;
+(3) NEITHER game's window contained a real level-up, so
+`score_goal_predicate_consistency` (REQ-ARC-WMTE-5593, the goal-hypothesis half
+of induction quality) was NEVER exercised.
+
+**Diagnosed root cause.** The prior measured the wrong-for-the-question metric
+(dynamics-only heldout) on windows that structurally could not exercise the
+goal-predicate half of induction quality, at an N too small to separate signal
+from noise, with each arm running its OWN `run_game` (arm-dependent windows =
+a confound). Separately, the induction pipeline itself has a mechanism that the
+prior found but under-weighted: with `CARNOT_ARC_CODEONLY_INDUCE` ON (the frozen
+live default), codeonly mode's `_L2_CODEONLY_DIRECTIVE` hardcodes `/no_think\n`
+AND a body that says "Do NOT reason ... Skip all reasoning" -- so the
+operationally-relevant "flip the toggle" is not even a real reasoning-effort
+change.
+
+**What is different (the four deltas).**
+1. **Live-agent code churn.** A dozen+ behavioral changes landed in
+   `arc_competition_agent.py` since 2026-07-13 (the `REQ-ARC-FCP-5699-*` series;
+   most relevantly -38/-39, which fixed FOUR real bugs installing a goal-energy
+   bias without checking goal achievability -- a plausible asymmetric confound of
+   planning quality between the two arms in the prior run). The prior test
+   predates that fix and is stale.
+2. **MTP re-enabled on Kaggle-L4-matched hardware.** The live submission kernel
+   hardcodes `CARNOT_ARC_MTP=0` (a June decision under a presumed 16GB ceiling);
+   Kaggle's scored hardware has been `NvidiaL4` (24GB/card) for weeks. This
+   experiment runs against a FRESH MTP-ON `llama-server` pinned to ONE local RTX
+   3090 (24GB, VRAM-matched to a single L4 card) via
+   `CARNOT_ARC_GENERATOR_CUDA_GPU`. The prior test's proposer passed `mtp=True`
+   but CONNECTED to a pre-warmed port-8920 server of UNKNOWN launch config, so its
+   true MTP state is not knowable from the artifact -- this run removes the ambiguity.
+3. **Larger, level-up-targeted roster.** Adaptered games are solved to L1 offline
+   and the winning labels replayed to build, per game, ONE SHARED window that
+   STRADDLES the real L0->L1 level-up. This (a) raises N well above 2, and (b)
+   makes `score_goal_predicate_consistency` fire on every game -- the prior's
+   single biggest gap. The SHARED window (fed to both arms of a comparison)
+   also removes the prior's arm-dependent-window confound.
+4. **A fuller, more decision-relevant metric.** Beyond dynamics `heldout_accuracy`,
+   each arm's induced `is_level_complete` is scored for whether it RECOGNIZES the
+   real win at the actual level-up transition (`levelup_positive_recall`) -- the
+   induction-quality signal that most determines whether a discovered hypothesis
+   leads to real progress, i.e. the thing GPT-5.6's ~26x Low->Max reasoning-effort
+   scaling on ARC-AGI-3 actually improved.
+
+**Two comparisons (both on the same shared level-up window; only the think axis
+differs within a comparison).**
+- **Comparison A -- FROZEN-STACK TOGGLE (codeonly ON):** `A1 no_think` vs
+  `A2 think_toggle` (the module constant's `/no_think`->`/think`). This is the
+  operator's LITERAL decision.
+- **Comparison B -- GENUINE REASONING (codeonly OFF):** `B1 no_think_plain` vs
+  `B2 think_plain`. Tests the GPT-5.6 hypothesis (does REAL reasoning improve
+  induction quality?), a pipeline change larger than a toggle flip -- reported as
+  a secondary, smaller-N signal because B2's full-reasoning calls are ~10-20x
+  slower (they reason for thousands of tokens before emitting code).
+
+**Falsifiable acceptance gate / retirement.** The rerun's gate is win-recognition
+head-to-head on Comparison A: `/think` is credited only if `A2` beats `A1` on
+`levelup_positive_recall` across more games than it loses. Given the RE-CONFIRMED
+mechanism finding (the codeonly toggle emits NO `<think>` trace -- verified: the
+toggle output opens with `import numpy`, no reasoning tag), the expected and
+honest outcome is `think_toggle_inert_under_codeonly` -- the toggle is a no-op,
+so flipping it in the frozen stack is not justified. This is NOT a re-run of a
+doomed approach: it answers a DIFFERENT, sharper question (win-recognition under
+a shared level-up window at larger N, plus a genuine-reasoning arm the prior
+never ran) and reaches a mechanistically-grounded conclusion rather than the
+prior's under-powered heldout comparison. `retire_if_same_verdict: false` because
+the verdict SHAPE differs (mechanistic inertness vs an accuracy delta).
+
+**GUARDRAIL.** OFFLINE DEV MEASUREMENT ONLY. This never edits the frozen
+submission stack; it reports a delta + an explicit recommendation and the operator
+decides. `solve_provenance: development_proxy`.
+
+Required field principles:
+
+- `codeonly_toggle_inert`: principle "the load-bearing mechanistic finding,
+  measured not assumed -- True iff no `A2` (think_toggle) arm produced any
+  reasoning trace; if True, the operator's literal toggle flip is a no-op."
+- `levelup_positive_recall`: principle "delta #4 -- does the induced
+  is_level_complete RECOGNIZE the real win at the actual level-up transition? The
+  win-recognition signal reasoning-effort is supposed to improve, which the prior
+  never measured (no level-up in any prior window)."
+- `mtp_enabled`: principle "delta #2 -- a FRESH MTP-ON server on L4-VRAM-matched
+  hardware, removing the prior's unknown-MTP ambiguity."
+
+#### SCENARIO-ARC-WMTE-5714-CODEONLY-TOGGLE-INERT
+
+Given the frozen codeonly induction path (`CARNOT_ARC_CODEONLY_INDUCE=1`) with
+`_L2_CODEONLY_DIRECTIVE` swapped `/no_think\n`->`/think\n`
+When an `A2` (think_toggle) arm induces on a shared level-up window
+Then the raw completion contains NO reasoning tag (`<think>`/`<thinking>`/
+`<reasoning>`), `reason_engaged` is False, and if this holds for every `A2` arm
+the artifact reports `codeonly_toggle_inert: true` and the verdict
+`complete: think_toggle_inert_under_codeonly_no_operator_action_justified`
+
+#### SCENARIO-ARC-WMTE-5714-GENUINE-THINK-ENGAGES
+
+Given the non-codeonly path (`CARNOT_ARC_CODEONLY_INDUCE=0`) with
+`no_think_prefix="/think\n"`
+When a `B2` (think_plain) arm induces
+Then the raw completion of at least one `generate()` call begins with / contains
+a reasoning tag and `reason_engaged` is True -- confirming genuine reasoning is
+engaged only OUTSIDE codeonly mode, not by the toggle alone
+
+#### SCENARIO-ARC-WMTE-5714-BLOCKS-CLEANLY
+
+Given a missing precondition (no cached GGUF, no CUDA llama-server, or neither an
+already-running MTP server nor >=13000 MB free on the pinned 3090)
+When `build_artifact` runs
+Then `honest_verdict` starts with `complete: blocked_` and no induction attempt
+is made on any roster game
+
+**Implementation Status (2026-07-16): DONE.** Experiment script
+`python/carnot/experiment_5714_think_mode_rescoped_ab.py`; tests
+`tests/python/test_experiment_5714_think_mode_rescoped_ab.py` (7 tests); artifact
+`results/experiment_5714_think_mode_rescoped_ab.json` (live MTP-on Qwen3.5-9B-MTP
+on one RTX 3090, 1964.9s, adversarial-verify clean).
+`honest_verdict: complete: think_toggle_inert_under_codeonly_but_genuine_reasoning_no_winrecognition_delta`.
+
+**Measured result (N=10 adaptered games; dc22 + ka59 skipped — no reproducible
+L0->L1 level-up window that run):**
+
+1. **Frozen-stack toggle is INERT (Comparison A).** `codeonly_toggle_inert=true`:
+   all 10 `A2` (think-toggle) arms engaged NO reasoning (`reason_engaged=false`,
+   10/10; output opens with `import numpy`), because `_L2_CODEONLY_DIRECTIVE`'s
+   body ("Do NOT reason ... Skip all reasoning") overrides the toggle. Both A arms
+   induced 10/10; `mean levelup_positive_recall` no_think 0.0 vs think 0.1;
+   per-game win-recognition head-to-head think/tie/no_think = 1/9/0. The single A2
+   "win" (vc33) is STOCHASTIC NOISE, not a reasoning effect — that A2 arm's
+   `reason_engaged` is still false (temperature-0.2 variance in the codeonly
+   induction, not `/think` doing anything). So flipping the live toggle is a
+   measured no-op.
+2. **Genuine reasoning fails to induce (Comparison A1-vs-B2 / B-control).** With
+   codeonly OFF and the induce fence removed, `/think` genuinely engages
+   (`reason_engaged=true` on 9/10 `B2` arms) but OVERRAN the 8192-token budget on
+   ALL 10 games (reasoned ~7000+ tokens, `HIT n_predict OUTPUT LIMIT`, never
+   emitted the required functions -> `induction_ok=false` 10/10). So the
+   genuine-reasoning-vs-frozen comparison has `n_games_both_induced=0` — genuine
+   reasoning produced NO usable world model on any roster game. (An isolated probe
+   on dc22 — a game NOT in the final roster — did once succeed with recall 1.0, so
+   concise-reasoning success is possible but did NOT replicate on the 10-game
+   roster.)
+3. **The code fence is load-bearing (B1 control).** `B1` (no-fence `/no_think`)
+   also induced 0/10 (`HIT n_predict` limit) — removing the fence breaks even
+   no_think code extraction, so any B2 gain would be confounded by the fence
+   change, not attributable to reasoning alone.
+4. **heldout_accuracy is floor-0** on the level-up windows for every arm
+   (exact-grid prediction near a boundary is too hard), so win-recognition is the
+   discriminating axis; MTP re-enablement is a throughput feature (same model
+   self-drafts) with no quality delta.
+
+**Recommendation (operator decision; NOT changed here per the frozen-live-stack +
+Operator-Only disciplines):** leave the frozen live stack's `/no_think` UNCHANGED
+(flipping the toggle is a measured no-op) and treat `CARNOT_ARC_MTP=0` as a
+separate throughput call. Genuine reasoning is NOT a safe drop-in for this 9B
+induction path (it overruns the budget and depends on removing the load-bearing
+fence), so GPT-5.6's ~26x reasoning-effort scaling does NOT transfer here as a
+config flip. This is a stronger, better-powered NEGATIVE than the prior's N=2
+heldout comparison, not a re-run of a doomed approach. `retire_if_same_verdict:
+false` (the verdict SHAPE — mechanistic inertness + overrun — differs from the
+prior's accuracy-delta framing).

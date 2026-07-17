@@ -1248,6 +1248,32 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
    > `openspec/capabilities/arc-human-replay-frame-change/spec.md`. Tests:
    > `tests/python/test_experiment_5594_think_mode_induction_quality_ab.py` (6 tests, including a direct
    > regression test for the `<thinking>`-tag-variant bug).
+   >
+   > **RE-TESTED 2026-07-16 (REQ-ARC-WMTE-5714, rescoped — Failed-Experiment Rerun).** Re-ran the
+   > previously-negative REQ-ARC-WMTE-5594 with four deltas: post-REQ-ARC-FCP-5699-38/39 live-agent code,
+   > a FRESH MTP-ON llama-server on one RTX 3090 (Kaggle-`NvidiaL4` 24GB VRAM match, vs the prior's
+   > unknown-launch-config port-8920 server), a larger adaptered roster (N=10 of 12; dc22+ka59 skipped for
+   > lack of a reproducible L0->L1 level-up window that run) with a SHARED per-game window straddling a real
+   > level-up (finally exercising the goal-predicate half + removing the prior's arm-dependent-window
+   > confound), and a win-recognition metric (`levelup_positive_recall`). Result
+   > (`results/experiment_5714_think_mode_rescoped_ab.json`, live MTP-on Qwen3.5-9B-MTP, 1964.9s,
+   > adversarial-verify clean, verdict
+   > `complete: think_toggle_inert_under_codeonly_but_genuine_reasoning_no_winrecognition_delta`): (1) the
+   > operator's LITERAL toggle flip is a measured NO-OP — under the frozen `CARNOT_ARC_CODEONLY_INDUCE=1`
+   > path, `_L2_CODEONLY_DIRECTIVE`'s "Do NOT reason ... Skip all reasoning" body overrides the
+   > `/no_think`->`/think` toggle, so all 10 `A2` arms emitted ZERO reasoning trace (`reason_engaged=false`;
+   > output opens with `import numpy`); the lone 1/10 A2 win-recognition "win" (vc33) is temperature-0.2
+   > noise, not reasoning. (2) GENUINE reasoning engages only with codeonly OFF + the induce fence removed,
+   > and then OVERRAN the 8192-token budget on ALL 10 games (`reason_engaged=true` 9/10, but induced 0/10 —
+   > reasoned ~7000+ tokens, `HIT n_predict`, never emitted the functions), so it produced no usable world
+   > model on any roster game. (3) The code fence is load-bearing: no-fence `/no_think` (B1) also induced
+   > 0/10. `heldout_accuracy` is floor-0 on level-up windows for every arm. MTP is a throughput feature
+   > (same model self-drafts), no quality delta. **Recommendation (operator decision, UNCHANGED here):
+   > leave the frozen `/no_think` + `CARNOT_ARC_MTP=0` as-is — the toggle flip is a no-op and genuine
+   > reasoning is not a safe drop-in (overrun + fence dependency); GPT-5.6's reasoning-effort scaling does
+   > NOT transfer to this 9B induction path as a config flip.** A stronger, better-powered negative than the
+   > N=2 prior. Spec: `REQ-ARC-WMTE-5714`; tests: `tests/python/test_experiment_5714_think_mode_rescoped_ab.py`
+   > (7 tests).
 
 8. **(Heavier lift — real training infra, a 3090; not a cheap pilot) TRM-as-generator: PTRM-style
    stochastic multi-trajectory recursion + Carnot-verifier selection, history/intent-conditioned.**

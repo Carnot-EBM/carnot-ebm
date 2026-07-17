@@ -1,0 +1,669 @@
+{
+  "experiment": "experiment_5714_think_mode_rescoped_ab",
+  "schema": "carnot.exp5714.think_mode_rescoped_ab.v1",
+  "result_path": "results/experiment_5714_think_mode_rescoped_ab.json",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy default tier-3 world-model induction proposer",
+      "server": "fresh MTP-on CUDA llama-server, -ngl 999, q8_0 KV, pinned to one RTX 3090",
+      "mtp": true,
+      "kaggle_parity": "single RTX 3090 (24GB) == single Kaggle NvidiaL4 card (24GB)"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; /think helping, hurting, tying, or being INERT under codeonly are all distinct, real, citable outcomes -- the last is the decision-critical one"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- every arm invokes the real MTP-on Qwen3.5-9B-MTP server on a 3090, not mocked; 60s duration floor applies to the whole run"
+    },
+    "mtp_enabled": {
+      "principle": "delta #2: run against a FRESH MTP-ON server (not the submission kernel's hardcoded CARNOT_ARC_MTP=0) on L4-VRAM-matched hardware, removing the prior's unknown-MTP ambiguity"
+    },
+    "codeonly_toggle_inert": {
+      "principle": "the load-bearing mechanistic finding: under the frozen codeonly path, flipping /no_think->/think produces NO reasoning trace, so the operator's literal toggle flip is a no-op"
+    },
+    "levelup_positive_recall": {
+      "principle": "delta #4: does the induced is_level_complete RECOGNIZE the real win at the actual level-up transition? This is the win-recognition signal reasoning-effort is supposed to improve, and the prior never measured it (no level-up in any prior window)"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- adaptered offline dev-twin windows, NOT a live-agent hidden-game self-discovery solve; declared so adversarial_verify can tell them apart"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 5714,
+  "prior_failures": [
+    {
+      "experiment_id": "exp5594-think-mode-induction-quality-ab",
+      "req": "REQ-ARC-WMTE-5594",
+      "verdict": "complete: think_mode_ab_equal_success_no_think_higher_accuracy",
+      "root_cause": "N=2 below sample-size floor; heldout-only metric; NO level-up in any window so goal-predicate never fired; arm-dependent windows (run_game per arm)",
+      "addressed_by": "larger adaptered roster; SHARED level-up window per game (goal-predicate now fires + no arm-window confound); win-recognition metric; MTP-on L4-matched hardware; post-REQ-ARC-FCP-5699-38/39 live-agent code",
+      "retire_if_same_verdict": false
+    }
+  ],
+  "honest_verdict": "complete: think_toggle_inert_under_codeonly_but_genuine_reasoning_no_winrecognition_delta",
+  "mtp_enabled": true,
+  "roster": [
+    "dc22",
+    "m0r0",
+    "sk48",
+    "ls20",
+    "cd82",
+    "ft09",
+    "tr87",
+    "vc33",
+    "cn04",
+    "sp80",
+    "ar25",
+    "ka59"
+  ],
+  "b_roster": [
+    "dc22",
+    "m0r0",
+    "sk48",
+    "ls20",
+    "cd82",
+    "ft09",
+    "tr87",
+    "vc33",
+    "cn04",
+    "sp80",
+    "ar25",
+    "ka59"
+  ],
+  "per_game_results": [
+    {
+      "game": "dc22",
+      "arm": "window",
+      "no_levelup_window": true
+    },
+    {
+      "game": "m0r0",
+      "arm": "A1",
+      "induce_s": 13.0,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 5885,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "m0r0",
+      "arm": "A2",
+      "induce_s": 46.5,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 14885,
+      "n_generate_calls": 2,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0017,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "m0r0",
+      "arm": "B1",
+      "induce_s": 27.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 9460,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "m0r0",
+      "arm": "B2",
+      "induce_s": 52.3,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 27770,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "sk48",
+      "arm": "A1",
+      "induce_s": 9.9,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 4451,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "sk48",
+      "arm": "A2",
+      "induce_s": 6.4,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 2322,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "sk48",
+      "arm": "B1",
+      "induce_s": 28.0,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 16307,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "sk48",
+      "arm": "B2",
+      "induce_s": 55.7,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 25596,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "ls20",
+      "arm": "A1",
+      "induce_s": 7.4,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 2759,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.005,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "ls20",
+      "arm": "A2",
+      "induce_s": 34.7,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 22994,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0557,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "ls20",
+      "arm": "B1",
+      "induce_s": 28.0,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 12716,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "ls20",
+      "arm": "B2",
+      "induce_s": 55.7,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 15166,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "cd82",
+      "arm": "A1",
+      "induce_s": 23.6,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 5888,
+      "n_generate_calls": 2,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.8,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "cd82",
+      "arm": "A2",
+      "induce_s": 9.2,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 2880,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0709,
+      "goal_predicate_accuracy": 0.8,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "cd82",
+      "arm": "B1",
+      "induce_s": 11.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 4614,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (syntax error line 45: expected ':')"
+    },
+    {
+      "game": "cd82",
+      "arm": "B2",
+      "induce_s": 58.2,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 15478,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "ft09",
+      "arm": "A1",
+      "induce_s": 39.2,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 6079,
+      "n_generate_calls": 3,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.75,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "ft09",
+      "arm": "A2",
+      "induce_s": 3.4,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 303,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0197,
+      "goal_predicate_accuracy": 0.75,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "ft09",
+      "arm": "B1",
+      "induce_s": 30.9,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 10314,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "ft09",
+      "arm": "B2",
+      "induce_s": 57.6,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 11887,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (syntax error line 4: invalid decimal literal)"
+    },
+    {
+      "game": "tr87",
+      "arm": "A1",
+      "induce_s": 4.4,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 932,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.2937,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "tr87",
+      "arm": "A2",
+      "induce_s": 4.9,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 1150,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "tr87",
+      "arm": "B1",
+      "induce_s": 28.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 14072,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "tr87",
+      "arm": "B2",
+      "induce_s": 56.4,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 32140,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "vc33",
+      "arm": "A1",
+      "induce_s": 4.2,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 789,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0098,
+      "goal_predicate_accuracy": 0.6667,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "vc33",
+      "arm": "A2",
+      "induce_s": 4.3,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 1339,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.3333,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 1.0
+    },
+    {
+      "game": "vc33",
+      "arm": "B1",
+      "induce_s": 29.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 17026,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "vc33",
+      "arm": "B2",
+      "induce_s": 59.2,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 21065,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "cn04",
+      "arm": "A1",
+      "induce_s": 56.1,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 12334,
+      "n_generate_calls": 3,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "cn04",
+      "arm": "A2",
+      "induce_s": 51.4,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 25112,
+      "n_generate_calls": 3,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "cn04",
+      "arm": "B1",
+      "induce_s": 28.8,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 14223,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "cn04",
+      "arm": "B2",
+      "induce_s": 58.7,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 35430,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "sp80",
+      "arm": "A1",
+      "induce_s": 57.3,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 10089,
+      "n_generate_calls": 3,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0777,
+      "goal_predicate_accuracy": 0.75,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "sp80",
+      "arm": "A2",
+      "induce_s": 4.9,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 1328,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.75,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "sp80",
+      "arm": "B1",
+      "induce_s": 31.4,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 19007,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "sp80",
+      "arm": "B2",
+      "induce_s": 60.6,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 19435,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "ar25",
+      "arm": "A1",
+      "induce_s": 8.1,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 2779,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "ar25",
+      "arm": "A2",
+      "induce_s": 11.3,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 3248,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.1341,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "ar25",
+      "arm": "B1",
+      "induce_s": 29.6,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 7897,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "ar25",
+      "arm": "B2",
+      "induce_s": 58.1,
+      "induction_ok": false,
+      "reason_engaged": true,
+      "max_raw_completion_len": 17740,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=8192 OUTPUT LIMIT before completing])"
+    },
+    {
+      "game": "ka59",
+      "arm": "window",
+      "window_error": "ValueError(\"invalid literal for int() with base 10: 'C:1'\")"
+    }
+  ],
+  "comparison_a_summary": {
+    "no_think_arm": "A1",
+    "think_arm": "A2",
+    "n_games_both_induced": 10,
+    "no_think_induction_success": 10,
+    "think_induction_success": 10,
+    "no_think_reason_engaged_frac": 0.0,
+    "think_reason_engaged_frac": 0.0,
+    "mean_heldout_no_think": 0.0,
+    "mean_heldout_think": 0.0,
+    "mean_goal_predicate_no_think": 0.8467,
+    "mean_goal_predicate_think": 0.8134,
+    "mean_levelup_recall_no_think": 0.0,
+    "mean_levelup_recall_think": 0.1,
+    "per_game_headtohead_think_tie_nothink": {
+      "goal_predicate_accuracy": [
+        0,
+        9,
+        1
+      ],
+      "levelup_positive_recall": [
+        1,
+        9,
+        0
+      ]
+    }
+  },
+  "comparison_b_summary": {
+    "no_think_arm": "B1",
+    "think_arm": "B2",
+    "n_games_both_induced": 0,
+    "no_think_induction_success": 0,
+    "think_induction_success": 0,
+    "no_think_reason_engaged_frac": 0.0,
+    "think_reason_engaged_frac": 0.0,
+    "mean_heldout_no_think": null,
+    "mean_heldout_think": null,
+    "mean_goal_predicate_no_think": null,
+    "mean_goal_predicate_think": null,
+    "mean_levelup_recall_no_think": null,
+    "mean_levelup_recall_think": null,
+    "per_game_headtohead_think_tie_nothink": {
+      "goal_predicate_accuracy": [
+        0,
+        0,
+        0
+      ],
+      "levelup_positive_recall": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "comparison_genuine_vs_frozen_summary": {
+    "no_think_arm": "A1",
+    "think_arm": "B2",
+    "n_games_both_induced": 0,
+    "no_think_induction_success": 10,
+    "think_induction_success": 0,
+    "no_think_reason_engaged_frac": 0.0,
+    "think_reason_engaged_frac": 0.0,
+    "mean_heldout_no_think": 0.0,
+    "mean_heldout_think": null,
+    "mean_goal_predicate_no_think": 0.8467,
+    "mean_goal_predicate_think": null,
+    "mean_levelup_recall_no_think": 0.0,
+    "mean_levelup_recall_think": null,
+    "per_game_headtohead_think_tie_nothink": {
+      "goal_predicate_accuracy": [
+        0,
+        0,
+        0
+      ],
+      "levelup_positive_recall": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "codeonly_toggle_inert": true,
+  "duration_s": 1964.856,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "adapters_available": true,
+    "e3_import": true,
+    "gguf_cached": true,
+    "cuda_llama_server_present": true,
+    "cuda_server_up_or_gpu1_headroom": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "904fedec29b62753c4bb13e1c26bfd5505f03c809e2173c0f414f6fb21520926"
+}
