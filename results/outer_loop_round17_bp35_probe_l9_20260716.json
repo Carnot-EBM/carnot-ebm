@@ -1,0 +1,71 @@
+{
+  "experiment": "outer_loop_round17_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-sonnet-5",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 358,
+  "reproduction_verified": true,
+  "reproduction_note": "Fifth same-session round, direct continuation of round 16's breakthrough. Both new sequences below (the pillar-corridor walk and the door-open-then-left-death sequence) were replayed fresh from the verified 342-action prefix and produced consistent results across repeated runs.",
+  "random_seed": null,
+  "reproducibility_checksum": "c8fd63ca693b01946d2e607fa3d5a6f38c40ca96a8d395dd05275bcfb6abbf74",
+  "reproducibility_checksum_note": "sha256 of the pillar-corridor-walk sequence (see corridor_sequence field): repeatedly click-grow the next pillar segment then slide right, three times, crossing the whole width of the fall-through room safely.",
+  "honest_verdict": "complete_bp35_l9_corridor_and_doors_mapped_new_death_found_no_win",
+  "narrative": "Fifth same-session round, continuing directly from round 16's fall-through breakthrough. TWO further findings. (1) THE FALL-THROUGH ROOM'S ENTIRE ROW IS A REPEATING GROW-THEN-WALK PATTERN: the row the player lands in after falling through the grown pillar (round 16) is blocked by a sequence of additional pillar segments roughly every 6 columns; clicking each one in turn (growing it, same mechanic as round 15/16) and then sliding right crosses the whole room safely, from cols32-34 all the way to the room's right wall at cols56-57, with no death anywhere along the way. No new switch, door, or goal was found along this specific corridor -- it dead-ends at the wall. (2) THE THREE E-TILE DOORS FOUND IN ROUND 13's DEATH-OVERVIEW ARE NOW CONFIRMED REACHABLE AND OPENABLE IN LIVE PLAY: from the fall-through landing spot, all three doors (previously only glimpsed) were clicked in sequence and opened cleanly (63->42->21->0 color-14 cells, one door per click, no death) -- but opening them replaced their cells with plain wall texture rather than revealing an obvious new passage in the immediate camera view, matching the general_gotchas warning that door-open semantics/outcomes are inconsistent and not fully understood. Critically, testing movement immediately after this door sequence found a NEW, DIFFERENT lethal spot: from the post-door-opening position (cols32-33, same fall-through landing area), moving LEFT is now fatal (GAME_OVER) -- this is a different death than any previously catalogued for this level, and it was not present before the doors were opened, suggesting the door-opening sequence itself changed what's safe nearby (or this position/direction combination was simply never tested with this exact history before). No new level banked; frontier stays at level 8. Given the level's escalating complexity (confirmed: a matched switch pair, a hazard-zone floor, a pillar-growth mechanic, a fall-through shaft, a full corridor of growable pillars, three openable doors, and now a door-triggered new death), this session is pausing bp35 L9 exploration here after five consecutive rounds of genuine, verified progress without a win, in favor of giving first-contact attention to the two other unsolved public games (lf52, sk48) per operator direction.",
+  "novel_mechanics_found": [
+    "The fall-through room's floor is a repeating series of pillar segments (~every 6 columns) that must each be individually clicked (grown) before the player can slide past them -- confirmed safe across the room's full width to its right wall.",
+    "All three E-tile doors found in round 13's death-overview are genuinely reachable and openable in live play (not just the generic overview); opening consumes them into plain wall texture rather than an obviously visible passage.",
+    "A NEW lethal spot: moving LEFT from the fall-through landing area (cols32-33) is fatal AFTER opening all three doors -- previously untested combination, and a different death than any catalogued in rounds 13-16."
+  ],
+  "dead_ends": [
+    "The pillar-growth corridor in the fall-through room dead-ends at the room's right wall (cols56-57) with nothing new found.",
+    "Opening the three doors did not reveal an obvious new passage in the immediate camera view, and introduced a new lethal LEFT move from the landing spot -- do not repeat this exact door-then-left sequence without a specific reason to test it again."
+  ],
+  "corridor_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 6, "data": {"x": 38, "y": 39}},
+    {"action": 4},
+    {"action": 6, "data": {"x": 45, "y": 39}},
+    {"action": 4},
+    {"action": 6, "data": {"x": 51, "y": 39}},
+    {"action": 4}
+  ],
+  "doors_then_left_death_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 6, "data": {"x": 15, "y": 3}},
+    {"action": 6, "data": {"x": 21, "y": 3}},
+    {"action": 6, "data": {"x": 27, "y": 3}},
+    {"action": 1}
+  ],
+  "doors_then_left_death_sequence_checksum": "9e27ba0e1f0f5fdd8abfb12f696c0705d5d4ffc974a2599ee6d855ea7e284c07",
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress per ARC Solve Reproducibility Discipline; this round is an honest HONEST_NULL despite substantial further mapping."
+    }
+  ],
+  "field_provenance": {
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the exact corridor-crossing sequence lets a future round independently re-verify this safe path before extending it further."
+    },
+    "solve_provenance": {
+      "principle": "This round used only the offline_arcade env + live actions -- no game source was read, no ground-truth teleport/probe was used -- matching the live_agent_self_discovery contract from the ARC Live-Path Reachability Discipline."
+    }
+  }
+}

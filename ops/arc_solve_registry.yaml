@@ -5655,6 +5655,39 @@ games:
     level) BEFORE spending the switch found in the new room, since that
     switch-click consumed the last flip without reaching the goal --
     opening a door first might reveal the actual route down.'
+  - 'L9 mapping round 17, corridor + doors mapped, NEW DEATH found, still
+    HONEST NULL (2026-07-16, claude-sonnet-5,
+    results/outer_loop_round17_bp35_probe_l9_20260716.json): fifth
+    same-session round. THE FALL-THROUGH ROOM''S FLOOR IS A REPEATING
+    GROW-THEN-WALK CORRIDOR: clicking each pillar segment in turn (roughly
+    every 6 columns) then sliding right crosses the whole room safely from
+    the landing spot (cols32-34) to the room''s right wall (cols56-57) --
+    confirmed with zero deaths across the full width. Dead-ends at the
+    wall; no new switch/door/goal found along it. SEPARATELY, ALL THREE
+    E-TILE DOORS from round 13''s death-overview are confirmed reachable
+    and openable in live play: clicked in sequence from the landing spot,
+    each opened cleanly (63->42->21->0 color-14 cells) with no death, but
+    the opened cells became plain wall texture rather than an obviously
+    visible new passage. Testing movement right after this door sequence
+    surfaced a NEW, PREVIOUSLY-UNSEEN DEATH: moving LEFT from the landing
+    spot (cols32-33) is fatal after opening all three doors -- a different
+    combination/history than anything tested in rounds 13-16, and not
+    obviously explained by the door-opening itself (may simply be an
+    untested position x history combination, not causally linked to the
+    doors -- not yet isolated). No new level banked; frontier stays at
+    level 8. SESSION PAUSE: after five consecutive rounds of genuine,
+    verified progress on L9 without a win (matched switch pair -> hazard
+    zone -> partial bypass -> pillar growth -> fall-through breakthrough ->
+    corridor + doors), this session is moving on to give first-contact
+    attention to lf52 and sk48 (the other two unsolved public games) rather
+    than continuing to deepen bp35 further. NEXT LEAD for a future round:
+    isolate whether the new LEFT-death is caused by the door-opening
+    specifically (test LEFT from the landing spot WITHOUT opening doors
+    first, as a control) before assuming causation; and try growing pillars
+    at OTHER row-bands within this fall-through room (e.g. the visible
+    door-room band at rows1-6 or 31-36) rather than only the player''s own
+    row, since the goal has never yet been sighted from anywhere within
+    this new fall-through area.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
