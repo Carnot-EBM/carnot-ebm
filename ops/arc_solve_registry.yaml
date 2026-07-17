@@ -5711,6 +5711,48 @@ games:
     door-room band at rows1-6 or 31-36) rather than only the player''s own
     row, since the goal has never yet been sighted from anywhere within
     this new fall-through area.'
+  - 'L9 mapping round 18, door-shaft descent route IDENTIFIED, still HONEST
+    NULL (2026-07-16, claude-opus-4-8,
+    results/outer_loop_round18_bp35_probe_l9_20260716.json): sixth round on
+    L9, fresh session. RESOLVED round 17''s open control: LEFT from the
+    fall-through landing is SAFE without opening any door (slides to the left
+    wall at col15, all NOT_FINISHED) -- so round 17''s door-then-LEFT death is
+    CAUSED by the door-opening, not leftward movement. Sharpened: opening ONLY
+    the leftmost door (click {x:15,y:3}) then sliding LEFT survives the first
+    two slides (col27, col21) but the THIRD LEFT is fatal. CORRECTS round 17''s
+    "doors become wall texture": doors are REAL passages -- opening the
+    leftmost door carves an air SHAFT down cols13-17, which are EXACTLY the
+    goal''s columns (the goal diamond is at cols14-16). The fatal LEFT is the
+    player sliding into that shaft and FALLING; the GAME_OVER overview shows
+    WHY it kills -- a pillar with a color-11 B0B eye sits at cols14-16 row20,
+    blocking the shaft ABOVE the goal, so the player hits the eye and dies
+    before reaching the goal below (which would win on touch mid-fall if the
+    shaft were clear). NEW: color-12 TOGGLE BLOCKS exist in L9 (a full row at
+    rows8-12 in the GAME_OVER overview), never seen in a live camera frame in
+    rounds 13-17 -- candidate mechanism to shield/land in the shaft. CORRECTS
+    round 16''s "all switches exhausted": the lower-region color-8 gravity
+    switches (left column) are FUNCTIONAL and consumable independently of the
+    two start-room switches, so the economical route preserves extra flips
+    (verified: breakthrough + LEFT x3 + flip {x:3,y:27} + RIGHT x3 re-sights
+    the goal at rows45-48 cols14-16 with a switch still spent from the lower
+    pool). MAJOR REFRAME from full-grid topology: the player is confined to
+    cols>=13 in EVERY reachable state (a solid cols6-12 wall blocks leftward
+    movement at every row 0-40 in the start room, up-gravity pocket, AND
+    fall-through room), while the goal sits in an open pocket (cols0-23,
+    rows40-50) BELOW the main floor (rows33-39, solid cols6-63) whose only
+    vertical opening is a narrow cols0-5 shaft on the FAR side of that wall.
+    So the problem is now "reach the goal pocket past the cols6-12 wall" --
+    and the leftmost-door shaft is the identified intended descent down the
+    goal''s own columns, currently gated by the row20 pillar eye. All four
+    load-bearing claims independently re-verified 3x from fresh env.reset()
+    (prefix->L8 no goal; door_death->GAME_OVER; goal_resight->alive+goal
+    visible; left_control->alive), all deterministic. No new level banked;
+    frontier stays at level 8. NEXT LEAD: neutralize/bypass the cols14-16
+    row20 pillar eye -- test whether growing the shaft pillar changes its
+    lethality, whether solidifying a color-12 toggle block above the goal
+    creates a safe landing, or whether falling down col13/col17 (the shaft
+    frame, off the eye) reaches a ledge to step onto the goal from; and probe
+    whether any color-12 toggle block is clickable from the fall-through room.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
