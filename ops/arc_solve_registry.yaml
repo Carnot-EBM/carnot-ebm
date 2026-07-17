@@ -5574,6 +5574,35 @@ games:
     reaches the 3rd switch (do not spend it blind) and probes the E-doors
     from beside them (per the general_gotchas door-opening caution) rather
     than repeating the col-28+ rightward walk that died this round.'
+  - 'L9 mapping round 14, still HONEST NULL (2026-07-16, claude-sonnet-5,
+    results/outer_loop_round14_bp35_probe_l9_20260716.json): same-session
+    continuation of round 13, two refinements. FIRST, the GAME_OVER frame
+    was shown to be a FIXED, deterministic level-overview render (identical
+    object bounding boxes) regardless of where the death actually occurred
+    -- reproduced the exact same death-frame content from a much simpler
+    2-pure-RIGHT-moves-from-true-start death, proving round 13''s "hidden
+    3rd switch + 3 doors + 2 pillar rows" are real level content visible on
+    a full overview, NOT a location-specific reveal tied to the death spot;
+    their live-camera coordinates and reachability remain unknown. SECOND,
+    narrowed the lethal zone and found a safe bypass: a pure DOWN-gravity
+    rightward walk (no switches) dies on the 2nd right slide from true
+    start (1st slide reaches cols26-27 safely, 2nd is fatal) -- confirming
+    the hazard is positional, not switch-history-dependent. By contrast,
+    sliding RIGHT while in UP-gravity is safe across the SAME horizontal
+    span, reaching the room''s right wall at cols56-57 in 6 slides with
+    nothing new found along the way. Flipping gravity back DOWN from that
+    far-right position lands safely at cols56-58 in the down-gravity floor
+    room, BYPASSING the lethal middle zone entirely -- narrowing it to
+    approximately cols 28-51 (fatal entry from either side, cols<=27 and
+    cols>=51 each independently safe). No switch/door/toggle found along
+    the newly-safe cols51-58 stretch, so this bypass currently leads
+    nowhere new, and it costs BOTH start-room switches to reach. No new
+    level banked; frontier stays at level 8. NEXT LEAD: the level''s 3rd
+    switch and 3 E-doors (confirmed real, per the overview) have still not
+    been physically reached during live play -- a future round should
+    prioritize finding the room/transition that leads to them BEFORE
+    spending either start-room switch, since both are one-shot and this
+    round burned both without reaching new interactive territory.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one

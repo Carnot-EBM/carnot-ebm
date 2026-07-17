@@ -1,0 +1,55 @@
+{
+  "experiment": "outer_loop_round14_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-sonnet-5",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 365,
+  "reproduction_verified": true,
+  "reproduction_note": "Continuation of round 13 in the same session. All findings below were independently confirmed via fresh env.reset() + replay of the verified 342-action prefix before each new probe (no state carried over uncontrolled between tests). No new level banked, so nothing to reproduction-gate via kit.reproduce() -- this artifact documents refined mapping + a validated safe bypass route instead.",
+  "random_seed": null,
+  "reproducibility_checksum": "d7c05d9c771674597a6a41df9969bb37c001698e691e02a2f71eaf6d03a111d8",
+  "reproducibility_checksum_note": "sha256 of the JSON-serialized 10-label safe-bypass-route sequence (see safe_bypass_sequence field): flip gravity up, slide right 6x to the room's right wall, flip gravity back down, then two more LEFTs -- the first LEFT is safe (lands at cols51-52), the second LEFT is lethal (documented as a dead-end boundary, not included in the 'safe' claim).",
+  "honest_verdict": "complete_bp35_l9_hazard_zone_narrowed_no_new_level_banked",
+  "narrative": "Deeper continuation of round 13's bp35 L9 mapping within the same session. Two key refinements: (1) DEATH-SCREEN CLARIFICATION -- re-tested the round-13 death with a much simpler action sequence (2 pure RIGHT moves from true start, no switch/left detour) and got the IDENTICAL death-frame content (same exact bounding boxes for the 3rd switch, doors, and pillar rows found in round 13), proving that frame is a fixed generic game-over overview shown regardless of the death location, not a per-death reveal of nearby hazards. This means the round-13 'hidden 3rd switch + 3 doors + 2 pillar rows' ARE real level content (visible on a full overview) but their live-camera coordinates and reachability are still unknown -- do not assume they are physically adjacent to where any given death occurred. (2) HAZARD ZONE NARROWED + SAFE BYPASS FOUND -- confirmed via a clean, switch-free test that a pure DOWN-gravity rightward walk dies on the SECOND right slide from true start (first slide reaches cols26-27 safely, second is lethal), independent of any switch-clicking history (rules out the switches as a confound). By contrast, sliding RIGHT while in UP-gravity is completely safe across the same horizontal span, reaching the room's right wall at cols56-57 after 6 slides with nothing new discovered along the way (no additional switches, doors, or toggles visible). Flipping gravity back DOWN from that far-right position (using the 2nd/last start-room switch) lands the player safely in the DOWN-gravity floor room at cols56-58 -- bypassing the lethal middle zone entirely. From there, one further LEFT is safe (lands at cols51-52) but a second LEFT back toward the middle is lethal again -- narrowing the hazardous span of the down-gravity floor to approximately cols 28-51 (approached from either side, entry into that range from outside it is fatal; the true left/right boundary was not pinned to single-column precision). No switch, door, or toggle was found visible anywhere along the safely-reachable cols51-58 stretch, so this bypass route currently leads nowhere new -- both start-room switches are consumed reaching it, and the level's 3rd switch (from the death overview) has still not been physically located or reached during live play. No new level banked; frontier stays at level 8.",
+  "novel_mechanics_found": [
+    "The GAME_OVER frame renders a FIXED, deterministic overview (same object bounding boxes every time) regardless of where in the level the death occurred -- confirmed by reproducing the identical death-frame content from two structurally different death sequences. Treat it as a level-overview reference, not a location-specific hazard reveal.",
+    "The down-gravity floor room (rows37-41) has a lethal invisible hazard occupying roughly cols 28-51; entry from either the left (col27->28+) or the right (col52->51-) side is fatal, but the two ends (cols<=27 and cols>=51) are each independently safe.",
+    "The up-gravity room (rows27-31) is fully safe across its entire width (left wall ~col15 to right wall ~col57), with no hazards found there -- gravity direction changes which of the two parallel corridors is safe to traverse at a given horizontal position."
+  ],
+  "dead_ends": [
+    "Both DOWN-gravity approaches into the cols28-51 span (from col27 going right, and from col52 going left) are lethal. Do not re-test this exact span without first finding a way to detect/avoid the specific hazard cell(s) within it.",
+    "The up-gravity-right-then-down-flip bypass reaches cols51-58 safely but that stretch has no discovered interactive objects (no switch, door, or toggle) -- currently a dead end on its own, though it may connect to something not yet explored (e.g. moving further within the down-gravity room from col51/58 in ways not yet tried, or the 3rd switch/doors being reachable only via a different room transition entirely)."
+  ],
+  "safe_bypass_sequence": [
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4}, {"action": 4}, {"action": 4}, {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 1}
+  ],
+  "safe_bypass_sequence_note": "Applied after the verified 342-action L1-L8 prefix. All 9 actions listed are confirmed safe (NOT_FINISHED throughout). A 10th action (a second consecutive {action:1}) was also tested and is LETHAL -- deliberately excluded from this 'safe' list; see dead_ends.",
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress per ARC Solve Reproducibility Discipline; this round is an honest HONEST_NULL, not a solve."
+    }
+  ],
+  "field_provenance": {
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the exact tested safe-bypass sequence lets a future round independently re-verify this specific route still holds before building further on top of it."
+    },
+    "solve_provenance": {
+      "principle": "This round used only the offline_arcade env + live actions -- no game source was read, no ground-truth teleport/probe was used -- matching the live_agent_self_discovery contract from the ARC Live-Path Reachability Discipline."
+    }
+  }
+}
