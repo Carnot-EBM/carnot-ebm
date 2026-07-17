@@ -1084,3 +1084,43 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
 - artifact: results/experiment_5713_qwen27b_q4_mtp_enabled_ab.json
+
+## outer_loop_sge_smoke_test.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test.json
+
+## outer_loop_sge_smoke_test_sk48.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test_sk48.json
+
+## outer_loop_sge_smoke_test_cd82.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test_cd82.json
+
+## outer_loop_sge_smoke_test_pre_5699_4_early_trigger_baseline.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test_pre_5699_4_early_trigger_baseline.json
+
+## outer_loop_sge_smoke_test_sk48_pre_5699_4_early_trigger_baseline.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test_sk48_pre_5699_4_early_trigger_baseline.json
+
+## outer_loop_sge_smoke_test_cd82_pre_5699_4_early_trigger_baseline.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test_cd82_pre_5699_4_early_trigger_baseline.json
+
+## outer_loop_sge_smoke_test_cd82_induction.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test_cd82_induction.json
+
+## outer_loop_sge_smoke_test_sp80.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_sge_smoke_test_sp80.json

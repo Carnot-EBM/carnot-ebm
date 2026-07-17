@@ -1,0 +1,84 @@
+{
+  "experiment": "outer_loop_round22_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-fable-5",
+  "run_date": "2026-07-17",
+  "schema": "carnot.arc_outer_loop_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "random_seed": null,
+  "random_seed_note": "The offline bp35 environment is fully deterministic (verified: 3x fresh env.reset() + identical 367-action replays produced byte-identical settled frames, endpoint hash f8a75b6729fd5dfc). No RNG is invoked by the probe.",
+  "duration_s": 3894,
+  "duration_note": "Wall-clock of the outer-loop session segment dedicated to bp35 L9 (2026-07-17T15:28:48Z to 16:33:42Z), dominated by ~40 fresh-env replay-and-probe runs plus three 110-click coordinate sweeps against the pure-Python offline arcade. No LLM inference and no GPU inside the env loop.",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "win_levels": 9,
+  "levels_won_this_session": 0,
+  "full_game_clear": false,
+  "offline_reproduced": false,
+  "reproduced_levels": 0,
+  "new_levels_banked": 0,
+  "total_env_steps_used": 0,
+  "total_env_steps_used_note": "Zero LIVE (scored) env steps; every action ran against the zero-quota offline arcade (environment_files/bp35), ~40 runs x ~350-470 actions each.",
+  "reproduction_verified": true,
+  "reproduction_note": "This is a mapping/characterization round, not a solve: reproduction_verified refers to the diagnostic routes, not a new level. The maximal-clear route (342-action L8 prefix + 25-action L9 tail) replays 3x from fresh env.reset() to byte-identical settled frames (endpoint hash f8a75b6729fd5dfc, level=8, NOT_FINISHED). The door-3 float-death signature (47 layers, GAME_OVER) also reproduces exactly.",
+  "reproducibility_checksum": "c38fb0a24638acf679ffeea731eca9f1a23b0e1ebe31474a374c7d90aa14bc01",
+  "reproducibility_checksum_note": "sha256 of the 25-action maximal-clear L9 tail (JSON list). The 342-action L8 prefix is the round-12 sequence, sha256 bc9d039720f787a2d601884323e761d29b799e3d0153e9f4ca6a9aab29d1416c.",
+  "honest_verdict": "complete_bp35_l9_round22_absolute_map_and_mechanics_no_new_level_structural_seal_mechanically_grounded",
+  "narrative": "Tenth dedicated L9 round, pure live-agent discovery (offline arcade + real env.step + public frames only; bp35 source never read). Delivered the absolute-coordinate world map that rounds 20-21 called for: consecutive public animation layers are registered by 2D correlation into a drift-free mosaic (an 83-action loop closure returns the accumulated camera offset exactly to (0,22)), anchored at the L9 start view. The map spans world rows -90..84 and corrects several standing conclusions. (1) The camera hard-clamps at world row -48: no live frame ever shows content above it, so prior rounds' 'fly off the open top' deaths are actually ascents above the visible region into the downward-pointing pillar-eye row at world -55, which guards every 6-lattice column c14-46; the door columns are therefore lethal to floats, and the historical open-top-void reading is retracted. (2) The tower top is real, physical, and rich: TWO previously unknown gravity switches (world y ~ -57 and ~ -81, cols 1-4) and the eight-block color-12 toggle row (world -83..-79, cols 13-59) exist above the camera clamp, which is why round 19 found toggles in zero live frames. With the clamp, they can never be clicked (clicks take screen coordinates only) and no rest position above -48 was found, so they are unreachable under all mechanisms known so far. (3) Switch-consumption semantics were measured cell-exact: consuming a switch removes its block AND its two cols 0-5 border floors, and nothing else; the six switch border pairs (-84/-78, -60/-54, -48/-42, -24/-18, 24/30, 36/42) account for EVERY floor in the cols 0-5 shaft, so a fully consumed shaft is continuous air from -85 down to the pocket floor at 72 - a designed elevator straight into the goal pocket (goal at cols 13-17, world 66-70; pocket cols 0-23, world 61-71). (4) Door semantics cell-exact: each of the three doors removes exactly its own 5-wide column across rows -18..-12 (both adjacent floors included); all three doors are identical. (5) Structure mechanics: remote builds chain LATERALLY only, from existing structure at the player's row band; vertical extension happens only as a player-riding carry (one 6px rung per click, clicking the cell above the player); carrying into native solid is a crush death; ride frames block lateral exit until an adjacent cell is built; native cells are immune to every rewrite (grow, carry, door, switch - all verified by aligned cell diffs); eye-type gauntlet pillars are click-inert, unlike tower pillars. The seal that survives all of this: the goal pocket's only air connection is the cols 0-5 shaft; the cols 6-12 wall is solid at every mapped row (-90..60) and click-inert under three full-lattice sweeps at three different histories (plus round 21's sweep); the -18..-12 slab is crossable upward only through a door column, and a door column ascent cannot be capped (vertical pre-builds are impossible without the player, and opening a door with the player anywhere in its column triggers an uncappable fatal float to the -55 eyes). The one unguarded ascent - the eye-free cols 55-59 channel from the -41..-25 room to a rest under the -78 floor - is only reachable from inside that room, which itself is only enterable through a door column. A maximal interactable clear (all four reachable switches +27/+39/-45/-21 consumed, doors 1 and 3 opened, all clickable pillars exercised, in one 25-action alive tail) does not complete the level; the third door provably cannot be opened without dying, because every camera-clamped park position lies in a door column. Frontier stays 8/9; this is an honest null with the strongest structural grounding to date.",
+  "novel_mechanics_found": [
+    "Camera hard-clamp at world row -48 (anchored to the L9 start view): live frames never render above it, clicks cannot target above it, and prior 'open top' death readings are retracted in favor of the -55 downward eye row.",
+    "Two additional one-shot gravity switches exist at approximately world (3,-57) and (3,-81) in the cols 0-5 shaft, plus the eight-block toggle row at world -83..-79 cols 13-59 - all above the camera clamp and unreachable/unclickable by any mechanism found.",
+    "Switch consumption removes the switch block plus its two cols 0-5 border floors ONLY (cell-exact diff); the six switch border pairs account for every floor in the cols 0-5 shaft, which fully consumed becomes a continuous drop into the goal pocket.",
+    "Each E-door carve removes exactly its own 5-wide column across rows -18..-12; all three doors identical (cell-exact diffs at two histories).",
+    "Structure builds chain laterally only from existing structure at the player's row; vertical extension requires a player-riding carry; carries into native cells are a crush death; gauntlet (eye) pillars are click-inert.",
+    "The death camera pan is a level-reset cutscene: doors re-close and grown structures revert during the pan, and it is the only render that shows the tower top (toggles included)."
+  ],
+  "bounded_negative_results": [
+    "Three full 6-lattice click sweeps (110 coordinates each) at cam -18, cam -48, and cam +22 vantages across three switch/door histories: the only responsive targets are the four reachable switches, the three doors, and tower pillar bodies. Cols 6-12 and the pocket ceiling respond to nothing.",
+    "Maximal interactable clear in one life (4 switches + 2 doors + all gauntlet/pillar clicks + ACTION5/ACTION7 probes) ends NOT_FINISHED at level 8 - no hidden completion condition fires.",
+    "Door-column ascents die deterministically (47-layer float, GAME_OVER) regardless of pre-built structure below; vertical pre-building above a closed door is impossible (remote vertical builds are inert, verified).",
+    "Riding the cols 31-35 column above world 2.5 crushes into the native -6 floor band (death), confirming carries cannot penetrate native cells."
+  ],
+  "structural_seal_statement": "Under every mechanism discovered through round 22 (moves, floats, switch flips, door carves, structure builds/carries, clicks across three vantages and histories), the goal pocket (cols 0-23, world 61-71) is reachable only via the cols 0-5 shaft, and no live player path into cols 0-5 exists: cols 6-12 is native-solid at every mapped row and click-inert, the top sandwich (-84/-78 floors) blocks the only eye-free ascent channel (cols 55-59), and door-column ascents are uncappable and lethal at the -55 eye row. This is a characterization of mechanisms found so far, NOT a proven impossibility.",
+  "next_leads": [
+    "Find a float-cap for a door column: if any mechanism can place structure or terrain into a door column above the door before the player enters (nothing found this round), the -41..-25 room becomes reachable and the eye-free cols 55-59 channel leads to a rest under the -78 floor at world -77..-73.",
+    "Determine whether ANY rest position above world -48 exists: if the camera follows a settled player past the clamp, the toggle row and the two upper switches become clickable and the cols 0-5 shaft can be fully opened.",
+    "Toggle-row semantics are completely unknown (eight blocks, one per main-area column band) - a plausible combination-lock for the goal barrier; only interactable if the clamp can be beaten.",
+    "ACTION7 undo interactions with floats/deaths were only shallowly probed (single no-op observed at the maximal-clear state)."
+  ],
+  "diagnostic_routes": {
+    "l8_prefix_artifact": "results/outer_loop_round12_bp35_probe_20260712.json",
+    "l8_prefix_sha256": "bc9d039720f787a2d601884323e761d29b799e3d0153e9f4ca6a9aab29d1416c",
+    "maximal_clear_tail_sha256": "c38fb0a24638acf679ffeea731eca9f1a23b0e1ebe31474a374c7d90aa14bc01",
+    "maximal_clear_endpoint_hash": "f8a75b6729fd5dfc",
+    "maximal_clear_endpoint": "level=8, GameState.NOT_FINISHED, player world (-9.5, 21.3), 3x fresh-env deterministic",
+    "door3_float_death_layers": 47
+  },
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "l8_prefix_replay_reaches_level_8", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "Any new banked level must pass arc_solver_kit.reproduce from fresh env.reset()",
+      "principle": "A solve not reproducible offline is wasted effort; only reproduced levels count.",
+      "result": "no_new_level_gate_not_applicable_null_round"
+    },
+    {
+      "condition": "All cited mechanics/corrections must reproduce deterministically from fresh envs",
+      "principle": "Frame-registration conclusions are only trustworthy if the underlying routes replay exactly; drift or stochasticity would poison the absolute map.",
+      "result": "passed_3x_deterministic_endpoint_hash_and_exact_loop_closure"
+    }
+  ],
+  "field_provenance": {
+    "inference_substrate": {
+      "principle": "Declares this artifact as pure env-stepping with no LLM/GPU so the adversarial duration floor is the 10ms offline-arcade floor, not the 60s live-inference floor.",
+      "satisfied_by": "All probing done via arc_agi offline Arcade env.step; no model loaded."
+    },
+    "solve_provenance": {
+      "principle": "The deliverable is a live agent that self-discovers; outer-loop source-reading solves are the anti-pattern and never count.",
+      "satisfied_by": "bp35 game source never read; public frames and real env.step only, consistent with rounds 13-21."
+    }
+  }
+}
