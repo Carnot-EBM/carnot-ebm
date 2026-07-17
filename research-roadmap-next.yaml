@@ -589,60 +589,45 @@ tasks:
       9. Run matched-budget, known-level, ledger-exercise, E/P/R, controls, provenance, orphan-solver, schema, adversarial, spec-coverage, and ARC E2E tests.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5727-arc-live-self-discovery-levelup-v511
+  - id: exp5727-arc-generalization-live-oracle-gap-v511
     milestone: "2026.07.511"
-    title: "Unconditional registry-rotated ARC live-agent self-discovery level-up attempt"
+    title: "First ARC-AGI-3 Generalization-Testing Floor task: fresh live-vs-oracle gap sweep across the fully-cleared 25-game registry"
     priority: critical
     track: arc-live
-    deliverable: results/experiment_5727_arc_live_self_discovery_levelup_v511.json
-    model: sonnet
+    deliverable: results/experiment_5727_arc_generalization_live_oracle_gap_v511.json
+    agent_type: codex
+    model: gpt-5.5
     max_turns: 50
-    estimated_wall_time_min: 480
-    prior_failures:
-      - experiment_id: exp5713-arc-live-self-discovery-levelup-v510
-        verdict: "complete: no_new_arc_level_banked_lf52_L9_bounded_live_attempt_v510"
-        addressed_by: "Rotation excludes lf52 L9 and all reproduced/recent targets; this may use only a promoted generic ledger learned from target-local observations, otherwise baseline runs."
-        retire_if_same_verdict: true
-      - experiment_id: exp5643-arc-live-self-discovery-levelup-v509
-        verdict: "complete: no_new_arc_level_banked_lf52_L8_bounded_live_attempt_v509"
-        addressed_by: "Target and recent-failure window rotate again while credit stays limited to the live agent's observations, attempts, and runtime RE with full duration/method receipts."
-        retire_if_same_verdict: true
+    estimated_wall_time_min: 240
+    prior_failures: []
     prompt: |
       CONTEXT:
-      The standing floor requires a genuine ARC level-up attempt. This task is deliberately ungated. Exp5726 is advisory: enable its ledger only if promoted and populated solely from this target's live observations; otherwise run unchanged baseline. Registry has 177 reproduced levels and Exp5713 failed at lf52 L9. Only the live agent's attempts/runtime RE count. Preferred execution uses no LLM. Today is {date}.
+      CLAUDE.md's "ARC-AGI-3 Generalization-Testing Floor" (2026-07-17) replaces the retired public-game-solving floor: all 25 public survey games now show full_game_clear=true (183/183 levels; ops/arc_solve_registry.yaml reproducible_total_games=25 — bp35 and lf52, the last two, were both solved 2026-07-17). This is task class 1 of that floor: held-out/leave-one-game-out live-path measurement. The REAL shipped scored agent is E3AgentPolicy (make_carnot_agent(Agent, cascade=True), the competition default). It never imports arc_game_adapters.py and never calls load_solutions() -- it is ALREADY frame-only, adapter-free, and banked-solution-free by construction (verified this session: grepping arc_competition_agent.py for GameAdapter/get_adapter returns nothing; only the retired cascade=False CarnotAgentPolicy path, explicitly documented as "useless on the hidden eval", touches load_solutions()). The measurement harness scripts/arc_leaderboard_eval.py --games oracle already runs exactly this comparison (fresh E3AgentPolicy vs the offline-dev oracle ceiling read live from the registry) but has never been run as a full 25-game sweep, and its last run (results/arc_live_oracle_gap.json, 2026-07-16) covered only 1 game and predates today's bp35 (8->9) and lf52 (7->10) wins. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/CODEX.md
-      - {project_root}/research-program.md
-      - {project_root}/ops/north-star.md
-      - {project_root}/ops/known-issues.md
-      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/CLAUDE.md ("ARC-AGI-3 Generalization-Testing Floor" section, and "ARC Live-Path Reachability Discipline")
       - {project_root}/ops/arc_solve_registry.yaml
-      - {project_root}/results/experiment_5713_arc_live_self_discovery_levelup_v510.json
-      - {project_root}/results/experiment_5725_arc_epistemic_ledger_live_qualification.json
-      - {project_root}/results/experiment_5726_arc_epistemic_ledger_live_ab.json
+      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/scripts/arc_leaderboard_eval.py
       - {project_root}/python/carnot/agentic/arc_competition_agent.py
-      - {project_root}/python/carnot/agentic/arc_loop_solve.py
-      - {project_root}/python/carnot/agentic
-      - {project_root}/tests/python
-      - {project_root}/openspec/capabilities
-      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/python/carnot/agentic/arc_solver_kit.py
+      - {project_root}/results/arc_live_oracle_gap.json
 
       TASK:
-      Run one bounded registry-rotated ARC live-agent self-discovery level-up attempt and emit results/experiment_5727_arc_live_self_discovery_levelup_v511.json.
+      Run a fresh, full-registry live-vs-oracle gap measurement using the REAL shipped E3AgentPolicy cascade at a submission-faithful action budget, then honestly characterize (do NOT attempt to fix) the 3 worst gaps with evidence grounded in the actual run, and emit results/experiment_5727_arc_generalization_live_oracle_gap_v511.json.
 
       CONCRETE STEPS:
-      1. Registry-precheck before target selection. Exclude every registered/reproduced level and recent failures including lf52 L8/L9. Freeze one eligible target via generic rotation; never re-solve a known level.
-      2. Snapshot baseline, registry hash/count, target receipt, source hashes, environment, seeds, budgets, and stop rules before action.
-      3. Enable Exp5726 ledger only if ready score 1.0 with zero unsafe commits/regressions and target-local population; otherwise baseline. Record decision and never skip.
-      4. Use only visible live states, own action/outcome history, and runtime receipts. No source, GameAdapter, hand solution/model, offline BFS, prior solution, or off-path solver.
-      5. Execute submitted E3AgentPolicy. Preserve observations, proposed/legal/executed actions, responses, retries/restarts, verifier/features/ledger, hypotheses/questions/commits, errors, times, and hashes in linked trace.
-      6. Record wall and active environment duration; exercise enough preregistered budget for a bounded live attempt. Do not emit bootstrap-only setup.
-      7. Credit only if a new level is reached and reproduced from the agent's trace under fresh replay, precheck confirms novelty, and provenance is clean; then atomically bank. Otherwise report honest null and do not update registry.
-      8. REQUIRED ARTIFACT FIELDS: with `field_principles`, `registry_precheck`, `registry_hash_before`, `registry_count_before`, `target_selection_protocol`, `selected_game_level`, and `recent_targets_excluded` — novelty exact; `solve_provenance=live_agent_self_discovery` — credited path; `baseline_config_hash`, `advisory_ledger_receipt`, and `ledger_enabled` — mechanism; `environment_receipt`, `source_hashes`, `random_seeds`, `action_budget`, `restart_budget`, `time_budget_s`, `budget_used`, `duration_s`, and `active_environment_duration_s` — execution; `trace_path`, `trace_root_hash`, `observation_count`, `candidate_count`, `legal_action_count`, `executed_action_count`, `restart_count`, `verifier_call_count`, `feature_route_counts`, `ledger_operation_counts`, `hypothesis_revision_count`, `open_question_resolution_count`, and `commitment_count` — method; `levels_before`, `levels_after`, `registry_delta`, `new_level_banked`, `fresh_replay_pass`, and `registry_updated` — outcome; `game_source_read_count=0`, `game_adapter_count=0`, `outer_loop_bfs_used=false`, `prior_solution_used=false`, and `off_path_solver_used=false` — forbidden paths; `inference_substrate=arc_live_submitted_agent_self_discovery_no_llm`, `reproducibility_checksum`, and `honest_verdict` — substrate/replay.
-      9. Run registry duplicate/rotation, provenance, trace, duration/method, replay-if-solved, orphan-solver, schema, adversarial, spec-coverage, and ARC live E2E checks. Preserve failure traces.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+      0. PRECONDITIONS (check BEFORE any run; on any failure write the matching honest_verdict and stop, do not proceed or fabricate):
+         a. Confirm the frozen live generator GGUF (Qwen3.5-9B-MTP) is locally cached -- E3AgentPolicy's tier-3 escalation lazily loads it only on a tier-1 stall (arc_competition_agent.py's `_proposer()`). Missing -> honest_verdict=blocked_qwen35_9b_gguf_not_cached.
+         b. Confirm `ops/arc_solve_registry.yaml` currently shows `reproducible_total_games: 25` -- the premise this task is built on. If a game has regressed or the registry has changed since this task was drafted -> honest_verdict=blocked_registry_premise_stale; do not proceed with a mismatched baseline.
+         c. Per the documented GGUF outer-loop GPU-pinning gotcha, any LocalGGUFProposer instantiation this run triggers must use CARNOT_ARC_GENERATOR_CUDA_GPU set correctly and a non-default port, so tier-3 induction cannot silently fall back to the slow iGPU or attach to a stale server on the conductor's default port.
+      1. Run `python3 scripts/arc_leaderboard_eval.py --games oracle --policy e3 --budget 400`. Use --budget 400, NOT the harness's default of 20000: 400 matches the real submission's MAX_ACTIONS cap in arc_competition_agent.py's CarnotAgent class, so the resulting live number is directly comparable to what the actually-shipped agent could achieve in the real scored eval, not an inflated unbounded-exploration number. This overwrites results/arc_live_oracle_gap.json with a fresh sweep covering every one of the 25 registry-cleared games.
+      2. Read the resulting per-game gap list. Select the 3 games with the largest `gap_vs_oracle` (break ties toward games whose registry win used development_proxy solve_provenance over live_agent_self_discovery, since whether source-assisted offline wins transfer worse to the frame-only live path than pure-live wins is the more informative comparison). For each, investigate using ONLY the public frames/logs/diagnostics the harness and policy already recorded during this run (navigation_diagnostics, the frame sequence, any induction trace the policy exposes) -- do NOT read the game's source, do NOT hand-solve it, do NOT build any per-game fix. Characterize the stall honestly as one of: PERCEPTION (the agent never correctly identifies the key objects/mechanics visible in the frames), SEARCH/BUDGET (it identifies the right structure but the 400-action budget or search strategy doesn't reach the needed depth), INDUCTION QUALITY (the world-model proposer's hypotheses are wrong, too shallow, or never fire), or a different class you observe directly in the trace -- name it precisely rather than forcing it into one of these three if the evidence doesn't fit.
+      3. Cross-reference each of the 3 characterizations against `ops/verifier_gaps.md`'s existing entries (per CLAUDE.md's "Missing-Verifier Gap Logging" discipline). If a characterization reveals a genuinely NEW missing-discriminator gap not already logged there, append an entry (using that file's existing schema) naming the failure mode, the missing discriminator a new verifier would need, a candidate design, and a priority by headroom. If it matches an existing entry, cite that entry's id instead of duplicating it.
+      4. Do NOT attempt to close any gap in this task -- that is task class 2 of the Generalization-Testing Floor, reserved for a future milestone once a specific fix is well-scoped from this characterization. Do NOT claim any new registry credit for this task. If step 1's run happens to genuinely reach a level beyond the game's current registry entry for some game, report it honestly (this would be a real live_agent_self_discovery finding worth flagging), but do not fabricate, round up, or infer a level from anything other than the harness's own `frame.levels_completed` reads.
+      5. REQUIRED ARTIFACT FIELDS, each with a `principle:` note under `field_provenance`: `harness_used=scripts/arc_leaderboard_eval.py`, `policy_kind=e3`, `budget_per_game=400` -- principle: exact reproducibility of the measurement, and the budget choice is what makes the number submission-faithful rather than optimistic. `oracle_source_registry_hash`, `games_measured` (should be 25 -- if fewer, name exactly which were skipped and why, per the project's no-silent-caps ethos), `live_levels_total`, `oracle_levels_total`, `gap_total` -- principle: the north-star generalization metric this floor exists to measure and, across future milestones, shrink. `per_game_gap` (list of objects: game, live_levels, oracle_levels, gap, oracle_win_solve_provenance) -- principle: a per-game breakdown is what makes this actionable rather than one opaque number, and carrying oracle_win_solve_provenance lets a future reader test the source-assisted-vs-pure-live-generalization hypothesis directly against real data. `worst_gap_games` (the 3 selected in step 2, each with stall_class, grounded_evidence citing the specific frames/diagnostics actually read, and an explicit "not attempted to fix" note) -- principle: an uncharacterized gap number is not actionable, and citing evidence prevents a future reader from trusting an unfounded stall-class guess. `verifier_gaps_entries_added` (list, may be empty) -- principle: connects this measurement to the project's own build backlog per Missing-Verifier Gap Logging. `any_new_level_found` (bool; almost certainly false at budget=400, but must be checked honestly, not assumed) and, only if true, full reproduction-gate evidence per the ARC Solve Reproducibility discipline before any credit is claimed. `inference_substrate` (declare `offline_sim_no_quota_frame_only_live_agent` for games where tier-3 LLM escalation never fired; separately note per-game which games DID escalate to real Qwen3.5-9B-MTP inference, since those specific game-runs used a different, real-compute substrate). `preconditions_checked`, `random_seed`, `reproducibility_checksum`, `honest_verdict` (terminal-prefixed per CLAUDE.md's Verdict Terminal-Prefix Discipline).
+      6. Run scripts/adversarial_verify.py on the emitted artifact before finishing; fix any real flag it raises rather than just noting it.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py. Do NOT modify ops/arc_solve_registry.yaml unless step 4 genuinely and reproducibly found a new level with full reproduction-gate evidence.'
 
   - id: exp5728-v511-capstone-reconciliation
     milestone: "2026.07.511"
@@ -680,7 +665,7 @@ tasks:
       - {project_root}/results/experiment_5724_one_axis_rust_python_matched_crossover.json
       - {project_root}/results/experiment_5725_arc_epistemic_ledger_live_qualification.json
       - {project_root}/results/experiment_5726_arc_epistemic_ledger_live_ab.json
-      - {project_root}/results/experiment_5727_arc_live_self_discovery_levelup_v511.json
+      - {project_root}/results/experiment_5727_arc_generalization_live_oracle_gap_v511.json
       - {project_root}/ops/arc_solve_registry.yaml
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/known-issues.md
@@ -697,7 +682,7 @@ tasks:
       3. Reconcile GGUF channel causes, qualified models/protocol, CUDA, rows, parse/truncation/repetition/missing, attestations/conflicts, disagreements, commitments, weight mutation, and closed runtime/scorer paths.
       4. Reconcile FR-11 chronology, lifecycle operations, prospective benefit/safety, E/P/R conflicts, retention/negative transfer, unsafe accepts/updates, rollback/crash replay, frozen weights, and disabled production. Stream alone is not learning.
       5. Reconcile sampler prerequisites, SamplerBackend integration, fallback, checkpoints, matched quality/work, timing intervals, crossover/null, and software/hardware boundaries. Preserve two-axis retirement.
-      6. Reconcile ARC prechecks, ledger reachability, matched A/B, unconditional execution duration/method, provenance, fresh replay, registry delta, and forbidden counters. Credit only live self-discovery.
+      6. Reconcile ARC epistemic-ledger qualification/A-B (Exp5725/5726) as before. Exp5727 changed scope 2026-07-17 mid-milestone (operator directive: all 25 public games are now full_game_clear=true, so the public-solving level-up floor retired; Exp5727 is now the FIRST ARC-AGI-3 Generalization-Testing Floor task -- a fresh live-vs-oracle gap SWEEP across the cleared registry, not a level-up attempt). Reconcile it as a measurement task: read its actual field names (live_levels_total, oracle_levels_total, gap_total, per_game_gap, worst_gap_games, any_new_level_found), NOT the old registry_delta/game_source_read_count/off_path_solver_used shape this step's REQUIRED ARTIFACT FIELDS below still names by their pre-retirement field names -- resolve any mismatch toward what Exp5727's own artifact actually declares, per CLAUDE.md's "ARC-AGI-3 Generalization-Testing Floor". arc_registry_delta must be 0 and arc_solve_credited must be false unless Exp5727 explicitly reported any_new_level_found=true with full reproduction-gate evidence -- do not infer credit from any other field.
       7. Apply mechanically required same-verdict retirements narrowly. Do not over-retire clean streams, external-memory CSL, SamplerBackend, epistemic state, or live attempts.
       8. Reconcile OpenSpec, `_bmad/traceability.md`, `_bmad/architecture.md`, research-complete.yaml, ops/status.md, ops/changelog.md, ops/conductor-log.md, exclusions, known issues, verifier gaps, north-star, and docs/roadmap.md where evidence requires.
       9. Run relevant unit/lint/spec-coverage and E2E checks for training/sampling, serialization, PyO3, verify/repair or FR-11, and ARC provenance. Record commands/exits and pre-existing debt.
