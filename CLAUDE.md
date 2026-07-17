@@ -3097,7 +3097,20 @@ reusable-scaffolding mechanism this framing mandates) · "ARC-AGI-3 Submission S
 Function" · `docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md` (the corpus-artifact
 incident).
 
-## ARC-AGI-3 Incremental-Progress Scoping (MANDATORY)
+## ARC-AGI-3 Incremental-Progress Scoping (RETIRED FOR PUBLIC GAMES 2026-07-17 — preserved per never-prune)
+
+> **STATUS (2026-07-17): RETIRED for the 25-game public survey set.** Operator directive: "now that the
+> registry of public levels is complete, we should not continue to try and solve them anymore." All 25
+> public survey games now show `full_game_clear: true` in `ops/arc_solve_registry.yaml`
+> (`reproducible_total_levels: 183`, `reproducible_total_games: 25` — the last two, bp35 and lf52, were
+> both solved same-day, 2026-07-17). The incremental-scoping PRINCIPLE below (never propose "solve all N
+> levels" in one task; scope to +1..+n and let progress compound) remains sound and reusable prose — it
+> is preserved unedited below per never-prune, and should be re-applied verbatim if this project ever
+> re-engages public-game solving (a new game added to the survey set, a regression found in an existing
+> one, etc.). It no longer has any live target: there is no unsolved public level left to scope a task
+> against. See the sibling retirements: CLAUDE.md "ARC-AGI-3 November-Submission Standing Floor" and "ARC
+> Level-Up Attempt Guarantee" (same origin, same date) for the standing-floor and mechanical-lint side of
+> this change.
 
 **Origin:** 2026-06-09 operator directive after the FIRST ARC-AGI-3 solves landed
 (r11l L1 in 4 actions, exp3946; lp85 L1, exp3954) but the `.366` task exp3953
@@ -3245,7 +3258,35 @@ CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" + "ARC Solve Reproducibility"
 CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precedent) · `[[project_arc_live_generator]]`
 (the frozen generator) · `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` (packaging).
 
-## ARC-AGI-3 November-Submission Standing Floor (MANDATORY — supersedes opportunistic-only default)
+## ARC-AGI-3 November-Submission Standing Floor (RETIRED 2026-07-17 — preserved per never-prune)
+
+> **STATUS (2026-07-17): RETIRED.** Operator directive: "now that the registry of public levels is
+> complete, we should not continue to try and solve them anymore." The floor this rule mandated (>=1
+> ARC-AGI-3 task slot per milestone through November 2026) was defined entirely in terms of public-game
+> level-solving progress (rule 4 below: "every ARC SOLVE task stays reproduction-gated and
+> Incremental-Progress-scoped"). All 25 public survey games are now fully cleared
+> (`ops/arc_solve_registry.yaml`: `reproducible_total_levels: 183`, `reproducible_total_games: 25`), so
+> the floor's own mechanism is moot — there is no more public-game solve work to reserve a slot for.
+>
+> **Mechanical side retired in lockstep:** `scripts/arc_levelup_guarantee_lint.py` (wired into
+> `scripts/research_conductor.py:_activate_next_roadmap()`, date-gated through 2026-11-01) would
+> otherwise HARD-BLOCK every future milestone activation the instant a planner correctly stopped
+> proposing dead-end public-game solve tasks — it required >=1 level-up attempt and there can never be
+> another one. Patched 2026-07-17 (same session as this retirement) to check
+> `ops/arc_solve_registry.yaml` first and pass trivially, with a clear message, once every tracked public
+> game shows `full_game_clear: true`; fails open (falls back to the original enforcement) if the
+> registry is missing/malformed so this can never silently mask a real regression.
+>
+> **What is NOT decided by this retirement:** whether ARC-AGI-3 work of any OTHER kind (submission
+> packaging/hardening for the actual November Kaggle deadline, testing whether accumulated per-game
+> method knowledge generalizes to unseen games, or something else) should continue to claim a reserved
+> milestone slot. The operator was asked this explicitly in the same session; if answered, a follow-up
+> addendum belongs directly below this one (do not overwrite this banner — append per never-prune). Until
+> answered, treat ARC as fully opportunistic (no reserved floor, no mechanical gate) rather than assuming
+> either "keep the floor for something else" or "drop ARC entirely."
+>
+> The November 2026 submission deadline itself is NOT retracted by this change — only the public-game
+> level-solving floor that fed it is. Preserve the original rule prose below unedited per never-prune.
 
 **Origin:** 2026-07-06 operator directive: "I want at least one ARC slot during each milestone, and more
 if possible to continue the prioritization of ARC-AGI-3 as we need to make headway toward our November
@@ -3312,7 +3353,21 @@ Forcing Function" (RETIRED, the precedent this supersedes at a lower, sustained 
 Discipline" (the per-task mechanics this floor feeds) · `ops/known-issues.md` 2026-07-06 entry (the current
 concrete task queue) · `scripts/arc_levelup_guarantee_lint.py` (mechanical enforcement).
 
-## ARC Level-Up Attempt Guarantee (MANDATORY)
+## ARC Level-Up Attempt Guarantee (RETIRED 2026-07-17 — preserved per never-prune)
+
+> **STATUS (2026-07-17): RETIRED — its own retirement condition (nothing left to level up) is now met.**
+> Operator directive: "now that the registry of public levels is complete, we should not continue to try
+> and solve them anymore." All 25 public survey games this rule's `_GAMES` regex tracks now show
+> `full_game_clear: true` in `ops/arc_solve_registry.yaml` — there is no remaining unsolved level to bank,
+> so "every roadmap must contain >=1 level-up attempt" is no longer a meaningful requirement; it would
+> only ever be satisfiable by a doomed rerun of an already-cleared game (itself forbidden by the
+> Failed-Experiment Rerun Discipline) or by fabrication. `scripts/arc_levelup_guarantee_lint.py` was
+> patched the same session to detect this condition (`_all_public_games_cleared()`, checked against the
+> registry) and pass trivially rather than hard-blocking every future milestone — see the matching status
+> banner on CLAUDE.md "ARC-AGI-3 November-Submission Standing Floor" for the full mechanical-enforcement
+> detail, which this rule's lint is shared with. Preserve the original rule prose below unedited per
+> never-prune; it documents real, reusable design decisions (target rotation, what counts as a genuine
+> vs. generic-re-solve attempt) in case this project ever adds a new public game to the survey set.
 
 **Origin:** 2026-06-19 operator directive — "are we attempting to solve any game levels this roadmap?
 ... how do we ensure we ALWAYS have at least one level-up attempt across all games once a roadmap."

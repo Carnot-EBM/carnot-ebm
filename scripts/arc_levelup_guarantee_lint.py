@@ -14,10 +14,23 @@ its prompt asserts `offline_reproduced=true` AND a new-level condition (reproduc
 only RE-solves an already-banked level via a generic operator (generalization validation), or that
 benchmarks / induces a library / reconciles the registry, does NOT count.
 
+**RETIRED 2026-07-17 (operator directive: "now that the registry of public levels is complete, we
+should not continue to try and solve them anymore").** All 25 public survey games now show
+`full_game_clear: true` in `ops/arc_solve_registry.yaml` (183/183 known levels; bp35 and lf52 were the
+last two, solved same-day). The requirement this lint enforces -- "every roadmap must attempt to bank a
+NEW reproducible level" -- is now structurally unsatisfiable: there is no remaining unsolved level in
+the public set to attempt. Left unpatched, this lint would permanently HARD-BLOCK conductor milestone
+activation (see `scripts/research_conductor.py`'s `_activate_next_roadmap`, date-gated through
+2026-11-01) the moment a planner correctly stopped proposing dead-end solve tasks. `lint_roadmap` below
+now checks the registry FIRST and passes trivially (with a clear retirement message, exit 0) once every
+public game is cleared, regardless of `--min`. See CLAUDE.md "ARC Level-Up Attempt Guarantee" and
+"ARC-AGI-3 November-Submission Standing Floor" for the corresponding rule-level retirement.
+
 Usage:
   python3 scripts/arc_levelup_guarantee_lint.py [roadmap.yaml] [--min N]
-Exit 0 if >= MIN level-up attempts; exit 1 otherwise (refuse the roadmap). Prints the qualifying
-tasks + the games targeted (so target ROTATION across games is auditable -- the soft half of the rule).
+Exit 0 if >= MIN level-up attempts (or if the public game set is fully cleared, see above); exit 1
+otherwise (refuse the roadmap). Prints the qualifying tasks + the games targeted (so target ROTATION
+across games is auditable -- the soft half of the rule).
 """
 
 from __future__ import annotations
@@ -30,10 +43,28 @@ from pathlib import Path
 import yaml
 
 # The 25 public survey games (targets the planner rotates through over milestones).
-_GAMES = re.compile(
-    r"\b(ar25|bp35|cd82|cn04|dc22|ft09|g50t|ka59|lf52|lp85|ls20|m0r0|r11l|re86|s5i5|sb26|sc25|sk48|"
-    r"sp80|su15|tn36|tr87|tu93|vc33|wa30)\b"
+_GAME_NAMES = (
+    "ar25", "bp35", "cd82", "cn04", "dc22", "ft09", "g50t", "ka59", "lf52", "lp85",
+    "ls20", "m0r0", "r11l", "re86", "s5i5", "sb26", "sc25", "sk48", "sp80", "su15",
+    "tn36", "tr87", "tu93", "vc33", "wa30",
 )
+_GAMES = re.compile(r"\b(" + "|".join(_GAME_NAMES) + r")\b")
+
+_REGISTRY_PATH = Path(__file__).resolve().parents[1] / "ops" / "arc_solve_registry.yaml"
+
+
+def _all_public_games_cleared(registry_path: Path = _REGISTRY_PATH) -> bool:
+    """True if every one of the 25 public survey games shows full_game_clear: true in the registry.
+
+    Returns False (fail open to the original enforcement) if the registry is missing, malformed, or
+    any tracked game is not yet cleared -- this check must never itself cause a false "retired" pass.
+    """
+    try:
+        reg = yaml.safe_load(registry_path.read_text())
+        games = {g.get("game"): g for g in (reg.get("games") or []) if isinstance(g, dict)}
+    except Exception:
+        return False
+    return all(bool(games.get(name, {}).get("full_game_clear")) for name in _GAME_NAMES)
 
 
 def _is_levelup_attempt(prompt: str) -> bool:
@@ -63,6 +94,15 @@ def _is_levelup_attempt(prompt: str) -> bool:
 
 
 def lint_roadmap(path: Path, minimum: int) -> int:
+    if _all_public_games_cleared():
+        print(
+            "RETIRED: all 25 public survey games show full_game_clear: true in "
+            "ops/arc_solve_registry.yaml (183/183 known levels). The level-up-attempt requirement is "
+            "moot -- there is no remaining unsolved public level to attempt. Per the 2026-07-17 operator "
+            "directive, roadmaps are no longer required to propose public-game solve tasks. Passing "
+            "without checking task content."
+        )
+        return 0
     d = yaml.safe_load(path.read_text())
     tasks = d.get("tasks", []) or []
     attempts = []
