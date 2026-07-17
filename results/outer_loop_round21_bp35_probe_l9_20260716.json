@@ -1,0 +1,174 @@
+{
+  "experiment": "outer_loop_round21_bp35_probe_l9",
+  "game": "bp35",
+  "model": "gpt-5.6-sol-max",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "random_seed": 0,
+  "random_seed_note": "The offline arcade constructor exposes no seed argument for bp35; seed 0 is the repository convention for this deterministic default environment. All diagnostic endpoints were independently rebuilt from fresh Arcade instances.",
+  "duration_s": 11889,
+  "duration_note": "Measured wall time from creation of the live-only round-21 probe harness through completion of the final focused verification rerun.",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "win_levels": 9,
+  "levels_won_this_session": 0,
+  "full_game_clear": false,
+  "total_env_steps_used": 45000,
+  "total_env_steps_used_note": "Approximate, not an exact metered claim: at least 90 fresh environments are present in retained probe logs (each replaying the 342-action prefix), plus deepcopy search branches and short trials whose steps were not globally instrumented.",
+  "reproduction_verified": true,
+  "reproduction_note": "This verifies the reported negative diagnostic endpoints, NOT a level-9 win. ROUTE_A, HIGH_X15_RETURN, DOOR_A, TOP_X15_MAX, and A45_HIGH_RETURN were each replayed three more times from independent fresh Arcade instances after exploration; all 15 endpoints reproduced their expected normalized hashes, remained levels_completed=8, and remained NOT_FINISHED/alive. Since no win occurred, arc_solver_kit.reproduce(claimed_level=9) was correctly not invoked and no level was banked.",
+  "reproducibility_checksum": "4e5b711867c04f7e36952d45f5e89a98a81cbb3cb57f8b5beba06d62b7ad3466",
+  "reproducibility_checksum_note": "sha256 of the compact canonical JSON in reproducibility_basis, serialized with sorted insertion order and no whitespace.",
+  "honest_verdict": "complete_bp35_l9_round21_new_vertical_connectivity_and_edge_pillar_insight_but_no_win",
+  "narrative": "Ninth dedicated L9 round. No win; bp35 remains honestly banked at 8/9. This round materially revises the earlier structural null without fabricating closure. Pillars are not cosmetic state noise: clicking a full 5x5 body rewrites neighboring six-pixel-lattice cells, and the player can be carried vertically by six world rows or routed horizontally through the resulting corridor. A deterministic 39-action L9 route reaches the goal column at player absolute anchor approximately (15,49), with the goal stable at approximately (15,68). A longer 83-action loop climbs back through the tower, reaches approximately (15,-11), reverses gravity, and returns to (15,49). Four distinct one-shot gravity switches were mapped at approximate world y=-45,-21,+27,+39; different switch-consumption histories can produce pixel-identical local frames. Thus round 20's simple claim that the player never escapes the original cols>=13 room is too weak: a much larger vertical tower is reachable. The stronger obstruction nevertheless survives all bounded tests here: across every prefix of the 83-action loop and the only persistent viewport-edge-pillar variant (84 + 85 endpoint states, four LEFT probes apiece), the player never crosses x=15. At the closest goal view, a safely rebuilt stride-2 sweep tested 1,024 screen coordinates; all 18 changing outcomes were known switches or pillar bodies at y<=30, none was lethal, and no coordinate at y>=32 changed the intervening wall, goal pocket, or player state. A prior search-pruning rule was also corrected: a color-15 component smaller than 20 pixels is interactive when it is a full pillar clipped by viewport y=0 or y=62; such edge pillars must not be discarded merely by visible pixel count. All 16 top-edge masks and all 8 bottom-edge masks were tested. They alter remote pillar topology, but preserve the same 19-pixel player-to-goal vertical gap; only bottom x=45 persisted through the first descent, and that difference washed out after the full high loop. A new door timing route opened the left E door from x=21, removed the blocking body, reversed gravity before entering x=15, and replayed the complete descent; it converged exactly to ROUTE_A's goal-column endpoint rather than opening the goal barrier. Attempts to cap an opened door shaft failed for a grounded reason: the 12-pixel eye-end components above the doors are inert, while the clickable bodies below grow away from the eye and cannot seed a cap above the door. Partial full-state and ACTION7 searches found no win and are reported only as partial coverage, not as an exhaustive proof. The deliverable is therefore a reproducible new map/mechanic correction and stronger bounded structural evidence, not a claimed clear.",
+  "novel_mechanics_found": [
+    "Pillar-body clicks are reachability-changing lattice rewrites, not cosmetic growth: they can carry the player vertically by six absolute rows and enable horizontal transfers through the tower.",
+    "L9 contains four independently consumable gravity switches at approximate world y=-45,-21,+27,+39. Pixel-identical settled frames can alias different remote consumed-switch histories.",
+    "A full pillar clipped by the viewport edge remains clickable even when its visible color-15 component has fewer than 20 pixels. Size-only component pruning used by earlier searches was unsound; edge contact must be retained.",
+    "The player can reach the goal's own x=15 column at absolute y approximately 49 and can traverse a vertical loop from approximately y=-11 to y=49. This retracts the overly simple prior model that only the original room was reachable, while leaving a 19-pixel wall-separated gap to the stable goal at y approximately 68."
+  ],
+  "bounded_negative_results": [
+    "Safe stride-2 coordinate sweep at the closest x15/y49 goal view: 1,024 coordinates, 18 non-no-op outcome groups, 0 death groups, maximum affected target row 30, and 0 changing coordinates whose hitbox begins at row 32 or below.",
+    "Prefix lateral scan: 84 states along the normal high loop and 85 along the x45 edge-pillar variant; four LEFT actions at every state; minimum settled player x=15, 0 wins, and 0 deaths.",
+    "All 8 masks of the three bottom-clipped pillars at the pre-switch view were replayed through the full descent. x27 and x39 washed out; x45 produced a distinct alive L8 endpoint (normalized color-15 250 versus 242), but no mask won.",
+    "All 16 masks of four top-clipped pillars at the x15/y49 view were followed by the remaining gravity switch. Every mask remained alive at L8 with player/goal separation unchanged; differences were confined to pillar topology above the player.",
+    "Opening the left door from x21, clearing the x15 body, flipping gravity before entering the door column, and completing the full descent produced the exact ROUTE_A endpoint hash rather than a passage into the goal pocket.",
+    "ACTION1, ACTION2, and ACTION3 were compared at the closest goal view and were pixel- and trajectory-identical LEFT actions; mixing them did not squeeze through the divider.",
+    "Two deepcopy searches were partial only: one expanded 180 nodes / generated 1,354 outcomes / observed 393 full states; another expanded 80 / generated 492 / observed 197. Neither won. An ACTION7 DFS also found no better goal gap before being stopped; none is claimed exhaustive."
+  ],
+  "absolute_connectivity": {
+    "route_a_l9_actions": 39,
+    "high_loop_l9_actions": 83,
+    "highest_player_anchor_approx": [15, -11],
+    "lowest_player_anchor_approx": [15, 49],
+    "stable_goal_anchor_approx": [15, 68],
+    "closest_vertical_gap_pixels": 19,
+    "minimum_reached_player_x": 15,
+    "coordinate_caveat": "Absolute y is reconstructed by accumulating fixed-camera animation trajectories and camera translations from public f.frame layers; screen endpoints re-center after vertical motion."
+  },
+  "coordinate_sweep": {
+    "base": "HIGH_X15_RETURN",
+    "stride": 2,
+    "tested_coordinates": 1024,
+    "fresh_rebuild_interval": 24,
+    "outcome_groups": 18,
+    "death_groups": 0,
+    "maximum_effect_hitbox_y": 30,
+    "effect_groups_at_or_below_y32": 0,
+    "newly_retained_edge_hitboxes": [[18, 0, 22, 0], [24, 0, 28, 0], [30, 0, 34, 0], [42, 0, 46, 0]],
+    "scope_caveat": "This is exhaustive on the even-coordinate stride-2 lattice, not every individual pixel. Every known 5x5 hitbox is sampled by that lattice; no claim is made about hypothetical one-pixel targets."
+  },
+  "edge_pillar_matrix": {
+    "bottom_pre_switch_masks_tested": 8,
+    "bottom_x27_effect_after_descent": "washed_out",
+    "bottom_x39_effect_after_descent": "washed_out",
+    "bottom_x45_effect_after_descent": "persisted_temporarily_no_win",
+    "top_goal_view_masks_tested": 16,
+    "top_mask_player_endpoints": "all_alive_L8_same_player_and_goal_coordinates",
+    "x45_variant_after_full_high_loop": "converged_to_normal_HIGH_X15_RETURN_hash"
+  },
+  "switch_history_aliases": {
+    "switch_world_y_approx": [-45, -21, 27, 39],
+    "tested_orders": [
+      ["-45", "+27", "-21", "+39 remaining"],
+      ["-21", "+27", "-45", "+39 remaining"],
+      ["-21", "+39", "-45", "+27 remaining"]
+    ],
+    "result": "Multiple histories converged to identical local x15/y49 or high-tower pixels; consuming the remaining switch reversed gravity away from the goal and did not win."
+  },
+  "diagnostic_routes": {
+    "prefix_artifact": "results/outer_loop_round12_bp35_probe_20260712.json",
+    "prefix_action_count": 342,
+    "prefix_action_sequence_sha256": "8497cc7767107068b19e7e0b028b37d1c5d30bf6921ab5e84d4b2c2035660f4b",
+    "route_a_action_sequence": [
+      {"action": 6, "data": {"x": 39, "y": 15}}, {"action": 4}, {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 33}}, {"action": 6, "data": {"x": 33, "y": 33}}, {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 39}}, {"action": 1},
+      {"action": 6, "data": {"x": 27, "y": 33}}, {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 21, "y": 39}}, {"action": 1},
+      {"action": 6, "data": {"x": 15, "y": 39}}, {"action": 1}, {"action": 6, "data": {"x": 3, "y": 3}},
+      {"action": 6, "data": {"x": 15, "y": 35}}, {"action": 6, "data": {"x": 15, "y": 35}}, {"action": 6, "data": {"x": 15, "y": 35}},
+      {"action": 6, "data": {"x": 15, "y": 35}}, {"action": 6, "data": {"x": 15, "y": 35}}, {"action": 6, "data": {"x": 15, "y": 35}},
+      {"action": 6, "data": {"x": 21, "y": 29}}, {"action": 4},
+      {"action": 6, "data": {"x": 27, "y": 29}}, {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 29}}, {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 35}}, {"action": 6, "data": {"x": 33, "y": 35}}, {"action": 6, "data": {"x": 33, "y": 35}}, {"action": 6, "data": {"x": 33, "y": 35}},
+      {"action": 6, "data": {"x": 27, "y": 29}}, {"action": 1},
+      {"action": 6, "data": {"x": 21, "y": 29}}, {"action": 1},
+      {"action": 6, "data": {"x": 27, "y": 23}}, {"action": 4},
+      {"action": 6, "data": {"x": 15, "y": 29}}, {"action": 1}
+    ],
+    "high_loop_extension_action_sequence": [
+      {"action": 6, "data": {"x": 3, "y": 5}}, {"action": 6, "data": {"x": 15, "y": 33}}, {"action": 6, "data": {"x": 15, "y": 33}},
+      {"action": 6, "data": {"x": 21, "y": 39}}, {"action": 4}, {"action": 6, "data": {"x": 27, "y": 39}}, {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 39}}, {"action": 4}, {"action": 6, "data": {"x": 39, "y": 39}}, {"action": 4},
+      {"action": 6, "data": {"x": 39, "y": 33}}, {"action": 6, "data": {"x": 39, "y": 33}}, {"action": 6, "data": {"x": 39, "y": 33}}, {"action": 6, "data": {"x": 39, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 39}}, {"action": 1}, {"action": 6, "data": {"x": 27, "y": 39}}, {"action": 1},
+      {"action": 6, "data": {"x": 21, "y": 39}}, {"action": 1}, {"action": 6, "data": {"x": 15, "y": 39}}, {"action": 1},
+      {"action": 6, "data": {"x": 3, "y": 3}}, {"action": 6, "data": {"x": 15, "y": 33}}, {"action": 6, "data": {"x": 15, "y": 33}},
+      {"action": 6, "data": {"x": 21, "y": 29}}, {"action": 4}, {"action": 6, "data": {"x": 27, "y": 29}}, {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 29}}, {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 35}}, {"action": 6, "data": {"x": 33, "y": 35}}, {"action": 6, "data": {"x": 33, "y": 35}}, {"action": 6, "data": {"x": 33, "y": 35}},
+      {"action": 6, "data": {"x": 27, "y": 29}}, {"action": 1}, {"action": 6, "data": {"x": 21, "y": 29}}, {"action": 1},
+      {"action": 6, "data": {"x": 27, "y": 23}}, {"action": 4}, {"action": 6, "data": {"x": 15, "y": 29}}, {"action": 1}
+    ],
+    "door_a_delta": "At ROUTE_A prefix length 12, insert click(15,33), then execute original action 13 click(15,39), original action 15 click(3,3), original action 14 LEFT, followed by original actions 16-39.",
+    "a45_delta": "At ROUTE_A prefix length 14, insert click(45,62), then execute original actions 15-39. Appending high_loop_extension converges to the normal HIGH_X15_RETURN endpoint."
+  },
+  "fresh_replay_endpoints": {
+    "repetitions_each": 3,
+    "route_a": {"hash": "9c89d82a3739d9c8eadf259c26fb6bbf98c923d3bd086fbd8092941a9000e235", "level": 8, "dead": false, "player": [15, 16, 27, 30], "goal": [15, 46]},
+    "door_a": {"hash": "9c89d82a3739d9c8eadf259c26fb6bbf98c923d3bd086fbd8092941a9000e235", "level": 8, "dead": false, "player": [15, 16, 27, 30], "goal": [15, 46]},
+    "high_x15_return": {"hash": "916f7609f0b134fb3ee487404842b75c59e468141e34182a74b1244285bc5bde", "level": 8, "dead": false, "player": [15, 16, 27, 30], "goal": [15, 46]},
+    "a45_high_return": {"hash": "916f7609f0b134fb3ee487404842b75c59e468141e34182a74b1244285bc5bde", "level": 8, "dead": false, "player": [15, 16, 27, 30], "goal": [15, 46]},
+    "top_x15_max": {"hash": "5064fa3338192b64c6d805351c660ad790c94f415aa601986a2916bd583cdd83", "level": 8, "dead": false, "player": [15, 16, 37, 40], "goal": null}
+  },
+  "reproducibility_basis": {
+    "prefix_checksum": "8497cc7767107068b19e7e0b028b37d1c5d30bf6921ab5e84d4b2c2035660f4b",
+    "route_a": "9c89d82a3739d9c8eadf259c26fb6bbf98c923d3bd086fbd8092941a9000e235",
+    "high_loop": "916f7609f0b134fb3ee487404842b75c59e468141e34182a74b1244285bc5bde",
+    "top": "5064fa3338192b64c6d805351c660ad790c94f415aa601986a2916bd583cdd83",
+    "sweep": {"tested": 1024, "effect_groups": 18, "dead_groups": 0, "max_effect_y": 30, "effects_y32_plus": 0},
+    "lateral": {"normal_prefixes": 84, "edge_prefixes": 85, "min_x": 15, "wins": 0},
+    "edge_bottom_masks": 8,
+    "repeats": 3
+  },
+  "dead_ends": [
+    "Door-shaft cap from the visible eye ends: eye-end blocks are inert; clickable bodies below cannot grow toward/through the eye to cap the open shaft.",
+    "Open left door before entering x15 under reversed gravity, then full descent: converges to the ordinary goal-column endpoint.",
+    "Alternative ACTION1/2/3 squeeze through the x15 barrier: exact same public frame and trajectory.",
+    "All viewport-edge pillar masks: topology changes but no new player region or win; the only persistent first-descent difference washes out after the high loop.",
+    "One additional support click beyond the x15 high endpoint: player flies off the open top and dies; no higher resting region was found."
+  ],
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true},
+    {"resource": "arc_solver_kit_offline_arcade_and_game_action_adapter", "available": true},
+    {"resource": "game_source", "accessed": false, "note": "Intentionally never read; doing so would violate the requested live-agent provenance contract."}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "levels_completed == 9 from real env.step exploration",
+      "result": false,
+      "principle": "No level-9 win was observed, so full_game_clear and levels_reproduced remain unchanged and no win reproduction claim is made."
+    },
+    {
+      "condition": "reported diagnostic endpoint hashes reproduce from fresh environments",
+      "result": true,
+      "principle": "Each of five key negative routes reproduced three times after exploration (15/15 fresh endpoints)."
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "Only offline_arcade(), env.reset(), env.step(), _game_action(), and public returned frame/state fields were used. The bp35 implementation source was never opened or inspected."
+    },
+    "absolute_coordinates": {
+      "principle": "Derived solely from public multi-layer animation trajectories and camera-relative frame registration; approximate values are labeled approximate."
+    },
+    "win_claim": {
+      "principle": "No win claim. levels_completed never exceeded 8."
+    }
+  }
+}

@@ -5927,6 +5927,51 @@ games:
     pillar-growth cosmetics, to make exhaustion tractable), and confirming
     whether the goal pocket is truly only cols0-5-accessible via an absolute-
     coordinate map stitched from the trajectory tool.'
+  - 'L9 mapping round 21, VERTICAL TOWER + EDGE-PILLAR PRUNING CORRECTION,
+    still HONEST NULL (2026-07-16, gpt-5.6-sol-max via codex,
+    results/outer_loop_round21_bp35_probe_l9_20260716.json): ninth dedicated
+    L9 round, pure live-agent discovery (offline_arcade + real env.step and
+    public frames only; bp35 source NEVER read). MAJOR CORRECTION to round
+    20''s simple reachability model: pillar growth is NOT cosmetic. Clicking
+    full 5x5 pillar bodies rewrites neighboring cells on a six-pixel lattice,
+    carrying the player vertically by six absolute rows and enabling lateral
+    transfers. A deterministic 39-action L9 route reaches the goal''s own
+    x=15 column with player absolute y~49 and the stable goal at y~68; an
+    83-action loop climbs through the tower to x=15/y~-11, reverses gravity,
+    and returns to x=15/y~49. FOUR independently consumable gravity switches
+    are now mapped at approximate world y=-45,-21,+27,+39; different consumed-
+    switch histories can alias to pixel-identical local frames. This retracts
+    the overly broad inference that the player never leaves the original
+    cols>=13 room, but it does NOT produce a win: levels_completed stayed 8.
+    STRONGER BOUNDED SEAL: every prefix of the normal high loop plus the only
+    persistent edge-pillar variant was tested with 4x LEFT (84+85 states,
+    minimum player x=15, zero wins/deaths), and a safely rebuilt stride-2
+    sweep at the closest goal view tested 1,024 coordinates. Its 18 effect
+    groups were all known switches/pillars at y<=30; zero target at y>=32
+    changed the intervening wall/goal region and zero sweep probe died.
+    SEARCH-PRUNING CORRECTION: sub-20-pixel color-15 components touching
+    viewport y=0/y=62 can be clipped FULL pillar bodies and remain clickable;
+    earlier size-only pruning silently dropped them. All 16 top-edge masks
+    and all 8 bottom-edge masks were executed. They change remote topology,
+    but not the 19-pixel player-to-goal gap; only bottom x=45 persisted through
+    the first descent, and even that converged to the ordinary endpoint after
+    the full high loop. A new door timing test opened the left E door from
+    x=21, cleared x15, reversed gravity BEFORE entering the shaft column, then
+    ran the full descent; it converged exactly to the ordinary x15/y49 hash,
+    so the door does not open the goal barrier. The cap-an-open-door idea was
+    also grounded null: visible 12-pixel eye ends above the doors are inert,
+    while clickable bodies below grow away from the eye and cannot seed an
+    overhead cap. ACTION1/2/3 were exactly equivalent at the closest goal
+    view. Two deepcopy searches (180/1,354 outcomes and 80/492) plus a bounded
+    ACTION7 DFS found no win but are explicitly PARTIAL, not an exhaustion
+    claim. Five key diagnostic routes were independently replayed 3x each
+    from fresh Arcade instances (15/15 endpoint hashes reproduced); this
+    verifies the negative evidence only, NOT L9 completion. Frontier remains
+    8/9, full_game_clear remains false. NEXT LEAD, if revisited: model pillar
+    bodies by orientation + viewport clipping and search over switch-history
+    aliases, while treating the immutable patterned cols6-12 / goal-ceiling
+    pixels as the actual obstruction rather than collapsing all pillar pixels
+    as cosmetic.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
