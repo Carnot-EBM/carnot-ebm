@@ -5980,8 +5980,11 @@ games:
     83-action loop closure returns the camera offset exactly). MAJOR
     CORRECTIONS: (1) the camera HARD-CLAMPS at world row -48 (anchored at the L9
     start view) -- the historical "fly off the open top" deaths are ascents
-    above the visible region into a DOWNWARD-pointing pillar-eye row at world
-    -55 that guards every column c14-46 (all three door columns included); (2)
+    above the visible region that end fatally a few layers after the sprite
+    exits the view; a DOWNWARD-pointing pillar-eye row at world -55 exists in
+    every accessible ascent column c14-46 (all three door columns included),
+    but eye-contact vs any-flight-above-view was not disambiguated (see the
+    caveat at the end of this entry); (2)
     the tower top is real and physical: TWO previously unknown one-shot gravity
     switches (~world (3,-57) and (3,-81)) plus the eight-block color-12 toggle
     row (world -83..-79, c13-59) exist ABOVE the clamp -- which is why round 19
@@ -6005,14 +6008,22 @@ games:
     upward only through a door column, and door-column ascents are uncappable
     (vertical pre-builds without the player are inert) and lethal at -55. A
     maximal one-life interactable clear (all four reachable switches, doors 1+3,
-    all clickable pillars; door 2 provably unopenable without death since every
-    clamped park is in a door column) does NOT complete the level. The one
+    all clickable pillars; door 2 unopenable without death in every
+    configuration found this round, since every clamped park found is in a door
+    column) does NOT complete the level. The one
     unguarded ascent is the eye-free c55-59 channel from the -41..-25 room to a
     rest under the -78 floor, but the room itself is only enterable through a
     lethal door column. Frontier stays 8/9. NEXT LEADS: find any float-cap for a
     door column; find any rest above -48 (would unlock clicking the toggle row +
     upper switches -- toggle semantics are a plausible combination lock and
-    remain wholly untested); ACTION7-during-float tricks barely probed.
+    remain wholly untested); ACTION7-during-float tricks barely probed. CAVEAT
+    on the -55 eye-kill reading: every observed ascent death shows only
+    "sprite exits the view top, GAME_OVER a few layers later" -- direct eye
+    contact was never observed, and an alternative "any flight above the
+    clamped view is fatal" rule was NOT ruled out (every accessible ascent
+    column happens to contain a -55 eye). The c55-59 channel lead is only
+    viable under the eye-kill reading; disambiguating the two is the single
+    most valuable next measurement.
     Reusable mapping tooling (frame registration + mosaic + click-sweep) lives
     with the round-22 artifact.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
