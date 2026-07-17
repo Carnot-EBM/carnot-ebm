@@ -1,0 +1,61 @@
+{
+  "experiment": "outer_loop_round23_bp35_probe_l9_killrule_disambiguation",
+  "game": "bp35",
+  "model": "claude-fable-5",
+  "run_date": "2026-07-17",
+  "schema": "carnot.arc_outer_loop_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "random_seed": 0,
+  "random_seed_note": "Deterministic offline env, no RNG invoked; seed field satisfied per substrate methodology requirement.",
+  "duration_s": 720,
+  "duration_note": "Wall-clock 2026-07-17T17:54:56Z to ~18:06Z; a handful of fresh-env replays with per-layer trajectory tracing.",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "win_levels": 9,
+  "levels_won_this_session": 0,
+  "full_game_clear": false,
+  "offline_reproduced": false,
+  "reproduced_levels": 0,
+  "new_levels_banked": 0,
+  "total_env_steps_used": 0,
+  "total_env_steps_used_note": "Zero live/scored steps; offline arcade only.",
+  "reproduction_verified": true,
+  "reproduction_note": "Characterization round. Both diagnostic deaths replay deterministically: the ungrown gap float (prefix + R + R, 57 layers, GAME_OVER) and the door-3 under-rest float (47 layers, GAME_OVER) from round 22.",
+  "reproducibility_checksum": "bc9d039720f787a2d601884323e761d29b799e3d0153e9f4ca6a9aab29d1416c",
+  "reproducibility_checksum_note": "sha256 of the shared 342-action L8 prefix (round-12 sequence); the round's diagnostic tails are 2-12 actions listed in the narrative.",
+  "honest_verdict": "complete_bp35_l9_round23_kill_rule_disambiguated_viewport_top_not_eyes_camera_not_clamped_no_new_level",
+  "narrative": "Operator-directed follow-up to round 22's kill_mechanism_caveat: disambiguate eye-contact kill vs any-flight-above-view kill. RESOLVED, with a decisive two-point measurement. Test: replay the L8 prefix then R,R WITHOUT the pillar grow click (round 16's 'normally fatal' gap float) while tracing every public animation layer. Result: the camera stays at (0,0) for the entire float and the player sprite rises smoothly from world row 38.5 and vanishes at world row 0.0 -- exactly SCREEN row 0, the top of the static viewport -- with GAME_OVER following after the reset pan. Round 22's door-3 float death (camera -48) killed the sprite at world -48.0 -- also exactly screen row 0. Two deaths at the same SCREEN row but 48 world-rows apart: the kill is CROSSING THE STATIC VIEWPORT TOP MID-FLIGHT, not the -55 eye row (which cannot explain the world-row-0 death; no eyes exist there). Corollaries, each load-bearing: (1) THE CAMERA IS NOT HARD-CLAMPED AT -48. It recenters after each settle to rest_row - 38.5 in up-gravity (verified: rests at 20.5, 2.5, -3.5, -9.5 gave cameras -18, -36, -42, -48 exactly) and rest_row - 28.5 in down-gravity (rest 50.5 gave camera 22). Round 22's 'clamp at -48' is retracted: -48 was simply the camera at the highest rest ever achieved (-9.5). (2) Round 16's 'growing the pillar first makes the fall survivable' is mechanically explained: the grown structure provides a rest INSIDE the current static viewport (20.5, screen 20.5 at cam 0); ungrown, the float's natural rest (about -5..-1, under the native -6 band) lies ABOVE the viewport top (0), so the flight crosses screen 0 and dies. Survival of any flight is exactly 'does the flight's rest lie within the current static view'. (3) The ascent problem is now sharply quantified: a flight's rest must satisfy rest >= previous_rest - 38.5. The first rest above the -18..-12 slab in any door column is at about -51 (under the -54 floor, if present); it requires a prior rest at or above -12.5; the best achievable rest is -9.5 (carry-ladder top beneath a door) -- a shortfall of about 3 pixels. Rung-gain attempts at the ladder top all null this round: clicking the player's own cell, edge-clicks at screen y=0 (targeting the boundary cell), ACTION5, ACTION7, and lateral slides (frame-blocked) leave the player at -9.5. (4) Round 22's cols 55-59 'eye-free channel' lead is moot as framed (eyes were not the killer) and worse in the corrected frame: the channel's first rest is at -77..-73, requiring a prior rest at or above -34.5. The updated frontier question: does ANY mechanism create a rest between world -13 and -48 in an ascent column (which would cascade: rest -15.5 -> view to -54 -> rest -51 -> camera about -89.5 -> the toggle row and both upper switches become clickable and the tower top opens)? The door cell at -15.5 is the natural candidate rung and everything tested so far refuses to make it one. Frontier stays 8/9; honest null on level progress, decisive positive on mechanism identification.",
+  "novel_mechanics_found": [
+    "KILL RULE DISAMBIGUATED: the player dies when crossing the top of the STATIC viewport mid-flight (screen row 0), regardless of world position. Two-point proof: identical screen-row-0 deaths at world rows 0 and -48 under cameras 48 rows apart. The -55 eye row was not the killer in any observed ascent death.",
+    "CAMERA MODEL CORRECTED (retracts round 22's hard-clamp): the camera recenters after each settle to rest_row - 38.5 (up-gravity) or rest_row - 28.5 (down-gravity); it does not move during flight. There is no absolute clamp; -48 was the camera at the highest rest achieved (-9.5).",
+    "FLIGHT SURVIVAL LAW: a float/fall survives iff its landing rest lies within the current static viewport. This mechanically explains round 16's grow-first-survives observation and every recorded ascent death.",
+    "ASCENT ARITHMETIC: reachable rests satisfy next_rest >= prev_rest - 38.5 (up-gravity). First rest above the -18..-12 slab is about -51, requiring prev_rest <= -12.5 vs best achievable -9.5: the seal is a roughly 3-pixel shortfall, not a wall."
+  ],
+  "bounded_negative_results": [
+    "Rung-gain at the ladder top (-9.5): own-cell click, screen y=0 edge click, ACTION5, ACTION7 all inert; lateral slide frame-blocked without an adjacent build. The door cell at -15.5 cannot be converted into a rung by any tested click.",
+    "No new level, no new rest above -9.5 found this round."
+  ],
+  "next_leads": [
+    "Hunt for any rest between world -13 and -48 in cols 13-29 or an ascent column: candidate mechanisms not yet exhausted include down-gravity rests on structure cells placed at the player's row band before a flip, multi-column structure geometries, and door-open timing interactions with a mid-flight player.",
+    "If such a rest exists, the cascade opens the tower top: rest -15.5 -> view top -54 -> rest about -51 -> camera about -89.5 -> toggle row + upper switches clickable -> full cols 0-5 shaft opening -> goal drop.",
+    "Alternatively test whether the -54 floor actually exists live at cols 13-29 (its presence determines whether the -51 rest exists at all): observable the moment any flight legally enters rows -49..-53."
+  ],
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "l8_prefix_replay_reaches_level_8", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "The disambiguation must rest on at least two independent deaths with conflicting world rows but consistent screen rows",
+      "principle": "A single death cannot separate a screen-relative rule from a world-anchored hazard; two cameras 48 rows apart can.",
+      "result": "passed_world_0_and_world_minus48_both_at_screen_row_0"
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "The deliverable is a live agent that self-discovers; outer-loop source-reading is the anti-pattern.",
+      "satisfied_by": "bp35 source never read; public frames and real env.step only."
+    }
+  }
+}
