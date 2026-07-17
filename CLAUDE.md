@@ -3287,6 +3287,72 @@ CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precede
 >
 > The November 2026 submission deadline itself is NOT retracted by this change — only the public-game
 > level-solving floor that fed it is. Preserve the original rule prose below unedited per never-prune.
+>
+> **FOLLOW-UP 2026-07-17 (same session, operator answered): "Redirect to generalization research."**
+> The reserved floor is REINSTATED at the same cadence as before (>=1 ARC-AGI-3 task slot every
+> milestone through November 2026, more when capacity allows), but retargeted per this new rule — see
+> "ARC-AGI-3 Generalization-Testing Floor" immediately below this section. Do NOT read this follow-up as
+> restoring the OLD public-game-solving floor; that stays retired per the banner above. This is a new
+> rule with a new acceptance criterion, not an un-retirement of the old one.
+
+## ARC-AGI-3 Generalization-Testing Floor (MANDATORY — 2026-07-17, supersedes the retired public-solving floor)
+
+**Origin:** follow-up to the 2026-07-17 retirement of the public-game-solving standing floor (above).
+With all 25 public survey games fully cleared (183/183 levels), the operator was asked what should fill
+the reserved ARC slot going forward and chose: **"Redirect to generalization research"** — testing and
+improving how well the accumulated per-game methods (`python/carnot/agentic/arc_solver_kit.py`'s reusable
+primitives, `ops/arc_solve_registry.yaml`'s per-game gotchas/win-conditions/solvers) transfer to games the
+live agent has NOT been specifically hand-tuned for, rather than continuing to deepen already-solved
+public games (which is now impossible) or packaging the frozen submission stack (the operator's other
+offered option, not chosen).
+
+**The rule.** Every milestone's `research-roadmap-next.yaml`, from 2026-07-17 through the November 2026
+submission deadline (or an explicit operator retirement), reserves **>=1 ARC-AGI-3 task slot** whose
+concrete work is one of:
+
+1. **Held-out / leave-one-game-out generalization measurement.** Run the LIVE scored path
+   (`python/carnot/agentic/arc_competition_agent.py`'s `E3AgentPolicy` / `make_carnot_agent`, per the ARC
+   Live-Path Reachability Discipline's two canonical entrypoints) against a game with its
+   per-game `GameAdapter` DELIBERATELY DISABLED or a genuinely-fresh/never-adaptered public game, so the
+   agent must rely on the reusable scaffolding alone (no per-game hardcoded route). Measure how far it
+   gets versus how far the hand-tuned solve reached. This is the closest available proxy for "how will
+   this perform on a hidden game," since a real hidden-game trial isn't available for practice.
+2. **Reusable-primitive hardening.** Strengthen a primitive in `arc_solver_kit.py` (the offline
+   arcade/BFS harness, verifier-routed search, camera/frame registration, hazard pruning, etc.) or the
+   live `E3AgentPolicy` cascade (online world-model induction, `WorldModelVerifier` gating,
+   `plan_in_model`) based on a genuine gap surfaced by task 1's measurement — not a per-game fix, a
+   METHOD fix that should help on ANY future unseen game.
+3. **Cross-game gotcha mining.** Read `ops/arc_solve_registry.yaml`'s accumulated `gotchas` across all 25
+   games and extract genuinely GENERAL mechanics classes (e.g. "camera pan-and-reacquire on unsupported
+   flight," "reusable cross-type stepping-stone pieces," "remote-open-before-entry as a general unlock
+   pattern") into `arc_solver_kit.py`'s `general_gotchas` / a new shared primitive, so a FUTURE hidden game
+   sharing that mechanic class benefits without per-game re-derivation.
+
+**What does NOT count** (mirrors the retired floor's own exclusions, updated for the new target):
+solving/re-deepening an already-cleared public game (structurally impossible now — there is nothing
+left); a benchmark or registry-hygiene task with no generalization measurement or reusable-primitive
+change; submission packaging/stamping (legitimate work, but scoped to a DIFFERENT reserved category if
+the operator later authorizes it — see the "submission hardening" option that was NOT chosen this round).
+
+**Mechanical enforcement (soft, 2026-07-17).** `scripts/arc_levelup_guarantee_lint.py` gained a
+`_is_generalization_attempt()` heuristic (prompt mentions held-out/leave-one-game-out/generalization/
+transfer/unseen-game testing, or a named `arc_solver_kit.py` primitive change, in ARC context) alongside
+the retired `_is_levelup_attempt()`. Unlike the old floor, this check is **WARN-ONLY, not a hard gate** —
+the detection heuristic is new and unproven, and a hard block on a fuzzy NLP-style match risks the exact
+deadlock the old floor's retirement was fixing. `research_conductor.py`'s activation guard logs a warning
+(does NOT refuse activation) when 0 qualifying tasks are found. Promote to a hard gate (mirroring the old
+floor's mechanism) only after several milestones establish what a compliant task prompt actually looks
+like in practice — do not hand-tune the heuristic against a single milestone's roadmap.
+
+**Why this is in CLAUDE.md.** Same defense-in-depth reasoning as every sibling ARC forcing function: the
+planner reads CLAUDE.md as required input on every plan generation, so the redirected floor is honored at
+design time without the outer-loop re-staging each milestone.
+
+**Cross-references:** 2026-07-17 operator directive (origin, same session as the public-solving floor's
+retirement) · CLAUDE.md "ARC-AGI-3 November-Submission Standing Floor" (RETIRED, the floor this
+supersedes) · CLAUDE.md "ARC Live-Path Reachability Discipline" (the two live entrypoints task 1 must use)
+· `python/carnot/agentic/arc_solver_kit.py` + `ops/arc_solve_registry.yaml` (the reusable-method assets
+this floor is meant to strengthen) · `scripts/arc_levelup_guarantee_lint.py` (soft mechanical check).
 
 **Origin:** 2026-07-06 operator directive: "I want at least one ARC slot during each milestone, and more
 if possible to continue the prioritization of ARC-AGI-3 as we need to make headway toward our November

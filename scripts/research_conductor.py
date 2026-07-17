@@ -3834,6 +3834,8 @@ def _activate_next_roadmap(push: bool = True) -> bool:
             try:
                 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
                 from arc_levelup_guarantee_lint import (  # type: ignore[import-not-found]
+                    _all_public_games_cleared as _arc_all_public_cleared,
+                    count_generalization_attempts as _arc_gen_count,
                     lint_roadmap as _arc_floor_lint,
                 )
 
@@ -3853,6 +3855,19 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                         "inspection or re-plan.",
                     )
                     return False
+
+                # 2026-07-17: public-solving floor RETIRED (all 25 games cleared), redirected to
+                # generalization research per operator directive. Soft, WARN-only check (the
+                # detection heuristic is new/unproven) -- never refuses activation.
+                if _arc_all_public_cleared() and _arc_gen_count(NEXT_ROADMAP_FILE) < 1:
+                    logger.warning(
+                        "ARC-AGI-3 generalization-testing floor: 0 qualifying tasks detected in "
+                        "milestone %s (soft check, not blocking). CLAUDE.md 'ARC-AGI-3 "
+                        "Generalization-Testing Floor' suggests reserving >=1 slot for held-out/"
+                        "leave-one-game-out live-path measurement, arc_solver_kit.py hardening, "
+                        "or cross-game gotcha mining.",
+                        next_milestone,
+                    )
             except Exception as _e:
                 logger.warning(
                     "ARC-AGI-3 standing-floor linter unavailable (%s) — "
