@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-07-16'
+updated: '2026-07-17'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -5972,6 +5972,49 @@ games:
     aliases, while treating the immutable patterned cols6-12 / goal-ceiling
     pixels as the actual obstruction rather than collapsing all pillar pixels
     as cosmetic.'
+  - 'L9 mapping round 22, ABSOLUTE MAP DELIVERED + camera clamp discovered, still
+    HONEST NULL (2026-07-17, claude-fable-5,
+    results/outer_loop_round22_bp35_probe_l9_20260717.json): tenth L9 round,
+    frames-only. Built the drift-free absolute-coordinate world map rounds 20-21
+    called for (public animation layers registered by 2D correlation; an
+    83-action loop closure returns the camera offset exactly). MAJOR
+    CORRECTIONS: (1) the camera HARD-CLAMPS at world row -48 (anchored at the L9
+    start view) -- the historical "fly off the open top" deaths are ascents
+    above the visible region into a DOWNWARD-pointing pillar-eye row at world
+    -55 that guards every column c14-46 (all three door columns included); (2)
+    the tower top is real and physical: TWO previously unknown one-shot gravity
+    switches (~world (3,-57) and (3,-81)) plus the eight-block color-12 toggle
+    row (world -83..-79, c13-59) exist ABOVE the clamp -- which is why round 19
+    saw toggles in zero live frames -- and cannot be clicked (clicks are
+    screen-coordinate only, nothing above the clamp is on-screen) unless a rest
+    above -48 is ever found; (3) switch consumption removes the block plus its
+    two cols0-5 border floors ONLY (cell-exact diff); the SIX switch border
+    pairs (-84/-78, -60/-54, -48/-42, -24/-18, 24/30, 36/42) account for every
+    floor in the cols0-5 shaft, so the fully-consumed shaft is a designed
+    continuous drop from -85 straight into the goal pocket (goal (13-17,66-70),
+    pocket c0-23 rows 61-71, pocket floor 72); (4) each E-door carve removes
+    exactly its own 5-wide column across rows -18..-12, all three identical;
+    (5) structure mechanics: remote builds chain LATERALLY only from existing
+    structure at the player row; vertical extension happens only as a
+    player-riding 6px carry; carrying into native cells is a crush DEATH; ride
+    frames block lateral exit until an adjacent cell is built; eye-type gauntlet
+    pillars are click-INERT (tower pillars are not). THE SEAL, mechanically
+    grounded: the goal pocket connects only to the cols0-5 shaft; cols6-12 is
+    native-solid at every mapped row (-90..60) and click-inert under three
+    full-lattice sweeps at three histories; the -18..-12 slab is crossable
+    upward only through a door column, and door-column ascents are uncappable
+    (vertical pre-builds without the player are inert) and lethal at -55. A
+    maximal one-life interactable clear (all four reachable switches, doors 1+3,
+    all clickable pillars; door 2 provably unopenable without death since every
+    clamped park is in a door column) does NOT complete the level. The one
+    unguarded ascent is the eye-free c55-59 channel from the -41..-25 room to a
+    rest under the -78 floor, but the room itself is only enterable through a
+    lethal door column. Frontier stays 8/9. NEXT LEADS: find any float-cap for a
+    door column; find any rest above -48 (would unlock clicking the toggle row +
+    upper switches -- toggle semantics are a plausible combination lock and
+    remain wholly untested); ACTION7-during-float tricks barely probed.
+    Reusable mapping tooling (frame registration + mosaic + click-sweep) lives
+    with the round-22 artifact.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one

@@ -28,3 +28,11 @@ Daily automated check (systemd timer `arc-news-watch.timer`, see `scripts/arc_ne
 
 - YUTO KOJIMA took the lead with **1.86**, ahead of Tecnod8.AI (**1.61**); the **1.56** trio now ties for third. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-07-15 13:13 UTC -- checked, nothing new
+
+## 2026-07-16 13:14 UTC -- checked, nothing new
+
+## 2026-07-17 13:15 UTC -- check failed
+
+CHECK_TIMED_OUT
+
