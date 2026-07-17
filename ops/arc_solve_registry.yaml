@@ -2235,7 +2235,9 @@ games:
     full-clear session above.
 - game: lf52
   reproducibility: reproduced
-  levels_reproduced: 7
+  levels_reproduced: 10
+  full_game_clear: true
+  final_game_state: 'GameState.WIN'
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
@@ -2266,6 +2268,18 @@ games:
     results/outer_loop_round14_lf52_probe_20260716.json action_sequence (759 labels:
     the verified 615-label L1-L6 prefix plus 144 L7 labels encoding 98 carrier
     moves and 23 two-click jumps), gpt-5.6-sol-max, 2026-07-16.
+    L8: results/outer_loop_lf52_l8plus_probe_20260717.json action_sequence
+    (827 labels: the verified 759-label L1-L7 prefix plus a 68-action L8
+    suffix encoding 26 carrier moves and 21 two-click jumps),
+    gpt-5.6-sol-max-effort, 2026-07-17.
+    L9: the same results/outer_loop_lf52_l8plus_probe_20260717.json
+    action_sequence (927 labels: the reproduced 827-label L1-L8 prefix plus a
+    100-action L9 suffix encoding 14 carrier moves and 43 two-click jumps),
+    gpt-5.6-sol-max-effort, 2026-07-17.
+    L10: the same results/outer_loop_lf52_l8plus_probe_20260717.json
+    action_sequence (1009 labels: the reproduced 927-label L1-L9 prefix plus an
+    82-action L10 suffix encoding 32 carrier moves and 25 two-click jumps),
+    gpt-5.6-sol-max-effort, 2026-07-17.
   reproduce: >-
     Exp4690 results/experiment_4690_levelup_selfplay.json re-gated
     results/arc_loop_solve_lf52.json offline_reproduced=True, reached_level=2,
@@ -2274,6 +2288,18 @@ games:
     offline env, then 5/5 additional fresh env.reset()+replay trials reached
     levels_completed=7, state=GameState.NOT_FINISHED, engine_level=8; concrete
     action checksum c4f4ee61011ddd8ce4b84b36e3fa684623ae0a0fda868a5a7d3ba0163ad25b2e.
+    L8 passed arc_solver_kit.reproduce(claimed_level=8), reached_level=8,
+    reproduced=true, then 5/5 additional fresh full-sequence replays reached
+    levels_completed=8, state=GameState.NOT_FINISHED; concrete action checksum
+    7cbb74e941706f836050de81857334157f639e0f2d0fdded8cbef25d9c4a8b38.
+    L9 passed arc_solver_kit.reproduce(claimed_level=9), reached_level=9,
+    reproduced=true, then 5/5 additional fresh 927-action replays reached
+    levels_completed=9, state=GameState.NOT_FINISHED; concrete action checksum
+    c0db6aff0712ef5a972016fbd0d0514c4ea6563348fd61294adfaa3b87ffb215.
+    L10 passed arc_solver_kit.reproduce(claimed_level=10), reached_level=10,
+    reproduced=true, then 5/5 additional fresh 1009-action replays reached
+    levels_completed=10, state=GameState.WIN; concrete action checksum
+    2c3b55bcfbc98ae2fe628862a0d602cba852890889f85f09b946c9394c36fa51.
   learned_verifier_checkpoint: models/arc_verifier_lf52.json
   gotchas:
   - The hupkpseyuim2 carrier is not a peg; it moves on rails and can carry a peg
@@ -2641,6 +2667,59 @@ games:
     constrains carriers, not necessarily peg reachability, and confinement
     searches must enumerate EVERY selectable peg type even when only one type
     can satisfy the removal win condition.'
+  - 'L8 SOLVED (2026-07-17, gpt-5.6-sol-max-effort,
+    results/outer_loop_lf52_l8plus_probe_20260717.json): adapter-free ACTION6
+    inventory found two green and two visible blue pegs; the direct
+    blue-over-blue jump was non-removing, the complete carrier-free graph
+    drained at 35 states, and 1,511 carrier-inclusive public-frame states did
+    not find a win. The permitted PUBLIC-source development switch revealed
+    two MORE blue pegs below the viewport and the actual rule: all four blue
+    pegs are indestructible relay pieces excluded from the win count; reduce
+    the two green pegs to one. Winning route: hop the west green across fixed
+    torches into the left carrier, ride it down (camera-follow reveals the
+    hidden blue pair), use those blue pegs as non-destructive relays across the
+    lower sockets, ferry the green along the bottom and right rails, then jump
+    UP from carrier (8,8) over the east green at (8,7) to remove it. Concrete
+    suffix: 47 abstract steps = 26 carrier moves + 21 jumps = 68 engine
+    actions, 827 total from reset. REAL env.step reached L9; official
+    reproduce(claimed_level=8) passed and 5/5 additional fresh replays ended
+    levels_completed=8, NOT_FINISHED. L8 banked; frontier 7->8; L9 remains.'
+  - 'L9 SOLVED (2026-07-17, gpt-5.6-sol-max-effort,
+    results/outer_loop_lf52_l8plus_probe_20260717.json): the reproduced
+    827-action prefix entered L9; a fresh exhaustive 10x10 ACTION6 sweep found
+    six visible pegs (two green, four blue) and two legal opening jumps. Source
+    mechanics establish three removable greens total plus six indestructible
+    blue relays, with one green/two blues initially off-screen east. A
+    668,532-state deterministic planner found the winning line: consolidate
+    the west relay ladder, walk the east blue pair west using off-screen
+    ACTION6 coordinates, merge one west green onto the entrance carrier at
+    (6,5) (which triggers a scripted -20px reveal), then move the green-loaded
+    carrier right 14 times while camera-follow progressively exposes the east
+    chamber. Blue relays route the east green to (21,5); the carrier green at
+    (20,5) jumps RIGHT over it into (22,5), leaving one green and firing
+    next_level. Concrete suffix: 57 abstract steps = 14 carrier moves + 43
+    jumps = 100 engine actions, 927 total from reset. REAL env.step reached
+    L10; official reproduce(claimed_level=9) passed and 5/5 additional fresh
+    replays ended levels_completed=9, NOT_FINISHED. L9 banked; frontier 8->9;
+    only L10 remains.'
+  - 'L10 SOLVED -- FULL 10/10 GAME CLEAR (2026-07-17,
+    gpt-5.6-sol-max-effort,
+    results/outer_loop_lf52_l8plus_probe_20260717.json): a fresh 927-action
+    replay entered L10 and an exhaustive offset-aware ACTION6 sweep found two
+    green pegs plus six visible blue relays; PUBLIC-source development exposed
+    four more blue pegs loaded on carriers below the viewport. L10 has two
+    removable greens, ten indestructible blue relay pieces, and eight carriers
+    that all respond to every direction action. Broad monolithic searches hit
+    permutation blow-up, so the route was decomposed: an exact 203,900-state
+    search produced a 42-step staging line, then a 372,127-state carrier-only
+    BFS found the 13 controls that parked a green-loaded carrier at (2,6).
+    Final jumps (2,6)->(4,6) over blue@(3,6), then green@(4,5)->(4,7) over the
+    staged green@(4,6), remove one green and fire the terminal win. Concrete
+    suffix: 57 abstract steps = 32 carrier moves + 25 jumps = 82 engine
+    actions, 1009 total from reset. REAL env.step reached
+    levels_completed=10, GameState.WIN; official reproduce(claimed_level=10)
+    passed and 5/5 additional fresh full replays also ended at 10/WIN. L10 is
+    banked and lf52 is fully cleared 10/10.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
@@ -5342,7 +5421,7 @@ games:
     reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
 - game: bp35
   reproducibility: reproduced
-  levels_reproduced: 8
+  levels_reproduced: 9
   mechanic_class: goal_directed_navigation_local_obstacle_clear
   win_condition: >-
     L1 goal-directed upward-gravity navigation plus L2 same-row blocker clears,
@@ -6119,6 +6198,26 @@ games:
     rest -9.5, no rest in [-48,-13]. NEXT LEAD: search for an ACTUAL safe
     offscreen landing/support in a door or c55-59 ascent column, using the
     three-RIGHT descent + ACTION7 as efficient reversible branch primitives.'
+  - 'L9 round 26, FULL GAME CLEAR (2026-07-17,
+    gpt-5.6-sol-max-effort,
+    results/outer_loop_round26_bp35_probe_l9_20260717.json): support topology,
+    not trigger type or viewport crossing, distinguishes safe and fatal flights.
+    A matched x26/+2.5 switch click lands at -9.5 over the closed third door
+    (22 layers) but dies over the pre-opened door (47 layers). The winning
+    68-action L9 tail remotely opens door 3 before entry, builds/rides the
+    unused x27 body through the old dead zone to -45.5, shuttles through the
+    eye-free x56 channel to -75.5, and uses the color-12 ceiling as a column
+    selector: x27 lands under a door at -87.5, while x45 survives a 42-row
+    ascent to the pillar at -117.5. One carry plus a lateral body bridge reaches
+    x15/-123.5; opening the newly live x7-11 horizontal E door and LEFT twice
+    crosses the formerly solid cols6-12 divider into the x3 shaft at -129.5.
+    The shaft-top view exposes nine 21-cell color-8 switches. Fixed terminal
+    suffix (9,3),(3,35),(15,3),(3,35),(21,3),(3,35),(27,3),(3,35),(33,3),
+    RIGHT,RIGHT reaches levels_completed=9 / WIN on full action 410. Official
+    reproduce(claimed_level=9) passed, then 5/5 brand-new full replays ended
+    WIN with identical terminal public hash 6429510c...ede; adversarial verifier
+    clean. bp35 is reproducibly complete at 9/9. Exact 342-prefix + 68-tail
+    derivation and checksum 20359e0f...8eee are in the artifact.'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
@@ -6152,7 +6251,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 179
+reproducible_total_levels: 183
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
