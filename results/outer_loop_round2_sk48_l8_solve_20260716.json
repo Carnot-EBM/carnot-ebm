@@ -1,0 +1,1560 @@
+{
+  "experiment": "outer_loop_round2_sk48_l8_solve",
+  "game": "sk48",
+  "model": "claude-opus-4-8",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "development_proxy",
+  "starting_level": 7,
+  "max_level_reached": 8,
+  "levels_won_this_session": 1,
+  "full_game_clear": true,
+  "final_game_state": "GameState.WIN",
+  "win_levels": 8,
+  "total_env_steps_used": 378,
+  "l8_tail_actions": 86,
+  "reproduction_verified": true,
+  "reproduction_note": "Two independent offline reproduction gates PASS. (1) arc_solver_kit.reproduce('sk48', full-378-action-solution, apply, claimed_level=8) -> {reached_level: 8, reproduced: true}. (2) 5x fresh env.reset()+replay of the full 378-action sequence via the offline arcade -- all 5 reached levels_completed=8, state=GameState.WIN (win_levels=8, so this is a FULL GAME CLEAR, not just a level-up). Matches every prior sk48 round's fresh-reset re-verification practice.",
+  "random_seed": null,
+  "random_seed_note": "The winning L8 tail was found by a DETERMINISTIC best-first transition search over the game's own deep-copied public engine (no RNG in the game logic or the search); the tail is fully reproducible from the fixed 292-action L1-L7 prefix. random_seed is null because no stochastic sampling was involved.",
+  "reproducibility_checksum": "5c5181bb8a796bbd1374f6dcd62cba1f9ffc696f33a5f52b7c7a3591581f0a06",
+  "reproducibility_checksum_note": "sha256 of the JSON-serialized (separators=',',':') 86-action L8 tail. Full-378 solution sha256 = ba6f2cb18748f455a0467e8c4d3e747fdc5f272f48521f1eac9d82743aeef7ae.",
+  "honest_verdict": "complete_sk48_l8_solved_full_game_clear_all_8_of_8_levels_win_state",
+  "narrative": "SOLVED sk48 Level 8 -- the FINAL level (win_levels=8) -- reaching GameState.WIN, a full 8/8 game clear. Method: an exact SOURCE-GROUNDED offline transition search over sk48's own deep-copied public engine (environment_files/sk48/d8078629/sk48.py), the same methodology the L4-L7 solves used (permitted public-game offline dev per CLAUDE.md's source-reading-is-a-public-games-dev-tool-only rule). The deep-copy substrate was verified move-for-move identical to live env.step before searching. L8 win condition (read from the engine): TWO simultaneously-checked chain/guide pairs -- the color-6 HORIZONTAL chain (head at (5,26), rows reachable {20,26,32}) must read [9,14] and the color-15 VERTICAL chain (head at (29,2), cols reachable {23,29,35}) must read [8,12], where a 'read' is the first two rack-block colors coincident with the chain's segments. The four rack blocks form a cross around center (29,26): 9@(29,14) and 14@(29,38) on the vertical column; 8@(17,26) and 12@(41,26) on the horizontal row. Crucially the two chains' NATURAL readings are SWAPPED from the targets (the vertical column already holds 9,14 and the horizontal row already holds 8,12), so the solve requires a full CROSSWISE RELOCATION: move 8,12 onto the vertical column (jammed at the bottom, rows 38/44) and 9,14 onto a horizontal row in order, using push (extend), retract-pull, and perpendicular carry primitives, coordinated across the two chains via ACTION6 pair-selection clicks (vertical pair = click (29,2); horizontal pair = click (5,26)). The winning L8 tail is 86 actions appended to the verified 292-action L1-L7 prefix (378 actions total). levels_completed advanced 7->8 (WIN) on the final action. The full-clear is confirmed by both reproduction gates above.",
+  "novel_mechanics_found": [
+    "L8 win condition: horizontal (color-6) chain must read [9,14] and vertical (color-15) chain must read [8,12] SIMULTANEOUSLY; a 'read' = the first two rack-block colors coincident with the chain's own segments, compared against the fixed bottom guide-row targets.",
+    "The two chains' NATURAL readings are exactly swapped from their targets (vertical column holds 9,14; horizontal row holds 8,12), so the solve is a full crosswise block relocation, not a variant of L6/L7's shared-crossing trick (L8 has four genuinely distinct colors).",
+    "Head reachability is tightly bounded by the irkeobngyh brace-walls: the horizontal head reaches only rows {20,26,32}; the vertical head only cols {23,29,35}. A block whose row is not in {20,26,32} AND whose col is not in {23,29,35} is PERMANENTLY stuck (neither chain can reach it) -- this stuck-cell invariant is load-bearing for any search.",
+    "Block-movement primitives: extending a chain in its base direction PUSHES blocks ahead toward the far boundary (read when they jam); retracting PULLS threaded blocks back toward the head; a perpendicular slide (braced against a wall) CARRIES threaded blocks +/-6 into the adjacent lane -- but keeps them fixed-distance apart, so decoupling a pair requires a core-cell handoff between the two chains.",
+    "The vertical read is LOCKABLE: once 8,12 are jammed at the bottom of the vertical column (rows 38/44), the horizontal chain (rows 20/26/32) can never reach them, so readB=[8,12] stays satisfied while readA is completed independently."
+  ],
+  "solve_method": "Deep-copied Sk48 engine (copy.deepcopy of env._game; env.step == game.perform_action, verified) with a best-first transition search over actions {1,2,3,4,6}. Heuristic: distance of each rack block to a concrete winning target config + a read-completion term, with a HARD prune of any state placing a block in a permanently-stuck cell. Winning target 'natural' (9,14 -> row 26 left; 8,12 -> col 29) converged at depth 86 after ~17.9k node expansions (~705s). Any candidate was checked for a real GameState.WIN via the engine before banking.",
+  "l8_tail": [
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    }
+  ],
+  "full_solution_action_sequence": [
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 7
+    },
+    {
+      "action": 7
+    },
+    {
+      "action": 7
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 44
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 35,
+        "y": 56
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 56
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 35,
+        "y": 56
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 2
+      }
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 5,
+        "y": 26
+      }
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "offline_arcade_environment_files_sk48",
+      "available": true
+    },
+    {
+      "resource": "verified_l1_l7_prefix_artifact_292_actions",
+      "available": true
+    },
+    {
+      "resource": "deepcopy_search_substrate_faithful_to_env_step",
+      "available": true
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 8 (full game clear, win_levels=8)",
+      "result": true,
+      "principle": "Only a reproduced level-8 win counts as banked progress per ARC Solve Reproducibility Discipline; L8 is the final level so this is a full 8/8 clear -> WIN."
+    },
+    {
+      "condition": "arc_solver_kit.reproduce claimed_level=8 reproduced==true",
+      "result": true,
+      "principle": "The canonical offline reproduction gate is the oracle-distinct authority for a banked solve."
+    },
+    {
+      "condition": "5x fresh env.reset()+replay all reach levels_completed==8",
+      "result": true,
+      "principle": "Independent fresh-env re-verification rules out a state-leak / non-idempotent-reset artifact."
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "Reading/using the level's own PUBLIC engine source to build a faithful deep-copy transition search is a PERMITTED public-game offline-dev accelerant (CLAUDE.md source-reading-is-a-public-games-dev-tool-only rule; same precedent as the L4-L7 solves). Classified development_proxy, not live_agent_self_discovery, because the search used the game engine directly. The winning sequence was nonetheless LIVE-executed and verified via real env.step() + both reproduction gates before being banked, exactly as L4-L7 were."
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the banked action tail lets any third party confirm they are replaying the identical sequence that produced the WIN."
+    }
+  }
+}
