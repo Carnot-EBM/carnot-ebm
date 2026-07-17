@@ -1,0 +1,83 @@
+{
+  "experiment": "outer_loop_round18_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-opus-4-8",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 3200,
+  "reproduction_verified": true,
+  "reproduction_note": "Sixth round on L9, direct continuation of rounds 13-17. All four load-bearing claims (prefix reaches L8; the door-shaft LEFT fall dies; the goal re-sighting sequence stays alive with the goal visible; the no-door LEFT control stays alive) were independently re-verified 3x each from a fresh env.reset()+replay: prefix-only -> (L8, NOT_FINISHED, no goal); door_death -> (L8, GAME_OVER); goal_resight -> (L8, NOT_FINISHED, goal visible); left_control -> (L8, NOT_FINISHED). All deterministic (offline arcade).",
+  "random_seed": null,
+  "random_seed_note": "The offline arcade env is deterministic given the fixed 342-action L1-L8 prefix; no RNG seed is consumed by the pure env-stepping self-discovery loop.",
+  "reproducibility_checksum": "492cd475758347b2b6cc0939198f0ad5465ec86218d768497e5f872ce6df857b",
+  "reproducibility_checksum_note": "sha256 of goal_resight_sequence (the economical breakthrough that re-sights the goal AND proves the lower-region switches are still available): breakthrough (grow pillar, flip up, RIGHT x2, flip down through the grown pillar) + LEFT x3 + flip-up via the lower left-column switch {x:3,y:27} + RIGHT x3, landing back in the up-gravity pocket at cols31-33 with the goal diamond re-sighted at rows45-48 cols14-16.",
+  "honest_verdict": "complete_bp35_l9_goal_sealed_behind_cols6_12_wall_door_shaft_route_identified_pillar_eye_blocker_no_win",
+  "narrative": "Sixth round on L9 (the final level of bp35), a fresh-session continuation of rounds 13-17. No win, but substantial NEW findings that REFRAME the level and resolve several round-17 open questions. (1) CONTROL RESOLVED: LEFT from the fall-through landing is SAFE without opening any door (the player slides along the floor band to the left wall at col15, all NOT_FINISHED across multiple slides). Round 17's door-then-LEFT death is therefore CAUSED by the door-opening, not by leftward movement itself. (2) EVEN THE LEFTMOST DOOR ALONE causes the LEFT-death: after opening only the leftmost door (click {x:15,y:3}), the player survives the first two LEFT slides (to col27, then col21) but the THIRD LEFT is fatal. (3) DOORS ARE REAL PASSAGES, not 'wall texture' (corrects round 17): opening the leftmost door turns cols13-17 (rows0-7 in the landing frame, and the shaft below it) into an air column; opening all three opens a chamber at cols13-29. (4) The leftmost door sits at cols13-17 -- EXACTLY the goal's columns (the goal diamond is at cols14-16) -- so opening it carves a vertical SHAFT down the goal's own columns; the fatal LEFT is the player sliding into that shaft and FALLING. The GAME_OVER overview shows WHY the fall kills: a pillar with a color-11 'B0B' eye sits at cols14-16 row20, directly blocking the shaft ABOVE the goal, so the player hits the eye and dies before ever reaching the goal below (the goal completes on touch even mid-fall, so a clear shaft would WIN). (5) LOWER-REGION GRAVITY SWITCHES ARE FUNCTIONAL (corrects round 16's 'all switches exhausted'): after the fall-through, clicking a color-8 switch block in the left column (e.g. {x:3,y:27}) flips gravity and is consumed, giving MORE flips than round 16 concluded -- the economical route (skipping round 16's {x:27,y:3} object-click) preserves them. A repeatable goal re-sighting loop was confirmed: breakthrough + LEFT x3 + flip{x:3,y:27} + RIGHT x3 returns to the up-gravity pocket with the goal re-sighted. (6) COLOR-12 TOGGLE BLOCKS EXIST in L9 (new -- never seen in a live camera frame before this round; visible as a full row of them at rows8-12 in the GAME_OVER overview); the L3-L4 gotcha said bp35 has toggle blocks, and this confirms L9 does too. (7) MAJOR REFRAME: full-grid topological analysis across every reachable state shows the player is confined to cols>=13 in EVERY gravity/position state (a solid cols6-12 wall blocks leftward movement at every row 0-40, in the start room, the up-gravity pocket, AND the fall-through room), while the goal sits in an open pocket (cols0-23, rows40-50) BELOW the main floor (rows33-39, solid across cols6-63) whose only vertical opening is a narrow cols0-5 shaft on the FAR side of the cols6-12 wall. So the problem is no longer 'find the goal' (found, sighted repeatedly) but 'reach the goal pocket past the cols6-12 wall' -- and the leftmost-door shaft is the identified intended descent down the goal's own columns, currently blocked by the row20 pillar eye. No new level banked; frontier stays at level 8.",
+  "novel_mechanics_found": [
+    "The leftmost E-tile door (cols13-17) opens a genuine vertical SHAFT down the goal's own columns (cols14-16), not 'wall texture' as round 17 concluded; sliding LEFT into it makes the player fall.",
+    "The door-shaft fall is blocked by a pillar with a color-11 'B0B' eye at cols14-16 row20 (visible in the GAME_OVER overview), ABOVE the goal -- this is why the fall kills instead of touching the goal below and winning.",
+    "Color-12 TOGGLE BLOCKS exist in L9 (a full row at rows8-12 in the GAME_OVER overview), never seen in a live camera frame in rounds 13-17; candidate mechanism for creating a safe landing / shield in the door shaft.",
+    "The lower-region color-8 gravity switches (left column) are FUNCTIONAL and consumable independently of the two start-room switches, so the economical route preserves extra gravity flips (corrects round 16's 'all switches exhausted').",
+    "The player is confined to cols>=13 in EVERY reachable state (start room, up-gravity pocket, fall-through room) by a solid cols6-12 wall spanning rows 0-40; the goal pocket is only openable via a cols0-5 shaft on the far side of that wall."
+  ],
+  "dead_ends": [
+    "Growing pillars and sliding across the fall-through room (round 17's corridor) and simple LEFT/RIGHT slides in any gravity keep the player on the cols>=13 side of the wall -- they never reach the goal pocket.",
+    "Naive LEFT into the opened leftmost-door shaft is fatal (pillar eye at cols14-16 row20); do not repeat the door-then-slide-into-shaft sequence without first neutralizing or bypassing that eye.",
+    "Flip-up via the lower switch + moving only returns the player to the up-gravity pocket (goal visible but unreached); repeated gravity cycling does not descend to the goal."
+  ],
+  "goal_resight_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 1}, {"action": 1}, {"action": 1},
+    {"action": 6, "data": {"x": 3, "y": 27}},
+    {"action": 4}, {"action": 4}, {"action": 4}
+  ],
+  "goal_resight_sequence_checksum": "492cd475758347b2b6cc0939198f0ad5465ec86218d768497e5f872ce6df857b",
+  "door_shaft_death_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 6, "data": {"x": 15, "y": 3}},
+    {"action": 1}, {"action": 1}, {"action": 1}
+  ],
+  "door_shaft_death_sequence_checksum": "1eb04e990dad5036f5702d469602dc15fc199c8e00d2be1e60750c9a1b20be57",
+  "left_control_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4}, {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 1}, {"action": 1}, {"action": 1}, {"action": 1}
+  ],
+  "left_control_sequence_checksum": "ac5600d275fb0810406b68d0536aa44a7d60f970aa79144e5bd9a83ea9f583b7",
+  "next_lead": "The leftmost-door shaft (cols13-17 = the goal's columns) is the identified intended descent; the blocker is the pillar eye at cols14-16 row20. Next round: neutralize or bypass that eye -- test whether growing the shaft pillar (round-15 click-to-grow) changes the eye's lethality, whether solidifying a color-12 toggle block above the goal creates a safe landing, or whether falling down col13 or col17 (the shaft's frame, off the eye) reaches a walkable ledge from which the player can step onto the goal. Also worth a live scan: whether any of the newly-confirmed color-12 toggle blocks are clickable/reachable from the fall-through room.",
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress per ARC Solve Reproducibility Discipline; this round is an honest HONEST_NULL despite resolving several round-17 open questions and identifying the intended descent route."
+    }
+  ],
+  "field_provenance": {
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the goal-resight sequence lets a future round independently re-derive the goal-visible state and the preserved-switch finding before extending toward the door-shaft descent."
+    },
+    "solve_provenance": {
+      "principle": "This round used only the offline_arcade env + live env.step actions and camera frames (including the GAME_OVER overview frame the live agent itself sees on death) -- no game source was read, no ground-truth teleport/probe was used -- matching the live_agent_self_discovery contract from the ARC Live-Path Reachability Discipline."
+    },
+    "solve_provenance_note": {
+      "principle": "read_game_source was NOT used; per the self-solve provenance contract, reading source would force outer_loop_re provenance (CRITICAL-flagged, never banked), so pure live discovery is the only path to a banked bp35 L9."
+    }
+  }
+}
