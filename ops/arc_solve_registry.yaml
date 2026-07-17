@@ -5753,6 +5753,42 @@ games:
     creates a safe landing, or whether falling down col13/col17 (the shaft
     frame, off the eye) reaches a ledge to step onto the goal from; and probe
     whether any color-12 toggle block is clickable from the fall-through room.'
+  - 'L9 mapping round 19, CORRECTS round 18, still HONEST NULL (2026-07-16,
+    claude-opus-4-8, results/outer_loop_round19_bp35_probe_l9_20260716.json):
+    seventh round on L9. NEW TOOL: the env f.frame is a multi-LAYER animation
+    array (e.g. 57 layers on the fatal fall) captured with a FIXED camera
+    during a single action, so it reveals the player''s ABSOLUTE vertical
+    trajectory (up vs down) directly -- a real advance over the camera-relative
+    settled frame (which re-centers on the player every step and hides absolute
+    motion). RETRACTS round 18''s "pillar eye at cols14-16 row20": the
+    door-shaft LEFT death is NOT a pillar eye. The animation shows the player
+    slides into the leftmost-door shaft at cols15-16 and RISES from row37 up to
+    row0 (passing the row20 position UNHARMED), then flies off the OPEN top of
+    the shaft (opening the door also removed the ceiling at cols13-17 rows0)
+    and dies at row0. Verified 3x (player row path min=0 max=37). The shaft
+    goes UP, AWAY from the goal (which is below) -- it is NOT the intended
+    descent; do not chase the retracted pillar-eye lead. Flipping to UP-gravity
+    BEFORE entering the shaft (open door + LEFT + flip {x:3,y:27} + LEFT)
+    SURVIVES the fly-off but only returns the player to the up-gravity pocket
+    at cols15-16 row27 (no goal, no descent). NO DESCENT EXISTS from the
+    fall-through landing: trajectory analysis of every move (LEFT/RIGHT) and
+    every click (pillars/switches/doors) shows the player stays at the same
+    absolute level (flat) or rises; none descend toward the goal. REFINES round
+    18''s toggle-block claim: color-12 toggle blocks appear in ZERO cells in
+    EVERY live reachable state (start, flip-up, landing, +1 door, +3 doors,
+    +flip-up, corridor) -- they appear ONLY in the GAME_OVER overview, so they
+    are NOT a live-usable mechanism (round 18 overstated their usefulness). NET:
+    the goal stays topologically SEALED (only the walled-off cols0-5 pocket
+    reaches it, per round 18''s still-valid wall analysis); both live descents
+    (door shaft=up, pillar gap=fall-through room) miss it. No new level banked;
+    frontier stays at level 8. NEXT LEAD: reconsider whether L9''s win is even a
+    "touch the diamond" navigation -- it may be an activate/collect condition
+    (open all doors, grow/toggle a set of objects, or a switch sequence) that
+    completes the level WITHOUT the player reaching the diamond; test that class
+    systematically. And use the new animation-trajectory tool to stitch a full
+    ABSOLUTE-coordinate map of vertical connectivity, to settle definitively
+    whether ANY path links the cols>=13 player region to the goal pocket
+    (rounds 13-19 only ever reasoned in shifting camera-relative frames).'
   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
     partially superseded by the entry above): a wider multi-screen tower with
     chained E-door descents. Every then-known descent branch dead-ended: one
