@@ -6,6 +6,22 @@
 
 ### 2026-07-06 (MANDATORY-NEXT-MILESTONE, operator-directed "continue trying new and novel ideas to forward progress with ARC-AGI-3... likely includes more ARC and AGI study"): ARC-AGI-3 standing floor (>=1 slot/milestone) — perception audit + classical salience front-end, in priority order
 
+> **RETIRED 2026-07-17 (operator directive: "now that the registry of public levels is complete, we
+> should not continue to try and solve them anymore").** All 25 public survey games now show
+> `full_game_clear: true` in `ops/arc_solve_registry.yaml` (`reproducible_total_levels: 183`,
+> `reproducible_total_games: 25`; bp35 and lf52 were the last two, both solved 2026-07-17). The standing
+> floor this entry fed (>=1 ARC-AGI-3 task slot every milestone) is RETIRED per CLAUDE.md "ARC-AGI-3
+> November-Submission Standing Floor" (same status change, same date). `scripts/arc_levelup_guarantee_lint.py`
+> was patched the same session to detect full public-set completion and pass without requiring a
+> level-up attempt, so the mechanical activation guard no longer hard-blocks milestones with zero ARC
+> tasks. The task list below (perception audit, classical salience front-end, ontology-error pilot, and
+> everything accumulated in the UPDATE chain through 2026-07-13) is preserved as historical record per
+> never-prune, but is NO LONGER a live pickup queue — do not resume any of it without a fresh operator
+> directive. **What replaces this floor is not yet decided** (submission-hardening for the actual
+> November Kaggle deadline vs. generalization testing vs. dropping ARC to fully opportunistic) — the
+> operator was asked in the same session; if answered, the resolution belongs in a new dated UPDATE
+> appended below this one, not as an edit to this banner.
+
 > **UPDATE 2026-07-06 (same session, operator escalation):** "I want at least one ARC slot during each
 > milestone, and more if possible to continue the prioritization of ARC-AGI-3 as we need to make headway
 > toward our November submission." This ELEVATES the entry below from opportunistic-only to a **standing
