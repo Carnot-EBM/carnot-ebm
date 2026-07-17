@@ -1,0 +1,40 @@
+{
+  "experiment": "outer_loop_round15_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-sonnet-5",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 344,
+  "reproduction_verified": true,
+  "reproduction_note": "Continuation of rounds 13-14 in the same session, still working from the same verified 342-action L1-L8 prefix, replayed fresh before each probe. No new level banked, so nothing to reproduction-gate via kit.reproduce() -- this artifact documents a newly discovered interactive mechanic instead.",
+  "random_seed": null,
+  "reproducibility_checksum": "6bda17a4228a1b585c1c3826c00715c86c4a919555f4c4b35644a2c368c30dad",
+  "reproducibility_checksum_note": "sha256 of the JSON-serialized single-action probe ([{action:6, data:{x:39,y:15}}]) applied directly after the verified 342-action prefix -- the exact click that triggered the pillar-growth mechanic.",
+  "honest_verdict": "complete_bp35_l9_new_mechanic_found_pillar_click_grows_no_new_level_banked",
+  "narrative": "Third round of bp35 L9 exploration in this session, following round 14's lead to try interacting with objects other than the two start-room switches. Clicking directly on the pillar visible from the true-start view (color-15, originally at rows[13:18] cols[37:42]) does NOT kill the player (unlike walking into a pillar's eye end) -- instead it GROWS the pillar into a larger cross/plus-shaped cluster: the original block plus two new pillar blocks appearing to its left and right (rows[13:17] cols[31:36] and cols[43:48]) and one appearing above it (rows[7:11] cols[37:42]), for a total pillar cell count of 84 (up from the original 21). A second click at the same display coordinates produced no further change (same 84-cell count), suggesting either the growth is capped after one click or the second click landed on an already-grown, non-reactive part of the cluster. This is a genuinely new mechanic for this game not previously documented in the registry -- prior bp35 levels only described pillars as passive hazards (lethal at the eye end, inert elsewhere) and TOGGLE BLOCKS/E-doors as the growable/interactive objects. The state remained NOT_FINISHED throughout (not fatal to click or to have grown pillars nearby while not touching them). Not yet determined: whether the newly-grown pillar cells are hazardous (do they have their own eye ends?), whether this growth is useful as a platform/shield (per the established solidify-for-a-shelf pattern used elsewhere with toggle blocks), or whether it connects to reaching the goal, the 3rd switch, or the doors in any way. No new level banked; frontier stays at level 8.",
+  "novel_mechanics_found": [
+    "PILLARS ARE CLICKABLE and GROW when clicked (color-15 cross/plus expansion, 21 cells -> 84 cells after one click), without harming the player. This is a previously-undocumented interaction for bp35 -- prior gotchas describe pillars only as passive lethal hazards. A second click at the same spot produced no further change."
+  ],
+  "dead_ends": [],
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress per ARC Solve Reproducibility Discipline; this round is an honest HONEST_NULL, not a solve."
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "This round used only the offline_arcade env + live actions -- no game source was read, no ground-truth teleport/probe was used -- matching the live_agent_self_discovery contract from the ARC Live-Path Reachability Discipline."
+    }
+  }
+}
