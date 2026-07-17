@@ -1,0 +1,53 @@
+{
+  "experiment": "exp5718-playbook-index-build",
+  "req": "REQ-ARC-WMTE-5718",
+  "inference_substrate": "live_llm_embedding_extraction",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "playbook-pattern embedder (matches the live query-embedding space)",
+      "quant": "Q4_K_M"
+    }
+  ],
+  "random_seed": 5718,
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed self-declared state (Verdict Terminal-Prefix)."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_embedding_extraction -> adversarial_verify applies the 2.0s embedding-forward-pass floor; real GGUF load + real forward passes, no generation."
+    },
+    "preconditions_checked": {
+      "principle": "records the GGUF was verified before any load; pre-empts silent-missing fabrication (Pre-Launch Preconditions)."
+    },
+    "random_seed": {
+      "principle": "harness determinism precondition."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash over patterns + embeddings catches drift."
+    },
+    "n_patterns": {
+      "principle": "count of embedded patterns; must equal the embeddings row count."
+    },
+    "embedding_dim": {
+      "principle": "vector dimension; the live query embedding must match it."
+    }
+  },
+  "n_patterns": 24,
+  "invalid_mechanic_tags": [],
+  "preconditions_checked": [
+    {
+      "resource": "qwen3.5_9b_gguf_cached",
+      "available": true
+    }
+  ],
+  "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+  "honest_verdict": "complete_playbook_index_built",
+  "embedding_dim": 4096,
+  "kit_reference_count": 6,
+  "index_dir": "models/arc_playbook_index",
+  "reproducibility_checksum": "sha256:876cceca9ecfc6dc5545de709580a0502bfa6497b09cd76630d198b630e46c4e",
+  "duration_s": 6.2,
+  "verifier_is_oracle": false
+}

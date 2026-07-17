@@ -1162,7 +1162,7 @@ def induce_prompt(
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
     k: int = 8,
-    include_playbook_exemplars: bool = False,
+    include_playbook_exemplars: bool | str = False,
 ) -> str:
     # REQ-ARC-FCP-5699-23: k defaults to _transitions_block's own default (8, unchanged
     # production behavior). REQ-ARC-FCP-5699-22 found the default shows the LLM only ~6
@@ -1172,11 +1172,17 @@ def induce_prompt(
     # test whether more per-action examples let the LLM infer general rules instead.
     h, w = trans[0].grid.shape
     colors = sorted(set(int(v) for t in trans for v in t.grid.flatten().tolist()))
-    # REQ-ARC-WMTE-5717: DEV-ONLY exemplar prefix. The inject/don't-inject DECISION is made by
-    # the caller (the agent, which combines SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED / the
-    # CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED env gate AND the stall-only scope) and passed via
-    # the kwarg. Default False -> "" -> the exact pre-existing prompt, byte-identical.
-    exemplars = _PLAYBOOK_EXEMPLAR_BLOCK if include_playbook_exemplars else ""
+    # REQ-ARC-WMTE-5717/5718: DEV-ONLY exemplar prefix. The inject/don't-inject DECISION is made
+    # by the caller (the agent's stall-only gate). Three modes, all default to byte-identical:
+    #   False / ""     -> no injection (the exact pre-existing prompt).
+    #   True           -> the STATIC generic exemplar block (REQ-5717).
+    #   <non-empty str> -> that exact RETRIEVED block (REQ-5718 RAG: top-K patterns for THIS
+    #                      stuck situation), already formatted by arc_playbook_retrieval.
+    if isinstance(include_playbook_exemplars, str):
+        block = include_playbook_exemplars.strip()
+        exemplars = (block + "\n\n") if block else ""
+    else:
+        exemplars = _PLAYBOOK_EXEMPLAR_BLOCK if include_playbook_exemplars else ""
     return f"""{exemplars}You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game '{game}'.
 
 The game state is a {h}x{w} integer grid (logical resolution; colors {colors}). You are
@@ -1310,7 +1316,7 @@ class CodexProposer:
     timeout: int = 420
     offline_legal: bool = False
     # REQ-ARC-WMTE-5717: DEV-ONLY (see LocalGGUFProposer's field); default False -> byte-identical.
-    include_playbook_exemplars: bool = False
+    include_playbook_exemplars: bool | str = False
 
     def induce(
         self,
@@ -1489,7 +1495,7 @@ class LocalGGUFProposer:
     # REQ-ARC-WMTE-5717: DEV-ONLY. When True (set by the agent ONLY on the stall/first-contact
     # re-induction path) AND CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED=1, induce() prepends the
     # game-agnostic exploration-playbook exemplars. Default False -> byte-identical induce prompt.
-    include_playbook_exemplars: bool = False
+    include_playbook_exemplars: bool | str = False
     # REQ-ARC-FCP-5699-30: the raw completion text, captured on EVERY call regardless of
     # success/failure -- generate()'s failure path previously discarded `text` entirely once it
     # decided the required functions were missing, so there was no way to see WHAT the model

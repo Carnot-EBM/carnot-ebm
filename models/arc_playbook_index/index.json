@@ -1,0 +1,369 @@
+{
+  "model": "Qwen3.5-9B-MTP-Q4_K_M",
+  "dim": 4096,
+  "embed_pooling": "last_token",
+  "built_by": "experiment_5718",
+  "patterns": [
+    {
+      "pattern_id": "verify_action_semantics_per_level",
+      "theme": "verification",
+      "statement": "Re-verify what each action does at THIS level from the observed transitions; do not assume an action mapping carried over from a prior level or a similar game.",
+      "mechanic_tags": [
+        "universal"
+      ],
+      "source_games": [
+        "bp35",
+        "m0r0",
+        "sc25",
+        "sk48"
+      ],
+      "citation": "bp35 L9 r13 / m0r0 L5 reversed controls"
+    },
+    {
+      "pattern_id": "level_counter_is_ground_truth",
+      "theme": "verification",
+      "statement": "Only the level counter advancing is a real win; a glyph recoloring, a piece overlapping a target, or an all-green board is not proof the level completed.",
+      "mechanic_tags": [
+        "universal"
+      ],
+      "source_games": [
+        "sp80",
+        "wa30",
+        "cn04"
+      ],
+      "citation": "sp80 L6 glyph-color!=entry / wa30 overlap!=placement"
+    },
+    {
+      "pattern_id": "measure_geometry_programmatically",
+      "theme": "verification",
+      "statement": "Read exact positions from the frame array and reason in lattice units; off-by-one eyeballing of a rendered image wastes scarce commit/action budget.",
+      "mechanic_tags": [
+        "pattern_align",
+        "fill_flow",
+        "config_toggle"
+      ],
+      "source_games": [
+        "sp80",
+        "wa30",
+        "cd82"
+      ],
+      "citation": "sp80 L6 one-cell elbow offset"
+    },
+    {
+      "pattern_id": "win_frame_is_next_level",
+      "theme": "verification",
+      "statement": "Many games fire the level transition on the same action that completes the arrangement, so the solved board never renders; ground the win predicate on the state just before the transition and count only the reproduced level advance.",
+      "mechanic_tags": [
+        "config_toggle",
+        "pattern_align",
+        "slot_match"
+      ],
+      "source_games": [
+        "lp85",
+        "s5i5",
+        "cd82"
+      ],
+      "citation": "lp85 L6-L7 search frame-after-next"
+    },
+    {
+      "pattern_id": "interrogate_unexplained_objects",
+      "theme": "perception",
+      "statement": "Click or otherwise interrogate every visually-unexplained object before committing a route; hazards and helper/utility objects are frequently camouflaged as background or decoration and are often the actual unlock.",
+      "mechanic_tags": [
+        "universal"
+      ],
+      "source_games": [
+        "wa30",
+        "bp35"
+      ],
+      "citation": "wa30 v9 helper robot / bp35 growable pillar"
+    },
+    {
+      "pattern_id": "naive_color_detectors_fooled_by_highlight",
+      "theme": "perception",
+      "statement": "Objects recolor on contact or selection; a detector keyed on one resting color misses the same object once it is adjacent, selected, or carrying something.",
+      "mechanic_tags": [
+        "multi_agent",
+        "pattern_align",
+        "navigation"
+      ],
+      "source_games": [
+        "wa30",
+        "r11l",
+        "sp80"
+      ],
+      "citation": "wa30 contact-highlight / r11l selection diamond"
+    },
+    {
+      "pattern_id": "read_multilayer_animation_for_absolute_motion",
+      "theme": "perception",
+      "statement": "Read the multi-layer animation array (all sub-frames of one action), not just the settled grid, to recover absolute motion; the camera-relative settled frame hides up/down/left/right displacement when the camera recenters.",
+      "mechanic_tags": [
+        "camera_scroll",
+        "navigation"
+      ],
+      "source_games": [
+        "bp35",
+        "wa30",
+        "ka59"
+      ],
+      "citation": "bp35 L9 r19 animation-frame trajectory reader"
+    },
+    {
+      "pattern_id": "camera_is_view_relative_reverify_after_scroll",
+      "theme": "perception",
+      "statement": "In any game with a scrolling or recentering camera, click coordinates are view-relative and the same grid cell maps to different screen coordinates after the camera moves; re-verify positions after any scroll.",
+      "mechanic_tags": [
+        "camera_scroll",
+        "navigation",
+        "peg_rail"
+      ],
+      "source_games": [
+        "lf52",
+        "bp35",
+        "m0r0"
+      ],
+      "citation": "lf52 L3 view-relative clicks"
+    },
+    {
+      "pattern_id": "use_games_own_move_enumeration",
+      "theme": "perception",
+      "statement": "Many games render their own legal-move affordances (highlighted landing squares, a required-color preview); read that as a free move enumerator, but a preview of a target is not proof the target is satisfied.",
+      "mechanic_tags": [
+        "peg_rail",
+        "drag_merge",
+        "pattern_align"
+      ],
+      "source_games": [
+        "lf52",
+        "su15",
+        "re86"
+      ],
+      "citation": "lf52 L3 ACTION6 paints legal landings"
+    },
+    {
+      "pattern_id": "target_is_not_the_goal_display",
+      "theme": "perception",
+      "statement": "Distinguish the interactive delivery target from an inert goal DISPLAY/legend; clicking the picture of the goal or a HUD legend does nothing and wastes actions.",
+      "mechanic_tags": [
+        "drag_merge",
+        "fill_flow",
+        "slot_match"
+      ],
+      "source_games": [
+        "su15",
+        "cd82",
+        "sb26"
+      ],
+      "citation": "su15 deliver to blobs not top boxes"
+    },
+    {
+      "pattern_id": "proven_exhausted_vs_search_capped",
+      "theme": "search",
+      "statement": "A search that finds no solution is a PROOF of unreachability only if the frontier emptied with no cut branches; if it hit a node/time/depth budget it proves nothing -- never treat a capped search as a settled dead end.",
+      "mechanic_tags": [
+        "universal"
+      ],
+      "source_games": [
+        "wa30",
+        "bp35",
+        "lf52"
+      ],
+      "citation": "wa30 settled-dead-end overturned; bp35 L9 partial-not-proven"
+    },
+    {
+      "pattern_id": "hash_semantic_state_ignore_cosmetics",
+      "theme": "search",
+      "statement": "Deduplicate search states on the load-bearing subset of state (position, facing, the flags that matter) and explicitly ignore cosmetic variation (animation phase, click counters, decorative growth), or the frontier explodes -- but verify what is truly cosmetic before discarding it.",
+      "mechanic_tags": [
+        "navigation",
+        "config_toggle",
+        "peg_rail"
+      ],
+      "source_games": [
+        "lp85",
+        "bp35"
+      ],
+      "citation": "lp85 goal-key dedup; bp35 pillar-growth not cosmetic"
+    },
+    {
+      "pattern_id": "question_win_model_when_navigation_exhausted",
+      "theme": "search",
+      "statement": "If every reachable route and interaction has been tried and nothing wins, the bug may be your model of what winning MEANS (spatial-touch vs a score/collection/activation condition), not your search over how to get there.",
+      "mechanic_tags": [
+        "navigation",
+        "config_toggle",
+        "fill_flow"
+      ],
+      "source_games": [
+        "bp35",
+        "sp80",
+        "vc33"
+      ],
+      "citation": "bp35 L9 tested non-spatial win; sp80 L5 hidden win condition"
+    },
+    {
+      "pattern_id": "source_grounded_validate_and_enumerate_all_pieces",
+      "theme": "search",
+      "statement": "For a PUBLIC development game only, a source-grounded offline simulator can break walls blind interaction cannot -- but validate it move-for-move against the real engine before trusting it, and any impossibility proof must enumerate EVERY selectable piece type, not just the one that satisfies the win.",
+      "mechanic_tags": [
+        "peg_rail",
+        "chain_sort"
+      ],
+      "source_games": [
+        "lf52",
+        "sk48"
+      ],
+      "citation": "lf52 r14 confinement-proof omitted a piece type"
+    },
+    {
+      "pattern_id": "verifier_routes_gate_decides",
+      "theme": "search",
+      "statement": "Use a learned or computed verifier to route best-first search (a dense cyclic-distance heuristic beats a sparse mismatch count), but the executable reproduction gate is the only authority that counts a level.",
+      "mechanic_tags": [
+        "config_toggle",
+        "universal"
+      ],
+      "source_games": [
+        "tr87",
+        "sk48",
+        "ar25"
+      ],
+      "citation": "tr87 summed-cyclic-distance routes L4"
+    },
+    {
+      "pattern_id": "fresh_env_branches_for_risky_tests",
+      "theme": "hazard",
+      "statement": "Test a dangerous hypothesis on a fresh throwaway environment branch, not on a real in-progress attempt; a fresh env per candidate is also the correct branch mode for a game whose reset is not idempotent.",
+      "mechanic_tags": [
+        "navigation",
+        "config_toggle",
+        "universal"
+      ],
+      "source_games": [
+        "tu93",
+        "sp80",
+        "cn04"
+      ],
+      "citation": "tu93 gotcha#7 fresh_env; sp80 fresh-env branching"
+    },
+    {
+      "pattern_id": "env_reset_is_often_not_clean",
+      "theme": "hazard",
+      "statement": "After a game-over or mid-level, env.reset() often leaves poisoned hidden state (parity flags, leaked ghosts, depleted timers); build a fresh env, or use the game's own in-game RESET action, rather than chaining resets.",
+      "mechanic_tags": [
+        "navigation",
+        "multi_agent"
+      ],
+      "source_games": [
+        "tu93",
+        "g50t",
+        "r11l"
+      ],
+      "citation": "tu93 parity-poisoned reset; g50t ghost leak"
+    },
+    {
+      "pattern_id": "count_every_action_including_failed",
+      "theme": "hazard",
+      "statement": "Games meter actions; blocked moves, failed clicks, selects, no-ops, and undo often consume the same budget, and failed clicks sometimes cost more (escalating lockouts). Plan routes as speedruns when a hard action ceiling exists.",
+      "mechanic_tags": [
+        "drag_merge",
+        "navigation",
+        "pattern_align"
+      ],
+      "source_games": [
+        "su15",
+        "bp35",
+        "r11l"
+      ],
+      "citation": "su15 failed-click escalating meter; bp35 L6 hard action clock"
+    },
+    {
+      "pattern_id": "reset_and_timer_scope_varies",
+      "theme": "hazard",
+      "statement": "Check whether a reset restarts the current level or the whole game, and whether the level's internal action/life timer is separate from your session budget; the same action can even have different scope depending on when it fires.",
+      "mechanic_tags": [
+        "navigation",
+        "drag_merge",
+        "config_toggle"
+      ],
+      "source_games": [
+        "r11l",
+        "su15",
+        "ka59"
+      ],
+      "citation": "r11l ACTION0 scope depends on timing; su15 L9 full-game reset"
+    },
+    {
+      "pattern_id": "bisect_death_to_minimal_prefix",
+      "theme": "hazard",
+      "statement": "When a sequence ends in death, binary-search the prefix to the exact action that kills, and separate a real hazard from an unrelated budget/timer/harness cause before concluding a move is lethal.",
+      "mechanic_tags": [
+        "navigation"
+      ],
+      "source_games": [
+        "bp35"
+      ],
+      "citation": "bp35 L6 'lethal step' was the action clock"
+    },
+    {
+      "pattern_id": "distinguish_harness_artifact_from_real_state",
+      "theme": "reframe",
+      "statement": "An empty/degenerate frame or a wide game-over OVERVIEW render is frequently a harness/engine artifact, not a real signal; a death-overview shows the whole level regardless of where death occurred, so it is not a location-specific reveal.",
+      "mechanic_tags": [
+        "universal"
+      ],
+      "source_games": [
+        "g50t",
+        "bp35",
+        "cd82"
+      ],
+      "citation": "g50t L7 post-win extra-step sentinel; bp35 L9 fixed overview render"
+    },
+    {
+      "pattern_id": "name_the_one_missing_step",
+      "theme": "reframe",
+      "statement": "When a plan fails, diagnose the single missing action/ordering from its exact failure point and insert it, rather than restarting; a failing candidate is data that localizes the fix.",
+      "mechanic_tags": [
+        "navigation",
+        "config_toggle"
+      ],
+      "source_games": [
+        "ls20",
+        "s5i5",
+        "sp80"
+      ],
+      "citation": "ls20 L5 'insert the ring reset'; s5i5 L4 exchange-order fix"
+    },
+    {
+      "pattern_id": "minimize_tooling_reason_from_raw_arrays",
+      "theme": "reframe",
+      "statement": "Do not burn a session building visualization harnesses or over-investing in offline simulation; reason from raw grid arrays, handle multi-layer frames defensively, and budget translating any offline plan into live actions before the session ends.",
+      "mechanic_tags": [
+        "universal"
+      ],
+      "source_games": [
+        "lf52",
+        "ka59",
+        "dc22"
+      ],
+      "citation": "lf52 r3 PNG-harness timeouts; ka59 tooling crash"
+    },
+    {
+      "pattern_id": "beware_ordering_and_prefix_contamination",
+      "theme": "reframe",
+      "statement": "Reaching the right positions is not enough when order matters: an intended sequence can be contaminated by a nearer element seen first, by leftover prefix actions bleeding into a level entry, or by residual win-animation state -- make candidate scripts phase-robust.",
+      "mechanic_tags": [
+        "chain_sort",
+        "config_toggle",
+        "pattern_align"
+      ],
+      "source_games": [
+        "sk48",
+        "wa30",
+        "tr87"
+      ],
+      "citation": "sk48 L6 ordering contamination; tr87 fade-animation residue"
+    }
+  ]
+}

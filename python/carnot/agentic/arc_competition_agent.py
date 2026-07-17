@@ -245,6 +245,27 @@ def _playbook_exemplars_gate_on() -> bool:
     return bool(SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED) or (
         _os.environ.get("CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED") == "1"
     )
+
+
+# REQ-ARC-WMTE-5718: RETRIEVAL (graph-RAG) variant of the playbook injection. Instead of the
+# fixed exemplar block, embed the CURRENT stuck situation with the loaded model and inject ONLY
+# the top-K patterns relevant to it (from the offline models/arc_playbook_index/). OFF by default;
+# when on it TAKES PRECEDENCE over the static block on the stall path (falling back to the static
+# block, then to nothing, if retrieval is unavailable). Dev-gated, never touches the frozen submit.
+SUBMITTED_PLAYBOOK_RETRIEVAL_ENABLED = False
+PLAYBOOK_RETRIEVAL_TOPK = 4
+
+
+def _playbook_retrieval_gate_on() -> bool:
+    """REQ-ARC-WMTE-5718: the DEV-ONLY gate for RETRIEVAL-based injection -- the SUBMITTED module
+    flag OR the CARNOT_ARC_PLAYBOOK_RETRIEVAL runtime env override."""
+    import os as _os
+
+    return bool(SUBMITTED_PLAYBOOK_RETRIEVAL_ENABLED) or (
+        _os.environ.get("CARNOT_ARC_PLAYBOOK_RETRIEVAL") == "1"
+    )
+
+
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -3400,6 +3421,90 @@ class E3AgentPolicy:
             )
         return self.proposer
 
+    def _embed_playbook_query(self, text: str):
+        """REQ-ARC-WMTE-5718: embed the stuck-situation query with the SAME GGUF weights the
+        proposer uses (live_llm_embedding_extraction), so the vector matches the offline index
+        space. Lazily creates + caches an embedding-mode llama_cpp.Llama; fully guarded so any
+        failure (missing GGUF, OOM) returns None and the caller falls back -- never crashes the
+        live path. NOTE: this is a second in-memory load of the same weights; on a tight live GPU
+        it must be VRAM-budgeted (the feature is dev-gated OFF, so the frozen submit is unaffected)."""
+        import os
+
+        embedder = getattr(self, "_playbook_embedder", None)
+        if embedder is False:  # a prior attempt failed; do not retry every stall
+            return None
+        try:
+            if embedder is None:
+                from llama_cpp import Llama
+                from llama_cpp.llama_cpp import LLAMA_POOLING_TYPE_LAST
+
+                from carnot.agentic.arc_executable_world_model import _resolve_gguf
+
+                gguf = os.environ.get("CARNOT_ARC_GGUF_PATH") or _resolve_gguf("Qwen3.5-9B")
+                if not gguf:
+                    self._playbook_embedder = False
+                    return None
+                embedder = Llama(
+                    model_path=gguf,
+                    embedding=True,
+                    pooling_type=LLAMA_POOLING_TYPE_LAST,
+                    n_ctx=2048,
+                    n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
+                    verbose=False,
+                )
+                self._playbook_embedder = embedder
+            import numpy as np
+
+            raw = embedder.embed(text, normalize=False, truncate=True)
+            arr = np.asarray(raw, dtype=np.float32)
+            return arr if arr.ndim == 1 else arr.reshape(-1)
+        except Exception:
+            self._playbook_embedder = False
+            return None
+
+    def _playbook_query_text(self, active_transitions) -> str:
+        """REQ-ARC-WMTE-5718: a compact free-text description of the current stuck situation to
+        embed as the retrieval query -- game id + grid shape + the action types and any click/
+        no-op signals observed so far. Deliberately game-agnostic (no per-game facts): it is the
+        SHAPE of the stuck situation, so it also works for a hidden game."""
+        actions: list[int] = []
+        shape = ""
+        for t in active_transitions or ():
+            try:
+                actions.append(int(getattr(t, "action", 0)))
+                if not shape:
+                    shape = "x".join(str(d) for d in getattr(t, "grid").shape)
+            except Exception:
+                continue
+        uniq = sorted(set(actions))
+        has_click = 6 in uniq
+        return (
+            f"ARC-AGI-3 game {self.short}: the agent is stuck making no level progress on a "
+            f"{shape or 'grid'} board; observed action types {uniq}"
+            f"{'; uses click/coordinate actions' if has_click else '; keyboard/directional actions'}; "
+            f"needs an exploration strategy to induce the world model and find the win condition."
+        )
+
+    def _retrieve_playbook_block(self, active_transitions):
+        """REQ-ARC-WMTE-5718: retrieve the top-K playbook patterns for the current stuck situation
+        and format them for injection. Returns the block string, or None on any failure (index
+        missing, embedder unavailable) so the caller falls back to the static block or nothing."""
+        try:
+            from carnot.agentic import arc_playbook_retrieval as rag
+
+            index = getattr(self, "_playbook_index", None)
+            if index is None:
+                index = self._playbook_index = rag.load_index()
+            vec = self._embed_playbook_query(self._playbook_query_text(active_transitions))
+            if vec is None:
+                return None
+            tags = rag.infer_query_mechanic_tags(game=self.short)
+            top = rag.retrieve(index, vec, top_k=PLAYBOOK_RETRIEVAL_TOPK, query_tags=tags)
+            block = rag.format_injection(top)
+            return block or None
+        except Exception:
+            return None
+
     def _world_model_candidates(self, engine, is_done) -> list[WorldModelCandidate]:
         import os
 
@@ -3766,13 +3871,24 @@ class E3AgentPolicy:
                     self.plan = list(outcome.plan)
                 return
             self._fit_dsl_model()
-            # REQ-ARC-WMTE-5717: STALL / first-contact path only (the level_up_reinduction branch
-            # returned above). Arm the DEV-ONLY playbook exemplars on the cached proposer when gated
-            # on, so BOTH the bounded stall-refactor induction and the plain single-shot fallback
-            # below prepend the game-agnostic method few-shot. Default (unset) -> False -> unchanged.
-            _pb_active = _playbook_exemplars_gate_on()
-            self._proposer().include_playbook_exemplars = _pb_active
-            attempt["playbook_exemplars_injected"] = bool(_pb_active)
+            # REQ-ARC-WMTE-5717/5718: STALL / first-contact path only (the level_up_reinduction
+            # branch returned above). Arm the DEV-ONLY playbook injection on the cached proposer.
+            # RETRIEVAL (5718) takes precedence when gated on: inject the top-K patterns relevant to
+            # THIS stuck situation; fall back to the STATIC block (5717) if retrieval is unavailable,
+            # else nothing. Default (both unset) -> False -> byte-identical prompt.
+            injection: bool | str = False
+            injection_mode = "none"
+            if _playbook_retrieval_gate_on():
+                block = self._retrieve_playbook_block(active_transitions)
+                if block:
+                    injection, injection_mode = block, "retrieval"
+                elif _playbook_exemplars_gate_on():
+                    injection, injection_mode = True, "static_retrieval_unavailable"
+            elif _playbook_exemplars_gate_on():
+                injection, injection_mode = True, "static"
+            self._proposer().include_playbook_exemplars = injection
+            attempt["playbook_exemplars_injected"] = bool(injection)
+            attempt["playbook_injection_mode"] = injection_mode
             # Graduated to default-on (REQ-ARC-FCP-5699-35, was DEV-ONLY per REQ-ARC-FCP-5699-24
             # / -25): the refactor/refinement loop (execute_bounded_llm_reinduction) was
             # previously reachable ONLY from the level_up_reinduction branch above, so
