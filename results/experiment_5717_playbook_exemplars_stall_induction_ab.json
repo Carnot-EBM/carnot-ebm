@@ -1,0 +1,273 @@
+{
+  "experiment": "exp5717-playbook-exemplars-stall-induction-ab",
+  "req": "REQ-ARC-WMTE-5717",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "E3AgentPolicy tier-3 world-model induction proposer (frozen live stack)",
+      "quant": "Q4_K_M"
+    }
+  ],
+  "random_seed": 5717,
+  "roster": [
+    "lp85",
+    "cn04",
+    "ft09",
+    "g50t"
+  ],
+  "trials_per_arm": 2,
+  "window_k": 12,
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed self-declared state; lets the reconciler classify without re-running (Verdict Terminal-Prefix Discipline)."
+    },
+    "inference_substrate": {
+      "principle": "explicit live_llm_inference declaration -> adversarial_verify applies the 60s generative-inference duration floor; this loads + runs the real GGUF per arm."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified before any inference; pre-empts the silent-missing-resource fabrication mode (Pre-Launch Preconditions Discipline)."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility of the harness."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash over config + per-arm results catches silent drift on replay."
+    },
+    "playbook_exemplars_delta_accuracy": {
+      "principle": "treatment-minus-control mean EXACT-match reproduction accuracy; floors at 0 for single-shot first-contact induction, so it is reported but not the discriminator."
+    },
+    "playbook_exemplars_delta_cell_recall": {
+      "principle": "treatment-minus-control mean GRADED per-changed-cell recall; the discriminating (non-flooring) induction-quality signal, directional under small N."
+    },
+    "metric_floored": {
+      "principle": "bare bool true when even graded cell_recall is at its floor for both arms, so the offline metric cannot detect an effect -- an honest 'unmeasurable offline', NOT evidence the feature helps or hurts (mirrors the AUTO_HUD_MASK levels_gained floor)."
+    },
+    "outlier_fragile_direction": {
+      "principle": "bare bool true when |delta| < the largest single-run cell_recall, so one lucky stochastic induction could account for or flip the direction; forbids calling improved/hurt on noise-dominated data under a temperature>0 proposer with small N."
+    }
+  },
+  "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+  "preconditions_checked": [
+    {
+      "resource": "qwen3.5_9b_mtp_gguf_cached",
+      "available": true
+    },
+    {
+      "resource": "llama_server_binary",
+      "available": true
+    }
+  ],
+  "server_port": 8931,
+  "mtp_enabled": true,
+  "honest_verdict": "complete_playbook_exemplars_no_reliable_signal_high_variance_cellrecall_delta_-0.0856_n_16",
+  "skipped": [],
+  "n_runs": 16,
+  "control_exemplars_off": {
+    "runs": 8,
+    "induction_ok": 8,
+    "induction_ok_rate": 1.0,
+    "scored_runs": 8,
+    "mean_reproduction_accuracy": 0.0,
+    "mean_cell_recall": 0.0905,
+    "max_cell_recall": 0.7237,
+    "mean_induce_s": 57.4
+  },
+  "treatment_exemplars_on": {
+    "runs": 8,
+    "induction_ok": 8,
+    "induction_ok_rate": 1.0,
+    "scored_runs": 8,
+    "mean_reproduction_accuracy": 0.0,
+    "mean_cell_recall": 0.0049,
+    "max_cell_recall": 0.0197,
+    "mean_induce_s": 21.3
+  },
+  "playbook_exemplars_delta_accuracy": 0.0,
+  "playbook_exemplars_delta_cell_recall": -0.0856,
+  "metric_floored": false,
+  "outlier_fragile_direction": true,
+  "rows": [
+    {
+      "game": "lp85",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 97.8,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 5,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "lp85",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 29.0,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 5,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "lp85",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 121.2,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 5,
+      "n_correct": 0,
+      "trial": 1
+    },
+    {
+      "game": "lp85",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 42.7,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 5,
+      "n_correct": 0,
+      "trial": 1
+    },
+    {
+      "game": "cn04",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 3.5,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 13,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "cn04",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 32.0,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 13,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "cn04",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 87.2,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 13,
+      "n_correct": 0,
+      "trial": 1
+    },
+    {
+      "game": "cn04",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 4.1,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 13,
+      "n_correct": 0,
+      "trial": 1
+    },
+    {
+      "game": "ft09",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 92.5,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.7237,
+      "n_transitions_scored": 4,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "ft09",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 2.3,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0197,
+      "n_transitions_scored": 4,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "ft09",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 27.2,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 4,
+      "n_correct": 0,
+      "trial": 1
+    },
+    {
+      "game": "ft09",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 3.6,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0197,
+      "n_transitions_scored": 4,
+      "n_correct": 0,
+      "trial": 1
+    },
+    {
+      "game": "g50t",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 27.2,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 17,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "g50t",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 51.9,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 17,
+      "n_correct": 0,
+      "trial": 0
+    },
+    {
+      "game": "g50t",
+      "exemplars": false,
+      "induction_ok": true,
+      "induce_s": 2.6,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 17,
+      "n_correct": 0,
+      "trial": 1
+    },
+    {
+      "game": "g50t",
+      "exemplars": true,
+      "induction_ok": true,
+      "induce_s": 5.1,
+      "reproduction_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "n_transitions_scored": 17,
+      "n_correct": 0,
+      "trial": 1
+    }
+  ],
+  "methodology_note": "The Qwen3.5-9B proposer samples at temperature>0, so per-arm induction is non-deterministic; N = len(roster) x trials x 2 arms is small. Deltas are DIRECTIONAL, not significance claims. Both arms share the identical window, proposer config, and budget; only include_playbook_exemplars differs. Verified against the full winning trajectory (held-out beyond the k-window). Exact-grid-match accuracy floors at 0 for single-shot first-contact induction on these hard games, so the graded cell_recall is the discriminating metric; metric_floored=true means even that is at its floor and the offline metric cannot detect an effect (the same floor the AUTO_HUD_MASK levels_gained A/B hit) -- NOT evidence the feature helps or hurts. A live-submission levels_gained A/B is the better test.",
+  "verifier_is_oracle": false,
+  "duration_s": 634.687,
+  "reproducibility_checksum": "sha256:392614bb04a29b7ff5637eefdaa2687561383e541be467af801634478d655cf0"
+}
