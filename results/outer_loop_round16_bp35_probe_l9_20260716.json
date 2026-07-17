@@ -1,0 +1,58 @@
+{
+  "experiment": "outer_loop_round16_bp35_probe_l9",
+  "game": "bp35",
+  "model": "claude-sonnet-5",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 349,
+  "reproduction_verified": true,
+  "reproduction_note": "Fourth same-session round, following directly from round 15's pillar-growth discovery. Replayed fresh from the verified 342-action prefix before this probe; the key 7-action breakthrough sequence (grow pillar, flip gravity up, slide right twice into the grown pillar's column, flip gravity down to fall safely through, slide left, click the newly-revealed switch) is independently re-derivable and was re-run twice during this round with consistent results.",
+  "random_seed": null,
+  "reproducibility_checksum": "cecdb9d0467793783c442a2aa214c5b2c18c4bed20425ce44042086a827a0c24",
+  "reproducibility_checksum_note": "sha256 of the JSON-serialized 7-action breakthrough sequence (see breakthrough_sequence field) that safely passes the player through the pillar shaft into new territory.",
+  "honest_verdict": "complete_bp35_l9_major_breakthrough_new_area_reached_no_win_switches_exhausted",
+  "narrative": "Major breakthrough round, direct continuation of round 15's pillar-growth discovery. GROWING THE PILLAR BEFORE FALLING THROUGH ITS SHAFT MAKES THE FALL SAFE: (1) click the true-start pillar to grow it (round 15's trick), (2) flip gravity up via the near start-room switch, (3) slide right twice to reach column ~32-33 -- squarely within the vertical gap at cols31-47 discovered this round in the wall band separating the up-gravity and down-gravity rooms (a genuine, previously-unnoticed opening; earlier rounds had only sampled columns outside this range and wrongly concluded the wall was fully solid), (4) flip gravity back down from within that gap column using the far/second switch. Without pre-growing the pillar, this exact fall is INSTANT DEATH (independently confirmed both with and without the grow-first step, isolating pillar-growth as the deciding factor) -- but with the pillar grown first, the player survives and lands in an entirely new, previously-unreachable room at the base of the (now-grown) pillar. This new room reveals, for the first time in live play (not just the generic death-overview): three E-tile doors in a row (matching round 13's death-overview sighting, now confirmed reachable), a long row of five pillars with the classic B0B eye signature, and -- critically -- what appears to be either a fresh third switch pair or the same switches re-rendered from a new camera angle (clicking it consumed BOTH remaining color-8 pixel clusters at once and flipped gravity again, carrying the player back up to the familiar up-gravity resting room). From that up-gravity room, both LEFT and RIGHT exploration are now fully safe (left wall ~col15, right wall ~col57, matching rooms mapped in round 14), passing directly through the horizontal span below the newly-found pillar/door cluster without incident (the hazards there occupy a different, higher row band than this corridor). With all switches now exhausted (color-8 count is 0 platform-wide), no further gravity change is available, and the goal diamond -- visible again from this familiar up-gravity vantage point -- remains unreached; this session's switch budget is spent. No new level banked; frontier stays at level 8, but the wall-gap + pillar-growth-enables-safe-fall mechanism is now understood and is the strongest lead yet for a fresh attempt.",
+  "novel_mechanics_found": [
+    "THE FLOOR SEPARATING THE UP- AND DOWN-GRAVITY ROOMS HAS A REAL GAP at cols~31-47 (not fully solid, contra round 14's column-limited sampling) -- this gap is occupied by the pillar first seen from true start, and falling through it in either gravity direction ordinarily kills the player (confirmed fatal both with a fresh pillar and, separately, when the pillar had not yet been grown).",
+    "GROWING THE PILLAR FIRST (round 15's click-to-grow trick) MAKES A FALL THROUGH ITS SHAFT SURVIVABLE -- directly isolated by testing the identical fall with vs without the pre-growth step. This is the key unlock: the pillar's growable state doubles as a traversal mechanic, not just a curiosity.",
+    "Falling through the grown pillar's shaft lands the player in a genuinely new room (not visible from any previously-reached camera position) containing 3 E-doors and a 5-pillar gauntlet, and what functions as one more usable switch-click (consumed both remaining color-8 clusters and flipped gravity), all now confirmed reachable in live play rather than only visible in the generic death-overview."
+  ],
+  "dead_ends": [
+    "All switches are now exhausted this round's playthrough (color-8 count reaches 0 after the breakthrough sequence's final click). A fresh attempt starting from this same sequence will hit the same wall unless a different switch-usage order reaches the doors/goal before spending the last flip.",
+    "The doors found in the new room were NOT interacted with this round (only observed) -- their open/soft-lock behavior for this specific level is still unknown and is the natural next probe."
+  ],
+  "breakthrough_sequence": [
+    {"action": 6, "data": {"x": 39, "y": 15}},
+    {"action": 6, "data": {"x": 3, "y": 39}},
+    {"action": 4},
+    {"action": 4},
+    {"action": 6, "data": {"x": 3, "y": 5}},
+    {"action": 1},
+    {"action": 6, "data": {"x": 3, "y": 27}}
+  ],
+  "breakthrough_sequence_note": "Applied after the verified 342-action L1-L8 prefix. All 7 actions are confirmed safe (NOT_FINISHED throughout, ending with all switches consumed and the player back in the familiar up-gravity room at cols27-29).",
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_bp35", "available": true},
+    {"resource": "verified_l1_l8_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 9",
+      "result": false,
+      "principle": "Only a reproduced level-9 win counts as banked progress per ARC Solve Reproducibility Discipline; this round is an honest HONEST_NULL despite the major mechanic breakthrough."
+    }
+  ],
+  "field_provenance": {
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the exact breakthrough sequence lets a future round independently re-verify the pillar-growth-enables-safe-fall mechanism before building the next attempt's switch-usage plan on top of it."
+    },
+    "solve_provenance": {
+      "principle": "This round used only the offline_arcade env + live actions -- no game source was read, no ground-truth teleport/probe was used -- matching the live_agent_self_discovery contract from the ARC Live-Path Reachability Discipline."
+    }
+  }
+}
