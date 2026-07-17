@@ -1,0 +1,207 @@
+{
+  "experiment": "outer_loop_round24_bp35_probe_l9_rung_gain_candidates",
+  "game": "bp35",
+  "model": "gpt-5.6-sol",
+  "run_date": "2026-07-17",
+  "schema": "carnot.arc_outer_loop_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "random_seed": 0,
+  "random_seed_note": "Deterministic offline environment; no RNG was invoked. Seed 0 records the methodology rather than controlling an environment random stream.",
+  "duration_s": 2169,
+  "duration_note": "Real wall clock from 2026-07-17T18:25:17Z through the completed 3x diagnostic reproduction gate at 2026-07-17T19:01:26Z; no sleep or duration padding.",
+  "starting_level": 8,
+  "max_level_reached": 8,
+  "win_levels": 9,
+  "levels_won_this_session": 0,
+  "full_game_clear": false,
+  "offline_reproduced": false,
+  "reproduced_levels": 0,
+  "new_levels_banked": 0,
+  "total_env_steps_used": 0,
+  "total_env_steps_used_note": "Zero scored/live-network environment steps; this was a development_proxy offline_arcade investigation only.",
+  "offline_env_steps_used": 19980,
+  "offline_env_steps_used_note": "Exact accounting across the precondition replay, public-frame probe sessions, 25 fresh-env offset trials, and 9 fresh-env diagnostic reproduction trials. The count includes every repeated 342-action L1-L8 prefix.",
+  "reproduction_verified": true,
+  "reproduction_note": "Characterization only, not a level reproduction claim. Three diagnostic tails were each replayed 3x from completely fresh env creation/reset plus the 342-action prefix. Frontier: all 3 ended L8 NOT_FINISHED at world (27.5,-9.5), camera (0,-48), settled sha256 e32085e00e825eceec30a49608a576de9845f4a019dd479e15ce2efeb4a67aae. Door-refill/timing: all 3 ended L8 GAME_OVER with 47 layers, last visible world center (15.0,-38.0) under camera (0,-38), settled sha256 580ad762ec753e51b7c1199aac2ff6e508986480c1cbdaa7c110f6b1128cc30c. Door-undo: all 3 ended L8 NOT_FINISHED at world (15.5,-9.5), camera (0,-48), settled sha256 3a4e7744e833861061fef1a96053c36d1cc0d5b49607f6e6683e4f8d2de119bb.",
+  "reproducibility_checksum": "5812e370d6700813d25ba534da981eaa4b2657e47f58d417c7ef3dc59924fee8",
+  "reproducibility_checksum_note": "sha256 of canonical compact JSON (sorted object keys) for the 20-action primary door-refill/timing diagnostic tail in diagnostic_routes. The shared 342-action L8 prefix is the round-12 sequence; prior artifact checksum bc9d039720f787a2d601884323e761d29b799e3d0153e9f4ca6a9aab29d1416c.",
+  "honest_verdict": "complete_bp35_l9_round24_requested_rung_candidates_bounded_no_new_rest_no_new_level",
+  "narrative": "Round 24 targeted only bp35 L9 and tested the operator-specified missing-rung candidates through public env.step actions and public frame layers. The required 342-action prefix first replayed from a fresh environment to levels_completed=8, GameState.NOT_FINISHED (settled-frame sha256 375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0). A fresh camera registrar then re-derived the known checkpoints numerically: the 10-action ladder reaches rests 20.5, 14.5, 8.5, 2.5, -3.5, and -9.5 with final camera -48. Candidate A, against-gravity carry: after reversing to DOWN gravity at rest -9.5, directly-above clicks were tested at three world rests and several distances. At -9.5 an above click hit and safely carved the door (32 aligned cells) but did not carry; at +2.5 and +8.5 direct-above clicks changed 0 cells and moved 0 rows. Only the with-gravity below click carried downward (+6, from +2.5 to +8.5). Lateral-then-vertical variants changed remote structure topology but never mounted the player upward. Candidate B, multi-column geometry: remote-first, base-first, one- and two-upper-segment, gravity-cycle, left-column, and right-column constructions were tested. Remote-first growth was inert until a base existed; base-first remote growth changed 120 aligned cells but blocked entry; sequential riding reproduced only the ordinary +2.5 -> -3.5 -> -9.5 ladder; the right column crushed at -3.5. A 25-point fresh-env click sweep around the final carry (x=25..29, y=31..35) produced one unique outcome: all 25 were alive, 12 layers, dy=-6, rest=-9.5, camera=-48. Candidate C, door timing: the synchronous public step API exposes no opportunity to inject another action during a returned animation. The strongest back-to-back order was therefore measured: carve door 1 safely while DOWN, then flip UP while parked in the already-open column. It still produced the exact 47-layer fatal flight, last visible at world -38.0, the flight-start view top. Clicking the carved door cell again and both cap locations changed 0 cells, so the gap cannot be refilled as a shelf. ACTION7 exactly restored all 32 door cells (21 color-14 plus 11 cap/accent cells) and made the subsequent UP flip safe, but it also reclosed the passage and left the player at -9.5. Candidates D and E remained unreachable: no live player entered world rows -49..-53, so the alleged -51 floor is still unverified live; the color-12 row never entered a live settled view and was not clicked. Candidate F remains honestly inconclusive: deliberate DOWN transitions measured +12 drops (38.5 -> 50.5 and -9.5 -> +2.5), both surviving, but no genuinely unsupported >20-row downward flight was found, so bottom-edge symmetry was not claimed. The best surviving rest remains world -9.5; no rest in [-48,-13], no level 9, and no win were observed.",
+  "novel_mechanics_found": [
+    "ACTION7 is a cell-exact reversible door undo in this context: a safe DOWN-gravity door carve changed exactly 32 aligned world cells over x=13..17, y=-18..-12 (14>10:21, 3>10:4, 5>10:7); ACTION7 immediately restored exactly the inverse transitions (10>14:21, 10>3:4, 10>5:7) without moving the player from world -9.5.",
+    "Door-gap refill is impossible under the tested safe timing: after carving door 1 while DOWN, repeat clicks at the exact empty door cell and at the carved top and bottom cap coordinates each changed 0 aligned cells. The following UP flip remained a 47-layer viewport-top death.",
+    "Final-carry click coordinates are hitbox-invariant over the tested 5x5 region: all 25 fresh-env offsets x=25..29/y=31..35 produced exactly dy=-6 and rest -9.5; no partial, diagonal, or taller carry exists in that hitbox.",
+    "Against-gravity structure clicks do not carry: at DOWN-gravity rests +2.5 and +8.5, direct-above clicks moved 0 rows; the symmetric below click carried +6 in the gravity direction. Above clicks at rest -9.5 select the door, not structure."
+  ],
+  "bounded_negative_results": [
+    "A / against-gravity carry: direct-above at world rests -9.5, +2.5, and +8.5; lateral-then-vertical at two columns; and one-cell-farther above clicks produced no upward player displacement. The only non-inert -9.5 above click carved a door.",
+    "B / multi-column geometries: simultaneous prebuild trapped the player at x~33; sequential remote-first/base-first constructions either blocked entry or converged to ordinary rests -3.5 and -9.5; a right-column climb crushed at -3.5. The 25-offset final-carry sweep had exactly one outcome and no rest above -9.5.",
+    "C / door timing: DOWN carve followed immediately by UP flip in the open player column died after 47 layers at world -38.0, exactly the active view top. Re-clicking the gap/caps was inert. ACTION7 only recloses the door; it does not create a rung.",
+    "D / -51 floor: untested live because no legal trajectory entered world rows -49..-53. No inference about floor presence is promoted from overview/death frames.",
+    "E / color-12 toggle row: not reached and not interacted with; no semantics claimed.",
+    "F / bottom boundary: two deliberate DOWN transitions survived 12-row drops, but neither was the requested unsupported >20-row drop. Symmetric bottom-kill versus follow behavior remains unresolved.",
+    "No new rest above world -9.5, no new level, and no game clear."
+  ],
+  "next_leads": [
+    "The frontier remains exactly the round-23 arithmetic: obtain any surviving rest in world rows -13..-48 in a door/gap column. All requested carry, split-column, door-refill/timing, and off-center-click variants are now bounded nulls.",
+    "A future bottom-boundary test must first identify a public path to a genuinely unsupported downward landing more than 20 world rows below the flight-start camera; the two +12 transitions here are positive survival controls, not a symmetry answer.",
+    "If a new mechanism ever yields a rest at or above -12.5, immediately trace entry into rows -49..-53 to verify the proposed -51 floor, then inspect/click the color-12 row only after it becomes live-visible."
+  ],
+  "diagnostic_routes": {
+    "l8_prefix_artifact": "results/outer_loop_round12_bp35_probe_20260712.json",
+    "l8_prefix_action_count": 342,
+    "ladder_frontier_tail_sha256": "ae2c67c3f9d9862e080d134f5d67b1ad20b5182dc9e3cabadf8c245601fef481",
+    "ladder_frontier_tail": [
+      {"action": 6, "data": {"x": 39, "y": 15}},
+      {"action": 4},
+      {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 33}}
+    ],
+    "primary_door_refill_tail_sha256": "5812e370d6700813d25ba534da981eaa4b2657e47f58d417c7ef3dc59924fee8",
+    "primary_door_refill_tail": [
+      {"action": 6, "data": {"x": 39, "y": 15}},
+      {"action": 4},
+      {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 21, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 15, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 3, "y": 3}},
+      {"action": 6, "data": {"x": 15, "y": 23}},
+      {"action": 6, "data": {"x": 15, "y": 23}},
+      {"action": 6, "data": {"x": 15, "y": 20}},
+      {"action": 6, "data": {"x": 15, "y": 26}},
+      {"action": 6, "data": {"x": 3, "y": 17}}
+    ],
+    "door_undo_tail_sha256": "69457fad4d87b31f79d25b83d3c305d1217cb33e5e5e7c53708ce362298f1833",
+    "door_undo_tail": [
+      {"action": 6, "data": {"x": 39, "y": 15}},
+      {"action": 4},
+      {"action": 4},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 33, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 27, "y": 33}},
+      {"action": 6, "data": {"x": 21, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 15, "y": 39}},
+      {"action": 1},
+      {"action": 6, "data": {"x": 3, "y": 3}},
+      {"action": 6, "data": {"x": 15, "y": 23}},
+      {"action": 7},
+      {"action": 6, "data": {"x": 3, "y": 17}}
+    ]
+  },
+  "numeric_evidence": {
+    "precondition": {
+      "prefix_actions": 342,
+      "levels_completed": 8,
+      "state": "GameState.NOT_FINISHED",
+      "last_action_layers": 12,
+      "settled_frame_sha256": "375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0"
+    },
+    "rederived_ladder": [
+      {"rest_world_y": 20.5, "camera_y": -18},
+      {"rest_world_y": 14.5, "camera_y": -24},
+      {"rest_world_y": 8.5, "camera_y": -30},
+      {"rest_world_y": 2.5, "camera_y": -36},
+      {"rest_world_y": -3.5, "camera_y": -42},
+      {"rest_world_y": -9.5, "camera_y": -48}
+    ],
+    "offset_sweep": {
+      "fresh_env_trials": 25,
+      "coordinates": "cartesian x=25..29, y=31..35 at pre-click rest -3.5",
+      "unique_outcomes": 1,
+      "outcome": {"state": "GameState.NOT_FINISHED", "levels": 8, "layers": 12, "camera": [0, -48], "player_world": [27.5, -9.5], "registration_dy": -6}
+    },
+    "door_refill": {
+      "carve_changed_cells": 32,
+      "repeat_exact_cell_changed_cells": 0,
+      "top_cap_changed_cells": 0,
+      "bottom_cap_changed_cells": 0,
+      "subsequent_flight_layers": 47,
+      "flight_start_camera_y": -38,
+      "last_visible_world_y": -38.0,
+      "state": "GameState.GAME_OVER"
+    },
+    "door_undo": {
+      "carve_changed_cells": 32,
+      "undo_changed_cells": 32,
+      "inverse_transitions_exact": true,
+      "post_flip_state": "GameState.NOT_FINISHED",
+      "post_flip_player_world": [15.5, -9.5],
+      "post_flip_camera": [0, -48]
+    },
+    "downward_controls": [
+      {"start_world_y": 38.5, "end_world_y": 50.5, "drop_rows": 12, "state": "GameState.NOT_FINISHED"},
+      {"start_world_y": -9.5, "end_world_y": 2.5, "drop_rows": 12, "state": "GameState.NOT_FINISHED"}
+    ]
+  },
+  "preconditions_checked": [
+    {"resource": "round12_342_action_prefix", "available": true, "result": "levels_completed=8_state=NOT_FINISHED"},
+    {"resource": "offline_arcade_bp35_public_interface", "available": true, "result": "env.step_frames_state_levels_only"},
+    {"resource": "round21_known_ladder_tail", "available": true, "result": "rederived_frontier_world_y=-9.5_camera_y=-48"},
+    {"resource": "network_or_llm", "available": false, "result": "not_required_and_not_used"}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "The fixed prefix must replay from a fresh environment to completed level 8 and NOT_FINISHED before any L9 probe",
+      "principle": "A failed starting-state replay invalidates every downstream mechanism claim.",
+      "result": "passed_342_actions_level_8_not_finished"
+    },
+    {
+      "condition": "Every world-coordinate claim must be recomputed from public frame registration in this session",
+      "principle": "Camera-relative pixels cannot support absolute trajectory claims without registration.",
+      "result": "passed_rederived_six_ladder_rests_and_two_death_boundaries"
+    },
+    {
+      "condition": "Any claimed new level must pass official reproduce plus 3-5 independent fresh replays",
+      "principle": "Only deterministic, independently replayable level progress can be banked.",
+      "result": "no_new_level_gate_not_applicable"
+    },
+    {
+      "condition": "Primary characterization endpoints must replay independently from fresh environments",
+      "principle": "A mechanism result is evidence only if the public action tail is deterministic.",
+      "result": "passed_three_cases_times_three_fresh_replays_byte_identical"
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "ARC-AGI-3 is a live hidden-game discovery process; source-assisted or private-state solutions are invalid.",
+      "satisfied_by": "Probe code never opened/read the bp35 source, imported it directly, accessed env._game, inspected private state, or used set_level/teleport. Actions used only public env.step; observations used frame.frame, frame.state, and frame.levels_completed."
+    },
+    "inference_substrate": {
+      "principle": "The compute substrate must be explicit so duration and provenance are auditable.",
+      "satisfied_by": "Local offline_arcade environment stepping, NumPy public-grid registration, zero network, zero LLM/model calls."
+    },
+    "coordinates": {
+      "principle": "Absolute positions must come from measured camera registration rather than remembered prompt coordinates.",
+      "satisfied_by": "Each settled layer was integer-registered against the preceding settled public grid with HUD row 63 excluded; accumulated offsets plus the public color-9 player bounding-box center produced all cited world coordinates."
+    },
+    "reproduction_verified": {
+      "principle": "Characterization claims require deterministic endpoints even when no level is won.",
+      "satisfied_by": "Nine fresh-env replays: 3 frontier, 3 door-refill death, 3 door-undo alive; each case was internally byte-identical."
+    },
+    "offline_env_steps_used": {
+      "principle": "Development-proxy effort must not be misreported as scored live quota.",
+      "satisfied_by": "19980 offline steps accounted separately; total_env_steps_used remains 0 for scored/live-network usage."
+    }
+  }
+}
