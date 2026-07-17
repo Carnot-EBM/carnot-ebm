@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-06-30'
+updated: '2026-07-16'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -2235,7 +2235,7 @@ games:
     full-clear session above.
 - game: lf52
   reproducibility: reproduced
-  levels_reproduced: 6
+  levels_reproduced: 7
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
@@ -2262,11 +2262,18 @@ games:
     + 104 labels of live L3 play, including a stranded-board auto-reset the agent
     recovered from), claude-fable-5, 2026-07-11. Self-run reproduction gate
     (reached_level=3, reproduced=True) AND independently re-verified by the outer
-    loop (5x fresh env.reset() + reproduce()) before being counted.
+    loop (5x fresh env.reset() + reproduce()) before being counted. L7:
+    results/outer_loop_round14_lf52_probe_20260716.json action_sequence (759 labels:
+    the verified 615-label L1-L6 prefix plus 144 L7 labels encoding 98 carrier
+    moves and 23 two-click jumps), gpt-5.6-sol-max, 2026-07-16.
   reproduce: >-
     Exp4690 results/experiment_4690_levelup_selfplay.json re-gated
     results/arc_loop_solve_lf52.json offline_reproduced=True, reached_level=2,
     banked +1 over the prior L1 registry row, checksum 0522cc0b1993a66e8076d45d4e8ebdaf25d65882e0319f52156a08c6a542523c.
+    Round 14 L7 passed arc_solver_kit.reproduce(claimed_level=7) from a fresh
+    offline env, then 5/5 additional fresh env.reset()+replay trials reached
+    levels_completed=7, state=GameState.NOT_FINISHED, engine_level=8; concrete
+    action checksum c4f4ee61011ddd8ce4b84b36e3fa684623ae0a0fda868a5a7d3ba0163ad25b2e.
   learned_verifier_checkpoint: models/arc_verifier_lf52.json
   gotchas:
   - The hupkpseyuim2 carrier is not a peg; it moves on rails and can carry a peg
@@ -2611,6 +2618,29 @@ games:
     is fully characterized from source, the obstacle is the column-7
     separation. (Round 12, 2026-07-12 codex, was another honest null:
     far-coordinate + counter-boundary click probes, all silent.)'
+  - 'L7 SOLVED round 14 -- STRUCTURAL NULL DEFINITIVELY REFUTED
+    (2026-07-16, gpt-5.6-sol-max via codex,
+    results/outer_loop_round14_lf52_probe_20260716.json): independently audited
+    round 13''s claimed confinement proof and found its load-bearing omission:
+    lf52_east_range.py generated jump successors ONLY for name==fozwvlovdui,
+    deleting every fozwvlovdui_red jump. Column 7 truly has NO rail and no
+    carrier can enter it, but the inference that no PIECE can cross is false.
+    Plain@(5,8) and red@(6,8) alternate three cross-name jumps to occupy
+    (7,8),(8,8),(9,8); cross-name jumps remove neither peg, so red is the
+    intended reusable stepping-stone, not an inert distractor. A second
+    plain/red relay at x=14 enters the east torch corridor; the west plain then
+    rides an east carrier to (22,3), jumps over a carried torch into (22,5),
+    and the east plain at (22,6) jumps UP over that same-name plain into an
+    empty carrier at (22,4), removing it and firing next_level. Concrete route:
+    98 carrier moves + 23 jumps = 144 L7 actions after the verified 615-action
+    prefix (759 total). REAL offline_arcade env.step execution advanced the
+    engine to L8. The mandatory arc_solver_kit.reproduce() gate reached level 7,
+    reproduced=true, and 5/5 MORE fresh env.reset()+replay trials independently
+    confirmed levels_completed=7, state=NOT_FINISHED, engine_level=8. L7 is
+    banked; frontier advances 6->7. General proof lesson: rail connectivity
+    constrains carriers, not necessarily peg reachability, and confinement
+    searches must enumerate EVERY selectable peg type even when only one type
+    can satisfy the removal win condition.'
   dead_ends:
   - bp35: no_grounded_next_level_adapter_for_platformer_delta
   - re86: sprite_overlay_L2_delta_not_adaptered_this_run
@@ -5930,7 +5960,7 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
-reproducible_total_levels: 178
+reproducible_total_levels: 179
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

@@ -3274,3 +3274,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-07-14T02:14:49Z | 2026-07-14T02:20:09Z | Wrote the milestone operational retrospective from the supplied bounded data, preserved locked fields, and appended the required changelog and research-log entries. | TBD |
+
+## Session: 2026-07-17 lf52 L7 Round 14 Exhaustive Reachability
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-07-17T01:38:00Z | 2026-07-17T02:08:14Z | Independently audited lf52 L7 source and prior searches, found the omitted red-peg transport moves, constructed and real-engine-verified a 759-action L1-L7 win, passed the official reproduction gate plus five fresh replays, and reconciled the registry/artifact/ops evidence. | ~110k |
