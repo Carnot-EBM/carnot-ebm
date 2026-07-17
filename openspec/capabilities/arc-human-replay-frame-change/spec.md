@@ -2194,7 +2194,121 @@ Required field principles:
 - `live_path_ready`: principle "live inference requires tested E3 reachability, a new mechanism, and no oracle leakage."
 - `honest_verdict`: principle "one-line verdict starting complete: or blocked: without claiming a solve."
 
+### REQ-ARC-WMTE-5716: Game-Agnostic Exploration-Playbook Primitives
+
+The repository SHALL provide a mined exploration playbook at
+`docs/research-notes/arc-exploration-playbook-20260717.md` that distills
+CROSS-GAME-TRANSFERABLE exploration methodology from `ops/arc_solve_registry.yaml`,
+and SHALL encode the most mechanizable of those patterns as reusable primitives in
+`python/carnot/agentic/arc_solver_kit.py`. Every primitive MUST be game-agnostic
+(no per-game color / coordinate / mechanic hardcoded) and MUST read only rendered
+frames or caller-injected callables, never `env._game` internals, so it is usable
+both offline and on the live scored path.
+
+The module SHALL provide at least: `probe_action_semantics` (measure each candidate
+action's effect this level from a fresh env instead of assuming carryover),
+`read_absolute_trajectory` (recover a sprite's absolute motion across the multi-layer
+animation array the camera-relative settled grid hides),
+`find_unexplained_glyphs` (surface uncatalogued objects to interrogate before
+committing a route), `bounded_reachability_search` (a pluggable-state-hash graph
+search), and `bisect_death_prefix` (isolate the minimal death-causing prefix).
+
+`bounded_reachability_search` SHALL distinguish a PROVEN-exhaustive negative
+(frontier emptied with no cut branches) from a merely SEARCH-CAPPED negative
+(node/depth budget hit), and SHALL set `proven_unreachable=true` only for the
+former. Each primitive SHALL be covered by unit tests exercising every branch, with
+no skipped tests, and SHALL pass ruff and mypy.
+
+Required field principles:
+
+- `proven_unreachable`: principle "bare bool true ONLY when the frontier emptied with no depth/node cut; conflating capped-with-proven is the corpus error this primitive prevents (wa30 settled-dead-end overturned)."
+- `status`: principle "one of goal/exhausted/capped_nodes/capped_depth so a caller can tell WHY a search returned negative before acting on it."
+- `changed_cells`: principle "None when the grid shape changed (degenerate/terminal frame), which the caller must treat as not-inert rather than as zero change."
+- `direction`: principle "absolute sprite motion (up/down/left/right/none) recovered from the animation layer stack, independent of any camera recentering."
+- `fatal_prefix_len`: principle "the minimal action count that still dies (or None), separating a real hazard from an action-budget/timer death."
+- `verifier_is_oracle`: principle "must be false; these are exploration heuristics, not win oracles -- only the offline reproduction gate counts a level."
+
+### REQ-ARC-WMTE-5717: Dev-Gated Playbook-Exemplar Stall Re-Induction Injection
+
+`arc_executable_world_model.induce_prompt` SHALL accept an opt-in
+`include_playbook_exemplars` boolean defaulting to False, and when False SHALL
+return the exact pre-existing prompt byte-identically. When True it SHALL prepend a
+SMALL, game-AGNOSTIC few-shot of exploration-method PATTERN statements (from the
+REQ-ARC-WMTE-5716 playbook) that biases the tier-3 proposer's priors without asking
+it to reason at length. `LocalGGUFProposer` and `CodexProposer` SHALL expose an
+`include_playbook_exemplars` field defaulting to False that passes through to
+`induce_prompt`.
+
+`E3AgentPolicy` SHALL arm the injection ONLY on the STALL / first-contact
+re-induction path (never the level-up reinduction path), gated by
+`SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED` OR the `CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED`
+runtime env override, both defaulting to OFF. The agent SHALL reset the cached
+proposer's flag to False at the start of each induction so a prior stall's injection
+never leaks into a level-up or program-synthesis-filter induction. This change SHALL
+NOT alter the frozen scored-submission default (the flag ships False) and SHALL NOT
+modify `scripts/kaggle/submission_kernel/`.
+
+Experiment 5717 SHALL run a MATCHED-BUDGET offline A/B (control = exemplars off,
+treatment = exemplars on) on the frozen live-stack proposer over a roster of games
+solved to L1, scoring each induced engine's reproduction accuracy against the full
+winning trajectory, and SHALL write
+`results/experiment_5717_playbook_exemplars_stall_induction_ab.json`. It SHALL
+declare the proposer's stochasticity and small sample explicitly and SHALL report
+the direction (improved / hurt / inconclusive) honestly, never fabricating a
+positive result. If the GGUF or llama-server precondition is missing it SHALL emit a
+`blocked_*` verdict rather than proceed.
+
+Required field principles:
+
+- `honest_verdict`: principle "MUST start with a terminal prefix complete:/complete_/success:/passed:/shipped: (Verdict Terminal-Prefix Discipline); an inconclusive or negative A/B is a valid terminal outcome."
+- `inference_substrate`: principle "live_llm_inference -- each arm loads and runs the real Qwen3.5-9B-MTP GGUF, so the 60s generative-inference duration floor applies."
+- `playbook_exemplars_delta_accuracy`: principle "treatment-minus-control mean reproduction accuracy; the primary induction-quality signal, reported with its small-sample caveat, never inflated."
+- `preconditions_checked`: principle "records that the GGUF weights + llama-server binary were verified before any inference; pre-empts silent-missing-resource fabrication."
+- `random_seed`: principle "harness determinism precondition; the LLM sampling remains stochastic and that gap is disclosed in methodology_note."
+- `reproducibility_checksum`: principle "content hash over config + per-arm rows catches silent drift on replay."
+- `verifier_is_oracle`: principle "must be false; reproduction accuracy is an oracle-distinct induction-quality metric, not a win-check."
+
 ## Scenarios
+
+### SCENARIO-ARC-WMTE-5716: Reachability Search Reports Proven Versus Capped
+
+Given a bounded reachability search over an abstract transition function whose goal
+is unreachable and whose frontier empties with no depth or node cut
+When `bounded_reachability_search` runs to completion
+Then it returns `status=exhausted`, `reached=false`, and `proven_unreachable=true`.
+
+Given the same search but with the node or depth budget hit before the frontier empties
+When the search stops at the cap
+Then it returns `status=capped_nodes` or `status=capped_depth`, `reached=false`, and
+`proven_unreachable=false`, so no caller mistakes a capped search for a proof.
+
+Given a multi-layer animation frame in which a sprite moves while the camera recenters
+When `read_absolute_trajectory` reads the layer stack
+Then it reports the sprite's ABSOLUTE per-layer centroids and a net direction that
+the camera-relative settled grid alone would hide.
+
+### SCENARIO-ARC-WMTE-5717: Exemplar Injection Is Off By Default And Stall-Scoped
+
+Given `include_playbook_exemplars` is False (the shipped default)
+When `induce_prompt` builds a world-model induction prompt
+Then the prompt is byte-identical to the pre-existing prompt and contains no
+exploration-principles block.
+
+Given a proposer whose `include_playbook_exemplars` is True
+When it induces a world model
+Then the induction prompt is prepended with the game-agnostic exploration-principles
+few-shot, and that few-shot contains no per-game color, coordinate, or mechanic name.
+
+Given the live agent enters induction with neither `SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED`
+nor `CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED` set
+When a stall or level-up re-induction runs
+Then `_playbook_exemplars_gate_on()` is False, the cached proposer's flag is reset to
+False, and no exemplars are injected on any path.
+
+Given the gate is on via the module flag or the env override
+When a STALL / first-contact re-induction runs (not a level-up reinduction)
+Then the agent arms the cached proposer's `include_playbook_exemplars` for that
+induction only and records `playbook_exemplars_injected=true` in the attempt.
 
 ### SCENARIO-ARC-FCP-5575: SGE Anti-Stagnation Controller Is E3-Reachable
 

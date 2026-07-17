@@ -222,6 +222,29 @@ MATM_SIMILARITY_MAX_CANDIDATES = 8
 # REQ-ARC-WMTE-5583's RESOLUTION note for the full record.
 SUBMITTED_AUTO_HUD_MASK_ENABLED = True
 SUBMITTED_AUTO_HUD_MASK_MODE = "rule_based_status_bar_classifier_single_frame"
+# REQ-ARC-WMTE-5717: inject a small game-AGNOSTIC exploration-playbook few-shot (the recurring
+# "orient, hypothesize, test, revise" method distilled from the solve corpus,
+# docs/research-notes/arc-exploration-playbook-20260717.md) into the STALL/first-contact
+# world-model re-induction prompt, to bias the tier-3 proposer's priors without long reasoning
+# (exp5714 found long-reasoning induction overruns the budget). OFF by default (dev-gated,
+# same pattern as SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED): the operator graduates it only if the
+# matched-budget A/B (exp5717) shows an induction-quality gain. Also togglable at runtime via
+# CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED=1 for the A/B harness (the prompt-side gate in
+# arc_executable_world_model.induce_prompt reads that env var, so BOTH the flag path here and
+# the env path there must agree before any exemplar text is injected).
+SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED = False
+
+
+def _playbook_exemplars_gate_on() -> bool:
+    """REQ-ARC-WMTE-5717: the DEV-ONLY gate for playbook-exemplar injection -- the SUBMITTED
+    module flag OR the CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED runtime env override (the same
+    flag-OR-env pattern as the SGE candidate router). Stall-only scoping is applied at the
+    call site; this only answers "is the feature gated on at all"."""
+    import os as _os
+
+    return bool(SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED) or (
+        _os.environ.get("CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED") == "1"
+    )
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -3545,6 +3568,12 @@ class E3AgentPolicy:
         }
         self.induction_attempts.append(attempt)
 
+        # REQ-ARC-WMTE-5717: reset the DEV-ONLY playbook-exemplar flag on the CACHED proposer so a
+        # prior stall induction's injection never leaks into this call's program-synthesis-filter or
+        # level-up-reinduction path. The stall fallthrough below re-arms it (stall-scoped) when gated.
+        if self.proposer is not None:
+            self.proposer.include_playbook_exemplars = False
+
         # Production-safe escape hatch (default OFF): when CARNOT_ARC_DISABLE_INDUCTION=1, skip the LLM
         # world-model induction tier entirely and stay in the (fast) tier-1 explorer. The local submission
         # GATE sets this so it measures the explorer's SEARCH/efficiency cleanly + fast, without paying the
@@ -3737,6 +3766,13 @@ class E3AgentPolicy:
                     self.plan = list(outcome.plan)
                 return
             self._fit_dsl_model()
+            # REQ-ARC-WMTE-5717: STALL / first-contact path only (the level_up_reinduction branch
+            # returned above). Arm the DEV-ONLY playbook exemplars on the cached proposer when gated
+            # on, so BOTH the bounded stall-refactor induction and the plain single-shot fallback
+            # below prepend the game-agnostic method few-shot. Default (unset) -> False -> unchanged.
+            _pb_active = _playbook_exemplars_gate_on()
+            self._proposer().include_playbook_exemplars = _pb_active
+            attempt["playbook_exemplars_injected"] = bool(_pb_active)
             # Graduated to default-on (REQ-ARC-FCP-5699-35, was DEV-ONLY per REQ-ARC-FCP-5699-24
             # / -25): the refactor/refinement loop (execute_bounded_llm_reinduction) was
             # previously reachable ONLY from the level_up_reinduction branch above, so

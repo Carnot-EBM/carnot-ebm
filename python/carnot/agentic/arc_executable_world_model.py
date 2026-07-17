@@ -1129,6 +1129,32 @@ def _induce_transitions_k() -> int:
     return int(override) if override else 8
 
 
+# REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
+# path. Default OFF (env CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED unset -> byte-identical
+# prompt, exactly like the CARNOT_ARC_CODEONLY_INDUCE / _REFACTOR_STRUCTURE_REMINDER
+# gates above). A SMALL, game-AGNOSTIC few-shot of the recurring "orient, hypothesize,
+# test, revise" exploration method distilled from the solve corpus
+# (docs/research-notes/arc-exploration-playbook-20260717.md) -- PATTERN statements only,
+# never a per-game fact (color/coordinate/mechanic), so they transfer to a HIDDEN game the
+# agent has never seen. Deliberately terse: a sibling experiment (exp5714) found that
+# long-reasoning induction overruns the token budget and emits zero code, so this biases
+# the model's PRIORS without asking it to reason at length.
+_PLAYBOOK_EXEMPLAR_BLOCK = """GENERAL EXPLORATION PRINCIPLES (observed across many ARC-AGI-3 games -- apply as PRIORS
+when inducing the rules below; do NOT copy any specific game's colors/coordinates):
+- Prefer SIMPLE, GENERAL rules over per-cell/hardcoded-coordinate special cases; a rule
+  that memorizes exact coordinates rarely generalizes to the next state.
+- Action effects can differ from level to level -- induce them from THESE transitions, do
+  not assume a mapping carried over from a prior level.
+- An object that recolors on contact or selection is the SAME object, not a new one.
+- A level-complete state is often the frame AFTER the winning action; ground
+  is_level_complete on the STRUCTURAL win condition, not one memorized exact grid.
+- Some actions are inert (no change) or reset the level -- model those honestly.
+- A fixed goal DISPLAY/legend is not the interactive target; the target is a piece that
+  actually moves or changes.
+
+"""
+
+
 def induce_prompt(
     game: str,
     trans: list[Transition],
@@ -1136,6 +1162,7 @@ def induce_prompt(
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
     k: int = 8,
+    include_playbook_exemplars: bool = False,
 ) -> str:
     # REQ-ARC-FCP-5699-23: k defaults to _transitions_block's own default (8, unchanged
     # production behavior). REQ-ARC-FCP-5699-22 found the default shows the LLM only ~6
@@ -1145,7 +1172,12 @@ def induce_prompt(
     # test whether more per-action examples let the LLM infer general rules instead.
     h, w = trans[0].grid.shape
     colors = sorted(set(int(v) for t in trans for v in t.grid.flatten().tolist()))
-    return f"""You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game '{game}'.
+    # REQ-ARC-WMTE-5717: DEV-ONLY exemplar prefix. The inject/don't-inject DECISION is made by
+    # the caller (the agent, which combines SUBMITTED_PLAYBOOK_EXEMPLARS_ENABLED / the
+    # CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED env gate AND the stall-only scope) and passed via
+    # the kwarg. Default False -> "" -> the exact pre-existing prompt, byte-identical.
+    exemplars = _PLAYBOOK_EXEMPLAR_BLOCK if include_playbook_exemplars else ""
+    return f"""{exemplars}You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game '{game}'.
 
 The game state is a {h}x{w} integer grid (logical resolution; colors {colors}). You are
 given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
@@ -1277,6 +1309,8 @@ class CodexProposer:
 
     timeout: int = 420
     offline_legal: bool = False
+    # REQ-ARC-WMTE-5717: DEV-ONLY (see LocalGGUFProposer's field); default False -> byte-identical.
+    include_playbook_exemplars: bool = False
 
     def induce(
         self,
@@ -1294,6 +1328,7 @@ class CodexProposer:
                 cell,
                 previous_level_complete_grid=previous_level_complete_grid,
                 k=_induce_transitions_k(),
+                include_playbook_exemplars=self.include_playbook_exemplars,
             ),
             self.timeout,
         )
@@ -1451,6 +1486,10 @@ class LocalGGUFProposer:
     # "content" field was read from the response).
     last_stop_type: str = ""
     last_prompt_truncated: bool = False
+    # REQ-ARC-WMTE-5717: DEV-ONLY. When True (set by the agent ONLY on the stall/first-contact
+    # re-induction path) AND CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED=1, induce() prepends the
+    # game-agnostic exploration-playbook exemplars. Default False -> byte-identical induce prompt.
+    include_playbook_exemplars: bool = False
     # REQ-ARC-FCP-5699-30: the raw completion text, captured on EVERY call regardless of
     # success/failure -- generate()'s failure path previously discarded `text` entirely once it
     # decided the required functions were missing, so there was no way to see WHAT the model
@@ -1744,6 +1783,7 @@ class LocalGGUFProposer:
             cell,
             previous_level_complete_grid=previous_level_complete_grid,
             k=_induce_transitions_k(),
+            include_playbook_exemplars=self.include_playbook_exemplars,
         )
         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
