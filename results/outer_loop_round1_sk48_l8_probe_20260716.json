@@ -1,0 +1,42 @@
+{
+  "experiment": "outer_loop_round1_sk48_l8_probe",
+  "game": "sk48",
+  "model": "claude-sonnet-5",
+  "run_date": "2026-07-16",
+  "schema": "carnot.arc_agi3_level_probe.v1",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "solve_provenance": "development_proxy",
+  "starting_level": 7,
+  "max_level_reached": 7,
+  "levels_won_this_session": 0,
+  "total_env_steps_used": 296,
+  "reproduction_verified": true,
+  "reproduction_note": "The 292-action L1-L7 prefix (results/outer_loop_round12_sk48_probe_20260712.json, reproduction_verified=True) replays cleanly from a fresh env.reset() to levels_completed=7, state=NOT_FINISHED via python/carnot/agentic/arc_solver_kit.py primitives, matching the registry's own reproduce() gate exactly. No new level was banked this round, so nothing new to reproduction-gate.",
+  "random_seed": null,
+  "reproducibility_checksum": "0d51f320a264b61a0a92c2a8e082dd86d966d6c2986a083de55c5bc409185ee5",
+  "reproducibility_checksum_note": "sha256 of the JSON-serialized 4-action control-probe sequence (ACTION1-4 in order) applied directly after the verified 292-action prefix.",
+  "honest_verdict": "complete_sk48_l8_initial_mapping_no_win_first_contact_round",
+  "narrative": "First-contact round for sk48 L8 (win_levels=8; this is the final level). Replayed the verified 292-action L1-L7 prefix, confirmed L8 start (levels_completed=7, NOT_FINISHED). Read the level's own static sprite layout from environment_files/sk48/d8078629/sk48.py (permitted for public-game offline dev per CLAUDE.md's source-reading-is-a-public-games-dev-tool-only rule -- the same precedent the L7 solve itself used, per its own registry gotcha entry) to accelerate mapping rather than starting purely blind: L8 places FOUR distinct colored rack blocks (colors 9, 14, 8, 12) in TWO pairs -- a vertical pair at x=29 (color-9 at y=14, color-14 at y=38) and a horizontal-row pair embedded in a y=26 strip (color-8 at x=17, color-12 at x=41) -- plus a target/guide row at y=56 listing all four colors in sequence (9, 14, then 8, 12 further right), and two chain-head actuators (one horizontal, one vertical, matching every prior level's dual-manipulator structure). This is structurally similar in KIND to L6/L7 (two simultaneously-checked chain/guide pairs) but uses four genuinely distinct rack colors instead of reusing one shared crossing color, suggesting the crosswise-cooperation trick from L6/L7 does not directly transfer and a fresh state-space search is needed. Confirmed live: ACTION1 and ACTION2 each move the vertical actuator (large frame diff, ~96 cells changed, matching the L3-L4-era 'actions 1/2 move vertically' characterization), and ACTION3/ACTION4 extend/retract the horizontal chain body (smaller diff, ~12-13 cells). All four actions are safe (state stays NOT_FINISHED). No candidate winning sequence was attempted this round -- this is pure initial reconnaissance. No new level banked; frontier stays at level 7.",
+  "novel_mechanics_found": [
+    "L8's rack uses four genuinely distinct colors (9, 14, 8, 12) in two pairs rather than reusing a single shared crossing color like L6/L7 -- the crosswise-cooperation solution pattern from those levels likely does not transfer directly and a fresh puzzle-specific route is needed.",
+    "Confirmed (matching prior levels' action model): ACTION1/ACTION2 move the vertical actuator (large frame diff ~96 cells); ACTION3/ACTION4 extend/retract the horizontal chain body (smaller diff ~12-13 cells). All four are safe from the L8 start position."
+  ],
+  "dead_ends": [],
+  "control_probe_sequence": [{"action": 1}, {"action": 2}, {"action": 3}, {"action": 4}],
+  "preconditions_checked": [
+    {"resource": "offline_arcade_environment_files_sk48", "available": true},
+    {"resource": "verified_l1_l7_prefix_artifact", "available": true}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "reached_level == 8",
+      "result": false,
+      "principle": "Only a reproduced level-8 win counts as banked progress per ARC Solve Reproducibility Discipline; this round is an honest first-contact mapping pass, not a solve attempt."
+    }
+  ],
+  "field_provenance": {
+    "solve_provenance": {
+      "principle": "Reading the level's static sprite layout from source is a PERMITTED public-game offline-dev accelerant (per CLAUDE.md and the L7 solve's own precedent) -- classified development_proxy rather than live_agent_self_discovery because the layout reading, not just live env interaction, informed this round's map. Any winning sequence must still be confirmed via live env.step() calls and the reproduction gate before being counted, exactly as L7 was."
+    }
+  }
+}

@@ -3648,6 +3648,29 @@ games:
     priority branch (sk48 levels_reproduced>=7), all 5 confirmed
     level=7, state=GameState.NOT_FINISHED, levels_completed=7,
     win_levels=8, frame well-formed (not degenerate).'
+  - 'L8 first-contact round 1, still HONEST NULL (2026-07-16,
+    claude-sonnet-5, results/outer_loop_round1_sk48_l8_probe_20260716.json):
+    initial reconnaissance of the final level (win_levels=8). Read the
+    level''s static sprite layout from source (permitted public-game
+    offline dev, same precedent as L7''s own solve) to accelerate mapping:
+    L8 places FOUR distinct colored rack blocks (9, 14, 8, 12) in two
+    pairs -- a vertical pair at x=29 (9 at y=14, 14 at y=38) and a
+    horizontal-row pair in a y=26 strip (8 at x=17, 12 at x=41) -- plus a
+    target/guide row at y=56 listing all four colors in sequence, and the
+    usual dual chain-head actuators. Structurally similar in KIND to
+    L6/L7 (two simultaneously-checked pairs) but uses four genuinely
+    distinct rack colors instead of one shared crossing color, so the
+    L6/L7 crosswise-cooperation trick likely does not transfer directly.
+    Confirmed live: ACTION1/ACTION2 move the vertical actuator (~96-cell
+    frame diff), ACTION3/ACTION4 extend/retract the horizontal chain body
+    (~12-13 cells) -- all four safe from the L8 start. No candidate
+    winning sequence attempted yet; pure reconnaissance. No new level
+    banked; frontier stays at level 7. NEXT LEAD: identify the two fixed
+    ACTION6 pair-selection click coordinates (matching L7''s (35,56) and
+    (5,56) pattern) before attempting any transfer sequence, and consider
+    a source-grounded offline transition search (matching L7''s own
+    solving methodology) given the four-distinct-color structure suggests
+    a genuinely new puzzle rather than a variant of L6/L7''s solution.'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
