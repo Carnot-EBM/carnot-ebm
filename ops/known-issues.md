@@ -17,10 +17,20 @@
 > tasks. The task list below (perception audit, classical salience front-end, ontology-error pilot, and
 > everything accumulated in the UPDATE chain through 2026-07-13) is preserved as historical record per
 > never-prune, but is NO LONGER a live pickup queue — do not resume any of it without a fresh operator
-> directive. **What replaces this floor is not yet decided** (submission-hardening for the actual
-> November Kaggle deadline vs. generalization testing vs. dropping ARC to fully opportunistic) — the
-> operator was asked in the same session; if answered, the resolution belongs in a new dated UPDATE
-> appended below this one, not as an edit to this banner.
+> directive.
+
+> **UPDATE 2026-07-17 (same session, operator answered): "Redirect to generalization research."** The
+> reserved floor is REINSTATED at the same >=1-slot/milestone cadence through November 2026, but
+> retargeted: test/improve how well the accumulated per-game methods (`arc_solver_kit.py`'s reusable
+> primitives, the registry's per-game gotchas) transfer to games the live agent hasn't been specifically
+> hand-tuned for, instead of deepening already-solved public games (impossible now) or packaging the
+> frozen submission stack (the option NOT chosen). Full rule: CLAUDE.md "ARC-AGI-3 Generalization-Testing
+> Floor". Mechanical side: `scripts/arc_levelup_guarantee_lint.py` gained a WARN-only (non-blocking)
+> `count_generalization_attempts()` check, wired into `research_conductor.py`'s activation guard; tests in
+> `tests/python/test_arc_levelup_guarantee_lint.py` (17 passing). The concrete task queue for this floor
+> is the three task classes named in the CLAUDE.md rule (held-out/leave-one-game-out live-path
+> measurement; `arc_solver_kit.py` primitive hardening; cross-game gotcha mining) — there is no
+> pre-staged task list yet; the planner should draft one from those three classes each milestone.
 
 > **UPDATE 2026-07-06 (same session, operator escalation):** "I want at least one ARC slot during each
 > milestone, and more if possible to continue the prioritization of ARC-AGI-3 as we need to make headway
