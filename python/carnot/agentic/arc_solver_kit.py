@@ -2023,7 +2023,10 @@ def online_warm_action_effect_controller_operator(
         else:
             scorer_used = True
             online_score = float(live_score)
-        if live_score is not None or _candidate_field(candidate, online_score_key, None) is not None:
+        if (
+            live_score is not None
+            or _candidate_field(candidate, online_score_key, None) is not None
+        ):
             online_score_rows += 1
         row["memory_score"] = float(memory_score)
         row["online_warm_score"] = float(online_score)
@@ -5454,4 +5457,424 @@ def reproduce(
         "claimed_level": claimed_level,
         "reproduced": (claimed_level is None) or (reached >= int(claimed_level)),
         "mode": "offline_reproduction_gate_no_quota",
+    }
+
+
+# ---------------------------------------------------------------------------
+# Exploration-playbook primitives (REQ-ARC-WMTE-5716)
+#
+# Game-AGNOSTIC exploration moves distilled from the whole solve corpus
+# (docs/research-notes/arc-exploration-playbook-20260717.md). These encode the
+# recurring METHODOLOGY -- verify semantics empirically, read absolute motion,
+# interrogate unexplained objects, know proven-vs-capped, isolate deaths -- so
+# the SAME know-how applies to a hidden game the agent has never seen, without
+# smuggling in any per-game fact (a color, a coordinate, a mechanic). None of
+# these reads env._game internals; they operate on rendered frames + injected
+# callables, so they are usable both offline (this kit) and on the live path.
+# ---------------------------------------------------------------------------
+
+
+def _frame_layers(frame: Any) -> list[Any]:
+    """Normalize any ARC frame representation into a list of 2-D grid layers.
+
+    A live ARC frame stacks N animation sub-frames as an (N, H, W) array on
+    ``.frame`` / ``._frame``; the LAST layer is the settled grid, and the
+    intermediate layers (captured with a FIXED camera during a single action)
+    carry the absolute-motion information the camera-relative settled grid hides
+    (playbook 2.3). Accepts a FrameDataRaw-like object, a raw (N,H,W) or (H,W)
+    array, or a list of 2-D grids -- so callers do not have to special-case the
+    representation.
+    """
+    import numpy as np
+
+    raw = frame
+    for attr in ("frame", "_frame"):
+        # A FrameDataRaw exposes the layer stack here; a bare array/list does not,
+        # so falling through leaves ``raw`` as the array/list the caller passed.
+        if hasattr(frame, attr):
+            raw = getattr(frame, attr)
+            break
+    arr = np.asarray(raw)
+    if arr.ndim == 2:
+        return [arr]
+    if arr.ndim == 3:
+        return [arr[i] for i in range(arr.shape[0])]
+    raise ValueError("frame must normalize to a 2-D grid or a stack of 2-D grids")
+
+
+def settled_grid(frame: Any) -> Any:
+    """The settled 2-D grid = the LAST animation layer (playbook 1.2 / 2.3).
+
+    Read this (never a mid-animation layer) when you want the resting board the
+    win predicate is evaluated against; read the full layer stack via
+    :func:`read_absolute_trajectory` when you need in-action motion.
+    """
+    return _frame_layers(frame)[-1]
+
+
+def _grid_background(grid: Any, background: Optional[int]) -> int:
+    import numpy as np
+
+    if background is not None:
+        return int(background)
+    arr = np.asarray(grid)
+    vals, counts = np.unique(arr, return_counts=True)
+    return int(vals[counts.argmax()]) if len(vals) else 0
+
+
+def probe_action_semantics(
+    env_factory: Callable[[], Any],
+    apply: Callable[[Any, Any, Any], Any],
+    action_labels: Sequence[Any],
+    *,
+    warmup_label: Optional[Any] = None,
+    prefix: Sequence[Any] = (),
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-5716 (playbook 1.1): empirically measure what each candidate
+    action DOES this level, instead of assuming carryover from a similar-looking
+    prior level/game -- the single most-cited wasted-round + instant-death cause
+    in the corpus.
+
+    Each label is measured INDEPENDENTLY from the same known state: a fresh env
+    (``env_factory()``) is reset, optionally warmed up (gotcha #4), replayed
+    through ``prefix``, then the one label is applied (playbook 4.1 fresh-env
+    branching, so a lethal probe cannot corrupt a real attempt). Reports per
+    label: the level delta, the number of changed settled-grid cells, whether it
+    leveled up, whether it caused a death (the level counter dropped below the
+    pre-action level, e.g. a GAME_OVER reset), and whether it was inert (no cell
+    changed and no level change). ``changed_cells`` is ``None`` when the grid
+    shape changed (e.g. a degenerate terminal frame), which the caller should
+    treat as "not inert".
+    """
+    import numpy as np
+
+    rows: list[dict[str, Any]] = []
+    for label in action_labels:
+        env = env_factory()
+        frame = env.reset()
+        if warmup_label is not None:
+            frame = apply(env, warmup_label, frame)
+        for step_label in prefix:
+            frame = apply(env, step_label, frame)
+        before_grid = np.asarray(settled_grid(frame))
+        before_level = frame_level(frame)
+        after = apply(env, label, frame)
+        after_grid = np.asarray(settled_grid(after))
+        after_level = frame_level(after)
+
+        if before_grid.shape == after_grid.shape:
+            changed_cells: Optional[int] = int(np.count_nonzero(before_grid != after_grid))
+        else:
+            changed_cells = None
+        leveled_up = after_level > before_level
+        died = after_level < before_level
+        inert = changed_cells == 0 and after_level == before_level
+        rows.append(
+            {
+                "label": label,
+                "level_before": before_level,
+                "level_after": after_level,
+                "level_delta": after_level - before_level,
+                "changed_cells": changed_cells,
+                "leveled_up": leveled_up,
+                "died": died,
+                "inert": inert,
+            }
+        )
+
+    return {
+        "operator": "probe_action_semantics",
+        "action_count": len(rows),
+        "rows": rows,
+        "inert_labels": [r["label"] for r in rows if r["inert"]],
+        "levelup_labels": [r["label"] for r in rows if r["leveled_up"]],
+        "lethal_labels": [r["label"] for r in rows if r["died"]],
+        "effective_labels": [r["label"] for r in rows if not r["inert"] and not r["died"]],
+        "verifier_is_oracle": False,
+    }
+
+
+def _mask_centroid(
+    grid: Any, *, color: Optional[int], background: int
+) -> Optional[tuple[float, float]]:
+    import numpy as np
+
+    arr = np.asarray(grid)
+    mask = (arr == color) if color is not None else (arr != background)
+    ys, xs = np.nonzero(mask)
+    if len(ys) == 0:
+        return None
+    return (float(ys.mean()), float(xs.mean()))
+
+
+def _dominant_direction(dy: float, dx: float) -> str:
+    # Screen coords: y grows DOWNWARD, so dy>0 is "down". Report the axis of
+    # larger magnitude; genuinely-zero net motion is "none".
+    if abs(dy) < 1e-9 and abs(dx) < 1e-9:
+        return "none"
+    if abs(dy) >= abs(dx):
+        return "down" if dy > 0 else "up"
+    return "right" if dx > 0 else "left"
+
+
+def read_absolute_trajectory(
+    frame: Any, *, color: Optional[int] = None, background: Optional[int] = None
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-5716 (playbook 2.3 / 2.4): recover a sprite's ABSOLUTE motion
+    across the multi-layer animation array, which the camera-relative settled grid
+    hides. Generalizes bp35 L9's animation-frame trajectory reader (which was the
+    tool that disambiguated a fatal fall and led to that game's full clear).
+
+    Tracks the centroid of the sprite (the pixels of ``color``, or -- when color
+    is None -- all non-``background`` foreground pixels) across each animation
+    layer, and reports per-layer centroids (row, col), per-step (dy, dx) deltas,
+    the net displacement over the whole action, a dominant direction, and how many
+    layers/observations there were. A single-layer frame has no motion to recover
+    (net (0, 0), direction "none"). Layers where the sprite is absent contribute a
+    ``None`` centroid and are skipped when chaining deltas.
+    """
+    layers = _frame_layers(frame)
+    bg = _grid_background(layers[-1], background)
+    centroids: list[Optional[tuple[float, float]]] = [
+        _mask_centroid(layer, color=color, background=bg) for layer in layers
+    ]
+    observed = [c for c in centroids if c is not None]
+    deltas: list[tuple[float, float]] = []
+    prev: Optional[tuple[float, float]] = None
+    for c in centroids:
+        if c is None:
+            continue
+        if prev is not None:
+            deltas.append((c[0] - prev[0], c[1] - prev[1]))
+        prev = c
+    if len(observed) >= 2:
+        net = (observed[-1][0] - observed[0][0], observed[-1][1] - observed[0][1])
+    else:
+        net = (0.0, 0.0)
+    return {
+        "operator": "read_absolute_trajectory",
+        "layer_count": len(layers),
+        "observed_count": len(observed),
+        "centroids": centroids,
+        "step_deltas": deltas,
+        "net_dy": net[0],
+        "net_dx": net[1],
+        "direction": _dominant_direction(net[0], net[1]),
+        "verifier_is_oracle": False,
+    }
+
+
+def find_unexplained_glyphs(
+    frame: Any,
+    known_colors: Sequence[int] = (),
+    *,
+    background: Optional[int] = None,
+    min_area: int = 1,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-5716 (playbook 2.1): surface on-screen objects whose color is
+    NOT yet in a caller-maintained registry of known-interactive / known-inert
+    colors, so the caller can systematically click/test each before committing to
+    a route. Camouflaged hazard/utility objects are a repeated corpus unlock (the
+    wa30 helper robot 9 prior attempts ignored; the bp35 growable pillar).
+
+    Operates on the settled grid's connected components (reusing
+    :func:`object_centric_digest`). Returns the uncatalogued components -- each
+    with ``color``, ``centroid`` = (x, y) click coordinates, ``area`` and
+    ``bbox`` -- sorted by area descending (largest, most-likely-load-bearing
+    first), plus the distinct uncatalogued colors. The background color is always
+    excluded; pass ``known_colors`` to also exclude colors you have already
+    catalogued.
+    """
+    grid = settled_grid(frame)
+    bg = _grid_background(grid, background)
+    known = {int(c) for c in known_colors} | {bg}
+    digest = object_centric_digest(grid)
+    unexplained: list[dict[str, Any]] = []
+    for comp in digest["components"]:
+        color = int(comp["color"])
+        area = int(comp["area"])
+        if color in known or area < int(min_area):
+            continue
+        cx, cy = comp["centroid"]
+        unexplained.append(
+            {
+                "color": color,
+                "centroid": [int(round(cx)), int(round(cy))],
+                "area": area,
+                "bbox": list(comp["bbox"]),
+            }
+        )
+    unexplained.sort(key=lambda row: (-int(row["area"]), int(row["color"])))
+    return {
+        "operator": "find_unexplained_glyphs",
+        "background_color": bg,
+        "unexplained_count": len(unexplained),
+        "unexplained_colors": sorted({row["color"] for row in unexplained}),
+        "components": unexplained,
+        "verifier_is_oracle": False,
+    }
+
+
+def bounded_reachability_search(
+    start: Any,
+    neighbors: Callable[[Any], Any],
+    is_goal: Callable[[Any], bool],
+    *,
+    state_hash: Optional[Callable[[Any], Hashable]] = None,
+    priority: Optional[Callable[[Any, int], float]] = None,
+    max_nodes: int = 10000,
+    max_depth: Optional[int] = None,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-5716 (playbook 3.1 / 3.2): a generic graph search that HONESTLY
+    reports whether a negative result is PROVEN (the frontier emptied with no cut
+    branches -> exhausted under the given model) or merely SEARCH-CAPPED (hit the
+    node/depth budget). Conflating the two is a repeated corpus error (wa30's
+    "settled dead end" overturned; bp35 L9's "intractable to exhaust" honestly
+    labeled partial-not-proven).
+
+    ``state_hash(state) -> Hashable`` dedups on the SEMANTICALLY-RELEVANT subset of
+    state, so cosmetic variation (animation phase, decorative growth, camera
+    pixels) does not explode the frontier; the default hashes the raw state, so
+    pass a projection whenever states carry cosmetic noise. ``neighbors(state)``
+    yields ``(edge_label, next_state)`` pairs. ``priority(state, depth) -> float``
+    makes the search best-first (lower expands first); omit it for plain BFS.
+
+    Returns ``reached`` (bool), the ``path`` of edge labels to the goal (or None),
+    a ``status`` of ``goal`` / ``exhausted`` / ``capped_nodes`` / ``capped_depth``,
+    ``nodes_expanded``, ``frontier_remaining``, and ``proven_unreachable`` -- which
+    is True ONLY for ``exhausted`` (never for a capped search).
+    """
+    hash_fn = state_hash if state_hash is not None else (lambda s: s)
+    seen: set[Hashable] = {hash_fn(start)}
+    counter = itertools.count()
+    use_priority = priority is not None
+
+    if use_priority:
+        heap: list[tuple[float, int, Any, list[Any], int]] = [
+            (priority(start, 0), next(counter), start, [], 0)
+        ]
+    else:
+        from collections import deque
+
+        queue: "deque[tuple[Any, list[Any], int]]" = deque([(start, [], 0)])
+
+    nodes_expanded = 0
+    depth_capped = False
+
+    def _pop() -> tuple[Any, list[Any], int]:
+        if use_priority:
+            _, _, state, path, depth = heapq.heappop(heap)
+            return state, path, depth
+        return queue.popleft()
+
+    def _frontier_len() -> int:
+        return len(heap) if use_priority else len(queue)
+
+    def _push(state: Any, path: list[Any], depth: int) -> None:
+        if use_priority:
+            heapq.heappush(heap, (priority(state, depth), next(counter), state, path, depth))
+        else:
+            queue.append((state, path, depth))
+
+    while _frontier_len() > 0:
+        if nodes_expanded >= max_nodes:
+            return _reachability_result(
+                False, None, "capped_nodes", nodes_expanded, _frontier_len()
+            )
+        state, path, depth = _pop()
+        if is_goal(state):
+            return _reachability_result(True, path, "goal", nodes_expanded, _frontier_len())
+        nodes_expanded += 1
+        if max_depth is not None and depth >= max_depth:
+            depth_capped = True
+            continue
+        for label, nxt in neighbors(state):
+            key = hash_fn(nxt)
+            if key in seen:
+                continue
+            seen.add(key)
+            _push(nxt, path + [label], depth + 1)
+
+    status = "capped_depth" if depth_capped else "exhausted"
+    return _reachability_result(False, None, status, nodes_expanded, 0)
+
+
+def _reachability_result(
+    reached: bool,
+    path: Optional[list[Any]],
+    status: str,
+    nodes_expanded: int,
+    frontier_remaining: int,
+) -> dict[str, Any]:
+    return {
+        "operator": "bounded_reachability_search",
+        "reached": reached,
+        "path": path,
+        "status": status,
+        "nodes_expanded": nodes_expanded,
+        "frontier_remaining": frontier_remaining,
+        # PROVEN unreachability requires an emptied frontier with no cut branches;
+        # a capped search proves nothing (playbook 3.1).
+        "proven_unreachable": (not reached) and status == "exhausted",
+    }
+
+
+def bisect_death_prefix(
+    actions: Sequence[Any],
+    is_dead_after: Callable[[int], bool],
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-5716 (playbook 4.5): binary-search the MINIMAL action prefix
+    that still ends in death, to isolate the true death-causing action instead of
+    manual step-by-step replay -- and to separate a real hazard from an unrelated
+    budget/timer/harness cause (bp35: the historically "lethal step" was actually
+    the invisible action-count clock, proven once the death was isolated).
+
+    ``is_dead_after(k) -> bool`` replays the first ``k`` actions from a fresh state
+    and returns whether the resulting state is dead. Death is assumed MONOTONE in
+    prefix length (once dead, a longer prefix stays dead) -- the usual case for a
+    sequence that ends in a game-over. Returns ``fatal_prefix_len`` (the smallest k
+    with ``is_dead_after(k)`` True, or None if no prefix is dead),
+    ``fatal_action_index`` = that length minus one (None when death precedes any
+    action), the ``fatal_action`` itself, and ``evaluations`` (replays performed).
+    """
+    n = len(actions)
+    evaluations = 0
+
+    def dead(k: int) -> bool:
+        nonlocal evaluations
+        evaluations += 1
+        return bool(is_dead_after(k))
+
+    if not dead(n):
+        return {
+            "operator": "bisect_death_prefix",
+            "fatal_prefix_len": None,
+            "fatal_action_index": None,
+            "fatal_action": None,
+            "evaluations": evaluations,
+            "monotone_assumption": True,
+        }
+
+    lo, hi = 0, n
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if dead(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+
+    fatal_len = lo
+    if fatal_len == 0:
+        fatal_index: Optional[int] = None
+        fatal_action: Any = None
+    else:
+        fatal_index = fatal_len - 1
+        fatal_action = actions[fatal_index]
+    return {
+        "operator": "bisect_death_prefix",
+        "fatal_prefix_len": fatal_len,
+        "fatal_action_index": fatal_index,
+        "fatal_action": fatal_action,
+        "evaluations": evaluations,
+        "monotone_assumption": True,
     }
