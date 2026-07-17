@@ -100,8 +100,22 @@ FIELD_PRINCIPLES = {
         "principle": "content hash over config + per-arm results catches silent drift on replay."
     },
     "playbook_exemplars_delta_accuracy": {
-        "principle": "treatment-minus-control mean reproduction accuracy; the primary "
-        "induction-quality signal, honestly reported with its small-sample caveat."
+        "principle": "treatment-minus-control mean EXACT-match reproduction accuracy; floors at 0 "
+        "for single-shot first-contact induction, so it is reported but not the discriminator."
+    },
+    "playbook_exemplars_delta_cell_recall": {
+        "principle": "treatment-minus-control mean GRADED per-changed-cell recall; the "
+        "discriminating (non-flooring) induction-quality signal, directional under small N."
+    },
+    "metric_floored": {
+        "principle": "bare bool true when even graded cell_recall is at its floor for both arms, "
+        "so the offline metric cannot detect an effect -- an honest 'unmeasurable offline', NOT "
+        "evidence the feature helps or hurts (mirrors the AUTO_HUD_MASK levels_gained floor)."
+    },
+    "outlier_fragile_direction": {
+        "principle": "bare bool true when |delta| < the largest single-run cell_recall, so one "
+        "lucky stochastic induction could account for or flip the direction; forbids calling "
+        "improved/hurt on noise-dominated data under a temperature>0 proposer with small N."
     },
 }
 
@@ -226,9 +240,9 @@ def run_arm(prop, game: str, arm_exemplars: bool, window: list, full: list, cell
         row["reproduction_accuracy"] = round(float(vr.accuracy), 4)
         row["n_transitions_scored"] = int(vr.n)
         row["n_correct"] = int(vr.n_correct)
-        cell_recall = getattr(vr, "cell_recall", None)
-        if cell_recall is not None:
-            row["cell_recall"] = round(float(cell_recall), 4)
+        # Graded per-changed-cell recall: a NON-flooring quality signal (an engine that gets some
+        # changed cells right scores >0), unlike the strict exact-grid-match accuracy.
+        row["cell_recall"] = round(float(getattr(vr, "cell_recall", 0.0) or 0.0), 4)
     except Exception as exc:
         row["verify_error"] = repr(exc)[:200]
     return row
@@ -237,34 +251,93 @@ def run_arm(prop, game: str, arm_exemplars: bool, window: list, full: list, cell
 # --------------------------------------------------------------------------------------
 # aggregation + verdict
 # --------------------------------------------------------------------------------------
+# Below this graded-recall level, the offline induction-quality metric is effectively at its
+# floor (a single-shot first-contact engine reproduces ~nothing of a hard game's trajectory),
+# so it cannot discriminate the arms regardless of any real prompt effect.
+FLOOR_CELL_RECALL = 0.05
+
+
 def _arm_summary(rows: list[JsonDict], exemplars: bool) -> JsonDict:
     arm = [r for r in rows if r.get("exemplars") is exemplars]
     ok = [r for r in arm if r.get("induction_ok")]
     accs = [r["reproduction_accuracy"] for r in ok if r.get("reproduction_accuracy") is not None]
+    recalls = [r["cell_recall"] for r in ok if r.get("cell_recall") is not None]
     return {
         "runs": len(arm),
         "induction_ok": len(ok),
         "induction_ok_rate": round(len(ok) / len(arm), 4) if arm else 0.0,
         "scored_runs": len(accs),
         "mean_reproduction_accuracy": round(sum(accs) / len(accs), 4) if accs else None,
+        "mean_cell_recall": round(sum(recalls) / len(recalls), 4) if recalls else None,
+        "max_cell_recall": round(max(recalls), 4) if recalls else None,
         "mean_induce_s": round(sum(r["induce_s"] for r in arm) / len(arm), 1) if arm else None,
     }
 
 
-def _verdict(control: JsonDict, treatment: JsonDict, n_runs: int) -> tuple[str, Optional[float]]:
-    c = control["mean_reproduction_accuracy"]
-    t = treatment["mean_reproduction_accuracy"]
-    if c is None or t is None:
-        return "complete_playbook_exemplars_ab_no_scored_runs_inconclusive", None
-    delta = round(t - c, 4)
-    # A small, honest margin: with a stochastic proposer and small N this is directional only.
-    if delta > 0.02 and treatment["induction_ok_rate"] >= control["induction_ok_rate"] - 0.001:
-        v = f"complete_playbook_exemplars_improved_induction_accuracy_delta_{delta}_small_n_{n_runs}"
-    elif delta < -0.02:
-        v = f"complete_playbook_exemplars_hurt_induction_accuracy_delta_{delta}_small_n_{n_runs}"
+def _arm_recalls(rows: list[JsonDict], exemplars: bool) -> list[float]:
+    return [
+        float(r["cell_recall"])
+        for r in rows
+        if r.get("exemplars") is exemplars
+        and r.get("induction_ok")
+        and r.get("cell_recall") is not None
+    ]
+
+
+def _leave_one_out_fragile(
+    c_recalls: list[float], t_recalls: list[float], delta: float, threshold: float
+) -> bool:
+    """Leave-one-out robustness: is the direction of `delta` fragile to removing ONE run? Removes
+    the single largest cell_recall (the run most able to inflate its arm's mean), recomputes the
+    delta, and calls it fragile if the sign flips OR the magnitude drops to/below `threshold`. This
+    correctly separates a real, tight separation (removing any one run barely moves the mean -> NOT
+    fragile) from a one-lucky-run artifact (removing that run flips the sign -> fragile). Arms with
+    fewer than 2 scored runs cannot establish robustness, so they are treated as fragile."""
+    if len(c_recalls) < 2 or len(t_recalls) < 2:
+        return True
+    c_max, t_max = max(c_recalls), max(t_recalls)
+    if c_max >= t_max:
+        c2 = list(c_recalls)
+        c2.remove(c_max)
+        d2 = sum(t_recalls) / len(t_recalls) - sum(c2) / len(c2)
     else:
-        v = f"complete_playbook_exemplars_inconclusive_delta_{delta}_small_n_{n_runs}"
-    return v, delta
+        t2 = list(t_recalls)
+        t2.remove(t_max)
+        d2 = sum(t2) / len(t2) - sum(c_recalls) / len(c_recalls)
+    sign_flipped = (delta >= 0) != (d2 >= 0)
+    return sign_flipped or abs(d2) <= threshold
+
+
+def _verdict(
+    control: JsonDict, treatment: JsonDict, rows: list[JsonDict], n_runs: int
+) -> tuple[str, Optional[float], bool, bool]:
+    """Return (verdict, cell_recall_delta, metric_floored, outlier_fragile). Exact-grid-match
+    accuracy floors at 0 for single-shot first-contact induction, so we discriminate on the graded
+    cell_recall AND (1) report when even that is at its floor, and (2) refuse to call a direction
+    that a single high-variance run could flip (leave-one-out) -- the stochastic proposer produces
+    per-run cell_recall from ~0 to ~0.7, so an outlier-driven mean is not a reliable direction."""
+    cr_c = control["mean_cell_recall"]
+    cr_t = treatment["mean_cell_recall"]
+    if cr_c is None or cr_t is None:
+        return "complete_playbook_exemplars_ab_no_scored_runs_inconclusive", None, True, False
+    delta = round(cr_t - cr_c, 4)
+    floored = max(cr_c, cr_t) < FLOOR_CELL_RECALL
+    outlier_fragile = _leave_one_out_fragile(
+        _arm_recalls(rows, exemplars=False), _arm_recalls(rows, exemplars=True), delta, 0.02
+    )
+    if floored:
+        # Both arms at the metric floor -> the offline induction-quality metric cannot detect any
+        # effect (mirrors the AUTO_HUD_MASK levels_gained floor). NOT evidence the feature is bad.
+        v = f"complete_playbook_exemplars_metric_floored_inconclusive_cellrecall_delta_{delta}_n_{n_runs}"
+    elif outlier_fragile:
+        v = f"complete_playbook_exemplars_no_reliable_signal_high_variance_cellrecall_delta_{delta}_n_{n_runs}"
+    elif delta > 0.02:
+        v = f"complete_playbook_exemplars_improved_cellrecall_delta_{delta}_small_n_{n_runs}"
+    elif delta < -0.02:
+        v = f"complete_playbook_exemplars_hurt_cellrecall_delta_{delta}_small_n_{n_runs}"
+    else:
+        v = f"complete_playbook_exemplars_inconclusive_cellrecall_delta_{delta}_small_n_{n_runs}"
+    return v, delta, floored, outlier_fragile
 
 
 def _checksum(payload: JsonDict) -> str:
@@ -354,7 +427,15 @@ def run(roster: tuple[str, ...] = DEFAULT_ROSTER, trials: int = TRIALS_PER_ARM) 
 
     control = _arm_summary(rows, exemplars=False)
     treatment = _arm_summary(rows, exemplars=True)
-    verdict, delta = _verdict(control, treatment, len(rows))
+    verdict, delta, floored, outlier_fragile = _verdict(control, treatment, rows, len(rows))
+    acc_delta = None
+    if (
+        control["mean_reproduction_accuracy"] is not None
+        and treatment["mean_reproduction_accuracy"] is not None
+    ):
+        acc_delta = round(
+            treatment["mean_reproduction_accuracy"] - control["mean_reproduction_accuracy"], 4
+        )
 
     base.update(
         {
@@ -363,14 +444,22 @@ def run(roster: tuple[str, ...] = DEFAULT_ROSTER, trials: int = TRIALS_PER_ARM) 
             "n_runs": len(rows),
             "control_exemplars_off": control,
             "treatment_exemplars_on": treatment,
-            "playbook_exemplars_delta_accuracy": delta,
+            "playbook_exemplars_delta_accuracy": acc_delta,
+            "playbook_exemplars_delta_cell_recall": delta,
+            "metric_floored": bool(floored),
+            "outlier_fragile_direction": bool(outlier_fragile),
             "rows": rows,
             "methodology_note": (
                 "The Qwen3.5-9B proposer samples at temperature>0, so per-arm induction is "
-                "non-deterministic; N = len(roster) x trials x 2 arms is small. The delta is "
-                "DIRECTIONAL, not a significance claim. Both arms share the identical window, "
+                "non-deterministic; N = len(roster) x trials x 2 arms is small. Deltas are "
+                "DIRECTIONAL, not significance claims. Both arms share the identical window, "
                 "proposer config, and budget; only include_playbook_exemplars differs. Verified "
-                "against the full winning trajectory (held-out beyond the k-window)."
+                "against the full winning trajectory (held-out beyond the k-window). Exact-grid-"
+                "match accuracy floors at 0 for single-shot first-contact induction on these hard "
+                "games, so the graded cell_recall is the discriminating metric; metric_floored=true "
+                "means even that is at its floor and the offline metric cannot detect an effect "
+                "(the same floor the AUTO_HUD_MASK levels_gained A/B hit) -- NOT evidence the "
+                "feature helps or hurts. A live-submission levels_gained A/B is the better test."
             ),
             "verifier_is_oracle": False,
             "duration_s": round(time.time() - started, 3),
