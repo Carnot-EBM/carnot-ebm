@@ -13353,3 +13353,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-17 16:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
 | 2026-07-17 16:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
 | 2026-07-17 16:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-17 16:36 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-17 16:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
