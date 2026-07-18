@@ -845,6 +845,34 @@ def resolve_replay_plan(
             adapter.apply,
             warmup_label=adapter.warmup_label,
         )
+    if game == "lf52" and _as_int(entry.get("levels_reproduced")) >= 7:
+        # L7-L10 (2026-07-16/17, gpt-5.6-sol-max-effort): the offline-reproducible chain
+        # extends past L6 via results/outer_loop_lf52_l8plus_probe_20260717.json's
+        # action_sequence (1009 labels, L1->L10; this file's own prefix is the L7 line
+        # from results/outer_loop_round14_lf52_probe_20260716.json, already folded in).
+        # NOTE: this is OFFLINE reproducibility only (arc_solver_kit.reproduce() uses
+        # offline_arcade()) -- L9-L10 are known LIVE-invalid (22 out-of-bounds ACTION6
+        # pixel clicks reject with live HTTP 400; see ops/arc_solve_registry.yaml
+        # lf52.live_replay_status). The live submission package caps lf52 at L8.
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/outer_loop_lf52_l8plus_probe_20260717.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("lf52 adapter missing")
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
     if game == "lf52" and _as_int(entry.get("levels_reproduced")) >= 6:
         from carnot.agentic.arc_game_adapters import get_adapter
 
@@ -908,6 +936,33 @@ def resolve_replay_plan(
         return ReplayPlan(
             game,
             [str(label) for label in labels],
+            rel_path,
+            adapter.apply,
+            warmup_label=adapter.warmup_label,
+        )
+    if game == "bp35" and _as_int(entry.get("levels_reproduced")) >= 9:
+        # L9, FULL GAME CLEAR (2026-07-17, gpt-5.6-sol-max, round 26): 410-action full
+        # sequence = the 342-action L1-L8 prefix (results/outer_loop_round12_bp35_probe_
+        # 20260712.json action_sequence) + a 68-action L9 tail (results/outer_loop_round26_
+        # bp35_probe_l9_20260717.json winning_sequence.l9_action_tail). Read directly from
+        # the authoritative banked trajectory (results/arc3_live_banked_trajectories/
+        # bp35.json solution) so this resolver stays in sync with the live submission
+        # package rather than re-deriving the prefix+tail concatenation a second time.
+        from carnot.agentic.arc_game_adapters import get_adapter
+
+        adapter = get_adapter(game)
+        rel_path = "results/arc3_live_banked_trajectories/bp35.json"
+        artifact = _load_json(root / rel_path)
+        raw_labels = artifact.get("solution") or artifact.get("action_sequence") or []
+        if adapter is None:
+            raise RuntimeError("bp35 adapter missing")
+        labels = [
+            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
+            for label in raw_labels
+        ]
+        return ReplayPlan(
+            game,
+            labels,
             rel_path,
             adapter.apply,
             warmup_label=adapter.warmup_label,
