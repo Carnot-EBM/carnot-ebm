@@ -232,14 +232,13 @@ def replay_live(
     if short in getattr(mh, "WARMUP_GAMES", set()) and actions and frame is not None:
         aid0, data0 = mh.normalize(actions[0])
         if aid0 is not None:
-            frame = env.step(
-                getattr(GameAction, f"ACTION{aid0}"), data=data0, reasoning={"policy": "warmup"}
-            )
+            ge0 = GameAction.RESET if aid0 == 0 else getattr(GameAction, f"ACTION{aid0}")
+            frame = env.step(ge0, data=data0, reasoning={"policy": "warmup"})
     for a in actions:
         aid, data = mh.normalize(a)
         if aid is None:
             continue
-        ge = getattr(GameAction, f"ACTION{aid}")
+        ge = GameAction.RESET if aid == 0 else getattr(GameAction, f"ACTION{aid}")
         frame = env.step(ge, data=data, reasoning={"policy": "offline_reproduced_replay"})
         if frame is None:
             break

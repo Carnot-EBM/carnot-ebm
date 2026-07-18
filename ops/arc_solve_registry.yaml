@@ -6266,6 +6266,42 @@ reproducible_total_levels: 183
 reproducible_total_games: 25
 provisional_total_levels: 1
 live_submissions:
+- date: '2026-07-18'
+  scorecard_id: dffcf7d8-6450-4d89-8738-f2c27852d6ed
+  levels: 181
+  games: 25
+  games_env_matched: 25/25
+  mode: mode1_offline_reproduced_replay
+  submitted: true
+  authorization: operator directive 2026-07-18 'refresh the submission package and then rerun the submit'
+    (chose 'Full multi-game refresh first' over a safe-partial-only refresh via AskUserQuestion, then
+    explicitly 'wait for it to finish, then submit')
+  driver: scripts/arc3_live_submit.py
+  artifact: results/arc3_live_submit.json
+  package: results/experiment_10000_submission_package_refresh_20260718.json
+  note: 'SIXTH live submission -- full multi-game refresh from the 2026-06-24-stale 60-level package
+    to 181 levels across all 25 games. Method: 21 parallel per-game agents each independently traced
+    the registry solver-field/gotcha prefix-chain to the deepest banked action sequence, offline-verified
+    it via a fresh env replay, then LIVE-validated it (VALIDATE mode, dedicated scorecard, no submit)
+    against the real API before it was trusted -- exactly the discipline the lf52 lesson (offline
+    success != live success) called for. Result: 22 of 23 refreshed games matched their FULL registry
+    depth live with zero gap (ar25 8, cd82 6, cn04 6, dc22 6, dc22 corrected the operator''s wrong 8-level
+    hint to the true 6, ft09 6, g50t 7, ka59 7, lp85 8, ls20 7, m0r0 6, r11l 6, re86 8, s5i5 8, sb26 8,
+    sc25 6 -- a genuine 5->6 upgrade, sk48 8, sp80 6, su15 9, tu93 9, vc33 7, wa30 9); only lf52 stays
+    capped at its already-known-safe L8 (registry credits 10 offline, L9-L10 blocked by the out-of-bounds
+    ACTION6 coordinate gap documented in lf52.live_replay_status -- NOT re-attempted this round, the
+    827-action L8-boundary truncation was re-confirmed offline before banking). bp35 (9) and lf52 (8)
+    carried forward from the same-day earlier bonus deep-win check. tn36 (7) and tr87 (6) were already
+    at full registry depth in the prior package and carried forward unchanged (not re-verified this
+    round). BUG FOUND AND FIXED during this refresh: scripts/arc3_live_submit.py''s replay_live() (both
+    the main loop and the warmup branch) mapped every action via getattr(GameAction, f"ACTION{aid}"),
+    which has no ACTION0 -- so any trajectory containing a mid-sequence RESET (r11l''s L5->L6 transition
+    requires one, to undo two post-L5 clicks baked into its banked prefix) crashed with AttributeError.
+    First surfaced in the pre-submit VALIDATE run (r11l ERRORed, 24/25 matched); fixed inline (aid==0 ->
+    GameAction.RESET) and independently re-confirmed via a direct replay_live() call before the real
+    --submit run, which then reached 25/25 games env-matched, 181/181 levels. This is the
+    mode1_offline_reproduced_replay validation score (games the agent has seen offline), NOT the
+    hidden-leaderboard score -- see scored_leaderboard_baseline (0.08) for that.'
 - date: '2026-07-17'
   scorecard_id: 26095155-ce9c-4eb7-a313-d799e69f0b37
   levels: 60
