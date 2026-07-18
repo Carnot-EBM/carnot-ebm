@@ -2238,15 +2238,26 @@ games:
   levels_reproduced: 10
   full_game_clear: true
   final_game_state: 'GameState.WIN'
-  live_replay_status: 'CONFIRMED through L8 (action 827/1009), BLOCKED L9-L10 (2026-07-17): the
-    banked L9 tail clicks 22 out-of-bounds ACTION6 pixel coordinates (x up to 132, valid range
-    0-63 -- an off-screen blue-peg leapfrog at source grid x~19-21) that the offline arc_agi
-    arcade accepts but the live API rejects with HTTP 400. This is a real offline/live
-    permissiveness gap, not a bug in the replay driver, and does not retract the offline
-    10/10 credit above (independently verified 5x fresh offline-arcade replay + official
-    reproduce() gate, commit c588364d7). Live-submittable depth is currently L8, not L10, until
-    an in-bounds equivalent route is found. See results/outer_loop_live_revalidation_20260717.json
-    and the 2026-07-17 live_submissions entries below for full diagnostic evidence.'
+  live_replay_status: 'RESOLVED 2026-07-17 -- an in-bounds L9-L10 route was found and LIVE-validated
+    to full L10 (all 1033 in-bounds actions accepted by the real API; VALIDATE mode, scorecard
+    ce55257e-d1db-44af-acd5-95ae1a8342e3 opened but NOT closed, no leaderboard record; replay
+    https://arcprize.org/replay/6a0876aa-5c8b-44c3-959d-c4be272b6e38; artifact
+    results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json). lf52 live-submittable depth is
+    now L10 (was L8). PRIOR-AND-NOW-FIXED (diagnostic preserved): the original banked 1009-action tail
+    clicked 22 out-of-bounds ACTION6 coordinates (x up to 132 / down to -8; valid range 0-63 --
+    off-screen blue relay pegs at source grid x~11-21) that the offline arcade accepts but the live
+    API rejects with HTTP 400 at action 849, so CONFIRMED-live was only through L8 (action 827/1009).
+    Root cause: the original walked the east blue relays westward while the camera was still at the
+    level-start offset and NO green was loaded on the carrier, so those pegs were off-screen. The fix
+    keeps the already-in-bounds L1-L8 prefix and the fresh-init L10 suffix UNCHANGED and restructures
+    only the L9 completion, using the carried green as a camera crane along the row-5 rail (x=6-20).
+    L9 camera model: render pixel = 6*grid + world_offset; world_offset starts -15 after a scripted
+    -20px pan that fires on ANY peg landing at cell (6,5); a green-loaded carrier ACTION1-4 move pans
+    -6px per cell (empty/blue carrier does not pan). An in-bounds completion (every ACTION6 target
+    within 0-63) was found by constrained best-first search over a faithful pure-Python L9 model that
+    was cross-checked op-by-op against the real engine. Offline: 0 OOB clicks, GameState.WIN,
+    reproduce(claimed_level=10) reproduced=True, 5/5 fresh replays. The offline 10/10 credit (commit
+    c588364d7) is unaffected. Original diagnostic: results/outer_loop_live_revalidation_20260717.json.'
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
@@ -6397,6 +6408,24 @@ live_submissions:
     the driver. Does NOT retract lf52''s offline registry credit (10/10 stands, independently
     verified); DOES mean lf52''s live-submittable depth is currently L8, not L10, until an in-bounds
     equivalent route is found (genuine new exploration, not attempted this session).'
+- date: '2026-07-17'
+  scorecard_id: ce55257e-d1db-44af-acd5-95ae1a8342e3
+  levels: 10
+  games: 1
+  games_env_matched: 1/1
+  mode: inbounds_live_parity_validate_no_submit
+  authorization: outer-loop live-parity task 2026-07-17 (VALIDATE mode ONLY -- no --submit, scorecard
+    opened but NEVER closed, no leaderboard record)
+  driver: ad-hoc scratch driver reusing arc3_live_submit.online_arcade + the sanctioned live replay
+    path (not a committed script, same pattern as the 2026-07-17 deep-win diagnostic above)
+  artifact: results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json
+  replay_url: https://arcprize.org/replay/6a0876aa-5c8b-44c3-959d-c4be272b6e38
+  note: 'IN-BOUNDS FIX for the 2026-07-17 lf52 L9 HTTP-400 gap (the deep-win bonus check above). Replayed
+    the restructured 1033-action fully-in-bounds sequence against the REAL API: claimed L10 -> LIVE L10,
+    ALL 1033 actions accepted (live level transitions at actions 7/41/145/213/311/614/758/826/950/1032),
+    350s, cleanly past the original action-849 out-of-bounds failure. Scorecard opened but NOT closed
+    (VALIDATE only, no submission). This upgrades lf52 live-submittable depth from L8 to L10. See the
+    lf52 live_replay_status field for the root cause + camera-crane fix method.'
 - date: '2026-06-19'
   mode: competition_kernel_live_agent   # the LIVE E3AgentPolicy on the hidden gateway -- the SCORED path
   public_leaderboard_score: 0.08

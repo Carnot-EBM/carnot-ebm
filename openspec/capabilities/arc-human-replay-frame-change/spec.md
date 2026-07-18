@@ -9098,3 +9098,84 @@ config flip. This is a stronger, better-powered NEGATIVE than the prior's N=2
 heldout comparison, not a re-run of a doomed approach. `retire_if_same_verdict:
 false` (the verdict SHAPE — mechanistic inertness + overrun — differs from the
 prior's accuracy-delta framing).
+
+### REQ-ARC-LIVESUBMIT-LF52-INBOUNDS: Live-Submittable Replays Must Use Only In-Bounds ACTION6 Coordinates (lf52 L9 Camera-Crane Fix)
+
+A banked ARC-AGI-3 replay sequence intended for LIVE submission SHALL emit only
+ACTION6 click coordinates within the visible frame (pixel x,y each in 0..63).
+The OFFLINE `arc_agi` arcade permissively accepts and routes ACTION6 clicks with
+coordinates OUTSIDE the 64x64 frame (addressing off-screen objects directly by
+their source-grid position), but the LIVE API validates coordinates strictly and
+rejects anything outside 0..63 with HTTP 400. A sequence that reproduces a level
+OFFLINE via out-of-bounds clicks is therefore NOT live-submittable to that depth;
+its live-submittable depth is capped at the last level reached before the first
+out-of-bounds click.
+
+**Origin (2026-07-17):** lf52 was solved offline 10/10 (commit `c588364d7`) but a
+live VALIDATE-mode replay of the banked 1009-action sequence
+(`results/outer_loop_live_revalidation_20260717.json`) reached only L8 before
+failing at action 849 with HTTP 400 on `ACTION6 {x:132,y:18}` — one of 22
+out-of-bounds clicks (x up to 132 / down to -8) that walked off-screen blue relay
+pegs (source grid x~11-21) in the L9 tail. All 22 were in the L9 segment; the
+L1-L8 prefix and the L10 suffix were already fully in-bounds.
+
+**Reference fix (development_proxy, offline dev-twin restructuring — NOT a new
+solve; lf52 was already 10/10):** the L1-L8 prefix and the fresh-init L10 suffix
+are kept UNCHANGED; only the L9 completion is restructured so every ACTION6 target
+renders within 0..63. The repository's understanding of the lf52 L9 camera model
+SHALL be treated as ground truth for any future lf52 live work:
+
+- Render pixel of a grid cell `(gx,gy)` = `(6*gx + world_offset_x, 6*gy +
+  world_offset_y)`; `world_offset` starts `(-15,5)` on L9 (after the scripted
+  first pan).
+- A SCRIPTED `-20px` world pan fires whenever ANY peg LANDS at cell `(6,5)` (every
+  time, not only once).
+- A carrier ACTION1-4 move pans the world by `(-dx*6, -dy*6)` ONLY when a GREEN
+  peg (`fozwvlovdui`, not `fozwvlovdui_blue`) rides the carrier cell; an empty or
+  blue-only carrier does NOT pan. The carrier rail is row `y=5`, `x=6..20`.
+- Consequently the carried green is a controllable "camera crane": keeping a green
+  on the carrier and shuttling it along the rail brings any east-chamber peg into
+  the visible window before it is clicked. Blue pegs are indestructible relays;
+  only a green-over-green same-name jump reduces the win count.
+
+An in-bounds L9 completion SHALL be found by a search that constrains every
+ACTION6 target to be in-bounds at the current camera offset, over a model that is
+cross-checked against the real engine (the reference fix used a constrained
+best-first search over a faithful pure-Python L9 model, validated op-by-op against
+the real offline engine).
+
+**Acceptance (all MUST hold for the fix to count):**
+
+- `out_of_bounds_action6_clicks == 0` across the whole assembled sequence.
+- A fresh offline-arcade replay reaches `levels_completed == 10` and
+  `GameState.WIN`.
+- `arc_solver_kit.reproduce(claimed_level=10)` returns `reproduced == True`, and 5
+  additional fresh replays all reach L10 (registry robustness).
+- A LIVE VALIDATE-mode replay (scorecard opened but NEVER closed; no `--submit`, no
+  leaderboard record) reaches live L10, replaying all actions past the original
+  action-849 failure point.
+
+The reference artifact is
+`results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json` (1033 actions,
+sha256 `2b03a9d5fbe7b79e1cd46ef6ff981eef447e41b0a152db6c05e0a2da8e31ebd5`,
+live replay `https://arcprize.org/replay/6a0876aa-5c8b-44c3-959d-c4be272b6e38`).
+
+Required field principles for a live-parity route-fix artifact:
+
+- `solve_provenance`: MUST be `development_proxy` (offline dev-twin restructuring of
+  an already-banked route; not a live self-discovery and not a new bank).
+  `new_levels_banked` MUST be 0 when the game is already at that depth.
+- `out_of_bounds_action6_clicks`: bare int; the necessary-condition gate for live
+  submittability (MUST be 0).
+- `inference_substrate`: `live_scored_env_real_network_calls_no_llm` (no LLM; the
+  headline evidence is the real live replay).
+- `honest_verdict`: MUST start with a terminal prefix
+  (`complete:`/`complete_`/`success:`/... per Verdict Terminal-Prefix Discipline)
+  and name both the offline reproduction AND the live-parity outcome.
+- `reproducibility_checksum`: sha256 over the concatenated compact JSON of every
+  concrete action, so a third party can confirm the exact submitted sequence.
+
+**Generalization:** other banked games' deep tails SHALL be audited for the same
+off-screen-click pattern before their live-submittable depth is trusted; the
+camera-crane restructuring is the reusable remedy where a game exposes an
+equivalent carried-piece camera-follow mechanic.
