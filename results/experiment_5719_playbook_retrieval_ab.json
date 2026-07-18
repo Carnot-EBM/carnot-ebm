@@ -1,0 +1,389 @@
+{
+  "experiment": "exp5719-playbook-retrieval-ab",
+  "req": "REQ-ARC-WMTE-5718",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "role": "induction proposer + playbook-query embedder (same GGUF, matched space)",
+      "quant": "Q4_K_M"
+    }
+  ],
+  "random_seed": 5719,
+  "roster": [
+    "lp85",
+    "cn04",
+    "ft09",
+    "g50t"
+  ],
+  "trials_per_arm": 2,
+  "retrieval_topk": 4,
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed self-declared state (Verdict Terminal-Prefix)."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference for inductions + a bounded live_llm_embedding_extraction step for the retrieval query; real GGUF, no fabrication."
+    },
+    "preconditions_checked": {
+      "principle": "GGUF + built index verified before any inference (Pre-Launch Preconditions)."
+    },
+    "random_seed": {
+      "principle": "harness determinism; the LLM sampling stays stochastic (disclosed)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash over config + rows catches drift."
+    },
+    "retrieval_vs_none_delta": {
+      "principle": "treatment-minus-control mean graded cell-recall for retrieval vs no injection; directional under small N, reported with floor + outlier-fragility guards."
+    },
+    "retrieval_vs_static_delta": {
+      "principle": "does the retrieval step earn its complexity over a fixed exemplar block; the core question of this redesign, reported honestly even when null."
+    },
+    "metric_floored": {
+      "principle": "true when graded cell-recall is at its floor for all arms -> the offline metric cannot detect an effect (NOT evidence for or against the feature)."
+    }
+  },
+  "preconditions_checked": [
+    {
+      "resource": "qwen3.5_9b_gguf_cached",
+      "available": true
+    },
+    {
+      "resource": "llama_server_binary",
+      "available": true
+    },
+    {
+      "resource": "playbook_index_built",
+      "available": true
+    }
+  ],
+  "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+  "honest_verdict": "complete_retrieval_vs_none_no_reliable_signal_high_variance__retrieval_vs_static_no_reliable_signal_high_variance",
+  "skipped": [],
+  "n_runs": 24,
+  "arm_summaries": {
+    "none": {
+      "runs": 8,
+      "induction_ok": 8,
+      "induction_ok_rate": 1.0,
+      "mean_cell_recall": 0.0888,
+      "max_cell_recall": 0.7105,
+      "mean_induce_s": 45.8
+    },
+    "static": {
+      "runs": 8,
+      "induction_ok": 8,
+      "induction_ok_rate": 1.0,
+      "mean_cell_recall": 0.0025,
+      "max_cell_recall": 0.0197,
+      "mean_induce_s": 22.1
+    },
+    "retrieval": {
+      "runs": 8,
+      "induction_ok": 8,
+      "induction_ok_rate": 1.0,
+      "mean_cell_recall": 0.0306,
+      "max_cell_recall": 0.2183,
+      "mean_induce_s": 35.3
+    }
+  },
+  "pair_deltas": {
+    "retrieval_vs_none": {
+      "delta": -0.0582,
+      "outlier_fragile": true,
+      "n_treat": 8,
+      "n_base": 8
+    },
+    "retrieval_vs_static": {
+      "delta": 0.0281,
+      "outlier_fragile": true,
+      "n_treat": 8,
+      "n_base": 8
+    },
+    "static_vs_none": {
+      "delta": -0.0863,
+      "outlier_fragile": true,
+      "n_treat": 8,
+      "n_base": 8
+    }
+  },
+  "retrieval_vs_none_delta": -0.0582,
+  "retrieval_vs_static_delta": 0.0281,
+  "metric_floored": false,
+  "retrieval_blocks": {
+    "lp85": {
+      "pattern_ids": [
+        "measure_geometry_programmatically",
+        "beware_ordering_and_prefix_contamination",
+        "win_frame_is_next_level",
+        "bisect_death_to_minimal_prefix"
+      ],
+      "query_tags": [
+        "pattern_align",
+        "navigation",
+        "universal"
+      ]
+    },
+    "cn04": {
+      "pattern_ids": [
+        "measure_geometry_programmatically",
+        "beware_ordering_and_prefix_contamination",
+        "win_frame_is_next_level",
+        "naive_color_detectors_fooled_by_highlight"
+      ],
+      "query_tags": [
+        "pattern_align",
+        "universal"
+      ]
+    },
+    "ft09": {
+      "pattern_ids": [
+        "measure_geometry_programmatically",
+        "beware_ordering_and_prefix_contamination",
+        "verifier_routes_gate_decides",
+        "win_frame_is_next_level"
+      ],
+      "query_tags": [
+        "config_toggle",
+        "universal"
+      ]
+    },
+    "g50t": {
+      "pattern_ids": [
+        "measure_geometry_programmatically",
+        "verifier_routes_gate_decides",
+        "beware_ordering_and_prefix_contamination",
+        "win_frame_is_next_level"
+      ],
+      "query_tags": [
+        "config_toggle",
+        "multi_agent",
+        "universal"
+      ]
+    }
+  },
+  "rows": [
+    {
+      "game": "lp85",
+      "induction_ok": true,
+      "induce_s": 38.2,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 0
+    },
+    {
+      "game": "lp85",
+      "induction_ok": true,
+      "induce_s": 88.1,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 0
+    },
+    {
+      "game": "lp85",
+      "induction_ok": true,
+      "induce_s": 30.2,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 0
+    },
+    {
+      "game": "lp85",
+      "induction_ok": true,
+      "induce_s": 79.8,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 1
+    },
+    {
+      "game": "lp85",
+      "induction_ok": true,
+      "induce_s": 4.7,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 1
+    },
+    {
+      "game": "lp85",
+      "induction_ok": true,
+      "induce_s": 51.1,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 1
+    },
+    {
+      "game": "cn04",
+      "induction_ok": true,
+      "induce_s": 85.0,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 0
+    },
+    {
+      "game": "cn04",
+      "induction_ok": true,
+      "induce_s": 4.1,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 0
+    },
+    {
+      "game": "cn04",
+      "induction_ok": true,
+      "induce_s": 32.7,
+      "cell_recall": 0.2183,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 0
+    },
+    {
+      "game": "cn04",
+      "induction_ok": true,
+      "induce_s": 85.2,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 1
+    },
+    {
+      "game": "cn04",
+      "induction_ok": true,
+      "induce_s": 2.0,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 1
+    },
+    {
+      "game": "cn04",
+      "induction_ok": true,
+      "induce_s": 3.5,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 1
+    },
+    {
+      "game": "ft09",
+      "induction_ok": true,
+      "induce_s": 14.2,
+      "cell_recall": 0.7105,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 0
+    },
+    {
+      "game": "ft09",
+      "induction_ok": true,
+      "induce_s": 5.6,
+      "cell_recall": 0.0197,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 0
+    },
+    {
+      "game": "ft09",
+      "induction_ok": true,
+      "induce_s": 21.9,
+      "cell_recall": 0.0066,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 0
+    },
+    {
+      "game": "ft09",
+      "induction_ok": true,
+      "induce_s": 4.6,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 1
+    },
+    {
+      "game": "ft09",
+      "induction_ok": true,
+      "induce_s": 2.2,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 1
+    },
+    {
+      "game": "ft09",
+      "induction_ok": true,
+      "induce_s": 31.4,
+      "cell_recall": 0.0197,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 1
+    },
+    {
+      "game": "g50t",
+      "induction_ok": true,
+      "induce_s": 57.9,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 0
+    },
+    {
+      "game": "g50t",
+      "induction_ok": true,
+      "induce_s": 30.0,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 0
+    },
+    {
+      "game": "g50t",
+      "induction_ok": true,
+      "induce_s": 81.2,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 0
+    },
+    {
+      "game": "g50t",
+      "induction_ok": true,
+      "induce_s": 1.6,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "none",
+      "trial": 1
+    },
+    {
+      "game": "g50t",
+      "induction_ok": true,
+      "induce_s": 40.2,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "static",
+      "trial": 1
+    },
+    {
+      "game": "g50t",
+      "induction_ok": true,
+      "induce_s": 30.6,
+      "cell_recall": 0.0,
+      "reproduction_accuracy": 0.0,
+      "arm": "retrieval",
+      "trial": 1
+    }
+  ],
+  "methodology_note": "3 arms share the identical window, proposer config, and budget; only the injected prefix differs (none / static block / retrieved top-K). Exact-match accuracy floors at 0, so cell-recall is the discriminator; metric_floored=true means even that is at the floor for all arms (unmeasurable offline, mirrors AUTO_HUD_MASK). Pair deltas are leave-one-out-guarded: a direction the stochastic proposer's single lucky induction could flip is reported no_reliable_signal_high_variance, not improved/hurt.",
+  "verifier_is_oracle": false,
+  "duration_s": 832.078,
+  "reproducibility_checksum": "sha256:4ff5be19207a3ad5dfda616555b72a465b7f1418f11264a0a67950dfc92ae2e3"
+}
