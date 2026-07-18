@@ -20,7 +20,9 @@ from carnot.agentic import arc_actions_to_progress as atp
 
 def _mock_proposer():
     return SimpleNamespace(
-        no_think_prefix="/no_think\n", max_tokens=4096, tries=3,
+        no_think_prefix="/no_think\n",
+        max_tokens=4096,
+        tries=3,
         include_playbook_exemplars=False,
     )
 
@@ -76,11 +78,19 @@ def test_apply_arm_retrieval_sets_retrieval_env():
 
 def test_summarize_inductions_aggregates_plan_and_heldout():
     events = [
-        {"planned": True, "playbook_injection_mode": "retrieval",
-         "refinement_rounds": [{"heldout_accuracy": 0.8, "prefix_accuracy": 0.9},
-                               {"heldout_accuracy": 0.95, "prefix_accuracy": 0.99}]},
-        {"planned": False, "playbook_injection_mode": "none",
-         "refinement_rounds": [{"heldout_accuracy": 0.5, "prefix_accuracy": 0.6}]},
+        {
+            "planned": True,
+            "playbook_injection_mode": "retrieval",
+            "refinement_rounds": [
+                {"heldout_accuracy": 0.8, "prefix_accuracy": 0.9},
+                {"heldout_accuracy": 0.95, "prefix_accuracy": 0.99},
+            ],
+        },
+        {
+            "planned": False,
+            "playbook_injection_mode": "none",
+            "refinement_rounds": [{"heldout_accuracy": 0.5, "prefix_accuracy": 0.6}],
+        },
     ]
     s = atp._summarize_inductions(events)
     assert s["n_inductions"] == 2
@@ -103,20 +113,38 @@ def test_summarize_inductions_empty():
 
 def _mk(game, seed, arm, hv):
     return atp.ProgressResult(
-        game=game, arm=arm, seed=seed, variant=0, start_level=0, reached_level=0,
-        levels_gained=0, solved=False, actions_to_first_solve=None, total_actions=10,
-        noop_frac=0.0, revisit_frac=0.0, start_hv=10.0, best_hv=10.0 - hv * 10, hv_progress=hv,
-        n_inductions=1, n_plans_found=0, plan_found_rate=0.0, mean_heldout_accuracy=0.8,
-        mean_prefix_accuracy=0.9, playbook_injection_modes=["none"], wall_s=1.0,
-        timed_out=False, hit_induction_cap=False,
+        game=game,
+        arm=arm,
+        seed=seed,
+        variant=0,
+        start_level=0,
+        reached_level=0,
+        levels_gained=0,
+        solved=False,
+        actions_to_first_solve=None,
+        total_actions=10,
+        noop_frac=0.0,
+        revisit_frac=0.0,
+        start_hv=10.0,
+        best_hv=10.0 - hv * 10,
+        hv_progress=hv,
+        n_inductions=1,
+        n_plans_found=0,
+        plan_found_rate=0.0,
+        mean_heldout_accuracy=0.8,
+        mean_prefix_accuracy=0.9,
+        playbook_injection_modes=["none"],
+        wall_s=1.0,
+        timed_out=False,
+        hit_induction_cap=False,
     )
 
 
 def test_paired_summary_treat_wins_all():
     results = []
     for g in ("a", "b", "c"):
-        results.append(_mk(g, 1, "reason", hv=0.5))   # treat better
-        results.append(_mk(g, 1, "frozen", hv=0.2))   # base worse
+        results.append(_mk(g, 1, "reason", hv=0.5))  # treat better
+        results.append(_mk(g, 1, "frozen", hv=0.2))  # base worse
     s = atp.paired_summary(results, "reason", "frozen", metric="hv_progress")
     assert s["n_pairs"] == 3
     assert abs(s["mean_delta"] - 0.3) < 1e-6
@@ -135,9 +163,12 @@ def test_paired_summary_drops_none_metric_pairs():
 def test_paired_summary_flags_outlier_fragile():
     # two tiny losses + one huge win -> positive mean, but dropping the win flips it negative
     results = [
-        _mk("a", 1, "reason", hv=0.0), _mk("a", 1, "frozen", hv=0.05),  # delta -0.05
-        _mk("b", 1, "reason", hv=0.0), _mk("b", 1, "frozen", hv=0.05),  # delta -0.05
-        _mk("c", 1, "reason", hv=0.9), _mk("c", 1, "frozen", hv=0.0),   # delta +0.9 (outlier)
+        _mk("a", 1, "reason", hv=0.0),
+        _mk("a", 1, "frozen", hv=0.05),  # delta -0.05
+        _mk("b", 1, "reason", hv=0.0),
+        _mk("b", 1, "frozen", hv=0.05),  # delta -0.05
+        _mk("c", 1, "reason", hv=0.9),
+        _mk("c", 1, "frozen", hv=0.0),  # delta +0.9 (outlier)
     ]
     s = atp.paired_summary(results, "reason", "frozen", metric="hv_progress")
     assert s["mean_delta"] > 0
@@ -149,3 +180,24 @@ def test_sign_test_p_symmetric_and_bounded():
     assert atp._sign_test_p(5, 0) == atp._sign_test_p(0, 5)
     assert 0.0 <= atp._sign_test_p(4, 1) <= 1.0
     assert atp._sign_test_p(1, 1) == 1.0  # fully discordant -> p=1
+
+
+# --- REQ-ARC-WMTE-5722: stale-engine attribution gate ---
+# Regression for the bug the exp5722 generator-swap adversarial review found: a FAILED
+# proposer.induce must NOT be scored on an earlier run's leftover world_model.py. The
+# load-bearing guard is `_attribution_ok`, which makes induction_ok require THIS cell's
+# induce to have SUCCEEDED, not merely that some world_model.py loaded. (The complementary
+# pre-induce delete-of-stale-engine guard lives inside run_seeded_progress and is exercised
+# end-to-end by the experiment, per this module's live-path convention.)
+
+
+def test_attribution_ok_requires_this_cells_induce_success():
+    # induce succeeded AND an engine+goal loaded -> attributable to this cell.
+    assert atp._attribution_ok(True, object(), object()) is True
+    # induce FAILED but an engine loaded anyway (a STALE re-read) -> NOT attributable.
+    assert atp._attribution_ok(False, object(), object()) is False
+    # induce succeeded but nothing loaded -> not ok.
+    assert atp._attribution_ok(True, None, object()) is False
+    assert atp._attribution_ok(True, object(), None) is False
+    # falsy induce return coerces to a real bool.
+    assert atp._attribution_ok(0, object(), object()) is False

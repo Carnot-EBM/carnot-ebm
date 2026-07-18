@@ -9322,3 +9322,202 @@ frozen/none control runs with REQ-ARC-WMTE-5720 via the common shard
 #### SCENARIO-ARC-WMTE-5721-RETRIEVAL-THROUGH-LIVE-WIRING
 - **WHEN** the `retrieval` arm runs with `CARNOT_ARC_PLAYBOOK_RETRIEVAL=1`
 - **THEN** the induced-attempt diagnostics SHALL record `playbook_injection_mode == "retrieval"` (proving the real live retrieval path fired), and the `retrieval_vs_none` / `retrieval_vs_static` contrasts SHALL be reported with the same paired-honesty guards as SCENARIO-ARC-WMTE-5720-PAIRED-HONEST-STATS.
+
+### REQ-ARC-WMTE-5722: Generator-Swap Induction-Floor Test -- Gemma-4-31B-it vs the Frozen Qwen3.5-9B-MTP (extends REQ-ARC-WMTE-5720/5721)
+
+The REQ-ARC-WMTE-5714 (`/think` vs `/no_think`) and REQ-ARC-WMTE-5716/5717/5718
+(playbook retrieval) A/Bs, re-run on the REQ-ARC-WMTE-5720/5721 actions-to-progress
+harness, BOTH found the frozen live generator (Qwen3.5-9B-MTP) at a hard
+`heldout_accuracy` floor (0.0 on every game/trial; no real level-up) that neither
+reasoning-mode nor retrieval-augmentation moved. Both prior levers change the
+induction *prompt*; this REQ tests the remaining hypothesis those A/Bs could not
+address -- that the binding constraint is model *capacity*, not prompting. It
+substitutes a stronger open-weight SOTA generator (`unsloth/gemma-4-31B-it-GGUF`,
+Q4_K_M, ~18.3GB) for Qwen3.5-9B-MTP in the induce call ONLY, holding the harness,
+roster, seeded level-up windows, planner, verifier, and execution identical, so any
+difference is attributable to the generator swap alone.
+
+**Clean-swap design (why it is confound-free).** The swap uses the SAME `frozen`
+arm the prior baselines used (`CARNOT_ARC_CODEONLY_INDUCE=1`, 4096 n_predict). In
+that arm `LocalGGUFProposer.generate` takes the codeonly branch, which prepends the
+model-agnostic codeonly directive and NEVER prepends the Qwen-specific
+`no_think_prefix` -- so the induce prompt is byte-identical in structure across
+generators and the `/no_think` vs `/think` toggle (a separate, already-tested lever)
+is NOT a confound here. The `reason`/`retrieval`/`static` arms are deliberately NOT
+re-run per-generator: `/think`/`/no_think` are Qwen tokens (meaningless to Gemma)
+and reasoning/retrieval were independently ruled out as levers, so mixing them in
+would conflate the generator question with prompt questions already answered.
+
+**Substrate / provenance (unchanged from REQ-ARC-WMTE-5720).**
+`inference_substrate=live_llm_inference` -- the real Gemma-4-31B-it GGUF induces on a
+CUDA `llama-server` (GPU-offload verified: `llama_supports_gpu_offload()==True`, VRAM
+loads on the outer-loop's GPU 1 via `CARNOT_ARC_GENERATOR_CUDA_GPU=1`, real
+GPU-speed generation). MTP is OFF for Gemma (the dense GGUF has no MTP self-draft
+heads; MTP is speed-only/content-neutral, so this does not change induction
+content). The Qwen3.5-9B-MTP baseline is re-measured FRESH in the same harness
+invocation (same session/server-warmth) for a clean matched comparison, not reused
+from the REQ-ARC-WMTE-5720 shard, to remove any stale-baseline objection; it is
+expected to reproduce the 0.0 `heldout_accuracy` floor as a sanity check.
+`solve_provenance=development_proxy` on PUBLIC games; `read_game_source=False`,
+`used_env_source=True`, `verifier_is_oracle=False`. The wall-clock is NOT
+Kaggle-representative (a 24GB 3090 dev card, not the ~16GB eval GPU); this tests
+the CONTENT question (does more capacity break the floor), and a positive result
+would only recommend a stronger generator PENDING a separate real-VRAM/latency
+feasibility check on the actual Kaggle hardware -- it does NOT itself flip the
+frozen live default (an operator-only graduation decision, and a bigger change than
+the reasoning/retrieval toggles).
+
+**Question (this REQ).** On the identical 6-game roster (`ls20 tr87 lp85 g50t m0r0
+ft09`), 2 trials/game, does the stronger Gemma-4-31B-it generator move the induction
+floor on the same signal ladder (`reached_levelup` / `hv_progress` / `plan_found` /
+`heldout_accuracy` / `cell_recall` / `goal_predicate_accuracy` /
+`levelup_positive_recall`), paired by game vs the fresh Qwen3.5-9B-MTP baseline?
+
+**Falsifiable gate / interpretation.** A stronger generator is worth pursuing (as a
+candidate live-stack replacement, pending real-hardware feasibility) ONLY on a
+positive paired delta on a real-progress metric (`reached_levelup` first, else
+`heldout_accuracy`/`hv_progress`) that is directionally consistent across games
+(small-N: report win/tie/loss + exact sign-test p + outlier-fragility, never a bare
+mean; with <=6 game pairs the sign test cannot reach p<0.05 unless every game
+agrees). If the floor persists at 0.0 even with the much larger model, that is an
+equally valuable terminal result pointing AWAY from "use a bigger model" and TOWARD
+prompt/architecture/gate as the binding constraint -- reported plainly, not spun.
+
+**Result artifact:** `results/experiment_5722_generator_swap_gemma31_ab.json`.
+
+**Implementation Status (measured 2026-07-18): DONE -- clean NULL.** All 36 cells re-run
+under the attribution fix (SCENARIO-ARC-WMTE-5722-INDUCE-ATTRIBUTION-GUARD). `heldout_accuracy`
+is floored at 0.0 for BOTH Gemma-4-31B-it and the Qwen3.5-9B-MTP baseline (paired delta 0.0, 6
+ties); ZERO real level-ups on any cell for any generator. Gemma-31B induces reliably (11/12
+cells) and shows only a modest, NON-significant edge on the partial `cell_recall` proxy (0.0995
+vs 0.0034, 3W/2T/1L, sign-test p=0.625) -- not exact-match, not a level-up. A stronger generator
+does NOT move the induction floor on this codeonly world-model-induction path. Recommendation:
+KEEP the frozen live default (operator-only decision; this experiment does not flip it). NB: an
+EARLIER buggy-harness run had shown Gemma-31B at heldout 0.25 on 2 cells; that did NOT replicate
+under clean attribution (small-N stochastic noise) -- see the artifact `attribution_integrity`.
+
+### REQ-ARC-WMTE-5723: Generator-Swap Size-vs-Capability Datum -- Gemma-4-12B-it (secondary to REQ-ARC-WMTE-5722)
+
+A lighter secondary arm on the SAME REQ-ARC-WMTE-5722 harness/roster/metric:
+substitute `unsloth/gemma-4-12B-it-GGUF` (Q4_K_M, ~7.1GB) for the generator and pair
+it by game against BOTH the fresh Qwen3.5-9B-MTP baseline and the Gemma-4-31B-it arm.
+This gives a size-vs-capability data point (does induction quality scale with model
+size at all on this task) and, because the 12B is close to the ~16GB Kaggle VRAM
+envelope, a more deployment-relevant capacity probe than the 31B. Same falsifiable
+gate and small-N honesty guards as REQ-ARC-WMTE-5722; the 31B is the primary ask and
+this must not displace it. **Result artifact:**
+`results/experiment_5723_generator_swap_gemma12_ab.json`.
+
+**Implementation Status (measured 2026-07-18): DONE -- clean NULL, and a distinct failure mode.**
+Under the attribution fix, Gemma-4-12B-it FAILS to induce a valid world model on 11/12 cells
+(`induce_ok=False` -- it cannot reliably emit valid `engine`+`is_level_complete` code under the
+codeonly path); its 1 successful induction scored `heldout_accuracy` 0.0. So the mid-size 12B is
+WORSE than the 9B here, NOT "~ 31B": induction quality does not scale smoothly with size on this
+task. (The `gemma31_vs_gemma12` `cell_recall` contrast favors 31B, +0.4618 on the single
+comparable game, reflecting that 31B induces where 12B fails.) The pre-fix run had shown 12B
+"moving the floor" on 4 cells -- those were 100% stale re-reads of Gemma-31B's engines and are
+RETRACTED. Recommendation: KEEP the frozen default; a smaller-but-SOTA generator is not a
+shortcut.
+
+#### SCENARIO-ARC-WMTE-5722-GENERATOR-IS-ONLY-VARIABLE
+- **WHEN** `experiment_5722_generator_swap_ab.py` runs a `(generator, game, trial)` cell
+- **THEN** it SHALL call `arc_actions_to_progress.run_seeded_progress(game, "frozen", proposer=<generator's LocalGGUFProposer>, ...)` with the SAME seeded `build_progress_window` input, planner (`plan_in_model`), verifier (`WorldModelVerifier`), and offline execution for every generator, so that the LLM identity used in `proposer.induce` is the ONLY variable, and SHALL record the exact resolved `.gguf` path + `llama_supports_gpu_offload()` in `preconditions_checked`.
+
+#### SCENARIO-ARC-WMTE-5722-FRESH-BASELINE-AND-PAIRED-HONESTY
+- **WHEN** the driver emits the `gemma31_vs_qwen9b` (and `gemma12_vs_qwen9b`, `gemma31_vs_gemma12`) comparisons
+- **THEN** the Qwen3.5-9B-MTP baseline SHALL be re-measured fresh in the same run (not reused from the REQ-ARC-WMTE-5720 shard), and each comparison SHALL be reported via `paired_by_game` with `mean_delta`, `wins/ties/losses`, an exact sign-test p-value, and an `outlier_fragile` flag -- with the artifact stating plainly whether the floor moved, never presenting a bare mean as a conclusion.
+
+#### SCENARIO-ARC-WMTE-5722-INDUCE-ATTRIBUTION-GUARD
+- **WHEN** `arc_actions_to_progress.run_seeded_progress` runs a cell whose `proposer.induce` FAILS (returns a falsy success flag and does not overwrite the per-game `world_model.py`)
+- **THEN** the harness SHALL (a) have DELETED the prior `world_model.py` before inducing and (b) gate `induction_ok` through `_attribution_ok(induce_ok, engine, is_done)` so the cell reports `induction_ok == False` and `heldout_accuracy is None` (never the score of an earlier generator's leftover engine), and SHALL record `induce_ok` on the row so an auditor can confirm every scored engine belongs to that cell's own generator. This closes the stale-engine cross-contamination bug the exp5722 generator-swap adversarial review found (a failed induce was previously scored on the prior generator's engine, e.g. Gemma-12B's apparent floor-move cells were stale re-reads of Gemma-31B's engines).
+
+### REQ-ARC-WMTE-5724: Token-Efficient Reasoning Test -- ThinkingCap-Qwen3.6-27B vs the Genuine-Reasoning Budget-Overrun Wall (extends REQ-ARC-WMTE-5714; sibling to REQ-ARC-WMTE-5722/5723)
+
+REQ-ARC-WMTE-5714's genuine-reasoning arm (B2: codeonly fence REMOVED, `/think`, 8192
+n_predict, single combined call via `_induce_no_fence`) found a specific, distinct
+failure mode: on the frozen Qwen3.5-9B-MTP generator, `/think` reasoning ACTUALLY
+ENGAGED (a real `<think>` trace on ~9/10 games) but OVERRAN the 8192-token completion
+budget on ALL 10 games -- the model reasoned past the budget without ever emitting the
+required `engine` + `is_level_complete` code, so `induction_ok = False` on every cell
+(`0/10` successful inductions). REQ-ARC-WMTE-5720's `reason` arm independently
+reproduced this (`0/12` honest `induce_ok` on the 6-game roster; the pre-fix
+`induction_ok=12` were stale re-reads, retracted). The finding is NOT that the
+reasoning was wrong -- it is that genuine reasoning never FINISHED within budget.
+This REQ tests a lever the prior A/Bs could not: whether a model specifically RL-tuned
+for **token-efficient reasoning** (`bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF`, Q4_K_M,
+~16GB -- fine-tuned to use ~50% fewer thinking tokens on average while preserving
+answer quality) completes reasoning + emits valid code within that SAME 8192-token
+budget more often than vanilla Qwen did (`0/N`). Because ThinkingCap is a Qwen3.6-family
+model, `/think`/`/no_think` are valid control tokens for it (unlike the Gemma generators
+of REQ-ARC-WMTE-5722/5723, where the reasoning toggle is meaningless) -- so this is the
+one generator swap for which re-running the genuine-reasoning arm is well-posed.
+
+**Design (faithful to the REQ-ARC-WMTE-5714 B2 failure mode).** The induce step reuses
+exp5714's `_induce_no_fence` mechanism EXACTLY -- codeonly OFF, `no_think_prefix=/think`,
+`max_tokens=8192`, `tries=1`, and CRUCIALLY no pre-opened ```` ```python ```` fence
+(the real `induce()` appends that fence-opener, which suppresses the `<think>` trace;
+`run_seeded_progress`'s built-in `reason` arm would therefore NOT reproduce B2 and is
+deliberately not used for the induce step). Only the generator LLM changes; the
+downstream measurement is the REQ-ARC-WMTE-5720 actions-to-progress ladder
+(`load_engine` -> `plan_in_model` -> execute against the real offline env ->
+`WorldModelVerifier`/`score_goal_predicate_consistency`), identical to the sibling
+generator-swap experiments. A fresh vanilla Qwen3.5-9B-MTP `reason` baseline is measured
+in the same invocation (matched control), and REQ-ARC-WMTE-5714/5720 are cited as the
+two prior independent confirmations of the `0/N` floor.
+
+**Substrate / provenance.** `inference_substrate=live_llm_inference` -- ThinkingCap-27B
+really induces on a CUDA `llama-server` on the outer-loop's GPU 1
+(`CARNOT_ARC_GENERATOR_CUDA_GPU=1`; GPU-offload verified `llama_supports_gpu_offload()
+==True` + a VRAM jump on load + a `/think` `/completion` round-trip confirming the
+Qwen3.6 prompt plumbing). Server config: `n_ctx=22000` (lp85's 64x64 grid overflows the
+class default, matching exp5599/exp5705), `-fit off` (the Qwen3.6-27B hybrid
+linear/full-attention arch hard-hangs on the default `-fit` heuristic; learned in the
+exp5705 diagnostic loop), `q8_0` KV, MTP off (this GGUF has no self-draft heads; MTP is
+speed-only/content-neutral). `solve_provenance=development_proxy` on PUBLIC games;
+`read_game_source=False`, `used_env_source=True`, `verifier_is_oracle=False`. The
+24GB-3090 dev card is NOT Kaggle-representative (the eval GPU is ~16GB and ThinkingCap-27B
+Q4 is a tight fit there); this tests the CONTENT question only and NEVER flips the frozen
+live default (operator-only) and NEVER submits.
+
+**Question / primary metric (this REQ).** On the identical 6-game roster (`ls20 tr87
+lp85 g50t m0r0 ft09`), 2 trials/game, does token-efficient ThinkingCap-27B COMPLETE
+genuine-reasoning inductions within the 8192-token budget more often than vanilla
+Qwen's `0/N`? The PRIMARY metric is the induce COMPLETION RATE (`induce_ok`: did the
+cell finish reasoning and emit parseable `engine`+`is_level_complete` code before hitting
+n_predict), reported alongside `reason_engaged` (confirming reasoning actually engaged,
+via the exp5714 `<think>` tag detection) and the overrun signal (`last_stop_type=="limit"`
+/ `max_raw_completion_len`). The full signal ladder (`reached_levelup` / `hv_progress` /
+`plan_found` / `heldout_accuracy` / `cell_recall` / `goal_predicate_accuracy` /
+`levelup_positive_recall`) is measured and paired by game as secondary color, but the
+completion-rate comparison against Qwen's `0/N` is the direct test of the
+token-efficiency claim itself, independent of whether it also improves quality.
+
+**Falsifiable gate / interpretation.** (a) Token-efficient reasoning is a viable path to
+make `/think` usable ONLY if ThinkingCap completes MATERIALLY more inductions within the
+same 8192 budget than vanilla Qwen's `0/N` -- a real, actionable completion-rate delta
+(and better still if those completions translate into a real-progress signal on the
+ladder). (b) If ThinkingCap STILL overruns on most/all cells, the conclusion flips to
+"8192 tokens is simply too tight a budget regardless of efficiency tuning" -- pointing
+toward RAISING the budget (or splitting the induce) as the lever rather than swapping in
+a more efficient model. Both outcomes are equally reportable; a clean negative is stated
+plainly, never spun. Small-N honesty guards apply as in REQ-ARC-WMTE-5722 (<=6 game
+pairs, stochastic proposer: report win/tie/loss + exact sign-test p + outlier-fragility,
+never a bare mean; a positive is a DIRECTION to investigate, not a significance claim).
+This REQ does not itself graduate any generator or budget change to the live stack.
+
+**Result artifact:** `results/experiment_5724_thinkingcap_token_efficient_reason_ab.json`.
+
+**Implementation Status:** Pending run (queued behind the REQ-ARC-WMTE-5722/5723
+generator-swap run on GPU 1). Driver `python/carnot/experiment_5724_thinkingcap_token_efficient_reason_ab.py`.
+
+#### SCENARIO-ARC-WMTE-5724-GENUINE-REASONING-INDUCE-FAITHFUL-TO-5714
+- **WHEN** `experiment_5724_thinkingcap_token_efficient_reason_ab.py` runs a genuine-reasoning `(generator, game, trial)` cell
+- **THEN** it SHALL induce via the exp5714 `_induce_no_fence` path (codeonly OFF, `no_think_prefix=/think`, `max_tokens=8192`, `tries=1`, NO pre-opened `python` fence) so `/think` genuinely engages, SHALL NOT route the induce step through `run_seeded_progress`'s built-in `reason` arm (whose real `induce()` fence-opener suppresses the `<think>` trace), and SHALL measure the downstream signal ladder with the SAME REQ-ARC-WMTE-5720 machinery (`load_engine` -> `plan_in_model` -> execute -> `WorldModelVerifier`) used by the sibling generator-swap experiments.
+
+#### SCENARIO-ARC-WMTE-5724-COMPLETION-RATE-IS-PRIMARY
+- **WHEN** the driver emits the ThinkingCap-27B vs fresh-Qwen3.5-9B-MTP comparison
+- **THEN** the artifact SHALL report per-generator induce COMPLETION RATE (`n_induce_ok / n_cells`) as the primary metric, annotate each cell with `reason_engaged` and the overrun signal (`last_stop_type`/`max_raw_completion_len`), re-measure the Qwen baseline FRESH in the same invocation (citing REQ-ARC-WMTE-5714 `0/10` and REQ-ARC-WMTE-5720 `0/12` as prior confirmations), and state plainly whether token-efficient reasoning cleared the budget wall or the overrun persists -- never presenting a bare mean or an induction-quality proxy as the headline in place of the completion-rate result.
+
+#### SCENARIO-ARC-WMTE-5724-THINKINGCAP-PRECONDITIONS
+- **WHEN** the driver launches the ThinkingCap-27B `llama-server`
+- **THEN** it SHALL verify (and record in `preconditions_checked`) that `llama_supports_gpu_offload()==True`, the exact resolved `.gguf` path, that the server was launched with `-fit off` + `n_ctx=22000` + `q8_0` KV on `CARNOT_ARC_GENERATOR_CUDA_GPU=1`, and that a `/think` `/completion` round-trip succeeded -- writing `honest_verdict` `complete_blocked_*` and exiting WITHOUT fabricating numbers if any precondition fails.
