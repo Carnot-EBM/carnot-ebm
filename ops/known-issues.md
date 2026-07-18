@@ -4,6 +4,46 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-17 (outer-loop, INFORMATIONAL — ARC-AGI-3 live-submission package status, for the operator's next submit decision)
+
+The **standing live-submission package** is
+`results/experiment_10000_submission_package_refresh_20260718.json` — the newest
+`experiment_*submission_package*.json` by mtime, which is what `scripts/arc3_live_submit.py`
+auto-selects. It was refreshed, per-game live-validated (21 parallel agents, VALIDATE mode), and
+**already submitted** — commit `3fe7256eb`, operator-directed 2026-07-18: `--submit` closed
+scorecard `dffcf7d8-6450-4d89-8738-f2c27852d6ed`, **25/25 games env-matched, 181/181 levels**
+(registry `live_submissions` records it, `submitted: true`).
+
+Contents (25 games / 181 levels, all `env_matched=True`):
+
+- **L9:** bp35 (410a), su15 (164a), tu93 (191a), wa30 (670a)
+- **L8:** ar25, **lf52 (CAPPED from offline L10)**, lp85, re86, s5i5, sb26, sk48
+- **L7:** g50t, ka59, ls20, tn36, vc33
+- **L6:** cd82, cn04, dc22, ft09, m0r0, r11l, sc25, sp80, tr87
+
+The **one deliberate cap:** lf52 is credited offline 10/10 (`ops/arc_solve_registry.yaml`,
+reproduce()-gated) but its **L9-L10 tail issues 22 out-of-bounds ACTION6 clicks** (pixel x=132,
+outside the live 0-63 frame) that the live API rejects with HTTP 400 (first fail action 849). So
+the package claims lf52 at **L8 (827a, live-safe)**, not L10. An in-bounds equivalent route is
+open exploration (sibling lf52-inbounds work); if found, it's a follow-on package update.
+
+**Independent offline verification (this outer-loop session, no live-API calls):**
+
+- Driver dry-run (`_build_claimed`) picks exp10000 and yields 25 games / 181 levels, bp35=9,
+  lf52=8, every game with a loadable banked trajectory — matches the manifest exactly.
+- `adversarial_verify.py`: exp10000 package CLEAN; `results/outer_loop_live_revalidation_20260717.json`
+  CLEAN. The bp35 probe's lone CRITICAL `ARC_OUTER_LOOP_SOLVE` flag is the known same-session
+  ordering false-positive already dispositioned in commit c588364d7 (not a fabrication/duration flag).
+- **Out-of-bounds coordinate audit (revalidation next-lead #2):** scanned all 25 banked
+  trajectories for ACTION6 clicks outside 0-63 — **all 25 CLEAN, 0 OOB.** lf52's banked file is
+  now the trimmed 827-action L8 prefix; the 22 OOB clicks live only in the removed tail. Every
+  claimed level in the standing package is coordinate-safe for live replay.
+
+**Note the channel distinction:** this replay-scorecard submission is a **public-set** demonstration
+(env-matched replays of offline-reproduced solves), DISTINCT from the SCORED **hidden** Kaggle
+leaderboard (last hidden score 0.08, kernel v3, 2026-06-19 — the authoritative competition
+baseline). A replay-scorecard submission does not change the hidden score.
+
 ### 2026-07-06 (MANDATORY-NEXT-MILESTONE, operator-directed "continue trying new and novel ideas to forward progress with ARC-AGI-3... likely includes more ARC and AGI study"): ARC-AGI-3 standing floor (>=1 slot/milestone) — perception audit + classical salience front-end, in priority order
 
 > **RETIRED 2026-07-17 (operator directive: "now that the registry of public levels is complete, we
