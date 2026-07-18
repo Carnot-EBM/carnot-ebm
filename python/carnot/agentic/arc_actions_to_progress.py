@@ -163,8 +163,11 @@ def apply_arm(proposer: Any, arm: str) -> Callable[[], None]:
     cfg = ARM_CONFIGS[arm]
     saved_env = {
         k: os.environ.get(k)
-        for k in ("CARNOT_ARC_CODEONLY_INDUCE", "CARNOT_ARC_PLAYBOOK_RETRIEVAL",
-                  "CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED")
+        for k in (
+            "CARNOT_ARC_CODEONLY_INDUCE",
+            "CARNOT_ARC_PLAYBOOK_RETRIEVAL",
+            "CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED",
+        )
     }
     saved_prop = {
         "no_think_prefix": getattr(proposer, "no_think_prefix", None),
@@ -272,8 +275,11 @@ def _summarize_inductions(events: list[dict[str, Any]]) -> dict[str, Any]:
     n = len(events)
     if n == 0:
         return {
-            "n_inductions": 0, "n_plans_found": 0, "plan_found_rate": None,
-            "mean_heldout_accuracy": None, "mean_prefix_accuracy": None,
+            "n_inductions": 0,
+            "n_plans_found": 0,
+            "plan_found_rate": None,
+            "mean_heldout_accuracy": None,
+            "mean_prefix_accuracy": None,
             "playbook_injection_modes": [],
         }
     n_plans = sum(1 for e in events if e.get("planned"))
@@ -378,8 +384,10 @@ def run_bounded_progress(
             # Induction cap: stop before a NEW explore->induce cycle, but let the plan of
             # the last permitted induction finish executing (phase == "execute"). Count
             # `induction_attempts` (the per-stall record), NOT `level_induction_events`.
-            if (len(getattr(pol, "induction_attempts", []) or []) >= max_inductions
-                    and getattr(pol, "phase", None) != "execute"):
+            if (
+                len(getattr(pol, "induction_attempts", []) or []) >= max_inductions
+                and getattr(pol, "phase", None) != "execute"
+            ):
                 hit_cap = True
                 break
             if pol.is_done(frames, latest):
@@ -433,21 +441,32 @@ def run_bounded_progress(
         hv_progress = round(max(0.0, (start_hv - best_hv)) / max(abs(start_hv), 1.0), 4)
 
     return ProgressResult(
-        game=game, arm=arm, seed=seed, variant=variant,
-        start_level=start or 0, reached_level=reached or 0, levels_gained=levels_gained,
+        game=game,
+        arm=arm,
+        seed=seed,
+        variant=variant,
+        start_level=start or 0,
+        reached_level=reached or 0,
+        levels_gained=levels_gained,
         solved=levels_gained >= 1,
         actions_to_first_solve=level_up_actions[0] if level_up_actions else None,
         total_actions=actions,
         noop_frac=round(noop / actions, 4) if actions else None,
         revisit_frac=round(revisit / actions, 4) if actions else None,
-        start_hv=start_hv, best_hv=best_hv, hv_progress=hv_progress,
-        n_inductions=ind["n_inductions"], n_plans_found=ind["n_plans_found"],
+        start_hv=start_hv,
+        best_hv=best_hv,
+        hv_progress=hv_progress,
+        n_inductions=ind["n_inductions"],
+        n_plans_found=ind["n_plans_found"],
         plan_found_rate=ind["plan_found_rate"],
         mean_heldout_accuracy=ind["mean_heldout_accuracy"],
         mean_prefix_accuracy=ind["mean_prefix_accuracy"],
         playbook_injection_modes=ind["playbook_injection_modes"],
-        wall_s=round(time.time() - t0, 1), timed_out=timed_out, hit_induction_cap=hit_cap,
-        error=err, induction_events=events,
+        wall_s=round(time.time() - t0, 1),
+        timed_out=timed_out,
+        hit_induction_cap=hit_cap,
+        error=err,
+        induction_events=events,
     )
 
 
@@ -482,6 +501,14 @@ class SeededProgressResult:
     arm: str
     trial: int
     induction_ok: bool
+    # induce_ok: did THIS cell's proposer.induce actually succeed and (over)write the engine? The
+    # stale-engine attribution bug (found 2026-07-18 by the exp5722 generator-swap adversarial review)
+    # was that load_engine reads a per-GAME world_model.py which a FAILED induce leaves untouched, so a
+    # later run silently re-reads (and is scored on) an EARLIER run's engine. induction_ok is now gated
+    # on induce_ok AND the stale file is deleted before each induce, so a failed induce -> engine=None
+    # -> induction_ok=False (honest), never a mis-attributed stale score. induce_ok is surfaced so an
+    # auditor can confirm the scored engine belongs to this cell's own generator/arm.
+    induce_ok: bool
     plan_found: bool
     plan_len: int
     reached_levelup: bool
@@ -519,6 +546,18 @@ def build_progress_window(game: str) -> Optional[tuple[list, list, int]]:
     out = build_window(game)
     _WINDOW_CACHE[game] = out
     return out
+
+
+def _attribution_ok(induce_ok: Any, engine: Any, is_done: Any) -> bool:
+    """A cell's induction is attributable to THIS cell's own generator/arm ONLY if its
+    proposer.induce SUCCEEDED (induce_ok) AND produced a loadable engine + goal predicate.
+
+    Gating on induce_ok -- not merely "a per-game world_model.py loaded" -- is the fix for the
+    stale-engine attribution bug the exp5722 generator-swap adversarial review found: a FAILED
+    induce leaves the prior run's engine on disk, which load_engine would otherwise silently
+    re-read and score as if this cell had produced it. See run_seeded_progress (which also
+    deletes the stale engine before inducing, a complementary guard)."""
+    return bool(induce_ok) and engine is not None and is_done is not None
 
 
 def _levelup_positive_recall(is_level_complete, window: list) -> Optional[float]:
@@ -590,8 +629,13 @@ def _execute_plan_measure(game: str, plan: list, hv_fn) -> dict[str, Any]:
     hv_progress = None
     if start_hv is not None and best_hv is not None:
         hv_progress = round(max(0.0, (start_hv - best_hv)) / max(abs(start_hv), 1.0), 4)
-    return {"reached_levelup": reached, "actions_to_levelup": actions_to,
-            "start_hv": start_hv, "best_hv": best_hv, "hv_progress": hv_progress}
+    return {
+        "reached_levelup": reached,
+        "actions_to_levelup": actions_to,
+        "start_hv": start_hv,
+        "best_hv": best_hv,
+        "hv_progress": hv_progress,
+    }
 
 
 def run_seeded_progress(
@@ -615,7 +659,11 @@ def run_seeded_progress(
     """
     from carnot.agentic.arc_competition_agent import E3AgentPolicy
     from carnot.agentic.arc_executable_world_model import (
-        WorldModelVerifier, load_engine, plan_in_model, score_goal_predicate_consistency,
+        E3_DIR,
+        WorldModelVerifier,
+        load_engine,
+        plan_in_model,
+        score_goal_predicate_consistency,
     )
 
     hv_fn = _hand_verifier_fn(game)
@@ -641,6 +689,15 @@ def run_seeded_progress(
         elif arm == "static":
             block, injection_mode = True, "static"
         proposer.include_playbook_exemplars = block
+        # DELETE the prior engine BEFORE inducing so a FAILED induce cannot leave a stale, earlier-run
+        # engine on disk for load_engine to silently re-read and mis-attribute to this cell (the
+        # exp5722 generator-swap stale-engine attribution bug -- proposer.induce writes world_model.py
+        # ONLY on success, and load_engine reads a per-GAME path shared across generators/arms/trials).
+        _wm = E3_DIR / game / "world_model.py"
+        try:
+            _wm.unlink()
+        except FileNotFoundError:
+            pass
         # Fresh, guaranteed LLM induction with the arm's exact prompt (codeonly/think + injection).
         induce_ok, _detail = proposer.induce(game, list(window), int(cell))
         try:
@@ -648,7 +705,9 @@ def run_seeded_progress(
         except Exception as exc:
             err = f"load_engine: {type(exc).__name__}: {exc}"[:200]
         if engine is not None and is_done is not None and root_grid is not None:
-            plan = list(plan_in_model(engine, is_done, root_grid, max_nodes=20000, max_depth=40) or [])
+            plan = list(
+                plan_in_model(engine, is_done, root_grid, max_nodes=20000, max_depth=40) or []
+            )
     except Exception as exc:
         err = f"{type(exc).__name__}: {exc}"[:300]
     finally:
@@ -668,8 +727,13 @@ def run_seeded_progress(
             pass
         levelup_rec = _levelup_positive_recall(is_done, window)
 
-    exe = {"reached_levelup": False, "actions_to_levelup": None, "start_hv": None,
-           "best_hv": None, "hv_progress": None}
+    exe = {
+        "reached_levelup": False,
+        "actions_to_levelup": None,
+        "start_hv": None,
+        "best_hv": None,
+        "hv_progress": None,
+    }
     if plan and err is None:
         try:
             exe = _execute_plan_measure(game, plan, hv_fn)
@@ -677,16 +741,29 @@ def run_seeded_progress(
             err = (err or "") + f" | execute: {type(exc).__name__}: {exc}"[:150]
 
     return SeededProgressResult(
-        game=game, arm=arm, trial=trial,
-        induction_ok=engine is not None and is_done is not None,
-        plan_found=bool(plan), plan_len=len(plan),
-        reached_levelup=exe["reached_levelup"], actions_to_levelup=exe["actions_to_levelup"],
-        start_hv=exe["start_hv"], best_hv=exe["best_hv"], hv_progress=exe["hv_progress"],
-        heldout_accuracy=heldout, cell_recall=cell_recall, goal_predicate_accuracy=goal_pred,
+        game=game,
+        arm=arm,
+        trial=trial,
+        # Gate on induce_ok (via _attribution_ok): an engine that loaded WITHOUT this cell's induce
+        # succeeding would be a stale re-read (now also prevented by the pre-induce unlink above);
+        # both guards together mean a True induction_ok is attributable to THIS cell's own generator.
+        induction_ok=_attribution_ok(induce_ok, engine, is_done),
+        induce_ok=bool(induce_ok),
+        plan_found=bool(plan),
+        plan_len=len(plan),
+        reached_levelup=exe["reached_levelup"],
+        actions_to_levelup=exe["actions_to_levelup"],
+        start_hv=exe["start_hv"],
+        best_hv=exe["best_hv"],
+        hv_progress=exe["hv_progress"],
+        heldout_accuracy=heldout,
+        cell_recall=cell_recall,
+        goal_predicate_accuracy=goal_pred,
         levelup_positive_recall=levelup_rec,
         playbook_injection_mode=injection_mode,
         n_refinement_rounds=0,
-        wall_s=round(time.time() - t0, 1), error=err,
+        wall_s=round(time.time() - t0, 1),
+        error=err,
     )
 
 
@@ -699,7 +776,7 @@ def _sign_test_p(wins: int, losses: int) -> Optional[float]:
     from math import comb
 
     k = min(wins, losses)
-    tail = sum(comb(n, i) for i in range(0, k + 1)) / (2 ** n)
+    tail = sum(comb(n, i) for i in range(0, k + 1)) / (2**n)
     return round(min(1.0, 2.0 * tail), 4)
 
 
@@ -730,8 +807,14 @@ def paired_by_game(
         pairs.append((g, statistics.mean(tv), statistics.mean(bv)))
 
     if not pairs:
-        return {"metric": metric, "treat": arm_treat, "base": arm_base, "n_game_pairs": 0,
-                "unit": "game", "note": "no comparable game pairs"}
+        return {
+            "metric": metric,
+            "treat": arm_treat,
+            "base": arm_base,
+            "n_game_pairs": 0,
+            "unit": "game",
+            "note": "no comparable game pairs",
+        }
     deltas = [t - b for _, t, b in pairs]
     wins = sum(1 for d in deltas if d > 1e-9)
     losses = sum(1 for d in deltas if d < -1e-9)
@@ -741,20 +824,29 @@ def paired_by_game(
     if len(deltas) >= 2:
         imax = max(range(len(deltas)), key=lambda i: abs(deltas[i]))
         remaining = [d for i, d in enumerate(deltas) if i != imax]
-        if remaining and (statistics.mean(remaining) * mean_delta < 0
-                          or (abs(statistics.mean(remaining)) < 1e-9 < abs(mean_delta))):
+        if remaining and (
+            statistics.mean(remaining) * mean_delta < 0
+            or (abs(statistics.mean(remaining)) < 1e-9 < abs(mean_delta))
+        ):
             outlier_fragile = True
     return {
-        "metric": metric, "treat": arm_treat, "base": arm_base, "unit": "game",
+        "metric": metric,
+        "treat": arm_treat,
+        "base": arm_base,
+        "unit": "game",
         "n_game_pairs": len(pairs),
         "mean_delta": round(mean_delta, 4),
         "mean_treat": round(statistics.mean([t for _, t, _ in pairs]), 4),
         "mean_base": round(statistics.mean([b for _, _, b in pairs]), 4),
-        "wins_treat": wins, "ties": ties, "losses_treat": losses,
+        "wins_treat": wins,
+        "ties": ties,
+        "losses_treat": losses,
         "sign_test_p": _sign_test_p(wins, losses),
         "outlier_fragile": outlier_fragile,
-        "per_game": [{"game": g, "treat": round(t, 4), "base": round(b, 4), "delta": round(t - b, 4)}
-                     for g, t, b in pairs],
+        "per_game": [
+            {"game": g, "treat": round(t, 4), "base": round(b, 4), "delta": round(t - b, 4)}
+            for g, t, b in pairs
+        ],
     }
 
 
@@ -783,8 +875,13 @@ def paired_summary(
         pairs.append((f"{key[0]}#s{key[1]}v{key[2]}", float(vt), float(vb)))
 
     if not pairs:
-        return {"metric": metric, "treat": arm_treat, "base": arm_base, "n_pairs": 0,
-                "note": "no comparable pairs (metric None or arm missing)"}
+        return {
+            "metric": metric,
+            "treat": arm_treat,
+            "base": arm_base,
+            "n_pairs": 0,
+            "note": "no comparable pairs (metric None or arm missing)",
+        }
 
     deltas = [t - b for _, t, b in pairs]
     wins = sum(1 for d in deltas if d > 1e-9)
@@ -795,17 +892,26 @@ def paired_summary(
     if len(deltas) >= 2:
         imax = max(range(len(deltas)), key=lambda i: abs(deltas[i]))
         remaining = [d for i, d in enumerate(deltas) if i != imax]
-        if remaining and (statistics.mean(remaining) * mean_delta < 0 or abs(statistics.mean(remaining)) < 1e-9 < abs(mean_delta)):
+        if remaining and (
+            statistics.mean(remaining) * mean_delta < 0
+            or abs(statistics.mean(remaining)) < 1e-9 < abs(mean_delta)
+        ):
             outlier_fragile = True
     return {
-        "metric": metric, "treat": arm_treat, "base": arm_base,
+        "metric": metric,
+        "treat": arm_treat,
+        "base": arm_base,
         "n_pairs": len(pairs),
         "mean_delta": round(mean_delta, 4),
         "mean_treat": round(statistics.mean([t for _, t, _ in pairs]), 4),
         "mean_base": round(statistics.mean([b for _, _, b in pairs]), 4),
-        "wins_treat": wins, "ties": ties, "losses_treat": losses,
+        "wins_treat": wins,
+        "ties": ties,
+        "losses_treat": losses,
         "sign_test_p": _sign_test_p(wins, losses),
         "outlier_fragile": outlier_fragile,
-        "per_pair": [{"key": k, "treat": round(t, 4), "base": round(b, 4), "delta": round(t - b, 4)}
-                     for k, t, b in pairs],
+        "per_pair": [
+            {"key": k, "treat": round(t, 4), "base": round(b, 4), "delta": round(t - b, 4)}
+            for k, t, b in pairs
+        ],
     }
