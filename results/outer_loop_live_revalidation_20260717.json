@@ -1,0 +1,102 @@
+{
+  "experiment": "outer_loop_live_revalidation_20260717",
+  "run_date": "2026-07-17",
+  "schema": "carnot.arc_live_revalidation.v1",
+  "inference_substrate": "live_scored_env_real_network_calls_no_llm",
+  "solve_provenance": "live_agent_self_discovery",
+  "random_seed": null,
+  "random_seed_note": "Live ARC-AGI-3 API replay of pre-computed action sequences; no RNG invoked by this driver.",
+  "duration_s": 1211,
+  "duration_note": "Sum of the three live sessions this run: the 25-game package re-validation (~8 min), the bp35/lf52 deep-win attempt (~7.5 min), and the instrumented lf52 diagnostic re-run (~5 min). All real network round-trips against https://three.arcprize.org.",
+  "honest_verdict": "complete_sc25_warmup_fix_confirmed_live_25_of_25_matched_bp35_l9_confirmed_live_lf52_l9_blocked_by_offscreen_coordinate_rejection",
+  "narrative": "Operator-directed follow-up to the earlier replay ledger: 'Fix the sc25 drift and re-validate all games.' PART 1 (the requested scope): ran scripts/arc3_live_submit.py (VALIDATE mode, no --submit, no scorecard close, no leaderboard record) against the real live ARC-AGI-3 API using the existing package (experiment_4679_submission_package_operator_resubmit.json, 25 games / 60 claimed levels). Result: 25/25 games env-matched, including sc25 (claimed L5 -> LIVE L5 MATCH). This confirms commit a09892c5a's WARMUP_GAMES fix (sc25's first env.step after reset is silently consumed as a no-op; the live driver now prepends the same throwaway warmup step arc3_replay_scorecard_metaharness.py's replay_game() already used) genuinely resolves the 2026-07-15 drift, which had never been re-tested live since the fix landed 18 minutes after that failed run. PART 2 (bonus, beyond the literal ask): the package used in Part 1 is stale (last refreshed 2026-06-24) and caps bp35/lf52 at L1, far below their true 2026-07-17 registry depth (bp35 9/9, lf52 10/10, both solved same-day, same session). Since fully-verified flat action sequences for both already existed (bp35: 410 actions, results/outer_loop_round26_bp35_probe_l9_20260717.json; lf52: 1009 actions, results/outer_loop_lf52_l8plus_probe_20260717.json), replayed them live directly on a fresh dedicated scorecard to test whether today's offline wins actually hold on the real environment. bp35: CLEAN MATCH -- claimed L9, LIVE L9, all 410 actions replayed without error (163s). lf52: FAILED at action 849 of 1009 -- a genuinely new, different problem from sc25's warmup bug. An instrumented re-run (fresh scorecard, per-action try/except) confirmed level progress is real and correct through L8 (0->1->2->3->4->5->6->7->8 at actions 7/41/145/213/311/614/758/826, matching the offline artifact's L8 boundary at action 827 almost exactly) but fails immediately at action 849, 22 actions into the L9 tail, with HTTP 400 Bad Request from https://three.arcprize.org/api/cmd/ACTION6. Root cause identified with full confidence: action 849 clicks pixel (132,18); the visible live frame is 64x64 (valid pixel range 0-63), so x=132 is out of bounds. Un-transforming lf52's own documented pixel<->source-grid formula (frame_xy = 6*grid_xy + 6, per this game's registry gotcha) gives source grid x=21 -- an exact match for the registry's own L9 gotcha text, which explicitly describes 'two off-screen blue pegs...legally leapfrogged from source x=20/21 back to x=11/12' as part of the winning route. A full scan of the 1009-action sequence found exactly 22 such out-of-bounds clicks, all contiguous (actions 849-870ish), all part of this same off-screen relay maneuver; none appear anywhere in the L1-L8 prefix (actions 0-826), which is exactly why L8 replayed cleanly live while L9 did not. CONCLUSION: the OFFLINE arc_agi arcade accepts and correctly routes ACTION6 clicks with pixel coordinates outside the visible 0-63 frame (addressing off-screen game objects directly by their source-grid position); the LIVE API validates coordinates strictly and rejects anything outside 0-63 with HTTP 400. This is a real, structural permissiveness gap between the offline dev environment and the live scored environment -- not a bug in this driver, not a warmup-step issue, and not something a quick patch can fix, since the winning L9 route as banked genuinely depends on a live-invalid interaction. Whether the SAME off-screen game-state manipulation is achievable live via some in-bounds equivalent (e.g. scrolling the camera into position first via legitimate moves, then clicking the same logical target in-frame) is unknown and would require genuine live exploration to determine -- deliberately NOT attempted in this session, since that is real new-mechanism-discovery work, not a re-validation task. No credit change: this does not retract lf52's OFFLINE registry credit (10/10, verified via 5x fresh offline-arcade replay + official reproduce() gate, per commit c588364d7 -- those claims stand, unaffected by live-API coordinate validation differences). It does mean lf52's L9-L10 win is not currently live-submittable as banked.",
+  "part1_package_revalidation": {
+    "package_source": "experiment_4679_submission_package_operator_resubmit.json",
+    "games": 25,
+    "claimed_levels_total": 60,
+    "live_levels_total": 60,
+    "games_env_matched": "25/25",
+    "scorecard_id": "9f4c282d-621d-4a2d-95d5-d98178db9a97",
+    "scorecard_closed": false,
+    "leaderboard_record_created": false,
+    "sc25_result": {
+      "claimed": 5,
+      "live_level": 5,
+      "env_match": true,
+      "replay_url": "https://arcprize.org/replay/ea498bc5-6080-48a0-b5e9-4e7573cb1efc"
+    },
+    "artifact": "results/arc3_live_submit.json"
+  },
+  "part2_deep_win_validation": {
+    "purpose": "Test today's freshly-verified full-depth offline wins (bp35 9/9, lf52 10/10) directly against the live env, since the package used in part 1 predates both and caps them at L1.",
+    "bp35": {
+      "claimed": 9,
+      "live_level": 9,
+      "env_match": true,
+      "actions_replayed": 410,
+      "duration_s": 163,
+      "scorecard_id": "988e3407-dc70-4294-b715-d44e056f96fa",
+      "replay_url": "https://arcprize.org/replay/7a998540-6ac5-44e7-b93c-96aba4a6681d",
+      "scorecard_closed": false,
+      "leaderboard_record_created": false
+    },
+    "lf52": {
+      "claimed": 10,
+      "live_level_reached_confirmed": 8,
+      "live_level_target_failed": true,
+      "failure_action_index": 849,
+      "failure_action_data": {"action": 6, "data": {"x": 132, "y": 18}},
+      "failure_http_error": "400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION6",
+      "level_transitions_confirmed_live": [
+        {"level": 1, "action_index": 7},
+        {"level": 2, "action_index": 41},
+        {"level": 3, "action_index": 145},
+        {"level": 4, "action_index": 213},
+        {"level": 5, "action_index": 311},
+        {"level": 6, "action_index": 614},
+        {"level": 7, "action_index": 758},
+        {"level": 8, "action_index": 826}
+      ],
+      "offline_l8_boundary_action_index": 827,
+      "root_cause": "out_of_bounds_action6_pixel_coordinate",
+      "root_cause_detail": "Live frame is 64x64 (valid pixel range 0-63); action 849 clicks pixel x=132. Un-transforming this game's own documented frame_xy=6*grid_xy+6 formula gives source grid x=21, matching the registry gotcha's own description of an off-screen blue-peg leapfrog maneuver as part of the L9 route. The offline arc_agi arcade accepts and correctly routes out-of-bounds ACTION6 clicks; the live API validates strictly (0-63) and rejects them.",
+      "out_of_bounds_actions_in_sequence": 22,
+      "out_of_bounds_action_range": [849, 870],
+      "out_of_bounds_actions_in_l1_l8_prefix": 0,
+      "scorecard_id": "f449e00f-1970-42ed-b867-d164cfee7dbe",
+      "replay_url": "https://arcprize.org/replay/c59b230f-7452-48ca-8a07-13b25051d86e",
+      "scorecard_closed": false,
+      "leaderboard_record_created": false,
+      "offline_registry_credit_affected": false,
+      "offline_registry_credit_note": "lf52 stays 10/10 in ops/arc_solve_registry.yaml -- this is a live-API-vs-offline-arcade coordinate-validation gap, not a retraction of the offline reproduction (verified 5x fresh offline-arcade replay + official reproduce() gate, commit c588364d7)."
+    }
+  },
+  "next_leads": [
+    "Determine whether lf52's off-screen blue-peg relay (source grid x~19-21) is achievable live via an in-bounds equivalent (camera-scroll-then-click within 0-63) -- requires genuine live exploration, not attempted this session.",
+    "Audit whether any OTHER banked game sequences rely on out-of-bounds ACTION6 coordinates the same way lf52's L9 does, before assuming the rest of the 25-game package is live-safe beyond what was directly tested here.",
+    "If an in-bounds route cannot be found, lf52's live-submittable depth is L8 (827 actions), not the offline-verified L10 -- the submission package should reflect this distinction explicitly rather than claiming L10."
+  ],
+  "preconditions_checked": [
+    {"resource": "sops_decrypt_arc_api_key", "available": true},
+    {"resource": "arc3_live_submit_py_syntax", "available": true},
+    {"resource": "bp35_lf52_offline_sequences_independently_verified", "available": true, "note": "Both sequences were independently replayed 5x from fresh offline environments earlier this session before being used here."}
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "sc25 fix must be confirmed via a real live network call, not just code inspection",
+      "principle": "A code fix that was never re-tested live is a claim, not a verification.",
+      "result": "passed_sc25_claimed_l5_live_l5_match_scorecard_9f4c282d"
+    },
+    {
+      "condition": "Any new finding (the lf52 out-of-bounds issue) must be root-caused with reproducible evidence, not just reported as an opaque failure",
+      "principle": "An unexplained live failure is not actionable; the exact action index, coordinate, and un-transformed source meaning must be shown.",
+      "result": "passed_action_849_x132_source_grid_x21_matches_registry_gotcha_text_exactly"
+    }
+  ],
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "The verdict must reflect both the successful requested fix AND the new problem found, not overstate success by omitting the lf52 finding.",
+      "satisfied_by": "Verdict names both outcomes explicitly."
+    }
+  }
+}

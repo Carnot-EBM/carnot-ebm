@@ -2238,6 +2238,15 @@ games:
   levels_reproduced: 10
   full_game_clear: true
   final_game_state: 'GameState.WIN'
+  live_replay_status: 'CONFIRMED through L8 (action 827/1009), BLOCKED L9-L10 (2026-07-17): the
+    banked L9 tail clicks 22 out-of-bounds ACTION6 pixel coordinates (x up to 132, valid range
+    0-63 -- an off-screen blue-peg leapfrog at source grid x~19-21) that the offline arc_agi
+    arcade accepts but the live API rejects with HTTP 400. This is a real offline/live
+    permissiveness gap, not a bug in the replay driver, and does not retract the offline
+    10/10 credit above (independently verified 5x fresh offline-arcade replay + official
+    reproduce() gate, commit c588364d7). Live-submittable depth is currently L8, not L10, until
+    an in-bounds equivalent route is found. See results/outer_loop_live_revalidation_20260717.json
+    and the 2026-07-17 live_submissions entries below for full diagnostic evidence.'
   mechanic_class: rail_carried_peg_jump
   win_condition: >-
     L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
@@ -6280,6 +6289,58 @@ live_submissions:
     (16->18 games incl recovered dc22/vc33; honest flat-replay-capped claims). Only miss: sc25 ->
     LIVE L0 (claimed L1; offline-reproduced L1 but live version-drift on hash 635fd71a -- +1 follow-up).
     The gate for the next online play: beat 33 levels.'
+- date: '2026-07-15'
+  scorecard_id: 8dd7c95f-932c-4fa2-8721-bf92287f0552
+  levels: 55
+  games: 25
+  games_env_matched: 24/25
+  mode: mode1_offline_reproduced_replay
+  authorization: (backfilled 2026-07-17 -- this run was never added to this list at the time)
+  driver: scripts/arc3_live_submit.py
+  artifact: results/arc3_live_submit.json
+  note: 'THIRD live validation (VALIDATE only, not submitted). Package grew to 25 games / 60
+    claimed levels. Only miss: sc25 (claimed L5 -> LIVE L-1, a 400 on ACTION4 the 22nd action --
+    the confirmed root cause was a missing WARMUP_GAMES step; sc25''s first env.step after reset
+    is silently consumed as a no-op, so every subsequent action landed one position out of phase).
+    The fix (commit a09892c5a) landed 18 minutes AFTER this run and was never re-tested live until
+    the 2026-07-17 entry below.'
+- date: '2026-07-17'
+  scorecard_id: 9f4c282d-621d-4a2d-95d5-d98178db9a97
+  levels: 60
+  games: 25
+  games_env_matched: 25/25
+  mode: mode1_offline_reproduced_replay
+  authorization: operator directive 2026-07-17 'Fix the sc25 drift and re-validate all games'
+  driver: scripts/arc3_live_submit.py
+  artifact: results/arc3_live_submit.json
+  note: 'FOURTH live validation (VALIDATE only, not submitted). Confirms the WARMUP_GAMES fix:
+    sc25 claimed L5 -> LIVE L5 MATCH. All 25/25 games env-matched for the first time. Same package
+    as the 2026-07-15 run (experiment_4679_submission_package_operator_resubmit.json, stale since
+    2026-06-24) -- bp35/lf52 still capped at their old L1 claims here; see the deep-win bonus check
+    below for their true current depth.'
+- date: '2026-07-17'
+  scorecard_id: 988e3407-dc70-4294-b715-d44e056f96fa / f449e00f-1970-42ed-b867-d164cfee7dbe
+  levels: 9
+  games: 2
+  games_env_matched: 1/2
+  mode: deep_win_direct_replay_bonus_check
+  authorization: operator directive 2026-07-17 'Fix the sc25 drift and re-validate all games' (bonus
+    extension beyond the literal package re-validation, since the package caps bp35/lf52 far below
+    their true same-day depth)
+  driver: results/outer_loop_live_revalidation_20260717.json (ad-hoc scratch driver, not a committed
+    script)
+  artifact: results/outer_loop_live_revalidation_20260717.json
+  note: 'Direct live replay of TODAY''s freshly-verified full-depth offline wins (bp35 9/9, lf52
+    10/10), bypassing the stale package entirely. bp35: claimed L9 -> LIVE L9 MATCH, clean 410-action
+    replay (163s). lf52: claimed L10 -> confirmed live through L8 (827 actions, all 8 level
+    transitions at the expected action indices) then FAILS at action 849 with HTTP 400 -- the L9 tail
+    clicks pixel x=132 (source grid x=21, an off-screen blue-peg leapfrog per this game''s own L9
+    gotcha), which the live API rejects as out-of-bounds (valid range 0-63) even though the offline
+    arc_agi arcade accepts and correctly routes it. 22 such out-of-bounds clicks exist in the L9-L10
+    tail, none in the L1-L8 prefix -- a real, structural offline/live permissiveness gap, not a bug in
+    the driver. Does NOT retract lf52''s offline registry credit (10/10 stands, independently
+    verified); DOES mean lf52''s live-submittable depth is currently L8, not L10, until an in-bounds
+    equivalent route is found (genuine new exploration, not attempted this session).'
 - date: '2026-06-19'
   mode: competition_kernel_live_agent   # the LIVE E3AgentPolicy on the hidden gateway -- the SCORED path
   public_leaderboard_score: 0.08
