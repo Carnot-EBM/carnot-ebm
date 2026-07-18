@@ -1,0 +1,1848 @@
+{
+  "experiment": "experiment_5721_actions_to_progress_retrieval_ab",
+  "schema": "carnot.experiment_5721_actions_to_progress_retrieval_ab.actions_to_progress_ab.v1",
+  "requirements": [
+    "REQ-ARC-WMTE-5721",
+    "REQ-ARC-WMTE-5720"
+  ],
+  "prior_work_extended": [
+    "REQ-ARC-WMTE-5714",
+    "REQ-ARC-WMTE-5716",
+    "REQ-ARC-WMTE-5717",
+    "REQ-ARC-WMTE-5718"
+  ],
+  "question": "Does playbook-exemplar retrieval injection help actions-to-progress vs no injection (and vs static injection)? (re-test of REQ-ARC-WMTE-5716/5717/5718 / exp5719)",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "Qwen3.5-9B-MTP",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "quant": "Q4_K_M",
+      "role": "E3AgentPolicy world-model induction proposer (the frozen live generator)",
+      "server": "CUDA llama-server GPU0 port 8933, -ngl 999, q8_0 KV, MTP self-draft on",
+      "mtp_note": "MTP (draft-mtp speculative decoding) is content-neutral (speed only); the induction-content arms differ in the request (codeonly fence / think / retrieval / n_predict), not the MTP flag.",
+      "gpu_substrate_note": "run on ONE discrete RTX 3090 (GPU0) for dev throughput -- server + retrieval embedder + CNN engine co-located to avoid cross-card OOM. Induction CONTENT is identical to the iGPU frozen live stack (same model/quant/prompt); wall-clock is NOT Kaggle-representative."
+    }
+  ],
+  "honest_verdict": "complete_retrieval_vs_none_heldout_only_progress_floored_no_reliable_signal_delta_0.0_signp_None_fragile_False",
+  "solve_provenance": "development_proxy",
+  "verifier_is_oracle": false,
+  "read_game_source": false,
+  "used_env_source": true,
+  "random_seed": 0,
+  "trials_per_arm": 2,
+  "field_principles": {
+    "honest_verdict": "terminal-prefixed self-declared state (Verdict Terminal-Prefix Discipline).",
+    "inference_substrate": "live_llm_inference -- the real Qwen3.5-9B-MTP GGUF induces via the live E3AgentPolicy._induce_and_plan path every arm; 60s floor applies.",
+    "random_seed": "the LLM sampling is stochastic (disclosed); trials are per-game replicates -- why we pair by GAME (average over trials) and report win/tie/loss + outlier-fragility.",
+    "reproducibility_checksum": "content hash over harness code + config + all rows catches drift.",
+    "solve_provenance": "development_proxy -- PUBLIC-game offline dev measurement of the LIVE induce->plan->execute mechanism, NOT a hidden-game self-discovery solve.",
+    "verifier_is_oracle": "False -- the win oracle is the level counter (frame.levels_completed); hand_verifier is only a dense progress MEASUREMENT, oracle-distinct.",
+    "preconditions_checked": "GGUF + offline arcade + playbook index verified before any inference.",
+    "metric_ladder": "PRIMARY = reached_levelup / hv_progress / plan_found (real downstream progress from the induced model's OWN plan executed in the real env). When those are floored (the frozen 9B's dynamics induction is usually too weak to plan a level-up), the denser induction-quality discriminators (heldout_accuracy, cell_recall, goal_predicate_accuracy, levelup_positive_recall) -- the SAME signals the prior single-shot experiments used, now on the live path + averaged over trials -- carry the comparison. An all-floored result is a valid, terminal finding (the reasoning/retrieval knob is not the bottleneck)."
+  },
+  "preconditions_checked": {
+    "offline_arcade_import": true,
+    "qwen3.5_9b_mtp_gguf_cached": true,
+    "playbook_index_built": true
+  },
+  "sample_size": {
+    "games": 6,
+    "trials_per_arm": 2,
+    "arms": [
+      "frozen",
+      "retrieval",
+      "static"
+    ],
+    "paired_unit": "game (metrics averaged over trials, paired by game)",
+    "max_game_pairs": 6,
+    "disclosure": "SMALL N (<=6 game pairs); stochastic proposer. Report paired game win/tie/loss + exact sign-test p + outlier-fragility, NOT a bare mean. With <=6 pairs the sign test cannot reach p<0.05 unless every game agrees."
+  },
+  "measurement_integrity": {
+    "retrieval_injection_modes_observed": [
+      "retrieval",
+      "retrieval_unavailable"
+    ],
+    "retrieval_actually_fired": true,
+    "any_plan_found_across_all_runs": true,
+    "any_real_levelup_across_all_runs": false,
+    "note": "If retrieval_actually_fired is False, the retrieval arm silently no-oped (embedder unavailable) and its contrast is NOT a valid test. If any_plan_found is False, the PRIMARY progress metrics are fully floored and only the induction-quality ladder carries signal -- disclosed, not hidden."
+  },
+  "comparisons": [
+    {
+      "metric": "reached_levelup",
+      "treat": "retrieval",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0,
+      "mean_base": 0.0,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_none"
+    },
+    {
+      "metric": "hv_progress",
+      "treat": "retrieval",
+      "base": "frozen",
+      "n_game_pairs": 0,
+      "unit": "game",
+      "note": "no comparable game pairs",
+      "contrast": "retrieval_vs_none"
+    },
+    {
+      "metric": "plan_found",
+      "treat": "retrieval",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": -0.0833,
+      "mean_treat": 0.0833,
+      "mean_base": 0.1667,
+      "wins_treat": 1,
+      "ties": 3,
+      "losses_treat": 2,
+      "sign_test_p": 1.0,
+      "outlier_fragile": true,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.5,
+          "delta": -0.5
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.5,
+          "delta": -0.5
+        },
+        {
+          "game": "ls20",
+          "treat": 0.5,
+          "base": 0.0,
+          "delta": 0.5
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_none"
+    },
+    {
+      "metric": "heldout_accuracy",
+      "treat": "retrieval",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0,
+      "mean_base": 0.0,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_none"
+    },
+    {
+      "metric": "cell_recall",
+      "treat": "retrieval",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.1098,
+      "mean_treat": 0.1683,
+      "mean_base": 0.0585,
+      "wins_treat": 2,
+      "ties": 2,
+      "losses_treat": 2,
+      "sign_test_p": 1.0,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.7072,
+          "base": 0.0592,
+          "delta": 0.648
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.1858,
+          "delta": -0.1858
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0003,
+          "base": 0.029,
+          "delta": -0.0287
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.3023,
+          "base": 0.0772,
+          "delta": 0.2251
+        }
+      ],
+      "contrast": "retrieval_vs_none"
+    },
+    {
+      "metric": "goal_predicate_accuracy",
+      "treat": "retrieval",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.8695,
+      "mean_base": 0.8695,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.75,
+          "base": 0.75,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.8,
+          "base": 0.8,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_none"
+    },
+    {
+      "metric": "levelup_positive_recall",
+      "treat": "retrieval",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0,
+      "mean_base": 0.0,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_none"
+    },
+    {
+      "metric": "reached_levelup",
+      "treat": "static",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0,
+      "mean_base": 0.0,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "static_vs_none"
+    },
+    {
+      "metric": "hv_progress",
+      "treat": "static",
+      "base": "frozen",
+      "n_game_pairs": 0,
+      "unit": "game",
+      "note": "no comparable game pairs",
+      "contrast": "static_vs_none"
+    },
+    {
+      "metric": "plan_found",
+      "treat": "static",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": -0.0833,
+      "mean_treat": 0.0833,
+      "mean_base": 0.1667,
+      "wins_treat": 1,
+      "ties": 3,
+      "losses_treat": 2,
+      "sign_test_p": 1.0,
+      "outlier_fragile": true,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.5,
+          "delta": -0.5
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.5,
+          "delta": -0.5
+        },
+        {
+          "game": "ls20",
+          "treat": 0.5,
+          "base": 0.0,
+          "delta": 0.5
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "static_vs_none"
+    },
+    {
+      "metric": "heldout_accuracy",
+      "treat": "static",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0,
+      "mean_base": 0.0,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "static_vs_none"
+    },
+    {
+      "metric": "cell_recall",
+      "treat": "static",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": -0.0137,
+      "mean_treat": 0.0448,
+      "mean_base": 0.0585,
+      "wins_treat": 2,
+      "ties": 2,
+      "losses_treat": 2,
+      "sign_test_p": 1.0,
+      "outlier_fragile": true,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0691,
+          "base": 0.0592,
+          "delta": 0.0098
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.1858,
+          "delta": -0.1858
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0232,
+          "base": 0.029,
+          "delta": -0.0059
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.1767,
+          "base": 0.0772,
+          "delta": 0.0995
+        }
+      ],
+      "contrast": "static_vs_none"
+    },
+    {
+      "metric": "goal_predicate_accuracy",
+      "treat": "static",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": -0.0694,
+      "mean_treat": 0.8,
+      "mean_base": 0.8695,
+      "wins_treat": 1,
+      "ties": 4,
+      "losses_treat": 1,
+      "sign_test_p": 1.0,
+      "outlier_fragile": true,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.75,
+          "base": 0.75,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.9584,
+          "base": 0.9167,
+          "delta": 0.0417
+        },
+        {
+          "game": "lp85",
+          "treat": 0.8,
+          "base": 0.8,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.4583,
+          "base": 0.9167,
+          "delta": -0.4583
+        },
+        {
+          "game": "tr87",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "static_vs_none"
+    },
+    {
+      "metric": "levelup_positive_recall",
+      "treat": "static",
+      "base": "frozen",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0833,
+      "mean_treat": 0.0833,
+      "mean_base": 0.0,
+      "wins_treat": 1,
+      "ties": 5,
+      "losses_treat": 0,
+      "sign_test_p": 1.0,
+      "outlier_fragile": true,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.5,
+          "base": 0.0,
+          "delta": 0.5
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "static_vs_none"
+    },
+    {
+      "metric": "reached_levelup",
+      "treat": "retrieval",
+      "base": "static",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0,
+      "mean_base": 0.0,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_static"
+    },
+    {
+      "metric": "hv_progress",
+      "treat": "retrieval",
+      "base": "static",
+      "unit": "game",
+      "n_game_pairs": 1,
+      "mean_delta": 0.1163,
+      "mean_treat": 0.2326,
+      "mean_base": 0.1163,
+      "wins_treat": 1,
+      "ties": 0,
+      "losses_treat": 0,
+      "sign_test_p": 1.0,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ls20",
+          "treat": 0.2326,
+          "base": 0.1163,
+          "delta": 0.1163
+        }
+      ],
+      "contrast": "retrieval_vs_static"
+    },
+    {
+      "metric": "plan_found",
+      "treat": "retrieval",
+      "base": "static",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0833,
+      "mean_base": 0.0833,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.5,
+          "base": 0.5,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_static"
+    },
+    {
+      "metric": "heldout_accuracy",
+      "treat": "retrieval",
+      "base": "static",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0,
+      "mean_treat": 0.0,
+      "mean_base": 0.0,
+      "wins_treat": 0,
+      "ties": 6,
+      "losses_treat": 0,
+      "sign_test_p": null,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_static"
+    },
+    {
+      "metric": "cell_recall",
+      "treat": "retrieval",
+      "base": "static",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.1235,
+      "mean_treat": 0.1683,
+      "mean_base": 0.0448,
+      "wins_treat": 2,
+      "ties": 3,
+      "losses_treat": 1,
+      "sign_test_p": 1.0,
+      "outlier_fragile": false,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.7072,
+          "base": 0.0691,
+          "delta": 0.6382
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0003,
+          "base": 0.0232,
+          "delta": -0.0228
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.3023,
+          "base": 0.1767,
+          "delta": 0.1256
+        }
+      ],
+      "contrast": "retrieval_vs_static"
+    },
+    {
+      "metric": "goal_predicate_accuracy",
+      "treat": "retrieval",
+      "base": "static",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": 0.0694,
+      "mean_treat": 0.8695,
+      "mean_base": 0.8,
+      "wins_treat": 1,
+      "ties": 4,
+      "losses_treat": 1,
+      "sign_test_p": 1.0,
+      "outlier_fragile": true,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.75,
+          "base": 0.75,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.9167,
+          "base": 0.9584,
+          "delta": -0.0417
+        },
+        {
+          "game": "lp85",
+          "treat": 0.8,
+          "base": 0.8,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.9167,
+          "base": 0.4583,
+          "delta": 0.4583
+        },
+        {
+          "game": "tr87",
+          "treat": 0.9167,
+          "base": 0.9167,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_static"
+    },
+    {
+      "metric": "levelup_positive_recall",
+      "treat": "retrieval",
+      "base": "static",
+      "unit": "game",
+      "n_game_pairs": 6,
+      "mean_delta": -0.0833,
+      "mean_treat": 0.0,
+      "mean_base": 0.0833,
+      "wins_treat": 0,
+      "ties": 5,
+      "losses_treat": 1,
+      "sign_test_p": 1.0,
+      "outlier_fragile": true,
+      "per_game": [
+        {
+          "game": "ft09",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "g50t",
+          "treat": 0.0,
+          "base": 0.5,
+          "delta": -0.5
+        },
+        {
+          "game": "lp85",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "ls20",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "m0r0",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        },
+        {
+          "game": "tr87",
+          "treat": 0.0,
+          "base": 0.0,
+          "delta": 0.0
+        }
+      ],
+      "contrast": "retrieval_vs_static"
+    }
+  ],
+  "per_run_rows": [
+    {
+      "game": "ls20",
+      "arm": "frozen",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0024,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 39.5,
+      "error": null
+    },
+    {
+      "game": "ls20",
+      "arm": "retrieval",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval",
+      "n_refinement_rounds": 0,
+      "wall_s": 12.7,
+      "error": null
+    },
+    {
+      "game": "ls20",
+      "arm": "static",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0462,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 117.8,
+      "error": null
+    },
+    {
+      "game": "ls20",
+      "arm": "frozen",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0557,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 58.4,
+      "error": null
+    },
+    {
+      "game": "ls20",
+      "arm": "retrieval",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": true,
+      "plan_len": 3,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": 43.0,
+      "best_hv": 33.0,
+      "hv_progress": 0.2326,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0007,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval",
+      "n_refinement_rounds": 0,
+      "wall_s": 14.8,
+      "error": null
+    },
+    {
+      "game": "ls20",
+      "arm": "static",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": true,
+      "plan_len": 1,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": 43.0,
+      "best_hv": 38.0,
+      "hv_progress": 0.1163,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0001,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 1.8,
+      "error": null
+    },
+    {
+      "game": "tr87",
+      "arm": "frozen",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 30.7,
+      "error": null
+    },
+    {
+      "game": "tr87",
+      "arm": "retrieval",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.3394,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval",
+      "n_refinement_rounds": 0,
+      "wall_s": 95.8,
+      "error": null
+    },
+    {
+      "game": "tr87",
+      "arm": "static",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.3535,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 103.5,
+      "error": null
+    },
+    {
+      "game": "tr87",
+      "arm": "frozen",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.1544,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 40.9,
+      "error": null
+    },
+    {
+      "game": "tr87",
+      "arm": "retrieval",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.2652,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval",
+      "n_refinement_rounds": 0,
+      "wall_s": 63.7,
+      "error": null
+    },
+    {
+      "game": "tr87",
+      "arm": "static",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 7.0,
+      "error": null
+    },
+    {
+      "game": "lp85",
+      "arm": "frozen",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.8,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 132.7,
+      "error": null
+    },
+    {
+      "game": "lp85",
+      "arm": "retrieval",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.8,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval_unavailable",
+      "n_refinement_rounds": 0,
+      "wall_s": 35.4,
+      "error": null
+    },
+    {
+      "game": "lp85",
+      "arm": "static",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.8,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 4.2,
+      "error": null
+    },
+    {
+      "game": "lp85",
+      "arm": "frozen",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": true,
+      "plan_len": 1,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": 15.0,
+      "best_hv": 15.0,
+      "hv_progress": 0.0,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.8,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 39.0,
+      "error": null
+    },
+    {
+      "game": "lp85",
+      "arm": "retrieval",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.8,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval_unavailable",
+      "n_refinement_rounds": 0,
+      "wall_s": 144.2,
+      "error": null
+    },
+    {
+      "game": "lp85",
+      "arm": "static",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.8,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 152.1,
+      "error": null
+    },
+    {
+      "game": "g50t",
+      "arm": "frozen",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": true,
+      "plan_len": 1,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": 72.0,
+      "best_hv": 72.0,
+      "hv_progress": 0.0,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.3716,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 4.9,
+      "error": null
+    },
+    {
+      "game": "g50t",
+      "arm": "retrieval",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval",
+      "n_refinement_rounds": 0,
+      "wall_s": 20.5,
+      "error": null
+    },
+    {
+      "game": "g50t",
+      "arm": "static",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 1.0,
+      "levelup_positive_recall": 1.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 46.8,
+      "error": null
+    },
+    {
+      "game": "g50t",
+      "arm": "frozen",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 2.3,
+      "error": null
+    },
+    {
+      "game": "g50t",
+      "arm": "retrieval",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval_unavailable",
+      "n_refinement_rounds": 0,
+      "wall_s": 12.2,
+      "error": null
+    },
+    {
+      "game": "g50t",
+      "arm": "static",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 100.0,
+      "error": null
+    },
+    {
+      "game": "m0r0",
+      "arm": "frozen",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 36.6,
+      "error": null
+    },
+    {
+      "game": "m0r0",
+      "arm": "retrieval",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval",
+      "n_refinement_rounds": 0,
+      "wall_s": 73.8,
+      "error": null
+    },
+    {
+      "game": "m0r0",
+      "arm": "static",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.0,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 4.3,
+      "error": null
+    },
+    {
+      "game": "m0r0",
+      "arm": "frozen",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 4.5,
+      "error": null
+    },
+    {
+      "game": "m0r0",
+      "arm": "retrieval",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval_unavailable",
+      "n_refinement_rounds": 0,
+      "wall_s": 18.4,
+      "error": null
+    },
+    {
+      "game": "m0r0",
+      "arm": "static",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 32.8,
+      "error": null
+    },
+    {
+      "game": "ft09",
+      "arm": "frozen",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.75,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 104.6,
+      "error": null
+    },
+    {
+      "game": "ft09",
+      "arm": "retrieval",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.7237,
+      "goal_predicate_accuracy": 0.75,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval_unavailable",
+      "n_refinement_rounds": 0,
+      "wall_s": 92.1,
+      "error": null
+    },
+    {
+      "game": "ft09",
+      "arm": "static",
+      "trial": 0,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.1184,
+      "goal_predicate_accuracy": 0.75,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 45.5,
+      "error": null
+    },
+    {
+      "game": "ft09",
+      "arm": "frozen",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.1184,
+      "goal_predicate_accuracy": 0.75,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "none",
+      "n_refinement_rounds": 0,
+      "wall_s": 58.3,
+      "error": null
+    },
+    {
+      "game": "ft09",
+      "arm": "retrieval",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.6908,
+      "goal_predicate_accuracy": 0.75,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "retrieval",
+      "n_refinement_rounds": 0,
+      "wall_s": 46.2,
+      "error": null
+    },
+    {
+      "game": "ft09",
+      "arm": "static",
+      "trial": 1,
+      "induction_ok": true,
+      "plan_found": false,
+      "plan_len": 0,
+      "reached_levelup": false,
+      "actions_to_levelup": null,
+      "start_hv": null,
+      "best_hv": null,
+      "hv_progress": null,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0197,
+      "goal_predicate_accuracy": 0.75,
+      "levelup_positive_recall": 0.0,
+      "playbook_injection_mode": "static",
+      "n_refinement_rounds": 0,
+      "wall_s": 39.2,
+      "error": null
+    }
+  ],
+  "methodology_note": "SEEDED induce->plan->execute: seed a real level-up-straddling transition window (reuses exp5717.build_window, the SAME input the prior A/Bs used), then DIRECT-induce with EXPLICIT per-arm injection (the exp5719 mechanism -- codeonly/think via env+proposer, retrieval via the live _retrieve_playbook_block, then proposer.induce() directly) so induction ALWAYS fires and the arm's exact prompt is guaranteed applied (the live _induce_and_plan auto-arming was unreliable: its TTT-CNN tier short-circuits the LLM fall-through where retrieval is armed, and the full-explore driver did not reliably reach a stall -- e.g. ls20 did 0 inductions). Then use the LIVE plan_in_model planner + execute the plan against a fresh real offline env, checking for a REAL level-up (frame.levels_completed advance) + tracking the dense hand_verifier goal-distance. Paired by GAME (metrics averaged over trials). ONLY the downstream metric changed vs the prior single-shot work; the induction input is identical.",
+  "duration_s": 3825.15,
+  "reproducibility_checksum": "sha256:f79ff6c365b8d10dae2637ab318d05d4c95489075121270c8e42c35f7d19ac52"
+}
