@@ -9179,3 +9179,146 @@ Required field principles for a live-parity route-fix artifact:
 off-screen-click pattern before their live-submittable depth is trusted; the
 camera-crane restructuring is the reusable remedy where a game exposes an
 equivalent carried-piece camera-follow mechanic.
+
+### REQ-ARC-WMTE-5720: Actions-to-Progress Bounded-Live-Solve Metric Harness + Re-Test of the `/think` vs Frozen A/B
+
+This defines a reusable **actions-to-progress** metric harness and uses it to
+re-resolve the two capability A/Bs that both landed inconclusive in 2026-07:
+REQ-ARC-WMTE-5714 (`/think` vs `/no_think`) and REQ-ARC-WMTE-5716/5717/5718 /
+exp5719 (playbook-exemplar injection). BOTH prior results explicitly named the
+SAME root cause -- their metric (single-shot world-model induction quality:
+graded cell-recall / goal-predicate accuracy on ONE fixed transition window) was
+floored and high-variance, and it did not measure the thing that matters
+(CLAUDE.md "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent"): whether a
+capability change helps the agent make REAL PROGRESS in a live-style solve, not
+predict one grid transition. exp5719's own agent wrote: "A live-submission
+`levels_gained` A/B remains the only definitive test."
+
+The harness (`python/carnot/agentic/arc_actions_to_progress.py`) drives the
+ACTUAL scored `E3AgentPolicy` cascade (the same `next_move`/`is_done` loop
+`scripts/arc_leaderboard_eval.py:run_game` and `make_carnot_agent.choose_action`
+run in production -- one of the two live entrypoints per the ARC Live-Path
+Reachability Discipline, so this is the live mechanism, not a parallel solver) on
+the offline arcade for a bounded solve, per arm. Each arm is activated through
+its REAL live env-var wiring (`CARNOT_ARC_CODEONLY_INDUCE`,
+`proposer.no_think_prefix`, `CARNOT_ARC_PLAYBOOK_RETRIEVAL` /
+`_EXEMPLARS_ENABLED`), so a result here is directly relevant to a graduation
+decision.
+
+**Three floor-busting signals (a ladder from decisive-but-sparse to dense-but-indirect).**
+1. `levels_gained` / `actions_to_first_solve` -- the RHAE-relevant ground truth
+   (a real level-up = `frame.levels_completed` advanced; the win oracle is the
+   level counter, NEVER a heuristic, so `verifier_is_oracle=False`). Sparse on
+   the live frame-only path (most public games do not level up live, consistent
+   with the ~0.08 live score), so confirmatory, not primary.
+2. `hv_progress` -- a DENSE goal-distance-reduction proxy: the per-game
+   `GameAdapter.hand_verifier` is a hand-written distance-to-goal (LOWER = closer;
+   the OfflineSolver best-first-searches on it). We track its MINIMUM over the run
+   and report `(start_hv - best_hv) / max(start_hv, 1)`. It changes whenever the
+   board gets closer to a win, so it discriminates even when no arm achieves a
+   full level-up -- the exact floor the single-shot proxy could not clear. It is a
+   MEASUREMENT (oracle-distinct from both the win gate and the agent's own routing
+   verifier), not a win oracle.
+3. Induction-quality aggregated over the run's MULTIPLE induction attempts:
+   `plan_found_rate` (fraction of attempts that produced a reachable plan) and
+   `mean_heldout_accuracy` (how close the induced model got to the live planning
+   gate). These are affected by induction CONTENT (reasoning / retrieval) even
+   when the strict live gate blocks every plan, and averaging over the attempts
+   the agent makes inside ONE solve on its OWN collected transitions is
+   lower-variance than the prior single-shot induction.
+
+**Roster selection (why these 6 games).** A fast induction-disabled probe
+selected `ls20 tr87 lp85 g50t m0r0 ft09`: adaptered games that (a) reach the
+stall->induce phase within budget and (b) have a NON-DEGENERATE `hand_verifier`
+the agent can actually REDUCE (`best_hv < start_hv`). Games whose `hand_verifier`
+was flat (`cn04 sp80 sk48 ka59`) or monotonically increasing (`ar25 dc22 cd82`)
+were excluded because the dense proxy cannot discriminate on them. `lp85`
+additionally solves L0->L1 under the pure explorer, giving a live level-up signal.
+
+**Tractability tradeoff (stated explicitly).** A full live solve per (game, arm,
+seed) is expensive; the dominant cost is LLM induction (~30-100s on a warm CUDA
+server; a genuine `/think` attempt is ~2-3 min). Each run is bounded three ways:
+an action `budget` (the real eval constraint), a `max_inductions` cap (the
+PRIMARY cost/fairness bound -- each arm gets the SAME number of induction
+attempts, so a slower arm is not penalized by wall time, which the live eval does
+not limit), and a `wall_s` safety cap (recorded honestly as `timed_out`).
+`explore_budget=24` (`SUBMITTED_ROUTED_EXPLORE_BUDGET`, a real shipped value) is
+set so every bounded run reliably reaches the induce->plan->execute phase the arms
+differ in -- without it, the graph-explore route's default 80-transition budget
+means a short run never induces and all arms are identical. Runs are PAIRED
+within (game, seed) so shared exploration luck cancels in the delta, and reported
+with paired win/tie/loss + exact sign-test p + an outlier-fragility flag (does
+dropping the single largest-magnitude pair flip the sign), NOT a bare mean.
+
+**Substrate / provenance.** `inference_substrate=live_llm_inference` (the real
+Qwen3.5-9B-MTP GGUF induces on a CUDA `llama-server`; MTP speculative decoding is
+content-neutral, so the arms differ in the request, not the MTP flag; the CUDA
+3090 substrate gives dev throughput and produces induction CONTENT identical to
+the iGPU frozen live stack -- wall-clock is NOT Kaggle-representative, only the
+CONTENT questions are). `solve_provenance=development_proxy` on PUBLIC games (NOT
+a hidden-game self-discovery solve); `read_game_source=False` (the dense proxy
+reads the live runtime game object via the adapter's public callable,
+`used_env_source=True`, never a game's `.py` source). The harness NEVER flips the
+frozen live default and NEVER submits.
+
+**Question (this REQ).** Does removing the codeonly fence + genuine `/think`
+reasoning (`CARNOT_ARC_CODEONLY_INDUCE=0`, `no_think_prefix=/think`, 8192
+n_predict) help actions-to-progress vs the frozen codeonly + `/no_think` default
+(4096 n_predict)? Prior (REQ-ARC-WMTE-5714): genuine reasoning DID engage on
+9/10 games but overran the token budget and produced NO usable single-shot
+induction; the narrower win-recognition metric showed no delta.
+
+**Falsifiable gate / retirement.** Graduate genuine reasoning to the frozen
+default ONLY on a significant (`sign_test_p < 0.05`), NOT-outlier-fragile
+positive paired delta on the primary metric (`hv_progress`), corroborated by a
+non-negative `plan_found_rate` / `mean_heldout_accuracy` delta. Any other outcome
+(no reliable signal, negative, or fragile) recommends KEEPING the frozen default
+and is a terminal honest result (NOT retried) -- an honest "the solve-loop metric
+also cannot separate the arms, here is why" is a valid, citable outcome.
+
+**Result artifact:** `results/experiment_5720_actions_to_progress_reason_ab.json`.
+
+### REQ-ARC-WMTE-5721: Actions-to-Progress Re-Test of Playbook-Exemplar Retrieval Injection (re-test of REQ-ARC-WMTE-5716/5717/5718)
+
+Uses the REQ-ARC-WMTE-5720 harness to re-resolve the retrieval question exp5719
+left open. exp5719 found retrieval-based injection beat static injection but
+neither beat no-injection on graded cell-recall (N=8/arm,
+`no_reliable_signal_high_variance`), and its agent recommended a live
+`levels_gained` A/B as the only definitive test. This runs the retrieval feature
+through its REAL live wiring (`CARNOT_ARC_PLAYBOOK_RETRIEVAL=1`, which makes
+`E3AgentPolicy._induce_and_plan` embed the stuck situation with the same GGUF,
+retrieve the top-K playbook patterns, and inject them into the induction prompt)
+inside the bounded live e3 solve, and measures the same actions-to-progress
+signal ladder.
+
+**Three contrasts, all paired within (game, seed):** `retrieval_vs_none`
+(retrieval vs the frozen no-injection control -- the primary), `static_vs_none`
+(the fixed exemplar block vs control), and `retrieval_vs_static` (does the
+retrieval step earn its complexity over a fixed block -- the core exp5719
+question). All arms hold the frozen codeonly + `/no_think` induction path
+constant; only the injected prefix differs (none / static block / retrieved
+top-K), so the contrast isolates injection, mirroring exp5719's design but with
+the actions-to-progress metric replacing single-shot cell-recall.
+
+**Falsifiable gate / retirement.** Graduate retrieval injection to the frozen
+default ONLY on a significant, not-outlier-fragile positive `retrieval_vs_none`
+paired delta on `hv_progress`, corroborated by `plan_found_rate` /
+`mean_heldout_accuracy`. Otherwise KEEP the dev-gated-off default; an honest
+no-reliable-signal outcome is terminal.
+
+**Result artifact:**
+`results/experiment_5721_actions_to_progress_retrieval_ab.json` (shares the
+frozen/none control runs with REQ-ARC-WMTE-5720 via the common shard
+`results/exp5720_atp_shard.jsonl`).
+
+#### SCENARIO-ARC-WMTE-5720-HARNESS-DRIVES-LIVE-E3
+- **WHEN** `arc_actions_to_progress.run_bounded_progress(game, arm, proposer=..., seed=..., budget, max_inductions, wall_s, explore_budget)` is called
+- **THEN** it SHALL drive the real `E3AgentPolicy` (`next_move`/`is_done`) on the offline arcade, configure the arm ONLY through the live env-var / proposer wiring, and return a `ProgressResult` with `levels_gained`, `actions_to_first_solve`, `hv_progress`, `plan_found_rate`, `mean_heldout_accuracy`, and honest `timed_out` / `hit_induction_cap` / `error` flags, restoring all mutated env vars and proposer fields on exit.
+
+#### SCENARIO-ARC-WMTE-5720-PAIRED-HONEST-STATS
+- **WHEN** `paired_summary(results, treat, base, metric=...)` compares two arms
+- **THEN** it SHALL pair strictly within `(game, seed, variant)`, drop pairs with a `None` metric, and report `mean_delta`, `wins/ties/losses`, an exact two-sided sign-test p-value, and an `outlier_fragile` flag (whether dropping the single largest-magnitude pair flips the sign) -- never a bare mean presented as a conclusion.
+
+#### SCENARIO-ARC-WMTE-5721-RETRIEVAL-THROUGH-LIVE-WIRING
+- **WHEN** the `retrieval` arm runs with `CARNOT_ARC_PLAYBOOK_RETRIEVAL=1`
+- **THEN** the induced-attempt diagnostics SHALL record `playbook_injection_mode == "retrieval"` (proving the real live retrieval path fired), and the `retrieval_vs_none` / `retrieval_vs_static` contrasts SHALL be reported with the same paired-honesty guards as SCENARIO-ARC-WMTE-5720-PAIRED-HONEST-STATS.
