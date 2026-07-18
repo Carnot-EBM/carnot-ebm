@@ -6278,6 +6278,40 @@ reproducible_total_games: 25
 provisional_total_levels: 1
 live_submissions:
 - date: '2026-07-18'
+  scorecard_id: bb3d2ed9-a696-473d-b56e-9bb9c4e7ba84
+  levels: 183
+  games: 25
+  games_env_matched: 25/25
+  mode: mode1_offline_reproduced_replay
+  submitted: true
+  authorization: "operator directive 2026-07-18 'refresh and submit' (in direct response to the operator\
+    \ asking whether lf52's L9-L10 in-bounds live-parity fix -- validated but never folded into a submitted\
+    \ package -- was still unsubmitted; confirmed yes, then explicitly authorized this refresh+submit)"
+  driver: scripts/arc3_live_submit.py
+  artifact: results/arc3_live_submit.json
+  package: results/experiment_10001_submission_package_refresh_lf52_inbounds_20260718.json
+  note: 'SEVENTH live submission -- folds lf52''s in-bounds L9-L10 live-parity fix (commit 5ca2a999b,
+    results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json) into a real submitted package for the
+    first time. That fix had been LIVE-validated (VALIDATE mode, scorecard ce55257e, never closed) on
+    2026-07-17 but the standing submitted package (the 2026-07-18 181-level SIXTH submission, scorecard
+    dffcf7d8) predates it and still capped lf52 at L8. This submission: (1) updated
+    results/arc3_live_banked_trajectories/lf52.json from the 827-action L8-capped sequence to the
+    verified 1033-action in-bounds L10 sequence (old L8 sequence preserved at
+    /tmp scratchpad/lf52_banked_L8_backup.json for reference, not committed); (2) built a new package
+    manifest (experiment_10001_...) carrying forward all 24 other games unchanged from the SIXTH
+    submission''s package and updating only lf52''s row (levels 8->10, action_count 827->1033,
+    offline_reproduced_level 8->10, claim_capped true->false); (3) ran a full VALIDATE pass first
+    (scorecard 8dca4283, never closed) confirming clean 25/25 env-match including lf52 claimed L10 ->
+    LIVE L10 MATCH (344s) before attempting any submit; (4) only then ran the real --submit, which
+    independently re-confirmed all 25/25 matches (lf52 again LIVE L10 MATCH, 358s) and closed scorecard
+    bb3d2ed9, creating this real leaderboard record. Total claimed levels 181 -> 183. This is the
+    mode1_offline_reproduced_replay validation score (games the agent has seen offline), NOT the
+    hidden-leaderboard score -- see scored_leaderboard_baseline (0.08) for that. Process note: the first
+    VALIDATE attempt this session was killed by an over-tight 30-minute Bash timeout combined with a
+    stdout-buffering pipe (grep/tail) that captured zero diagnostic output before being killed -- retried
+    cleanly with direct file redirection and a PID-based wait instead of a fixed timeout, which is the
+    correct pattern for any future long-running live-API call.'
+- date: '2026-07-18'
   scorecard_id: dffcf7d8-6450-4d89-8738-f2c27852d6ed
   levels: 181
   games: 25
