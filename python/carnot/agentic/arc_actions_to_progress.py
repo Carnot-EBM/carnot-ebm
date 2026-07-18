@@ -466,13 +466,14 @@ def run_bounded_progress(
 # replay-heavy and never accumulates enough transitions to STALL within a bounded
 # budget, so induction never fires and the induction arms are identical for the WRONG
 # reason (observed: ls20 did 0 inductions at budget=136, explore_budget=8). This mode
-# removes that confound by SEEDING the policy with a real level-up-straddling
-# transition window and calling the LIVE induction path (`policy._induce_and_plan()`)
-# DIRECTLY -- the exact pattern exp4871 uses -- so induction ALWAYS fires and the arm
-# config is the only thing that varies. It reuses the prior experiments' `build_window`
-# input, so results are directly comparable to REQ-ARC-WMTE-5714/5719 with ONLY the
-# metric upgraded from single-shot cell-recall to actions-to-progress (does the induced
-# model's OWN plan, executed against the real env, reach a real level-up).
+# removes that confound by SEEDING with a real level-up-straddling `build_window` and calling
+# the LLM induction DIRECTLY (`proposer.induce`) with EXPLICIT per-arm injection (the exp5719
+# mechanism) -- so induction ALWAYS fires, the arm's prompt is guaranteed applied, and the arm
+# config is the only thing that varies. It then uses the LIVE `plan_in_model` planner + executes
+# the plan against the real env. Reuses the prior experiments' `build_window` input, so results
+# are directly comparable to REQ-ARC-WMTE-5714/5719 with ONLY the metric upgraded from
+# single-shot cell-recall to actions-to-progress (does the induced model's OWN plan reach a win).
+# (`run_bounded_progress` above remains the maximally-faithful whole-loop mode for other uses.)
 
 
 @dataclass
@@ -600,13 +601,21 @@ def run_seeded_progress(
     to fire), then execute the induced model's OWN plan against the real env and measure
     whether it reaches a real level-up + how dense the goal-distance progress was.
 
-    Faithful to the live induce->plan path: calls `policy._induce_and_plan()` (the exact
-    entrypoint the scored agent uses on a stall), so the arm's env-var/proposer config flows
-    through the real pipeline (codeonly fence, /think, playbook retrieval, n_predict).
+    Mechanism (DIRECT induce with EXPLICIT injection, the exp5719 pattern + live planner):
+    the live `E3AgentPolicy._induce_and_plan` auto-arms playbook injection only on its LLM
+    fall-through path, which is skipped when its TTT-CNN tier short-circuits -- so it does NOT
+    reliably inject retrieval (observed: retrieval arm reused a stale world_model.py, mode=none).
+    Instead we (1) build the retrieval block with the live `_retrieve_playbook_block` (same
+    embed+retrieve+format the scored agent uses), (2) set it on the proposer + apply the arm's
+    codeonly/think config, (3) call `proposer.induce(...)` DIRECTLY so the fresh LLM induction
+    ALWAYS runs with the arm's exact prompt (guaranteed injection, reliable), then (4) load the
+    engine and use the LIVE `plan_in_model` planner + execute the plan against the real env.
+    This isolates the LLM-induction-content question (what the arms change) and is directly
+    comparable to exp5714/5719 (same induce input), upgrading only the downstream metric.
     """
     from carnot.agentic.arc_competition_agent import E3AgentPolicy
     from carnot.agentic.arc_executable_world_model import (
-        WorldModelVerifier, load_engine, score_goal_predicate_consistency,
+        WorldModelVerifier, load_engine, plan_in_model, score_goal_predicate_consistency,
     )
 
     hv_fn = _hand_verifier_fn(game)
@@ -615,21 +624,31 @@ def run_seeded_progress(
     err: Optional[str] = None
     engine = is_done = None
     plan: list = []
-    policy = None
+    root_grid = full_traj[0].grid if full_traj else None
+    injection_mode = "none"
+    induce_ok = False
     try:
-        policy = E3AgentPolicy(game, proposer=proposer)
-        policy.transitions = list(full_traj)
-        policy.cell = int(cell)
-        policy.root_grid = full_traj[0].grid if full_traj else None
-        policy.induced = False
-        policy._pending_induction_reason = "actions_to_progress_seeded"
-        if policy.transitions and policy.root_grid is not None:
-            policy._induce_and_plan()
-        plan = list(getattr(policy, "plan", None) or [])
+        # Build the injection block for the retrieval/static arms via the LIVE retrieval method.
+        block: Any = False
+        if arm == "retrieval":
+            helper = E3AgentPolicy(game, proposer=proposer)
+            helper.cell = int(cell)
+            b = helper._retrieve_playbook_block(list(full_traj))
+            if b:
+                block, injection_mode = b, "retrieval"
+            else:
+                injection_mode = "retrieval_unavailable"  # honest: embedder/index failed
+        elif arm == "static":
+            block, injection_mode = True, "static"
+        proposer.include_playbook_exemplars = block
+        # Fresh, guaranteed LLM induction with the arm's exact prompt (codeonly/think + injection).
+        induce_ok, _detail = proposer.induce(game, list(window), int(cell))
         try:
             engine, is_done = load_engine(game)
         except Exception as exc:
             err = f"load_engine: {type(exc).__name__}: {exc}"[:200]
+        if engine is not None and is_done is not None and root_grid is not None:
+            plan = list(plan_in_model(engine, is_done, root_grid, max_nodes=20000, max_depth=40) or [])
     except Exception as exc:
         err = f"{type(exc).__name__}: {exc}"[:300]
     finally:
@@ -657,10 +676,6 @@ def run_seeded_progress(
         except Exception as exc:
             err = (err or "") + f" | execute: {type(exc).__name__}: {exc}"[:150]
 
-    # playbook_injection_mode / refinement_rounds / planned live on `induction_attempts`
-    # (the per-stall record), NOT `level_induction_events` (which is only for level BOUNDARIES).
-    events = list(getattr(policy, "induction_attempts", []) or []) if policy is not None else []
-    last = events[-1] if events else {}
     return SeededProgressResult(
         game=game, arm=arm, trial=trial,
         induction_ok=engine is not None and is_done is not None,
@@ -669,8 +684,8 @@ def run_seeded_progress(
         start_hv=exe["start_hv"], best_hv=exe["best_hv"], hv_progress=exe["hv_progress"],
         heldout_accuracy=heldout, cell_recall=cell_recall, goal_predicate_accuracy=goal_pred,
         levelup_positive_recall=levelup_rec,
-        playbook_injection_mode=str(last.get("playbook_injection_mode") or "none"),
-        n_refinement_rounds=int(last.get("refinement_rounds_used") or len(last.get("refinement_rounds") or [])),
+        playbook_injection_mode=injection_mode,
+        n_refinement_rounds=0,
         wall_s=round(time.time() - t0, 1), error=err,
     )
 
