@@ -6266,6 +6266,26 @@ reproducible_total_levels: 183
 reproducible_total_games: 25
 provisional_total_levels: 1
 live_submissions:
+- date: '2026-07-17'
+  scorecard_id: 26095155-ce9c-4eb7-a313-d799e69f0b37
+  levels: 60
+  games: 25
+  games_env_matched: 25/25
+  mode: mode1_offline_reproduced_replay
+  submitted: true
+  authorization: operator directive 2026-07-17 'run again with --submit'
+  driver: scripts/arc3_live_submit.py
+  artifact: results/arc3_live_submit.json
+  note: 'FIFTH live submission (first SUBMIT since 2026-06-21 -- scorecard CLOSED, real leaderboard
+    record created). Same package as the 2026-07-17 VALIDATE run immediately prior (deliberately
+    unchanged -- the sc25 fix was already confirmed clean there; this run reproduces it and commits
+    it). All 25/25 games env-matched, 60/60 levels, including the now-fixed sc25 (claimed L5 -> LIVE
+    L5). Does NOT include bp35''s confirmed-live L9 or lf52''s L8-blocked-at-L9 deep wins from the
+    same-day bonus check -- those are not part of the standing package manifest, and lf52''s L9 tail
+    is known-broken live (see lf52.live_replay_status above), so folding either into an irreversible
+    submit run was deliberately avoided. This is the mode1_offline_reproduced_replay validation score
+    (games agent has seen offline), NOT the hidden-leaderboard score -- see scored_leaderboard_baseline
+    (0.08) for that.'
 - date: '2026-06-17'
   scorecard_id: 0f6273ce-cf0d-426c-83e5-d745e4d45ea2
   levels: 13
