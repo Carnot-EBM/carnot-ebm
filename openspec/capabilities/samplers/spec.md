@@ -1193,6 +1193,136 @@ timing/hardware claim appears
 |---|---|---|
 | REQ-SAMPLE-5723 | Implemented (`python/carnot/samplers/one_axis_rust_backend.py`, `python/carnot/samplers/backend.py`, `python/carnot/experiment_5723_one_axis_rust_samplerbackend_integration.py`, `results/experiment_5723_one_axis_rust_samplerbackend_integration.json`) | Implemented (`tests/python/samplers/test_one_axis_rust_backend.py`, `tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py`) |
 
+### REQ-SAMPLE-5724: One-Axis Rust/Python Production-Backend Matched Crossover
+
+Carnot MUST provide Exp 5724 at
+`python/carnot/experiment_5724_one_axis_rust_python_matched_crossover.py` and
+write `results/experiment_5724_one_axis_rust_python_matched_crossover.json`
+without modifying `scripts/research_conductor.py`. Exp 5724 SHALL ask only
+where, if anywhere, the production Rust/PyO3 one-axis backend beats the exact
+Python one-axis fallback under identical CPU work and quality. A null crossover
+is valid and SHALL be terminal for this CPU Rust/Python substrate. No CPU/CUDA,
+GPU, FPGA, board, or TSU speedup claim is in scope.
+
+The protocol SHALL freeze build profile, hardware/OS/compiler/Python receipts,
+CPU affinity, observable frequency/governor, thread settings, workloads,
+problem sizes, random seeds, beta ladders, corrected-transition budgets,
+restarts, warmups, timing repetitions, quality margins, and crossover
+thresholds before timing. The study SHALL use at least six size strata spanning
+PyO3-overhead-dominated through kernel-dominated work, at least three
+topology/hardness families, and at least ten paired seeds through the same
+production `SamplerBackend` API. Rust and Python arms SHALL match transitions,
+energy evaluations, replicas, swaps, restarts, stopping rules, checkpoints,
+initial states, validation, and work counters.
+
+Both arms SHALL be warmed before measurement. Timing order SHALL be randomized
+and interleaved with a deterministic benchmark-order seed. Each qualified
+size/family SHALL record at least thirty measured paired repetitions. The
+artifact SHALL report affinity, observable frequency/governor, peak RSS, build
+mode, and timing noise. It SHALL separate kernel, setup, PyO3 boundary,
+serialization/checkpoint, validation, and end-to-end timing while keeping the
+primary speedup based on end-to-end time without subtracting overhead.
+
+Quality SHALL be matched before speedups are interpreted. Matching SHALL cover
+state feasibility, best and mean energy, within-replica acceptance, swap
+acceptance, exact target-distribution parity where enumerable, restart parity,
+and work-counter equality. Excluded pairs SHALL remain in the denominator with
+preregistered reasons. Speedups SHALL be paired Rust-speedup ratios computed as
+`python_end_to_end_time / rust_end_to_end_time` with bootstrap intervals.
+`qualified_crossover_n` SHALL be the first size whose consecutive larger-size
+suffix remains quality-matched and has a Rust end-to-end interval entirely
+above `1.0`; otherwise it SHALL be null. `rust_crossover_ready_score` SHALL be
+`1.0` only when that crossover gate passes with timing claimed and all
+hardware/GPU/FPGA/TSU claims false; otherwise it SHALL be `0.0`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `upstream_gate_receipts`, `hardware_receipt`,
+`software_receipt`, `build_profile`, `cpu_affinity`, `thread_receipts`,
+`preregistered_protocol`, `workload_manifest`, `problem_sizes`,
+`topology_families`, `random_seeds`, `warmup_count`,
+`measured_repetition_count`, `arm_configs`, `matched_work_receipts`,
+`quality_metrics_by_pair`, `quality_margins`, `quality_matched_pair_count`,
+`excluded_pair_reasons`, `kernel_times`, `pyo3_overhead_times`,
+`serialization_times`, `validation_times`, `end_to_end_times`,
+`peak_rss_by_arm`, `paired_speedup_ratios`, `paired_speedup_intervals`,
+`qualified_crossover_n`, `rust_crossover_ready_score`,
+`software_speedup_claimed`, `timing_claimed`, `hardware_speedup_claimed`,
+`gpu_speedup_claimed`, `fpga_or_tsu_used`, `inference_substrate`,
+`reproducibility_checksum`, and `honest_verdict`. `timing_claimed` SHALL be
+true. `hardware_speedup_claimed`, `gpu_speedup_claimed`, and
+`fpga_or_tsu_used` SHALL be false. `inference_substrate` SHALL equal
+`matched_cpu_python_vs_rust_pyo3_production_samplerbackend`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every crossover field exists before a reviewer trusts the JSON shape."
+- `upstream_gate_receipts`: principle "Pins Exp5611/5623 CPU/CUDA terminal scope and Exp5714/5715/5723 one-axis Rust/Python readiness before timing is interpreted."
+- `hardware_receipt`: principle "Authenticates CPU, OS, memory, affinity, and observable frequency without implying board or accelerator use."
+- `software_receipt`: principle "Records Python, NumPy, Rust extension, compiler, and source hashes needed to replay the production arms."
+- `build_profile`: principle "Freezes release/debug, PyO3 ABI, and feature settings before timing."
+- `cpu_affinity`: principle "Shows the CPU set used for timing instead of leaving scheduler placement implicit."
+- `thread_receipts`: principle "Records thread environment and observed thread pools so Python and Rust work are compared under the same CPU policy."
+- `preregistered_protocol`: principle "Freezes workloads, sizes, seeds, repetitions, warmups, budgets, margins, thresholds, and null rules before timing."
+- `workload_manifest`: principle "Lists every size/family Hamiltonian and descriptor hash used by both arms."
+- `problem_sizes`: principle "Makes the PyO3-overhead to kernel-dominated size range explicit."
+- `topology_families`: principle "Shows all hardness/topology families entering the denominator."
+- `random_seeds`: principle "Records the ten paired seeds and benchmark-order seed for replay."
+- `warmup_count`: principle "Prevents cold-start effects from entering primary measurements."
+- `measured_repetition_count`: principle "Proves each qualified size/family has at least thirty timing repetitions."
+- `arm_configs`: principle "Names the Rust/PyO3 and exact Python fallback SamplerBackend configurations under one contract."
+- `matched_work_receipts`: principle "Proves transitions, energy evaluations, replicas, swaps, restarts, checkpoints, stopping, and initial states are identical."
+- `quality_metrics_by_pair`: principle "Reports quality before any speedup denominator is formed."
+- `quality_margins`: principle "Predeclares feasibility, energy, acceptance, swap, target, restart, and work-counter margins."
+- `quality_matched_pair_count`: principle "Counts only pairs that passed quality gates before timing intervals."
+- `excluded_pair_reasons`: principle "Keeps failed or unmatched pairs in the denominator instead of silently shrinking evidence."
+- `kernel_times`: principle "Reports the measured SamplerBackend sampling call cost separately from setup and validation."
+- `pyo3_overhead_times`: principle "Records PyO3 boundary probe cost without subtracting it from primary end-to-end timing."
+- `serialization_times`: principle "Reports checkpoint/JSON serialization cost separately while keeping it in end-to-end timing."
+- `validation_times`: principle "Reports per-run validation cost separately while keeping it in end-to-end timing."
+- `end_to_end_times`: principle "Preserves the primary timing evidence that includes all production overhead."
+- `peak_rss_by_arm`: principle "Records memory pressure by arm so speed is not traded against unreported RSS growth."
+- `paired_speedup_ratios`: principle "Reports paired Python/Rust end-to-end ratios rather than unrelated aggregate means."
+- `paired_speedup_intervals`: principle "Uses bootstrap intervals so a crossover cannot rest on one noisy repetition."
+- `qualified_crossover_n`: principle "Records the first gated consecutive crossover size or null for a terminal no-crossover result."
+- `rust_crossover_ready_score`: principle "Equals 1.0 only when matched quality and end-to-end timing prove a Rust CPU crossover with no hardware claim."
+- `software_speedup_claimed`: principle "Bare boolean separates an allowed Rust/Python software timing claim from a null result."
+- `timing_claimed`: principle "Bare true declares this is a CPU timing study, unlike Exp5714/5715/5723 parity-only artifacts."
+- `hardware_speedup_claimed`: principle "Bare false prevents Rust/PyO3 CPU timing from becoming a board or TSU claim."
+- `gpu_speedup_claimed`: principle "Bare false prevents the retired CPU/CUDA substrate from being reopened."
+- `fpga_or_tsu_used`: principle "Bare false records that no FPGA, board, or TSU participated."
+- `inference_substrate`: principle "Declares matched CPU Python versus Rust/PyO3 production SamplerBackend sampling, not LLM, GPU, or hardware timing."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether the Rust/Python crossover is proven or terminal null."
+
+### SCENARIO-SAMPLE-5724: Exp5724 Emits Matched CPU Rust/Python Crossover Evidence
+
+**Given** Exp5714 exact parity, Exp5715 hard-instance quality/restart parity,
+and Exp5723 production SamplerBackend integration are hash-pinned
+**When** Exp5724 runs the frozen one-axis workload panel through the same
+production SamplerBackend API with Rust/PyO3 and exact Python fallback arms
+**Then** it records matched work counters, quality metrics, timing components,
+paired speedup ratios, bootstrap intervals, environment receipts, and writes
+`results/experiment_5724_one_axis_rust_python_matched_crossover.json`
+**And** any `qualified_crossover_n` is allowed only when quality matches and
+the consecutive larger-size end-to-end Rust-speedup intervals are entirely
+above `1.0`.
+
+**If** upstream gates fail, Rust/Python quality diverges, work counters differ,
+timing repetitions are insufficient, Rust speed intervals do not prove a
+consecutive larger-size crossover, or any GPU/FPGA/TSU/hardware claim appears
+**Then** the artifact SHALL still emit terminal evidence with
+`qualified_crossover_n=null`, `rust_crossover_ready_score=0.0`,
+`software_speedup_claimed=false`, `timing_claimed=true`,
+`hardware_speedup_claimed=false`, `gpu_speedup_claimed=false`,
+`fpga_or_tsu_used=false`, and an `honest_verdict` starting with `complete:` or
+`blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5724)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5724 | Implemented (`python/carnot/experiment_5724_one_axis_rust_python_matched_crossover.py`, `results/experiment_5724_one_axis_rust_python_matched_crossover.json`) | Implemented (`tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
