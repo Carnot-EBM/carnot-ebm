@@ -13788,3 +13788,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-19 08:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
 | 2026-07-19 19:01 UTC | Milestone 2026.07.511 activated | OK | 12 tasks queued |
 | 2026-07-19 19:18 UTC | Transition terminal .510 evidence, apply the narro | OK | 85 passed, 1 warning in 8.53s |
+| 2026-07-19 19:42 UTC | Ingest post-V511 2025-2026 source deltas with dupl | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
