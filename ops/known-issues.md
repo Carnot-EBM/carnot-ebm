@@ -4,6 +4,46 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-19 (outer-loop, INFORMATIONAL — conductor stale-import gotcha: a fixed lint doesn't take effect until process restart)
+
+**Symptom:** the conductor was stuck refusing to activate milestone 2026.07.511 for ~90 hours
+(2026-07-15 06:13 UTC onward), first on an `arc-levelup-guarantee: 0 level-up attempts` violation,
+then (after an unrelated exclusion-manifest fix landed, commit `166b7c498`) back on the SAME
+`arc-levelup-guarantee` reason again for several more hours (2026-07-19, until the conductor was
+stopped ~04:34 EDT for an unrelated dual-GPU experiment) — even though
+`scripts/arc_levelup_guarantee_lint.py` had ALREADY been fixed to self-retire on 2026-07-17
+(commit `56d91abec`: once all 25 public games show `full_game_clear: true`, the level-up-attempt
+requirement is moot and the lint passes unconditionally). Running the standalone script directly
+(`python3 scripts/arc_levelup_guarantee_lint.py research-roadmap-next.yaml`) confirmed it passes
+cleanly — so the roadmap file itself was never the problem.
+
+**Root cause:** `scripts/research_conductor.py`'s activation-guard code does
+`from arc_levelup_guarantee_lint import lint_roadmap` (and sibling names) inside its
+per-activation-attempt check. Python caches an imported module in `sys.modules` on first import
+and does NOT re-read it from disk on subsequent `import` statements within the same process. The
+conductor is a single long-lived process (`carnot-conductor.service`, alive continuously since
+2026-07-13 in this instance) — so once it imported `arc_levelup_guarantee_lint` for the first time
+(before the 2026-07-17 retirement fix landed on disk), every subsequent activation check in that
+same process kept calling the STALE pre-fix version of `lint_roadmap()`, even though the file on
+disk — and any FRESH subprocess invocation of the script — had the correct, fixed logic the whole
+time. This is why a file-level fix (confirmed correct via standalone testing) did not actually
+unblock the running conductor: the fix needs the conductor PROCESS to restart (fresh Python import)
+to take effect, not just the file to be correct.
+
+**No code fix required for this specific instance** — restarting the conductor
+(`systemctl --user restart carnot-conductor.service`) forces a fresh import and picks up the
+already-correct file. This entry exists so a future debugging session doesn't waste time re-testing
+the lint file (it's fine) instead of recognizing the conductor process itself needs a restart.
+
+**General lesson worth carrying forward:** any helper module that `research_conductor.py` imports
+via a plain `from X import Y` inside a function called repeatedly across the conductor's long
+lifetime is vulnerable to this same staleness class if that module is edited on disk while the
+conductor is running. The exclusion-manifest check right above this one in the same function uses
+the identical import pattern and could in principle hit the same issue if it's ever hot-patched
+while the conductor is mid-run — worth keeping in mind, though not urgent to fix defensively right
+now (e.g. via `importlib.reload()` or shelling out to the script as a subprocess instead of
+importing it in-process) unless it recurs.
+
 ### 2026-07-17 (outer-loop, INFORMATIONAL — ARC-AGI-3 live-submission package status, for the operator's next submit decision)
 
 The **standing live-submission package** is
