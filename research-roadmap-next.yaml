@@ -599,7 +599,19 @@ tasks:
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 240
-    prior_failures: []
+    prior_failures:
+      - experiment_id: exp4258-arc-oracle-distinct-cross-game-transfer
+        verdict: "blocked_arc_game_ids_unrecoverable (held_out_game_n=0, held_out_task_n=0 -- the run never
+          recovered real held-out game data; an infrastructure/data-recovery block, not a substantive
+          research negative)"
+        addressed_by: "exp5727 does not repeat exp4258's game-ID-recovery mechanism at all. It uses a
+          completely different, already-proven-working harness (scripts/arc_leaderboard_eval.py --games
+          oracle), which already ran successfully on at least one game on 2026-07-16
+          (results/arc_live_oracle_gap.json) -- i.e. the precondition that blocked exp4258 does not apply
+          here. This task extends that already-functioning harness to a full 25-game sweep (now that all
+          25 public games are registry-cleared, per the 2026-07-17 Generalization-Testing Floor) rather
+          than re-attempting exp4258's blocked cross-game-transfer approach."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
       CLAUDE.md's "ARC-AGI-3 Generalization-Testing Floor" (2026-07-17) replaces the retired public-game-solving floor: all 25 public survey games now show full_game_clear=true (183/183 levels; ops/arc_solve_registry.yaml reproducible_total_games=25 — bp35 and lf52, the last two, were both solved 2026-07-17). This is task class 1 of that floor: held-out/leave-one-game-out live-path measurement. The REAL shipped scored agent is E3AgentPolicy (make_carnot_agent(Agent, cascade=True), the competition default). It never imports arc_game_adapters.py and never calls load_solutions() -- it is ALREADY frame-only, adapter-free, and banked-solution-free by construction (verified this session: grepping arc_competition_agent.py for GameAdapter/get_adapter returns nothing; only the retired cascade=False CarnotAgentPolicy path, explicitly documented as "useless on the hidden eval", touches load_solutions()). The measurement harness scripts/arc_leaderboard_eval.py --games oracle already runs exactly this comparison (fresh E3AgentPolicy vs the offline-dev oracle ceiling read live from the registry) but has never been run as a full 25-game sweep, and its last run (results/arc_live_oracle_gap.json, 2026-07-16) covered only 1 game and predates today's bp35 (8->9) and lf52 (7->10) wins. Today is {date}.
