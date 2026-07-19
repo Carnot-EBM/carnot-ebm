@@ -7508,6 +7508,95 @@ Then all required fields are present, `solve_provenance=development_proxy`,
 clean, and `arc_epistemic_ledger_ready_score` is 1.0 only if every frozen safety
 and reachability gate passes.
 
+### REQ-ARC-WMTE-5726: Matched-Budget Epistemic Ledger Live A/B
+
+Experiment 5726 SHALL run a preregistered matched-budget known-level
+`E3AgentPolicy` A/B for the Exp5725 epistemic ledger. The workload SHALL use
+only registry-prechecked reproduced public-game levels as a development proxy:
+navigation, placement, toggle, count/commitment, spatial, and negative-control
+fixtures SHALL be frozen before execution; `solve_provenance` SHALL be
+`development_proxy`; `new_levels_claimed` SHALL remain `0`; and the registry
+SHALL NOT be updated.
+
+The control arm SHALL be the unchanged submitted full stack with the Exp5725
+ledger/commitment mechanism explicitly disabled for isolation. The treatment
+arm SHALL use the identical stack with only the Exp5725
+`AgentEpistemicLedger` and bounded commitment policy enabled. Seeds, initial
+states, action budgets, restart policy, policy knobs, cache policy, stopping
+rules, legal proposal sources, and observation access SHALL be matched across
+arms. No LLM or game source, per-game adapter, imported solution, or offline
+BFS solver MAY contribute to the treatment.
+
+The A/B SHALL record retained known levels, actions per retained level,
+frontier expansions, legal proposals/actions, ledger operation counts,
+hypothesis revisions, open questions resolved, action reorderings,
+commitments, invalid/no-op rates, action latency to first retained level,
+first-decision divergence, paired deltas, verification calls avoided versus
+evidence lost, CPU/memory overhead, entry-propagation depth, and recovery after
+stale/conflicting/corrupted ledger injection. It SHALL include exercised
+ledger-disabled, shuffled/stale ledger, corrupted-link, always-commit,
+never-commit, and budget-matched inert controls with explicit fallback results.
+
+The terminal artifact
+`results/experiment_5726_arc_epistemic_ledger_live_ab.json` SHALL include
+principle-annotated top-level fields for `field_principles`,
+`upstream_gate_receipts`, `registry_precheck`, `solve_provenance`,
+`preregistered_protocol`, `game_level_manifest`, `fixture_hashes`,
+`arm_configs`, `budget_parity_receipt`, `successful_pair_count`,
+`failed_pair_reasons`, `levels_reproduced_by_arm`,
+`known_level_regression_count`, `environment_actions_by_arm`,
+`frontier_expansions_by_arm`, `actions_per_reproduced_level`,
+`solve_latency_actions_by_arm`, `ledger_operation_counts_by_arm`,
+`hypothesis_revisions_by_arm`, `open_questions_resolved_by_arm`,
+`action_order_change_count`, `commitment_count`,
+`first_decision_divergence`, `verification_calls_by_arm`,
+`redundant_verification_delta`, `ledger_cpu_overhead`,
+`ledger_memory_overhead`, `entry_propagation_recovery_metrics`,
+`invalid_actions_by_arm`, `noop_rate_by_arm`, `unsafe_commit_count`,
+`control_results`, `paired_intervals`, `material_regression_margins`,
+`arc_epistemic_live_ab_ready_score`, `new_levels_claimed`,
+`registry_updated`, `inference_substrate`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`arc_epistemic_live_ab_ready_score` SHALL be `1.0` only when a frozen
+efficiency or retention primary improves with a paired interval excluding zero,
+known-level regressions and unsafe treatment commitments are zero, intended
+decisions change, negative controls pass, and the overhead caps pass. A null is
+terminal and advisory and SHALL NOT gate Exp5727. Null is terminal for Exp5726
+and does not block Exp5727.
+
+Required field principles SHALL include:
+
+- `upstream_gate_receipts`: principle "Exp5725 readiness, live reachability, and zero leakage must pass before a utility A/B is eligible."
+- `registry_precheck`: principle "known-level development proxy fixtures are frozen before execution and cannot create registry credit."
+- `arm_configs`: principle "control disables only the Exp5725 ledger while treatment changes only ledger/commitment state."
+- `budget_parity_receipt`: principle "matched seeds, states, budgets, knobs, caches, stopping, proposals, and observations prevent hidden arm advantages."
+- `first_decision_divergence`: principle "proves whether the ledger changed intended behavior rather than only recording passive telemetry."
+- `verification_calls_by_arm`: principle "efficiency claims must count avoided checks and any evidence lost."
+- `ledger_cpu_overhead`: principle "promotion is blocked if the mechanism wins by exceeding the frozen compute cap."
+- `ledger_memory_overhead`: principle "promotion is blocked if retained ledger state exceeds the frozen memory cap."
+- `unsafe_commit_count`: principle "must remain zero for treatment live pairs; adversarial controls may detect unsafe modes but cannot promote them."
+- `arc_epistemic_live_ab_ready_score`: principle "1.0 only for interval-backed utility, no material regressions, changed intended decisions, passing negatives, zero unsafe commits, and overhead within cap."
+- `honest_verdict`: principle "terminal-prefixed complete:/blocked: summary; a null is a finished measurement and no solve is claimed."
+
+#### SCENARIO-ARC-WMTE-5726-GATED-MATCHED-AB
+
+Given Exp5725 readiness receipts, a frozen known-level manifest, and matched arm
+configs
+When Exp5726 runs the control and ledger-treatment pairs
+Then the artifact reports honest denominators, retained levels, action/latency
+metrics, ledger mechanisms, first-decision divergence, paired intervals, and no
+registry update or new solve claim.
+
+#### SCENARIO-ARC-WMTE-5726-CONTROLS-AND-OVERHEAD
+
+Given ledger-disabled, shuffled/stale, corrupted-link, always-commit,
+never-commit, and budget-matched inert controls
+When Exp5726 evaluates ledger safety and cost
+Then supported controls exercise ordering or commitment, unsafe/corrupt/stale
+inputs fail closed, overhead caps are reported, and promotion remains blocked
+unless all frozen utility and safety gates pass.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD
