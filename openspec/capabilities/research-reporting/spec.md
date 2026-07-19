@@ -41723,3 +41723,107 @@ and `honest_verdict` has a terminal prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5707 | Planned (`python/carnot/experiment_5707_v510_source_delta_ingestion.py`, `results/experiment_5707_v510_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5707_v510_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5718: V511 Source Delta Ingestion Artifact
+
+The Exp5718 workflow SHALL perform a bounded execution-time source-delta check
+after the `V511-PLANNER-REFRESH-20260715-END` marker and SHALL write
+`results/experiment_5718_v511_source_delta_ingestion.json`. It SHALL search
+2025-2026 sources for EBM verification/reasoning, neural CSPs, Ising ML,
+hallucination mitigation, KANs, constrained generation, hardware sampling, and
+continual constraint learning; SHALL also check OpenReview, Extropic, Semantic
+Scholar citation routes for EBT `2507.02092` and ARM-EBM `2512.15605`, Hugging
+Face Papers, GitHub, and Logical Intelligence; and SHALL deduplicate source
+identifiers, titles, techniques, repositories, and experiment mappings against
+`research-references.md`, `research-complete.yaml`, the V511 proposal, the
+exclusion manifest, and known issues.
+
+Accepted findings SHALL contain the exact Carnot hook, target Exp5719-Exp5727
+task, substrate, validator boundary, and falsifiable metric. The workflow SHALL
+mark watch-only, inaccessible, duplicate, and excluded findings explicitly, and
+SHALL reject sources that reopen JSON grammar, external generated-text scoring,
+token/logit authority, model-weight writes, PTRM generation, generic exploration
+signals, transition patching, two-axis exchange, TSU/Kona execution, or
+unsupported speedups. It SHALL append to `research-references.md` only for a
+genuine non-duplicate actionable delta that maps into the existing V511 task
+range without changing IDs or gates. If a source requires operator scope
+expansion, it SHALL set `roadmap_change_required=true` and emit a blocked
+artifact instead of silently modifying the roadmap. It SHALL declare
+`inference_substrate="web_and_bibliographic_search_only"`.
+
+The artifact SHALL include required fields `field_principles`,
+`search_timestamp_utc`, `planner_marker`, `sources_checked`, `queries`,
+`accepted_findings`, `duplicate_findings`, `watch_only_findings`,
+`excluded_findings`, `semantic_scholar_status`, `extropic_status`,
+`logical_intelligence_status`, `huggingface_status`, `github_status`,
+`target_experiment_map`, `roadmap_change_required`, `references_updated`,
+`inference_substrate`, `reproducibility_checksum`, and `honest_verdict`. It
+SHOULD also record `planner_marker_found`, `source_link_checks`,
+`dedupe_corpus_checked`, `marker_checks`, `duplicate_checks`,
+`closed_scope_review`, `duration_s`, `random_seed`, and `spec_refs`.
+
+Required field principles:
+
+- `field_principles`: principle "One-line annotations for every required headline and gate field."
+- `search_timestamp_utc`: principle "freshness/coverage exact"
+- `planner_marker`: principle "the search window is anchored"
+- `sources_checked`: principle "coverage reconstructs"
+- `queries`: principle "coverage reconstructs"
+- `accepted_findings`: principle "accepted work has a local exact home"
+- `duplicate_findings`: principle "dispositions are explicit"
+- `watch_only_findings`: principle "unavailable systems support no claim"
+- `excluded_findings`: principle "closed scopes remain closed"
+- `semantic_scholar_status`: principle "citation-route access is honest"
+- `extropic_status`: principle "hardware access is honest"
+- `logical_intelligence_status`: principle "Kona access is honest"
+- `huggingface_status`: principle "secondary paper-feed access is honest"
+- `github_status`: principle "repository-route access is honest"
+- `target_experiment_map`: principle "accepted work has a home"
+- `roadmap_change_required`: principle "scope expansion blocks instead of mutating gates"
+- `references_updated`: principle "mutations are declared"
+- `inference_substrate`: principle "no benchmark inference occurred"
+- `reproducibility_checksum`: principle "the report is stable"
+- `honest_verdict`: principle "zero findings can be complete"
+
+#### SCENARIO-REPORT-5718-ACCEPT-BOUNDED-DELTA: Regression-Control Source Appends Once
+
+**Given** `research-references.md` contains the
+`V511 Planner Refresh - 20260715` marker and does not yet contain the
+`V511 Execution Refresh - 20260719` block
+**And** a post-marker source supplies a non-duplicate regression-control hook
+for the existing Exp5721/Exp5722 FR-11 lifecycle and rollback tasks
+**When** the Exp5718 workflow runs
+**Then** it appends one execution-refresh block to `research-references.md`,
+records the accepted finding with exact hook, target experiment, substrate,
+validator boundary, and falsifiable metric, sets `references_updated=true`,
+keeps `roadmap_change_required=false`, declares
+`inference_substrate=web_and_bibliographic_search_only`, and emits a terminal
+artifact.
+
+#### SCENARIO-REPORT-5718-BLOCKED-MARKER: Missing Planner Marker Blocks Mutation
+
+**Given** `research-references.md` lacks the
+`V511 Planner Refresh - 20260715` marker
+**When** the Exp5718 workflow runs
+**Then** it leaves `research-references.md` unchanged, sets
+`planner_marker_found=false`, keeps `accepted_findings=[]`, keeps
+`roadmap_change_required=false`, and writes a terminal blocked artifact rather
+than appending an unanchored source block.
+
+#### SCENARIO-REPORT-5718-FIELD-PRINCIPLES: Source Delta Fields Stay Annotated
+
+**Given** the Exp5718 artifact is emitted
+**When** the artifact schema is validated
+**Then** every required headline and gate field has a one-line
+`field_principles` entry, `inference_substrate` is
+`web_and_bibliographic_search_only`, `planner_marker` is
+`V511 Planner Refresh - 20260715`, `search_timestamp_utc` is populated,
+`reproducibility_checksum` is populated, `roadmap_change_required` is false
+unless a source needs operator scope expansion, and `honest_verdict` has a
+terminal prefix.
+
+## Implementation Status (REQ-REPORT-5718)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5718 | Implemented (`python/carnot/experiment_5718_v511_source_delta_ingestion.py`, `results/experiment_5718_v511_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5718_v511_source_delta_ingestion.py`) |
