@@ -9533,3 +9533,133 @@ proper Qwen3.6 chat template before any budget-wall conclusion. Does NOT flip th
 #### SCENARIO-ARC-WMTE-5724-THINKINGCAP-PRECONDITIONS
 - **WHEN** the driver launches the ThinkingCap-27B `llama-server`
 - **THEN** it SHALL verify (and record in `preconditions_checked`) that `llama_supports_gpu_offload()==True`, the exact resolved `.gguf` path, that the server was launched with `-fit off` + `n_ctx=22000` + `q8_0` KV on `CARNOT_ARC_GENERATOR_CUDA_GPU=1`, and that a `/think` `/completion` round-trip succeeded -- writing `honest_verdict` `complete_blocked_*` and exiting WITHOUT fabricating numbers if any precondition fails.
+
+### REQ-ARC-WMTE-5725: ThinkingCap-Qwen3.6-27B Genuine-Reasoning Retest Through Its Proper Chat Template (harness correction of REQ-ARC-WMTE-5724; ultimately targets REQ-ARC-WMTE-5714)
+
+REQ-ARC-WMTE-5724 tried to answer whether a model RL-tuned for token-efficient
+reasoning (`bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF`, Q4_K_M) completes genuine `/think`
+induction within the 8192-token budget that vanilla Qwen3.5-9B-MTP overran on `0/N`
+(REQ-ARC-WMTE-5714's finding), but its result was **INCONCLUSIVE for a harness reason,
+not a model reason.** The exp5714 `_induce_no_fence` mechanism POSTs a hand-built prompt
+string to llama.cpp's RAW `/completion` endpoint with NO chat template applied (deliberately,
+so a `/think` prefix reasons before emitting the code fence). That works for Qwen3.5-9B, but
+Qwen3.6-family models (ThinkingCap-27B) REQUIRE their embedded chat template's turn structure
+(system/user/assistant delimiters) to know a turn has started. Without it, ThinkingCap emitted
+an immediate end-of-sequence with ~0 output on `10/12` reason cells (`stop_type=='eos'`, no
+`<think>` trace) -- those cells never genuinely tested the budget hypothesis. The 2 genuine
+attempts (`0/2` completed) and the healthy `12/12` codeonly frozen control proved the
+model/server/GPU path itself is fine; only the raw-completion-without-template combination was
+broken for this model family. REQ-ARC-WMTE-5724's own recommended follow-up was to re-test
+through the proper Qwen3.6 chat template before drawing any budget-wall conclusion. This REQ
+is that retest.
+
+**The fix.** A new opt-in `LocalGGUFProposer.use_chat_template` field routes `generate()` and
+`complete_text()` through the OpenAI-compatible `/v1/chat/completions` endpoint (a single user
+turn) instead of raw `/completion`, so `llama-server` applies the GGUF's OWN embedded Qwen3.6
+chat template automatically -- no external HuggingFace template needed (the `unsloth`/`bottlecap`
+`-GGUF` repos ship no tokenizer files, but the template lives in the `.gguf` metadata). The
+OpenAI-shaped reply is normalized back into llama.cpp's native `{content, stop_type, truncated}`
+shape (`finish_reason=='length'` -> `stop_type='limit'`; a split-out `reasoning_content` is
+folded back into `content` wrapped in `<think>` tags), so `_record_completion_diagnostics`,
+`reason_engaged` detection, `max_raw_completion_len`, and every existing caller work unchanged.
+The field DEFAULTS False, keeping the FROZEN live-generator path (Qwen3.5-9B raw `/completion`)
+byte-identical -- this is a decentralization/frozen-stack-safe additive change, not a live-stack
+edit.
+
+**Genuine-reasoning semantics preserved (the load-bearing care point).** The retest must not
+let the chat template's own scaffolding silently re-suppress the `<think>` trace the way the
+codeonly directive originally did (the exact failure REQ-ARC-WMTE-5714's B2 arm was built to
+avoid). The induce stays codeonly OFF with NO pre-opened ```` ```python ```` fence and the
+`/think` soft-switch in the user turn, so reasoning genuinely engages and the model emits its
+```` ```python ```` block afterward. This was **smoke-tested BEFORE the full run**: 4/4
+induction-shaped `/v1/chat/completions` calls engaged a real `<think>` trace with non-empty
+output (vs the `10/12` immediate-EOS the raw path produced in 5724), confirming the template
+supplies the assistant-turn structure reliably (not just once) before any budget-wall numbers
+were trusted.
+
+**Design -- byte-identical to REQ-ARC-WMTE-5724 EXCEPT the chat-template route.** The
+ThinkingCap reason cell reuses `exp5724.run_reason_cell` VERBATIM (imported, not copied):
+codeonly OFF, `no_think_prefix=/think`, `max_tokens=8192`, `tries=1`, `_induce_no_fence`, the
+exp5722 stale-engine unlink guard, and the full REQ-ARC-WMTE-5720 actions-to-progress ladder
+(`load_engine` -> `plan_in_model` -> execute -> `WorldModelVerifier`/`score_goal_predicate_consistency`).
+The ONLY change is the proposer's `use_chat_template=True`. The two BASELINE arms are NOT
+re-measured -- they were already healthy in REQ-ARC-WMTE-5724 on the raw path each tolerates:
+the Qwen3.5-9B raw-`/think` reason baseline (`1/12` `induce_ok`) and the ThinkingCap codeonly
+frozen control (`12/12`, proving model health) are CITED from 5724's artifact and their per-run
+rows folded in (tagged `reused_from=REQ-ARC-WMTE-5724`) so the paired-by-game comparison against
+Qwen is real. This keeps compute on the one arm the harness bug actually corrupted.
+
+**Substrate / provenance (unchanged from REQ-ARC-WMTE-5724).**
+`inference_substrate=live_llm_inference` -- ThinkingCap-27B really induces on a CUDA
+`llama-server` on GPU 1 (`CARNOT_ARC_GENERATOR_CUDA_GPU=1`; GPU-offload verified
+`llama_supports_gpu_offload()==True` + a VRAM jump on load + a `/think` chat-completions
+round-trip). Server config `n_ctx=22000`, `-fit off`, `q8_0` KV, MTP off, distinct port
+(8959) so a stale 5724 server is never reused. `solve_provenance=development_proxy` on PUBLIC
+games; `read_game_source=False`, `used_env_source=True`, `verifier_is_oracle=False`. The
+24GB-3090 dev card is NOT Kaggle-representative (the eval GPU is ~16GB and ThinkingCap-27B Q4
+is a tight fit there); this tests the CONTENT question only and NEVER flips the frozen live
+default (operator-only) and NEVER submits.
+
+**Question / primary metric.** On the identical 6-game roster (`ls20 tr87 lp85 g50t m0r0
+ft09`), 2 trials/game, does token-efficient ThinkingCap-27B -- now genuinely reasoning via its
+proper chat template -- COMPLETE genuine-reasoning inductions within the 8192-token budget more
+often than vanilla Qwen's `~0/N`? PRIMARY metric = induce COMPLETION RATE (`n_induce_ok /
+n_cells`) for the freshly-measured chat-template ThinkingCap reason arm vs Qwen's cited baseline,
+annotated with `reason_engaged` (confirming the template fixed the immediate-EOS degeneracy) and
+the overrun signal (`last_stop_type=='limit'` / `max_raw_completion_len`). The full signal ladder
+is measured and paired by game as secondary color.
+
+**Falsifiable gate / interpretation.** (a) The chat template must FIRST demonstrably fix the
+degeneracy (most cells now genuine attempts, not immediate-EOS) -- otherwise the fix did not take
+and the result is flagged for investigation rather than reported as a budget finding. (b) Given
+genuine reasoning, token-efficient reasoning is a viable path to make `/think` usable ONLY if
+ThinkingCap completes MATERIALLY more inductions within the same 8192 budget than Qwen's `~0/N`.
+(c) If ThinkingCap STILL overruns on most/all cells even with the correct template, the
+conclusion is "8192 tokens is simply too tight regardless of efficiency tuning" -- pointing
+toward RAISING the budget (or splitting the induce) as the lever rather than swapping in a more
+efficient model. All outcomes are equally reportable; a clean negative is stated plainly, never
+spun. Small-N honesty guards apply (<=6 game pairs, stochastic proposer: report win/tie/loss +
+exact sign-test p + outlier-fragility, never a bare mean; a positive is a DIRECTION to
+investigate, not a significance claim). This REQ does not itself graduate any generator or budget
+change to the live stack.
+
+**Result artifact:** `results/experiment_5725_thinkingcap_chat_template_reason_ab.json`.
+
+**Implementation Status:** Run 2026-07-18 (GPU 1, ThinkingCap-27B server VRAM 4->17176 MiB on
+load, `/think` chat-completions smoke round-trip OK). Driver
+`python/carnot/experiment_5725_thinkingcap_chat_template_reason_ab.py`; artifact
+`results/experiment_5725_thinkingcap_chat_template_reason_ab.json` (adversarial-verify clean,
+`summarize_artifact` clean, no adversarial flags). **The harness fix WORKED, and the result is a
+modest, NON-SIGNIFICANT completion gain — not a solved budget wall.** Pre-run smoke: 4/4
+induction-shaped `/v1/chat/completions` calls engaged a genuine `<think>` trace with non-empty
+output (the raw `/completion` path gave 10/12 immediate-EOS in 5724). Full run: with the chat
+template applied, ThinkingCap-27B genuinely reasoned on **12/12** cells (`reason_engaged`;
+`n_degenerate_empty_eos=0` vs 5724's 10/12) — so REQ-ARC-WMTE-5724's inconclusive result is
+resolved: it was a HARNESS artifact (raw completion without the Qwen3.6 turn structure), NOT a
+model limitation. On the now-valid measurement, ThinkingCap completed **3/12** inductions within
+the 8192 budget vs the cited Qwen3.5-9B baseline's **1/12** (paired by game: +0.167 mean delta,
+3 wins / 2 ties / 1 loss over 6 game pairs, **sign-test p=0.625 — NOT significant**,
+`outlier_fragile=False`), and overran fewer cells (9/12 vs Qwen 12/12; delta -0.25, p=0.25). BUT
+the completions did NOT translate to progress: **0/12 level-ups** (both arms 0) and only **1/12**
+`plan_found` (tr87 trial 1, `outlier_fragile=True`). The ThinkingCap frozen control (12/12) and
+Qwen reason baseline (1/12) are CITED from REQ-ARC-WMTE-5724 (rows tagged
+`reused_from=REQ-ARC-WMTE-5724`), not re-measured. **Honest read:** token-efficient reasoning
+does clear the 8192 budget somewhat more often than vanilla Qwen and overruns less, but the effect
+is small, not statistically significant at n=6, still leaves the majority (9/12) of cells
+overrunning, and yields no downstream solve progress — a real DIRECTION, not evidence sufficient
+to prefer a more-efficient model over the simpler "raise the budget / split the induce" lever.
+Does NOT flip the frozen live default (operator-only); a real-VRAM/latency feasibility check on
+the ~16GB Kaggle eval GPU (27B Q4 is a tight fit) remains pending before any deployment
+consideration.
+
+#### SCENARIO-ARC-WMTE-5725-CHAT-TEMPLATE-ROUTE-IS-THE-ONLY-CHANGE
+- **WHEN** `experiment_5725_thinkingcap_chat_template_reason_ab.py` runs a ThinkingCap-27B genuine-reasoning `(game, trial)` cell
+- **THEN** it SHALL reuse `exp5724.run_reason_cell` verbatim (codeonly OFF, `no_think_prefix=/think`, `max_tokens=8192`, `tries=1`, `_induce_no_fence`, NO pre-opened `python` fence, the exp5722 stale-engine unlink guard, and the REQ-ARC-WMTE-5720 ladder), the ONLY difference from REQ-ARC-WMTE-5724 being the proposer's `use_chat_template=True` which routes induce through `/v1/chat/completions` so the GGUF's embedded Qwen3.6 chat template applies -- and SHALL NOT re-measure the Qwen3.5-9B reason baseline or the ThinkingCap frozen control (both CITED from 5724 with per-run rows tagged `reused_from=REQ-ARC-WMTE-5724`).
+
+#### SCENARIO-ARC-WMTE-5725-SMOKE-BEFORE-BUDGET-NUMBERS
+- **WHEN** the driver (or its pre-run smoke) exercises the chat-completion path on ThinkingCap-27B
+- **THEN** genuine `<think>` reasoning SHALL be confirmed to engage RELIABLY (multiple induction-shaped calls, not just one) with non-empty output BEFORE any full-run completion-rate numbers are trusted, and the artifact SHALL record (in `measurement_validity`) both the smoke result and whether the chat template fixed the immediate-EOS degeneracy (`n_degenerate_empty_eos <= n_genuine_attempt`) -- so a still-degenerate result is flagged for investigation, never silently reported as a false-negative budget finding.
+
+#### SCENARIO-ARC-WMTE-5725-NORMALIZED-DIAGNOSTICS-AND-FROZEN-STACK-SAFETY
+- **WHEN** `LocalGGUFProposer` runs with `use_chat_template=True`
+- **THEN** the `/v1/chat/completions` reply SHALL be normalized back into llama.cpp's native `{content, stop_type, truncated}` shape (`finish_reason=='length'` -> `stop_type='limit'`; a split-out `reasoning_content` folded into `content` wrapped in `<think>` tags) so `_record_completion_diagnostics` / `reason_engaged` / `overran` / `max_raw_completion_len` stay faithful to everything the model emitted, AND the field SHALL default `False` so the frozen live-generator path (Qwen3.5-9B raw `/completion`) stays byte-identical (a decentralization/frozen-stack-safe additive change, never a live-stack edit).

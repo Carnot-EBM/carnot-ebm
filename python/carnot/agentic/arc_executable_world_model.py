@@ -1472,6 +1472,18 @@ class LocalGGUFProposer:
     # Kaggle-notebook cap + the 600 RPM real-env rate limit, neither of which gates internal generation).
     n_gpu_layers: int = 999
     no_think_prefix: str = ""  # e.g. "/no_think\n" -> suppress hybrid-thinking CoT (Qwen3)
+    # REQ-ARC-WMTE-5725: OPT-IN. When True, generate()/complete_text() POST to the OpenAI-compatible
+    # /v1/chat/completions endpoint (a single user turn) instead of the raw /completion endpoint. The
+    # server then applies the GGUF's OWN embedded chat template (turn delimiters, e.g. Qwen3.6's
+    # <|im_start|>assistant), which Qwen3.6-family models (ThinkingCap-27B) REQUIRE to know a turn has
+    # started -- the raw /completion path (no template) made those models emit an immediate EOS with ~0
+    # output on ~10/12 genuine-reasoning induce cells (REQ-ARC-WMTE-5724 measurement-validity caveat).
+    # Default False keeps the FROZEN live-generator path (Qwen3.5-9B raw /completion) byte-identical.
+    # The response is normalized back into llama.cpp's {content, stop_type, truncated} shape so
+    # _record_completion_diagnostics + every caller works unchanged; a split-out reasoning_content (some
+    # builds extract <think> into its own field) is folded back into `content` wrapped in <think> tags
+    # so reason_engaged detection + max_raw_completion_len stay faithful to what the model generated.
+    use_chat_template: bool = False
     model_path: Optional[str] = (
         None  # explicit .gguf path; on Kaggle set to the bundled /kaggle/input/... path
     )
@@ -1511,6 +1523,62 @@ class LocalGGUFProposer:
         self.last_stop_type = str(response.get("stop_type") or "")
         self.last_prompt_truncated = bool(response.get("truncated"))
         self.last_raw_completion = str(response.get("content") or "")
+
+    def _chat_complete_request(
+        self,
+        prompt: str,
+        *,
+        max_tokens: int,
+        temperature: float,
+        stop: Optional[list],
+    ) -> tuple[dict, str]:
+        """POST one user turn to the OpenAI-compatible /v1/chat/completions endpoint (the server
+        applies the GGUF's OWN embedded chat template -- the turn delimiters Qwen3.6/ThinkingCap
+        need) and normalize the OpenAI-shaped reply back into llama.cpp's native
+        {content, stop_type, truncated} shape. Returns (normalized_response, extraction_text):
+
+          * normalized_response["content"] -> the FULL generated text. Some llama.cpp builds
+            extract the <think> reasoning into a separate `reasoning_content` field and strip it
+            from `content`; we fold it back in (wrapped in <think></think>) so
+            _record_completion_diagnostics, reason_engaged detection, and max_raw_completion_len
+            stay faithful to EVERYTHING the model emitted (reasoning + answer).
+          * extraction_text -> the FINAL answer only (reasoning stripped when the build split it),
+            so _extract_python cannot accidentally grab a ```python block written INSIDE the
+            model's reasoning trace.
+
+        Raises on a network/transport error; the caller converts that to its failure tuple,
+        exactly like the raw /completion path."""
+        import json as _json
+        import urllib.request
+
+        payload: dict[str, Any] = {
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": int(max_tokens),
+            "temperature": float(temperature),
+            "cache_prompt": True,
+        }
+        if stop:
+            payload["stop"] = list(stop)
+        req = urllib.request.Request(
+            self._url() + "/v1/chat/completions",
+            data=_json.dumps(payload).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=self.timeout) as r:
+            raw = _json.load(r)
+        choice = (raw.get("choices") or [{}])[0]
+        msg = choice.get("message") or {}
+        final = str(msg.get("content") or "")
+        reasoning = str(msg.get("reasoning_content") or "")
+        # OpenAI finish_reason 'length' == hit max_tokens == llama.cpp stop_type 'limit' (overran).
+        stop_type = "limit" if choice.get("finish_reason") == "length" else "eos"
+        full = f"<think>\n{reasoning}\n</think>\n{final}" if reasoning else final
+        normalized = {
+            "content": full,
+            "stop_type": stop_type,
+            "truncated": bool(raw.get("truncated")),
+        }
+        return normalized, final
 
     def _healthy(self) -> bool:
         import urllib.request
@@ -1619,16 +1687,26 @@ class LocalGGUFProposer:
                 _payload["stop"] = _stop_seq
             body = _json.dumps(_payload).encode()
             try:
-                req = urllib.request.Request(
-                    self._url() + "/completion",
-                    data=body,
-                    headers={"Content-Type": "application/json"},
-                )
-                with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                    _response = _json.load(r)
+                if self.use_chat_template:
+                    # OpenAI /v1/chat/completions -> server applies the GGUF's embedded chat template
+                    # (Qwen3.6/ThinkingCap need the assistant-turn structure; REQ-ARC-WMTE-5725).
+                    _response, text = self._chat_complete_request(
+                        prompt,
+                        max_tokens=self.max_tokens,
+                        temperature=_payload["temperature"],
+                        stop=_stop_seq,
+                    )
+                else:
+                    req = urllib.request.Request(
+                        self._url() + "/completion",
+                        data=body,
+                        headers={"Content-Type": "application/json"},
+                    )
+                    with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                        _response = _json.load(r)
+                    text = _response.get("content", "")
             except Exception as e:
                 return False, f"local gguf (GPU server) failed: {e!r}"[:200]
-            text = _response.get("content", "")
             self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
             code = _extract_python(text)
             if not code and _codeonly:
@@ -1700,13 +1778,24 @@ class LocalGGUFProposer:
             payload["stop"] = list(stop)
         body = _json.dumps(payload).encode()
         try:
-            req = urllib.request.Request(
-                self._url() + "/completion",
-                data=body,
-                headers={"Content-Type": "application/json"},
-            )
-            with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                _response = _json.load(r)
+            if self.use_chat_template:
+                # OpenAI /v1/chat/completions applies the GGUF's embedded chat template; the
+                # normalized "content" folds any split-out reasoning back in so callers/smoke
+                # tests can see the <think> trace (REQ-ARC-WMTE-5725).
+                _response, _ = self._chat_complete_request(
+                    full_prompt,
+                    max_tokens=int(max_tokens or self.max_tokens),
+                    temperature=temperature,
+                    stop=stop,
+                )
+            else:
+                req = urllib.request.Request(
+                    self._url() + "/completion",
+                    data=body,
+                    headers={"Content-Type": "application/json"},
+                )
+                with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                    _response = _json.load(r)
         except Exception as e:  # pragma: no cover - network boundary
             return False, f"local gguf (GPU server) failed: {e!r}"[:200]
         self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
