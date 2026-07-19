@@ -13393,3 +13393,397 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-17 17:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
 | 2026-07-17 17:57 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
 | 2026-07-17 17:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-18 18:17 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:19 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:24 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:26 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:28 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:35 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:42 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:44 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:47 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:49 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:51 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:53 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:56 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 18:58 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:00 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:02 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:07 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:09 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:11 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:16 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:20 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:23 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:25 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:32 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:36 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:41 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:43 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:45 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:47 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:50 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:52 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:54 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:56 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 19:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:03 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:08 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:10 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:17 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:19 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:24 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:26 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:28 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:30 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:35 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:37 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:39 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:42 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:44 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:46 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:48 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:51 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:53 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 20:57 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:00 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:02 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:04 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:06 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:08 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:11 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:13 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:15 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:17 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:19 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:23 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:26 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:28 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:30 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:32 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:36 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:39 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:41 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:43 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:45 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:47 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:49 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:52 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:54 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:56 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 21:58 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:00 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:02 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:07 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:09 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:11 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:13 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:15 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:20 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:22 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:24 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:26 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:28 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:35 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:37 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:39 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:41 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:43 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:46 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:48 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:50 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:52 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:54 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:56 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 22:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:03 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:07 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:09 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:16 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:20 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:22 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:25 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:35 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:42 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:44 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:46 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:48 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:51 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:53 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:57 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-18 23:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:03 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:06 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:08 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:10 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:16 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:19 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:23 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:25 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:32 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:36 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:42 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:45 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:47 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-19 00:49 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 00:51 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 00:53 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 00:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 00:58 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:00 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:02 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:04 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:06 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:09 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:11 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:13 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:15 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:20 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:22 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:24 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:36 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:43 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:45 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:47 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:49 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:52 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:54 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:56 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 01:58 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:03 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:07 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:09 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:16 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:20 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:22 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:24 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:35 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:37 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:42 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:44 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:46 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:48 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:50 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:52 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:57 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 02:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:03 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:08 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:10 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:16 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:23 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:25 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:36 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:42 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:44 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:46 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:49 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:51 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:53 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:57 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 03:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:04 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:06 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:08 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:10 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:17 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:19 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:23 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:25 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:30 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:32 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:36 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:43 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:45 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:47 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:49 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:51 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:53 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 04:58 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:00 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:02 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:04 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:06 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:08 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:11 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:13 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:15 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:17 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:19 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:24 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:26 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:28 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:30 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:32 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:37 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:39 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:41 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:43 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:45 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:47 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:49 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:52 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:54 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:56 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 05:58 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:00 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:02 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:07 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:09 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:11 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:13 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:15 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:20 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:22 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:24 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:26 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:28 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:35 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:37 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:39 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:41 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:44 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:46 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:48 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:50 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:52 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:54 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:56 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 06:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:03 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:05 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:07 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:09 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:16 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:18 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:20 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:22 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:25 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:27 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:29 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:31 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:33 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:35 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:38 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:40 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:42 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:44 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:46 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:48 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:51 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:53 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:55 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:57 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 07:59 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:01 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:04 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:06 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:08 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:10 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:12 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:14 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:16 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:19 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:21 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:23 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:25 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:28 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:30 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:32 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 08:34 UTC | Activation REFUSED: milestone 2026.07.511 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+| 2026-07-19 19:01 UTC | Milestone 2026.07.511 activated | OK | 12 tasks queued |

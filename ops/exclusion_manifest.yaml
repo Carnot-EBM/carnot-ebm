@@ -773,3 +773,24 @@ retired_extras:
   - Exp5645 two-axis beta-lambda tempering hard-constraint quality extension
   - two-axis beta-lambda tempering extension exp5645
   - two_axis_quality_extension_exp5645
+- id: exp5709_fr11_prospective_shadow_stream_retired_v511
+  scope_key: fr11_prospective_shadow_stream_exp5709_same_verdict
+  experiment_scope: Exp5709 prospective shadow stream rerun with the same parse-failed
+    Exp5708 stream verdict only
+  reason: >-
+    Exp5709 gate-blocked because Exp5708 authenticated CUDA but produced a
+    parse-failed exact stream: 21 truncations, 26 missing-answer rows, 3 parses,
+    and zero validator disagreements. Preserve future clean prospective streams
+    and generic lifecycle learning.
+  experiment_ids:
+  - exp5709
+  retired_milestone: 2026.07.511
+  retired_by_artifact: results/experiment_5709_fr11_prospective_shadow_stream.json
+  recorded_by_artifact: results/experiment_5717_transition_v511.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - fr11_prospective_shadow_stream_exp5709_same_verdict
+  - repeat Exp5709 prospective shadow stream on the parse-failed Exp5708 stream
+  - blocked_gate_check_failed after exp5708 parse_failures without a new clean
+    stream
