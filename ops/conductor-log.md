@@ -13790,3 +13790,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-19 19:18 UTC | Transition terminal .510 evidence, apply the narro | OK | 85 passed, 1 warning in 8.53s |
 | 2026-07-19 19:42 UTC | Ingest post-V511 2025-2026 source deltas with dupl | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-19 20:07 UTC | Diagnose the .510 GGUF answer-channel failure acro | OK | 88 passed, 1 warning in 9.43s |
+| 2026-07-19 20:09 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
