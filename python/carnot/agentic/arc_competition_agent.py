@@ -44,6 +44,7 @@ from carnot.agentic.arc_program_synthesis_filter import (
 )
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
+from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
     GroundTruthValidatedFrameChangeScorer,
@@ -193,6 +194,8 @@ SUBMITTED_MATM_SIMILARITY_RETRIEVAL_ENABLED = False
 SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE = "within_game_lsh_cross_game_features_v2"
 MATM_SIMILARITY_BUCKET_WIDTH = 0.25
 MATM_SIMILARITY_MAX_CANDIDATES = 8
+SUBMITTED_EPISTEMIC_LEDGER_ENABLED = True
+SUBMITTED_EPISTEMIC_LEDGER_MODE = "agent_owned_visible_state_hypothesis_ledger"
 # E1 (arXiv:2512.24156, the hidden-leaderboard 3rd-place "just-explore" solver) status-bar
 # masking. `StepwiseExplorer.hud_mask` has existed as a constructor param since before this
 # flag (see `_hash`, which already collapses masked cells) but was never populated on the
@@ -270,6 +273,7 @@ _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
 _DEFAULT_GOAL_BIAS = object()
+_DEFAULT_EPISTEMIC_LEDGER = object()
 # REQ-ARC-FCP-5703 / GAP-5703: thresholds for goal_bias_diagnostics()'s degenerate-score
 # self-audit. Mirrors GoalEnergyCandidateGuidance's arms_non_degenerate variance floor
 # (arc_goal_energy_live.py: `variance > 1e-12`); the minimum-sample floor guards against a
@@ -731,6 +735,7 @@ class StepwiseExplorer:
         similarity_bucket_width: float = MATM_SIMILARITY_BUCKET_WIDTH,
         similarity_max_candidates: int = MATM_SIMILARITY_MAX_CANDIDATES,
         transition_cycle_verifier: Any | None = None,
+        epistemic_ledger: Any | bool | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         self.auto_hud_mask = bool(auto_hud_mask)
@@ -807,6 +812,7 @@ class StepwiseExplorer:
         self.frontier_batch_size = self._normalize_frontier_batch_size(frontier_batch_size)
         self.navigation_cost_tiebreak = bool(navigation_cost_tiebreak)
         self.candidate_router = candidate_router
+        self.epistemic_ledger = coerce_epistemic_ledger(epistemic_ledger)
         if isinstance(dense_curiosity, DenseCuriosityProgress):
             self.dense_curiosity: DenseCuriosityProgress | None = dense_curiosity
         elif dense_curiosity:
@@ -1486,7 +1492,20 @@ class StepwiseExplorer:
                 )
             except Exception:
                 self._qd_generation_errors += 1
-        return self._apply_controllable_novelty_order(frame, rows)
+        rows = self._apply_controllable_novelty_order(frame, rows)
+        if self.epistemic_ledger is not None and rows:
+            try:
+                return self.epistemic_ledger.rank_candidates(
+                    frame,
+                    rows,
+                    runtime_receipts={
+                        "source": "StepwiseExplorer._candidates",
+                        "candidate_count": len(rows),
+                    },
+                )
+            except Exception:
+                return rows
+        return rows
 
     def _apply_amortized_prior_order(
         self,
@@ -2727,6 +2746,7 @@ class E3AgentPolicy:
         active_probe_concentration_threshold: float = 0.9,
         goal_guidance_lambda: float = SUBMITTED_GOAL_GUIDANCE_LAMBDA,
         transition_cycle_verifier: Any | None = None,
+        epistemic_ledger: Any = _DEFAULT_EPISTEMIC_LEDGER,
     ) -> None:
         import os
 
@@ -2774,6 +2794,9 @@ class E3AgentPolicy:
             self.approach_recommendation.get("strategy")
             or arc_strategy_router.route_for_game(self.short)
         )
+        if epistemic_ledger is _DEFAULT_EPISTEMIC_LEDGER:
+            epistemic_ledger = SUBMITTED_EPISTEMIC_LEDGER_ENABLED
+        self.epistemic_ledger = coerce_epistemic_ledger(epistemic_ledger)
         self.approach_recommendation["strategy"] = self.strategy_route
         self._route_from_frame_checked = False
         self._feature_router_checked = False
@@ -2832,6 +2855,7 @@ class E3AgentPolicy:
             amortized_first_contact_prior=amortized_first_contact_prior,
             go_explore_archive=go_explore_archive,
             similarity_retrieval=similarity_retrieval,
+            epistemic_ledger=self.epistemic_ledger,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -3558,6 +3582,18 @@ class E3AgentPolicy:
     def next_move(self, frames, latest):
         from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
 
+        if self.epistemic_ledger is not None and latest is not None:
+            try:
+                self.epistemic_ledger.observe_state(
+                    latest,
+                    runtime_receipts={
+                        "source": "E3AgentPolicy.next_move.before_routing",
+                        "phase": self.phase,
+                        "frames_seen": len(frames),
+                    },
+                )
+            except Exception:
+                pass
         self._maybe_route_from_frame(latest)
         # collect a transition from the last action's outcome
         if self._prev is not None and latest is not None:
@@ -3580,6 +3616,22 @@ class E3AgentPolicy:
                 if admit_world_model_update:
                     self.transitions.append(transition)
                     self._dsl_transitions.append((g0, _action_key(aid, data), g1))
+                    if self.epistemic_ledger is not None:
+                        try:
+                            self.epistemic_ledger.observe_transition(
+                                self._prev[0],
+                                int(aid),
+                                data,
+                                g1,
+                                level_before=int(self._prev_level),
+                                level_after=int(_level_of(latest)),
+                                runtime_receipts={
+                                    "source": "E3AgentPolicy.next_move.after_transition",
+                                    "admitted_world_model_update": True,
+                                },
+                            )
+                        except Exception:
+                            pass
                     self._observe_active_probe_transition(transition)
                     self._maybe_route_from_transitions()
             except Exception:
@@ -4311,6 +4363,8 @@ SUBMITTED_AGENT_CONFIG = {
     "ige_cell_selection_mode": SUBMITTED_IGE_CELL_SELECTION_MODE,
     "matm_similarity_retrieval_enabled": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_ENABLED,
     "matm_similarity_retrieval_mode": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE,
+    "epistemic_ledger_enabled": SUBMITTED_EPISTEMIC_LEDGER_ENABLED,
+    "epistemic_ledger_mode": SUBMITTED_EPISTEMIC_LEDGER_MODE,
     "auto_hud_mask_enabled": SUBMITTED_AUTO_HUD_MASK_ENABLED,
     "auto_hud_mask_mode": SUBMITTED_AUTO_HUD_MASK_MODE,
     "router_wired": True,
