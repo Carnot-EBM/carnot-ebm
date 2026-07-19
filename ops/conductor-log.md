@@ -13792,3 +13792,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-19 20:07 UTC | Diagnose the .510 GGUF answer-channel failure acro | OK | 88 passed, 1 warning in 9.43s |
 | 2026-07-19 20:09 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
 | 2026-07-19 20:11 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
+| 2026-07-19 20:13 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
+| 2026-07-19 20:15 UTC | Gated on Exp5720 exact stream: prospective MemOps | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5720-sota-attested-exact-envelope-canary, |
