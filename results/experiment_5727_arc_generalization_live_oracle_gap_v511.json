@@ -1,0 +1,527 @@
+{
+  "experiment": "experiment_5727_arc_generalization_live_oracle_gap_v511",
+  "schema": "carnot.exp5727.arc_generalization_live_oracle_gap.v1",
+  "result_path": "results/experiment_5727_arc_generalization_live_oracle_gap_v511.json",
+  "field_provenance": {
+    "harness_used": {
+      "principle": "exact reproducibility of the measurement; the harness path is part of the claim."
+    },
+    "policy_kind": {
+      "principle": "e3 means the real submitted E3AgentPolicy cascade, not a banked replay or adapter path."
+    },
+    "budget_per_game": {
+      "principle": "400 is the submission-faithful action cap rather than an optimistic unbounded exploration budget."
+    },
+    "oracle_source_registry_hash": {
+      "principle": "content-addressed registry baseline prevents measuring against a stale oracle ceiling."
+    },
+    "games_measured": {
+      "principle": "the no-silent-caps ethos requires 25 games or an explicit skipped-game list."
+    },
+    "live_levels_total": {
+      "principle": "the live side of the north-star generalization metric."
+    },
+    "oracle_levels_total": {
+      "principle": "the offline-dev oracle ceiling the live path is measured against."
+    },
+    "gap_total": {
+      "principle": "the total live-vs-oracle headroom this floor exists to shrink."
+    },
+    "per_game_gap": {
+      "principle": "per-game gaps and oracle-win provenance make the aggregate actionable."
+    },
+    "worst_gap_games": {
+      "principle": "gap numbers are only useful when the stall class is grounded in run evidence."
+    },
+    "verifier_gaps_entries_added": {
+      "principle": "connects new missing-discriminator findings to the verifier backlog."
+    },
+    "any_new_level_found": {
+      "principle": "new level credit requires honest frame.levels_completed evidence and a separate reproduction gate."
+    },
+    "inference_substrate": {
+      "principle": "distinguishes offline frame-only simulation from per-game real Qwen3.5-9B-MTP escalation."
+    },
+    "preconditions_checked": {
+      "principle": "records the GGUF, registry, GPU pinning, and non-default port gates checked before trusting the run."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for replaying the measurement."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed result payload catches silent drift."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed complete:/blocked: verdict preserves blocked preconditions and honest nulls."
+    }
+  },
+  "harness_used": "scripts/arc_leaderboard_eval.py",
+  "policy_kind": "e3",
+  "budget_per_game": 400,
+  "oracle_source_registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+  "games_measured": 25,
+  "expected_registry_games": 25,
+  "skipped_games": [],
+  "live_levels_total": 4,
+  "oracle_levels_total": 183,
+  "gap_total": 179,
+  "per_game_gap": [
+    {
+      "game": "ar25",
+      "live_levels": 0,
+      "oracle_levels": 8,
+      "gap": 8,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "bp35",
+      "live_levels": 0,
+      "oracle_levels": 9,
+      "gap": 9,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "cd82",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "unknown_registry_unstructured"
+    },
+    {
+      "game": "cn04",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "dc22",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "development_proxy"
+    },
+    {
+      "game": "ft09",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "unknown_registry_unstructured"
+    },
+    {
+      "game": "g50t",
+      "live_levels": 0,
+      "oracle_levels": 7,
+      "gap": 7,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "ka59",
+      "live_levels": 0,
+      "oracle_levels": 7,
+      "gap": 7,
+      "oracle_win_solve_provenance": "unknown_registry_unstructured"
+    },
+    {
+      "game": "lf52",
+      "live_levels": 0,
+      "oracle_levels": 10,
+      "gap": 10,
+      "oracle_win_solve_provenance": "development_proxy"
+    },
+    {
+      "game": "lp85",
+      "live_levels": 1,
+      "oracle_levels": 8,
+      "gap": 7,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "ls20",
+      "live_levels": 0,
+      "oracle_levels": 7,
+      "gap": 7,
+      "oracle_win_solve_provenance": "unknown_registry_unstructured"
+    },
+    {
+      "game": "m0r0",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "r11l",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "unknown_registry_unstructured"
+    },
+    {
+      "game": "re86",
+      "live_levels": 0,
+      "oracle_levels": 8,
+      "gap": 8,
+      "oracle_win_solve_provenance": "unknown_registry_unstructured"
+    },
+    {
+      "game": "s5i5",
+      "live_levels": 0,
+      "oracle_levels": 8,
+      "gap": 8,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "sb26",
+      "live_levels": 0,
+      "oracle_levels": 8,
+      "gap": 8,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "sc25",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "sk48",
+      "live_levels": 0,
+      "oracle_levels": 8,
+      "gap": 8,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "sp80",
+      "live_levels": 1,
+      "oracle_levels": 6,
+      "gap": 5,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "su15",
+      "live_levels": 0,
+      "oracle_levels": 9,
+      "gap": 9,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "tn36",
+      "live_levels": 0,
+      "oracle_levels": 7,
+      "gap": 7,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "tr87",
+      "live_levels": 0,
+      "oracle_levels": 6,
+      "gap": 6,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "tu93",
+      "live_levels": 1,
+      "oracle_levels": 9,
+      "gap": 8,
+      "oracle_win_solve_provenance": "unknown_registry_unstructured"
+    },
+    {
+      "game": "vc33",
+      "live_levels": 1,
+      "oracle_levels": 7,
+      "gap": 6,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "wa30",
+      "live_levels": 0,
+      "oracle_levels": 9,
+      "gap": 9,
+      "oracle_win_solve_provenance": "live_agent_self_discovery"
+    }
+  ],
+  "worst_gap_games": [
+    {
+      "game": "lf52",
+      "live_levels": 0,
+      "oracle_levels": 10,
+      "gap": 10,
+      "oracle_win_solve_provenance": "development_proxy",
+      "stall_class": "INDUCTION QUALITY",
+      "grounded_evidence": [
+        "results/arc_live_oracle_gap.json per_game row: game=lf52 live_levels=0 oracle_levels=10 gap_vs_oracle=10 actions=395/400 actions_to_first_levelup=None",
+        "frame_sequence evidence: frame[0].levels_completed=0 hash=sha256:9ce3975d61cdd3dce8a2e0215a8c50dbbcf248cc467f061439a1ae8b5b439d37; frame[399].levels_completed=0 hash=sha256:ee629a2aed2f922968412f99035287960eef91f57c865a732a70100ccab961b1",
+        "navigation_diagnostics: reset_replay_steps=4 forward_walk_hit_rate=0.9322033898305084",
+        "policy_diagnostics.induction_attempts[-1]: reason=stall transition_count=25 planned=False skipped=world_model_accuracy_below_threshold verify_accuracy=0.0 refinement_rounds_used=3"
+      ],
+      "verifier_gap_reference": "GAP-3",
+      "not_attempted_to_fix": "No per-game fix, hand solve, source read, registry edit, or new credit was attempted."
+    },
+    {
+      "game": "bp35",
+      "live_levels": 0,
+      "oracle_levels": 9,
+      "gap": 9,
+      "oracle_win_solve_provenance": "live_agent_self_discovery",
+      "stall_class": "INDUCTION QUALITY",
+      "grounded_evidence": [
+        "results/arc_live_oracle_gap.json per_game row: game=bp35 live_levels=0 oracle_levels=9 gap_vs_oracle=9 actions=393/400 actions_to_first_levelup=None",
+        "frame_sequence evidence: frame[0].levels_completed=0 hash=sha256:92370b9db1c1b1f1570ec24487c8a1669fe3bf35572f0c3efa2bb084c5a1a634; frame[399].levels_completed=0 hash=sha256:a8488591ac36c571611aa1a9cf778ff1d3a92c67ef5d99364b96e5c9fd8cf749",
+        "navigation_diagnostics: reset_replay_steps=0 forward_walk_hit_rate=0.0",
+        "policy_diagnostics.induction_attempts[-1]: reason=stall transition_count=25 planned=False skipped=world_model_accuracy_below_threshold verify_accuracy=0.0 refinement_rounds_used=2"
+      ],
+      "verifier_gap_reference": "GAP-3",
+      "not_attempted_to_fix": "No per-game fix, hand solve, source read, registry edit, or new credit was attempted."
+    },
+    {
+      "game": "su15",
+      "live_levels": 0,
+      "oracle_levels": 9,
+      "gap": 9,
+      "oracle_win_solve_provenance": "live_agent_self_discovery",
+      "stall_class": "INDUCTION QUALITY",
+      "grounded_evidence": [
+        "results/arc_live_oracle_gap.json per_game row: game=su15 live_levels=0 oracle_levels=9 gap_vs_oracle=9 actions=389/400 actions_to_first_levelup=None",
+        "frame_sequence evidence: frame[0].levels_completed=0 hash=sha256:4f7a9e9c9162cd2264988122c927256ad18504b1c6bc4407c8ff248e96483686; frame[399].levels_completed=0 hash=sha256:8e683ed2e8f3ef1e8ff4401ce9a9e15f0fbcd8bd30c856e77eb1f3674336eeb6",
+        "navigation_diagnostics: reset_replay_steps=11 forward_walk_hit_rate=0.75",
+        "policy_diagnostics.induction_attempts[-1]: reason=stall transition_count=81 planned=False skipped=world_model_accuracy_below_threshold verify_accuracy=0.1235 refinement_rounds_used=3"
+      ],
+      "verifier_gap_reference": "GAP-3",
+      "not_attempted_to_fix": "No per-game fix, hand solve, source read, registry edit, or new credit was attempted."
+    }
+  ],
+  "verifier_gaps_entries_added": [],
+  "any_new_level_found": false,
+  "new_level_evidence": [],
+  "target_model": "unsloth/Qwen3.5-9B-MTP-GGUF",
+  "model_specs": {
+    "name": "Qwen3.5-9B-MTP",
+    "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "gguf_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+    "mtp": true,
+    "spec_type": "draft-mtp",
+    "kv_quant": "q8_0",
+    "no_think_prefix": "/no_think\n",
+    "proposer_port_env": "CARNOT_ARC_PROPOSER_PORT",
+    "cuda_gpu_env": "CARNOT_ARC_GENERATOR_CUDA_GPU"
+  },
+  "inference_substrate": "offline_sim_no_quota_frame_only_live_agent_with_per_game_qwen35_mtp_notes",
+  "inference_substrate_by_game": {
+    "ar25": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "bp35": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "cd82": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "cn04": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "dc22": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "ft09": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "g50t": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "ka59": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "lf52": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "lp85": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "ls20": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "m0r0": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "r11l": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "re86": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "s5i5": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "sb26": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "sc25": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "sk48": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "sp80": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "su15": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "tn36": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "tr87": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "tu93": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "vc33": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    },
+    "wa30": {
+      "base": "offline_sim_no_quota_frame_only_live_agent",
+      "tier3_qwen35_mtp_escalated": true,
+      "tier3_substrate": "real_qwen35_9b_mtp_local_gguf_inference",
+      "proposer_repo_substr": "Qwen3.5-9B-MTP",
+      "proposer_port": 8922,
+      "proposer_mtp": true
+    }
+  },
+  "preconditions_checked": {
+    "qwen35_9b_gguf_cached": true,
+    "qwen35_9b_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+    "cuda_gpu_env": "0",
+    "proposer_port": 8922,
+    "proposer_port_non_default": true,
+    "registry_reproducible_total_games": 25,
+    "registry_premise_ok": true,
+    "oracle_source_registry_hash": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e"
+  },
+  "random_seed": 20260719,
+  "reproducibility_checksum": "sha256:ebfb55c6debe73ca9a7df93052a995718729a155f78324705ffbab76e02b0a48",
+  "honest_verdict": "complete: arc_generalization_live_oracle_gap_4_of_183_levels_gap_179"
+}

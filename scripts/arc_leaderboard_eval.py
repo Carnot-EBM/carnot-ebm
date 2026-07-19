@@ -20,6 +20,9 @@ Usage: arc_leaderboard_eval.py [--budget N] [--mode explore|replay]
 from __future__ import annotations
 
 import json
+import hashlib
+import os
+import random
 import sys
 import time
 from pathlib import Path
@@ -140,6 +143,95 @@ def _navigation_diagnostics(policy) -> dict:
     }
 
 
+def _json_safe(value):
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    if isinstance(value, dict):
+        return {str(k): _json_safe(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(v) for v in value]
+    if hasattr(value, "item"):
+        try:
+            return value.item()
+        except Exception:
+            pass
+    return str(value)
+
+
+def _frame_public_summary(frame, *, frame_index: int, action_count: int) -> dict:
+    """Small public-frame receipt for post-run gap characterization."""
+
+    row = {
+        "frame_index": int(frame_index),
+        "action_count": int(action_count),
+        "levels_completed": _level_of(frame),
+    }
+    try:
+        import numpy as np
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        grid = np.asarray(grid_of(frame))
+        row["grid_shape"] = [int(x) for x in grid.shape]
+        row["grid_hash"] = "sha256:" + hashlib.sha256(grid.tobytes()).hexdigest()
+        row["colors"] = [int(x) for x in np.unique(grid).tolist()]
+    except Exception:
+        row["grid_shape"] = []
+        row["grid_hash"] = ""
+        row["colors"] = []
+    try:
+        actions = getattr(frame, "available_actions", []) or []
+        row["available_actions"] = [str(getattr(a, "name", a)) for a in actions]
+    except Exception:
+        row["available_actions"] = []
+    return row
+
+
+def _policy_diagnostics(policy) -> dict:
+    proposer = getattr(policy, "proposer", None)
+    explorer = getattr(policy, "explorer", None)
+    diagnostics = {
+        "phase": getattr(policy, "phase", None),
+        "explore_budget": getattr(policy, "explore_budget", None),
+        "target_levels": getattr(policy, "target_levels", None),
+        "strategy_route": getattr(policy, "strategy_route", None),
+        "feature_router": getattr(policy, "feature_router", None),
+        "level_induction_events": getattr(policy, "level_induction_events", []),
+        "induction_attempts": getattr(policy, "induction_attempts", []),
+        "proposer": {
+            "instantiated": proposer is not None,
+            "repo_substr": getattr(proposer, "repo_substr", None),
+            "port": getattr(proposer, "port", None),
+            "mtp": getattr(proposer, "mtp", None),
+            "kv_quant": getattr(proposer, "kv_quant", None),
+            "last_stop_type": getattr(proposer, "last_stop_type", None),
+            "last_prompt_truncated": getattr(proposer, "last_prompt_truncated", None),
+            "last_raw_completion_len": len(getattr(proposer, "last_raw_completion", "") or ""),
+        },
+    }
+    if explorer is not None:
+        for name in (
+            "adaptive_budget_diagnostics",
+            "lazy_value_diagnostics",
+            "goal_bias_diagnostics",
+            "goal_candidate_guidance_diagnostics",
+            "action_effect_expansion_prior_diagnostics",
+            "action_salience_diagnostics",
+            "curiosity_diagnostics",
+            "qd_generation_diagnostics",
+            "controllable_novelty_diagnostics",
+            "object_centric_proposal_diagnostics",
+            "program_synthesis_filter_diagnostics",
+            "transition_cycle_diagnostics",
+        ):
+            fn = getattr(explorer, name, None)
+            if callable(fn):
+                try:
+                    diagnostics[name] = fn()
+                except Exception as exc:
+                    diagnostics[name] = {"error": repr(exc)[:160]}
+    return _json_safe(diagnostics)
+
+
 def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -156,7 +248,8 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     start = None
     best = None
     level_up_actions: list[int] = []  # cumulative `actions` count at each level-up (for per-level cost)
-    for _ in range(budget):
+    frame_sequence = []
+    for step_index in range(budget):
         if policy.is_done(frames, latest):
             break
         kind, data = policy.next_move(frames, latest)
@@ -176,6 +269,15 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                 level_up_actions.append(actions)
             best = lvl
         frames.append(latest)
+        if latest is not None:
+            frame_row = _frame_public_summary(
+                latest,
+                frame_index=len(frames) - 1,
+                action_count=actions,
+            )
+            frame_row["move"] = _json_safe({"kind": kind, "data": data})
+            frame_row["loop_index"] = int(step_index)
+            frame_sequence.append(frame_row)
         if latest is None:
             break
     reached = _level_of(latest)
@@ -225,6 +327,8 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
             "efficiency": eff, "per_level_efficiency": eff, "per_level": per_level,
             "deepest_level_reached": reached,
             "navigation_diagnostics": nav,
+            "frame_sequence": frame_sequence,
+            "policy_diagnostics": _policy_diagnostics(policy),
             "reset_replay_steps": nav["reset_replay_steps"],
             "forward_walk_hit_rate": nav["forward_walk_hit_rate"],
             "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
@@ -237,6 +341,14 @@ def _arg(argv, flag, default):
 
 def main() -> int:
     argv = sys.argv[1:]
+    seed = int(_arg(argv, "--seed", os.environ.get("CARNOT_ARC_RANDOM_SEED", "20260719")))
+    random.seed(seed)
+    try:
+        import numpy as np
+
+        np.random.seed(seed)
+    except Exception:
+        pass
     # --games oracle: measure the LIVE frame-only agent against the 16 games our OFFLINE oracle solved,
     #   reporting the honest GAP (oracle 32 levels - what the live path reaches with NO per-game knowledge).
     #   This is the north-star metric: live capability, not the offline reproducibility scorecard.
@@ -293,6 +405,7 @@ def main() -> int:
     out.write_text(json.dumps({
         "experiment": "arc_live_oracle_gap" if games_mode == "oracle" else "arc_leaderboard_eval",
         "games_mode": games_mode, "policy": policy_kind, "budget": budget,
+        "random_seed": seed,
         "live_levels": live_levels_sum if games_mode == "oracle" else total_levels,
         "oracle_levels": oracle_sum, "gap": gap_sum,
         "efficiency_sum": round(total_eff, 4), "open_gaps": gaps, "per_game": rows,

@@ -7597,6 +7597,81 @@ Then supported controls exercise ordering or commitment, unsafe/corrupt/stale
 inputs fail closed, overhead caps are reported, and promotion remains blocked
 unless all frozen utility and safety gates pass.
 
+### REQ-ARC-WMTE-5727: Full-Registry Live-Vs-Oracle Generalization Gap
+
+Experiment 5727 SHALL measure the real submitted `E3AgentPolicy` cascade on the
+full reproduced public-game registry against the offline-dev oracle ceiling from
+`ops/arc_solve_registry.yaml`. The measurement SHALL run through
+`scripts/arc_leaderboard_eval.py --games oracle --policy e3 --budget 400`,
+SHALL use the shipped frame-only live policy rather than `GameAdapter`,
+`load_solutions()`, or banked action traces, and SHALL treat `budget=400` as the
+submission-faithful per-game action cap. Before measurement, the workflow SHALL
+fail closed if the Qwen3.5-9B-MTP GGUF is not locally cached or the registry no
+longer reports `reproducible_total_games: 25`.
+
+If tier-3 `LocalGGUFProposer` induction fires during the run, the workflow SHALL
+pin it to `CARNOT_ARC_GENERATOR_CUDA_GPU` and a non-default proposer port so it
+cannot attach to a stale default-port server. The submitted default SHALL remain
+unchanged when the override is absent. The leaderboard harness SHALL preserve
+per-game public-frame summaries, navigation diagnostics, level-boundary events,
+and induction attempts exposed by the policy so the three largest oracle gaps can
+be characterized without reading game source or attempting a fix.
+
+The terminal artifact
+`results/experiment_5727_arc_generalization_live_oracle_gap_v511.json` SHALL
+include principle-annotated top-level fields for `harness_used`,
+`policy_kind`, `budget_per_game`, `oracle_source_registry_hash`,
+`games_measured`, `live_levels_total`, `oracle_levels_total`, `gap_total`,
+`per_game_gap`, `worst_gap_games`, `verifier_gaps_entries_added`,
+`any_new_level_found`, `inference_substrate`, `preconditions_checked`,
+`random_seed`, `reproducibility_checksum`, and `honest_verdict`.
+`per_game_gap` SHALL list game, live levels, oracle levels, gap, and
+oracle-win solve provenance. `worst_gap_games` SHALL contain exactly the three
+largest gaps, tie-breaking toward registry oracle wins with
+`development_proxy` provenance, and SHALL cite concrete public-frame or policy
+diagnostic evidence plus an explicit no-fix-attempted note.
+
+Required field principles SHALL include:
+
+- `harness_used`: principle "exact reproducibility of the measurement; the harness path is part of the claim."
+- `policy_kind`: principle "e3 means the real submitted E3AgentPolicy cascade, not a banked replay or adapter path."
+- `budget_per_game`: principle "400 is the submission-faithful action cap rather than an optimistic unbounded exploration budget."
+- `oracle_source_registry_hash`: principle "content-addressed registry baseline prevents measuring against a stale oracle ceiling."
+- `games_measured`: principle "the no-silent-caps ethos requires 25 games or an explicit skipped-game list."
+- `live_levels_total`: principle "the live side of the north-star generalization metric."
+- `oracle_levels_total`: principle "the offline-dev oracle ceiling the live path is measured against."
+- `gap_total`: principle "the total live-vs-oracle headroom this floor exists to shrink."
+- `per_game_gap`: principle "per-game gaps and oracle-win provenance make the aggregate actionable."
+- `worst_gap_games`: principle "gap numbers are only useful when the stall class is grounded in run evidence."
+- `verifier_gaps_entries_added`: principle "connects new missing-discriminator findings to the verifier backlog."
+- `any_new_level_found`: principle "new level credit requires honest frame.levels_completed evidence and a separate reproduction gate."
+- `inference_substrate`: principle "distinguishes offline frame-only simulation from per-game real Qwen3.5-9B-MTP escalation."
+- `preconditions_checked`: principle "records the GGUF, registry, GPU pinning, and non-default port gates checked before trusting the run."
+- `random_seed`: principle "determinism precondition for replaying the measurement."
+- `reproducibility_checksum`: principle "content-addressed result payload catches silent drift."
+- `honest_verdict`: principle "terminal-prefixed complete:/blocked: verdict preserves blocked preconditions and honest nulls."
+
+#### SCENARIO-ARC-WMTE-5727-PRECONDITIONS-AND-RUN-PROVENANCE
+
+Given the Qwen3.5-9B-MTP GGUF is cached, the registry reports 25 reproduced
+games, `CARNOT_ARC_GENERATOR_CUDA_GPU` is set, and a non-default proposer port
+is configured
+When Exp5727 compiles a fresh `arc_leaderboard_eval.py --games oracle --policy
+e3 --budget 400` result
+Then the artifact records the checked preconditions, the registry hash, the
+exact harness/policy/budget, all measured games, and per-game inference-substrate
+notes showing which games escalated to Qwen inference.
+
+#### SCENARIO-ARC-WMTE-5727-WORST-GAP-CHARACTERIZATION
+
+Given a full-registry live-oracle result with per-game public-frame summaries,
+navigation diagnostics, and policy induction attempts
+When Exp5727 selects the three largest oracle gaps
+Then ties prefer development-proxy oracle-win provenance, each selected game
+has a grounded stall class with cited run diagnostics, no gap fix is attempted,
+and new verifier-gap entries are added only for genuinely new missing
+discriminators not already covered by `ops/verifier_gaps.md`.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD
