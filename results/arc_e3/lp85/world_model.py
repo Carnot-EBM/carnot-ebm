@@ -5,12 +5,9 @@ def engine(grid, action, data):
         if data is None:
             return grid
         px, py = data['x'], data['y']
-        if grid[py, px] == 5:
-            return grid
-        grid = grid.copy()
-        grid[py, px] = 3
-        return grid
+        if grid[py, px] == 14:
+            grid[py, px] = 15
     return grid
 
 def is_level_complete(grid):
-    return False
+    return np.all(grid == 15)

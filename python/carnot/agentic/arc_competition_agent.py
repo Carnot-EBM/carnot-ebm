@@ -3441,6 +3441,7 @@ class E3AgentPolicy:
                 no_think_prefix="/no_think\n",
                 max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
                 timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
+                port=int(os.environ.get("CARNOT_ARC_PROPOSER_PORT", "8919")),
                 n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             )
         return self.proposer
