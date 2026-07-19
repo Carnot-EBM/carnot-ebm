@@ -30021,3 +30021,18 @@ dispositions.
   performance claim. Do not reopen two-axis exchange or claim FPGA/TSU acceleration.
 
 <!-- V511-PLANNER-REFRESH-20260715-END -->
+
+## V511 Execution Refresh - 20260719
+
+Execution-time sweep on 2026-07-19 after the V511 planner marker. Only sources with a non-duplicate, existing-task Carnot hook are listed here; watch-only and excluded sources are recorded in `results/experiment_5718_v511_source_delta_ingestion.json`.
+
+### New actionable deltas
+
+- **Do Agent Optimizers Compound? A Continual-Learning Evaluation on Terminal-Bench 2.0** - arXiv:2607.14004, https://arxiv.org/abs/2607.14004. Carnot hook: Use a phased regression-control check for FR-11 sidecar updates: each second-phase accepted update must improve the new exact-label suffix while retaining the prior solved prefix within margin. Target: exp5721-fr11-memops-lifecycle-shadow-stream, exp5722-fr11-compliance-recovery-rollback-canary. Substrate: CPU/RAM exact-label FR-11 sidecar and KAN lifecycle replay. Validator boundary: exact-label row validators, pre/post state hashes, held-out prefix retention checks, and exact rollback receipts remain authoritative. Falsifiable metric: phase-2 accepted-update suffix improvement must be positive while old-prefix retention_delta stays within the preregistered margin, unsafe_update_count remains 0, and rollback restores prior state hashes This sharpens the existing FR-11 retention/rollback gate and does not authorize model-weight writes, broad RL, or roadmap gate changes.
+
+### V511 execution impact
+
+- Preserve the existing Exp5721/Exp5722 lifecycle and rollback shape. The accepted delta only makes the regression-control metric explicit: new-suffix utility cannot count if old-prefix behavior regresses or rollback fails to restore the exact prior state.
+
+<!-- V511-EXECUTION-REFRESH-20260719-END -->
+
