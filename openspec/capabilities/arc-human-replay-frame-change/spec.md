@@ -9865,3 +9865,94 @@ prerequisite before any deployment consideration of the 27B.
 #### SCENARIO-ARC-WMTE-5726-SAMPLE-SIZE-CEILING-DISCLOSED
 - **WHEN** the artifact reports the completion-rate comparison
 - **THEN** it SHALL disclose that N>=30 UNIQUE games is mathematically unreachable (only 25 public games exist, of which 20 supply a valid seeded window), state the exact N used and whether it was further bounded by conductor downtime (a downtime bound, NOT a fresh statistical ceiling), use the Wilcoxon signed-rank on per-game deltas as the primary paired test (with the sign test + fragility alongside), and disclose that trials-per-game add per-game stability but are NOT independent game-level degrees of freedom.
+
+### REQ-ARC-FCP-5729: GroundTruth-Validation-Gate Tolerance Matched-Budget A/B
+
+`arc_frame_change_predictor.GroundTruthValidatedFrameChangeScorer` gates its
+`candidate_score` to return `0.0` whenever `not self.validated`, where
+`validated` requires `agreement_count >= required_agreements (=1)` AND
+`contradiction_count == 0` -- zero contradictions FOREVER, and its `reset()`
+forwards to the inner scorer but never clears its OWN agreement/contradiction/
+observed counters. Because the dominant `PersistentAEM` memory term has an
+observed floor `>= 0.94` (exp5728 per-game `memory_term_stats.min`), the gate's
+`predicted_changed` is nearly always True, so any ordinary no-op action (a
+blocked move, an inert click -- normal ARC play) trips one contradiction and
+PERMANENTLY disqualifies validation for the rest of the game run. This is
+stricter than the gate's own originating spec (REQ-ARC-FCP-5373: "at least one
+observed transition validates it"); the zero-tolerance-forever requirement is
+an implementation overreach. exp5728's `cnn_weight` sweep localized this gate
+(not the blend weight) as the next lever: 7/11 games never validated post-run,
+so the scorer was returned `0.0` upstream of every downstream multiply and was
+never exercised.
+
+`python/carnot/experiment_5729_gtv_gate_fix_ab.py` SHALL run a matched-budget
+A/B across the full 11-game roster (same roster + `budget=200` +
+`CARNOT_ARC_DISABLE_INDUCTION=1` no-LLM harness as exp5590/exp5728,
+single-threaded for determinism) comparing the CURRENT shipped gate (baseline
+control) against at least: (a) a RATE-tolerance criterion
+(`validated := observed_count >= min_observations AND agreement_count/
+observed_count >= threshold`, threshold swept at 0.6/0.7/0.8, `min_observations`
+justified), and (b) a RESET-ON-LEVEL-UP criterion (keep zero-tolerance but clear
+the wrapper's own counters when `reset(reset_to_prior=True)` fires, the live
+level-up path at `arc_competition_agent.py:1798`). Configs SHALL be injected by
+in-place `__class__` reassignment onto the single shared gate object
+(`policy.explorer.frame_change_scorer`, identity-preserving so the ranking,
+frontier-priority, observe, and reset paths all see the change) WITHOUT editing
+`arc_frame_change_predictor.py` -- this is a measurement task; whether to change
+the live default is reported as an operator-only recommendation. The chosen
+tolerance MUST still gate OFF a genuinely miscalibrated scorer (the gate is not
+deleted wholesale). The artifact SHALL report `gate_config_results` (per-config
+levels/states/efficiency + `n_games_validated_post_run`),
+`n_games_validated_post_run_by_config`, `safety_regression_check` (per-config
+`states_expanded` vs baseline, flagging any material blow-up),
+`levels_gained_headroom_present`, `any_config_beats_baseline_levels`,
+`any_config_beats_baseline_without_safety_regression`, and a
+`prior_work_extended` block citing exp5590 AND exp5728.
+
+**RESOLUTION (2026-07-19).** Ran cleanly on the full 11-game roster,
+budget=200/game, 300.9s, 5 configs x 11 games. `levels_gained_headroom_present:
+true` (1 level, `lp85` L1, reached in every config -- interpretable null, not a
+zero-headroom test). The rate-tolerance gate WORKED MECHANICALLY: games-
+validated-post-run rose from baseline's `3/11` to `9/11` (threshold 0.7/0.8) and
+`10/11` (threshold 0.6), and ranking-scorer nonzero returns nearly tripled
+(18,691 -> ~49-55k) -- the gate loosening turned the scorer ON as designed.
+Protection was preserved: `sk48` (agreement rate 0.056) stayed gated OFF in
+every config, and `cn04` (0.526) passed only at the most-permissive 0.6 -- a
+genuinely miscalibrated scorer is still blocked. BUT no capability gain: every
+config banked exactly `1` level (`any_config_beats_baseline_levels: false`). On
+`lp85` the gate flipped to validated and the scorer was consulted ~27,000 times,
+yet `states_expanded` (181), `levels` (1), and `actions_to_first_levelup` (11)
+were IDENTICAL to baseline -- because the memory-dominated blended signal is
+near-uniform across candidates (exp5728 `memory_term_stats.variance` ~= 3e-4 on
+`lp85`), so admitting it does not reorder the search. No safety regression:
+`states_expanded` DROPPED 6-8% under the rate configs (854-876 vs baseline 931,
+`any_config_states_regression: false`), so the loosened gate did not make search
+noisier. `reset_on_levelup` was byte-identical to baseline on all 11 games (only
+`lp85` levels up, and it never reaches L2 within budget, so the single reset had
+no 2nd-level window to act on -- the mechanism is correct but untestable-as-
+beneficial on this roster). Verdict:
+`complete: gtv_gate_loosening_turns_scorer_on_3_to_10_of_11_games_validated_but_no_level_gain_scorer_signal_is_the_blocker_not_the_gate`.
+This confirms exp5728's retire condition: the gate WAS a real blocker (it kept
+the scorer off), loosening it is SAFE and turns the scorer on, but the blocker
+is now DOWNSTREAM -- the scorer's own discriminative quality (CNN/memory
+perception), not the gate that admits it. Recommendation (operator-only): do NOT
+change the live default gate on a capability basis (no level gain); the right
+next lever per Missing-Verifier Gap Logging is the scorer's signal quality. A
+gate-criterion change remains defensible on its own merits (it is safe and
+correctly admits well-calibrated scorers) IF a future stronger scorer makes the
+admitted signal load-bearing.
+
+Required field principles:
+
+- `gate_config_results`: principle "per-config levels/states/efficiency + n_games_validated_post_run -- n_games_validated is the mechanism this experiment directly manipulates, levels is the capability answer."
+- `safety_regression_check`: principle "a loosened gate that lets a miscalibrated scorer steer search can make search WORSE/noisier even when it banks a level -- states_expanded vs baseline flags any blow-up so a level win is never reported without its search cost."
+- `n_games_validated_post_run_by_config`: principle "the direct mechanism readout -- a gate change that does not move validation cannot have changed the search; one that moves validation a lot but banks no levels localizes the failure downstream of the gate."
+- `any_config_beats_baseline_without_safety_regression`: principle "the load-bearing recommendation boolean -- a level win only justifies changing the live default if it does not come with a search-cost blow-up."
+
+#### SCENARIO-ARC-FCP-5729-RATE-TOLERANCE-GATE
+- **WHEN** the rate-tolerance gate config runs a game whose end-of-run agreement rate exceeds the threshold despite a nonzero contradiction count (e.g. `lp85`: agreement 184, contradiction 10, rate 0.948)
+- **THEN** the gate SHALL validate (unlike the zero-tolerance baseline which stays permanently disqualified on the first contradiction) and admit the blended scorer to the ranking + frontier-priority paths, while a genuinely miscalibrated scorer (e.g. `sk48`, agreement rate 0.056) SHALL remain gated OFF -- and the artifact SHALL report whether turning the scorer on changed banked levels AND whether `states_expanded` regressed.
+
+#### SCENARIO-ARC-FCP-5729-RESET-ON-LEVELUP
+- **WHEN** the reset-on-level-up gate config runs a game that banks a level, triggering `reset(reset_to_prior=True)`
+- **THEN** the gate SHALL clear its own agreement/contradiction/observed counters (giving the next level a fresh validation window) while an ordinary `reset()` without `reset_to_prior` SHALL NOT clear them, and the artifact SHALL report that on a roster where no game reaches a 2nd level this config is byte-identical to baseline (the mechanism is correct but has no lever to pull), never fabricating a difference.
