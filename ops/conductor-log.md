@@ -13801,3 +13801,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-07-19 20:19 UTC | Gated on Exp5721 lifecycle readiness: isolated Com | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5721-fr11-memops-lifecycle-shadow-strea |
 | 2026-07-19 20:49 UTC | Gated on Exp5717 Rust quality: expose one-axis tem | OK | 120 passed, 1 warning in 10.76s |
 | 2026-07-19 21:10 UTC | Gated on Exp5723 production backend: matched Rust/ | OK | 88 passed, 1 warning in 8.86s |
+| 2026-07-19 21:32 UTC | Qualify an agent-owned ARC epistemic ledger on the | OK | 109 passed, 1 warning in 9.97s |
