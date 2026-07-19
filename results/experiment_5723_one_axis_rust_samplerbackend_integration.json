@@ -1,0 +1,292 @@
+{
+  "broken_control_results": [
+    {
+      "control_id": "broken_extension",
+      "passed": true,
+      "policy": "exact_python_fallback"
+    },
+    {
+      "control_id": "wrong_symbol",
+      "passed": true,
+      "policy": "exact_python_fallback"
+    },
+    {
+      "control_id": "malformed_descriptor",
+      "passed": true,
+      "policy": "fail_closed"
+    },
+    {
+      "control_id": "unsupported_topology",
+      "passed": true,
+      "policy": "fail_closed"
+    },
+    {
+      "control_id": "corrupt_checkpoint",
+      "passed": true,
+      "policy": "fail_closed"
+    },
+    {
+      "control_id": "seed_mismatch",
+      "passed": true,
+      "policy": "fail_closed"
+    },
+    {
+      "control_id": "energy_sign",
+      "expected_energy": 1.18,
+      "passed": true,
+      "policy": "reject_wrong_energy_sign",
+      "reason": "opposite Ising energy sign would invert the promoted target",
+      "wrong_sign_energy": -1.18
+    }
+  ],
+  "checkpoint_roundtrip_pass": true,
+  "checkpoint_schema_version": "carnot.one_axis_samplerbackend.checkpoint.v1",
+  "decision_log_parity": true,
+  "energy_parity_max_error": 0.0,
+  "exact_fallback_equivalence_score": 1.0,
+  "experiment": 5723,
+  "experiment_id": "exp5723-one-axis-rust-samplerbackend-integration",
+  "factory_registration_receipt": {
+    "default_backend_class": "CpuBackend",
+    "default_backend_name": "cpu",
+    "default_backend_preserved": true,
+    "explicit_backend_class": "OneAxisRustBackend",
+    "explicit_backend_name": "one_axis_rust",
+    "factory_hash": "0223c46e71979cfc8f3d720dbfe03151e5f6258b7fee7291d2ce86f735b4e3e8",
+    "factory_path": "python/carnot/samplers/backend.py",
+    "registered_without_default_change": true
+  },
+  "fallback_cases": [
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "missing_extension",
+      "equivalent": true,
+      "expected_reason_fragment": "rust_extension_missing",
+      "fallback_reason": "rust_extension_missing:missing"
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "broken_extension",
+      "equivalent": true,
+      "expected_reason_fragment": "rust_extension_error",
+      "fallback_reason": "rust_extension_error:RuntimeError:broken"
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "wrong_symbol",
+      "equivalent": true,
+      "expected_reason_fragment": "rust_symbol_missing",
+      "fallback_reason": "rust_symbol_missing:RustOneAxisTemperingConfig,RustOneAxisTemperingCore,RustOneAxisTemperingState"
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "unsupported_dtype",
+      "equivalent": true,
+      "expected_reason_fragment": "unsupported_dtype_or_layout",
+      "fallback_reason": "unsupported_dtype_or_layout"
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "unsupported_layout",
+      "equivalent": true,
+      "expected_reason_fragment": "unsupported_dtype_or_layout",
+      "fallback_reason": "unsupported_dtype_or_layout"
+    },
+    {
+      "active_backend": "python_exact_fallback",
+      "case_id": "declared_python_compatibility",
+      "equivalent": true,
+      "expected_reason_fragment": "declared_python_compatibility",
+      "fallback_reason": "declared_python_compatibility"
+    }
+  ],
+  "fallback_equivalence_pass": true,
+  "field_principles": {
+    "broken_control_results": "Documents broken-extension, wrong-symbol, malformed descriptor, unsupported topology, corrupt checkpoint, seed mismatch, and energy-sign controls.",
+    "checkpoint_roundtrip_pass": "Proves duplicate save/load preserves state and receipts.",
+    "checkpoint_schema_version": "Pins the production adapter checkpoint schema.",
+    "decision_log_parity": "Proves the recorded production decision log matches across Rust and exact fallback.",
+    "energy_parity_max_error": "Quantifies production-adapter energy parity against the exact Python fallback.",
+    "exact_fallback_equivalence_score": "Provides a scalar gate equal to 1.0 only when all fallback cases are exact.",
+    "factory_registration_receipt": "Proves explicit factory registration while preserving the cpu default.",
+    "fallback_cases": "Lists every exercised exact fallback case and the recorded reason.",
+    "fallback_equivalence_pass": "Gates fallback only when samples, checkpoints, and decision logs match exactly.",
+    "field_principles": "Explains why every required production integration field exists before the sampler backend can be marked ready.",
+    "hardware_speedup_claimed": "Bare false prevents PyO3 routing from becoming a hardware claim.",
+    "honest_verdict": "Starts complete: or blocked: and states whether production SamplerBackend integration is ready.",
+    "inference_substrate": "Declares production Python SamplerBackend plus Rust/PyO3 one-axis execution with no LLM or board participation.",
+    "one_axis_samplerbackend_ready_score": "Equals 1.0 only when upstream gates, protocol/factory exposure, parity, restart, fallback, and controls all pass.",
+    "proposal_parity_max_error": "Quantifies production-adapter corrected proposal parity.",
+    "pyo3_binding_hash": "Content-addresses the PyO3 binding symbols used by the adapter.",
+    "python_adapter_hash": "Content-addresses the production Python adapter that implements fallback and receipts.",
+    "python_to_rust_restart_pass": "Proves a Python fallback checkpoint can resume through the Rust adapter.",
+    "random_seeds": "Records replay seeds for production adapter parity, fallback, and restart checks.",
+    "reproducibility_checksum": "Content-addresses the complete artifact after blanking the self-checksum field.",
+    "rust_source_hash": "Content-addresses the Rust kernel used by the adapter.",
+    "rust_to_python_restart_pass": "Proves a Rust adapter checkpoint can resume through exact Python fallback.",
+    "sampler_backend_protocol": "Proves the adapter satisfies the production SamplerBackend boundary.",
+    "seed_semantics": "Records the portable LCG state and seed mismatch rule used for replay and restart.",
+    "source_algorithm_hash": "Binds the adapter to the frozen one-axis algorithm recipe rather than a renamed or tuned variant.",
+    "supported_descriptor_schema": "Declares the only descriptor accepted for the promoted one-axis path.",
+    "swap_parity_max_error": "Quantifies production-adapter swap-ratio parity.",
+    "swap_schedule_receipt": "Proves exchange remains label-only adjacent one-axis swapping.",
+    "temperature_ladder_receipt": "Proves the Exp5714/5715 one-axis beta ladder was not changed.",
+    "timing_claimed": "Bare false prevents integration readiness from becoming a timing claim.",
+    "transition_budget_receipt": "Accounts for corrected transitions and swap attempts without adding work silently.",
+    "two_axis_code_added": "Bare false keeps retired penalty-axis exchange closed.",
+    "unsupported_case_policy": "Separates exact fallback cases from fail-closed malformed or out-of-scope cases.",
+    "upstream_gate_receipts": "Pins Exp5714 exact parity, Exp5715 hard-instance quality/restart, source hashes, algorithm identity, checkpoint schema, and two-axis-closed receipts."
+  },
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete: one-axis Rust/PyO3 kernel is exposed through SamplerBackend with exact fallback, restart receipts, and no timing or hardware claim",
+  "inference_substrate": "production_python_samplerbackend_plus_rust_pyo3_one_axis",
+  "milestone": "2026.07.523",
+  "one_axis_samplerbackend_ready_score": 1.0,
+  "proposal_parity_max_error": 0.0,
+  "pyo3_binding_hash": "b4a36fdceca611dc4b6a695fb9cab5e7b6aab61ecff11ba31dff2162b914c4c9",
+  "python_adapter_hash": "f003cbce7bb72863675cdabeef7af069aced606904843688bc7fdd75307ff268",
+  "python_to_rust_restart_pass": true,
+  "random_seeds": [
+    5723,
+    5724,
+    5725
+  ],
+  "reproducibility_checksum": "fcd199dbdcdaa54f898bc6490238c362ed00a83b2c348f91292e35652ea5300d",
+  "run_date": "2026-07-19",
+  "rust_source_hash": "95df0b7e873a81fe5d39caeb3fd087e85f7dd8fb82ffd874d7c3bd3fbd42f8b7",
+  "rust_to_python_restart_pass": true,
+  "sampler_backend_protocol": {
+    "backend_class": "OneAxisRustBackend",
+    "backend_name": "one_axis_rust",
+    "dual_update_step_noop": true,
+    "is_sampler_backend": true,
+    "methods": {
+      "dual_update_step": true,
+      "minimize_energy": true,
+      "sample": true,
+      "set_constraints": true
+    },
+    "set_constraints_noop": true
+  },
+  "schema": "carnot.experiment_5723.one_axis_rust_samplerbackend_integration.v1",
+  "seed_semantics": {
+    "checkpoint_carries_rng_state": true,
+    "lcg_a": 6364136223846793005,
+    "lcg_c": 1442695040888963407,
+    "rng": "portable_lcg_u64",
+    "seed_mismatch_policy": "fail_closed",
+    "seed_range": "0 <= seed < 2**64"
+  },
+  "source_algorithm_hash": "921a0c316c9bbd2cd94c9e3979d7b21272b2c02aa5506617da14673c7f4803e6",
+  "spec_refs": [
+    "REQ-SAMPLE-5723",
+    "SCENARIO-SAMPLE-5723"
+  ],
+  "supported_descriptor_schema": {
+    "algorithm": "one_axis_corrected_cdls_temperature_label_exchange",
+    "optional_fields": [
+      "initial_states",
+      "initial_labels",
+      "burn_in_sweeps",
+      "checkpoint",
+      "force_python_fallback"
+    ],
+    "required_fields": [
+      "algorithm",
+      "topology",
+      "source_algorithm_hash",
+      "beta_ladder",
+      "proposal_std",
+      "drift_scale",
+      "seed"
+    ],
+    "sample_return_convention": "bool array where True means +1 and False means -1",
+    "spin_values": [
+      -1,
+      1
+    ],
+    "topology": "one_axis_temperature_label_exchange"
+  },
+  "swap_parity_max_error": 0.0,
+  "swap_schedule_receipt": {
+    "label_only_adjacent_swaps": true,
+    "scheduler_trace": [
+      "within:0",
+      "within:1",
+      "within:2",
+      "swap:0-1",
+      "swap:1-2"
+    ],
+    "state_copy_swaps_allowed": false,
+    "two_axis_exchange": false
+  },
+  "temperature_ladder_receipt": {
+    "beta_ladder": [
+      0.45,
+      0.8,
+      1.25
+    ],
+    "beta_ladder_hash": "851e084505679f3984d3aa6bca50b87c19276c1db2d3bc44768b4ab6f17e3112",
+    "matches_exp5714": true,
+    "source_algorithm_hash": "921a0c316c9bbd2cd94c9e3979d7b21272b2c02aa5506617da14673c7f4803e6"
+  },
+  "tests_added_or_reused": [],
+  "timing_claimed": false,
+  "transition_budget_receipt": {
+    "algorithm": "one_axis_corrected_cdls_temperature_label_exchange",
+    "budget": {
+      "burn_in_sweeps": 1,
+      "cold_target_samples": 3,
+      "corrected_transitions": 12,
+      "sample_sweeps": 3,
+      "swap_attempts": 8,
+      "total_sweeps": 4
+    },
+    "ladder_unchanged": true,
+    "matched": true,
+    "python_active_backend": "python_exact_fallback",
+    "rust_active_backend": "rust_pyo3"
+  },
+  "two_axis_code_added": false,
+  "unsupported_case_policy": {
+    "broken_extension": "exact_python_fallback",
+    "corrupt_checkpoint": "fail_closed",
+    "declared_python_compatibility": "exact_python_fallback",
+    "invalid_shape": "fail_closed",
+    "malformed_descriptor": "fail_closed",
+    "missing_extension": "exact_python_fallback",
+    "seed_mismatch": "fail_closed",
+    "two_axis_request": "fail_closed",
+    "unsupported_dtype_or_layout": "exact_python_fallback",
+    "unsupported_topology": "fail_closed",
+    "wrong_symbol": "exact_python_fallback"
+  },
+  "upstream_gate_receipts": {
+    "exp5714": {
+      "algorithm_hash_matches": true,
+      "hardware_speedup_claimed": false,
+      "path": "results/experiment_5714_one_axis_tempering_rust_parity.json",
+      "ready": true,
+      "ready_score": 1.0,
+      "sha256": "01d711e5fd2c565499a725c1df0cfd95ab6b14ccaf6dbf38beb6ecc8e033819e",
+      "timing_claimed": false,
+      "two_axis_closed": true
+    },
+    "exp5715": {
+      "checkpoint_schema": "carnot.one_axis_tempering.checkpoint.v1",
+      "checkpoint_schema_matches": true,
+      "hardware_speedup_claimed": false,
+      "path": "results/experiment_5715_one_axis_tempering_rust_quality_restart.json",
+      "ready": true,
+      "ready_score": 1.0,
+      "sha256": "e674f56ebf8da66074b5a7202c2d27e0e0988e63249a97c91b2ff76993651720",
+      "timing_claimed": false,
+      "two_axis_closed": true
+    },
+    "two_axis_closed_receipts": {
+      "closed": true,
+      "exp5714_two_axis_code_added": false,
+      "exp5715_two_axis_arm_count": 0
+    }
+  }
+}
