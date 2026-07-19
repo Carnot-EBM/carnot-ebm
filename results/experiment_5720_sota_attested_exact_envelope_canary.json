@@ -1,0 +1,51 @@
+{
+  "experiment": 5720,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-19",
+  "started_at": "2026-07-19T20:09:05.217440+00:00",
+  "finished_at": "2026-07-19T20:09:05.217440+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp5719 channel readiness: build a sealed attested exact-envelope SOTA canary",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answer_channel_ready_score (actual=0.0 >= expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5719-sota-answer-channel-forensics",
+      "artifact_field": "answer_channel_ready_score",
+      "op": ">=",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 >= expected=1.0"
+    },
+    {
+      "upstream": "exp5719-sota-answer-channel-forensics",
+      "artifact_field": "positive_control_parse_rate",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    },
+    {
+      "upstream": "exp5719-sota-answer-channel-forensics",
+      "artifact_field": "qualified_model_count",
+      "op": ">=",
+      "expected": 2,
+      "actual": 0,
+      "passed": false,
+      "reason": "actual=0 >= expected=2"
+    },
+    {
+      "upstream": "exp5719-sota-answer-channel-forensics",
+      "artifact_field": "cuda_offload_authenticated_score",
+      "op": ">=",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 >= expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
