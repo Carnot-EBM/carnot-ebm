@@ -1063,6 +1063,136 @@ not fail closed, a two-axis arm appears, or any speed/hardware claim appears
 |---|---|---|
 | REQ-SAMPLE-5715 | Planned (`python/carnot/experiment_5715_one_axis_tempering_rust_quality_restart.py`, `results/experiment_5715_one_axis_tempering_rust_quality_restart.json`) | Planned (`tests/python/test_experiment_5715_one_axis_tempering_rust_quality_restart.py`) |
 
+### REQ-SAMPLE-5723: One-Axis Rust SamplerBackend Production Integration
+
+Carnot MUST expose the promoted one-axis corrected-cDLS temperature-label
+replica-exchange Rust/PyO3 kernel through the production sampler backend
+boundary without changing the default backend. The implementation SHALL provide
+a `OneAxisRustBackend` that satisfies `SamplerBackend`, register it under the
+explicit factory name `one_axis_rust`, and leave the default factory selection
+as `cpu` unless a caller explicitly requests the one-axis backend.
+
+The backend SHALL accept only the frozen one-axis descriptor
+`one_axis_corrected_cdls_temperature_label_exchange` with topology
+`one_axis_temperature_label_exchange`, Exp5714's source algorithm hash,
+Exp5714/5715's beta ladder, proposal standard deviation, drift scale, label-only
+adjacent swap schedule, corrected transition budget, LCG seed semantics, and
+Ising energy convention `E(x) = -0.5 x^T J x - h^T x`. It SHALL route
+Rust-supported descriptors through the Rust/PyO3 config/core/state symbols and
+SHALL use an explicit exact Python fallback when the extension is missing,
+broken, missing symbols, the input is a declared Python-compatibility case, or
+the input dtype/layout is outside the adapter's Rust-supported array surface.
+Fallback use SHALL be recorded with `active_backend="python_exact_fallback"` and
+a non-empty `fallback_reason`; malformed descriptors, unsupported topology,
+invalid shape, corrupt checkpoints, seed mismatches, and two-axis requests SHALL
+fail closed.
+
+The backend SHALL emit stable input, output, and checkpoint receipts for each
+run. Checkpoints SHALL include a schema version, source algorithm hash,
+descriptor hash, input hash, seed, beta-ladder hash, portable sampler state,
+active backend, fallback reason, and payload checksum. Duplicate save/load,
+corruption rejection, Python-to-Rust restart, and Rust-to-Python restart SHALL
+be verified through the production adapter rather than only through experiment
+helpers.
+
+Experiment 5723 SHALL write
+`results/experiment_5723_one_axis_rust_samplerbackend_integration.json` after
+verifying Exp5714/5715 hashes, ready scores, algorithm hash, checkpoint schema,
+and two-axis-closed receipts. `one_axis_samplerbackend_ready_score` SHALL equal
+exactly `1.0` only when protocol/factory conformance, exact Rust/Python parity,
+checkpoint/restart, fallback equivalence, and broken controls pass. The
+artifact SHALL make no speed or hardware claim:
+`two_axis_code_added=false`, `timing_claimed=false`, and
+`hardware_speedup_claimed=false`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `upstream_gate_receipts`, `source_algorithm_hash`,
+`rust_source_hash`, `pyo3_binding_hash`, `python_adapter_hash`,
+`sampler_backend_protocol`, `factory_registration_receipt`,
+`supported_descriptor_schema`, `unsupported_case_policy`, `seed_semantics`,
+`temperature_ladder_receipt`, `swap_schedule_receipt`,
+`transition_budget_receipt`, `energy_parity_max_error`,
+`proposal_parity_max_error`, `swap_parity_max_error`, `decision_log_parity`,
+`checkpoint_schema_version`, `checkpoint_roundtrip_pass`,
+`python_to_rust_restart_pass`, `rust_to_python_restart_pass`,
+`fallback_cases`, `fallback_equivalence_pass`,
+`exact_fallback_equivalence_score`, `broken_control_results`,
+`one_axis_samplerbackend_ready_score`, `two_axis_code_added`,
+`timing_claimed`, `hardware_speedup_claimed`, `inference_substrate`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`production_python_samplerbackend_plus_rust_pyo3_one_axis`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every required production integration field exists before the sampler backend can be marked ready."
+- `upstream_gate_receipts`: principle "Pins Exp5714 exact parity, Exp5715 hard-instance quality/restart, source hashes, algorithm identity, checkpoint schema, and two-axis-closed receipts."
+- `source_algorithm_hash`: principle "Binds the adapter to the frozen one-axis algorithm recipe rather than a renamed or tuned variant."
+- `rust_source_hash`: principle "Content-addresses the Rust kernel used by the adapter."
+- `pyo3_binding_hash`: principle "Content-addresses the PyO3 binding symbols used by the adapter."
+- `python_adapter_hash`: principle "Content-addresses the production Python adapter that implements fallback and receipts."
+- `sampler_backend_protocol`: principle "Proves the adapter satisfies the production SamplerBackend boundary."
+- `factory_registration_receipt`: principle "Proves explicit factory registration while preserving the cpu default."
+- `supported_descriptor_schema`: principle "Declares the only descriptor accepted for the promoted one-axis path."
+- `unsupported_case_policy`: principle "Separates exact fallback cases from fail-closed malformed or out-of-scope cases."
+- `seed_semantics`: principle "Records the portable LCG state and seed mismatch rule used for replay and restart."
+- `temperature_ladder_receipt`: principle "Proves the Exp5714/5715 one-axis beta ladder was not changed."
+- `swap_schedule_receipt`: principle "Proves exchange remains label-only adjacent one-axis swapping."
+- `transition_budget_receipt`: principle "Accounts for corrected transitions and swap attempts without adding work silently."
+- `energy_parity_max_error`: principle "Quantifies production-adapter energy parity against the exact Python fallback."
+- `proposal_parity_max_error`: principle "Quantifies production-adapter corrected proposal parity."
+- `swap_parity_max_error`: principle "Quantifies production-adapter swap-ratio parity."
+- `decision_log_parity`: principle "Proves the recorded production decision log matches across Rust and exact fallback."
+- `checkpoint_schema_version`: principle "Pins the production adapter checkpoint schema."
+- `checkpoint_roundtrip_pass`: principle "Proves duplicate save/load preserves state and receipts."
+- `python_to_rust_restart_pass`: principle "Proves a Python fallback checkpoint can resume through the Rust adapter."
+- `rust_to_python_restart_pass`: principle "Proves a Rust adapter checkpoint can resume through exact Python fallback."
+- `fallback_cases`: principle "Lists every exercised exact fallback case and the recorded reason."
+- `fallback_equivalence_pass`: principle "Gates fallback only when samples, checkpoints, and decision logs match exactly."
+- `exact_fallback_equivalence_score`: principle "Provides a scalar gate equal to 1.0 only when all fallback cases are exact."
+- `broken_control_results`: principle "Documents broken-extension, wrong-symbol, malformed descriptor, unsupported topology, corrupt checkpoint, seed mismatch, and energy-sign controls."
+- `one_axis_samplerbackend_ready_score`: principle "Equals 1.0 only when upstream gates, protocol/factory exposure, parity, restart, fallback, and controls all pass."
+- `two_axis_code_added`: principle "Bare false keeps retired penalty-axis exchange closed."
+- `timing_claimed`: principle "Bare false prevents integration readiness from becoming a timing claim."
+- `hardware_speedup_claimed`: principle "Bare false prevents PyO3 routing from becoming a hardware claim."
+- `inference_substrate`: principle "Declares production Python SamplerBackend plus Rust/PyO3 one-axis execution with no LLM or board participation."
+- `random_seeds`: principle "Records replay seeds for production adapter parity, fallback, and restart checks."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether production SamplerBackend integration is ready."
+
+### SCENARIO-SAMPLE-5723: One-Axis Rust Backend Emits Production Integration Evidence
+
+**Given** Exp5714 exact Rust/Python one-axis parity and Exp5715 hard-instance
+quality/restart readiness are hash-pinned
+**When** the production `OneAxisRustBackend` is selected explicitly through
+`get_backend("one_axis_rust")` and run on the frozen one-axis descriptor
+**Then** Rust/PyO3 and exact Python fallback samples, energies, proposal
+diagnostics, swap diagnostics, decision logs, transition budgets, output
+receipts, checkpoints, duplicate save/load, and cross-language restarts match
+within frozen tolerances
+**And** missing/broken/wrong-symbol extension and declared compatibility cases
+take recorded exact fallback
+**And** malformed descriptors, unsupported topology, corrupt checkpoints, seed
+mismatches, and energy-sign controls fail closed or are rejected
+**And** `results/experiment_5723_one_axis_rust_samplerbackend_integration.json`
+is written with `one_axis_samplerbackend_ready_score=1.0`,
+`two_axis_code_added=false`, `timing_claimed=false`, and
+`hardware_speedup_claimed=false`.
+
+**If** upstream Exp5714/5715 gates are stale, the factory changes the default,
+Rust/Python adapter parity fails, checkpoint or restart receipts fail, fallback
+equivalence is not exact, any out-of-scope control is accepted, or any
+timing/hardware claim appears
+**Then** the artifact SHALL still emit terminal evidence with
+`one_axis_samplerbackend_ready_score=0.0` and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5723)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5723 | Implemented (`python/carnot/samplers/one_axis_rust_backend.py`, `python/carnot/samplers/backend.py`, `python/carnot/experiment_5723_one_axis_rust_samplerbackend_integration.py`, `results/experiment_5723_one_axis_rust_samplerbackend_integration.json`) | Implemented (`tests/python/samplers/test_one_axis_rust_backend.py`, `tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
