@@ -1,0 +1,355 @@
+{
+  "action_order_change_count": 2,
+  "arc_epistemic_ledger_ready_score": 1.0,
+  "call_graph_receipt": {
+    "after_transition_write": "E3AgentPolicy.next_move -> AgentEpistemicLedger.observe_transition",
+    "before_proposal_routing_write": "E3AgentPolicy.next_move -> AgentEpistemicLedger.observe_state",
+    "candidate_read": "StepwiseExplorer._candidates -> AgentEpistemicLedger.rank_candidates",
+    "first_move_after_noop_commit": [
+      2,
+      null
+    ]
+  },
+  "candidate_order_change_count": 2,
+  "commitment_count": 2,
+  "commitment_policy": {
+    "allowed_commitments": [
+      "deprioritize_repeated_noop_signature",
+      "prefer_supported_visible_change_or_level_progress_signature"
+    ],
+    "candidate_scope": "existing_legal_candidates_only",
+    "fail_closed_on": [
+      "missing_observation",
+      "corrupted_hash",
+      "stale_evidence",
+      "contradiction",
+      "ledger_disabled"
+    ],
+    "max_contradictions_to_commit": 0,
+    "min_support_to_commit": 2,
+    "stale_after_steps": 8
+  },
+  "control_totals": {
+    "action_order_change_count": 3,
+    "candidate_order_change_count": 3,
+    "commitment_count": 4,
+    "false_commit_count": 0,
+    "unsafe_commit_count": 1
+  },
+  "experiment": "experiment_5725_arc_epistemic_ledger_live_qualification",
+  "fallback_equivalence": {
+    "corrupted_hash": true,
+    "ledger_disabled": true,
+    "missing_observation": true
+  },
+  "false_commit_count": 0,
+  "field_principles": {
+    "arc_epistemic_ledger_ready_score": {
+      "principle": "1.0 only when live reachability, exact controls, LOO/integrity, no regressions, decision changes, and clean provenance all pass."
+    },
+    "commitment_policy": {
+      "principle": "commit only under fresh generic evidence with support threshold met, contradictions bounded, matching existing candidate signatures, and clean integrity."
+    },
+    "false_commit_count": {
+      "principle": "must be zero; a wrong evidence-sufficient action commitment blocks readiness."
+    },
+    "game_adapter_count": {
+      "principle": "must remain 0; reproduced-level fixtures are labels for qualification, not per-game adapters."
+    },
+    "game_source_read_count": {
+      "principle": "must remain 0; ledger evidence is agent-owned runtime evidence."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed complete:/blocked: summary; no novel level or solve claim is allowed."
+    },
+    "ledger_schema": {
+      "principle": "freezes confirmed facts, ranked hypotheses, open questions, supersession, evidence sufficiency, and bounded commitment entries."
+    },
+    "ledger_update_rules": {
+      "principle": "updates only from visible states, emitted actions, immediate outcomes, and current runtime feature receipts."
+    },
+    "live_read_call_count": {
+      "principle": "proves submitted-policy candidate ordering consulted the ledger."
+    },
+    "live_write_call_count": {
+      "principle": "proves submitted-policy observation and transition hooks populated the ledger."
+    },
+    "outer_loop_bfs_used": {
+      "principle": "must remain false; no off-path exhaustive solver participates."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy only -- Exp5725 qualifies a live reachable organization mechanism and claims no solve."
+    },
+    "unsafe_commit_count": {
+      "principle": "must be zero; stale, contradicted, corrupt, missing, or off-path commitments fail closed."
+    }
+  },
+  "game_adapter_count": 0,
+  "game_adapter_fixture_note": "fixture labels only; no GameAdapter imported or called",
+  "game_source_read_count": 0,
+  "honest_verdict": "complete: arc_epistemic_ledger_live_reachable_safe_no_solve_claim",
+  "hypothesis_revision_count": 3,
+  "inference_substrate": "arc_visible_state_epistemic_ledger_no_llm",
+  "integrity_control_results": [
+    {
+      "action_order_changed": false,
+      "candidate_order_changed": false,
+      "commitment_count": 0,
+      "false_commit_count": 0,
+      "name": "stale_evidence",
+      "safe_fallback": true,
+      "unsafe_commit_count": 0
+    },
+    {
+      "action_order_changed": false,
+      "candidate_order_changed": false,
+      "commitment_count": 0,
+      "false_commit_count": 0,
+      "name": "missing_observation",
+      "safe_fallback": true,
+      "unsafe_commit_count": 0
+    },
+    {
+      "action_order_changed": false,
+      "candidate_order_changed": false,
+      "commitment_count": 0,
+      "false_commit_count": 0,
+      "name": "corrupted_hash",
+      "safe_fallback": true,
+      "unsafe_commit_count": 0
+    }
+  ],
+  "known_level_regression_count": 0,
+  "leave_one_game_out_protocol": {
+    "games": [
+      "tu93",
+      "sp80",
+      "g50t",
+      "s5i5",
+      "lp85"
+    ],
+    "held_out_axis": "fixture_type",
+    "pass_condition": "all held-out fixture types retain fallback safety and exact synthetic behavior",
+    "rule": "ledger thresholds are fixed before withholding each fixture type",
+    "used_for_solve_credit": false
+  },
+  "ledger_budget_overhead": {
+    "operation_count": 11,
+    "over_cap": false,
+    "resource_caps": {
+      "max_commitments": 64,
+      "max_facts": 128,
+      "max_hypotheses": 64,
+      "max_questions": 64,
+      "max_superseded": 64
+    },
+    "retention": "arc_epistemic_ledger.v1"
+  },
+  "ledger_disabled_control_present": true,
+  "ledger_operation_counts": {
+    "commitment_checks": 4,
+    "observe_state": 2,
+    "observe_transition": 3,
+    "rank_candidates": 2
+  },
+  "ledger_schema": {
+    "active_hypothesis_fields": [
+      "id",
+      "kind",
+      "candidate_signature",
+      "support_count",
+      "contradiction_count",
+      "support",
+      "counterevidence",
+      "rank",
+      "expires_at_step"
+    ],
+    "bounded_commitment_fields": [
+      "candidate_signature",
+      "state_hash",
+      "reason",
+      "support_count",
+      "contradiction_count",
+      "unsafe",
+      "false"
+    ],
+    "caps": {
+      "max_commitments": 64,
+      "max_facts": 128,
+      "max_hypotheses": 64,
+      "max_questions": 64,
+      "max_superseded": 64
+    },
+    "confirmed_fact_fields": [
+      "id",
+      "kind",
+      "state_hash",
+      "candidate_signature",
+      "outcome",
+      "runtime_receipts"
+    ],
+    "evidence_sufficiency_fields": [
+      "min_support_to_commit",
+      "max_contradictions_to_commit",
+      "stale_after_steps"
+    ],
+    "open_question_fields": [
+      "id",
+      "candidate_signature",
+      "question",
+      "generic_discriminating_observation",
+      "resolved",
+      "resolution"
+    ],
+    "schema_version": "arc_epistemic_ledger.v1",
+    "superseded_entry_fields": [
+      "entry_id",
+      "reason",
+      "payload",
+      "step"
+    ]
+  },
+  "ledger_update_rules": {
+    "allowed_inputs": [
+      "visible_state_hash",
+      "visible_state_shape",
+      "existing_legal_candidate_signature",
+      "emitted_action",
+      "immediate_visible_outcome",
+      "level_counter_delta",
+      "runtime_feature_receipt"
+    ],
+    "expiration": "stale_after_steps",
+    "forbidden_inputs": [
+      "game_source",
+      "GameAdapter",
+      "hardcoded_game_id_color_coordinate_action_goal",
+      "imported_solution",
+      "offline_bfs",
+      "llm_call"
+    ],
+    "ranking": "support_count_minus_contradiction_count_then_stable_candidate_order",
+    "supersession": "contradictions_above_threshold_or_stale"
+  },
+  "live_path_reachable": true,
+  "live_path_reachable_score": 1.0,
+  "live_read_call_count": 2,
+  "live_write_call_count": 5,
+  "new_levels_claimed": 0,
+  "open_question_resolution_count": 1,
+  "openspec_requirement_ids": [
+    "REQ-ARC-WMTE-5725"
+  ],
+  "outer_loop_bfs_used": false,
+  "per_game_constant_scan": {
+    "clean": true,
+    "fixture_game_ids": [
+      "tu93",
+      "sp80",
+      "g50t",
+      "s5i5",
+      "lp85"
+    ],
+    "fixture_manifest_ids_are_non_behavioral": true,
+    "per_game_constants_in_live_ledger": [],
+    "scanned_paths": [
+      "python/carnot/agentic/arc_epistemic_ledger.py",
+      "python/carnot/agentic/arc_competition_agent.py"
+    ]
+  },
+  "per_game_leakage_detected": false,
+  "random_seeds": [
+    20260719,
+    5725
+  ],
+  "redundant_verification_delta": {
+    "baseline_redundant_noop_candidates": 1,
+    "delta": -1,
+    "ledger_redundant_noop_candidates": 0
+  },
+  "registry_precheck": {
+    "fixture_selection_order": "registry_precheck_before_fixture_scoring",
+    "ok": true,
+    "registry_hash_before": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e",
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "reproduced_games_seen": 25,
+    "reproducible_total_levels": 183,
+    "solve_provenance": "development_proxy"
+  },
+  "registry_updated": false,
+  "reproduced_level_fixture_manifest": [
+    {
+      "fixture_type": "navigation",
+      "game": "tu93",
+      "source": "reproduced_registry_label"
+    },
+    {
+      "fixture_type": "placement",
+      "game": "sp80",
+      "source": "reproduced_registry_label"
+    },
+    {
+      "fixture_type": "count",
+      "game": "g50t",
+      "source": "reproduced_registry_label"
+    },
+    {
+      "fixture_type": "toggle",
+      "game": "s5i5",
+      "source": "reproduced_registry_label"
+    },
+    {
+      "fixture_type": "negative",
+      "game": "lp85",
+      "source": "reproduced_registry_label"
+    }
+  ],
+  "reproducibility_checksum": "sha256:14020ed4f783b1f119975f0ab9313e60b70a7f8ce72a63bf8ddb328dfcd27457",
+  "resource_caps": {
+    "max_commitments": 64,
+    "max_facts": 128,
+    "max_hypotheses": 64,
+    "max_questions": 64,
+    "max_superseded": 64
+  },
+  "result_path": "results/experiment_5725_arc_epistemic_ledger_live_qualification.json",
+  "schema": "carnot.exp5725.arc_epistemic_ledger_live_qualification.v1",
+  "solve_provenance": "development_proxy",
+  "source_paths": [
+    "python/carnot/agentic/arc_epistemic_ledger.py",
+    "python/carnot/agentic/arc_competition_agent.py",
+    "python/carnot/experiment_5725_arc_epistemic_ledger_live_qualification.py",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+    "tests/python/test_experiment_5725_arc_epistemic_ledger_live_qualification.py"
+  ],
+  "stale_or_conflict_recovery_results": {
+    "contradiction_recovery": true,
+    "corrupted_hash": true,
+    "missing_observation": true,
+    "stale_evidence": true
+  },
+  "state_hash_positive_control": "sha256:cd4a0aea0738d89d77af467674881f02a24321b315ff55798c74973e6da53aea",
+  "synthetic_fixture_manifest": [
+    {
+      "fixture": "visible_change",
+      "role": "positive_action_effect"
+    },
+    {
+      "fixture": "level_progress",
+      "role": "positive_commitment"
+    },
+    {
+      "fixture": "repeated_noop",
+      "role": "redundant_verification_control"
+    },
+    {
+      "fixture": "contradiction",
+      "role": "supersession_control"
+    },
+    {
+      "fixture": "missing_or_corrupt",
+      "role": "integrity_fallback_control"
+    }
+  ],
+  "unsafe_commit_count": 0
+}

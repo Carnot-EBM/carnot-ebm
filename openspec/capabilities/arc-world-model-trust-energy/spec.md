@@ -7393,6 +7393,121 @@ passes with at least one reproduced level and non-empty reproduction receipts;
 otherwise the candidate remains a null even if the original runtime observed a
 level transition.
 
+### REQ-ARC-WMTE-5725: Agent-Owned Epistemic Ledger Live Qualification
+
+Experiment 5725 SHALL add a generic, agent-owned epistemic ledger reachable
+from the submitted `E3AgentPolicy`. The ledger SHALL organize only facts the
+agent owns at runtime: visible-state hashes and shapes, legal action candidates
+already proposed by the live policy, emitted actions, immediate visible
+outcomes, level-counter deltas, and current runtime feature receipts. It SHALL
+NOT read game source, use `GameAdapter`s, hard-code game IDs/colors/
+coordinates/actions/goals, import solutions, run offline BFS, invoke an LLM, or
+scan per-game constants. The registry precheck SHALL run before any fixtures
+are scored, the workload SHALL be development-proxy only, and the artifact SHALL
+claim no novel level.
+
+The ledger schema SHALL be frozen and auditable. It SHALL expose confirmed observation/action facts,
+active hypotheses ranked by support minus
+contradiction, open discriminating questions tied only to existing legal
+proposal signatures, superseded entries for stale/contradicted/expired
+records, evidence-sufficiency decisions, and bounded commitment reasons. Update
+rules SHALL be deterministic, schema-versioned, resource-capped, and fail
+closed when observations are missing, hashes are corrupted, evidence is stale,
+or contradictions exceed the frozen threshold.
+
+The live `E3AgentPolicy` SHALL write to the ledger before proposal/routing and
+after accepted transitions. Its `StepwiseExplorer` SHALL read the ledger during
+candidate ordering and MAY only reorder existing legal candidates; it SHALL NOT
+create actions, solve off-path, or replace the planner. Open questions MAY
+prioritize an existing candidate only when they name a generic discriminating
+observation, such as whether an action family changes the visible state or
+advances the level counter. Evidence-sufficient commitment MAY skip redundant
+verification by demoting repeated no-op signatures or choose an already
+supported reachable candidate only under frozen generic conditions: fresh
+evidence, support at or above threshold, contradiction count at or below
+threshold, matching candidate signature, and clean state-hash integrity.
+
+Experiment 5725 SHALL freeze schema, update rules, ranking, expiration,
+supersession, thresholds, leave-one-game-out protocol, and resource caps before
+scoring. It SHALL test exact synthetic controls and diverse already-reproduced
+navigation, placement, count, toggle, and negative fixtures. Controls SHALL
+include stale evidence, contradictions, repeated no-ops, misleading
+hypotheses, shuffled candidate links, missing observations, corrupted hashes,
+always-commit, never-commit, and ledger-disabled arms, with recovery/fallback
+recorded.
+
+The terminal artifact
+`results/experiment_5725_arc_epistemic_ledger_live_qualification.json` SHALL
+include principle-annotated top-level fields for `field_principles`,
+`registry_precheck`, `solve_provenance`, `openspec_requirement_ids`,
+`source_paths`, `call_graph_receipt`, `ledger_schema`,
+`ledger_update_rules`, `commitment_policy`, `resource_caps`,
+`synthetic_fixture_manifest`, `reproduced_level_fixture_manifest`,
+`leave_one_game_out_protocol`, `live_read_call_count`, `live_write_call_count`,
+`ledger_operation_counts`, `hypothesis_revision_count`,
+`open_question_resolution_count`, `candidate_order_change_count`,
+`action_order_change_count`, `commitment_count`, `false_commit_count`,
+`unsafe_commit_count`, `stale_or_conflict_recovery_results`,
+`known_level_regression_count`, `redundant_verification_delta`,
+`ledger_budget_overhead`, `integrity_control_results`,
+`fallback_equivalence`, `game_source_read_count`, `game_adapter_count`,
+`outer_loop_bfs_used`, `per_game_constant_scan`,
+`per_game_leakage_detected`, `live_path_reachable`,
+`live_path_reachable_score`, `arc_epistemic_ledger_ready_score`,
+`new_levels_claimed`, `registry_updated`, `inference_substrate`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+
+`arc_epistemic_ledger_ready_score` SHALL be `1.0` only when live read/write
+hooks are exercised, synthetic controls update exactly, leave-one-game-out and
+integrity controls pass, false/unsafe commits are zero, already reproduced
+levels do not regress, intended candidate/action decisions change, leakage and
+off-path scans are clean, and no solve is claimed. Any failed gate SHALL emit
+`0.0` with a terminal honest verdict.
+
+Required field principles SHALL include:
+
+- `solve_provenance`: principle "development_proxy only -- Exp5725 qualifies a live reachable organization mechanism and claims no solve."
+- `ledger_schema`: principle "freezes confirmed facts, ranked hypotheses, open questions, supersession, evidence sufficiency, and bounded commitment entries."
+- `ledger_update_rules`: principle "updates only from visible states, emitted actions, immediate outcomes, and current runtime feature receipts."
+- `commitment_policy`: principle "commit only under fresh generic evidence with support threshold met, contradictions bounded, matching existing candidate signatures, and clean integrity."
+- `live_read_call_count`: principle "proves submitted-policy candidate ordering consulted the ledger."
+- `live_write_call_count`: principle "proves submitted-policy observation and transition hooks populated the ledger."
+- `false_commit_count`: principle "must be zero; a wrong evidence-sufficient action commitment blocks readiness."
+- `unsafe_commit_count`: principle "must be zero; stale, contradicted, corrupt, missing, or off-path commitments fail closed."
+- `game_source_read_count`: principle "must remain 0; ledger evidence is agent-owned runtime evidence."
+- `game_adapter_count`: principle "must remain 0; reproduced-level fixtures are labels for qualification, not per-game adapters."
+- `outer_loop_bfs_used`: principle "must remain false; no off-path exhaustive solver participates."
+- `arc_epistemic_ledger_ready_score`: principle "1.0 only when live reachability, exact controls, LOO/integrity, no regressions, decision changes, and clean provenance all pass."
+- `honest_verdict`: principle "terminal-prefixed complete:/blocked: summary; no novel level or solve claim is allowed."
+
+#### SCENARIO-ARC-WMTE-5725-LEDGER-STATE-AND-CONTROLS
+
+Given visible synthetic frames, existing legal candidates, emitted actions, and
+immediate outcomes
+When the ledger records observations, ranks hypotheses, resolves open
+questions, expires stale evidence, and handles contradicted/corrupted inputs
+Then confirmed facts, support/counterevidence, superseded entries,
+commitments, and fail-closed fallback diagnostics match the frozen schema
+exactly.
+
+#### SCENARIO-ARC-WMTE-5725-LIVE-E3-REACHABILITY
+
+Given a submitted `E3AgentPolicy` with the ledger enabled and induction
+disabled for a no-LLM control run
+When the policy receives visible frames and emits legal actions
+Then the ledger is written before proposal/routing, written after accepted
+transitions, read during candidate ordering, and can change only the order of
+existing candidates.
+
+#### SCENARIO-ARC-WMTE-5725-QUALIFICATION-ARTIFACT
+
+Given registry-prechecked synthetic and already reproduced fixture manifests
+When Experiment 5725 builds its qualification artifact
+Then all required fields are present, `solve_provenance=development_proxy`,
+`new_levels_claimed=0`, `registry_updated=false`, leakage/off-path counts are
+clean, and `arc_epistemic_ledger_ready_score` is 1.0 only if every frozen safety
+and reachability gate passes.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD
