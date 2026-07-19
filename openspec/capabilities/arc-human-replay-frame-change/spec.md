@@ -9663,3 +9663,97 @@ consideration.
 #### SCENARIO-ARC-WMTE-5725-NORMALIZED-DIAGNOSTICS-AND-FROZEN-STACK-SAFETY
 - **WHEN** `LocalGGUFProposer` runs with `use_chat_template=True`
 - **THEN** the `/v1/chat/completions` reply SHALL be normalized back into llama.cpp's native `{content, stop_type, truncated}` shape (`finish_reason=='length'` -> `stop_type='limit'`; a split-out `reasoning_content` folded into `content` wrapped in `<think>` tags) so `_record_completion_diagnostics` / `reason_engaged` / `overran` / `max_raw_completion_len` stay faithful to everything the model emitted, AND the field SHALL default `False` so the frozen live-generator path (Qwen3.5-9B raw `/completion`) stays byte-identical (a decentralization/frozen-stack-safe additive change, never a live-stack edit).
+
+### REQ-ARC-WMTE-5727: Perception/Representation Adequacy for Action-Effect (Dynamics) Prediction -- the Frame Representation Is at Chance; the Above-Chance Number Is a Trivial Action Base Rate (re-tests the "order-1 at chance" finding on the dynamics half of induction)
+
+**Motivation.** A full session of generator-side experiments (reasoning depth,
+retrieval augmentation, three generator sizes/architectures for the induction step
+-- REQ-ARC-WMTE-5714/5720/5721/5722/5723/5724/5725 and siblings) produced ZERO real
+level-ups. That convergence raises a diagnostic question upstream of generation: is
+the world-model induction task being posed on top of a frame representation that
+does not carry the signal induction needs -- in which case no generator swap could
+help, and the lever is a representation upgrade, not a generator? This REQ tests one
+concrete, load-bearing half of that question.
+
+**Prior context this extends.** The standing project finding
+(`project_arc_live_agent_learning_gaps` memory; exp4545
+`experiment_4545_cross_game_discrimination_v3`, REQ-LEARN-4476) is that FRAME-ONLY
+ORDER-1 features test at CHANCE in leave-one-GAME-out (LOO-AUROC ~0.49), while the
+FULL live featurizer (`cross_game_features_v3`) clears chance (~0.67). But exp4545
+measured that only on the VALUE/GOAL half of induction: POS = states ON a winning
+path, NEG = states one wrong move OFF it. It never measured the DYNAMICS half --
+"given this state and this action, will the action change the frame?" -- which the
+live perception layer (`arc_frame_change_predictor`, `ActionEffectExpansionPrior`)
+exists to answer and which dynamics induction depends on.
+
+**Method (exp5727, deliberately identical to exp4545's LOO methodology so the two
+halves are directly comparable).** Replay all banked solve trajectories on the
+offline `Arcade` env (18 banked games; 14 usable after dropping single-class games).
+At sampled on-path states, try candidate actions {gold} u {ACTION1..5}, step the REAL
+env, and label `y = 1` iff the raw grid changed (`count_nonzero(before != after) > 0`
+-- the SAME ground-truth definition the live `GroundTruthValidatedFrameChangeScorer`
+uses). Feature = `cross_game_features_v3(before, previous_frame, action_id)` -- never
+the after-frame, so no label leakage. Ablate the SAME feature classes as exp4545 and
+train the SAME `DiscriminativeVerifier` with leave-one-GAME-out AUROC + bootstrap CI.
+Substrate `verifier_ensemble_against_cached_candidates` (offline env-stepping + a
+linear classifier; no LLM, no GPU; 32.3s).
+
+**Result (honest null on perception).** The full-vector headline LOO-AUROC is 0.844
+(CI [0.704, 0.940], excludes chance) -- but an adversarial control shows this is NOT
+the frame representation carrying signal:
+
+| representation | LOO-AUROC |
+|---|---|
+| v2 (frame-only order-1) | **0.536** (chance; in-sample 0.797, so the harness works) |
+| v2 + frame_delta | 0.490 |
+| v2 + object_relational | 0.529 |
+| v2 + predicate_distance | 0.536 |
+| v2 + action_conditioned | 0.837 |
+| v3_full | 0.844 |
+| **action-id ALONE (control)** | **0.883** |
+
+The entire lift comes from the `action_conditioned` family, which is a bare one-hot
+of the action id. Action-id ALONE (no frame features at all) scores 0.883 -- HIGHER
+than v3_full -- and adding frame features to the action id changes LOO by -0.039 (it
+slightly hurts). The mechanism is a global per-action base rate that transfers across
+games because action semantics are shared: ACTION5 changes the frame only 15.8% of
+the time, ACTION6 (click) 100%, directional ACTION1-4 ~72%. That base rate is trivial
+prior knowledge every agent already has; it is not perception.
+
+**The precise finding.** On BOTH halves of induction the FRAME-ONLY ORDER-1
+representation sits at chance cross-game (exp4545 value target 0.494; exp5727 dynamics
+target 0.536 -- a fresh-corpus, fresh-target REPLICATION of the standing finding). On
+the value half the richer v3 frame features (frame_delta, object_relational) DO lift
+transfer to 0.674. On the dynamics half NO frame feature family lifts it: the current
+representation cannot predict, from the frame, WHICH state-specific actions are
+effective (which click target is live vs dead, which move direction is wall-blocked)
+beyond the action's global base rate. This is structural: `cross_game_features_v3`'s
+action family is a bare action-id one-hot with NO action x frame interaction term, so
+it literally cannot express state-grounded action-effect. That missing interaction
+feature -- exactly what the `SmallFrameChangeCNN` in `arc_frame_change_predictor`
+computes -- is the representational gap; and per the 2026-07-13 perception-grounding
+audit that CNN term is silently zero on the live default frontier-priority path (a
+dict-shape bug) and weight 0.05 even when alive.
+
+**Recommendation (diagnose-and-recommend only; no frozen default flipped).** (1) Do
+NOT conclude "perception is the wall, the generator work was wasted" -- that is too
+strong; the richer v3 features DO carry cross-game VALUE signal (exp4545, 0.674), so
+the value representation is adequate yet the offline->live bridge still fails (the
+unresolved 2026-06-23 issue). (2) Do NOT "add more global frame features" -- exp4545
+showed that is done for value and exp5727 shows it cannot help dynamics. (3) The
+actionable dynamics lever is a genuine action x frame-LOCALIZED perception feature
+(clickability of the click target; blocked-ness of the move direction) -- which the
+frame-change CNN already computes but is under-wired (fix its live frontier-priority
+call site + weight) rather than a generator swap or another global featurizer.
+
+#### SCENARIO-ARC-WMTE-5727-GATE
+- **WHEN** the exp5727 harness scores `cross_game_features_v3` on the action-effect (grid-change) target with leave-one-GAME-out AUROC over the banked-game corpus
+- **THEN** it SHALL report the per-feature-class LOO-AUROC table AND the action-id-alone control, and SHALL classify the result as a frame-representation signal ONLY IF the frame features beat the action-id-alone control by >= 0.05 AUROC (else the honest verdict is `action_effect_above_chance_but_driven_by_action_base_rate_not_frame_representation_honest_null_on_perception`), so an above-chance headline driven purely by the action base rate is never reported as evidence the representation is adequate.
+
+#### SCENARIO-ARC-WMTE-5727-POSITIVE-CONTROL-AND-NO-LEAKAGE
+- **WHEN** the harness computes the LOO null for the frame-only (v2) representation
+- **THEN** the in-sample (train==test) AUROC SHALL be reported as a positive control and SHALL exceed 0.5 (measured 0.797) so the null is informative rather than a broken harness, AND every feature vector SHALL be computed from `(before_frame, real_previous_frame, action_id)` only -- never the after-frame -- so the ground-truth grid-change label cannot leak into the features.
+
+#### SCENARIO-ARC-WMTE-5727-LIVE-PATH-FIDELITY
+- **WHEN** the "current representation" under test is chosen
+- **THEN** it SHALL be the live-path featurizer `cross_game_features_v3` (the one `arc_competition_agent.py`'s value head loads; its shipped subset is `v2_plus_frame_delta`), NOT a hypothetical richer representation, per the ARC Live-Path Reachability Discipline -- so the finding describes what the shipped agent can actually encode, and the recommended lever (an action x frame-localized feature such as the `SmallFrameChangeCNN` term) names a real live-path module rather than a strawman.

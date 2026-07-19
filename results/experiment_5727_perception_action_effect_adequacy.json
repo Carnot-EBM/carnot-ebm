@@ -1,0 +1,261 @@
+{
+  "action_base_rate_control": {
+    "action_id_only_loo_auroc": 0.883162919485108,
+    "frame_adds_over_action_id": -0.039145025054029614,
+    "frame_beats_action_margin_threshold": 0.05,
+    "frame_only_v2_loo_auroc": 0.5360800284834792,
+    "interpretation": "If action_id_only ~= v3_full, the above-chance LOO is a per-action-type base rate (clicks act, arrows often do not), NOT the frame representation carrying state-grounded action-effect signal. The frame representation is adequate for the dynamics sub-task only if frame features beat this control by a real margin.",
+    "per_action_change_base_rate": {
+      "action_conditioned_action_1": {
+        "change_rate": 0.726,
+        "n": 146
+      },
+      "action_conditioned_action_2": {
+        "change_rate": 0.7466,
+        "n": 146
+      },
+      "action_conditioned_action_3": {
+        "change_rate": 0.7123,
+        "n": 146
+      },
+      "action_conditioned_action_4": {
+        "change_rate": 0.7192,
+        "n": 146
+      },
+      "action_conditioned_action_5": {
+        "change_rate": 0.1575,
+        "n": 146
+      },
+      "action_conditioned_action_6": {
+        "change_rate": 1.0,
+        "n": 40
+      },
+      "action_conditioned_action_known": {
+        "change_rate": 0.6325,
+        "n": 770
+      }
+    },
+    "v3_full_loo_auroc": 0.8440178944310783
+  },
+  "candidate_simple_actions": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "comparison_to_exp4545_value_target": {
+    "exp4545_target": "win_reachability_on_path_vs_off_path",
+    "exp4545_v2_loo": 0.4936942710787065,
+    "exp4545_v3_full_loo": 0.6744657162333668,
+    "this_target": "action_effect_dynamics"
+  },
+  "corpus_checksum": "sha256:2dd2fa7ba0211394175942aa65cb16bf573b5df3aa337396ea46b7fa0da52bee",
+  "corpus_diagnostics": {
+    "games": {
+      "ar25": {
+        "dropped_single_class": {
+          "n": 60,
+          "pos": 60
+        },
+        "neg": 0,
+        "pos": 60,
+        "traj_len": 16
+      },
+      "cd82": {
+        "neg": 4,
+        "pos": 21,
+        "traj_len": 6
+      },
+      "cn04": {
+        "dropped_single_class": {
+          "n": 61,
+          "pos": 61
+        },
+        "neg": 0,
+        "pos": 61,
+        "traj_len": 14
+      },
+      "dc22": {
+        "neg": 18,
+        "pos": 44,
+        "traj_len": 133
+      },
+      "ka59": {
+        "neg": 11,
+        "pos": 45,
+        "traj_len": 12
+      },
+      "lp85": {
+        "neg": 60,
+        "pos": 12,
+        "traj_len": 55
+      },
+      "ls20": {
+        "neg": 12,
+        "pos": 48,
+        "traj_len": 14
+      },
+      "m0r0": {
+        "neg": 13,
+        "pos": 47,
+        "traj_len": 16
+      },
+      "r11l": {
+        "dropped_single_class": {
+          "n": 24,
+          "pos": 24
+        },
+        "neg": 0,
+        "pos": 24,
+        "traj_len": 5
+      },
+      "sc25": {
+        "neg": 12,
+        "pos": 51,
+        "traj_len": 17
+      },
+      "sk48": {
+        "neg": 15,
+        "pos": 45,
+        "traj_len": 15
+      },
+      "sp80": {
+        "dropped_single_class": {
+          "n": 20,
+          "pos": 20
+        },
+        "neg": 0,
+        "pos": 20,
+        "traj_len": 5
+      },
+      "su15": {
+        "neg": 35,
+        "pos": 7,
+        "traj_len": 8
+      },
+      "tn36": {
+        "neg": 60,
+        "pos": 12,
+        "traj_len": 103
+      },
+      "tr87": {
+        "neg": 12,
+        "pos": 48,
+        "traj_len": 128
+      },
+      "tu93": {
+        "neg": 12,
+        "pos": 48,
+        "traj_len": 65
+      },
+      "vc33": {
+        "neg": 15,
+        "pos": 3,
+        "traj_len": 4
+      },
+      "wa30": {
+        "neg": 4,
+        "pos": 56,
+        "traj_len": 34
+      }
+    },
+    "n_games_kept": 14,
+    "n_games_with_trajectory": 18,
+    "n_rows_kept": 770,
+    "n_rows_total": 935
+  },
+  "duration_s": 32.812,
+  "experiment": "experiment_5727_perception_action_effect_adequacy",
+  "false_negative_risk_checked": true,
+  "feature_class_in_sample_auroc": {
+    "v2": 0.7967109511612889,
+    "v2_plus_action_conditioned": 0.9599915832855661,
+    "v2_plus_frame_delta": 0.8006218210577488,
+    "v2_plus_object_relational": 0.8173391573127462,
+    "v2_plus_predicate_distance": 0.7967109511612889,
+    "v3_full": 0.9762518048773409
+  },
+  "feature_class_loo_auroc": {
+    "v2": 0.5360800284834792,
+    "v2_plus_action_conditioned": 0.837155230400861,
+    "v2_plus_frame_delta": 0.4898208828903447,
+    "v2_plus_object_relational": 0.5287432289907482,
+    "v2_plus_predicate_distance": 0.5360800284834792,
+    "v3_full": 0.8440178944310783
+  },
+  "field_principles": {
+    "action_base_rate_control": "the adversarial control: action-id-alone LOO. If it matches v3_full, the signal is a trivial per-action base rate, not the frame representation -- guards against overclaiming perception.",
+    "corpus_checksum": "content hash of (features,label) rows; catches silent corpus drift on replay.",
+    "duration_s": "wall-clock of corpus build + LOO eval; substrate is offline env-stepping + a linear classifier (no LLM/GPU), so the 1s cached-candidate floor applies.",
+    "false_negative_risk_checked": "a LOO null is valid only if the in-sample control passed.",
+    "honest_verdict": "terminal prefix; success: above-chance LOO with CI excluding 0.5, else complete: honest null.",
+    "in_sample_auroc": "POSITIVE CONTROL; must exceed 0.5 or the harness is broken and a null is uninformative (FALSE_NEGATIVE_RISK guard).",
+    "loo_auroc_ci": "bootstrap CI on per-game LOO AUROC; above-chance requires CI to exclude 0.5.",
+    "loo_auroc_mean": "HEADLINE -- mean leave-one-GAME-out AUROC; the only cross-game (not cross-frame) evidence the representation transfers to a hidden game.",
+    "missing_verifier_gaps": "if the representation is at chance, the missing discriminator is the input to the verifier-build backlog (Missing-Verifier Gap Logging).",
+    "positive_control_passed": "in-sample AUROC > 0.5 guards a silently-broken harness.",
+    "preconditions_checked": "records resources verified before the run.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "representation_under_test": "must be the live-path featurizer, not a hypothetical richer one (ARC Live-Path Reachability Discipline).",
+    "reproducibility_checksum": "determinism precondition for replay verification.",
+    "target": "action-effect is the DYNAMICS half of world-model induction; exp4545 measured the value/goal half. Both must carry signal for induction to be posed on adequate features.",
+    "v2_order1_loo_auroc": "the order-1 baseline this re-tests (exp4545 value-target: 0.494).",
+    "v3_full_loo_auroc": "the CURRENT live representation's ceiling on the dynamics target.",
+    "verifier_is_oracle": "false -- label is raw pixel-change ground truth, oracle-DISTINCT from the LEARNED DiscriminativeVerifier scoring the features."
+  },
+  "honest_verdict": "complete: action_effect_above_chance_but_driven_by_action_base_rate_not_frame_representation_honest_null_on_perception",
+  "in_sample_auroc": 0.9762518048773409,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "loo_auroc_ci": [
+    0.7041249066968577,
+    0.9398638271854932
+  ],
+  "loo_auroc_mean": 0.8440178944310783,
+  "loo_ci_excludes_chance": true,
+  "missing_verifier_gaps": [],
+  "n_held_out_games": 14,
+  "n_neg": 283,
+  "n_pos": 487,
+  "per_game_loo_auroc": {
+    "cd82": 0.16071428571428573,
+    "dc22": 0.702020202020202,
+    "ka59": 1.0,
+    "lp85": 1.0,
+    "ls20": 1.0,
+    "m0r0": 0.8166939443535188,
+    "sc25": 1.0,
+    "sk48": 0.8740740740740741,
+    "su15": 1.0,
+    "tn36": 0.9236111111111112,
+    "tr87": 0.9878472222222222,
+    "tu93": 0.8993055555555556,
+    "vc33": 0.7555555555555555,
+    "wa30": 0.6964285714285714
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "arc_agi_import": true,
+    "arc_value_learner_import": true,
+    "banked_game_count": 18,
+    "feature_names": "cross_game_features_v3",
+    "metaharness_import": true,
+    "seed": 0
+  },
+  "prior_context_retested": [
+    "REQ-LEARN-4476",
+    "experiment_4545_cross_game_discrimination_v3"
+  ],
+  "random_seed": 0,
+  "representation_under_test": "cross_game_features_v3 (the live-path featurizer); live value head ships the v2_plus_frame_delta subset",
+  "reproducibility_checksum": "6283baec408daf4124434ae03e8810adf7400ca658f8e7146eecb87d40a94703",
+  "schema": "carnot.arc_perception_action_effect_adequacy_5727.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-5727",
+    "SCENARIO-ARC-WMTE-5727-GATE"
+  ],
+  "states_per_game": 12,
+  "target": "action_effect_will_this_action_change_the_frame",
+  "v2_order1_loo_auroc": 0.5360800284834792,
+  "verifier_is_oracle": false
+}
