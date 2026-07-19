@@ -9757,3 +9757,111 @@ call site + weight) rather than a generator swap or another global featurizer.
 #### SCENARIO-ARC-WMTE-5727-LIVE-PATH-FIDELITY
 - **WHEN** the "current representation" under test is chosen
 - **THEN** it SHALL be the live-path featurizer `cross_game_features_v3` (the one `arc_competition_agent.py`'s value head loads; its shipped subset is `v2_plus_frame_delta`), NOT a hypothetical richer representation, per the ARC Live-Path Reachability Discipline -- so the finding describes what the shipped agent can actually encode, and the recommended lever (an action x frame-localized feature such as the `SmallFrameChangeCNN` term) names a real live-path module rather than a strawman.
+
+### REQ-ARC-WMTE-5726: ThinkingCap-Qwen3.6-27B 16384-Budget, Larger-N, Dual-GPU Retest (properly-scaled extension of REQ-ARC-WMTE-5725)
+
+REQ-ARC-WMTE-5725 established (via the chat-template fix) that ThinkingCap-27B genuinely
+reasons and completed `3/12` genuine-reasoning inductions within the 8192-token budget vs
+vanilla Qwen3.5-9B-MTP's `1/12` -- a **modest, NON-significant** edge at only `n=6` game pairs,
+with `9/12` ThinkingCap cells still OVERRUNNING the budget and `0/12` level-ups. Three
+operator-requested changes properly scale that test:
+
+1. **Doubled completion budget: 8192 -> 16384 tokens.** The 5725 failure mode was OVERRUN
+   (the model reasoned past 8192 without emitting the required `engine`+`is_level_complete`
+   code). This REQ tests whether a 2x budget lets materially more cells finish.
+2. **Larger N: 6 -> the maximum honestly-usable game set.** Of the 25 public games in
+   `ops/arc_solve_registry.yaml`, exactly **20** supply a valid seeded level-up window via
+   `build_progress_window` (5 fail: `wa30`/`sc25`/`tn36` have no `hand_verifier` adapter,
+   `ka59` hits a coordinate-parse `ValueError`, `dc22` returns `None`). **N>=30 UNIQUE games
+   is MATHEMATICALLY UNREACHABLE** (only 25 public games exist) -- disclosed, not silently
+   under-reported. Both generators are re-measured FRESH at 16384 (the 5725 8192 Qwen baseline
+   is NOT reused; the budget change makes it an unfair comparator).
+3. **Dual-GPU llama-server topology for the 16GB ThinkingCap-27B, empirically selected.** A
+   pre-run smoke test (coherence + tok/s) compares single-GPU vs a dual-GPU FFN+MTP-draft split
+   (FFN tensors `blk.N.ffn_{down,gate,up}` -> CUDA0 via `-ot ffn=CUDA0`, main attention + SSM +
+   KV cache -> CUDA1 via `-ts 0,1`, the nextn MTP self-draft -> CUDA0 via `-otd nextn=CUDA0` when
+   MTP on). This requires STOPPING the autonomous conductor to free GPU 0 (operator-authorized).
+   The winning topology is picked by measurement, never assumed.
+
+**Design -- generator is the ONLY scientific variable.** The induce cell is the
+`exp5724.run_reason_cell` mechanism (codeonly OFF, `/think`, no pre-opened fence, `tries=1`, the
+exp5722 stale-engine unlink guard, the REQ-ARC-WMTE-5720 actions-to-progress ladder) with ONLY
+the token budget changed 8192->16384. ThinkingCap routes through `/v1/chat/completions`
+(`use_chat_template=True`, the 5725 fix); Qwen3.5-9B routes through the raw `/completion` path it
+tolerates (the frozen live-generator path). This per-model routing asymmetry is intrinsic (each
+model uses the path it needs) and unchanged from 5724/5725. Servers run SEQUENTIALLY (one torn
+down before the next) so the two models never contend and never race on the shared
+`results/arc_e3/<game>/world_model.py`.
+
+**Substrate / provenance.** `inference_substrate=live_llm_inference` on 2x RTX 3090.
+`solve_provenance=development_proxy` on PUBLIC games; `read_game_source=False`,
+`used_env_source=True`, `verifier_is_oracle=False`. The dual-GPU topology is a DEV-RIG
+approximation of Kaggle L4x4, NOT the submission-kernel config (a separate operator decision).
+NEVER flips the frozen live default (operator-only) and NEVER submits.
+
+**Question / primary metric.** At the doubled 16384 budget and larger N, does ThinkingCap-27B
+(genuine `/think` via its chat template) COMPLETE the seeded induction more often than vanilla
+Qwen3.5-9B-MTP, and is any edge statistically distinguishable? PRIMARY metric = induce COMPLETION
+RATE (`n_induce_ok / n_cells`); PRIMARY test = **Wilcoxon signed-rank on the per-game deltas** (more
+powered than the binary sign test at this N), with the sign test + outlier-fragility reported
+alongside. Real LEVEL-UP count is the decisive downstream signal, reported regardless of the proxy
+metrics.
+
+**Falsifiable gate / interpretation.** (a) The dual-GPU topology must FIRST smoke-test COHERENT
+(a cross-GPU split that loads can still silently corrupt output) AND its speed measured honestly
+(single-GPU vs split, tok/s) BEFORE the full run -- the fastest COHERENT config is deployed. (b)
+The completion-rate result is reported with its Wilcoxon p; a positive delta at this N is a
+DIRECTION, not a significance claim, unless the test says so. (c) A clean negative (still
+small/non-significant even at larger N, or the dual-GPU split adds overhead rather than speeding
+up) is exactly as reportable as a positive. This REQ does not graduate any generator, budget, or
+GPU-topology change to the live stack.
+
+**Result artifact:** `results/experiment_5726_thinkingcap_16k_dualgpu_reason_ab.json`.
+
+**Implementation Status:** Run 2026-07-19 on 2x RTX 3090. Driver
+`python/carnot/experiment_5726_thinkingcap_16k_dualgpu_reason_ab.py`; artifact
+`results/experiment_5726_thinkingcap_16k_dualgpu_reason_ab.json` (adversarial-verify clean,
+`summarize_artifact` clean, 0 flags). **Deployed config: single-GPU, MTP off** (ThinkingCap on
+GPU0, VRAM 17586 MiB; Qwen on GPU1, VRAM 12186 MiB; budget 16384, n_ctx 32768, q8 KV), N=20 (the
+full usable ceiling) x 2 trials = 80 cells. **The completion advantage is now LARGE and
+STATISTICALLY SIGNIFICANT at proper N, but it does NOT translate to progress.** ThinkingCap
+genuinely reasoned on 40/40 cells and completed 31/40 (77.5%) genuine-reasoning inductions within
+the 16384 budget vs vanilla Qwen3.5-9B-MTP's 6/40 (15%) -- paired by game (N=20): +0.625 mean
+delta, 16 wins / 2 ties / 2 losses, sign-test p=0.0013, **Wilcoxon signed-rank p=0.0005
+(two-sided), p=0.0002 (greater)** -- a well-powered win, resolving 5725's non-significant n=6 edge
+(there ThinkingCap 3/12=25% vs Qwen 1/12; here 77.5% vs 15%, so the doubled budget roughly TRIPLED
+ThinkingCap's completion rate). ThinkingCap overran only 9/40 cells vs Qwen's 37/40.
+**BUT: ZERO level-ups in BOTH arms across all 20 game pairs (reached_levelup all-ties at 0), and
+plan_found only 9/40 (ThinkingCap) / 0/40 (Qwen).** Honest read: at the doubled budget the
+completion wall is decisively cleared for the token-efficient model, but completion is NOT the
+level-up bottleneck -- 31 completed inductions across 20 distinct games still produced no game
+progress, consistent with the entire REQ-ARC-WMTE-5714->5725 lineage (the wall is downstream, in
+plan generation/execution quality, not induce completion). Per the operator's stated priority (a
+single genuine real level-up matters more than a significant proxy-metric delta), the DECISIVE
+signal remains NULL. **Dual-GPU topology finding (empirical, honest negative):** the FFN-split
+(FFN tensors -> CUDA0 via `-ot ffn=CUDA0`, attention+SSM+KV -> CUDA1 via `-ts 0,1`) smoke-tested
+COHERENT (VRAM split cleanly GPU0=10476/GPU1=7540 MiB, real reasoning+code) but ran ~24% SLOWER
+than single-GPU (30.2 vs 39.5 tok/s) -- a 16GB Q4 model already fits one 24GB card, so intra-model
+tensor split only adds cross-GPU PCIe + sequential-GPU-execution overhead; no speed benefit for
+this model size. MTP self-draft is INFEASIBLE on the 27B in this llama.cpp build (b9606): it loads
+`--model-draft` as a full second 16GB copy (2x16=32GB > 24GB -> OOM), even though the GGUF ships
+nextn heads; Qwen3.5-9B's MTP works only because 2x5.5GB fits. So the run deployed the fastest
+COHERENT config (single-GPU). This is a DEV-RIG approximation of Kaggle L4x4, NOT the
+submission-kernel config; it does NOT flip the frozen live default (operator-only) and NEVER
+submits. **Recommendation:** do NOT adopt ThinkingCap-27B into the live stack on the strength of
+the completion win -- the completion advantage, though large and significant, buys no level-up;
+the lever that matters (plan generation/execution) is untouched. Keep single-GPU serving for a
+16GB-class model. A real-VRAM/latency feasibility check on the ~16GB Kaggle eval GPU remains a
+prerequisite before any deployment consideration of the 27B.
+
+#### SCENARIO-ARC-WMTE-5726-GENERATOR-IS-THE-ONLY-VARIABLE-AT-16384
+- **WHEN** `experiment_5726_thinkingcap_16k_dualgpu_reason_ab.py` runs a genuine-reasoning `(generator, game, trial)` cell
+- **THEN** it SHALL use the `exp5724.run_reason_cell` induce mechanism with ONLY the token budget changed (8192 -> 16384), re-measure BOTH generators FRESH at 16384 (NOT reusing 5725's 8192 numbers), hold harness/planner/verifier constant so ONLY the generator LLM (and its intrinsic chat-template-vs-raw routing) varies, and run the two servers SEQUENTIALLY so they never contend or race on `results/arc_e3/<game>/world_model.py`.
+
+#### SCENARIO-ARC-WMTE-5726-DUAL-GPU-TOPOLOGY-SMOKE-BEFORE-FULL-RUN
+- **WHEN** the dual-GPU ThinkingCap topology is a candidate for the full run
+- **THEN** a pre-run smoke test SHALL confirm OUTPUT COHERENCE (real reasoning + real code, not garbled cross-GPU-corrupted output) AND measure per-config tok/s (single-GPU vs the FFN+MTP-draft split) BEFORE any full-run numbers are trusted, the fastest COHERENT config SHALL be deployed, and the artifact SHALL record every tested config's coherence + speed in `dual_gpu_topology_smoke` -- reporting honestly whether the split sped the run up or added overhead.
+
+#### SCENARIO-ARC-WMTE-5726-SAMPLE-SIZE-CEILING-DISCLOSED
+- **WHEN** the artifact reports the completion-rate comparison
+- **THEN** it SHALL disclose that N>=30 UNIQUE games is mathematically unreachable (only 25 public games exist, of which 20 supply a valid seeded window), state the exact N used and whether it was further bounded by conductor downtime (a downtime bound, NOT a fresh statistical ceiling), use the Wilcoxon signed-rank on per-game deltas as the primary paired test (with the sign test + fragility alongside), and disclose that trials-per-game add per-game stability but are NOT independent game-level degrees of freedom.
