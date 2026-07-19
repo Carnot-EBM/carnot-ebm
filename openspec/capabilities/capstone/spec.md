@@ -2613,3 +2613,81 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5716 | Implemented (`python/carnot/experiment_5716_v510_capstone_reconciliation.py`, `results/experiment_5716_v510_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_5716_v510_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-5717: The `.511` transition workflow
+  `exp5717-transition-v511` in
+  `python/carnot/experiment_5717_transition_v511.py` SHALL read the terminal
+  Exp5706 through Exp5716 `.510` artifacts and conductor outcomes, including
+  the explicitly missing Exp5710 isolated canary, then write
+  `results/experiment_5717_transition_v511.json` without modifying
+  `research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL apply
+  exactly one new exclusion-manifest retirement for
+  `fr11_prospective_shadow_stream_exp5709_same_verdict`, preserving the `.509`
+  FR-11 controller, the disabled shadow adapter, future clean prospective
+  streams, generic lifecycle learning, generic ARC working memory, live ARC
+  attempts, one-axis exchange, and generic replica exchange.
+- SCENARIO-CAPSTONE-5717: The artifact
+  `results/experiment_5717_transition_v511.json` must emit top-level fields
+  `field_principles`, `source_capstone_hash`, `v510_task_verdicts`,
+  `v510_conductor_outcomes`, `sota_parse_failure_taxonomy`,
+  `cuda_offload_authenticated`, `fr11_prospective_promoted`,
+  `fr11_isolated_promoted`, `model_weight_mutation`,
+  `production_default_enabled`, `arc_registry_count`, `arc_registry_delta`,
+  `arc_relational_route_promoted`, `one_axis_rust_parity_ready_score`,
+  `one_axis_rust_quality_ready_score`, `retirements_required`,
+  `retirements_applied`, `preserved_scopes`, `retired_scopes`,
+  `current_task_range`, `dependency_map`, `gate_map`, `timing_claimed`,
+  `hardware_speedup_claimed`, `inference_substrate`, `test_commands`,
+  `test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. The
+  default `.511` transition must preserve Exp5708's exact root cause as
+  authenticated CUDA with 50 manifest rows, 21 truncations, 26 missing answers,
+  3 parses, 47 parse failures, and zero validator disagreements; refuse Exp5709
+  and Exp5710 promotion; keep production defaults and model weights unchanged;
+  preserve Exp5711 as qualification-only, Exp5712 as a safe matched null,
+  Exp5713 as `solve_provenance=live_agent_self_discovery` with registry count
+  `177` and delta `0`, and Exp5714/Exp5715 Rust readiness with no timing or
+  hardware-speedup claim; and allocate `current_task_range=exp5717-exp5728`
+  only after recording any historical artifact, roadmap, log, script, or test
+  collisions.
+- SCENARIO-CAPSTONE-5717-MISSING-MALFORMED: If an expected `.510` artifact is
+  missing or malformed, the workflow must still write the transition artifact,
+  list the affected path, keep every dependent promotion false, and start
+  `honest_verdict` with `blocked:` while preserving unrelated completed
+  evidence. A missing Exp5710 artifact must remain an absent isolated-canary
+  outcome and must not be recreated or upgraded.
+- SCENARIO-CAPSTONE-5717-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required transition field.",
+  `source_capstone_hash` = "binds the transition to the terminal .510 capstone bytes.",
+  `v510_task_verdicts` = "every Exp5706-Exp5716 verdict is explicit before carry-forward.",
+  `v510_conductor_outcomes` = "conductor OK, gate-block, skip, activation, and missing states stay distinct.",
+  `sota_parse_failure_taxonomy` = "Exp5708 parse-root-cause denominators are preserved exactly.",
+  `cuda_offload_authenticated` = "authenticated CUDA provenance cannot override stream parsing gates.",
+  `fr11_prospective_promoted` = "Exp5709 gate-skipped evidence cannot promote prospective learning.",
+  `fr11_isolated_promoted` = "Exp5710 missing/skipped evidence cannot promote act-on-advice.",
+  `model_weight_mutation` = "bare false proves no model weights were changed.",
+  `production_default_enabled` = "bare false keeps canary evidence out of production defaults.",
+  `arc_registry_count` = "authoritative reproduced-level count after .510.",
+  `arc_registry_delta` = "the .510 live attempt banked no ARC level.",
+  `arc_relational_route_promoted` = "Exp5712 matched null cannot promote the relational route.",
+  `one_axis_rust_parity_ready_score` = "Exp5714 exact parity readiness is scalar and local to Rust portability.",
+  `one_axis_rust_quality_ready_score` = "Exp5715 hard-instance/restart readiness is scalar and local to Rust portability.",
+  `retirements_required` = "the transition names every required narrow exclusion before mutation.",
+  `retirements_applied` = "manifest-applied retirements are reconstructable from exact scopes.",
+  `preserved_scopes` = "non-retired scopes stay live and unbroadened.",
+  `retired_scopes` = "terminal negative scopes are bounded narrowly.",
+  `current_task_range` = "canonical allocation is exp5717-exp5728.",
+  `dependency_map` = "successors and prerequisites are reconstructable.",
+  `gate_map` = "structured gates are auditable and ID-valid.",
+  `timing_claimed` = "bare false prevents runtime inflation.",
+  `hardware_speedup_claimed` = "bare false prevents hardware inflation.",
+  `inference_substrate` = "artifact_reconciliation_only -- no inference occurred.",
+  `test_commands` = "verification commands are replayable.",
+  `test_exit_codes` = "observed command exits are recorded without laundering failures.",
+  `reproducibility_checksum` = "content-addressed transition output is stable.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5717)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5717 | Planned (`python/carnot/experiment_5717_transition_v511.py`, `results/experiment_5717_transition_v511.json`) | Planned (`tests/python/test_experiment_5717_transition_v511.py`) |

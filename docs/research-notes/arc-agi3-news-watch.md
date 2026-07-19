@@ -36,3 +36,7 @@ Daily automated check (systemd timer `arc-news-watch.timer`, see `scripts/arc_ne
 
 CHECK_TIMED_OUT
 
+## 2026-07-19 13:13 UTC -- NEW
+
+DhanaLakshmiMalla scored **1.60**, taking sole third place and pushing the **1.56** trio to joint fourth. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
