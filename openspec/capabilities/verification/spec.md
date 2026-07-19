@@ -29972,6 +29972,161 @@ artifact with preserved diagnostics, `sota_canary_ready_score=0.0`, and an
 |---|---|---|
 | REQ-VERIFY-5708 | Implemented (`python/carnot/experiment_5708_sota_exact_constraint_canary.py`, `results/experiment_5708_sota_exact_constraint_canary.json`) | Implemented (`tests/python/test_experiment_5708_sota_exact_constraint_canary.py`) |
 
+### REQ-VERIFY-5719: Mandated-GGUF Answer-Channel Forensics
+
+The repository SHALL provide Exp 5719 at
+`python/carnot/experiment_5719_sota_answer_channel_forensics.py` and write
+`results/experiment_5719_sota_answer_channel_forensics.json` plus a lossless
+JSONL raw-response manifest. Exp 5719 SHALL diagnose the Exp 5708
+completion/chat boundary on small exact controls only. It SHALL declare
+`MODEL_SPECS` for exactly the three mandated local GGUF models
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, SHALL resolve cached `.gguf` files through
+the repository GGUF cache helper pattern, SHALL hash the weight bytes, record
+file names, quantizations, and sizes, and SHALL use llama.cpp APIs without any
+`transformers` tokenization. Legacy small models SHALL remain smoke-only and
+SHALL NOT qualify the answer channel.
+
+Before and during model execution, Exp 5719 SHALL record
+`llama_cpp_version`, `llama_cpp_build_info`, native chat-template receipts,
+CUDA device receipts, requested/offloaded GPU layers, and before/peak/after GPU
+memory. CPU fallback, zero offloaded layers, missing CUDA build evidence, or
+missing GPU memory movement SHALL make a model ineligible for qualification.
+The scalar `cuda_offload_authenticated_score` SHALL equal `1.0` only when at
+least two qualified mandated models have positive layer-offload and memory
+receipts; in other words, `cuda_offload_authenticated_score` SHALL equal `1.0`
+only when at least two qualified models carry positive CUDA receipts. Otherwise
+it SHALL equal `0.0`.
+`cuda_offload_authenticated_score` SHALL equal `1.0` only when at least two
+qualified models carry positive CUDA receipts.
+
+The control manifest SHALL freeze at least six positive finite-label or
+arithmetic controls and at least four negative malformed, truncation, sentinel,
+or repetition controls per model before generation. The controls SHALL be
+disjoint from Exp 5720 science rows and SHALL have deterministic exact
+validators. Exp 5719 SHALL run a preregistered protocol matrix containing the
+exact Exp 5708 raw-completion control, native `create_chat_completion` with the
+embedded GGUF chat template, newline-stop versus EOS-only stop policy,
+adequate answer budget, and a reason-then-`FINAL: <value>` envelope. Each row
+SHALL preserve the template hash, raw text, finish reason, token counts, timing,
+repetition telemetry, parser outcome, and exact-validator outcome.
+
+Exp 5719 SHALL NOT use JSON grammar, XGrammar, llguidance, external scorers, an
+LLM parser, or logit bias as semantic authority. Deterministic parsing and
+exact validators SHALL decide positive controls. The failure taxonomy SHALL
+classify template mismatch, length truncation, premature stop, sentinel
+omission, repetition, malformed envelope, runtime failure, and semantic exact
+error separately. Missing answers, truncation, repetition failures, parse
+failures, semantic errors, and validator disagreements SHALL be separate top
+level counts.
+
+Exp 5719 SHALL freeze one `qualified_protocol` only if at least two mandated
+model families each achieve 100% positive-control parse success, zero
+missing/truncated positive controls, zero validator disagreement, bounded
+repetition, and authenticated CUDA. Protocol selection SHALL use controls only.
+`answer_channel_ready_score` SHALL equal `1.0` only when the qualified protocol
+exists, at least two mandated model IDs qualify, the positive-control parse
+rate over the qualified controls equals `1.0`, `cuda_offload_authenticated_score`
+equals `1.0`, and native JSON grammar, external scorers, and retired runtimes
+are all absent. Otherwise `answer_channel_ready_score` SHALL equal `0.0`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`field_principles`, `MODEL_SPECS`, `resolved_model_receipts`, `model_hashes`,
+`gguf_filenames`, `quantizations`, `llama_cpp_version`,
+`llama_cpp_build_info`, `native_chat_template_receipts`,
+`cuda_device_receipts`, `n_gpu_layers_offloaded`, `gpu_memory_before_mb`,
+`gpu_memory_peak_mb`, `gpu_memory_after_mb`, `cuda_offload_authenticated`,
+`cuda_offload_authenticated_score`, `control_manifest`, `protocol_matrix`,
+`raw_response_manifest_path`, `raw_response_hashes`, `finish_reason_counts`,
+`truncation_count`, `missing_answer_count`, `repetition_failure_count`,
+`parse_failure_count`, `semantic_error_count`, `validator_disagreement_count`,
+`root_cause_attribution`, `qualified_protocol`, `qualified_model_ids`,
+`qualified_model_count`, `positive_control_parse_rate`,
+`answer_channel_ready_score`, `native_json_grammar_used`,
+`external_scorer_used`, `retired_runtime_used`, `inference_substrate`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`local_llama_cpp_python_cuda_gguf_diagnostic`, while
+`native_json_grammar_used`, `external_scorer_used`, and
+`retired_runtime_used` SHALL all be false.
+
+Field principles:
+
+- `field_principles`: Every gate field names the evidence boundary it protects.
+- `MODEL_SPECS`: The three mandated GGUF identities are explicit and cannot
+  drift to legacy smoke models.
+- `resolved_model_receipts`: Cache paths, file sizes, and local presence are
+  auditable before inference.
+- `model_hashes`: Weight bytes are bound to the artifact.
+- `gguf_filenames`: Exact GGUF filenames are visible.
+- `quantizations`: Observed quantization is recorded per weight file.
+- `llama_cpp_version`: The Python runtime can be reconstructed.
+- `llama_cpp_build_info`: CUDA build evidence is inspectable.
+- `native_chat_template_receipts`: Embedded chat-template provenance is
+  preserved.
+- `cuda_device_receipts`: NVIDIA devices and memory snapshots are preserved.
+- `n_gpu_layers_offloaded`: Positive offload evidence is separate from intent.
+- `gpu_memory_before_mb`: CPU fallback cannot hide as a baseline.
+- `gpu_memory_peak_mb`: During-run GPU allocation is visible.
+- `gpu_memory_after_mb`: Cleanup evidence is visible.
+- `cuda_offload_authenticated`: Per-model CUDA eligibility is explicit.
+- `cuda_offload_authenticated_score`: The two-model CUDA gate scalar is
+  mechanical.
+- `control_manifest`: Controls and expected answers are frozen before
+  outcomes.
+- `protocol_matrix`: Completion/chat, stop policy, and budget arms are
+  preregistered.
+- `raw_response_manifest_path`: Raw row evidence is lossless and replayable.
+- `raw_response_hashes`: Each response is byte-bound.
+- `finish_reason_counts`: Termination behavior is counted directly.
+- `truncation_count`: Length failures remain separate.
+- `missing_answer_count`: Sentinel omission remains separate.
+- `repetition_failure_count`: Repetition loops remain separate.
+- `parse_failure_count`: Parser failures remain separate from semantic errors.
+- `semantic_error_count`: Exact wrong answers remain separate from parse errors.
+- `validator_disagreement_count`: Independent validator mismatch blocks
+  readiness.
+- `root_cause_attribution`: Exp 5708 failure causes are reported explicitly.
+- `qualified_protocol`: The downstream answer channel is frozen only from
+  controls.
+- `qualified_model_ids`: The qualifying mandated models are visible.
+- `qualified_model_count`: The model denominator is honest.
+- `positive_control_parse_rate`: Positive-control parse success is measurable.
+- `answer_channel_ready_score`: Readiness is a strict mechanical gate.
+- `native_json_grammar_used`: The retired grammar path stays closed.
+- `external_scorer_used`: No external judge can decide labels.
+- `retired_runtime_used`: Retired runtimes cannot qualify the channel.
+- `inference_substrate`: Execution provenance is declared.
+- `random_seeds`: Sampling replay is stable.
+- `reproducibility_checksum`: The artifact can be replayed.
+- `honest_verdict`: Terminal state starts complete: or blocked:.
+
+### SCENARIO-VERIFY-5719: Answer Channel Qualifies Or Blocks
+
+Given the three mandated GGUF files are cached, llama-cpp-python imports with a
+CUDA backend, NVIDIA devices are visible, and at least two mandated models
+record positive offloaded-layer plus memory receipts, when Exp 5719 runs the
+preregistered control/protocol matrix, then it writes the raw-response
+manifest, classifies Exp 5708-style failures separately from semantic errors,
+freezes exactly one qualified protocol only from controls, writes
+`results/experiment_5719_sota_answer_channel_forensics.json`, and sets
+`cuda_offload_authenticated_score=1.0` and `answer_channel_ready_score=1.0`
+only when all readiness gates pass.
+
+If fewer than two mandated models are CUDA-authenticated, any qualified
+positive control is missing, truncated, repetitive, unparsable, or disagrees
+between validators, no protocol reaches two-family qualification, native JSON
+grammar runs, an external scorer runs, or a retired runtime is used, then Exp
+5719 SHALL still write the terminal artifact with preserved diagnostics,
+`answer_channel_ready_score=0.0`, and an `honest_verdict` beginning with
+`blocked:`.
+
+## Implementation Status (REQ-VERIFY-5719)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5719 | Planned (`python/carnot/experiment_5719_sota_answer_channel_forensics.py`, `results/experiment_5719_sota_answer_channel_forensics.json`) | Planned (`tests/python/test_experiment_5719_sota_answer_channel_forensics.py`) |
+
 ### REQ-VERIFY-5615: Native llama.cpp CUDA Runtime Certificate
 
 The repository SHALL provide Exp 5615 at
