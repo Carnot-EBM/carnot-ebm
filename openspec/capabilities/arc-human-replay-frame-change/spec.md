@@ -9507,8 +9507,20 @@ This REQ does not itself graduate any generator or budget change to the live sta
 
 **Result artifact:** `results/experiment_5724_thinkingcap_token_efficient_reason_ab.json`.
 
-**Implementation Status:** Pending run (queued behind the REQ-ARC-WMTE-5722/5723
-generator-swap run on GPU 1). Driver `python/carnot/experiment_5724_thinkingcap_token_efficient_reason_ab.py`.
+**Implementation Status:** Run 2026-07-18 (GPU 1, after the REQ-ARC-WMTE-5722/5723
+generator-swap run freed the card). Driver
+`python/carnot/experiment_5724_thinkingcap_token_efficient_reason_ab.py`; artifact
+`results/experiment_5724_thinkingcap_token_efficient_reason_ab.json` (adversarial-verify clean).
+**Result: INCONCLUSIVE for the token-efficiency claim** — on 10/12 ThinkingCap-27B reason cells the
+model emitted an immediate end-of-sequence with ~0 output on the no-fence raw-`/completion` `/think`
+path (a prompt-format artifact, NOT a genuine reasoning attempt); only 2/12 genuinely reasoned and
+0/2 completed (1 overran the 8192 budget, 1 finished reasoning but emitted unparseable code). The
+SECONDARY `thinkingcap27_frozen` codeonly arm induced cleanly on 12/12 cells (model, server, GPU
+offload and prompt plumbing all healthy — verified: VRAM 4->17176 MiB on load, `/think` smoke
+round-trip OK), isolating the failure to the raw-completion genuine-reasoning path. The fresh
+Qwen3.5-9B-MTP reason baseline completed 1/12 (12/12 genuine attempts, 12 overran) — reproducing the
+~0/N budget wall of REQ-ARC-WMTE-5714/5720. Recommended follow-up: re-test ThinkingCap through its
+proper Qwen3.6 chat template before any budget-wall conclusion. Does NOT flip the frozen live default.
 
 #### SCENARIO-ARC-WMTE-5724-GENUINE-REASONING-INDUCE-FAITHFUL-TO-5714
 - **WHEN** `experiment_5724_thinkingcap_token_efficient_reason_ab.py` runs a genuine-reasoning `(generator, game, trial)` cell
