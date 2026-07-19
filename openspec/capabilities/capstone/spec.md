@@ -2691,3 +2691,129 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5717 | Planned (`python/carnot/experiment_5717_transition_v511.py`, `results/experiment_5717_transition_v511.json`) | Planned (`tests/python/test_experiment_5717_transition_v511.py`) |
+
+- REQ-CAPSTONE-5728: The `.511` capstone reconciliation workflow
+  `exp5728-v511-capstone-reconciliation` in
+  `python/carnot/experiment_5728_v511_capstone_reconciliation.py` SHALL read
+  every expected Exp5717 through Exp5727 artifact plus conductor gate evidence,
+  including the missing Exp5721 lifecycle artifact, and SHALL write
+  `results/experiment_5728_v511_capstone_reconciliation.json` without
+  modifying `research-roadmap.yaml`, `scripts/research_conductor.py`,
+  `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`. It SHALL
+  declare `inference_substrate=artifact_reconciliation_and_validation_only`.
+  Missing, malformed, flagged, blocked, gate-skipped, proxy, null, and
+  complete-null artifacts SHALL remain separate denominator states and SHALL NOT
+  promote streams, FR-11 self-learning, software speedup, hardware speedup, or
+  ARC solve credit. Exp5727 SHALL be reconciled as the ARC-AGI-3
+  Generalization-Testing Floor live-vs-oracle gap measurement using its actual
+  `live_levels_total`, `oracle_levels_total`, `gap_total`, `per_game_gap`,
+  `worst_gap_games`, and `any_new_level_found` fields rather than the retired
+  public-level-up field shape.
+- SCENARIO-CAPSTONE-5728: The artifact
+  `results/experiment_5728_v511_capstone_reconciliation.json` must emit
+  top-level fields `field_principles`, `milestone`, `expected_task_ids`,
+  `artifact_metadata`, `missing_artifacts`, `malformed_artifacts`,
+  `conductor_gate_statuses`, `transition_status`,
+  `source_ingestion_status`, `answer_channel_status`,
+  `qualified_model_ids`, `sota_attested_stream_status`,
+  `parse_failure_count`, `validator_disagreement_count`,
+  `attestation_coverage`, `stream_commitment_status`,
+  `fr11_lifecycle_shadow_status`, `fr11_recovery_canary_status`,
+  `continuous_self_learning_credited`, `unsafe_false_accept_count`,
+  `unsafe_update_accept_count`, `negative_transfer_count`,
+  `retention_regression_count`, `model_weight_mutation`,
+  `production_default_enabled`, `rust_samplerbackend_status`,
+  `rust_python_crossover_status`, `quality_matched_pair_count`,
+  `qualified_crossover_n`, `software_speedup_claimed`,
+  `hardware_speedup_claimed`, `two_axis_retirement_preserved`,
+  `arc_epistemic_qualification_status`, `arc_epistemic_live_ab_status`,
+  `arc_live_attempt_status`, `arc_solve_provenance`,
+  `arc_registry_count_before`, `arc_registry_count_after`,
+  `arc_registry_delta`, `arc_solve_credited`,
+  `arc_forbidden_path_counts`, `promotion_retirement_ledger`,
+  `retirements_applied`, `preserved_scopes`, `spec_reconciliation`,
+  `traceability_reconciliation`, `ops_reconciliation`,
+  `e2e_check_receipts`, `timing_claimed`, `claim_boundaries`,
+  `inference_substrate`, `test_commands`, `test_exit_codes`,
+  `reproducibility_checksum`, and `honest_verdict`. The default `.511`
+  reconciliation must preserve Exp5717's narrow Exp5709 same-verdict retirement,
+  quarantine Exp5718 when adversarial verification stamps it critical, block
+  Exp5719/Exp5720 stream promotion when no qualified protocol or model exists,
+  block Exp5721/Exp5722 FR-11 credit when the stream and lifecycle gates did
+  not run, promote only the Exp5723 production `SamplerBackend` integration,
+  treat Exp5724 as a terminal Rust/Python CPU timing null when
+  `qualified_crossover_n` is null and `software_speedup_claimed=false`, preserve
+  the two-axis retirement, qualify Exp5725 only as development-proxy epistemic
+  readiness, treat Exp5726 as a matched A/B null, and credit no ARC solve unless
+  Exp5727 explicitly reports `any_new_level_found=true` with reproduction-gate
+  evidence. With the current Exp5727 gap measurement, the capstone must report
+  `arc_registry_delta=0` and `arc_solve_credited=false`.
+- SCENARIO-CAPSTONE-5728-MISSING-MALFORMED: If an expected Exp5717 through
+  Exp5727 artifact is missing or malformed, the workflow must still write the
+  capstone artifact, list the affected path, keep every dependent promotion
+  false, and start `honest_verdict` with `blocked:` while preserving unrelated
+  completed evidence. A missing Exp5721 artifact must be recorded as lifecycle
+  evidence absent rather than silently recreated or counted as a zero-unsafe
+  success.
+- SCENARIO-CAPSTONE-5728-FIELD-PRINCIPLES: The required field principles are:
+  `field_principles` = "one-line annotations for every required capstone field.",
+  `milestone` = "fixed route key for the 2026.07.511 closeout.",
+  `expected_task_ids` = "fixed Exp5717-Exp5728 denominator before success counts.",
+  `artifact_metadata` = "path, loadability, hash, and status prove what was actually read.",
+  `missing_artifacts` = "missing deliverables stay visible and cannot promote.",
+  `malformed_artifacts` = "malformed deliverables stay visible and cannot promote.",
+  `conductor_gate_statuses` = "gate-block, flagged, OK, and missing conductor states stay distinct.",
+  `transition_status` = "Exp5717 transition facts are bounded to observed retirements and preserved scopes.",
+  `source_ingestion_status` = "Exp5718 source work is quarantined if adversarial verification flagged it.",
+  `answer_channel_status` = "Exp5719 controls decide whether a protocol exists; GGUF presence alone is insufficient.",
+  `qualified_model_ids` = "only models qualified by Exp5719 controls can enter the stream gate.",
+  `sota_attested_stream_status` = "Exp5720 cannot promote when upstream channel gates failed.",
+  `parse_failure_count` = "unparsed rows remain failures and are never imputed.",
+  `validator_disagreement_count` = "exact validators remain the final authority.",
+  `attestation_coverage` = "attestation is creditable only over admitted rows.",
+  `stream_commitment_status` = "stream chronology must be committed before FR-11 learning credit.",
+  `fr11_lifecycle_shadow_status` = "Exp5721 missing or gate-blocked lifecycle evidence cannot count as learning.",
+  `fr11_recovery_canary_status` = "Exp5722 recovery evidence cannot promote without lifecycle gates.",
+  `continuous_self_learning_credited` = "bare false unless prospective lifecycle and recovery gates both pass.",
+  `unsafe_false_accept_count` = "unsafe counts are null when the canary did not run, not zero-success.",
+  `unsafe_update_accept_count` = "unsafe update counts are null when the canary did not run, not zero-success.",
+  `negative_transfer_count` = "negative-transfer counts are null when the learner did not run.",
+  `retention_regression_count` = "retention counts are null when the learner did not run.",
+  `model_weight_mutation` = "bare false preserves immutable GGUF weights.",
+  `production_default_enabled` = "bare false keeps FR-11 out of production defaults.",
+  `rust_samplerbackend_status` = "Exp5723 integration is separate from timing and hardware claims.",
+  `rust_python_crossover_status` = "Exp5724 null crossover is separate from backend readiness.",
+  `quality_matched_pair_count` = "only quality-matched pairs enter timing interpretation.",
+  `qualified_crossover_n` = "null crossover blocks a software speedup claim.",
+  `software_speedup_claimed` = "bare false unless Exp5724's preregistered interval gate passes.",
+  `hardware_speedup_claimed` = "bare false prevents CPU/PyO3 timing from becoming a board claim.",
+  `two_axis_retirement_preserved` = "the retired two-axis extension stays closed while one-axis remains live.",
+  `arc_epistemic_qualification_status` = "Exp5725 readiness is no-solve development-proxy evidence.",
+  `arc_epistemic_live_ab_status` = "Exp5726 null A/B cannot promote the ledger into solve credit.",
+  `arc_live_attempt_status` = "Exp5727 is a live-vs-oracle generalization gap measurement.",
+  `arc_solve_provenance` = "only live self-discovery plus reproduction evidence can credit a solve.",
+  `arc_registry_count_before` = "registry baseline before any credited Exp5727 update.",
+  `arc_registry_count_after` = "registry count after Exp5727 reconciliation.",
+  `arc_registry_delta` = "solve credit requires a positive reproduced-level delta.",
+  `arc_solve_credited` = "bare false unless Exp5727 explicitly reports new reproduced credit.",
+  `arc_forbidden_path_counts` = "game source, adapter, off-path solver, and proxy paths are auditable.",
+  `promotion_retirement_ledger` = "promotion, null, blocked, and retirement decisions are reconstructable.",
+  `retirements_applied` = "same-verdict retirements are applied narrowly.",
+  `preserved_scopes` = "non-retired clean streams, CSL, SamplerBackend, epistemic state, and live attempts stay live.",
+  `spec_reconciliation` = "REQ-* and SCENARIO-* anchors for this module and tests are explicit.",
+  `traceability_reconciliation` = "traceability updates are delegated by the stop rule rather than silently edited.",
+  `ops_reconciliation` = "ops ledgers are read and status/changelog edits are delegated by the stop rule.",
+  `e2e_check_receipts` = "applicable E2E and audit checks are named with observed exits.",
+  `timing_claimed` = "bare true only for Exp5724 CPU timing null, not a speedup.",
+  `claim_boundaries` = "scope limits prevent promotion from blocked, skipped, proxy, or null artifacts.",
+  `inference_substrate` = "artifact_reconciliation_and_validation_only -- no model or board inference occurred.",
+  `test_commands` = "verification commands are replayable.",
+  `test_exit_codes` = "observed exits are recorded without laundering failures.",
+  `reproducibility_checksum` = "content-addressed capstone output is stable.",
+  and `honest_verdict` = "terminal summary starting with complete: or blocked:."
+
+## Implementation Status (REQ-CAPSTONE-5728)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5728 | Planned (`python/carnot/experiment_5728_v511_capstone_reconciliation.py`, `results/experiment_5728_v511_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5728_v511_capstone_reconciliation.py`) |

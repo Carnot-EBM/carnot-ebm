@@ -1,0 +1,1131 @@
+{
+  "answer_channel_status": {
+    "answer_channel_ready_score": 0.0,
+    "cuda_offload_authenticated": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+      "unsloth/gemma-4-31B-it-GGUF": true
+    },
+    "cuda_offload_authenticated_score": 0.0,
+    "external_scorer_used": false,
+    "honest_verdict": "blocked: no_qualified_protocol,fewer_than_two_qualified_models,positive_control_parse_rate_below_one,cuda_offload_unauthenticated",
+    "missing_answer_count": 82,
+    "native_json_grammar_used": false,
+    "positive_control_parse_rate": 0.0,
+    "promoted": false,
+    "qualified_model_count": 0,
+    "qualified_protocol": {},
+    "repetition_failure_count": 10,
+    "retired_runtime_used": false,
+    "semantic_error_count": 2,
+    "status": "blocked",
+    "truncation_count": 41
+  },
+  "arc_epistemic_live_ab_status": {
+    "honest_verdict": "complete: epistemic_ledger_live_ab_null_no_promotion",
+    "new_levels_claimed": 0,
+    "promoted": false,
+    "ready_score": 0.0,
+    "registry_updated": false,
+    "solve_provenance": "development_proxy",
+    "status": "complete",
+    "successful_pair_count": 6,
+    "unsafe_commit_count": 0
+  },
+  "arc_epistemic_qualification_status": {
+    "live_path_reachable_score": 1.0,
+    "new_levels_claimed": 0,
+    "promoted_as_solve": false,
+    "qualified": true,
+    "ready_score": 1.0,
+    "solve_provenance": "development_proxy",
+    "status": "complete",
+    "unsafe_commit_count": 0
+  },
+  "arc_forbidden_path_counts": {
+    "known_forbidden_count": 0,
+    "missing_or_retired_legacy_fields": [
+      "Exp5727 uses live/oracle gap fields; registry_delta/game_source_read_count legacy level-up fields are not part of its declared artifact shape."
+    ],
+    "observed_fields": [
+      {
+        "fields": {
+          "game_adapter_count": 0,
+          "game_source_read_count": 0,
+          "hand_solution_used": null,
+          "off_path_solver_used": null,
+          "outer_loop_bfs_used": false
+        },
+        "task_id": "exp5725-arc-epistemic-ledger-live-qualification"
+      },
+      {
+        "fields": {
+          "game_adapter_count": null,
+          "game_source_read_count": null,
+          "hand_solution_used": null,
+          "off_path_solver_used": null,
+          "outer_loop_bfs_used": null
+        },
+        "task_id": "exp5726-arc-epistemic-ledger-live-ab"
+      },
+      {
+        "fields": {
+          "game_adapter_count": null,
+          "game_source_read_count": null,
+          "hand_solution_used": null,
+          "off_path_solver_used": null,
+          "outer_loop_bfs_used": null
+        },
+        "task_id": "exp5727-arc-generalization-live-oracle-gap-v511"
+      }
+    ]
+  },
+  "arc_live_attempt_status": {
+    "any_new_level_found": false,
+    "budget_per_game": 400,
+    "games_measured": 25,
+    "gap_total": 179,
+    "harness_used": "scripts/arc_leaderboard_eval.py",
+    "honest_verdict": "complete: arc_generalization_live_oracle_gap_4_of_183_levels_gap_179",
+    "live_levels_total": 4,
+    "new_level_evidence": [],
+    "oracle_levels_total": 183,
+    "per_game_gap_count": 25,
+    "policy_kind": "e3",
+    "scope": "arc_generalization_live_oracle_gap",
+    "solve_attempted": false,
+    "status": "complete",
+    "worst_gap_games": [
+      {
+        "game": "lf52",
+        "gap": 10,
+        "grounded_evidence": [
+          "results/arc_live_oracle_gap.json per_game row: game=lf52 live_levels=0 oracle_levels=10 gap_vs_oracle=10 actions=395/400 actions_to_first_levelup=None",
+          "frame_sequence evidence: frame[0].levels_completed=0 hash=sha256:9ce3975d61cdd3dce8a2e0215a8c50dbbcf248cc467f061439a1ae8b5b439d37; frame[399].levels_completed=0 hash=sha256:ee629a2aed2f922968412f99035287960eef91f57c865a732a70100ccab961b1",
+          "navigation_diagnostics: reset_replay_steps=4 forward_walk_hit_rate=0.9322033898305084",
+          "policy_diagnostics.induction_attempts[-1]: reason=stall transition_count=25 planned=False skipped=world_model_accuracy_below_threshold verify_accuracy=0.0 refinement_rounds_used=3"
+        ],
+        "live_levels": 0,
+        "not_attempted_to_fix": "No per-game fix, hand solve, source read, registry edit, or new credit was attempted.",
+        "oracle_levels": 10,
+        "oracle_win_solve_provenance": "development_proxy",
+        "stall_class": "INDUCTION QUALITY",
+        "verifier_gap_reference": "GAP-3"
+      },
+      {
+        "game": "bp35",
+        "gap": 9,
+        "grounded_evidence": [
+          "results/arc_live_oracle_gap.json per_game row: game=bp35 live_levels=0 oracle_levels=9 gap_vs_oracle=9 actions=393/400 actions_to_first_levelup=None",
+          "frame_sequence evidence: frame[0].levels_completed=0 hash=sha256:92370b9db1c1b1f1570ec24487c8a1669fe3bf35572f0c3efa2bb084c5a1a634; frame[399].levels_completed=0 hash=sha256:a8488591ac36c571611aa1a9cf778ff1d3a92c67ef5d99364b96e5c9fd8cf749",
+          "navigation_diagnostics: reset_replay_steps=0 forward_walk_hit_rate=0.0",
+          "policy_diagnostics.induction_attempts[-1]: reason=stall transition_count=25 planned=False skipped=world_model_accuracy_below_threshold verify_accuracy=0.0 refinement_rounds_used=2"
+        ],
+        "live_levels": 0,
+        "not_attempted_to_fix": "No per-game fix, hand solve, source read, registry edit, or new credit was attempted.",
+        "oracle_levels": 9,
+        "oracle_win_solve_provenance": "live_agent_self_discovery",
+        "stall_class": "INDUCTION QUALITY",
+        "verifier_gap_reference": "GAP-3"
+      },
+      {
+        "game": "su15",
+        "gap": 9,
+        "grounded_evidence": [
+          "results/arc_live_oracle_gap.json per_game row: game=su15 live_levels=0 oracle_levels=9 gap_vs_oracle=9 actions=389/400 actions_to_first_levelup=None",
+          "frame_sequence evidence: frame[0].levels_completed=0 hash=sha256:4f7a9e9c9162cd2264988122c927256ad18504b1c6bc4407c8ff248e96483686; frame[399].levels_completed=0 hash=sha256:8e683ed2e8f3ef1e8ff4401ce9a9e15f0fbcd8bd30c856e77eb1f3674336eeb6",
+          "navigation_diagnostics: reset_replay_steps=11 forward_walk_hit_rate=0.75",
+          "policy_diagnostics.induction_attempts[-1]: reason=stall transition_count=81 planned=False skipped=world_model_accuracy_below_threshold verify_accuracy=0.1235 refinement_rounds_used=3"
+        ],
+        "live_levels": 0,
+        "not_attempted_to_fix": "No per-game fix, hand solve, source read, registry edit, or new credit was attempted.",
+        "oracle_levels": 9,
+        "oracle_win_solve_provenance": "live_agent_self_discovery",
+        "stall_class": "INDUCTION QUALITY",
+        "verifier_gap_reference": "GAP-3"
+      }
+    ]
+  },
+  "arc_registry_count_after": 183,
+  "arc_registry_count_before": 183,
+  "arc_registry_delta": 0,
+  "arc_solve_credited": false,
+  "arc_solve_provenance": {
+    "credit_path": "none",
+    "exp5725": "development_proxy",
+    "exp5726": "development_proxy",
+    "exp5727": "measurement_not_solve_claim"
+  },
+  "artifact_metadata": {
+    "exp5717-transition-v511": {
+      "blocked_or_skipped_cannot_promote": true,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked: v511 transition preserved terminal .510 evidence but manifest or source inputs are incomplete",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5717_transition_v511.json",
+      "schema": "carnot.experiment_5717.transition_v511.v1",
+      "sha256": "sha256:3537bdf24ac03f685345bc340dcadea9206ae581712f6ea3c9abba63a2777f69",
+      "status": "blocked",
+      "supports_promotion": false
+    },
+    "exp5718-v511-source-delta-ingestion": {
+      "blocked_or_skipped_cannot_promote": true,
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: accepted 1 non-duplicate actionable V511 source delta; no roadmap ID or gate change",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5718_v511_source_delta_ingestion.json",
+      "schema": "carnot.experiment_5718.v511_source_delta_ingestion.v1",
+      "sha256": "sha256:f04bfb0c81774b586443858013c46acb5c72946dee66ad495acd0a5df70ed9dc",
+      "status": "flagged",
+      "supports_promotion": false
+    },
+    "exp5719-sota-answer-channel-forensics": {
+      "blocked_or_skipped_cannot_promote": true,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked: no_qualified_protocol,fewer_than_two_qualified_models,positive_control_parse_rate_below_one,cuda_offload_unauthenticated",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5719_sota_answer_channel_forensics.json",
+      "schema": "carnot.experiment_5719.sota_answer_channel_forensics.v1",
+      "sha256": "sha256:e50477c2647cbd403f30b2b9f7ebe2001f4e5dfb1942468fdd27204ebfbdd05a",
+      "status": "blocked",
+      "supports_promotion": false
+    },
+    "exp5720-sota-attested-exact-envelope-canary": {
+      "blocked_or_skipped_cannot_promote": true,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5720_sota_attested_exact_envelope_canary.json",
+      "schema": "blocked_gate_check_v1",
+      "sha256": "sha256:635950cc08c45378808b999be258b2fda7afdb800c078fbf7e9dbc6e7839e661",
+      "status": "gate_skipped",
+      "supports_promotion": false
+    },
+    "exp5721-fr11-memops-lifecycle-shadow-stream": {
+      "blocked_or_skipped_cannot_promote": true,
+      "exists": false,
+      "flagged_adversarial": false,
+      "honest_verdict": null,
+      "loadable": false,
+      "metadata_error": "missing",
+      "path": "results/experiment_5721_fr11_memops_lifecycle_shadow_stream.json",
+      "schema": null,
+      "sha256": null,
+      "status": "missing",
+      "supports_promotion": false
+    },
+    "exp5722-fr11-compliance-recovery-rollback-canary": {
+      "blocked_or_skipped_cannot_promote": true,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5722_fr11_compliance_recovery_rollback_canary.json",
+      "schema": "blocked_gate_check_v1",
+      "sha256": "sha256:1e11b898d3c473c7aba12a2e61185b391acfc3643a816e07eaf51120b814fbf4",
+      "status": "gate_skipped",
+      "supports_promotion": false
+    },
+    "exp5723-one-axis-rust-samplerbackend-integration": {
+      "blocked_or_skipped_cannot_promote": false,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: one-axis Rust/PyO3 kernel is exposed through SamplerBackend with exact fallback, restart receipts, and no timing or hardware claim",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5723_one_axis_rust_samplerbackend_integration.json",
+      "schema": "carnot.experiment_5723.one_axis_rust_samplerbackend_integration.v1",
+      "sha256": "sha256:70f2f15c0c105e9a2f2b05e81286eb5720668e73f9f7ccccaafb66fec2131c35",
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5724-one-axis-rust-python-matched-crossover": {
+      "blocked_or_skipped_cannot_promote": false,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: terminal null; no consecutive larger-size matched-quality Rust/Python CPU crossover proven; timing claimed without GPU, FPGA, TSU, or hardware claim",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5724_one_axis_rust_python_matched_crossover.json",
+      "schema": "carnot.experiment_5724.one_axis_rust_python_matched_crossover.v1",
+      "sha256": "sha256:722d03aa830158fa6994e991148f5cf081147e3a7dc4cb8a4f4fb8aca4183044",
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5725-arc-epistemic-ledger-live-qualification": {
+      "blocked_or_skipped_cannot_promote": false,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: arc_epistemic_ledger_live_reachable_safe_no_solve_claim",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5725_arc_epistemic_ledger_live_qualification.json",
+      "schema": "carnot.exp5725.arc_epistemic_ledger_live_qualification.v1",
+      "sha256": "sha256:08620238f0bbef45e72a8c4c021eae4fa4187021a77b7d47ce44ea8242230a0c",
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5726-arc-epistemic-ledger-live-ab": {
+      "blocked_or_skipped_cannot_promote": false,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: epistemic_ledger_live_ab_null_no_promotion",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5726_arc_epistemic_ledger_live_ab.json",
+      "schema": "carnot.exp5726.arc_epistemic_ledger_live_ab.v1",
+      "sha256": "sha256:1ce7675fed26a8f40864b49450a54978d133279c2e9ae4a2158c5860b56d9c87",
+      "status": "complete",
+      "supports_promotion": true
+    },
+    "exp5727-arc-generalization-live-oracle-gap-v511": {
+      "blocked_or_skipped_cannot_promote": false,
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: arc_generalization_live_oracle_gap_4_of_183_levels_gap_179",
+      "loadable": true,
+      "metadata_error": null,
+      "path": "results/experiment_5727_arc_generalization_live_oracle_gap_v511.json",
+      "schema": "carnot.exp5727.arc_generalization_live_oracle_gap.v1",
+      "sha256": "sha256:46347c420f76cba180e8a5f8b07bf7db7a2d9f2861f8e44e82130127e7b1b63b",
+      "status": "complete",
+      "supports_promotion": true
+    }
+  },
+  "artifact_status_by_task": {
+    "exp5717-transition-v511": "blocked",
+    "exp5718-v511-source-delta-ingestion": "flagged",
+    "exp5719-sota-answer-channel-forensics": "blocked",
+    "exp5720-sota-attested-exact-envelope-canary": "gate_skipped",
+    "exp5721-fr11-memops-lifecycle-shadow-stream": "missing",
+    "exp5722-fr11-compliance-recovery-rollback-canary": "gate_skipped",
+    "exp5723-one-axis-rust-samplerbackend-integration": "complete",
+    "exp5724-one-axis-rust-python-matched-crossover": "complete",
+    "exp5725-arc-epistemic-ledger-live-qualification": "complete",
+    "exp5726-arc-epistemic-ledger-live-ab": "complete",
+    "exp5727-arc-generalization-live-oracle-gap-v511": "complete"
+  },
+  "attestation_coverage": {
+    "admitted_rows": 0,
+    "attested_rows": 0,
+    "coverage": 0.0,
+    "status": "not_applicable_gate_skipped"
+  },
+  "claim_boundaries": {
+    "arc_gap_measurement_not_levelup": true,
+    "blocked_skipped_missing_null_cannot_promote": true,
+    "exact_validators_mandatory": true,
+    "fr11_production_disabled": true,
+    "hardware_speedup_not_claimed": true,
+    "immutable_gguf_weights": true
+  },
+  "conductor_gate_statuses": {
+    "exp5717-transition-v511": {
+      "artifact_status": "blocked",
+      "counts_as_success": false,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 19:18 UTC | Transition terminal .510 evidence, apply the narro | OK | 85 passed, 1 warning in 8.53s |",
+      "outcome": "OK"
+    },
+    "exp5718-v511-source-delta-ingestion": {
+      "artifact_status": "flagged",
+      "counts_as_success": false,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 19:42 UTC | Ingest post-V511 2025-2026 source deltas with dupl | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+      "outcome": "FLAGGED"
+    },
+    "exp5719-sota-answer-channel-forensics": {
+      "artifact_status": "blocked",
+      "counts_as_success": false,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 20:07 UTC | Diagnose the .510 GGUF answer-channel failure acro | OK | 88 passed, 1 warning in 9.43s |",
+      "outcome": "OK"
+    },
+    "exp5720-sota-attested-exact-envelope-canary": {
+      "artifact_status": "gate_skipped",
+      "counts_as_success": false,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 20:13 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |",
+      "outcome": "GATE_BLOCK"
+    },
+    "exp5721-fr11-memops-lifecycle-shadow-stream": {
+      "artifact_status": "missing",
+      "counts_as_success": false,
+      "detail": "missing_artifact_preemptive_gate_block",
+      "evidence_line": "| 2026-07-19 20:19 UTC | Gated on Exp5720 exact stream: prospective MemOps | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5720-sota-attested-exact-envelope-canary, |",
+      "outcome": "GATE_BLOCK"
+    },
+    "exp5722-fr11-compliance-recovery-rollback-canary": {
+      "artifact_status": "gate_skipped",
+      "counts_as_success": false,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 20:19 UTC | Gated on Exp5721 lifecycle readiness: isolated Com | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp5721-fr11-memops-lifecycle-shadow-strea |",
+      "outcome": "GATE_BLOCK"
+    },
+    "exp5723-one-axis-rust-samplerbackend-integration": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 20:49 UTC | Gated on Exp5717 Rust quality: expose one-axis tem | OK | 120 passed, 1 warning in 10.76s |",
+      "outcome": "OK"
+    },
+    "exp5724-one-axis-rust-python-matched-crossover": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 21:10 UTC | Gated on Exp5723 production backend: matched Rust/ | OK | 88 passed, 1 warning in 8.86s |",
+      "outcome": "OK"
+    },
+    "exp5725-arc-epistemic-ledger-live-qualification": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 21:32 UTC | Qualify an agent-owned ARC epistemic ledger on the | OK | 109 passed, 1 warning in 9.97s |",
+      "outcome": "OK"
+    },
+    "exp5726-arc-epistemic-ledger-live-ab": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 21:50 UTC | Gated on Exp5725 ledger readiness: matched known-l | OK | 88 passed, 1 warning in 9.17s |",
+      "outcome": "OK"
+    },
+    "exp5727-arc-generalization-live-oracle-gap-v511": {
+      "artifact_status": "complete",
+      "counts_as_success": true,
+      "detail": "from_conductor_log",
+      "evidence_line": "| 2026-07-19 23:08 UTC | First ARC-AGI-3 Generalization-Testing Floor task: | OK | 108 passed, 1 warning in 13.79s |",
+      "outcome": "OK"
+    }
+  },
+  "continuous_self_learning_credited": false,
+  "e2e_check_receipts": [
+    {
+      "applicability": "upstream_or_full_pytest",
+      "check_id": "training_sampling",
+      "commands": [
+        ".venv/bin/pytest tests/python -q",
+        ".venv/bin/pytest tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py -q --no-cov -n 0"
+      ],
+      "receipt": "Exp5723/Exp5724 sampler tests plus full pytest exercise the changed path."
+    },
+    {
+      "applicability": "upstream_or_full_pytest",
+      "check_id": "serialization_pyo3",
+      "commands": [
+        ".venv/bin/pytest tests/python -q",
+        ".venv/bin/pytest tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py -q --no-cov -n 0"
+      ],
+      "receipt": "Exp5723 checkpoint/restart and factory receipts are reconciled."
+    },
+    {
+      "applicability": "blocked_by_missing_exp5721",
+      "check_id": "fr11_verify_repair",
+      "commands": [
+        ".venv/bin/pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0",
+        ".venv/bin/coverage run --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py -m pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0",
+        ".venv/bin/coverage report --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py --fail-under=100",
+        ".venv/bin/ruff check python/carnot/experiment_5728_v511_capstone_reconciliation.py tests/python/test_experiment_5728_v511_capstone_reconciliation.py",
+        ".venv/bin/pytest tests/python -q",
+        ".venv/bin/python scripts/check_spec_coverage.py",
+        ".venv/bin/pytest tests/python/test_e2e_training_sampling.py tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py tests/python/test_pipeline_verify_repair.py tests/python/test_experiment_5725_arc_epistemic_ledger_live_qualification.py tests/python/test_experiment_5726_arc_epistemic_ledger_live_ab.py tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py -q --no-cov -n 0",
+        ".venv/bin/pytest tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py -q --no-cov -n 0",
+        ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+        ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+        "bash scripts/validate-reconciliation.sh --help",
+        ".venv/bin/python scripts/adversarial_verify.py results/experiment_5728_v511_capstone_reconciliation.json",
+        "git diff --check",
+        ".venv/bin/python scripts/root_clutter_sweep.py",
+        "git diff --name-only -- research-roadmap.yaml scripts/research_conductor.py"
+      ],
+      "receipt": "No new FR-11 E2E success is claimed because lifecycle evidence is missing."
+    },
+    {
+      "applicability": "exp5727_gap_measurement",
+      "check_id": "arc_provenance",
+      "commands": [
+        ".venv/bin/pytest tests/python -q",
+        ".venv/bin/pytest tests/python/test_e2e_training_sampling.py tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py tests/python/test_pipeline_verify_repair.py tests/python/test_experiment_5725_arc_epistemic_ledger_live_qualification.py tests/python/test_experiment_5726_arc_epistemic_ledger_live_ab.py tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py -q --no-cov -n 0"
+      ],
+      "receipt": "Exp5727 live/oracle fields are reconciled and solve credit remains false."
+    }
+  ],
+  "expected_task_ids": [
+    "exp5717-transition-v511",
+    "exp5718-v511-source-delta-ingestion",
+    "exp5719-sota-answer-channel-forensics",
+    "exp5720-sota-attested-exact-envelope-canary",
+    "exp5721-fr11-memops-lifecycle-shadow-stream",
+    "exp5722-fr11-compliance-recovery-rollback-canary",
+    "exp5723-one-axis-rust-samplerbackend-integration",
+    "exp5724-one-axis-rust-python-matched-crossover",
+    "exp5725-arc-epistemic-ledger-live-qualification",
+    "exp5726-arc-epistemic-ledger-live-ab",
+    "exp5727-arc-generalization-live-oracle-gap-v511",
+    "exp5728-v511-capstone-reconciliation"
+  ],
+  "experiment": "experiment_5728_v511_capstone_reconciliation",
+  "experiment_id": "exp5728-v511-capstone-reconciliation",
+  "field_principles": {
+    "answer_channel_status": "Exp5719 controls decide whether a protocol exists; GGUF presence alone is insufficient.",
+    "arc_epistemic_live_ab_status": "Exp5726 null A/B cannot promote the ledger into solve credit.",
+    "arc_epistemic_qualification_status": "Exp5725 readiness is no-solve development-proxy evidence.",
+    "arc_forbidden_path_counts": "game source, adapter, off-path solver, and proxy paths are auditable.",
+    "arc_live_attempt_status": "Exp5727 is a live-vs-oracle generalization gap measurement.",
+    "arc_registry_count_after": "registry count after Exp5727 reconciliation.",
+    "arc_registry_count_before": "registry baseline before any credited Exp5727 update.",
+    "arc_registry_delta": "solve credit requires a positive reproduced-level delta.",
+    "arc_solve_credited": "bare false unless Exp5727 explicitly reports new reproduced credit.",
+    "arc_solve_provenance": "only live self-discovery plus reproduction evidence can credit a solve.",
+    "artifact_metadata": "path, loadability, hash, and status prove what was actually read.",
+    "attestation_coverage": "attestation is creditable only over admitted rows.",
+    "claim_boundaries": "scope limits prevent promotion from blocked, skipped, proxy, or null artifacts.",
+    "conductor_gate_statuses": "gate-block, flagged, OK, and missing conductor states stay distinct.",
+    "continuous_self_learning_credited": "bare false unless prospective lifecycle and recovery gates both pass.",
+    "e2e_check_receipts": "applicable E2E and audit checks are named with observed exits.",
+    "expected_task_ids": "fixed Exp5717-Exp5728 denominator before success counts.",
+    "field_principles": "one-line annotations for every required capstone field.",
+    "fr11_lifecycle_shadow_status": "Exp5721 missing or gate-blocked lifecycle evidence cannot count as learning.",
+    "fr11_recovery_canary_status": "Exp5722 recovery evidence cannot promote without lifecycle gates.",
+    "hardware_speedup_claimed": "bare false prevents CPU/PyO3 timing from becoming a board claim.",
+    "honest_verdict": "terminal summary starting with complete: or blocked:.",
+    "inference_substrate": "artifact_reconciliation_and_validation_only -- no model or board inference occurred.",
+    "malformed_artifacts": "malformed deliverables stay visible and cannot promote.",
+    "milestone": "fixed route key for the 2026.07.511 closeout.",
+    "missing_artifacts": "missing deliverables stay visible and cannot promote.",
+    "model_weight_mutation": "bare false preserves immutable GGUF weights.",
+    "negative_transfer_count": "negative-transfer counts are null when the learner did not run.",
+    "ops_reconciliation": "ops ledgers are read and status/changelog edits are delegated by the stop rule.",
+    "parse_failure_count": "unparsed rows remain failures and are never imputed.",
+    "preserved_scopes": "non-retired clean streams, CSL, SamplerBackend, epistemic state, and live attempts stay live.",
+    "production_default_enabled": "bare false keeps FR-11 out of production defaults.",
+    "promotion_retirement_ledger": "promotion, null, blocked, and retirement decisions are reconstructable.",
+    "qualified_crossover_n": "null crossover blocks a software speedup claim.",
+    "qualified_model_ids": "only models qualified by Exp5719 controls can enter the stream gate.",
+    "quality_matched_pair_count": "only quality-matched pairs enter timing interpretation.",
+    "reproducibility_checksum": "content-addressed capstone output is stable.",
+    "retention_regression_count": "retention counts are null when the learner did not run.",
+    "retirements_applied": "same-verdict retirements are applied narrowly.",
+    "rust_python_crossover_status": "Exp5724 null crossover is separate from backend readiness.",
+    "rust_samplerbackend_status": "Exp5723 integration is separate from timing and hardware claims.",
+    "software_speedup_claimed": "bare false unless Exp5724's preregistered interval gate passes.",
+    "sota_attested_stream_status": "Exp5720 cannot promote when upstream channel gates failed.",
+    "source_ingestion_status": "Exp5718 source work is quarantined if adversarial verification flagged it.",
+    "spec_reconciliation": "REQ-* and SCENARIO-* anchors for this module and tests are explicit.",
+    "stream_commitment_status": "stream chronology must be committed before FR-11 learning credit.",
+    "test_commands": "verification commands are replayable.",
+    "test_exit_codes": "observed exits are recorded without laundering failures.",
+    "timing_claimed": "bare true only for Exp5724 CPU timing null, not a speedup.",
+    "traceability_reconciliation": "traceability updates are delegated by the stop rule rather than silently edited.",
+    "transition_status": "Exp5717 transition facts are bounded to observed retirements and preserved scopes.",
+    "two_axis_retirement_preserved": "the retired two-axis extension stays closed while one-axis remains live.",
+    "unsafe_false_accept_count": "unsafe counts are null when the canary did not run, not zero-success.",
+    "unsafe_update_accept_count": "unsafe update counts are null when the canary did not run, not zero-success.",
+    "validator_disagreement_count": "exact validators remain the final authority."
+  },
+  "forbidden_files_unchanged": {
+    "_bmad/traceability.md": {
+      "exists": true,
+      "sha256": "sha256:339e9d4bb83c1a7683da37bc66ba9d0c2d24016e753f79222995f8aa823795f6",
+      "unchanged": true
+    },
+    "ops/changelog.md": {
+      "exists": true,
+      "sha256": "sha256:acc45927f1bddf3a5f0ee7ca4838c1c070e78f05b5e64e6fa58eb8f6bf5ae321",
+      "unchanged": true
+    },
+    "ops/status.md": {
+      "exists": true,
+      "sha256": "sha256:cf4d4d571917cc86e9f6d59c7480e0e287d732c6b299953b55b581aa48ddb67d",
+      "unchanged": true
+    },
+    "research-roadmap.yaml": {
+      "exists": true,
+      "sha256": "sha256:523d91775a2d6cb7f7aa69f5e28425aad8d25ef5030033c50109874eda5a4510",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "exists": true,
+      "sha256": "sha256:d3aec876c7be8d4b76a0075872d61526149ff37b23dd1e42500558369ee12b81",
+      "unchanged": true
+    }
+  },
+  "fr11_lifecycle_shadow_status": {
+    "artifact_absent_or_gate_blocked": true,
+    "gate_check_summary": null,
+    "honest_verdict": null,
+    "promoted": false,
+    "ready_score": 0.0,
+    "status": "missing"
+  },
+  "fr11_recovery_canary_status": {
+    "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp5721-fr11-memops-lifecycle-shadow-stream.fr11_lifecycle_shadow_ready_score (numeric comparison rejected because one side is None (actual=None, expected=1.0))",
+    "gates_evaluated": [
+      {
+        "actual": null,
+        "artifact_field": "fr11_lifecycle_shadow_ready_score",
+        "expected": 1.0,
+        "op": ">=",
+        "passed": false,
+        "reason": "numeric comparison rejected because one side is None (actual=None, expected=1.0)",
+        "upstream": "exp5721-fr11-memops-lifecycle-shadow-stream"
+      },
+      {
+        "actual": null,
+        "artifact_field": "unsafe_false_accept_count",
+        "expected": 0,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=None == expected=0",
+        "upstream": "exp5721-fr11-memops-lifecycle-shadow-stream"
+      },
+      {
+        "actual": null,
+        "artifact_field": "unsafe_update_accept_count",
+        "expected": 0,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=None == expected=0",
+        "upstream": "exp5721-fr11-memops-lifecycle-shadow-stream"
+      }
+    ],
+    "honest_verdict": "blocked_gate_check_failed",
+    "promoted": false,
+    "ready_score": 0.0,
+    "status": "gate_skipped"
+  },
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "blocked: v511 reconciled; answer_channel_ready=false; stream_ready=false; continuous_self_learning_credited=false; rust_samplerbackend_ready=true; rust_python_crossover_null=true; arc_registry_delta=0; arc_solve_credited=false",
+  "inference_substrate": "artifact_reconciliation_and_validation_only",
+  "malformed_artifacts": [],
+  "manifest_metadata": {
+    "error": null,
+    "exists": true,
+    "loadable": true,
+    "sha256": "sha256:ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2"
+  },
+  "milestone": "2026.07.511",
+  "missing_artifacts": [
+    "results/experiment_5721_fr11_memops_lifecycle_shadow_stream.json"
+  ],
+  "model_weight_mutation": false,
+  "negative_transfer_count": null,
+  "ops_reconciliation": {
+    "changelog_path": "ops/changelog.md",
+    "conductor_log_present": true,
+    "delegated_by_stop_rule": true,
+    "exclusion_manifest_present": true,
+    "exp5709_retirement_present": true,
+    "ops_changelog_edited_by_this_capstone": false,
+    "ops_status_edited_by_this_capstone": false,
+    "registry_full_game_clear_count": 25,
+    "registry_reproducible_total_games": 25,
+    "registry_reproducible_total_levels": 183,
+    "status_path": "ops/status.md"
+  },
+  "parse_failure_count": 82,
+  "preserved_scopes": [
+    {
+      "preserved_fact": "promoted",
+      "scope": "v509_fr11_independent_controller"
+    },
+    {
+      "preserved_fact": "disabled_by_default",
+      "scope": "fr11_shadow_adapter_disabled_by_default"
+    },
+    {
+      "preserved_fact": "not_retired_by_exp5709_same_verdict",
+      "scope": "future_clean_prospective_streams"
+    },
+    {
+      "preserved_fact": "not_retired",
+      "scope": "generic_lifecycle_learning"
+    },
+    {
+      "preserved_fact": "not_retired",
+      "scope": "generic_arc_working_memory"
+    },
+    {
+      "preserved_fact": "not_retired",
+      "scope": "arc_live_attempts"
+    },
+    {
+      "preserved_fact": "promoted",
+      "scope": "one_axis_temperature_exchange"
+    },
+    {
+      "preserved_fact": "not_retired",
+      "scope": "generic_replica_exchange"
+    },
+    {
+      "preserved_fact": "not_retired",
+      "scope": "external_memory_csl"
+    },
+    {
+      "preserved_fact": "not_retired",
+      "scope": "samplerbackend_contract"
+    },
+    {
+      "preserved_fact": "not_retired",
+      "scope": "arc_epistemic_state"
+    }
+  ],
+  "production_default_enabled": false,
+  "promotion_retirement_ledger": [
+    {
+      "decision": "bounded_transition",
+      "lane": "transition",
+      "promoted": false,
+      "status": "blocked",
+      "task_id": "exp5717-transition-v511"
+    },
+    {
+      "decision": "quarantined_flagged_artifact",
+      "lane": "source_ingestion",
+      "promoted": false,
+      "status": "flagged",
+      "task_id": "exp5718-v511-source-delta-ingestion"
+    },
+    {
+      "decision": "blocked_or_gate_skipped",
+      "lane": "sota_stream",
+      "promoted": false,
+      "status": "gate_skipped",
+      "task_id": "exp5720-sota-attested-exact-envelope-canary"
+    },
+    {
+      "decision": "missing_lifecycle_no_csl_credit",
+      "lane": "fr11",
+      "promoted": false,
+      "status": "missing",
+      "task_id": "exp5721-fr11-memops-lifecycle-shadow-stream"
+    },
+    {
+      "decision": "promote_backend_integration_only",
+      "lane": "samplerbackend",
+      "promoted": true,
+      "status": "complete",
+      "task_id": "exp5723-one-axis-rust-samplerbackend-integration"
+    },
+    {
+      "decision": "terminal_null_no_software_speedup",
+      "lane": "rust_python_crossover",
+      "promoted": false,
+      "status": "complete",
+      "task_id": "exp5724-one-axis-rust-python-matched-crossover"
+    },
+    {
+      "decision": "qualification_only_no_solve",
+      "lane": "arc_epistemic",
+      "promoted": true,
+      "status": "complete",
+      "task_id": "exp5725-arc-epistemic-ledger-live-qualification"
+    },
+    {
+      "decision": "matched_null_no_promotion",
+      "lane": "arc_ab",
+      "promoted": false,
+      "status": "complete",
+      "task_id": "exp5726-arc-epistemic-ledger-live-ab"
+    },
+    {
+      "decision": "measurement_no_solve_credit",
+      "lane": "arc_generalization",
+      "promoted": false,
+      "status": "complete",
+      "task_id": "exp5727-arc-generalization-live-oracle-gap-v511"
+    }
+  ],
+  "qualified_crossover_n": null,
+  "qualified_model_ids": [],
+  "quality_matched_pair_count": 178,
+  "random_seed": 5728,
+  "registry_metadata": {
+    "error": null,
+    "exists": true,
+    "loadable": true,
+    "sha256": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e"
+  },
+  "reproducibility_checksum": "sha256:4de5f450f8c9bbf06f18e62ffbb87f71c4f42e9f109e307db4f68097b8066674",
+  "result_path": "results/experiment_5728_v511_capstone_reconciliation.json",
+  "retention_regression_count": null,
+  "retirements_applied": [
+    {
+      "decision": "retire_same_parse_failed_stream_scope_only",
+      "manifest_entry_present": true,
+      "preserves": [
+        "v509_fr11_independent_controller",
+        "fr11_shadow_adapter_disabled_by_default",
+        "future_clean_prospective_streams",
+        "generic_lifecycle_learning"
+      ],
+      "scope": "fr11_prospective_shadow_stream_exp5709_same_verdict"
+    }
+  ],
+  "run_date": "2026-07-19",
+  "rust_python_crossover_status": {
+    "fpga_or_tsu_used": false,
+    "gpu_speedup_claimed": false,
+    "hardware_speedup_claimed": false,
+    "honest_verdict": "complete: terminal null; no consecutive larger-size matched-quality Rust/Python CPU crossover proven; timing claimed without GPU, FPGA, TSU, or hardware claim",
+    "qualified_crossover_n": null,
+    "quality_matched_pair_count": 178,
+    "rust_crossover_ready_score": 0.0,
+    "software_speedup_claimed": false,
+    "status": "complete",
+    "terminal_null": true,
+    "timing_claimed": true
+  },
+  "rust_samplerbackend_status": {
+    "exact_fallback_equivalence_score": 1.0,
+    "fallback_equivalence_pass": true,
+    "hardware_speedup_claimed": false,
+    "honest_verdict": "complete: one-axis Rust/PyO3 kernel is exposed through SamplerBackend with exact fallback, restart receipts, and no timing or hardware claim",
+    "one_axis_samplerbackend_ready_score": 1.0,
+    "promoted": true,
+    "status": "complete",
+    "timing_claimed": false,
+    "two_axis_code_added": false
+  },
+  "schema": "carnot.experiment_5728.v511_capstone_reconciliation.v1",
+  "software_speedup_claimed": false,
+  "sota_attested_stream_status": {
+    "blocked_or_skipped_cannot_promote": true,
+    "gate_check_summary": "4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answer_channel_ready_score (actual=0.0 >= expected=1.0)",
+    "gates_evaluated": [
+      {
+        "actual": 0.0,
+        "artifact_field": "answer_channel_ready_score",
+        "expected": 1.0,
+        "op": ">=",
+        "passed": false,
+        "reason": "actual=0.0 >= expected=1.0",
+        "upstream": "exp5719-sota-answer-channel-forensics"
+      },
+      {
+        "actual": 0.0,
+        "artifact_field": "positive_control_parse_rate",
+        "expected": 1.0,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=0.0 == expected=1.0",
+        "upstream": "exp5719-sota-answer-channel-forensics"
+      },
+      {
+        "actual": 0,
+        "artifact_field": "qualified_model_count",
+        "expected": 2,
+        "op": ">=",
+        "passed": false,
+        "reason": "actual=0 >= expected=2",
+        "upstream": "exp5719-sota-answer-channel-forensics"
+      },
+      {
+        "actual": 0.0,
+        "artifact_field": "cuda_offload_authenticated_score",
+        "expected": 1.0,
+        "op": ">=",
+        "passed": false,
+        "reason": "actual=0.0 >= expected=1.0",
+        "upstream": "exp5719-sota-answer-channel-forensics"
+      }
+    ],
+    "honest_verdict": "blocked_gate_check_failed",
+    "promoted": false,
+    "status": "gate_skipped"
+  },
+  "source_context": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "sha256": "sha256:20cbc11c703e7fb7209a0e1745b64f8626aca9cb8905503f12650d04fa1c5db9"
+    },
+    {
+      "exists": true,
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/prd.md",
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/architecture.md",
+      "sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:e7c81eeb4b64466eba1e909c4187301243000fab20312d9b4c940fbd8573fb3f"
+    },
+    {
+      "exists": true,
+      "path": "openspec/capabilities/capstone/spec.md",
+      "sha256": "sha256:222047894b298c7dad258248156a6219b8c148cbf1fe9ac958d2528b7d31d641"
+    },
+    {
+      "exists": true,
+      "path": "research-complete.yaml",
+      "sha256": "sha256:bd7c038a7042127ab88387b0dd9fd51b1ea58ea9081b11eb14a1b48ead78f5a5"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:ec0f2bd1828e3f786d567c14bd6e65fbe1b197887266c9bfaa06bdd409c9ccf2"
+    },
+    {
+      "exists": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:990b559eee6d2d05723c25bf66d8d4d977d9e6865111bd3ce03618103b5ea36e"
+    },
+    {
+      "exists": true,
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:0ea82d90d928e664c2a2dd256261c557ffb1e3820c4702a9369187d9f822ec2e"
+    },
+    {
+      "exists": true,
+      "path": "ops/verifier_gaps.md",
+      "sha256": "sha256:78a299b65d6940d91516e28c5d3d678da50b3fa97ef89a87db3496b3425254ba"
+    },
+    {
+      "exists": true,
+      "path": "ops/north-star.md",
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+    },
+    {
+      "exists": true,
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:c16359d1548b5f6868995e9281bfe1f172e376cbea6ec99b0c01dbc0f4eadf15"
+    }
+  ],
+  "source_context_missing": [],
+  "source_ingestion_status": {
+    "corrigendum_pending": [
+      {
+        "detail": "duration_s=2.6996713131666183e-07 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "counts_as_success": false,
+    "critical_flags": [],
+    "flagged_adversarial": true,
+    "honest_verdict": "complete: accepted 1 non-duplicate actionable V511 source delta; no roadmap ID or gate change",
+    "quarantined_by_adversarial_flag": true,
+    "references_updated": true,
+    "roadmap_change_required": false,
+    "status": "flagged"
+  },
+  "spec_reconciliation": {
+    "module_path": "python/carnot/experiment_5728_v511_capstone_reconciliation.py",
+    "module_present": true,
+    "req_present": true,
+    "scenarios_present": true,
+    "spec_path": "openspec/capabilities/capstone/spec.md",
+    "spec_refs": [
+      "REQ-CAPSTONE-5728",
+      "SCENARIO-CAPSTONE-5728",
+      "SCENARIO-CAPSTONE-5728-MISSING-MALFORMED",
+      "SCENARIO-CAPSTONE-5728-FIELD-PRINCIPLES"
+    ],
+    "test_path": "tests/python/test_experiment_5728_v511_capstone_reconciliation.py",
+    "test_present": true
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-5728",
+    "SCENARIO-CAPSTONE-5728",
+    "SCENARIO-CAPSTONE-5728-MISSING-MALFORMED",
+    "SCENARIO-CAPSTONE-5728-FIELD-PRINCIPLES"
+  ],
+  "stream_commitment_status": {
+    "commitments_present": false,
+    "prospective_prefix_hash": null,
+    "sealed_suffix_hash": null,
+    "status": "gate_skipped",
+    "stream_root_commitment": null
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py -m pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py --fail-under=100",
+    ".venv/bin/ruff check python/carnot/experiment_5728_v511_capstone_reconciliation.py tests/python/test_experiment_5728_v511_capstone_reconciliation.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python/test_e2e_training_sampling.py tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py tests/python/test_pipeline_verify_repair.py tests/python/test_experiment_5725_arc_epistemic_ledger_live_qualification.py tests/python/test_experiment_5726_arc_epistemic_ledger_live_ab.py tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py -q --no-cov -n 0",
+    ".venv/bin/pytest tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py -q --no-cov -n 0",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    "bash scripts/validate-reconciliation.sh --help",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5728_v511_capstone_reconciliation.json",
+    "git diff --check",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git diff --name-only -- research-roadmap.yaml scripts/research_conductor.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py --fail-under=100": 0,
+    ".venv/bin/coverage run --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py -m pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_e2e_training_sampling.py tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py tests/python/test_pipeline_verify_repair.py tests/python/test_experiment_5725_arc_epistemic_ledger_live_qualification.py tests/python/test_experiment_5726_arc_epistemic_ledger_live_ab.py tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5728_v511_capstone_reconciliation.json": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5728_v511_capstone_reconciliation.py tests/python/test_experiment_5728_v511_capstone_reconciliation.py": 0,
+    "bash scripts/validate-reconciliation.sh --help": 130,
+    "git diff --check": 0,
+    "git diff --name-only -- research-roadmap.yaml scripts/research_conductor.py": 0
+  },
+  "timing_claimed": true,
+  "traceability_reconciliation": {
+    "delegated_by_stop_rule": true,
+    "edited_by_this_capstone": false,
+    "exists": true,
+    "path": "_bmad/traceability.md",
+    "sha256": "sha256:339e9d4bb83c1a7683da37bc66ba9d0c2d24016e753f79222995f8aa823795f6"
+  },
+  "transition_status": {
+    "fr11_isolated_promoted": false,
+    "fr11_prospective_promoted": false,
+    "future_clean_streams_preserved": true,
+    "generic_arc_memory_preserved": true,
+    "generic_lifecycle_learning_preserved": true,
+    "honest_verdict": "blocked: v511 transition preserved terminal .510 evidence but manifest or source inputs are incomplete",
+    "narrow_exp5709_retirement_applied": true,
+    "one_axis_readiness": {
+      "parity": 1.0,
+      "quality": 1.0
+    },
+    "status": "blocked"
+  },
+  "two_axis_retirement_preserved": true,
+  "unsafe_false_accept_count": null,
+  "unsafe_update_accept_count": null,
+  "validation_results": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "5 passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py -m pytest tests/python/test_experiment_5728_v511_capstone_reconciliation.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "5 passed under coverage"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5728_v511_capstone_reconciliation.py --fail-under=100",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "100% coverage on python/carnot/experiment_5728_v511_capstone_reconciliation.py"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5728_v511_capstone_reconciliation.py tests/python/test_experiment_5728_v511_capstone_reconciliation.py",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "All checks passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "status": "pre_existing_debt_interrupted_after_native_crash",
+      "summary": "27 failed, 10601 passed, 41 skipped before KeyboardInterrupt after Z3 worker crash/hang; no Exp5728 failures listed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "status": "pre_existing_debt",
+      "summary": "1261 pre-existing tests lack REQ-* or SCENARIO-* traceability; new Exp5728 test not listed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_e2e_training_sampling.py tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py tests/python/test_pipeline_verify_repair.py tests/python/test_experiment_5725_arc_epistemic_ledger_live_qualification.py tests/python/test_experiment_5726_arc_epistemic_ledger_live_ab.py tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "122 passed, 1 warning"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5723_one_axis_rust_samplerbackend_integration.py tests/python/test_experiment_5724_one_axis_rust_python_matched_crossover.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "12 passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "Exclusion-manifest lint clean"
+    },
+    {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "No schema errors, no prior_failures violations"
+    },
+    {
+      "command": "bash scripts/validate-reconciliation.sh --help",
+      "exit_code": 130,
+      "status": "pre_existing_debt_interrupted_after_stale_doc_loop",
+      "summary": "Script began normal freshness check despite --help; repeatedly reported stale architecture and traceability docs before interruption"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_5728_v511_capstone_reconciliation.json",
+      "exit_code": 1,
+      "status": "info_flag_expected_honest_null",
+      "summary": "INFO IMPLAUSIBLE_PERFECT for required arc_registry_delta=0 honest null; no success credit claimed"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "No whitespace errors"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "Dry-run found 0 root scratch files and 0 regenerable artifacts to remove"
+    },
+    {
+      "command": "git diff --name-only -- research-roadmap.yaml scripts/research_conductor.py",
+      "exit_code": 0,
+      "status": "passed",
+      "summary": "No output; protected files unchanged"
+    }
+  ],
+  "validator_disagreement_count": 0
+}
