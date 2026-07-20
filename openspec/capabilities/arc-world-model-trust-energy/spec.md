@@ -7672,6 +7672,127 @@ has a grounded stall class with cited run diagnostics, no gap fix is attempted,
 and new verifier-gap entries are added only for genuinely new missing
 discriminators not already covered by `ops/verifier_gaps.md`.
 
+### REQ-ARC-WMTE-5740: Game-Blind Primitive Causal Audit by Deletion Replay
+
+Experiment 5740 SHALL mine a small game-blind action-effect primitive vocabulary
+from already checked-in live-agent trace receipts and SHALL measure each
+candidate primitive's causal trajectory utility by deletion replay. The workflow
+SHALL registry-precheck all 25 public games, hash
+`ops/arc_solve_registry.yaml`, declare `solve_provenance="development_proxy"`,
+and award no solve or registry credit. The diagnostic SHALL not modify policy
+code, the solve registry, `scripts/research_conductor.py`, or per-game adapters.
+
+Learner-visible inputs SHALL be restricted to agent-owned rendered
+frame/action/transition/decision receipts already present in checked-in result
+artifacts, including `frame_sequence`, `move`, `available_actions`,
+`levels_completed`, grid hashes/shapes/colors, action counts, and policy
+diagnostic summaries. The learner-visible rows SHALL strip game ids, names,
+registry provenance labels, source-derived metadata, per-game constants, and
+future-frame values. The audit SHALL NOT read game source, solution code, hidden
+state, per-game adapters, outer-loop BFS labels, hand-authored game models, or
+learned value-transfer family artifacts.
+
+The primitive schema SHALL contain only generic observable action-effect
+families: `object_displacement`, `reversible_or_noop_action`,
+`boundary_or_collision`, `inventory_or_state_toggle`, `agent_relative_motion`,
+`repeated_action_loop`, and `delayed_effect`. It SHALL not encode
+game-specific constants. Candidate primitives SHALL be mined under
+leave-one-game-out splits and retained only if they satisfy preregistered
+effect and retention thresholds over at least 30 paired trace replays with
+corrected intervals. Static frequency, plausibility, or vocabulary match alone
+SHALL NOT qualify a positive primitive.
+
+For each candidate primitive, deletion replay SHALL remove that primitive from
+the runtime-induction replay and rerun the same recorded decision trajectory
+under identical budgets and seeds. The artifact SHALL report counterfactual
+changes in next-action validity, world-model transition accuracy,
+planned-state reachability, repeated-action rate, invalid-action rate,
+time/budget to first progress event, and downstream decision hashes. The audit
+SHALL include negative controls for shuffled primitive, game-ID leak, per-game
+constant, future-frame leak, source-derived rule, orphan primitive, and no-op deletion;
+every leak control SHALL be detected and rejected.
+
+The terminal artifact
+`results/experiment_5740_arc_game_blind_primitive_causal_audit.json` SHALL
+include top-level `field_principles` covering every artifact field, plus
+`preconditions_checked`, `registry_hash`, `registry_game_count`,
+`trace_manifest`, `trace_hashes`, `games_measured`,
+`leave_one_game_out_splits`, `primitive_schema`, `primitive_candidates`,
+`game_identity_stripping_receipts`, `deletion_replay_manifest`,
+`counterfactual_receipt_coverage`, `counterfactual_trajectory_utility`,
+`next_action_validity_delta`, `world_model_accuracy_delta`,
+`planning_reachability_delta`, `repeat_rate_delta`, `invalid_action_delta`,
+`progress_budget_delta`, `negative_controls`, `source_leak_count`,
+`game_identity_leak_count`, `positive_causal_primitive_count`,
+`policy_modified=false`, `registry_modified=false`,
+`solve_provenance="development_proxy"`, `verifier_is_oracle=true`,
+`inference_substrate="offline_arc_trace_counterfactual_development_proxy"`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL include:
+
+- `field_principles`: principle "every field carries its own audit rationale so schema compliance is principle-grounded."
+- `preconditions_checked`: principle "records registry, trace, source-access, and policy/registry immutability guards before trusting the diagnostic."
+- `registry_hash`: principle "content-addressed public registry baseline prevents accidental solve-credit drift."
+- `registry_game_count`: principle "the public registry premise is exactly 25 completed games."
+- `trace_manifest`: principle "agent-owned checked-in trace inputs are explicit and replayable."
+- `trace_hashes`: principle "trace bytes are content-addressed so mined primitives cannot silently change."
+- `games_measured`: principle "leave-one-game-out means the measured roster is visible."
+- `leave_one_game_out_splits`: principle "candidate mining excludes the held-out game before measuring retention."
+- `primitive_schema`: principle "the vocabulary is generic observable action-effect structure, not game rules."
+- `primitive_candidates`: principle "each candidate exposes support, thresholds, controls, and causal-retention status."
+- `game_identity_stripping_receipts`: principle "proves learner-visible rows removed ids, names, and source-derived metadata."
+- `deletion_replay_manifest`: principle "causal utility is measured by paired deletion replay under fixed budgets and seeds."
+- `counterfactual_receipt_coverage`: principle "N>=30 paired replays is explicit before interpreting effects."
+- `counterfactual_trajectory_utility`: principle "utility is trajectory-level, not static frequency or plausibility."
+- `next_action_validity_delta`: principle "validity impact is measured directly after deletion."
+- `world_model_accuracy_delta`: principle "dynamics quality is measured as transition prediction change."
+- `planning_reachability_delta`: principle "planned-state reachability is a downstream induction target."
+- `repeat_rate_delta`: principle "looping behavior is separated from validity."
+- `invalid_action_delta`: principle "bad-action regressions are counted, not hidden."
+- `progress_budget_delta`: principle "time or budget to first progress is the live-agent cost signal."
+- `negative_controls`: principle "leak and orphan controls prove the harness rejects non-causal or illegal signals."
+- `source_leak_count`: principle "source-derived rules must be detected and excluded."
+- `game_identity_leak_count`: principle "game-id leakage must be detected and excluded."
+- `positive_causal_primitive_count`: principle "headline count follows preregistered effect and retention thresholds only."
+- `policy_modified`: principle "false keeps this diagnostic out of the submitted policy path."
+- `registry_modified`: principle "false prevents public-game solve credit inflation."
+- `solve_provenance`: principle "development_proxy marks this as diagnostic evidence, not a hidden-game solve."
+- `verifier_is_oracle`: principle "true because deletion replay compares against recorded trace receipts, not a deployable live oracle."
+- `inference_substrate`: principle "offline_arc_trace_counterfactual_development_proxy declares no LLM inference or source execution."
+- `random_seeds`: principle "paired deletion replay is deterministic only with fixed seeds."
+- `reproducibility_checksum`: principle "content-addressed artifact payload catches threshold or trace drift."
+- `honest_verdict`: principle "terminal prefix reports complete diagnostic or blocked precondition without solve credit."
+
+#### SCENARIO-ARC-WMTE-5740-IDENTITY-AND-SOURCE-LEAK-REJECTION
+
+Given checked-in ARC trace artifacts and adversarial controls that inject game
+ids, per-game constants, future-frame fields, or source-derived rule labels
+When Exp5740 builds learner-visible primitive rows
+Then every leak control is detected and rejected, `source_leak_count` and
+`game_identity_leak_count` reflect only rejected controls, and accepted
+primitive rows contain no game ids, names, source-derived metadata, hidden
+state, per-game adapter labels, or future-frame values.
+
+#### SCENARIO-ARC-WMTE-5740-DELETION-REPLAY-CAUSAL-UTILITY
+
+Given at least 30 paired trace replays per retained primitive under
+leave-one-game-out splits
+When Exp5740 deletes a candidate primitive from runtime-induction replay and
+reruns the same recorded decision trajectory with identical budgets and seeds
+Then the artifact reports corrected-interval deltas for next-action validity,
+world-model accuracy, planning reachability, repeat rate, invalid-action rate,
+progress budget, and downstream decision hashes, and counts a positive causal
+primitive only when the preregistered effect and retention thresholds pass.
+
+#### SCENARIO-ARC-WMTE-5740-DIAGNOSTIC-NO-CREDIT-CONTRACT
+
+Given the public registry already contains 25 completed games
+When Exp5740 writes its terminal artifact
+Then `policy_modified=false`, `registry_modified=false`,
+`solve_provenance="development_proxy"`, no solve or registry credit is claimed,
+and the registry hash in the artifact still matches the checked precondition.
+
 ### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
 
 Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD

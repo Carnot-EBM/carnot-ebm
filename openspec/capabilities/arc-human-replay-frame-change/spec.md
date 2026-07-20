@@ -10100,3 +10100,103 @@ Required field principles:
 #### SCENARIO-ARC-FCP-5730-WITHIN-ACTION-ID-SEED-ROBUST
 - **WHEN** a within-action-id head (e.g. `click_head` with action_id fixed at 6) produces a high AUROC on one training seed (0.918 on seed 4547) but is re-measured across >=5 seeds against a per-seed untrained-CNN structural baseline
 - **THEN** the artifact SHALL report the trained AUROC distribution (mean/min/max) AND the untrained baseline distribution, and SHALL declare `..._robust_learned_signal: false` when the worst seed does not clear the 0.55 floor or does not beat the untrained baseline (here trained min 0.444 vs untrained mean 0.580) -- never headlining the lone lucky-seed value as evidence of a learned discriminator.
+
+### REQ-ARC-FCP-5740: ObjectHistorySaliencePrior Properly-Powered 11-Game Live A/B + Blob-Cache Perf Fix
+
+`ObjectHistorySaliencePrior` (`arc_object_history_salience.py`) is an
+already-live-wired `action_prior` (gated OFF by default,
+`SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED = False`) that wraps
+`ColorBlobSaliencePrior` with a per-`object_hash` change-history bonus: click
+candidates on objects observed to change the frame when clicked are preferred.
+A prior A/B (exp5603) found `object_history_salience_ab_no_op_at_either_weight`
+but tested exactly ONE game (`m0r0`, 37 transitions) with the ONLY available
+metric being trajectory divergence (it self-documented "no OfflineSolver-
+equivalent states_expanded metric exists for action_prior"). exp5732 then
+measured a real ONLINE prefix-causal `object_hash`-keyed memory signal (AUROC
+0.844 vs click-bucket 0.711, +0.133) that its own coverage probe showed was
+heavily `lp85`-dominated -- so the `m0r0` null was plausibly game-specific, not
+mechanism-wide. This re-test is NOT a doomed rerun (Failed-Experiment Rerun
+Discipline): it changes the roster (1 game -> the full 11-game exp5729/exp5732
+roster) AND the metric (trajectory-only -> real `levels`/`states_expanded`),
+NOT the weight (exp5603 already settled both tested weights are null).
+
+A per-candidate perf bug is fixed FIRST (independently motivated):
+`ObjectHistorySaliencePrior.score()` called `connected_color_blobs` RAW per
+candidate, bypassing the module-level per-frame LRU cache
+(`_cached_blobs_and_counts`, REQ-ARC-FCP-5699 item-2, 2026-07-16) that its own
+`base_prior` (`ColorBlobSaliencePrior.score`) already uses with identical
+params -- reintroducing the exact per-candidate flood-fill the 2026-07-16 fix
+eliminated elsewhere. It is routed through the same cache (the `base_prior.score`
+call one line above already warms it for this exact grid key), behavior-
+preserving (identical blobs -> identical scores).
+
+`python/carnot/experiment_5740_object_history_salience_11game_ab.py` SHALL run a
+matched-budget A/B across the full 11-game roster (same roster + `budget=200` +
+`CARNOT_ARC_DISABLE_INDUCTION=1` no-LLM harness as exp5729, single-threaded,
+per-game fixed seed) with FOUR arms: (1) `baseline` -- shipped default
+(`action_prior=None`, since `SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED=False`); (2)
+`blob_only` -- ISOLATION control (`action_prior=ColorBlobSaliencePrior()`, no
+object-history bonus), REQUIRED because the shipped default has no action_prior
+so the faithful live flip adds BOTH the ColorBlob prior AND the bonus; (3)
+`treatment_default` -- the faithful live flip (`object_history_salience=True`,
+default weight 10.0); (4) `treatment_rescaled` -- exp5603 continuity (weight
+2000.0). The artifact SHALL report `levels_gained_total_by_arm`,
+`states_expanded_total_by_arm`, per-game breakdown, `safety_regression_check`
+(states vs baseline, exp5729 discipline), a THREE-way `trajectories_diverge_per_game`
+(the LOAD-BEARING `object_history_bonus_marginal_vs_blob_only` isolation, the
+CONFOUNDED `full_live_flip_vs_baseline`, and `color_blob_prior_alone_vs_baseline`
+attribution), `blob_cache_perf_fix` (before/after per-candidate timing +
+behavior-preservation check), and a `prior_work_extended` block citing exp5603
+(the null this extends), exp5732 (the motivating online signal), and exp5729
+(the harness precedent). The verdict SHALL key on the ISOLATED bonus effect
+(treatment vs `blob_only`), never the confounded treatment-vs-baseline.
+
+**RESOLUTION (2026-07-20).** Ran cleanly on the full 11-game roster,
+budget=200/game, 4 arms, 270.3s, adversarial_verify 0 flags. NO capability gain:
+every arm banked exactly `1` level (`lp85` L1, a pre-existing registry solve
+reached in every arm), `any_config_beats_baseline_levels: false`,
+`levels_gained_headroom_present: true` (interpretable null). The ISOLATION was
+decisive: the object-history bonus's TRUE marginal effect over the ColorBlob
+prior (treatment vs `blob_only`) changed search on only 4 games at default
+weight (`cd82, lp85, sp80, su15`) and 5 at the rescaled weight (`+m0r0`) -- 9
+arm-game divergences -- while the ColorBlob prior ALONE (`blob_only` vs baseline)
+changed search on 8 games and the CONFOUNDED treatment-vs-baseline showed 16.
+So the bulk of the "`object_history_salience=True` changes search" effect is the
+ColorBlob base prior, NOT the object-history bonus -- exactly the confound the
+`blob_only` arm was built to expose, and the reason a treatment-vs-baseline-only
+comparison (exp5603's implicit frame) would have over-credited the bonus.
+`m0r0` is NOT in the DEFAULT-weight isolation set, reconciling with exp5603's
+`m0r0` default-weight no-op; the full-roster breadth shows the bonus is not
+mechanism-wide inert (4-5 games diverge) but its effect is small and banks no
+level. No safety regression: the action_prior arms REDUCED `states_expanded`
+(baseline 931 -> `blob_only` 813 -> treatment 812, `any_config_states_regression:
+false`). The perf fix removed a real ~4x per-candidate flood-fill cost (raw
+2807us/cand -> fixed 703us/cand, `fixed_scores_identical_to_raw: true`); the
+residual fixed-vs-baseline overhead (~47x per candidate in isolation) is
+`object_hash(blob)`, inherent to the mechanism, and does NOT confound the
+capability A/B (run_game's budget is action-count, not wall-clock; the
+no-induction search path has no wall-clock cutoff). Verdict:
+`complete: object_history_bonus_marginal_over_colorblob_prior_changes_search_on_9_arm_games_but_no_level_gain_over_baseline_1_colorblob_prior_drives_the_larger_behavioral_change`.
+Recommendation (operator-only): do NOT flip
+`SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED` on a capability basis (no level
+gain); the object-history bonus is not the live-path lever. Per the retire
+condition this is NOT a same-verdict rerun of exp5603 (single-game trajectory-
+only vs full roster with real metrics + isolation), so the lineage is not
+auto-retired, but the marginal signal does not justify a live flip. The
+object-identity signal exp5732 found is real ONLINE but does not reach the live
+search's frontier ordering here -- logged as a verifier gap.
+
+Required field principles:
+
+- `object_history_bonus_marginal_vs_blob_only`: principle "THE isolated object-history-bonus effect -- both arms carry the ColorBlob prior so only the bonus differs; the verdict keys on this, never the treatment-vs-baseline comparison confounded by the ColorBlob prior."
+- `blob_cache_perf_fix`: principle "documents the independently-motivated uncached-blob bug, the minimal cache-routing fix, the before/after per-candidate timing, and WHY the residual object_hash cost does not confound an action-budget A/B."
+- `safety_regression_check`: principle "a config that banks a level while materially inflating states_expanded may be luck-under-noise -- states vs baseline flags any blow-up so a level win is never reported without its search cost."
+- `any_config_beats_baseline_levels`: principle "the load-bearing capability boolean -- an action_prior only justifies a live-default flip if it beats baseline on banked levels, not on a proxy or a confounded divergence count."
+
+#### SCENARIO-ARC-FCP-5740-BONUS-MARGINAL-ISOLATED-FROM-COLORBLOB-PRIOR
+- **WHEN** the shipped default has no `action_prior` (`SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED=False`), so enabling `object_history_salience=True` wraps a freshly-constructed `ColorBlobSaliencePrior` and thus adds BOTH the ColorBlob base prior AND the object-history change bonus
+- **THEN** the experiment SHALL include a `blob_only` isolation arm (`action_prior=ColorBlobSaliencePrior()`, no bonus) and report the object-history bonus's marginal behavioral effect as treatment-vs-`blob_only` (here 4 games at default weight, 5 at rescaled), NOT treatment-vs-baseline (here 16, dominated by the ColorBlob prior's own 8-game effect), and the verdict SHALL attribute the larger behavioral change to the ColorBlob prior -- never over-crediting the object-history bonus with a confounded divergence count.
+
+#### SCENARIO-ARC-FCP-5740-BLOB-CACHE-PERF-FIX-BEHAVIOR-PRESERVING
+- **WHEN** `ObjectHistorySaliencePrior.score()` is routed through `_cached_blobs_and_counts` instead of calling `connected_color_blobs` raw per candidate
+- **THEN** the fix SHALL be behavior-preserving (identical blobs -> `fixed_scores_identical_to_raw: true`, verified against a pre-fix raw replica on a real frame) and SHALL remove the per-candidate flood-fill cost (raw ~2807us/cand -> fixed ~703us/cand), and the artifact SHALL document that the residual overhead over the blob-only baseline is `object_hash(blob)` (inherent to the mechanism) which does NOT confound the capability metrics because `run_game`'s budget is action-count, not wall-clock, and the no-induction search path has no wall-clock cutoff.
