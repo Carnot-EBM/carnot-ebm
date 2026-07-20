@@ -16,42 +16,42 @@ OK: all solver-like ARC modules are reachable from the live agent path (55 modul
 
 ## Hostile LLM review
 
-**TL;DR: REJECT all 7 as evidence of new live self-discovery: 0 `SELF_DISCOVERY_ADVANCE`; 5 `OUTER_LOOP_RE`, 1 `OFF_PATH`, 1 `DUPLICATE`.**
+**TL;DR: 0/7 qualify as live self-discovery. All seven are `OUTER_LOOP_RE`; reachability proves the agent can replay the resulting machinery, not that it autonomously discovered it.**
 
 - `results/arc_loop_solve_sk48.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Declares `development_proxy` and `standing_arc_loop_offline_no_quota`. The entrypoint admits this mode uses a hand-registered adapter, not hidden-game discovery ([arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:212)). `_sk48` feeds frozen L1/L2 action tails, reads private game fields, and uses a hand verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2529)). It is also stale versus registry depth 8.
-  - **Recommended action:** Regression fixture only. Exclude from live-capability accounting; require a fresh adapter-free run emitted by the scored policy.
+  - **Evidence:** Declares `development_proxy`. `_sk48` emits the next hard-coded `SK48_L1_LABELS`/`SK48_L2_TAIL_LABELS` action; 44 moves equals 44 expansions—prescribed replay through a hand-built per-game adapter.
+  - **Recommended action:** Keep only as a regression fixture. Remove from self-discovery accounting.
 
 - `results/arc_loop_solve_ar25.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Same explicit development-proxy/offline declaration. `_ar25` serves predetermined L1–L3 tails, reads hidden undo/internal sprite state, hard-codes goal coordinates, and supplies a hand verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2093)). No discovery trace exists. Registry is already at L8.
-  - **Recommended action:** Keep only for replay testing; do not count as self-discovery.
+  - **Evidence:** `development_proxy`; `_ar25` contains fixed L1–L3 action tails, private game-specific state extraction, and a hand verifier. The standing loop executes supplied knowledge.
+  - **Recommended action:** Quarantine the adapter/trajectory from hidden-game discovery claims.
 
 - `results/arc_loop_solve_lf52.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** `development_proxy`, offline mode, frozen L1/L2 tails, private obfuscated-object introspection, and a hand-written peg-count verifier ([arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2745)). Registry is already at L10.
-  - **Recommended action:** Quarantine as a deterministic adapter regression.
+  - **Evidence:** `development_proxy`; `_lf52` feeds fixed L1/L2 tails and a game-specific verifier/model. Reproduction establishes replayability, not discovery.
+  - **Recommended action:** Regression-only; require a clean entrypoint run that induces the mechanic and route at runtime.
 
 - `results/outer_loop_lf52_l8plus_probe_20260717.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Explicitly switched to reading `environment_files/.../lf52.py`, then used a bespoke per-game source planner after offline graph exploration failed ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l8plus_probe_20260717.json:164)). That is textbook source-assisted outer-loop solving.
-  - **Recommended action:** Preserve as public-game analysis only; remove L8–L10 from live self-discovery metrics.
+  - **Evidence:** Explicitly read `environment_files/.../lf52.py`, built source-faithful planners, and ran 668,532-state search plus 372,127-state BFS. It correctly declares `development_proxy`.
+  - **Recommended action:** Retain as oracle-assisted development research; strip L8–L10 from autonomous-agent capability metrics.
 
 - `results/outer_loop_round26_bp35_probe_l9_20260717.json`
-  - **Verdict:** `OFF_PATH`
-  - **Evidence:** The public-frame-only attempt trail is credible, but the claimed provenance is not. Discovery was conducted by `gpt-5.6-sol-max-effort` through 174,508 offline steps, then encoded in a standalone experiment with a banked prefix and fixed 68-action tail ([probe](/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/bp35_round26_live_probe.py:28)). Neither live entrypoint references this probe. The orphan lint misses it because it scans only selected `python/carnot/agentic/arc_*.py` surfaces—not experiment scripts ([lint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py:116)).
-  - **Recommended action:** Port the generic runtime exploration capability—not the bp35 route—into the competition agent, then demonstrate a fresh discovery through that entrypoint.
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** The `live_agent_self_discovery` label is not credible provenance. This is an externally driven round-26 artifact, recorded in the changelog as `[outer-loop]`, starting from a banked 342-action prefix and consuming 174,508 offline steps. No named live entrypoint produced the discovery trace; later code merely consumes its winning sequence.
+  - **Recommended action:** Re-run end-to-end through a live entrypoint with no banked BP35 route and emit an autonomous attempt/model-induction trace.
 
 - `results/outer_loop_round14_lf52_probe_20260716.json`
   - **Verdict:** `OUTER_LOOP_RE`
-  - **Evidence:** Explicitly says it reread the public source and a hand-built source-faithful simulator, audited prior proof searches, and manually constructed the missing leapfrog relay ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_round14_lf52_probe_20260716.json:23)).
-  - **Recommended action:** Development note only; no live-agent credit.
+  - **Evidence:** Explicit public-source rereading, source audit, source-faithful simulator, and hand translation into engine actions. `development_proxy` is the honest field; `live_agent_runtime_self_discovery` is misleading substrate language.
+  - **Recommended action:** Treat as source-assisted analysis only, never self-discovery.
 
 - `results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json`
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** The artifact explicitly says `new_levels_banked: 0`, “ALREADY-banked route,” and “not a new solve” ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/outer_loop_lf52_l9_inbounds_live_parity_20260717.json:8)). It repairs live parity using source-derived camera knowledge and a bespoke Python model; useful validation, zero new capability.
-  - **Recommended action:** Record as route-validation/engineering evidence only, never as a solve advance.
+  - **Verdict:** `OUTER_LOOP_RE`
+  - **Evidence:** Admits source reading, a ported pure-Python L9 model, constrained best-first search, and `new_levels_banked=0`; LF52 L10 was already registered. It adds live-route parity, but through outer-loop construction.
+  - **Recommended action:** Keep as deployment/replay-parity evidence only; award no solve or discovery credit.
 
-**Pattern watch:** Serious drift: frozen adapters, private-state verifiers, source-derived per-game planners, and outer-loop coding-agent investigations are being wrapped in replay gates and live-sounding labels. `reproduce()` proves that a sequence works; it does not prove the live agent discovered it. Reachability auditing must cover artifact-generating experiment scripts and require an entrypoint-emitted discovery trace, not merely reachable helper modules.
+**Pattern watch:** Severe laundering drift: hard-coded adapters, banked prefixes, source-derived simulators/BFS, and outer-loop Codex sessions are being made callable from the live path and then described as “live-agent” capability. Reproduction proves a route can be replayed; closure reachability proves it can be called. Neither proves the live agent discovered anything.
 
