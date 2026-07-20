@@ -1585,6 +1585,111 @@ consecutive-size rule fails, or any GPU/FPGA/TSU/hardware claim appears
 |---|---|---|
 | REQ-SAMPLE-5739 | Planned (`python/carnot/experiment_5739_one_axis_batched_10x_crossover.py`, `results/experiment_5739_one_axis_batched_10x_crossover.json`) | Planned (`tests/python/test_experiment_5739_one_axis_batched_10x_crossover.py`) |
 
+### REQ-SAMPLE-5751: One-Axis Rust Restart Parity Repair
+
+Carnot MUST repair the production-reachable one-axis Rust/PyO3 batch restart
+path when Exp5739 restart receipts diverge despite identical resumed sampler
+semantics. The repair SHALL first reproduce at least one Exp5739
+`restart_match` exclusion at `n=96` or `n=192`, identify the first divergent
+checkpoint-boundary field, and patch the narrowest production adapter path
+without adding a second sampler API or modifying `scripts/research_conductor.py`.
+
+Checkpoint-boundary receipts SHALL canonicalize diagnostic floats so Python and
+Rust logs that are semantically equal, including signed-zero cases, hash
+identically. The sampler state schema SHALL remain backward compatible unless a
+versioned migration is explicitly required. Corrupted checkpoints, wrong
+schema, wrong input, wrong seed, wrong ladder, and malformed checkpoint payloads
+SHALL continue to fail closed.
+
+The repair SHALL inject interruption/resume checks before and after restart and
+checkpoint transitions at `n=48`, `n=96`, and `n=192`. It SHALL compare
+uninterrupted versus resumed Python and Rust traces exactly for energies,
+proposals, scheduler decisions, restart counts, sample counts, RNG state and
+schema, checkpoint hashes, final samples, exact fallback equivalence, and
+corrupted-checkpoint rejection. Distributional parity SHALL be reported for the
+large non-enumerable cases using the existing one-axis quality summaries. No
+timing promotion is in scope: `timing_claimed=false` and
+`hardware_speedup_claimed=false`.
+
+Experiment 5751 SHALL write
+`results/experiment_5751_rust_restart_parity_repair.json` with at least these
+top-level fields: `field_principles`, `preconditions_checked`, `spec_refs`,
+`upstream_artifact_hashes`, `rust_toolchain`, `python_version`, `pyo3_version`,
+`release_build_receipt`, `reproduced_failure_receipts`,
+`first_divergence_receipt`, `root_cause`, `changed_files`,
+`checkpoint_schema_before`, `checkpoint_schema_after`, `migration_receipt`,
+`interruption_injection_manifest`, `energy_parity`, `proposal_parity`,
+`scheduler_parity`, `rng_parity`, `restart_parity`, `checkpoint_parity`,
+`sample_count_parity`, `distributional_parity`, `fallback_equivalence`,
+`production_backend_reachable`, `restart_parity_ready_score`,
+`timing_claimed`, `hardware_speedup_claimed`, `random_seeds`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `field_principles`: principle "Explains why every restart-repair field exists before downstream timing work can consume the artifact."
+- `preconditions_checked`: principle "Records local Rust, PyO3, Python, release-build, affinity, memory, disk, upstream-hash, and mismatch-reproduction gates before declaring repair."
+- `spec_refs`: principle "Binds the artifact to REQ-SAMPLE-5751 and SCENARIO-SAMPLE-5751."
+- `upstream_artifact_hashes`: principle "Pins Exp5738 and Exp5739 evidence so the repair addresses the observed production divergence."
+- `rust_toolchain`: principle "Records rustc and cargo versions used to build and test the PyO3 path."
+- `python_version`: principle "Records the Python runtime used by the production adapter and tests."
+- `pyo3_version`: principle "Records the binding ABI dependency version relevant to restart receipts."
+- `release_build_receipt`: principle "Shows whether a release PyO3 build was attempted and whether it completed."
+- `reproduced_failure_receipts`: principle "Preserves at least one original Exp5739 restart_match failure before patch interpretation."
+- `first_divergence_receipt`: principle "Documents the first divergent field, event, and hash boundary instead of patching by guess."
+- `root_cause`: principle "States the causal bug in production-reachable terms."
+- `changed_files`: principle "Lists the exact implementation, spec, test, and artifact files changed."
+- `checkpoint_schema_before`: principle "Pins the checkpoint schema accepted before the repair."
+- `checkpoint_schema_after`: principle "Pins the checkpoint schema accepted after the repair."
+- `migration_receipt`: principle "Declares whether migration was required or why compatibility is preserved."
+- `interruption_injection_manifest`: principle "Lists every before/after restart and checkpoint transition case at n=48, n=96, and n=192."
+- `energy_parity`: principle "Proves resumed Rust and Python energy diagnostics remain equal."
+- `proposal_parity`: principle "Proves resumed Rust and Python proposal diagnostics remain equal."
+- `scheduler_parity`: principle "Proves within and swap scheduler decisions remain equal."
+- `rng_parity`: principle "Proves RNG state and consumption schema remain equal across uninterrupted and resumed paths."
+- `restart_parity`: principle "Gates the repaired suffix hashes and restart counts."
+- `checkpoint_parity`: principle "Gates checkpoint hashes, schema, and corrupted-checkpoint rejection."
+- `sample_count_parity`: principle "Proves resumed and uninterrupted paths keep the same retained sample counts."
+- `distributional_parity`: principle "Records large-case non-enumerable parity evidence without promoting timing."
+- `fallback_equivalence`: principle "Proves exact Python fallback remains equivalent to the Rust production path."
+- `production_backend_reachable`: principle "Proves the existing OneAxisRustBackend.sample_batch path is the repaired path."
+- `restart_parity_ready_score`: principle "Equals 1.0 only when reproduction, repair, interruption, fallback, corruption, and no-speed gates pass."
+- `timing_claimed`: principle "Bare false prevents this repair from becoming a speed claim."
+- `hardware_speedup_claimed`: principle "Bare false prevents CPU restart evidence from becoming a board or hardware claim."
+- `random_seeds`: principle "Records replay seeds for failure reproduction and interruption injection."
+- `test_commands`: principle "Lists the verification commands run for the repair."
+- `test_exit_codes`: principle "Records command outcomes honestly, including any bounded or blocked checks."
+- `reproducibility_checksum`: principle "Content-addresses the complete artifact after blanking the self-checksum field."
+- `honest_verdict`: principle "Starts complete: or blocked: and states whether restart parity is repaired."
+
+### SCENARIO-SAMPLE-5751: Exp5751 Emits Restart Parity Repair Evidence
+
+**Given** Exp5738 qualified the production `sample_batch` backend and Exp5739
+excluded larger-size rows for `restart_match`
+**When** the first larger-size restart divergence is reproduced and repaired in
+the production one-axis adapter
+**Then** Rust and Python uninterrupted and resumed traces at `n=48`, `n=96`,
+and `n=192` have matching semantic diagnostics and repaired checkpoint-boundary
+hashes
+**And** fallback and corrupted-checkpoint controls still pass
+**And** `results/experiment_5751_rust_restart_parity_repair.json` is written
+with `restart_parity_ready_score=1.0`, `timing_claimed=false`, and
+`hardware_speedup_claimed=false` only when every restart repair gate passes.
+
+**If** the original Exp5739 mismatch cannot be reproduced, root cause is not
+identified, checkpoint compatibility is broken without migration, interruption
+parity fails, fallback equivalence regresses, corrupted checkpoints are
+accepted, or any speed/hardware claim appears
+**Then** the artifact SHALL still emit terminal evidence with
+`restart_parity_ready_score=0.0` and an `honest_verdict` starting with
+`blocked:`.
+
+## Implementation Status (REQ-SAMPLE-5751)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-5751 | Implemented (`python/carnot/samplers/one_axis_rust_backend.py`, `results/experiment_5751_rust_restart_parity_repair.json`) | Implemented (`tests/python/samplers/test_one_axis_rust_backend.py`, `tests/python/test_experiment_5751_rust_restart_parity_repair.py`) |
+
 ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
 
 Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
