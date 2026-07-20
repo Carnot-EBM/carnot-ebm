@@ -313,6 +313,19 @@ DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S = 0.0001
 NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE = "local_native_llama_cpp_gguf_backend_bisect"
 NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S = 5.0
 
+# Source-delta/SOTA-ingestion artifacts (per CLAUDE.md's SOTA-Ingestion Cycle Discipline) do
+# WebSearch/WebFetch + read research-references.md; no model is loaded, no GPU touched. Genuinely
+# fast (sub-second) but the literature they ingest routinely discusses GGUF/CUDA/model names,
+# tripping the generic compute-bound-marker detector under the 60s live_llm_inference floor.
+# Discovered 2026-07-20 (exp5718/exp5732 v511/v512 source-delta-ingestion artifacts, duration_s
+# 2.7e-07 and 0.05, both flagged DURATION_TOO_SHORT despite declaring
+# inference_substrate=web_and_bibliographic_search_only -- a value the linter did not yet
+# recognize -- while two sibling v510/v513 ingestion artifacts with the same substrate value but
+# content that didn't trip the marker detector passed clean, confirming the false-positive was
+# substrate-recognition-gap-driven, not artifact-specific).
+WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE = "web_and_bibliographic_search_only"
+WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S = 0.0001
+
 # Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
 # including negative controls whose details mention GGUF/CUDA/live-model markers.
 # The artifact itself runs JSON lint tests, not model inference, so exact
@@ -1981,6 +1994,13 @@ def _is_log_analysis_local_timing(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE)
 
 
+def _is_web_bibliographic_search_only(d: dict[str, Any]) -> bool:
+    """True when the artifact declares pure web/bibliographic search, no model load.
+    See WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE for the exemplar incidents (exp5718, exp5732)."""
+
+    return _inference_substrate_matches(d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE)
+
+
 def _is_artifact_qa_lint_tests(d: dict[str, Any]) -> bool:
     """True when the artifact declares fixture-driven artifact QA lint tests."""
 
@@ -2125,6 +2145,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
             "min_duration_s": ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S,
             "reason": "artifact_qa_lint_tests",
+        }
+    if _is_web_bibliographic_search_only(d):
+        return {
+            "substrate": WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
+            "min_duration_s": WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S,
+            "reason": "web_bibliographic_search_only",
         }
     if _is_local_sota_gguf_small_n(d):
         return {
