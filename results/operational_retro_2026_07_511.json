@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.511",
+  "generated_at": "2026-07-20T00:02:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 217.1,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "First ARC-AGI-3 Generalization-Testing Floor task: fresh live-vs-oracle gap swee",
+      "duration_minutes": 77.78,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile .511 attested FR-11, Rust backend, ARC epistemic, specification, and o",
+      "duration_minutes": 47.45,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5717 Rust quality: expose one-axis tempering through production Samp",
+      "duration_minutes": 29.88,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Diagnose the .510 GGUF answer-channel failure across the mandated SOTA model fam",
+      "duration_minutes": 22.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify an agent-owned ARC epistemic ledger on the submitted live E3AgentPolicy ",
+      "duration_minutes": 22.13,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Across 11 completed experiments, 217.1 minutes of wall time included 6 compute-bound experiments. The slowest compute-bound entries took 77.78, 47.45, and 22.3 minutes; the timing record provides no phase-level causes for those durations.",
+  "bottlenecks_identified": [
+    "The two longest recorded experiments were compute-bound, but the timing record contains no phase-level data to explain their durations.",
+    "Milestone timing required disk-mtime reconstruction after the live git-log path found no commits, limiting stage-level attribution.",
+    "No task-correlated GPU samples or model-concurrency receipts are available, so compute-bound GPU efficiency and runner selection cannot be diagnosed beyond the locked false idle indicator."
+  ],
+  "improvements_suggested": [
+    "Emit per-experiment phase timers for setup, model loading, inference, verification, and reconciliation so the next slow path has a measured cause.",
+    "Record task-correlated GPU utilization with the active task, compute-bound classification, model count, and selected runner in one timing receipt.",
+    "Select DualGPURunner automatically only for declared multi-model parallel work, while retaining the single-GPU path for single-model inference."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase-level timing receipts to every experiment artifact.",
+    "Correlate GPU telemetry with active compute-bound task boundaries.",
+    "Add model-concurrency-aware runner selection and record the selection decision."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The available data supports ranking slow experiments but not assigning causal explanations or a nonzero savings estimate. The next retrospective will become actionable if timing, GPU activity, model concurrency, and runner choice are captured in the same task-scoped record."
+}
